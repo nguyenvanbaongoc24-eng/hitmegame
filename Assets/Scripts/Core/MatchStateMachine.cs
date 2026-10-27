@@ -32,6 +32,11 @@ namespace HitMe.Core
 
         private List<HitRecord> _currentBatchHits = new List<HitRecord>();
 
+        // Read-only surface for presentation. It does not own or mutate gameplay state.
+        public bool IsPlayerActionLocked => _isPlayerLocked;
+        public bool IsBotActionLocked => _isBotLocked;
+        public float PhaseSecondsRemaining => Mathf.Max(0f, _phaseTimer);
+
         private void Start()
         {
             if (uiManager != null)

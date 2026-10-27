@@ -28,3 +28,18 @@ The prompt's alternate `D:\HITME CODEX\ASSET HITME FINAL` path does not exist on
 | `arena.final` | `ASSET BỐI CẢNH/BỐI CẢNH/**` | Layer/reference images; exact role requires visual QA | `Assets/HITME/Art/Environment/Arena` | `MainMatch` visual hierarchy | Planned |
 
 `metadata.json` is reference/manifest data, not proof that a sheet is a valid Unity animation. No source image is assumed to be an approved sprite until it has been inspected in Unity.
+
+## Imported vertical slice (Codex branch)
+
+| Asset ID | Actual Unity import destination | Validation | Runtime binding |
+|---|---|---|---|
+| `char.nam-lang.normal` | `Assets/HITME/Art/Characters/NamLang/` | 55 PNG + 4 JSON copied without editing source; individual alpha PNG, `sprite-cutter/1` metadata, 1536x1024 source board, 12 FPS reference, foot pivot metadata | `sprite_001.png` bound to both actors for the smoke-test idle pose and to `NamLang.asset` |
+| `char.nam-lang.dep` | `Assets/HITME/Art/Characters/NamLang/CAM DEP/` | Individual transparent pose frames | held frame used for `spriteAim` when available |
+| `weapon.dep-to-ong` | `Assets/HITME/Art/Weapons/DepToOng/` | 25 transparent PNG rotation frames + metadata | `sprite_001.png` bound to `Projectile.prefab` and `DepToOng.asset` |
+| `arena.festival` | `Assets/HITME/Art/Environment/FestivalArena/` | 39 PNG + one reference text file; inspected layered PNGs include A01 mountains, A02 rooftops, A03 temple roof, A07 stone floor, A08 border, A09 lotus, C01/C02 trees, C07/C08 crowd, B03 lantern | `FinalArena_2_5D` in `MainMatch` |
+
+The imported runtime-source subset totals 110 PNG, 6 JSON, and one text file. UUID-named reference boards were intentionally excluded from the Unity project; raw FINAL source remains only at `D:\HITME GAME\ASSET HITME FINAL` and is not modified.
+
+### Frame and animation decision
+
+Only the idle and held-weapon frames were assigned. The supplied per-state pose/frame metadata has not yet been validated as true contiguous timing for run, throw, hit, elimination, and victory clips, so those clips were deliberately not fabricated. `ActorView` falls back to idle for unverified states. This is an explicit incomplete item, not a claim of finished animation.
