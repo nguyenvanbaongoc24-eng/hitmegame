@@ -1,59 +1,64 @@
+using System;
+using HitMe.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using HitMe.Core;
 
 namespace HitMe.Gameplay
 {
     public class AimController : MonoBehaviour
     {
+        private const int NoPointer = int.MinValue;
+        private const int MousePointer = -1;
+
         public Camera mainCamera;
         public ActorView playerActor;
         public Transform destinationMarker;
         public SpriteRenderer destinationMarkerSr;
 
-        private bool _isInputActive = false;
-        private bool _isAimDragging = false;
-        private Vector2 _targetDestination;
-        private bool _isMovingToDestination = false;
+        [Header("Gesture")]
+        [SerializeField] private float dragThresholdReferencePixels = 12f;
+        [SerializeField] private Vector2 referenceResolution = new Vector2(390f, 844f);
+
+        private bool _isInputActive;
+        private int _activePointerId = NoPointer;
+        private Vector2 _gestureStartScreen;
+        private Vector2 _gestureOriginWorld;
+
+        public event Action<Vector2> AimChanged;
+        public event Action<Vector2, Vector2> ValidActionReleased;
 
         public Vector2 CurrentPosition => playerActor != null ? (Vector2)playerActor.transform.position : Vector2.zero;
         public Vector2 CurrentDirection { get; private set; } = Vector2.up;
+        public bool HasValidAim { get; private set; }
+        public bool IsGestureActive => _activePointerId != NoPointer;
 
         private void Awake()
         {
             if (mainCamera == null) mainCamera = Camera.main;
             if (destinationMarkerSr == null && destinationMarker != null)
-            {
                 destinationMarkerSr = destinationMarker.GetComponent<SpriteRenderer>();
-            }
+
             ShowDestinationMarker(false);
         }
 
         public void EnableInput(Vector2 initialPos, Vector2 initialDir)
         {
+            ResetGesture(true);
             _isInputActive = true;
-            _isAimDragging = false;
-            _isMovingToDestination = false;
-            CurrentDirection = initialDir.normalized;
+            CurrentDirection = CombatRules.NormalizeDirectionOrDefault(initialDir, Vector2.up);
 
             if (playerActor != null)
             {
                 playerActor.SetPosition(initialPos);
-                playerActor.SetPose(CharacterPose.Aim);
-                Vector2 target = initialPos + CurrentDirection * 3.5f;
-                playerActor.UpdateAimTarget(initialPos, target, CurrentDirection);
-                playerActor.ShowAim(true);
+                playerActor.SetPose(CharacterPose.Idle);
+                playerActor.ShowAim(false);
             }
-            ShowDestinationMarker(false);
         }
 
         public void DisableInput()
         {
             _isInputActive = false;
-            _isAimDragging = false;
-            _isMovingToDestination = false;
-
-            ShowDestinationMarker(false);
+            ResetGesture(false);
 
             if (playerActor != null)
             {
@@ -66,78 +71,174 @@ namespace HitMe.Gameplay
         {
             if (!_isInputActive || playerActor == null || mainCamera == null) return;
 
-            float dt = Time.deltaTime;
-
-            // 1. Get current mouse position clamped inside arena
-            Vector2 mouseWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 clampedMouse = CombatRules.ClampToArena(mouseWorld);
-
-            // 2. Continuously track aim across the entire arena map (di chuột -> thước ngắm đi theo)
-            Vector2 originFeet = (Vector2)playerActor.transform.position + new Vector2(0f, -0.45f);
-            Vector2 aimVector = clampedMouse - originFeet;
-            if (aimVector.sqrMagnitude > 0.05f)
+            if (Input.touchCount > 0)
             {
-                CurrentDirection = aimVector.normalized;
-            }
-
-            // Always update aim visual to follow mouse cursor
-            playerActor.UpdateAimTarget(playerActor.transform.position, clampedMouse, CurrentDirection);
-
-            // Face direction of aiming
-            if (!_isMovingToDestination && playerActor.characterRenderer != null)
-            {
-                if (CurrentDirection.x < -0.1f) playerActor.characterRenderer.flipX = true;
-                else if (CurrentDirection.x > 0.1f) playerActor.characterRenderer.flipX = false;
-            }
-
-            // 3. Handle click/tap to place character anywhere on the arena
-            HandleInput(clampedMouse);
-
-            // 4. Smooth walking towards destination
-            if (_isMovingToDestination)
-            {
-                Vector2 currentPos = playerActor.transform.position;
-                float dist = Vector2.Distance(currentPos, _targetDestination);
-
-                if (dist > 0.08f)
-                {
-                    playerActor.MoveStep(_targetDestination, 8.5f, dt);
-                }
-                else
-                {
-                    _isMovingToDestination = false;
-                    playerActor.SetPosition(_targetDestination);
-                    playerActor.SetPose(CharacterPose.Aim);
-                    ShowDestinationMarker(false);
-                }
-            }
-        }
-
-        private void HandleInput(Vector2 clampedMouse)
-        {
-            // Ignore clicks on UI buttons
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
+                HandleTouches();
                 return;
             }
 
-            // When clicking or tapping anywhere on the arena -> move character to that location!
-            if (Input.GetMouseButtonDown(0))
+            HandleMouse();
+        }
+
+        private void HandleTouches()
+        {
+            if (_activePointerId == NoPointer)
             {
-                SetMoveDestination(clampedMouse);
+                for (int i = 0; i < Input.touchCount; i++)
+                {
+                    Touch touch = Input.GetTouch(i);
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        TryBeginPointer(touch.fingerId, touch.position);
+                        break;
+                    }
+                }
+            }
+
+            if (_activePointerId == NoPointer) return;
+
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Touch touch = Input.GetTouch(i);
+                if (touch.fingerId != _activePointerId) continue;
+
+                switch (touch.phase)
+                {
+                    case TouchPhase.Moved:
+                    case TouchPhase.Stationary:
+                        UpdatePointer(touch.position);
+                        break;
+                    case TouchPhase.Ended:
+                        ReleasePointer(touch.position);
+                        break;
+                    case TouchPhase.Canceled:
+                        ResetGesture(true);
+                        break;
+                }
+                return;
             }
         }
 
-        private void SetMoveDestination(Vector2 worldTarget)
+        private void HandleMouse()
         {
-            _targetDestination = CombatRules.ClampToArena(worldTarget);
-            _isMovingToDestination = true;
+            Vector2 screenPosition = Input.mousePosition;
+            if (Input.GetMouseButtonDown(0))
+                TryBeginPointer(MousePointer, screenPosition);
+
+            if (_activePointerId != MousePointer) return;
+
+            if (Input.GetMouseButton(0))
+                UpdatePointer(screenPosition);
+
+            if (Input.GetMouseButtonUp(0))
+                ReleasePointer(screenPosition);
+        }
+
+        private void TryBeginPointer(int pointerId, Vector2 screenPosition)
+        {
+            if (_activePointerId != NoPointer || IsPointerOverUi(pointerId)) return;
+            if (!TryScreenToArenaPlane(screenPosition, out Vector2 worldPosition)) return;
+            if (!CombatRules.IsInsideArena(worldPosition)) return;
+
+            _activePointerId = pointerId;
+            _gestureStartScreen = screenPosition;
+            _gestureOriginWorld = CombatRules.ClampToArena(worldPosition);
+            HasValidAim = false;
+
+            playerActor.SetPosition(_gestureOriginWorld);
+            playerActor.SetPose(CharacterPose.Idle);
+            playerActor.ShowAim(false);
 
             if (destinationMarker != null)
             {
-                destinationMarker.position = new Vector3(_targetDestination.x, _targetDestination.y, -0.05f);
+                destinationMarker.position = new Vector3(_gestureOriginWorld.x, _gestureOriginWorld.y, -0.05f);
                 ShowDestinationMarker(true);
             }
+        }
+
+        private void UpdatePointer(Vector2 screenPosition)
+        {
+            if (!TryScreenToArenaPlane(screenPosition, out Vector2 pointerWorld)) return;
+
+            float screenDistance = Vector2.Distance(_gestureStartScreen, screenPosition);
+            Vector2 aimVector = pointerWorld - _gestureOriginWorld;
+            bool directionValid = CombatRules.TryNormalizeDirection(aimVector, out Vector2 normalized);
+            HasValidAim = screenDistance >= GetScaledDragThreshold() && directionValid;
+
+            if (!HasValidAim)
+            {
+                playerActor.ShowAim(false);
+                playerActor.SetPose(CharacterPose.Idle);
+                return;
+            }
+
+            CurrentDirection = normalized;
+            playerActor.SetPose(CharacterPose.Aim);
+            playerActor.UpdateAimTarget(_gestureOriginWorld, pointerWorld, CurrentDirection);
+            playerActor.ShowAim(true);
+            AimChanged?.Invoke(CurrentDirection);
+        }
+
+        private void ReleasePointer(Vector2 screenPosition)
+        {
+            UpdatePointer(screenPosition);
+            bool shouldCommit = HasValidAim;
+            Vector2 position = _gestureOriginWorld;
+            Vector2 direction = CurrentDirection;
+            ResetGesture(true);
+
+            if (shouldCommit && _isInputActive)
+                ValidActionReleased?.Invoke(position, direction);
+        }
+
+        private bool TryScreenToArenaPlane(Vector2 screenPosition, out Vector2 worldPosition)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(screenPosition);
+            Plane gameplayPlane = new Plane(Vector3.forward, Vector3.zero);
+            if (gameplayPlane.Raycast(ray, out float distance))
+            {
+                Vector3 hit = ray.GetPoint(distance);
+                worldPosition = new Vector2(hit.x, hit.y);
+                return true;
+            }
+
+            worldPosition = default;
+            return false;
+        }
+
+        private bool IsPointerOverUi(int pointerId)
+        {
+            if (EventSystem.current == null) return false;
+            return pointerId == MousePointer
+                ? EventSystem.current.IsPointerOverGameObject()
+                : EventSystem.current.IsPointerOverGameObject(pointerId);
+        }
+
+        private float GetScaledDragThreshold()
+        {
+            float widthScale = Screen.width / Mathf.Max(1f, referenceResolution.x);
+            float heightScale = Screen.height / Mathf.Max(1f, referenceResolution.y);
+            return Mathf.Clamp(dragThresholdReferencePixels * Mathf.Min(widthScale, heightScale), 8f, 36f);
+        }
+
+        private void ResetGesture(bool keepInputActive)
+        {
+            _activePointerId = NoPointer;
+            HasValidAim = false;
+            ShowDestinationMarker(false);
+            if (playerActor != null) playerActor.ShowAim(false);
+            if (!keepInputActive) _isInputActive = false;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus && _activePointerId != NoPointer)
+                ResetGesture(true);
+        }
+
+        private void OnDisable()
+        {
+            ResetGesture(false);
         }
 
         private void ShowDestinationMarker(bool show)

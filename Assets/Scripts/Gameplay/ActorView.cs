@@ -155,7 +155,9 @@ namespace HitMe.Gameplay
 
         public void UpdateAimTarget(Vector2 origin, Vector2 targetWorldPos, Vector2 direction)
         {
-            Vector2 footPos = origin + new Vector2(0f, -0.45f);
+            // Actor transform is the authoritative gameplay/feet position. Presentation
+            // pivots belong on renderer children and must not offset the throw vector.
+            Vector2 footPos = origin;
             float dist = Vector2.Distance(footPos, targetWorldPos);
             dist = Mathf.Max(dist, 1.0f);
             Vector2 endPoint = footPos + direction.normalized * dist;

@@ -57,13 +57,15 @@ namespace HitMe.Core
         public Vector2 position;
         public Vector2 direction;
         public string weaponId;
+        public bool willThrow;
 
-        public LockedAction(string actorId, Vector2 position, Vector2 direction, string weaponId)
+        public LockedAction(string actorId, Vector2 position, Vector2 direction, string weaponId, bool willThrow = true)
         {
             this.actorId = actorId;
             this.position = position;
             this.direction = direction;
             this.weaponId = weaponId;
+            this.willThrow = willThrow;
         }
     }
 
@@ -86,6 +88,7 @@ namespace HitMe.Core
         public const float AimDuration = 5.0f; // 5s aiming countdown
         public const int InitialHP = 3;
         public const int DamagePerHit = 1;
+        public const int MaxRounds = 20;
         public const float ProjectileSpeed = 14.0f;
         public const float ProjectileRadius = 0.5f;
         public const float ActorHitRadius = 0.65f;
@@ -100,6 +103,42 @@ namespace HitMe.Core
         public const float ArenaMinY = -5.0f;
         public const float ArenaMaxY = 4.2f;
         public const float CornerRadius = 0.9f;
+
+        public static bool TryNormalizeDirection(Vector2 value, out Vector2 direction)
+        {
+            if (value.sqrMagnitude <= 0.0001f)
+            {
+                direction = Vector2.zero;
+                return false;
+            }
+
+            direction = value.normalized;
+            return true;
+        }
+
+        public static Vector2 NormalizeDirectionOrDefault(Vector2 value, Vector2 fallback)
+        {
+            if (TryNormalizeDirection(value, out Vector2 direction)) return direction;
+            return TryNormalizeDirection(fallback, out direction) ? direction : Vector2.up;
+        }
+
+        public static bool IsInsideArena(Vector2 pos)
+        {
+            return (ClampToArena(pos) - pos).sqrMagnitude <= 0.0001f;
+        }
+
+        public static MatchResultType DetermineMatchResult(int playerHp, int botHp, int round)
+        {
+            bool playerDead = playerHp <= 0;
+            bool botDead = botHp <= 0;
+            if (playerDead && botDead) return MatchResultType.Draw;
+            if (playerDead) return MatchResultType.BotWin;
+            if (botDead) return MatchResultType.PlayerWin;
+            if (round < MaxRounds) return MatchResultType.None;
+            if (playerHp > botHp) return MatchResultType.PlayerWin;
+            if (botHp > playerHp) return MatchResultType.BotWin;
+            return MatchResultType.Draw;
+        }
 
         // Rounded rectangle boundary clamping
         public static Vector2 ClampToArena(Vector2 pos)

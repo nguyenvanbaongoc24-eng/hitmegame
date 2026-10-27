@@ -1,17 +1,26 @@
+using System;
 using UnityEngine;
 
 namespace HitMe.Core
 {
     public class BotBrain
     {
-        private float _thinkDuration = 3.0f;
-        private float _elapsed = 0f;
-        private bool _isLocked = false;
+        private System.Random _random = new System.Random(20261027);
+        private float _thinkDuration = 3f;
+        private float _elapsed;
+        private bool _isLocked;
 
         public Vector2 StartPosition { get; private set; }
         public Vector2 TargetPosition { get; private set; }
         public Vector2 CurrentPosition { get; private set; }
         public Vector2 DraftDirection { get; private set; }
+
+        public void Reset(int seed)
+        {
+            _random = new System.Random(seed);
+            _elapsed = 0f;
+            _isLocked = false;
+        }
 
         public void PrepareNewRound(Vector2 initialBotPos)
         {
@@ -19,42 +28,39 @@ namespace HitMe.Core
             _isLocked = false;
             StartPosition = initialBotPos;
             CurrentPosition = initialBotPos;
-            _thinkDuration = Random.Range(2.2f, 4.2f); // Human-like reaction time < 5s
+            _thinkDuration = NextFloat(2.2f, 4.2f);
 
-            // Bot picks a destination in the upper court (y in [1.0, 3.8])
-            float posX = Random.Range(CombatRules.ArenaMinX * 0.82f, CombatRules.ArenaMaxX * 0.82f);
-            float posY = Random.Range(1.0f, CombatRules.ArenaMaxY * 0.82f);
+            float posX = NextFloat(CombatRules.ArenaMinX * 0.82f, CombatRules.ArenaMaxX * 0.82f);
+            float posY = NextFloat(1f, CombatRules.ArenaMaxY * 0.82f);
             TargetPosition = CombatRules.ClampToArena(new Vector2(posX, posY));
 
-            // FAIR BOT (GP-009): Does NOT read player's secret coordinate!
-            // Aims at general lower court (y in [-4.5, -1.0])
-            float targetX = Random.Range(CombatRules.ArenaMinX * 0.8f, CombatRules.ArenaMaxX * 0.8f);
-            float targetY = Random.Range(CombatRules.ArenaMinY * 0.85f, -1.0f);
-            Vector2 generalTarget = new Vector2(targetX, targetY);
-
-            DraftDirection = (generalTarget - TargetPosition).normalized;
+            // The bot deliberately aims at a general court region. It never reads
+            // the player's secret position or aim command.
+            float targetX = NextFloat(CombatRules.ArenaMinX * 0.8f, CombatRules.ArenaMaxX * 0.8f);
+            float targetY = NextFloat(CombatRules.ArenaMinY * 0.85f, -1f);
+            DraftDirection = CombatRules.NormalizeDirectionOrDefault(
+                new Vector2(targetX, targetY) - TargetPosition,
+                Vector2.down);
         }
 
-        public bool UpdateTick(float dt)
+        public bool UpdateTick(float deltaTime)
         {
-            _elapsed += dt;
-
-            // Move bot smoothly towards target position
-            CurrentPosition = Vector2.MoveTowards(CurrentPosition, TargetPosition, CombatRules.BotMoveSpeed * dt);
+            _elapsed += deltaTime;
+            CurrentPosition = Vector2.MoveTowards(CurrentPosition, TargetPosition, CombatRules.BotMoveSpeed * deltaTime);
             CurrentPosition = CombatRules.ClampToArena(CurrentPosition);
 
-            if (!_isLocked && _elapsed >= _thinkDuration)
-            {
-                _isLocked = true;
-                return true;
-            }
+            if (!_isLocked && _elapsed >= _thinkDuration) _isLocked = true;
             return _isLocked;
         }
 
         public LockedAction GetLockedAction(string botId)
         {
-            // Atomically freeze at current physical position
-            return new LockedAction(botId, CurrentPosition, DraftDirection, "dep_cao_su");
+            return new LockedAction(botId, CurrentPosition, DraftDirection, "dep_to_ong", true);
+        }
+
+        private float NextFloat(float min, float max)
+        {
+            return min + (float)_random.NextDouble() * (max - min);
         }
     }
 }
