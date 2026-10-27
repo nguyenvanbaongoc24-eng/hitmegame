@@ -23,7 +23,7 @@ namespace HitMe.Editor
         public static void BuildVisualFoundation()
         {
             ConfigureFinalImports();
-            EnsureSortingLayers("ArenaFar", "ArenaMid", "CombatField", "ArenaDecor", "Actors", "Projectiles", "CombatVFX", "HUD");
+            EnsureSortingLayers("ArenaFar", "ArenaMid", "CombatField", "ArenaDecor", "Actors", "Projectiles", "CombatVFX", "ArenaForeground", "HUD");
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             var wind = EnsureWindSettings();
             BuildArena(wind);
@@ -51,7 +51,7 @@ namespace HitMe.Editor
                 importer.wrapMode = TextureWrapMode.Clamp;
                 importer.filterMode = FilterMode.Bilinear;
                 importer.textureCompression = TextureImporterCompression.CompressedHQ;
-                importer.spritePixelsPerUnit = (path.Contains("Characters/NamLang") || path.Contains("Art/UI/")) ? 100f : 50f;
+                importer.spritePixelsPerUnit = 100f;
                 importer.spritePivot = path.Contains("Characters/NamLang") ? new Vector2(.5f, 0f) : new Vector2(.5f, .5f);
 
                 // Configure 9-slice borders for UI skins (PPU 100 native)
@@ -67,7 +67,8 @@ namespace HitMe.Editor
                 else if (path.Contains("avatar_ring_cyan")) importer.spriteBorder = new Vector4(48, 48, 48, 48);
 
                 var webGl = importer.GetPlatformTextureSettings("WebGL");
-                webGl.name = "WebGL"; webGl.overridden = true; webGl.maxTextureSize = 1024;
+                webGl.name = "WebGL"; webGl.overridden = true;
+                webGl.maxTextureSize = (path.Contains("bg_") || path.Contains("arena_floor_master") || path.Contains("lotus_pond")) ? 2048 : 1024;
                 importer.SetPlatformTextureSettings(webGl);
                 importer.SaveAndReimport();
             }
@@ -78,42 +79,57 @@ namespace HitMe.Editor
         {
             var prior = GameObject.Find("FinalArena_2_5D");
             if (prior != null) Object.DestroyImmediate(prior);
-            // This root owns the existing, full arena surface and its established gameplay
-            // alignment. It is a valid runtime backdrop, not a UI mock-up. Keep it behind
-            // the FINAL detail layers so transparent FINAL sprites never expose a blank clear.
+
+            // Permanently disable old prototype arena
             var oldArena = FindSceneObjectIncludingInactive("ArenaRoot_25D");
-            if (oldArena != null) oldArena.SetActive(true);
+            if (oldArena != null) oldArena.SetActive(false);
+
             var root = new GameObject("FinalArena_2_5D");
 
-            // FINAL layers are intentionally sized from their actual authored bounds. The
-            // previous full-bleed tile was a small sprite scaled to hundreds of world units,
-            // which hid the arena and produced the flat tan gameplay screen in WebGL.
-            CreateSprite(root.transform, "FarMountains", "Assets/HITME/Art/Environment/FestivalArena/HITME_A01_Far_Mountains.png", new Vector3(0f, 3.0f, 0f), Vector3.one * 1.35f, "ArenaFar", 0);
-            CreateSprite(root.transform, "VillageRooftops", "Assets/HITME/Art/Environment/FestivalArena/HITME_A02_Village_Rooftops.png", new Vector3(0f, 2.1f, 0f), Vector3.one * 1.4f, "ArenaFar", 1);
-            CreateSprite(root.transform, "TempleRoof", "Assets/HITME/Art/Environment/FestivalArena/HITME_A03_Temple_Roof.png", new Vector3(0f, 1.6f, 0f), Vector3.one * 1.4f, "ArenaMid", 0);
-            CreateSprite(root.transform, "CombatField", "Assets/HITME/Art/Environment/FestivalArena/HITME_A07_Stone_Tile_Floor.png", new Vector3(0f, -0.25f, 0f), Vector3.one * 1.85f, "CombatField", 0);
-            CreateSprite(root.transform, "ArenaBorder", "Assets/HITME/Art/Environment/FestivalArena/HITME_A08_Arena_Border.png", new Vector3(0f, -0.22f, 0f), Vector3.one * 1.85f, "CombatField", 2);
-            CreateSprite(root.transform, "LotusEmblem", "Assets/HITME/Art/Environment/FestivalArena/HITME_A09_Lotus_Emblem.png", new Vector3(0f, -0.1f, 0f), Vector3.one * 1.35f, "CombatField", 3);
+            // LAYER 1: SKY & FAR MOUNTAINS (ArenaFar)
+            CreateSprite(root.transform, "FarMountains", "Assets/HITME/Art/Environment/FestivalArena/HITME_A01_Far_Mountains.png", new Vector3(0f, 4.9f, 0f), Vector3.one * 1.6f, "ArenaFar", 0);
+            CreateSprite(root.transform, "VillageRooftops", "Assets/HITME/Art/Environment/FestivalArena/HITME_A02_Village_Rooftops.png", new Vector3(0f, 4.2f, 0f), Vector3.one * 1.5f, "ArenaFar", 1);
+            CreateSprite(root.transform, "FestivalBunting", "Assets/HITME/Art/Environment/FestivalArena/HITME_B01_Festival_Bunting.png", new Vector3(0f, 4.4f, 0f), Vector3.one * 1.3f, "ArenaFar", 2);
+            CreateSprite(root.transform, "VietnameseFlag", "Assets/HITME/Art/Environment/FestivalArena/HITME_B02_Vietnamese_Flag.png", new Vector3(0f, 4.7f, 0f), Vector3.one * 1.0f, "ArenaFar", 3);
 
-            // Decorations, crowds and wind sways.
-            CreateSprite(root.transform, "LeftCrowd", "Assets/HITME/Art/Environment/FestivalArena/HITME_C07_Left_Crowd.png", new Vector3(-3.05f, 1.4f, 0f), Vector3.one * .95f, "ArenaDecor", 0);
-            CreateSprite(root.transform, "RightCrowd", "Assets/HITME/Art/Environment/FestivalArena/HITME_C08_Right_Crowd.png", new Vector3(3.05f, 1.4f, 0f), Vector3.one * .95f, "ArenaDecor", 1);
-            CreatePivotSprite(root.transform, "LeftTreePivot", "Assets/HITME/Art/Environment/FestivalArena/HITME_C01_Left_Tree_Canopy.png", new Vector3(-4.2f, -4.7f, 0f), .9f, "ArenaDecor", 4, wind, .2f);
-            CreatePivotSprite(root.transform, "RightTreePivot", "Assets/HITME/Art/Environment/FestivalArena/HITME_C02_Right_Tree_Canopy.png", new Vector3(4.2f, -4.7f, 0f), .9f, "ArenaDecor", 5, wind, 1.7f);
-            CreateSprite(root.transform, "ForegroundLeafShadow", "Assets/HITME/Art/Environment/FestivalArena/HITME_C10_Leaf_Shadow.png", new Vector3(0f, -1.5f, 0f), Vector3.one * 1.55f, "ArenaDecor", 9);
-            CreateLantern(root.transform, "LanternLeft", new Vector3(-3.8f, 3.7f, 0f), wind, .1f);
-            CreateLantern(root.transform, "LanternRight", new Vector3(3.8f, 3.7f, 0f), wind, 2.5f);
+            // LAYER 2: MASTER COMBAT ARENA FLOOR (CombatField)
+            // 941 x 1672 PPU 100: size is 9.41 x 16.72 units, perfectly framing the entire camera view
+            CreateSprite(root.transform, "CombatField", "Assets/HITME/Art/Environment/arena_floor_master.png", new Vector3(0f, -0.4f, 0f), Vector3.one, "CombatField", 0);
+            CreateSprite(root.transform, "ArenaBorder", "Assets/HITME/Art/Environment/FestivalArena/HITME_A08_Arena_Border.png", new Vector3(0f, 999f, 0f), Vector3.one, "CombatField", 0);
+
+            // LAYER 3: TEMPLE GATEWAY AT TOP (ArenaMid)
+            CreateSprite(root.transform, "TempleRoof", "Assets/HITME/Art/Environment/FestivalArena/HITME_A03_Temple_Roof.png", new Vector3(0f, 3.9f, 0f), Vector3.one * 1.4f, "ArenaMid", 0);
+            CreateSprite(root.transform, "TempleStairs", "Assets/HITME/Art/Environment/FestivalArena/HITME_A06_Temple_Staircase.png", new Vector3(0f, 3.2f, 0f), Vector3.one * 1.3f, "ArenaMid", 1);
+            CreateSprite(root.transform, "LeftStonePillar", "Assets/HITME/Art/Environment/FestivalArena/HITME_A04_Left_Stone_Pillar.png", new Vector3(-2.2f, 3.5f, 0f), Vector3.one * 1.2f, "ArenaMid", 2);
+            CreateSprite(root.transform, "RightStonePillar", "Assets/HITME/Art/Environment/FestivalArena/HITME_A05_Right_Stone_Pillar.png", new Vector3(2.2f, 3.5f, 0f), Vector3.one * 1.2f, "ArenaMid", 2);
+            CreateLantern(root.transform, "LanternLeft", new Vector3(-2.2f, 4.3f, 0f), 0.1f);
+            CreateLantern(root.transform, "LanternRight", new Vector3(2.2f, 4.3f, 0f), 2.5f);
+
+            // LAYER 4: PERIMETER PROPS & FOLIAGE FRAMING (ArenaDecor)
+            CreateSprite(root.transform, "DrumLeft", "Assets/HITME/Art/Environment/FestivalArena/HITME_B06_Festival_Drum.png", new Vector3(-2.4f, 1.2f, 0f), Vector3.one * 0.9f, "ArenaDecor", 1);
+            CreateSprite(root.transform, "DrumRight", "Assets/HITME/Art/Environment/FestivalArena/HITME_B06_Festival_Drum.png", new Vector3(2.4f, 1.2f, 0f), Vector3.one * 0.9f, "ArenaDecor", 1);
+            CreateSprite(root.transform, "BananaBushLeft", "Assets/HITME/Art/Environment/FestivalArena/HITME_C04_Banana_Bush.png", new Vector3(-2.4f, -1.2f, 0f), Vector3.one * 0.95f, "ArenaDecor", 2);
+            CreateSprite(root.transform, "BananaBushRight", "Assets/HITME/Art/Environment/FestivalArena/HITME_C04_Banana_Bush.png", new Vector3(2.4f, -1.2f, 0f), Vector3.one * 0.95f, "ArenaDecor", 2);
+            CreateSprite(root.transform, "TerracottaJarsLeft", "Assets/HITME/Art/Environment/FestivalArena/HITME_B10_Terracotta_Jars.png", new Vector3(-2.3f, -3.2f, 0f), Vector3.one * 0.9f, "ArenaDecor", 3);
+            CreateSprite(root.transform, "TerracottaJarsRight", "Assets/HITME/Art/Environment/FestivalArena/HITME_B10_Terracotta_Jars.png", new Vector3(2.3f, -3.2f, 0f), Vector3.one * 0.9f, "ArenaDecor", 3);
+
+            // LAYER 5: BOTTOM FOREGROUND LOTUS POND (ArenaForeground)
+            CreateSprite(root.transform, "LotusPondForeground", "Assets/HITME/Art/Environment/lotus_pond_foreground.png", new Vector3(0f, -5.9f, 0f), new Vector3(0.32f, 0.32f, 1f), "ArenaForeground", 10);
+
+            // TOP TREE CANOPIES (ArenaForeground)
+            CreatePivotSprite(root.transform, "LeftTreePivot", "Assets/HITME/Art/Environment/FestivalArena/HITME_C01_Left_Tree_Canopy.png", new Vector3(-2.0f, 5.7f, 0f), 1.1f, "ArenaForeground", 11, wind, 0.2f);
+            CreatePivotSprite(root.transform, "RightTreePivot", "Assets/HITME/Art/Environment/FestivalArena/HITME_C02_Right_Tree_Canopy.png", new Vector3(2.0f, 5.7f, 0f), 1.1f, "ArenaForeground", 11, wind, 1.7f);
 
             var camera = Camera.main;
             if (camera != null)
             {
                 var controller = camera.GetComponent<CameraController25D>();
-                if (controller != null) controller.enabled = false;
+                if (controller != null) Object.DestroyImmediate(controller);
                 camera.orthographic = true;
-                camera.orthographicSize = 6.15f;
-                camera.transform.position = new Vector3(0f, 0f, -10f);
+                camera.orthographicSize = 6.4f;
+                camera.transform.position = new Vector3(0f, -0.4f, -10f);
                 camera.transform.rotation = Quaternion.identity;
-                camera.backgroundColor = new Color(.08f, .15f, .18f);
+                camera.backgroundColor = new Color(.08f, .14f, .18f);
             }
         }
 
@@ -131,7 +147,7 @@ namespace HitMe.Editor
                 ReplaceWithFootAnchoredVisual(actor, idle);
                 if (actor.shadowRenderer != null) { actor.shadowRenderer.sortingLayerName = "Actors"; actor.shadowRenderer.sortingOrder = 9; }
                 
-                // Hide actors by default in Main Menu (they appear once match starts)
+                // Hide actors in Main Menu; MatchStateMachine unhides player upon match start
                 actor.SetVisibility(false);
             }
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Projectile.prefab");
@@ -183,11 +199,14 @@ namespace HitMe.Editor
                 menuRt.anchorMin = Vector2.zero; menuRt.anchorMax = Vector2.one;
                 menuRt.offsetMin = menuRt.offsetMax = Vector2.zero;
 
+                // Main Menu Full-Screen Vietnamese Village Gate Background
                 var menuImage = ui.mainMenuPanel.GetComponent<Image>();
                 if (menuImage != null)
                 {
-                    menuImage.sprite = null;
-                    menuImage.color = new Color(0f, 0f, 0f, 0.15f); // Soft dark vignette, allowing vibrant arena background to shine through
+                    menuImage.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/HITME/Art/Environment/bg_village_gate_menu.png");
+                    menuImage.color = Color.white;
+                    menuImage.type = Image.Type.Simple;
+                    menuImage.preserveAspect = false;
                     menuImage.raycastTarget = false;
                 }
 
@@ -197,6 +216,12 @@ namespace HitMe.Editor
                     Object.DestroyImmediate(ui.mainMenuPanel.transform.GetChild(i).gameObject);
                 }
 
+                // Soft vignette overlay to ensure pristine UI text legibility
+                var vignette = CreateUIContainer("MenuVignette", ui.mainMenuPanel.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+                var vigImg = vignette.AddComponent<Image>();
+                vigImg.color = new Color(0.04f, 0.08f, 0.12f, 0.28f);
+                vigImg.raycastTarget = false;
+
                 // 1. TopProfileBar
                 var topBar = CreateUIContainer("TopProfileBar", ui.mainMenuPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -85f), new Vector2(980f, 110f));
                 CreateSlicedImage("ProfileStrip", topBar.transform, "Assets/HITME/Art/UI/Skins/panel_profile_strip.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(980f, 110f));
@@ -204,7 +229,7 @@ namespace HitMe.Editor
                 var avatarRing = CreateSlicedImage("AvatarRing", topBar.transform, "Assets/HITME/Art/UI/Skins/avatar_ring_cyan.png", new Vector2(0f, 0.5f), new Vector2(65f, 0f), new Vector2(96f, 96f));
                 CreateSimpleImage("Portrait", avatarRing.transform, "Assets/HITME/Art/UI/Portraits/portrait_namlang.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(76f, 76f));
 
-                var nameTxt = CreateUIText("PlayerName", topBar.transform, "Nam Làng", 30, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(130f, 14f), new Vector2(240f, 36f));
+                var nameTxt = CreateUIText("PlayerName", topBar.transform, "Nam Làng", 32, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(130f, 14f), new Vector2(240f, 36f));
                 nameTxt.color = Color.white;
                 var subTxt = CreateUIText("PlayerSub", topBar.transform, "Hồ sơ", 20, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(130f, -18f), new Vector2(240f, 28f));
                 subTxt.color = new Color(0.2f, 0.9f, 1f);
@@ -219,12 +244,12 @@ namespace HitMe.Editor
                 CreateSimpleImage("GearIcon", settingsBtn.transform, "Assets/HITME/Art/UI/Icons/gear.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(40f, 40f));
 
                 // 2. Official 3D HIT ME Logo
-                CreateSimpleImage("LogoHitMe", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Logo/logo_hit_me.png", new Vector2(0.5f, 1f), new Vector2(0f, -235f), new Vector2(580f, 230f));
+                CreateSimpleImage("LogoHitMe", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Logo/logo_hit_me.png", new Vector2(0.5f, 1f), new Vector2(0f, -240f), new Vector2(620f, 240f));
 
                 // 3. Character Showcase (Properly Centered with Contact Shadow & Lotus Podium)
-                var showcase = CreateUIContainer("CharacterShowcase", ui.mainMenuPanel.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 100f), new Vector2(700f, 640f));
-                var podium = CreateSimpleImage("LotusPodium", showcase.transform, "Assets/HITME/Art/Environment/lotus_emblem_clean.png", new Vector2(0.5f, 0f), new Vector2(0f, 15f), new Vector2(460f, 150f));
-                podium.color = new Color(1f, 1f, 1f, 0.9f);
+                var showcase = CreateUIContainer("CharacterShowcase", ui.mainMenuPanel.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 70f), new Vector2(700f, 660f));
+                var podium = CreateSimpleImage("LotusPodium", showcase.transform, "Assets/HITME/Art/Environment/lotus_emblem_clean.png", new Vector2(0.5f, 0f), new Vector2(0f, 15f), new Vector2(480f, 150f));
+                podium.color = new Color(1f, 1f, 1f, 0.95f);
                 CreateSimpleImage("CharacterSprite", showcase.transform, "Assets/HITME/Art/Characters/NamLang/namlang_dep_showcase.png", new Vector2(0.5f, 0f), new Vector2(0f, 65f), new Vector2(460f, 500f));
 
                 var arrLeft = CreateSimpleImage("ArrowLeft", showcase.transform, "Assets/HITME/Art/UI/Skins/btn_circle_gold.png", new Vector2(0f, 0.45f), new Vector2(30f, 0f), new Vector2(74f, 74f));
@@ -233,57 +258,58 @@ namespace HitMe.Editor
                 CreateSimpleImage("Icon", arrRight.transform, "Assets/HITME/Art/UI/Icons/chevron_right.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(36f, 36f));
 
                 // 4. Character & Weapon Selection Cards
-                var selectors = CreateUIContainer("Selectors", ui.mainMenuPanel.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -260f), new Vector2(920f, 130f));
+                var selectors = CreateUIContainer("Selectors", ui.mainMenuPanel.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -320f), new Vector2(920f, 135f));
                 var charCard = CreateSlicedImage("CharCard", selectors.transform, "Assets/HITME/Art/UI/Skins/panel_card_dark_gold.png", new Vector2(0.5f, 0.5f), new Vector2(-235f, 0f), new Vector2(430f, 125f));
-                var charCardTxt = CreateUIText("Label", charCard.transform, "NHÂN VẬT\nNam Làng", 24, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(400f, 80f));
+                CreateSimpleImage("CharIcon", charCard.transform, "Assets/HITME/Art/UI/Portraits/portrait_namlang.png", new Vector2(0f, 0.5f), new Vector2(55f, 0f), new Vector2(65f, 65f));
+                var charCardTxt = CreateUIText("Label", charCard.transform, "NHÂN VẬT\nNam Làng", 26, TextAnchor.MiddleLeft, new Vector2(0.5f, 0.5f), new Vector2(50f, 0f), new Vector2(260f, 80f));
                 charCardTxt.color = new Color(1f, 0.9f, 0.65f);
 
                 var weaponCard = CreateSlicedImage("WeaponCard", selectors.transform, "Assets/HITME/Art/UI/Skins/panel_card_dark_gold.png", new Vector2(0.5f, 0.5f), new Vector2(235f, 0f), new Vector2(430f, 125f));
                 CreateSimpleImage("WeaponIcon", weaponCard.transform, "Assets/HITME/Art/UI/Icons/weapon_dep.png", new Vector2(0f, 0.5f), new Vector2(55f, 0f), new Vector2(65f, 65f));
-                var weaponCardTxt = CreateUIText("Label", weaponCard.transform, "VŨ KHÍ\nDép tổ ong", 24, TextAnchor.MiddleLeft, new Vector2(0.5f, 0.5f), new Vector2(50f, 0f), new Vector2(260f, 80f));
+                var weaponCardTxt = CreateUIText("Label", weaponCard.transform, "VŨ KHÍ\nDép tổ ong", 26, TextAnchor.MiddleLeft, new Vector2(0.5f, 0.5f), new Vector2(50f, 0f), new Vector2(260f, 80f));
                 weaponCardTxt.color = new Color(1f, 0.9f, 0.65f);
 
                 // 5. Action Play Mode Buttons
-                // CHƠI NHANH (Primary Yellow 3D)
-                var playBtn = CreateSlicedButton("BtnQuickPlay", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png", new Vector2(0.5f, 0.5f), new Vector2(0f, -435f), new Vector2(900f, 160f));
-                CreateSimpleImage("PlayIcon", playBtn.transform, "Assets/HITME/Art/UI/Icons/play_outline.png", new Vector2(0f, 0.5f), new Vector2(75f, 0f), new Vector2(56f, 56f));
-                var playTxt = CreateUIText("PlayText", playBtn.transform, "CHƠI NHANH", 42, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(25f, 16f), new Vector2(650f, 52f));
-                playTxt.color = new Color(0.25f, 0.12f, 0f);
-                var playSub = CreateUIText("PlaySub", playBtn.transform, "Online • Tối đa 6 người", 22, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(25f, -22f), new Vector2(650f, 32f));
-                playSub.color = new Color(0.4f, 0.25f, 0.05f);
+                // CHƠI NHANH (Primary Yellow 3D CTA)
+                var playBtn = CreateSlicedButton("BtnQuickPlay", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png", new Vector2(0.5f, 0.5f), new Vector2(0f, -500f), new Vector2(920f, 160f));
+                CreateSimpleImage("PlayIcon", playBtn.transform, "Assets/HITME/Art/UI/Icons/play_outline.png", new Vector2(0f, 0.5f), new Vector2(80f, 0f), new Vector2(60f, 60f));
+                var playTxt = CreateUIText("PlayText", playBtn.transform, "CHƠI NHANH", 44, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(30f, 18f), new Vector2(650f, 52f));
+                playTxt.color = new Color(0.24f, 0.12f, 0f);
+                var playSub = CreateUIText("PlaySub", playBtn.transform, "Online • Tối đa 6 người", 22, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(30f, -22f), new Vector2(650f, 32f));
+                playSub.color = new Color(0.4f, 0.23f, 0.03f);
 
                 // LUYỆN VỚI BOT (Navy 3D Bar)
-                var botBtn = CreateSlicedButton("BtnTrainWithBot", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_navy_normal.png", new Vector2(0.5f, 0.5f), new Vector2(0f, -605f), new Vector2(900f, 125f));
-                CreateSimpleImage("BotIcon", botBtn.transform, "Assets/HITME/Art/UI/Icons/bot.png", new Vector2(0f, 0.5f), new Vector2(70f, 0f), new Vector2(48f, 48f));
-                var botTxt = CreateUIText("BotText", botBtn.transform, "LUYỆN VỚI BOT", 32, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(20f, 0f), new Vector2(650f, 44f));
+                var botBtn = CreateSlicedButton("BtnTrainWithBot", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_navy_normal.png", new Vector2(0.5f, 0.5f), new Vector2(0f, -675f), new Vector2(920f, 135f));
+                CreateSimpleImage("BotIcon", botBtn.transform, "Assets/HITME/Art/UI/Icons/bot.png", new Vector2(0f, 0.5f), new Vector2(75f, 0f), new Vector2(52f, 52f));
+                var botTxt = CreateUIText("BotText", botBtn.transform, "LUYỆN VỚI BOT", 36, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(25f, 0f), new Vector2(650f, 48f));
                 botTxt.color = Color.white;
 
                 // TẠO PHÒNG & VÀO PHÒNG
-                var createBtn = CreateSlicedButton("BtnCreateRoom", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_blue_normal.png", new Vector2(0.5f, 0.5f), new Vector2(-235f, -740f), new Vector2(430f, 110f));
+                var createBtn = CreateSlicedButton("BtnCreateRoom", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_blue_normal.png", new Vector2(0.5f, 0.5f), new Vector2(-240f, -830f), new Vector2(430f, 115f));
                 CreateSimpleImage("Icon", createBtn.transform, "Assets/HITME/Art/UI/Icons/person_add.png", new Vector2(0f, 0.5f), new Vector2(50f, 0f), new Vector2(40f, 40f));
                 var createTxt = CreateUIText("Text", createBtn.transform, "TẠO PHÒNG", 28, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(20f, 0f), new Vector2(280f, 40f));
                 createTxt.color = Color.white;
 
-                var joinBtn = CreateSlicedButton("BtnJoinRoom", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_green_normal.png", new Vector2(0.5f, 0.5f), new Vector2(235f, -740f), new Vector2(430f, 110f));
+                var joinBtn = CreateSlicedButton("BtnJoinRoom", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/btn_green_normal.png", new Vector2(0.5f, 0.5f), new Vector2(240f, -830f), new Vector2(430f, 115f));
                 CreateSimpleImage("Icon", joinBtn.transform, "Assets/HITME/Art/UI/Icons/people.png", new Vector2(0f, 0.5f), new Vector2(50f, 0f), new Vector2(40f, 40f));
                 var joinTxt = CreateUIText("Text", joinBtn.transform, "VÀO PHÒNG", 28, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(20f, 0f), new Vector2(280f, 40f));
                 joinTxt.color = Color.white;
 
                 // 6. Bottom Navigation Dock
-                var dock = CreateSlicedImage("BottomDock", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/dock_bg.png", new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(980f, 135f));
+                var dock = CreateSlicedImage("BottomDock", ui.mainMenuPanel.transform, "Assets/HITME/Art/UI/Skins/dock_bg.png", new Vector2(0.5f, 0f), new Vector2(0f, 35f), new Vector2(980f, 140f));
                 var tabHome = CreateUIContainer("TabHome", dock.transform, new Vector2(0.18f, 0.5f), new Vector2(0.18f, 0.5f), Vector2.zero, new Vector2(160f, 100f));
                 CreateSimpleImage("Icon", tabHome.transform, "Assets/HITME/Art/UI/Icons/home.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 14f), new Vector2(44f, 44f));
-                var homeTxt = CreateUIText("Text", tabHome.transform, "Trang chủ", 20, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
+                var homeTxt = CreateUIText("Text", tabHome.transform, "Trang chủ", 22, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
                 homeTxt.color = new Color(0.2f, 0.9f, 1f);
 
                 var tabTrophy = CreateUIContainer("TabTrophy", dock.transform, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), Vector2.zero, new Vector2(160f, 100f));
                 CreateSimpleImage("Icon", tabTrophy.transform, "Assets/HITME/Art/UI/Icons/trophy.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 14f), new Vector2(44f, 44f));
-                var trophyTxt = CreateUIText("Text", tabTrophy.transform, "Xếp hạng", 20, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
+                var trophyTxt = CreateUIText("Text", tabTrophy.transform, "Xếp hạng", 22, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
                 trophyTxt.color = new Color(0.7f, 0.75f, 0.85f);
 
                 var tabQuest = CreateUIContainer("TabQuest", dock.transform, new Vector2(0.82f, 0.5f), new Vector2(0.82f, 0.5f), Vector2.zero, new Vector2(160f, 100f));
                 CreateSimpleImage("Icon", tabQuest.transform, "Assets/HITME/Art/UI/Icons/gift.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 14f), new Vector2(44f, 44f));
-                var questTxt = CreateUIText("Text", tabQuest.transform, "Nhiệm vụ", 20, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
+                var questTxt = CreateUIText("Text", tabQuest.transform, "Nhiệm vụ", 22, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -24f), new Vector2(140f, 26f));
                 questTxt.color = new Color(0.7f, 0.75f, 0.85f);
 
                 // Wire up buttons to authoritative UIManager
@@ -293,73 +319,110 @@ namespace HitMe.Editor
                 EditorUtility.SetDirty(ui);
             }
 
-            // REPAIR IN-MATCH HUD PANEL
+            // REPAIR IN-MATCH HUD PANEL WITH FULL CLASH ROYALE SPEC
             if (ui.inGameHUDPanel != null)
             {
-                var top = ui.inGameHUDPanel.transform.Find("TopBar");
-                if (top != null)
+                var hudRt = ui.inGameHUDPanel.GetComponent<RectTransform>();
+                hudRt.anchorMin = Vector2.zero; hudRt.anchorMax = Vector2.one;
+                hudRt.offsetMin = hudRt.offsetMax = Vector2.zero;
+
+                for (int i = ui.inGameHUDPanel.transform.childCount - 1; i >= 0; i--)
                 {
-                    var rect = top.GetComponent<RectTransform>();
-                    rect.anchorMin = new Vector2(0f, 1f); rect.anchorMax = new Vector2(1f, 1f);
-                    rect.pivot = new Vector2(.5f, 1f); rect.anchoredPosition = new Vector2(0f, -30f);
-                    rect.sizeDelta = new Vector2(0f, 140f);
-                    var image = top.GetComponent<Image>();
-                    if (image != null) { image.sprite = null; image.color = new Color(.04f, .08f, .1f, .75f); }
+                    Object.DestroyImmediate(ui.inGameHUDPanel.transform.GetChild(i).gameObject);
                 }
 
-                var bottom = ui.inGameHUDPanel.transform.Find("BottomBar");
-                if (bottom != null)
-                {
-                    var rect = bottom.GetComponent<RectTransform>();
-                    rect.anchorMin = new Vector2(0f, 0f); rect.anchorMax = new Vector2(1f, 0f);
-                    rect.pivot = new Vector2(.5f, 0f); rect.anchoredPosition = new Vector2(0f, 20f);
-                    rect.sizeDelta = new Vector2(0f, 160f);
-                    var image = bottom.GetComponent<Image>();
-                    if (image != null) { image.sprite = null; image.color = new Color(.04f, .08f, .1f, .75f); }
+                // 1. Top HUD Bar (Player Card, Match Info, Bot Card)
+                var topBar = CreateUIContainer("TopBar", ui.inGameHUDPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -75f), new Vector2(980f, 130f));
+                CreateSlicedImage("Strip", topBar.transform, "Assets/HITME/Art/UI/Skins/panel_profile_strip.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(980f, 130f));
 
-                    // Style the ready button
-                    var readyBtn = bottom.Find("BtnReady");
-                    if (readyBtn != null)
-                    {
-                        var readyImg = readyBtn.GetComponent<Image>();
-                        if (readyImg != null)
-                        {
-                            readyImg.sprite = SpriteAt("Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png");
-                            readyImg.type = Image.Type.Sliced;
-                        }
-                    }
-                }
+                // Player Info (Left)
+                var pRing = CreateSlicedImage("PlayerRing", topBar.transform, "Assets/HITME/Art/UI/Skins/avatar_ring_cyan.png", new Vector2(0f, 0.5f), new Vector2(60f, 0f), new Vector2(84f, 84f));
+                CreateSimpleImage("Portrait", pRing.transform, "Assets/HITME/Art/UI/Portraits/portrait_namlang.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(66f, 66f));
+                var pName = CreateUIText("PlayerName", topBar.transform, "Nam Làng", 26, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(120f, 16f), new Vector2(190f, 32f));
+                pName.color = Color.white;
+                ui.txtPlayerHP = CreateUIText("PlayerHP", topBar.transform, "♥ ♥ ♥", 26, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(120f, -16f), new Vector2(190f, 32f));
+                ui.txtPlayerHP.color = new Color(1f, 0.25f, 0.25f);
+
+                // Match Status (Center)
+                var roundPill = CreateSlicedImage("RoundPill", topBar.transform, "Assets/HITME/Art/UI/Skins/pill_coin.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 28f), new Vector2(190f, 44f));
+                ui.txtRound = CreateUIText("RoundText", roundPill.transform, "VÒNG 1/5", 24, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(180f, 36f));
+                ui.txtRound.color = new Color(1f, 0.85f, 0.2f);
+                ui.txtTimer = CreateUIText("TimerText", topBar.transform, "15", 44, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0f, -22f), new Vector2(130f, 48f));
+                ui.txtTimer.color = Color.white;
+
+                // Bot Info (Right)
+                var bRing = CreateSlicedImage("BotRing", topBar.transform, "Assets/HITME/Art/UI/Skins/btn_circle_navy.png", new Vector2(1f, 0.5f), new Vector2(-60f, 0f), new Vector2(84f, 84f));
+                CreateSimpleImage("BotIcon", bRing.transform, "Assets/HITME/Art/UI/Icons/bot.png", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(50f, 50f));
+                var bName = CreateUIText("BotName", topBar.transform, "Bot Luyện Tập", 26, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-120f, 16f), new Vector2(190f, 32f));
+                bName.color = Color.white;
+                ui.txtBotHP = CreateUIText("BotHP", topBar.transform, "♥ ♥ ♥", 26, TextAnchor.MiddleRight, new Vector2(1f, 0.5f), new Vector2(-120f, -16f), new Vector2(190f, 32f));
+                ui.txtBotHP.color = new Color(1f, 0.25f, 0.25f);
+
+                // 2. Phase Banner (Middle overlay)
+                ui.txtPhaseBanner = CreateUIText("PhaseBanner", ui.inGameHUDPanel.transform, "", 30, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0f, -170f), new Vector2(850f, 60f));
+                ui.txtPhaseBanner.color = new Color(1f, 0.9f, 0.2f);
+
+                // 3. Compact Bottom HUD Bar
+                var bottomBar = CreateUIContainer("BottomBar", ui.inGameHUDPanel.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 75f), new Vector2(980f, 150f));
+
+                // Left: Equipped Weapon Card Slot
+                var weaponSlot = CreateSlicedImage("WeaponSlot", bottomBar.transform, "Assets/HITME/Art/UI/Skins/panel_card_dark_gold.png", new Vector2(0f, 0.5f), new Vector2(85f, 0f), new Vector2(140f, 130f));
+                CreateSimpleImage("Icon", weaponSlot.transform, "Assets/HITME/Art/UI/Icons/weapon_dep.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 12f), new Vector2(75f, 75f));
+                var wepName = CreateUIText("Name", weaponSlot.transform, "Dép tổ ong", 18, TextAnchor.MiddleCenter, new Vector2(0.5f, 0f), new Vector2(0f, 16f), new Vector2(130f, 24f));
+                wepName.color = new Color(1f, 0.85f, 0.3f);
+
+                // Right: Primary Yellow 3D Ready Button
+                var readyBtn = CreateSlicedButton("BtnReady", bottomBar.transform, "Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png", new Vector2(1f, 0.5f), new Vector2(-365f, 0f), new Vector2(700f, 130f));
+                ui.txtReadyBtn = CreateUIText("ReadyText", readyBtn.transform, "SẴN SÀNG", 38, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(600f, 50f));
+                ui.txtReadyBtn.color = new Color(0.24f, 0.12f, 0f);
+
+                ui.btnReady = readyBtn.GetComponent<Button>();
+                EditorUtility.SetDirty(ui);
             }
 
-            BuildResultPanel(ui);
-        }
-
-        private static void BuildResultPanel(UIManager ui)
-        {
-            if (ui.resultPanel == null) return;
-            var panelImage = ui.resultPanel.GetComponent<Image>();
-            if (panelImage != null)
+            // REPAIR RESULT PANEL WITH IMMERSIVE WIN/LOSS PODIUM
+            if (ui.resultPanel != null)
             {
-                panelImage.sprite = null;
-                panelImage.color = new Color(0.015f, 0.025f, 0.04f, 0.78f);
-                panelImage.raycastTarget = false;
+                var resRt = ui.resultPanel.GetComponent<RectTransform>();
+                resRt.anchorMin = Vector2.zero; resRt.anchorMax = Vector2.one;
+                resRt.offsetMin = resRt.offsetMax = Vector2.zero;
+
+                var resBg = ui.resultPanel.GetComponent<Image>();
+                if (resBg != null) { resBg.color = new Color(0.02f, 0.05f, 0.08f, 0.88f); resBg.raycastTarget = true; }
+
+                for (int i = ui.resultPanel.transform.childCount - 1; i >= 0; i--)
+                {
+                    Object.DestroyImmediate(ui.resultPanel.transform.GetChild(i).gameObject);
+                }
+
+                var modal = CreateSlicedImage("ResultModal", ui.resultPanel.transform, "Assets/HITME/Art/UI/Skins/panel_card_dark_gold.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 40f), new Vector2(900f, 1100f));
+                ui.txtResultTitle = CreateUIText("Title", modal.transform, "CHIẾN THẮNG!", 54, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0f, -100f), new Vector2(800f, 75f));
+                ui.txtResultSubtitle = CreateUIText("Subtitle", modal.transform, "Bạn đã hạ gục đối thủ xuất sắc!", 26, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0f, -165f), new Vector2(800f, 40f));
+                ui.txtResultSubtitle.color = new Color(0.7f, 0.75f, 0.85f);
+
+                CreateSimpleImage("Podium", modal.transform, "Assets/HITME/Art/Environment/lotus_emblem_clean.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 160f), new Vector2(360f, 130f));
+                CreateSimpleImage("Trophy", modal.transform, "Assets/HITME/Art/UI/Icons/trophy.png", new Vector2(0.5f, 0.5f), new Vector2(0f, 240f), new Vector2(160f, 160f));
+
+                var statsBox = CreateSlicedImage("StatsBox", modal.transform, "Assets/HITME/Art/UI/Skins/panel_card_dark_selected.png", new Vector2(0.5f, 0.5f), new Vector2(0f, -90f), new Vector2(800f, 260f));
+                ui.txtPlayerStats = CreateUIText("PlayerStats", statsBox.transform, "Bạn (Nam Làng)\nSố lượt ném: 5\nTrúng đích: 3\nTỉ lệ: 60.0%", 26, TextAnchor.MiddleLeft, new Vector2(0f, 0.5f), new Vector2(60f, 0f), new Vector2(340f, 220f));
+                ui.txtPlayerStats.color = Color.white;
+                ui.txtBotStats = CreateUIText("BotStats", statsBox.transform, "Bot Luyện Tập\nSố lượt ném: 5\nTrúng đích: 1\nTỉ lệ: 20.0%", 26, TextAnchor.MiddleLeft, new Vector2(1f, 0.5f), new Vector2(-60f, 0f), new Vector2(340f, 220f));
+                ui.txtBotStats.color = new Color(0.8f, 0.85f, 0.95f);
+
+                // Rematch CTA Button (Primary Yellow)
+                var rematchBtn = CreateSlicedButton("BtnRematch", modal.transform, "Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png", new Vector2(0.5f, 0f), new Vector2(0f, 215f), new Vector2(760f, 140f));
+                var rematchTxt = CreateUIText("Text", rematchBtn.transform, "CHƠI LẠI", 40, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(500f, 50f));
+                rematchTxt.color = new Color(0.24f, 0.12f, 0f);
+
+                // Home Button (Navy)
+                var homeBtn = CreateSlicedButton("BtnBackToHome", modal.transform, "Assets/HITME/Art/UI/Skins/btn_navy_normal.png", new Vector2(0.5f, 0f), new Vector2(0f, 75f), new Vector2(760f, 115f));
+                var homeBtnTxt = CreateUIText("Text", homeBtn.transform, "VỀ TRANG CHỦ", 30, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(500f, 44f));
+                homeBtnTxt.color = Color.white;
+
+                ui.btnRematch = rematchBtn.GetComponent<Button>();
+                ui.btnBackToHome = homeBtn.GetComponent<Button>();
+                EditorUtility.SetDirty(ui);
             }
-
-            for (var i = ui.resultPanel.transform.childCount - 1; i >= 0; i--)
-                Object.DestroyImmediate(ui.resultPanel.transform.GetChild(i).gameObject);
-
-            ui.txtResultTitle = CreateUIText("ResultTitle", ui.resultPanel.transform, "KẾT QUẢ", 54, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), new Vector2(0f, 420f), new Vector2(920f, 90f));
-            ui.txtResultSubtitle = CreateUIText("ResultSubtitle", ui.resultPanel.transform, "", 25, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), new Vector2(0f, 335f), new Vector2(900f, 70f));
-            ui.txtPlayerStats = CreateUIText("PlayerStats", ui.resultPanel.transform, "", 27, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), new Vector2(0f, 120f), new Vector2(760f, 170f));
-            ui.txtBotStats = CreateUIText("BotStats", ui.resultPanel.transform, "", 27, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), new Vector2(0f, -110f), new Vector2(760f, 170f));
-            ui.txtPlayerStats.color = new Color(.25f, .92f, 1f);
-            ui.txtBotStats.color = new Color(1f, .48f, .48f);
-
-            ui.btnRematch = CreateSlicedButton("BtnRematch", ui.resultPanel.transform, "Assets/HITME/Art/UI/Skins/btn_primary_yellow_normal.png", new Vector2(.5f, .5f), new Vector2(0f, -390f), new Vector2(820f, 125f));
-            var rematchLabel = CreateUIText("Label", ui.btnRematch.transform, "CHƠI LẠI", 34, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), Vector2.zero, new Vector2(620f, 60f));
-            rematchLabel.color = new Color(.2f, .1f, 0f);
-            ui.btnBackToHome = CreateSlicedButton("BtnBackToHome", ui.resultPanel.transform, "Assets/HITME/Art/UI/Skins/btn_navy_normal.png", new Vector2(.5f, .5f), new Vector2(0f, -540f), new Vector2(820f, 105f));
-            CreateUIText("Label", ui.btnBackToHome.transform, "VỀ TRANG CHỦ", 30, TextAnchor.MiddleCenter, new Vector2(.5f, .5f), Vector2.zero, new Vector2(620f, 60f));
         }
 
         private static void BindPresentationAdapter()
@@ -367,7 +430,7 @@ namespace HitMe.Editor
             var state = Object.FindFirstObjectByType<MatchStateMachine>();
             var aim = Object.FindFirstObjectByType<AimController>();
             var actors = Object.FindObjectsByType<ActorView>(FindObjectsSortMode.None);
-            if (state == null || actors.Length < 2) return;
+            if (state == null || aim == null) return;
             ActorView player = null, bot = null;
             foreach (var a in actors) { if (a.actorType == ActorType.Player) player = a; else bot = a; }
             var adapter = state.GetComponent<MatchPresentationAdapter>();
@@ -405,16 +468,18 @@ namespace HitMe.Editor
             var renderer = child.AddComponent<SpriteRenderer>(); renderer.sprite = sprite; renderer.sortingLayerName = layer; renderer.sortingOrder = order;
         }
 
-        private static void CreateLantern(Transform parent, string name, Vector3 pos, GlobalWindSettings wind, float phase)
+        private static void CreateLantern(Transform parent, string name, Vector3 pos, float phase)
         {
             var sprite = SpriteAt("Assets/HITME/Art/Environment/FestivalArena/HITME_B03_Red_Lantern.png"); if (sprite == null) return;
-            var pivot = new GameObject(name); pivot.transform.SetParent(parent, false); pivot.transform.localPosition = pos; pivot.AddComponent<PivotSwing>();
-            var swing = pivot.GetComponent<PivotSwing>(); var so = new SerializedObject(swing); so.FindProperty("phase").floatValue = phase; so.ApplyModifiedPropertiesWithoutUndo();
-            var child = new GameObject("Sprite"); child.transform.SetParent(pivot.transform, false); child.transform.localPosition = new Vector3(0f, -sprite.bounds.extents.y * .7f, 0f); child.transform.localScale = Vector3.one * .8f;
-            var renderer = child.AddComponent<SpriteRenderer>(); renderer.sprite = sprite; renderer.sortingLayerName = "ArenaDecor"; renderer.sortingOrder = 8;
+            var pivot = new GameObject(name); pivot.transform.SetParent(parent, false); pivot.transform.localPosition = pos;
+            var swing = pivot.AddComponent<PivotSwing>();
+            var so = new SerializedObject(swing);
+            var phaseProp = so.FindProperty("phase");
+            if (phaseProp != null) phaseProp.floatValue = phase;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            var child = new GameObject("Sprite"); child.transform.SetParent(pivot.transform, false); child.transform.localPosition = new Vector3(0f, -sprite.bounds.extents.y * 0.9f, 0f); child.transform.localScale = Vector3.one * 0.9f;
+            var renderer = child.AddComponent<SpriteRenderer>(); renderer.sprite = sprite; renderer.sortingLayerName = "ArenaMid"; renderer.sortingOrder = 4;
         }
-
-        private static Sprite SpriteAt(string path) => AssetDatabase.LoadAssetAtPath<Sprite>(path);
 
         private static GameObject FindSceneObjectIncludingInactive(string objectName)
         {
@@ -480,48 +545,63 @@ namespace HitMe.Editor
             var img = go.AddComponent<Image>();
             img.sprite = SpriteAt(spritePath);
             img.type = Image.Type.Sliced;
-            img.raycastTarget = true;
             var btn = go.AddComponent<Button>();
             btn.targetGraphic = img;
+            var colors = btn.colors;
+            colors.highlightedColor = new Color(1.08f, 1.08f, 1.08f, 1f);
+            colors.pressedColor = new Color(0.88f, 0.88f, 0.88f, 1f);
+            colors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            btn.colors = colors;
             return btn;
         }
 
-        private static Text CreateUIText(string name, Transform parent, string value, int size, TextAnchor alignment, Vector2 anchor, Vector2 anchoredPos, Vector2 sizeDelta)
+        private static Text CreateUIText(string name, Transform parent, string text, int fontSize, TextAnchor alignment, Vector2 anchor, Vector2 anchoredPos, Vector2 sizeDelta)
         {
             var go = CreateUIContainer(name, parent, anchor, anchor, anchoredPos, sizeDelta);
             var txt = go.AddComponent<Text>();
-            txt.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/HITME/Fonts/BeVietnamPro-Bold.ttf");
-            if (txt.font == null) txt.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            txt.text = value;
-            txt.fontSize = size;
+            txt.text = text;
+            txt.fontSize = fontSize;
             txt.alignment = alignment;
-            txt.color = Color.white;
+            var vietFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/HITME/Fonts/BeVietnamPro-Bold.ttf");
+            if (vietFont == null) vietFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/HitMeFont.ttf");
+            if (vietFont == null) vietFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            txt.font = vietFont;
             txt.raycastTarget = false;
+            var shadow = go.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.65f);
+            shadow.effectDistance = new Vector2(1.5f, -1.5f);
             return txt;
+        }
+
+        private static Sprite SpriteAt(string path)
+        {
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
         private static void EnsureEventSystem()
         {
-            var es = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
-            if (es == null)
+            if (Object.FindFirstObjectByType<EventSystem>() == null)
             {
-                var go = new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.EventSystems.StandaloneInputModule));
-                Debug.Log("Created missing EventSystem with StandaloneInputModule in MainMatch scene.");
+                var eventSystemGo = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+                Undo.RegisterCreatedObjectUndo(eventSystemGo, "Create EventSystem");
             }
         }
 
-        private static void EnsureSortingLayers(params string[] names)
+        private static void EnsureSortingLayers(params string[] layerNames)
         {
-            var assets = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset"); if (assets.Length == 0) return;
-            var serialized = new SerializedObject(assets[0]); var layers = serialized.FindProperty("m_SortingLayers");
-            foreach (var name in names)
+            var tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            var layersProp = tagManager.FindProperty("m_SortingLayers");
+            var existing = new HashSet<string>();
+            for (var i = 0; i < layersProp.arraySize; i++) existing.Add(layersProp.GetArrayElementAtIndex(i).FindPropertyRelative("name").stringValue);
+            foreach (var name in layerNames)
             {
-                var found = false; for (var i=0;i<layers.arraySize;i++) if (layers.GetArrayElementAtIndex(i).FindPropertyRelative("name").stringValue == name) { found=true; break; }
-                if (found) continue;
-                var index = layers.arraySize; layers.InsertArrayElementAtIndex(index); var entry = layers.GetArrayElementAtIndex(index);
-                entry.FindPropertyRelative("name").stringValue = name; entry.FindPropertyRelative("uniqueID").intValue = 1000 + index * 7919; entry.FindPropertyRelative("locked").boolValue = false;
+                if (existing.Contains(name)) continue;
+                layersProp.InsertArrayElementAtIndex(layersProp.arraySize);
+                var elem = layersProp.GetArrayElementAtIndex(layersProp.arraySize - 1);
+                elem.FindPropertyRelative("name").stringValue = name;
+                elem.FindPropertyRelative("uniqueID").intValue = (int)layersProp.arraySize * 1000 + 1234;
             }
-            serialized.ApplyModifiedProperties();
+            tagManager.ApplyModifiedProperties();
         }
     }
 }

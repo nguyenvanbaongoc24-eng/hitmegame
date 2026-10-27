@@ -32,7 +32,7 @@ namespace HitMe.Editor
                 scenes = new[] { MainMatchScene },
                 locationPathName = OutputPath,
                 target = BuildTarget.WebGL,
-                options = BuildOptions.Development
+                options = BuildOptions.None
             });
 
             if (report.summary.result != BuildResult.Succeeded)

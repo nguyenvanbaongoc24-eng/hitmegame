@@ -192,7 +192,7 @@ namespace HitMe.UI
         {
             if (txtRound != null)
             {
-                txtRound.text = (round > 1) ? $"VÒNG {round}/5" : "";
+                txtRound.text = $"VÒNG {Mathf.Max(1, round)}/5";
             }
         }
 
@@ -213,24 +213,19 @@ namespace HitMe.UI
         {
             if (txtPhaseBanner != null)
             {
-                // Only show overlay when phase changes away from initial aim
-                if (text.Contains("ĐÃ KHÓA") || text.Contains("NÉM") || text.Contains("KẾT THÚC"))
-                    txtPhaseBanner.text = text;
-                else
-                    txtPhaseBanner.text = "";
+                txtPhaseBanner.text = text ?? "";
             }
         }
 
         public void UpdateHP(int playerHp, int playerMax, int botHp, int botMax)
         {
-            // The graphic already shows initial 3/3 hearts cleanly
             if (txtPlayerHP != null)
             {
-                txtPlayerHP.text = (playerHp < playerMax) ? $"BẠN: {GetHeartsString(playerHp, playerMax)}" : "";
+                txtPlayerHP.text = $"BẠN: {GetHeartsString(playerHp, playerMax)}";
             }
             if (txtBotHP != null)
             {
-                txtBotHP.text = (botHp < botMax) ? $"BOT: {GetHeartsString(botHp, botMax)}" : "";
+                txtBotHP.text = $"BOT: {GetHeartsString(botHp, botMax)}";
             }
         }
 
@@ -252,8 +247,8 @@ namespace HitMe.UI
             }
             if (txtReadyBtn != null)
             {
-                txtReadyBtn.text = isLocked ? "ĐÃ KHÓA" : "";
-                txtReadyBtn.gameObject.SetActive(isLocked);
+                txtReadyBtn.text = isLocked ? "ĐÃ KHÓA" : "SẴN SÀNG";
+                txtReadyBtn.gameObject.SetActive(true);
             }
         }
     }
