@@ -145,7 +145,11 @@ namespace HitMe.Gameplay
         {
             if (_activePointerId != NoPointer || IsPointerOverUi(pointerId)) return;
             if (!TryScreenToArenaPlane(screenPosition, out Vector2 worldPosition)) return;
-            if (!CombatRules.IsInsideArena(worldPosition)) return;
+            float halfW = (CombatRules.ArenaMaxX - CombatRules.ArenaMinX) * 0.5f;
+            float halfH = (CombatRules.ArenaMaxY - CombatRules.ArenaMinY) * 0.5f;
+            float cx = (CombatRules.ArenaMinX + CombatRules.ArenaMaxX) * 0.5f;
+            float cy = (CombatRules.ArenaMinY + CombatRules.ArenaMaxY) * 0.5f;
+            if (Mathf.Abs(worldPosition.x - cx) > halfW + 1.2f || Mathf.Abs(worldPosition.y - cy) > halfH + 1.2f) return;
 
             _activePointerId = pointerId;
             _gestureStartScreen = screenPosition;

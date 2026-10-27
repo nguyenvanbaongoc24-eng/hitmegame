@@ -109,7 +109,7 @@ namespace HitMe.Core
             if (playerActor != null)
             {
                 playerActor.stats = new ActorStats();
-                playerActor.ResetActor(new Vector2(0f, -3.5f), CombatRules.InitialHP);
+                playerActor.ResetActor(new Vector2(0f, -3.8f), CombatRules.InitialHP);
             }
 
             if (botActor != null)
@@ -148,7 +148,7 @@ namespace HitMe.Core
                 botActor.ShowAim(false);
             }
 
-            Vector2 currentPlayerPos = playerActor != null ? (Vector2)playerActor.transform.position : new Vector2(0f, -3.5f);
+            Vector2 currentPlayerPos = playerActor != null ? (Vector2)playerActor.transform.position : new Vector2(0f, -3.8f);
             if (playerActor != null) playerActor.SetVisibility(true);
 
             yield return new WaitForSeconds(0.4f);

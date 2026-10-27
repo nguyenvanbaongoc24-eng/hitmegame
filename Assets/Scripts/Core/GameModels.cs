@@ -97,12 +97,12 @@ namespace HitMe.Core
         public const float PlayerMoveSpeed = 5.2f; // Smooth travel across arena within 5s
         public const float BotMoveSpeed = 4.0f;
 
-        // Arena logical bounds (fitted to white line of ARENA.png)
-        public const float ArenaMinX = -3.2f;
-        public const float ArenaMaxX = 3.2f;
-        public const float ArenaMinY = -5.0f;
-        public const float ArenaMaxY = 4.2f;
-        public const float CornerRadius = 0.9f;
+        // Arena logical bounds (fitted to white line of arena_floor_master.png)
+        public const float ArenaMinX = -2.70f;
+        public const float ArenaMaxX = 2.70f;
+        public const float ArenaMinY = -5.50f;
+        public const float ArenaMaxY = 4.70f;
+        public const float CornerRadius = 0.75f;
 
         public static bool TryNormalizeDirection(Vector2 value, out Vector2 direction)
         {

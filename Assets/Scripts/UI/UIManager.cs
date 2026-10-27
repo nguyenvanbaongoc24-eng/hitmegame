@@ -54,11 +54,14 @@ namespace HitMe.UI
                 });
 
             if (btnQuickMatch != null)
+            {
+                btnQuickMatch.gameObject.SetActive(false);
                 btnQuickMatch.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    OnClickTrainWithBot?.Invoke();
+                    ShowNotice("Chơi nhanh đang được phát triển. Hãy chọn Luyện với Bot.");
                 });
+            }
 
             if (btnCreateRoom != null)
                 btnCreateRoom.onClick.AddListener(() =>
@@ -144,6 +147,7 @@ namespace HitMe.UI
             if (mainMenuPanel != null) mainMenuPanel.SetActive(false);
             if (inGameHUDPanel != null) inGameHUDPanel.SetActive(true);
             if (resultPanel != null) resultPanel.SetActive(false);
+            if (btnReady != null) btnReady.gameObject.SetActive(true);
         }
 
         public void ShowResult(MatchResultType result, ActorStats playerStats, ActorStats botStats)
@@ -192,7 +196,7 @@ namespace HitMe.UI
         {
             if (txtRound != null)
             {
-                txtRound.text = $"VÒNG {Mathf.Max(1, round)}/5";
+                txtRound.text = $"VÒNG {Mathf.Max(1, round)}/{CombatRules.MaxRounds}";
             }
         }
 
@@ -201,11 +205,11 @@ namespace HitMe.UI
             if (txtTimer != null)
             {
                 int s = Mathf.CeilToInt(Mathf.Max(0f, remainingSeconds));
-                txtTimer.text = (s > 0) ? s.ToString() : "";
+                txtTimer.text = (s > 0) ? $"{s}s" : "";
                 if (s <= 2)
-                    txtTimer.color = new Color(0.9f, 0.15f, 0.15f);
+                    txtTimer.color = new Color(1f, 0.25f, 0.25f);
                 else
-                    txtTimer.color = new Color(0.12f, 0.10f, 0.08f);
+                    txtTimer.color = Color.white;
             }
         }
 
@@ -221,22 +225,12 @@ namespace HitMe.UI
         {
             if (txtPlayerHP != null)
             {
-                txtPlayerHP.text = $"BẠN: {GetHeartsString(playerHp, playerMax)}";
+                txtPlayerHP.text = $"BẠN: HP {Mathf.Max(0, playerHp)}/{playerMax}";
             }
             if (txtBotHP != null)
             {
-                txtBotHP.text = $"BOT: {GetHeartsString(botHp, botMax)}";
+                txtBotHP.text = $"BOT: HP {Mathf.Max(0, botHp)}/{botMax}";
             }
-        }
-
-        private string GetHeartsString(int current, int max)
-        {
-            string s = "";
-            for (int i = 0; i < max; i++)
-            {
-                s += (i < current) ? "♥ " : "♡ ";
-            }
-            return s.TrimEnd();
         }
 
         public void SetReadyButtonState(bool isLocked)
@@ -244,11 +238,12 @@ namespace HitMe.UI
             if (btnReady != null)
             {
                 btnReady.interactable = !isLocked;
+                btnReady.gameObject.SetActive(true);
             }
             if (txtReadyBtn != null)
             {
                 txtReadyBtn.text = isLocked ? "ĐÃ KHÓA" : "SẴN SÀNG";
-                txtReadyBtn.gameObject.SetActive(true);
+                txtReadyBtn.color = isLocked ? new Color(0.45f, 0.45f, 0.45f) : new Color(0.24f, 0.12f, 0f);
             }
         }
     }

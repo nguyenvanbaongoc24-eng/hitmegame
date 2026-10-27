@@ -11,7 +11,7 @@ namespace HitMe.Gameplay
     {
         public const float GameplayPlaneZ = 0f;
         public const float DefaultCameraDistance = 10f;
-        public const float FramingMargin = 0.35f;
+        public const float FramingMargin = 0.55f;
 
         private static readonly Plane GameplayPlane = new Plane(Vector3.forward, new Vector3(0f, 0f, GameplayPlaneZ));
 
