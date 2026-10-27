@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7884654aefc0d4589cf2509a1e0d10, type: 3}
+  m_Name: NamLang
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.CharacterData
+  characterId: nam_lang
+  characterName: "Nam L\xE0ng"
+  description: "C\u1EADu b\xE9 l\xE0ng nhanh nh\u1EB9n, trang ph\u1EE5c c\u1EDD \u0111\u1ECF sao v\xE0ng. L\u1ED1i ch\u01A1i linh ho\u1EA1t, t\u1ED1c \u0111\u1ED9 c\u01A1 b\u1EA3n cao."
+  avatarIcon: {fileID: 21300000, guid: 87582c0b154279b4baaf56df38eb9df2, type: 3}
+  baseHp: 3
+  moveSpeed: 5.2
+  spriteIdle: {fileID: 21300000, guid: 7269f914c3e56f6428218b225fc58df3, type: 3}
+  spriteMove: {fileID: 21300000, guid: 7c06bf3a35f36cb46b70306798bc3a61, type: 3}
+  spriteAim: {fileID: 21300000, guid: 1ea0b2c205700b44c9911e6422a157df, type: 3}
+  spriteThrowWindup: {fileID: 21300000, guid: 23f4a8403c59b1c4ba4b16bb47fd1f2d, type: 3}
+  spriteThrowRelease: {fileID: 21300000, guid: 02d1f702b464f3744a48e0449039f512, type: 3}
+  spriteHit: {fileID: 21300000, guid: af2936ba883a32d4e870c48a4c787225, type: 3}
+  spriteVictory: {fileID: 21300000, guid: 71772a0164cf51e44a731101c78a09a6, type: 3}
+  spriteDefeat: {fileID: 21300000, guid: b48f2b8102bec054d991d541633a8e2b, type: 3}

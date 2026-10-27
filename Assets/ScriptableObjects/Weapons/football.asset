@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d4e5165654d9e468446389cf2b1298, type: 3}
+  m_Name: football
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.WeaponData
+  weaponId: football
+  weaponName: "Qu\u1EA3 B\xF3ng \u0110\xE1"
+  description: "Tr\xE1i b\xF3ng tr\xF2n th\xE2n thu\u1ED9c tr\xEAn s\xE2n l\xE0ng, qu\u1EF9 \u0111\u1EA1o bay linh ho\u1EA1t v\xE0 n\u1EA3y l\u1EEDa."
+  icon: {fileID: 21300000, guid: a8e938dc6058b3dad7dde56fb86f9bf7, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 324681cb9598c393dc0f0415c485f299, type: 3}
+  damage: 1
+  speed: 14.5
+  hitRadius: 0.55
+  trajectoryType: 0
+  sfxThrow: {fileID: 8300000, guid: 4ef2513640a601a4cb1d44c3074fcb82, type: 3}
+  sfxImpact: {fileID: 8300000, guid: feb0abd62903795449ddf5249b9b7963, type: 3}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d4e5165654d9e468446389cf2b1298, type: 3}
+  m_Name: VotPickleball
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.WeaponData
+  weaponId: vot_pickleball
+  weaponName: "V\u1EE3t Pickleball"
+  description: "V\u0169 kh\xED th\u1EDDi th\u01B0\u1EE3ng t\u1ED1c \u0111\u1ED9 cao. Bay nhanh v\xE0 b\u1EA5t ng\u1EDD khi\u1EBFn \u0111\u1ED1i th\u1EE7 kh\xF3 ph\u1EA3n x\u1EA1."
+  icon: {fileID: 21300000, guid: 7d5e6675116973940a251ebd3e15f365, type: 3}
+  projectileSprite: {fileID: 21300000, guid: c5341d4b4be72af41af3116dbfe4cda3, type: 3}
+  damage: 1
+  speed: 16
+  hitRadius: 0.45
+  trajectoryType: 0
+  sfxThrow: {fileID: 8300000, guid: 4ef2513640a601a4cb1d44c3074fcb82, type: 3}
+  sfxImpact: {fileID: 8300000, guid: feb0abd62903795449ddf5249b9b7963, type: 3}

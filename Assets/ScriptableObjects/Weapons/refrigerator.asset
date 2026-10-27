@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d4e5165654d9e468446389cf2b1298, type: 3}
+  m_Name: refrigerator
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.WeaponData
+  weaponId: refrigerator
+  weaponName: "T\u1EE7 L\u1EA1nh Mint"
+  description: "T\u1EE7 l\u1EA1nh 2 c\xE1nh bo g\xF3c phong c\xE1ch retro. K\xEDch th\u01B0\u1EDBc kh\u1ED5ng l\u1ED3 chi\u1EBFm tr\u1ECDn t\u1EA7m nh\xECn."
+  icon: {fileID: 21300000, guid: 0569539048f9e5cb6a2c5dc71fbc2516, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 94ef3ddeb3d08c8a6b3c49077f4ae42a, type: 3}
+  damage: 1
+  speed: 9.5
+  hitRadius: 0.85
+  trajectoryType: 0
+  sfxThrow: {fileID: 8300000, guid: 4ef2513640a601a4cb1d44c3074fcb82, type: 3}
+  sfxImpact: {fileID: 8300000, guid: feb0abd62903795449ddf5249b9b7963, type: 3}

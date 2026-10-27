@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7884654aefc0d4589cf2509a1e0d10, type: 3}
+  m_Name: AnhNonLa
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.CharacterData
+  characterId: anh_non_la
+  characterName: "Anh N\xF3n L\xE1"
+  description: "Anh ch\xE0ng \u0111\u1ED9i n\xF3n l\xE1 truy\u1EC1n th\u1ED1ng, v\u1EEFng v\xE0ng v\xE0 ki\xEAn \u0111\u1ECBnh. Ph\xF2ng th\u1EE7 t\u1ED1t, n\xE9m \u0111\u1EA7m tay."
+  avatarIcon: {fileID: 21300000, guid: f4afd75042b4a014db1f0f6db974717a, type: 3}
+  baseHp: 4
+  moveSpeed: 4.8
+  spriteIdle: {fileID: 21300000, guid: f4afd75042b4a014db1f0f6db974717a, type: 3}
+  spriteMove: {fileID: 21300000, guid: 0cbf5f41385ea4a4e9502e16a22d92e5, type: 3}
+  spriteAim: {fileID: 21300000, guid: 4bb470b465def0d428397208dde651a3, type: 3}
+  spriteThrowWindup: {fileID: 21300000, guid: b21621f487d3b4e4faa9e001094cd18b, type: 3}
+  spriteThrowRelease: {fileID: 21300000, guid: 6072106a710c1d544a9986155a6c4746, type: 3}
+  spriteHit: {fileID: 21300000, guid: 4faccf8a3463cc64e968641c0c360d30, type: 3}
+  spriteVictory: {fileID: 21300000, guid: 1a597d200deeb5d40b22f0188d2b2d33, type: 3}
+  spriteDefeat: {fileID: 21300000, guid: ead614c79178b034e870850446a44052, type: 3}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d4e5165654d9e468446389cf2b1298, type: 3}
+  m_Name: slipper
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.WeaponData
+  weaponId: slipper
+  weaponName: "D\xE9p T\u1ED5 Ong"
+  description: "V\u0169 kh\xED huy\u1EC1n tho\u1EA1i qu\u1ED1c d\xE2n. \u0110\u1ED9 c\xE2n b\u1EB1ng tuy\u1EC7t \u0111\u1ED1i, \u0111\u01B0\u1EDDng \u0111\u1EA1n th\u1EB3ng v\xE0 uy l\u1EF1c."
+  icon: {fileID: 21300000, guid: ecf64a5a95b5f07faf949880ac557130, type: 3}
+  projectileSprite: {fileID: 21300000, guid: ae4fc6b1931ff88467438b6ede375b3f, type: 3}
+  damage: 1
+  speed: 14
+  hitRadius: 0.5
+  trajectoryType: 0
+  sfxThrow: {fileID: 8300000, guid: 4ef2513640a601a4cb1d44c3074fcb82, type: 3}
+  sfxImpact: {fileID: 8300000, guid: feb0abd62903795449ddf5249b9b7963, type: 3}

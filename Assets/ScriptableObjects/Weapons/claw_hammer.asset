@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d4e5165654d9e468446389cf2b1298, type: 3}
+  m_Name: claw_hammer
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.Core.WeaponData
+  weaponId: claw_hammer
+  weaponName: "B\xFAa \u0110\xF3ng \u0110inh"
+  description: "B\xFAa \u0111\u1EA7u th\xE9p m\xF3ng nh\u1ED5 \u0111inh ch\u1EAFc n\u1ECBch, \u0111\xF2n n\xE9m n\u1EB7ng tr\u1ECBch d\u1EE9t kho\xE1t."
+  icon: {fileID: 21300000, guid: 0d8b7dc17edde645005dd2764625dc93, type: 3}
+  projectileSprite: {fileID: 21300000, guid: 6bb55d35027d07b20363300c11e10e22, type: 3}
+  damage: 1
+  speed: 13.5
+  hitRadius: 0.5
+  trajectoryType: 0
+  sfxThrow: {fileID: 8300000, guid: 4ef2513640a601a4cb1d44c3074fcb82, type: 3}
+  sfxImpact: {fileID: 8300000, guid: feb0abd62903795449ddf5249b9b7963, type: 3}
