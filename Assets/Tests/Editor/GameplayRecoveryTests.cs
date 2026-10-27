@@ -98,5 +98,29 @@ namespace HitMe.Tests.Editor
             Assert.That(CombatRules.DetermineMatchResult(2, 2, CombatRules.MaxRounds), Is.EqualTo(MatchResultType.Draw));
             Assert.That(CombatRules.DetermineMatchResult(3, 3, 1), Is.EqualTo(MatchResultType.None));
         }
+
+        [Test]
+        public void WorldProjection_RoundTripsScreenPointOnArenaPlane()
+        {
+            GameObject cameraObject = new GameObject("ArenaCamera_Test");
+            try
+            {
+                Camera camera = cameraObject.AddComponent<Camera>();
+                camera.aspect = 390f / 844f;
+                ArenaProjection.ConfigureTopDownCamera(camera);
+                Vector2 expected = new Vector2(1.25f, -2.1f);
+                Vector3 screen = camera.WorldToScreenPoint(new Vector3(expected.x, expected.y, 0f));
+
+                Assert.That(ArenaProjection.TryScreenPointToArena(camera, screen, out Vector2 actual), Is.True);
+                Assert.That(actual.x, Is.EqualTo(expected.x).Within(0.001f));
+                Assert.That(actual.y, Is.EqualTo(expected.y).Within(0.001f));
+                Assert.That(camera.orthographicSize, Is.GreaterThanOrEqualTo(
+                    (CombatRules.ArenaMaxX - CombatRules.ArenaMinX) * 0.5f / camera.aspect));
+            }
+            finally
+            {
+                Object.DestroyImmediate(cameraObject);
+            }
+        }
     }
 }

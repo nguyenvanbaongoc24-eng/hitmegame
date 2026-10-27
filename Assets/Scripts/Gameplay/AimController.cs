@@ -18,11 +18,13 @@ namespace HitMe.Gameplay
         [Header("Gesture")]
         [SerializeField] private float dragThresholdReferencePixels = 12f;
         [SerializeField] private Vector2 referenceResolution = new Vector2(390f, 844f);
+        [SerializeField] private bool enforceTopDownWorldCamera = true;
 
         private bool _isInputActive;
         private int _activePointerId = NoPointer;
         private Vector2 _gestureStartScreen;
         private Vector2 _gestureOriginWorld;
+        private Vector2Int _lastScreenSize;
 
         public event Action<Vector2> AimChanged;
         public event Action<Vector2, Vector2> ValidActionReleased;
@@ -37,6 +39,8 @@ namespace HitMe.Gameplay
             if (mainCamera == null) mainCamera = Camera.main;
             if (destinationMarkerSr == null && destinationMarker != null)
                 destinationMarkerSr = destinationMarker.GetComponent<SpriteRenderer>();
+
+            RefreshCameraProjection();
 
             ShowDestinationMarker(false);
         }
@@ -70,6 +74,9 @@ namespace HitMe.Gameplay
         private void Update()
         {
             if (!_isInputActive || playerActor == null || mainCamera == null) return;
+
+            Vector2Int screenSize = new Vector2Int(Screen.width, Screen.height);
+            if (screenSize != _lastScreenSize) RefreshCameraProjection();
 
             if (Input.touchCount > 0)
             {
@@ -193,17 +200,14 @@ namespace HitMe.Gameplay
 
         private bool TryScreenToArenaPlane(Vector2 screenPosition, out Vector2 worldPosition)
         {
-            Ray ray = mainCamera.ScreenPointToRay(screenPosition);
-            Plane gameplayPlane = new Plane(Vector3.forward, Vector3.zero);
-            if (gameplayPlane.Raycast(ray, out float distance))
-            {
-                Vector3 hit = ray.GetPoint(distance);
-                worldPosition = new Vector2(hit.x, hit.y);
-                return true;
-            }
+            return ArenaProjection.TryScreenPointToArena(mainCamera, screenPosition, out worldPosition);
+        }
 
-            worldPosition = default;
-            return false;
+        private void RefreshCameraProjection()
+        {
+            if (mainCamera == null) mainCamera = Camera.main;
+            if (enforceTopDownWorldCamera) ArenaProjection.ConfigureTopDownCamera(mainCamera);
+            _lastScreenSize = new Vector2Int(Screen.width, Screen.height);
         }
 
         private bool IsPointerOverUi(int pointerId)
