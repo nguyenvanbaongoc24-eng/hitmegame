@@ -1,0 +1,439 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 9324)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 39252)
+VBCSCompiler prewarm took 41.39 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T12:09:12.5217196Z"
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-10-28T12:09:12Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              d3de8297f7fc4a93bf494823ce170c99
+  Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
+  External correlation Id: 7779222962476058174
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.08s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T12:09:12.6045941Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.09s
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-projectPath
+.
+-executeMethod
+HitMe.AimKit.Editor.HitMeAimPrefabBuilder.Generate
+-logFile
+Evidence/phase2/aimkit-generate.log
+-quit
+Successfully changed project path to: D:/HITME GAME/unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [37212]  Target information:
+
+Player connection [37212]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 2036426599 [EditorId] 2036426599 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [37212] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [37212] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-11472" after 0.4 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56472
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001791 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.112 seconds
+Domain Reload Profiling: 2071ms
+	BeginReloadAssembly (235ms)
+		CreateAndSetChildDomain (20ms)
+	RebuildCommonClasses (9ms)
+	RebuildNativeTypeToScriptingClass (33ms)
+	initialDomainReloadingComplete (99ms)
+	LoadAllAssembliesAndSetupDomain (580ms)
+		LoadAssemblies (214ms)
+		TypeCache.Refresh (389ms)
+			TypeCache.ScanAssembly (363ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1115ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (178ms)
+			ProcessInitializeOnLoadAttributes (206ms)
+			ProcessInitializeOnLoadMethodAttributes (375ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 43 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.accessibility@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 1s696ms
+[278/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[315/319    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+[316/319    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 311 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[317/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[318/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (1.63 seconds), 5 items updated, 319 evaluated
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+AssetDatabase: script compilation time: 2.745347s
+Begin MonoManager ReloadAssembly
+Importing 'GUID: 865e755c8be3385429ad7e8517cc45fc - Path: Assets/HITME_AimKit' with importer (DefaultImporter)
+Imported 'GUID: 865e755c8be3385429ad7e8517cc45fc' -> (Import Result ID: 'c35e4a470a7418b06b7b61b59ae4c27d') in 0.047 seconds [static dependencies only]. Details - ImportResultOutputID=d0a1e65f0e40f4dde19fe4752155782b DependenciesID=0e68316e86fd5d941b216bd0d2193b4a StaticDependenciesID=6defe6351f3c235f08e62b659cf1bc3d 
+Importing 'GUID: 10966395ff7e39c40a866dc082d04421 - Path: Assets/HITME_AimKit/Editor' with importer (DefaultImporter)
+Imported 'GUID: 10966395ff7e39c40a866dc082d04421' -> (Import Result ID: 'f844a1528ed1c8f0d6558d18a0e1adc0') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=b609e2d2a850162229d5e9d1b9edbefb DependenciesID=6e381484bc267fb06dad9fd7de0e9d1d StaticDependenciesID=70c726bd636b72a57c04e229cebc8050 
+Importing 'GUID: 749ca8496e7d5df43b655c1e3b65c64d - Path: Assets/HITME_AimKit/Runtime' with importer (DefaultImporter)
+Imported 'GUID: 749ca8496e7d5df43b655c1e3b65c64d' -> (Import Result ID: '1a54e27e8f986bffb2aa6a27552fbe1e') in 0.016 seconds [static dependencies only]. Details - ImportResultOutputID=2868e5a6fbf1ee5eec59168270bd3b39 DependenciesID=6ff5f29acab986b5fde42fa083e39acc StaticDependenciesID=94afac0d401bef274a341139f9f3a5ec 
+Importing 'GUID: 6e8ac8a545bbab640a19c6b4a7a7ece1 - Path: Assets/HITME_AimKit/Art' with importer (DefaultImporter)
+Imported 'GUID: 6e8ac8a545bbab640a19c6b4a7a7ece1' -> (Import Result ID: 'e0d231a78cf181c1162d5e8ac0c65404') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=e0a5a6490de342629aa59604d9a411f1 DependenciesID=6903f8635e4a9cfadd169d41d3cb38d0 StaticDependenciesID=9e86cc63c67a443947eeb0dfe0c27282 
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.927 seconds
+Domain Reload Profiling: 2040ms
+	BeginReloadAssembly (539ms)
+		DisableScriptedObjects (66ms)
+		CreateAndSetChildDomain (178ms)
+	RebuildCommonClasses (14ms)
+	RebuildNativeTypeToScriptingClass (33ms)
+	initialDomainReloadingComplete (62ms)
+	LoadAllAssembliesAndSetupDomain (462ms)
+		LoadAssemblies (382ms)
+		TypeCache.Refresh (32ms)
+			TypeCache.ScanAssembly (22ms)
+		AnalyzeDomain (24ms)
+			BuildScriptInfoCaches (19ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (929ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (181ms)
+			ProcessInitializeOnLoadAttributes (291ms)
+			ProcessInitializeOnLoadMethodAttributes (68ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (49ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: 0271cb527a0586d4c975a7b44d186242 - Path: Assets/HITME_AimKit/Art/Aim_Direction_Arrow.png' with importer (TextureImporter)
+Imported 'GUID: 0271cb527a0586d4c975a7b44d186242' -> (Import Result ID: 'da87890f404e686eec8f0f9420b751b9') in 0.048 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=69ed47c5aa783c4ef51c21f2c51df5c0 DependenciesID=9d39e1117a49eef0eed9a334e684d96a StaticDependenciesID=44423bd66c09c210c6f15715c912cd4e 
+Importing 'GUID: 52a8c641294daa54dbc289910c7d4b0b - Path: Assets/HITME_AimKit/Art/Aim_Origin_Ring.png' with importer (TextureImporter)
+Imported 'GUID: 52a8c641294daa54dbc289910c7d4b0b' -> (Import Result ID: '7146f82bb64ce4525604f63697d1d704') in 0.025 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=500e91c619a50622c19d90e69d91cc58 DependenciesID=7b67024913a57db3095e9eb62428aa67 StaticDependenciesID=9ee4ae296ffc80862e893e73ee4533bf 
+Importing 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Tiny.png' with importer (TextureImporter)
+Imported 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2' -> (Import Result ID: 'a51f41e17fa94736ee25358352760cd2') in 0.019 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7f9f5275210969982afd084db708c21a DependenciesID=ff9369160e58c7a39f4e8087ae53f0d2 StaticDependenciesID=2d269790b78e2e653c2bd7e5b649685c 
+Importing 'GUID: 136eb9b796c135344b478626c0ccd1c5 - Path: Assets/HITME_AimKit/Art/Aim_Beam_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 136eb9b796c135344b478626c0ccd1c5' -> (Import Result ID: '95bbcea0079e3ca06ff20acc445d3a71') in 0.043 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8bb3c06bd04d37e65027f85342aa9a3a DependenciesID=7e4b403c826711e0275be123a1845d54 StaticDependenciesID=42825d7cdea413466ee2b04473853935 
+Importing 'GUID: 74a83171284373841a0ba56a55a4d93d - Path: Assets/HITME_AimKit/Art/Aim_Weapon_Preview_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 74a83171284373841a0ba56a55a4d93d' -> (Import Result ID: 'f941415a07d8cf00da65eb655cfb85b6') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5ef4b2f279269e526baf3d02662b92d4 DependenciesID=d92c95a00a549171685d5e6e89dd13ac StaticDependenciesID=5106b79cfedd6f38de1ae73b789cab16 
+Importing 'GUID: e4a580cd261835b46aa564cd198312fc - Path: Assets/HITME_AimKit/Art/Aim_Fan_Soft.png' with importer (TextureImporter)
+Imported 'GUID: e4a580cd261835b46aa564cd198312fc' -> (Import Result ID: '8b5df6d7f323e19bc10f497b0e23be8f') in 0.028 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e7674a380d6489e0ab8f7433dab26430 DependenciesID=baf2a1e03ceceb6a262c08b502744154 StaticDependenciesID=20d411c28ac326189d0058f7bd6b295e 
+Importing 'GUID: a50876785f521204792789641faf247e - Path: Assets/HITME_AimKit/Art/Aim_Dot_Bright.png' with importer (TextureImporter)
+Imported 'GUID: a50876785f521204792789641faf247e' -> (Import Result ID: '1d1c1e0e290d1ae443c4df8e150ca2de') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e9f9ae1cedceccdcb40dfaa090d4cd21 DependenciesID=2e643be6af3f2971a7c4f2632bb8756a StaticDependenciesID=83fb76e9eacca998534804ceb9864c1a 
+Importing 'GUID: e6e411d4f159f324a9d14470cdd17504 - Path: Assets/HITME_AimKit/Art/Aim_Trail_Spark.png' with importer (TextureImporter)
+Imported 'GUID: e6e411d4f159f324a9d14470cdd17504' -> (Import Result ID: '4eb530468d00065592dae39d544b1f47') in 0.017 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=af09e0659edf1a1c69842757a862026e DependenciesID=ee01d0d6dedacce4872eef5a44d8a9b0 StaticDependenciesID=aa1e1236d5b3d2fe3fd02d3bf1e41d20 
+Importing 'GUID: 1776b375694e4a243914799c75a0c492 - Path: Assets/HITME_AimKit/Art/Aim_Target_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 1776b375694e4a243914799c75a0c492' -> (Import Result ID: 'a013d57d87d6bd9a98d7284a3f0369d3') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d923f72d6f4bfb8219fbef0c3ccf8c12 DependenciesID=a845a53b4404649289e9ad4f12b32934 StaticDependenciesID=0051720a8d750c66f248a71611485ec6 
+Importing 'GUID: 67a0973286654494c97d3e2c14c11814 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 67a0973286654494c97d3e2c14c11814' -> (Import Result ID: '53056d1989f50db9aaaa4eff6cdcac3b') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0120ea1393882e9750415b495b781b00 DependenciesID=eace804b03f33f4a061cede22cb76d7c StaticDependenciesID=085e34dd5dfd9121ed8d53e00112d4ae 
+Importing 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02 - Path: Assets/HITME_AimKit/Art/Aim_Origin_Glow.png' with importer (TextureImporter)
+Imported 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02' -> (Import Result ID: '2cd4b8093947debe88cf3781879de41d') in 0.024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1a640e39a24719e11506669b1b711ca3 DependenciesID=ad410911a4e88a0e0d46fc7588323e76 StaticDependenciesID=0e2a81b51f2d1e66a54edad7ed2e330a 
+Importing 'GUID: 3bac430955e7f434582db3a9d95b93df - Path: Assets/HITME_AimKit/Art/Aim_Target_Reticle.png' with importer (TextureImporter)
+Imported 'GUID: 3bac430955e7f434582db3a9d95b93df' -> (Import Result ID: '33fa4f830b8c051bfa5d958db564ff57') in 0.022 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4a94ccea13e37708262c04da3727c9b1 DependenciesID=acdee1b9691a258d939eb121734400b4 StaticDependenciesID=766572a307ddc6d477d7e16f2fca57af 
+Importing 'GUID: 9fcfff780565e9044a2cbe291d1c4aca - Path: Assets/HITME_AimKit/Art/Aim_Target_Locked.png' with importer (TextureImporter)
+Imported 'GUID: 9fcfff780565e9044a2cbe291d1c4aca' -> (Import Result ID: 'b62e4d245f4502aa941b54e8ce29772e') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=06c5f872ce4c21c2ecc365c86ca14f63 DependenciesID=b50ae1c529fba1021561dc4bba8b4a1d StaticDependenciesID=7c592fc10d683d0640968b970c25c9bb 
+Importing 'GUID: efac4ec391763f94fa169270a8cc122e - Path: Assets/HITME_AimKit/Art/Aim_Target_Invalid.png' with importer (TextureImporter)
+Imported 'GUID: efac4ec391763f94fa169270a8cc122e' -> (Import Result ID: 'f5502dc30aff64c30a292714bafd34f2') in 0.024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=50d034b3aae9fc1ae2acc3b2e992a986 DependenciesID=8ca3e40225fe2f0260dd677c30c483ea StaticDependenciesID=f7bc04735ea725a1769fc81f907c8827 
+
+Asset Pipeline Refresh (id=4ef3e71c7c454e246a583b13a426828d): Total: 5.968 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=18 (actual=18, local cache=0, cache server=0)
+		Asset DB Process Time: managed=14 ms, native=1881 ms
+		Asset DB Callback time: managed=133 ms, native=28 ms
+		Scripting: domain reloads=1, domain reload time=1146 ms, compile time=2749 ms, other=14 ms
+		Project Asset Count: scripts=328, non-scripts=423
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 29.023ms
+	ApplyChangesToAssetFolders: 0.908ms
+	Scan: 136.195ms
+	Collect global state as custom dependencies: 13.233ms
+	OnSourceAssetsModified: 1.089ms
+	CategorizeScriptCompilationAssets: 9.551ms
+	ProcessAssetsWithTransientArtifactChanges: 19.654ms
+	CategorizeAssets: 8.196ms
+	CompileScripts: 2749.401ms
+	ImportOutOfDateAssets: 1427.073ms (930.482ms without children)
+		ImportManagerImport: 469.415ms (7.761ms without children)
+			UpdateCategorizedAssets: 0.258ms
+		UnloadImportedAssets: 2.685ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.172ms
+		ImportSchedulerStart: 24.302ms
+	PostProcessAllAssets: 132.332ms
+		ShaderAssetModifiedCallback 0.127ms
+		PostProcessCallbackCreateDeferredMaterials 0.116ms
+		MonoPostProcessAllAssets: 130.927ms
+			AssetPostprocessor.OnPostprocessAllAssets 38.942ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 36.025ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 13.455ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 9.510ms
+			AssetChangedListener.OnPostprocessAllAssets 5.239ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 3.302ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 3.244ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.014ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.333ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.927ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.605ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.437ms
+			AssetEvents.OnPostprocessAllAssets 0.426ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.408ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.405ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.355ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.298ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.296ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.265ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.255ms
+			SyncVS.PostprocessSyncProject 0.217ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.193ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.112ms
+	PostAssetChangesProfiler: 1.936ms
+	UnloadStreamsBegin: 2.192ms
+	PersistCurrentRevisions: 18.796ms
+	GenerateScriptTypeHashes: 0.577ms
+	GenerateScriptTypeSerializationHashes: 1.761ms
+	Untracked: 1367.283ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Scanning for USB devices : 1.169ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 931 unused Assets / (1.9 MB). Loaded Objects now: 1660.
+Memory consumption went from 238.6 MB to 236.7 MB.
+Total: 29.494300 ms (FindLiveObjects: 0.274500 ms CreateObjectMapping: 0.031000 ms MarkObjects: 8.348600 ms  DeleteObjects: 20.671500 ms)
+
+Importing 'GUID: 52a8c641294daa54dbc289910c7d4b0b - Path: Assets/HITME_AimKit/Art/Aim_Origin_Ring.png' with importer (TextureImporter)
+Imported 'GUID: 52a8c641294daa54dbc289910c7d4b0b' -> (Import Result ID: '92a1bb546bcd753398b8a68ff3290d07') in 0.056 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3eee1cc7d0be04a5a2de15d4cec4ad91 DependenciesID=5609c10c3401eb047ff409992b51b3de StaticDependenciesID=a5b3fba490bccdf51f93d44a4edf2547 
+Asset Pipeline Refresh (id=173db04bea5e2b34498853e3eb340575): Total: 0.135 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02 - Path: Assets/HITME_AimKit/Art/Aim_Origin_Glow.png' with importer (TextureImporter)
+Imported 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02' -> (Import Result ID: 'e5f832da585ab7cbb62b0b431e51596c') in 0.033 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5ebac355e935178b40f9dc47bb14c538 DependenciesID=cada070889889cfce0bf8a506f98060e StaticDependenciesID=8115399c5880992b9707802197539b0a 
+Asset Pipeline Refresh (id=0700085902512ab4c8efbfd9af74b85c): Total: 0.061 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: a50876785f521204792789641faf247e - Path: Assets/HITME_AimKit/Art/Aim_Dot_Bright.png' with importer (TextureImporter)
+Imported 'GUID: a50876785f521204792789641faf247e' -> (Import Result ID: '392ef2c6cf9769a48a534fbf81cd6f30') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f6b7ba588df16ffe933cbdddfb08c721 DependenciesID=2150eff27f2349d46506ff6afbde49f5 StaticDependenciesID=ad4a4a1051e3583272477dcbdf1251f1 
+Asset Pipeline Refresh (id=c88087165288c264787707dd105fb624): Total: 0.049 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 67a0973286654494c97d3e2c14c11814 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 67a0973286654494c97d3e2c14c11814' -> (Import Result ID: '6a527515575867008f8e14fcf098ac10') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=563bb50d64dc2e046c7b6ec84e0f95b9 DependenciesID=61db916edd3374f9794a2e6071879908 StaticDependenciesID=0800cc41d3cad33d745d52db45636f33 
+Asset Pipeline Refresh (id=9a8ac700248de144aacbcc01841c738a): Total: 0.052 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Tiny.png' with importer (TextureImporter)
+Imported 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2' -> (Import Result ID: '87b8cc105592df8d251e038a7c42dcb6') in 0.037 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=01b74f8eb73f9e29eaad0919ecbb8f4b DependenciesID=fea3f45f1d62aea85b2d5113e2d1f04d StaticDependenciesID=42d8abb993bf3fb2f467a74dad0c07fc 
+Asset Pipeline Refresh (id=e869bf76696972249a24d6a7049bde3e): Total: 0.068 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: e4a580cd261835b46aa564cd198312fc - Path: Assets/HITME_AimKit/Art/Aim_Fan_Soft.png' with importer (TextureImporter)
+Imported 'GUID: e4a580cd261835b46aa564cd198312fc' -> (Import Result ID: 'a2b7709b7e5242a1ca3dbff902d8713f') in 0.037 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ca6a246a0dbe419be0fb5ee87f3b044e DependenciesID=aa659da2a52faa2db5943db1a8ff1abb StaticDependenciesID=1301e707b6a7836faedc4e4cea99ed9a 
+Asset Pipeline Refresh (id=4721c559d6abd13449ecf79c0107fa8e): Total: 0.066 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 136eb9b796c135344b478626c0ccd1c5 - Path: Assets/HITME_AimKit/Art/Aim_Beam_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 136eb9b796c135344b478626c0ccd1c5' -> (Import Result ID: '9f0e911ba9413c6b3d5f41c2a54fae36') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e00d15676a04d03c97b68a1cf382a21a DependenciesID=3b74ec37b6eb787928356614734aaf4c StaticDependenciesID=9e718d7e690a72e1d7aecda11939f7ff 
+Asset Pipeline Refresh (id=688650c3f972a7b45a252254e35d6f3a): Total: 0.053 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 1776b375694e4a243914799c75a0c492 - Path: Assets/HITME_AimKit/Art/Aim_Target_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 1776b375694e4a243914799c75a0c492' -> (Import Result ID: 'dba52912e49bb9815f721248a8ad05ee') in 0.033 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=414c53c194022451535506b0696ff157 DependenciesID=7c3359229beb07c349809054bb42cec2 StaticDependenciesID=fa8d24fc9d529e2af474cade4e850ff7 
+Asset Pipeline Refresh (id=42b1102bed628274082d83f3c4d7eb00): Total: 0.070 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 3bac430955e7f434582db3a9d95b93df - Path: Assets/HITME_AimKit/Art/Aim_Target_Reticle.png' with importer (TextureImporter)
+Imported 'GUID: 3bac430955e7f434582db3a9d95b93df' -> (Import Result ID: 'ef4e5c2f7487186d4ad8d55f08d06bee') in 0.031 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a9b8254ddf00160ee62623cd846f99b9 DependenciesID=24e04c83e5af0842bc744eea9cb72d81 StaticDependenciesID=32a2b7f8eca0b74c99ed3879dc2da4a6 
+Asset Pipeline Refresh (id=c00c8b6449248804caa8c163ef1f778c): Total: 0.061 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 74a83171284373841a0ba56a55a4d93d - Path: Assets/HITME_AimKit/Art/Aim_Weapon_Preview_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 74a83171284373841a0ba56a55a4d93d' -> (Import Result ID: '7edef41601ab190dc9490cccffa80e63') in 0.030 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=669a9c40421469e4d55f7ed31b140294 DependenciesID=7522557ae73e291d8379ff9a10d40585 StaticDependenciesID=dc17b216a74cf7980a6f2ac88092f62a 
+Asset Pipeline Refresh (id=73503f9bb9275c2488ded87eb18ad6fe): Total: 0.081 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 0271cb527a0586d4c975a7b44d186242 - Path: Assets/HITME_AimKit/Art/Aim_Direction_Arrow.png' with importer (TextureImporter)
+Imported 'GUID: 0271cb527a0586d4c975a7b44d186242' -> (Import Result ID: '48036b74182a8d60cba09db5469bed98') in 0.022 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0e6cf6892d70775525b31b556edcde67 DependenciesID=3f9f076f6d750296513bc0365bd59405 StaticDependenciesID=16100334898aa245024f47520af59c23 
+Asset Pipeline Refresh (id=319566d8e188f8643920669b4a28bd16): Total: 0.054 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 9fcfff780565e9044a2cbe291d1c4aca - Path: Assets/HITME_AimKit/Art/Aim_Target_Locked.png' with importer (TextureImporter)
+Imported 'GUID: 9fcfff780565e9044a2cbe291d1c4aca' -> (Import Result ID: '85c99502110cf5a38bddaf6ea39cd12c') in 0.034 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e97945c7bc22804d7a7f404eed0c208e DependenciesID=cdf96eac41eaf1136baf725878439633 StaticDependenciesID=7fd9ba85caa29f181ff97b4fdf9ebdab 
+Asset Pipeline Refresh (id=d29968cc4909f444fab9b2121fb20516): Total: 0.066 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: efac4ec391763f94fa169270a8cc122e - Path: Assets/HITME_AimKit/Art/Aim_Target_Invalid.png' with importer (TextureImporter)
+Imported 'GUID: efac4ec391763f94fa169270a8cc122e' -> (Import Result ID: '84e8324af657d35b8a05dc220e5b439f') in 0.033 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dae10c0832154325bc268de3104d5600 DependenciesID=7320b2fac3be95e0bb8c0a0c8512bc7d StaticDependenciesID=97e10a44dd84b3c7f71b6534ca3a46ac 
+Asset Pipeline Refresh (id=448cb7d77562b4545b06cdb3cb24d2d2): Total: 0.064 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: e6e411d4f159f324a9d14470cdd17504 - Path: Assets/HITME_AimKit/Art/Aim_Trail_Spark.png' with importer (TextureImporter)
+Imported 'GUID: e6e411d4f159f324a9d14470cdd17504' -> (Import Result ID: 'b3c0d38b7a5daae3a480370cad7ecef6') in 0.022 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c266e12a2bc067a5eac77264e0e634b4 DependenciesID=fc71a45a1b12dbff2df562311b3c5794 StaticDependenciesID=da14d174ef983b97ca6512c917a3d22f 
+Asset Pipeline Refresh (id=c4624a4485dafdf49a008d4116a9e19c): Total: 0.055 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 236ac069764c4124f966343a3568f454 - Path: Assets/HITME_AimKit/Generated' with importer (DefaultImporter)
+Imported 'GUID: 236ac069764c4124f966343a3568f454' -> (Import Result ID: '8b784f70e027d4151d134ee8431f5138') in 0.020 seconds [static dependencies only]. Details - ImportResultOutputID=ed8ccbe57d1ebeea69cabd45f57c7e97 DependenciesID=0f0d77df4920170977213390ddaced42 StaticDependenciesID=b6abe99f5c8e0f8903406572217877d3 
+Asset Pipeline Refresh (id=b9939382b2c14e94a8d09a3c02b750a0): Total: 0.036 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 1307c5177b7b40b47b17c4b1fd3208e5 - Path: Assets/HITME_AimKit/Generated/HITME_AimVisual.prefab' with importer (PrefabImporter)
+Imported 'GUID: 1307c5177b7b40b47b17c4b1fd3208e5' -> (Import Result ID: 'd9d9ca3447a46bd200bc228bbba2a12d') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=84c2cef7241b5281470533e81195c878 DependenciesID=05f3e9bcee0b98e9ac59081486c6a173 StaticDependenciesID=9df1c808cc6bbf2c07383de0575282a1 
+Asset Pipeline Refresh (id=feeb30ae4f6bf484ba9e3bfcae7a98a3): Total: 0.043 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[HIT ME Aim] Generated: Assets/HITME_AimKit/Generated/HITME_AimVisual.prefab
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.AimKit.Editor.HitMeAimPrefabBuilder:Generate () (at Assets/HITME_AimKit/Editor/HitMeAimPrefabBuilder.cs:78)
+
+(Filename: Assets/HITME_AimKit/Editor/HitMeAimPrefabBuilder.cs Line: 78)
+
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2066 ms: Could not connect to server
+Batchmode quit successfully invoked - shutting down!
+Worker ready: AssetImportWorkerHW0 0
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

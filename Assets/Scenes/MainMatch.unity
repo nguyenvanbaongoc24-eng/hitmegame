@@ -2599,6 +2599,8 @@ MonoBehaviour:
   weaponTip: {fileID: 1694449603}
   weaponTipRenderer: {fileID: 822244987}
   weaponGlowRenderer: {fileID: 1591729600}
+  aimVisual: {fileID: 0}
+  equippedWeaponIcon: {fileID: 0}
   spriteIdle: {fileID: 21300000, guid: 7269f914c3e56f6428218b225fc58df3, type: 3}
   spriteMove: {fileID: 21300000, guid: 7c06bf3a35f36cb46b70306798bc3a61, type: 3}
   spriteAim: {fileID: 21300000, guid: 1ea0b2c205700b44c9911e6422a157df, type: 3}
@@ -3473,6 +3475,8 @@ MonoBehaviour:
   weaponTip: {fileID: 262518434}
   weaponTipRenderer: {fileID: 1937427638}
   weaponGlowRenderer: {fileID: 1852243861}
+  aimVisual: {fileID: 1932559230}
+  equippedWeaponIcon: {fileID: 21300000, guid: ecf64a5a95b5f07faf949880ac557130, type: 3}
   spriteIdle: {fileID: 21300000, guid: 7269f914c3e56f6428218b225fc58df3, type: 3}
   spriteMove: {fileID: 21300000, guid: 7c06bf3a35f36cb46b70306798bc3a61, type: 3}
   spriteAim: {fileID: 21300000, guid: 1ea0b2c205700b44c9911e6422a157df, type: 3}
@@ -3501,6 +3505,7 @@ Transform:
   - {fileID: 416986796}
   - {fileID: 827521548}
   - {fileID: 262518434}
+  - {fileID: 1932559231}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1456527398
@@ -4211,7 +4216,7 @@ MonoBehaviour:
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 54
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4551,6 +4556,79 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &1932559229
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1447551461}
+    m_Modifications:
+    - target: {fileID: 5079487534695641525, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_Name
+      value: HITME_AimVisual
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+--- !u!114 &1932559230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7869342789105074904, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+  m_PrefabInstance: {fileID: 1932559229}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7383f4d4cc633a3419079d43afabf941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.AimKit.HitMeAimVisual2D
+--- !u!4 &1932559231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9079224195289300974, guid: 1307c5177b7b40b47b17c4b1fd3208e5, type: 3}
+  m_PrefabInstance: {fileID: 1932559229}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1937427637
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,6 +23,10 @@ namespace HitMe.Gameplay
         public SpriteRenderer weaponTipRenderer;
         public SpriteRenderer weaponGlowRenderer;
 
+        [Header("Aim Kit Integration")]
+        public HitMe.AimKit.HitMeAimVisual2D aimVisual;
+        public Sprite equippedWeaponIcon;
+
         [Header("Character Sprites")]
         public Sprite spriteIdle;
         public Sprite spriteMove;
@@ -142,9 +146,13 @@ namespace HitMe.Gameplay
 
         public void ShowAim(bool show)
         {
-            if (aimLine != null) aimLine.enabled = show;
-            if (aimBeam != null) aimBeam.enabled = show;
-            if (weaponTip != null) weaponTip.gameObject.SetActive(show);
+            if (aimVisual != null)
+            {
+                if (!show) aimVisual.Hide();
+            }
+            if (aimLine != null) aimLine.enabled = show && aimVisual == null;
+            if (aimBeam != null) aimBeam.enabled = show && aimVisual == null;
+            if (weaponTip != null) weaponTip.gameObject.SetActive(show && aimVisual == null);
         }
 
         public void UpdateAimLine(Vector2 origin, Vector2 direction, float length = 3.5f)
@@ -158,6 +166,16 @@ namespace HitMe.Gameplay
             Vector2 footPos = origin + new Vector2(0f, -0.45f);
             float dist = Vector2.Distance(footPos, targetWorldPos);
             dist = Mathf.Max(dist, 1.0f);
+
+            if (aimVisual != null)
+            {
+                if (aimLine != null) aimLine.enabled = false;
+                if (aimBeam != null) aimBeam.enabled = false;
+                if (weaponTip != null) weaponTip.gameObject.SetActive(false);
+                aimVisual.ShowAim(footPos, direction, dist, equippedWeaponIcon);
+                return;
+            }
+
             Vector2 endPoint = footPos + direction.normalized * dist;
 
             // 1. Widening Beam / Cone
