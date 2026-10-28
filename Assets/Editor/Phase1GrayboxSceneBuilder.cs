@@ -74,7 +74,7 @@ namespace HitMe.Editor
             }
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var cameraGo = new GameObject("Main Camera");
-            var camera = cameraGo.AddComponent<Camera>(); camera.orthographic = true; camera.orthographicSize = 10f; camera.backgroundColor = new Color(.06f, .07f, .09f); cameraGo.tag = "MainCamera"; cameraGo.transform.position = new Vector3(0, 0, -10);
+            var camera = cameraGo.AddComponent<Camera>(); camera.orthographic = true; camera.orthographicSize = 10f; camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.06f, .07f, .09f); cameraGo.tag = "MainCamera"; cameraGo.transform.position = new Vector3(0, 0, -10);
             var arenaGo = new GameObject("Arena"); var arena = arenaGo.AddComponent<ArenaView>(); arena.configAsset = config;
             var hud = new GameObject("HUD").AddComponent<HudView>();
             var controllerGo = new GameObject("Match Controller"); var controller = controllerGo.AddComponent<MatchController>(); controller.configAsset = config; controller.arena = arena; controller.hud = hud;
