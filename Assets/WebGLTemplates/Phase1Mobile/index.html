@@ -28,12 +28,16 @@
       ["touchstart", "touchmove", "touchend", "touchcancel"].forEach(type => canvas.addEventListener(type, event => event.preventDefault(), { passive: false }));
       document.addEventListener("gesturestart", event => event.preventDefault(), { passive: false });
       const buildUrl = "Build";
+      // Safari can keep an older .data/.wasm pair after a LAN rebuild because Unity
+      // normally uses fixed filenames. A new `v` query forces every build asset to reload.
+      const buildVersion = new URLSearchParams(window.location.search).get("v") || "phase1-webgl-20261028-2";
+      const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
       const config = {
-        arguments: [], dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}", frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}", codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+        arguments: [], dataUrl: versioned(buildUrl + "/{{{ DATA_FILENAME }}}"), frameworkUrl: versioned(buildUrl + "/{{{ FRAMEWORK_FILENAME }}}"), codeUrl: versioned(buildUrl + "/{{{ CODE_FILENAME }}}"),
         streamingAssetsUrl: "StreamingAssets", companyName: "{{{ COMPANY_NAME }}}", productName: "{{{ PRODUCT_NAME }}}", productVersion: "{{{ PRODUCT_VERSION }}}",
         showBanner: unityShowBanner, matchWebGLToCanvasSize: true
       };
-      const script = document.createElement("script"); script.src = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      const script = document.createElement("script"); script.src = versioned(buildUrl + "/{{{ LOADER_FILENAME }}}");
       script.onload = () => createUnityInstance(canvas, config, () => {}).then(instance => { loading.remove(); canvas.focus(); }).catch(error => unityShowBanner(error, "error"));
       document.body.appendChild(script);
     </script>
