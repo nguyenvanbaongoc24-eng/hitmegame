@@ -17,11 +17,13 @@ namespace HitMe.Game
         public int damagePerHit = 1;
         public int maxHitsPerThrow = 1;
         public float minSpawnDistance = 0.9f;
+        [Tooltip("Minimum world-space drag from the player before an aim direction is committed.")]
+        public float minAimDrag = 0.25f;
         public uint seed = 12345;
 
         public GameConfig ToCore()
         {
-            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, Seed = seed };
+            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, Seed = seed };
         }
     }
 }

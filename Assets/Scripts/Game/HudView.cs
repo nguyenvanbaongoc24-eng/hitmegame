@@ -16,7 +16,14 @@ namespace HitMe.Game
             var state = controller.State; GUI.color = Color.white;
             GUI.Label(new Rect(20, 20, 360, 32), "VÒNG " + state.RoundNumber + "  •  " + state.Phase + "  •  " + controller.SecondsRemaining.ToString("0.0") + "s");
             GUI.Label(new Rect(20, 50, 500, 26), "Chạm để đặt · Kéo từ vòng tròn để chọn hướng");
-            int y = 84; for (int i = 0; i < state.Players.Count; i++) { var p = state.Players[i]; GUI.Label(new Rect(20, y, 220, 22), p.Name + ": " + p.Hp + " HP" + (p.IsAlive ? "" : "  (đã loại)")); y += 22; }
+            int y = 84;
+            for (int i = 0; i < state.Players.Count; i++)
+            {
+                var p = state.Players[i];
+                if (state.Phase == Phase.Placing && p.IsBot) continue;
+                GUI.Label(new Rect(20, y, 220, 22), p.Name + ": " + p.Hp + " HP" + (p.IsAlive ? "" : "  (đã loại)"));
+                y += 22;
+            }
             if (state.Phase == Phase.Placing && GUI.Button(new Rect(Screen.width - 150, 24, 120, 44), "SẴN SÀNG")) ReadyPressed = true;
             if (state.Phase == Phase.MatchEnd)
             {

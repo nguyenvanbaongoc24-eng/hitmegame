@@ -16,6 +16,7 @@ namespace HitMe.Core
         public int DamagePerHit = 1;
         public int MaxHitsPerThrow = 1;
         public float MinSpawnDistance = 0.9f;
+        public float MinAimDrag = 0.25f;
         public uint Seed = 12345;
 
         public float MinX { get { return -ArenaWidth * 0.5f + PlayerRadius; } }

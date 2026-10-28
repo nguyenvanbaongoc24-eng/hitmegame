@@ -24,7 +24,7 @@ namespace HitMe.Game
                 if (args[i] == "-capturePhase1") enabled = true;
                 if (args[i] == "-captureDir" && i + 1 < args.Length) _directory = args[i + 1];
             }
-            if (!enabled) { enabled = false; gameObject.SetActive(false); return; }
+            if (!enabled) { this.enabled = false; return; }
             Directory.CreateDirectory(_directory);
             Screen.SetResolution(1080, 2340, false);
             var camera = Camera.main;

@@ -150,5 +150,82 @@ namespace HitMe.Tests
             }
             Assert.That(totalRounds, Is.GreaterThan(0));
         }
+
+        [Test]
+        public void GestureCanPlaceThenPlaceAgainWithoutCreatingAnAim()
+        {
+            var gesture = new PlacementGestureState(Vec2.Zero, Vec2.Up);
+            gesture.PointerDown(new Vec2(2f, 1f), .45f);
+            Assert.That(gesture.Mode, Is.EqualTo(PlacementGestureMode.Moving));
+            Assert.That(gesture.Placement, Is.EqualTo(new Vec2(2f, 1f)));
+            gesture.PointerMove(new Vec2(-3f, 2f), .25f);
+            gesture.PointerUp();
+            gesture.PointerDown(new Vec2(1f, -4f), .45f);
+            Assert.That(gesture.Placement, Is.EqualTo(new Vec2(1f, -4f)));
+            Assert.That(gesture.HasAim, Is.False);
+        }
+
+        [Test]
+        public void GestureHoldOnPlayerAndDragSetsDirectionWithoutMovingPlacement()
+        {
+            var gesture = new PlacementGestureState(new Vec2(2f, 3f), Vec2.Up);
+            gesture.PointerDown(new Vec2(2.1f, 3f), .45f);
+            gesture.PointerMove(new Vec2(5f, 3f), .25f);
+            Assert.That(gesture.Mode, Is.EqualTo(PlacementGestureMode.Aiming));
+            Assert.That(gesture.Placement, Is.EqualTo(new Vec2(2f, 3f)));
+            Assert.That(gesture.HasAim, Is.True);
+            Assert.That(gesture.AimDirection, Is.EqualTo(new Vec2(1f, 0f)));
+        }
+
+        [Test]
+        public void GestureDragBelowMinAimDragDoesNotCommitAnAim()
+        {
+            var gesture = new PlacementGestureState(Vec2.Zero, Vec2.Up);
+            gesture.PointerDown(Vec2.Zero, .45f);
+            gesture.PointerMove(new Vec2(.24f, 0f), .25f);
+            Assert.That(gesture.HasAim, Is.False);
+            Assert.That(gesture.BuildRoundInput("player", false).HasAim, Is.False);
+        }
+
+        [Test]
+        public void GestureDraggingBackNearPlayerCancelsAim()
+        {
+            var gesture = new PlacementGestureState(Vec2.Zero, Vec2.Up);
+            gesture.PointerDown(Vec2.Zero, .45f);
+            gesture.PointerMove(new Vec2(0f, 2f), .25f);
+            Assert.That(gesture.HasAim, Is.True);
+            gesture.PointerMove(new Vec2(.1f, 0f), .25f);
+            Assert.That(gesture.HasAim, Is.False);
+            Assert.That(gesture.EffectiveDirection, Is.EqualTo(Vec2.Up));
+        }
+
+        [Test]
+        public void TimeoutLockUsesTheLastCommittedAim()
+        {
+            var config = Config();
+            var player = Player("player", Vec2.Zero);
+            var match = new MatchState(config, new[] { player, Player("other", new Vec2(3f, 0f)) });
+            var gesture = new PlacementGestureState(Vec2.Zero, player.Facing);
+            gesture.PointerDown(Vec2.Zero, config.PlayerRadius);
+            gesture.PointerMove(new Vec2(2f, 0f), config.MinAimDrag);
+            match.StartRound();
+            match.SetInput(gesture.BuildRoundInput("player", true));
+            match.LockRound();
+            Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(1f, 0f)));
+        }
+
+        [Test]
+        public void NoAimUsesCurrentFacingFallbackWhenTimerLocks()
+        {
+            var config = Config();
+            var player = new PlayerState("player", "player", false, 3, Vec2.Zero, new Vec2(-1f, 0f));
+            var match = new MatchState(config, new[] { player, Player("other", new Vec2(3f, 0f)) });
+            var gesture = new PlacementGestureState(Vec2.Zero, player.Facing);
+            match.StartRound();
+            match.SetInput(gesture.BuildRoundInput("player", true));
+            match.LockRound();
+            Assert.That(gesture.HasAim, Is.False);
+            Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(-1f, 0f)));
+        }
     }
 }
