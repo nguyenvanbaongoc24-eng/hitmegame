@@ -18,7 +18,7 @@ namespace HitMe.Core
         public GameObject projectilePrefab;
 
         [Header("State")]
-        public MatchState currentState = MatchState.Initializing;
+        public LegacyMatchState currentState = LegacyMatchState.Initializing;
         public int currentRound = 1;
 
         private BotBrain _botBrain = new BotBrain();
@@ -57,7 +57,7 @@ namespace HitMe.Core
 
         private void HandleBackToHome()
         {
-            currentState = MatchState.Initializing;
+            currentState = LegacyMatchState.Initializing;
             aimController.DisableInput();
             if (playerActor != null) playerActor.SetVisibility(false);
             if (botActor != null) botActor.SetVisibility(false);
@@ -89,7 +89,7 @@ namespace HitMe.Core
 
         private IEnumerator PreparingRoundRoutine()
         {
-            currentState = MatchState.PreparingRound;
+            currentState = LegacyMatchState.PreparingRound;
             uiManager.UpdateRound(currentRound);
             uiManager.UpdatePhaseBanner("CHUẨN BỊ VÒNG ĐẤU");
             uiManager.SetReadyButtonState(false);
@@ -122,14 +122,14 @@ namespace HitMe.Core
             yield return new WaitForSeconds(0.4f);
 
             // 4. Start 5-second Window (GP-003): Player can move anywhere in arena + aim!
-            currentState = MatchState.Aiming;
+            currentState = LegacyMatchState.Aiming;
             uiManager.UpdatePhaseBanner("CHẠM ĐỂ ĐI — KÉO ĐỂ NGẮM (5s)");
             _phaseTimer = CombatRules.AimDuration;
             _lastTickSec = Mathf.CeilToInt(_phaseTimer);
 
             aimController.EnableInput(currentPlayerPos, Vector2.up);
 
-            while (currentState == MatchState.Aiming)
+            while (currentState == LegacyMatchState.Aiming)
             {
                 float dt = Time.deltaTime;
                 _phaseTimer -= dt;
@@ -172,7 +172,7 @@ namespace HitMe.Core
 
         private void HandlePlayerClickReady()
         {
-            if (currentState != MatchState.Aiming || _isPlayerLocked) return;
+            if (currentState != LegacyMatchState.Aiming || _isPlayerLocked) return;
 
             _isPlayerLocked = true;
             // Freeze movement atomically at current accepted position
@@ -211,7 +211,7 @@ namespace HitMe.Core
 
         private IEnumerator RevealingRoutine()
         {
-            currentState = MatchState.Revealing;
+            currentState = LegacyMatchState.Revealing;
             aimController.DisableInput();
             uiManager.UpdateTimer(0f);
             uiManager.UpdatePhaseBanner("REVEAL ĐỐI THỦ!");
@@ -240,7 +240,7 @@ namespace HitMe.Core
 
         private IEnumerator ResolvingRoutine()
         {
-            currentState = MatchState.Resolving;
+            currentState = LegacyMatchState.Resolving;
             uiManager.UpdatePhaseBanner("ĐỒNG THỜI NÉM VŨ KHÍ!");
 
             // Wind up animation
@@ -362,7 +362,7 @@ namespace HitMe.Core
 
         private void EvaluateRoundSummary()
         {
-            currentState = MatchState.RoundSummary;
+            currentState = LegacyMatchState.RoundSummary;
 
             bool playerDead = playerActor.currentHP <= 0;
             bool botDead = botActor.currentHP <= 0;
@@ -392,7 +392,7 @@ namespace HitMe.Core
 
         private void EndMatch(MatchResultType result)
         {
-            currentState = MatchState.MatchEnded;
+            currentState = LegacyMatchState.MatchEnded;
 
             if (result == MatchResultType.PlayerWin)
             {

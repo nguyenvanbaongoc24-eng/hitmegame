@@ -1,0 +1,78 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using HitMe.Core;
+using HitMe.Game;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace HitMe.Editor
+{
+    public static class Phase1GrayboxSceneBuilder
+    {
+        public static void GenerateSimulationEvidence()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset").ToCore();
+            var wins = new int[config.MaxPlayers]; int totalRounds = 0;
+            for (uint seed = 1; seed <= 1000; seed++)
+            {
+                var result = MatchSimulator.RunBotMatchDetailed(config, seed); totalRounds += result.Rounds;
+                for (int w = 0; w < result.WinnerIds.Count; w++)
+                {
+                    int index; if (int.TryParse(result.WinnerIds[w].Replace("bot-", ""), out index) && index >= 0 && index < wins.Length) wins[index]++;
+                }
+            }
+            var text = new StringBuilder(); text.AppendLine("Phase 1 bot simulation"); text.AppendLine("Matches: 1000"); text.AppendLine("Average rounds: " + (totalRounds / 1000f).ToString("0.000"));
+            for (int i = 0; i < wins.Length; i++) text.AppendLine("Bot position " + (i + 1) + ": " + wins[i] + " shared/sole wins (" + (wins[i] / 10f).ToString("0.0") + "%)");
+            Directory.CreateDirectory("Evidence/phase1"); File.WriteAllText("Evidence/phase1/sim.txt", text.ToString()); Debug.Log(text.ToString());
+        }
+
+        public static void GenerateAutoPlayEvidence()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset").ToCore();
+            var text = new StringBuilder(); text.AppendLine("Phase 1 AutoPlay batchmode evidence"); text.AppendLine("Mode: every participant, including player, is driven by Phase1BotBrain.");
+            int errors = 0;
+            for (uint match = 1; match <= 10; match++)
+            {
+                try { var result = MatchSimulator.RunBotMatchDetailed(config, config.Seed + match); text.AppendLine("match=" + match + " rounds=" + result.Rounds + " winners=" + string.Join(",", result.WinnerIds) + " exceptions=0"); }
+                catch (System.Exception exception) { errors++; text.AppendLine("match=" + match + " ERROR=" + exception); }
+            }
+            text.AppendLine("Summary: matches=10 exceptions=" + errors + " hung=0");
+            Directory.CreateDirectory("Evidence/phase1"); File.WriteAllText("Evidence/phase1/playtest_auto.txt", text.ToString()); Debug.Log(text.ToString());
+        }
+
+        public static void BuildWindowsEvidence()
+        {
+            Directory.CreateDirectory("Evidence/phase1");
+            const string output = "Evidence/phase1/WindowsBuild/HITME.exe";
+            var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = new[] { "Assets/Scenes/Graybox.unity" }, locationPathName = output, target = UnityEditor.BuildTarget.StandaloneWindows64, options = UnityEditor.BuildOptions.None });
+            File.WriteAllText("Evidence/phase1/build.txt", "Target: Windows 64-bit\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n");
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new System.Exception("Windows build failed; see Evidence/phase1/build.txt");
+        }
+
+        public static void CreateGrayboxScene()
+        {
+            const string configPath = "Assets/ScriptableObjects/GameConfig_Phase1.asset";
+            var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>(configPath);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<GameConfigAsset>();
+                AssetDatabase.CreateAsset(config, configPath);
+            }
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var cameraGo = new GameObject("Main Camera");
+            var camera = cameraGo.AddComponent<Camera>(); camera.orthographic = true; camera.orthographicSize = 10f; camera.backgroundColor = new Color(.06f, .07f, .09f); cameraGo.tag = "MainCamera"; cameraGo.transform.position = new Vector3(0, 0, -10);
+            var arenaGo = new GameObject("Arena"); var arena = arenaGo.AddComponent<ArenaView>(); arena.configAsset = config;
+            var hud = new GameObject("HUD").AddComponent<HudView>();
+            var controllerGo = new GameObject("Match Controller"); var controller = controllerGo.AddComponent<MatchController>(); controller.configAsset = config; controller.arena = arena; controller.hud = hud;
+            var input = controllerGo.AddComponent<PlacementInput>(); input.viewCamera = camera; input.controller = controller;
+            EditorSceneManager.SaveScene(scene, "Assets/Scenes/Graybox.unity");
+            var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes) { new EditorBuildSettingsScene("Assets/Scenes/Graybox.unity", true) };
+            EditorBuildSettings.scenes = scenes.ToArray();
+            AssetDatabase.SaveAssets();
+            Debug.Log("Phase 1 Graybox scene created.");
+        }
+    }
+}

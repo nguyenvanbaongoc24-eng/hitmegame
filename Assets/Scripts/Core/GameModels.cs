@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace HitMe.Core
 {
-    public enum MatchState
+    // Legacy prototype state; Phase 1's server-shareable state lives in Core/Phase1/MatchState.cs.
+    public enum LegacyMatchState
     {
         Initializing,
         PreparingRound,
