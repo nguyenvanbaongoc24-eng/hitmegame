@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 11828)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 19120)
-VBCSCompiler prewarm took 41.78 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 32924)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 37348)
+VBCSCompiler prewarm took 34.00 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T17:41:12.8717341Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T18:25:54.4375808Z"
 OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-10-28T17:41:12Z
+Date: 2026-10-28T18:25:54Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.3+d7ffd15
-  Session Id:              c027084dcc4a41369d8feb8596ea76c7
+  Session Id:              06d64cd1436c4f8fbb4a2bb3dbe7f0af
   Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
-  External correlation Id: 3323070351634166583
+  External correlation Id: 330315420355417993
   Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
 [Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.07s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T17:41:12.9396128Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T18:25:54.5110216Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -28,19 +28,19 @@ Date: 2026-10-28T17:41:12Z
   Expiration: Unlimited
 [Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
 [Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] Licensing Background thread has ended after 0.08s
+[Licensing::Module] Licensing Background thread has ended after 0.09s
 
 COMMAND LINE ARGUMENTS:
 D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
 -batchmode
+-quit
 -projectPath
-.
+D:\HITME GAME\unity-client
 -executeMethod
 HitMe.Editor.Phase1GrayboxSceneBuilder.BuildWebGLEvidence
 -logFile
-Evidence/phase2/build-webgl.log
--quit
-Successfully changed project path to: D:/HITME GAME/unity-client
+D:\HITME GAME\unity-client\Evidence\phase2\build-webgl.log
+Successfully changed project path to: D:\HITME GAME\unity-client
 D:/HITME GAME/unity-client
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
@@ -80,16 +80,16 @@ D:/HITME GAME/unity-client
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [9084]  Target information:
+Player connection [26944]  Target information:
 
-Player connection [9084]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 1645623064 [EditorId] 1645623064 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [26944]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 1240207848 [EditorId] 1240207848 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [9084] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [9084] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [26944] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [26944] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-39784" after 0.4 seconds.
+[Package Manager] Connected to IPC stream "Upm-36072" after 0.4 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
@@ -119,7 +119,7 @@ Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
 Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56784
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56072
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -127,30 +127,31 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.001841 seconds.
+Registered in 0.001645 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.956 seconds
-Domain Reload Profiling: 1779ms
-	BeginReloadAssembly (180ms)
-		CreateAndSetChildDomain (11ms)
-	RebuildCommonClasses (9ms)
-	RebuildNativeTypeToScriptingClass (25ms)
-	initialDomainReloadingComplete (91ms)
-	LoadAllAssembliesAndSetupDomain (515ms)
-		LoadAssemblies (170ms)
-		TypeCache.Refresh (349ms)
-			TypeCache.ScanAssembly (326ms)
-		AnalyzeDomain (1ms)
-	FinalizeReload (959ms)
+- Finished resetting the current domain, in  0.941 seconds
+Domain Reload Profiling: 1725ms
+	BeginReloadAssembly (190ms)
+		CreateAndSetChildDomain (8ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (84ms)
+	LoadAllAssembliesAndSetupDomain (478ms)
+		LoadAssemblies (182ms)
+		TypeCache.Refresh (320ms)
+			TypeCache.ScanAssembly (301ms)
+		AnalyzeDomain (3ms)
+	FinalizeReload (943ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (4ms)
-			BeforeProcessingInitializeOnLoad (173ms)
-			ProcessInitializeOnLoadAttributes (172ms)
-			ProcessInitializeOnLoadMethodAttributes (321ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (6ms)
+			BeforeProcessingInitializeOnLoad (146ms)
+			ProcessInitializeOnLoadAttributes (168ms)
+			ProcessInitializeOnLoadMethodAttributes (305ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -202,130 +203,158 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
     com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.03 seconds
+[Package Manager] Done registering packages in 0.02 seconds
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Compiling Scripts
-ExitCode: 0 Duration: 0s263ms
+ExitCode: 0 Duration: 0s260ms
 [279/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
 *** Tundra build success (0.20 seconds), 1 items updated, 319 evaluated
-AssetDatabase: script compilation time: 0.864369s
+AssetDatabase: script compilation time: 0.903706s
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.779 seconds
-Domain Reload Profiling: 1677ms
-	BeginReloadAssembly (443ms)
-		DisableScriptedObjects (49ms)
-		CreateAndSetChildDomain (166ms)
-	RebuildCommonClasses (12ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (54ms)
-	LoadAllAssembliesAndSetupDomain (367ms)
-		LoadAssemblies (294ms)
+- Finished resetting the current domain, in  0.789 seconds
+Domain Reload Profiling: 1696ms
+	BeginReloadAssembly (451ms)
+		DisableScriptedObjects (45ms)
+		CreateAndSetChildDomain (176ms)
+	RebuildCommonClasses (16ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (57ms)
+	LoadAllAssembliesAndSetupDomain (352ms)
+		LoadAssemblies (290ms)
 		TypeCache.Refresh (26ms)
 			TypeCache.ScanAssembly (18ms)
-		AnalyzeDomain (23ms)
-			BuildScriptInfoCaches (16ms)
+		AnalyzeDomain (21ms)
+			BuildScriptInfoCaches (15ms)
 			ResolveRequiredComponents (3ms)
-	FinalizeReload (780ms)
+	FinalizeReload (791ms)
 		SetupLoadedEditorAssemblies (0ms)
-			LogAssemblyErrors (3ms)
-			BeforeProcessingInitializeOnLoad (166ms)
-			ProcessInitializeOnLoadAttributes (230ms)
-			ProcessInitializeOnLoadMethodAttributes (53ms)
-			AfterProcessingInitializeOnLoad (4ms)
-		AwakeInstancesAfterBackupRestoration (40ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (154ms)
+			ProcessInitializeOnLoadAttributes (222ms)
+			ProcessInitializeOnLoadMethodAttributes (61ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (41ms)
 Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
 
-Asset Pipeline Refresh (id=82ddc6e37c42adb4aaa9e597c07a1218): Total: 3.027 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=3b4547c8d125aee458cc5497680b4144): Total: 3.035 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
 		Imports: total=0 (actual=0, local cache=0, cache server=0)
-		Asset DB Process Time: managed=0 ms, native=1155 ms
-		Asset DB Callback time: managed=34 ms, native=27 ms
-		Scripting: domain reloads=1, domain reload time=930 ms, compile time=868 ms, other=10 ms
+		Asset DB Process Time: managed=0 ms, native=1119 ms
+		Asset DB Callback time: managed=31 ms, native=24 ms
+		Scripting: domain reloads=1, domain reload time=938 ms, compile time=908 ms, other=11 ms
 		Project Asset Count: scripts=329, non-scripts=438
 		Asset File Changes: new=0, changed=0, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 29.923ms
-	ApplyChangesToAssetFolders: 0.747ms
-	Scan: 129.585ms
-	Collect global state as custom dependencies: 10.027ms
-	CategorizeScriptCompilationAssets: 7.436ms
-	ProcessAssetsWithTransientArtifactChanges: 15.258ms
-	CategorizeAssets: 8.278ms
-	CompileScripts: 867.655ms
-	ImportOutOfDateAssets: 805.878ms (781.255ms without children)
-		UnloadImportedAssets: 4.636ms
+	InvokePackagesCallback: 26.660ms
+	ApplyChangesToAssetFolders: 0.708ms
+	Scan: 116.116ms
+	Collect global state as custom dependencies: 10.371ms
+	CategorizeScriptCompilationAssets: 7.344ms
+	ProcessAssetsWithTransientArtifactChanges: 17.069ms
+	CategorizeAssets: 9.545ms
+	CompileScripts: 908.269ms
+	ImportOutOfDateAssets: 816.419ms (791.451ms without children)
+		UnloadImportedAssets: 1.736ms
 		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.182ms
-		ImportSchedulerStart: 19.801ms
-	PostProcessAllAssets: 34.483ms
-		MonoPostProcessAllAssets: 34.388ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 13.712ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.394ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.119ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.652ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.538ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.453ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.335ms
-			SyncVS.PostprocessSyncProject 0.180ms
-	UnloadStreamsBegin: 2.166ms
-	GenerateScriptTypeHashes: 0.764ms
-	GenerateScriptTypeSerializationHashes: 2.165ms
-	Untracked: 1042.009ms
+		ImportSchedulerStart: 23.046ms
+	PostProcessAllAssets: 31.766ms
+		MonoPostProcessAllAssets: 31.671ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 14.741ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.472ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.134ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.455ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.303ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.288ms
+			SyncVS.PostprocessSyncProject 0.155ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.122ms
+	UnloadStreamsBegin: 2.054ms
+	GenerateScriptTypeHashes: 0.772ms
+	GenerateScriptTypeSerializationHashes: 2.060ms
+	Untracked: 1039.188ms
 
 Application.AssetDatabase Initial Refresh End
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
-Scanning for USB devices : 1.143ms
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
+Scanning for USB devices : 1.245ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
 Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 935 unused Assets / (2.0 MB). Loaded Objects now: 1662.
-Memory consumption went from 236.0 MB to 234.1 MB.
-Total: 16.758800 ms (FindLiveObjects: 0.310200 ms CreateObjectMapping: 0.052600 ms MarkObjects: 12.735900 ms  DeleteObjects: 3.305700 ms)
+Unloading 939 unused Assets / (1.9 MB). Loaded Objects now: 1666.
+Memory consumption went from 237.2 MB to 235.4 MB.
+Total: 10.197600 ms (FindLiveObjects: 0.213100 ms CreateObjectMapping: 0.027500 ms MarkObjects: 6.773400 ms  DeleteObjects: 3.062400 ms)
 
 Importing 'GUID: 52b1bd4378d114b43a07620cff9e1853 - Path: Assets/WebGLTemplates/Phase1Mobile/index.html' with importer (DefaultImporter)
-Imported 'GUID: 52b1bd4378d114b43a07620cff9e1853' -> (Import Result ID: '3b789e3ca5ba176039f9a7aca046dc06') in 0.072 seconds [static dependencies only]. Details - ImportResultOutputID=8b070d450ea5b56d148c5f13a9beab16 DependenciesID=306a7dad6be71cc178dec10ce9be5c3c StaticDependenciesID=c18d4854efbac79f65ca849fc4ce412d 
-Asset Pipeline Refresh (id=37aa6f459a83fd447a1ca53039682945): Total: 0.157 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 52b1bd4378d114b43a07620cff9e1853' -> (Import Result ID: '3b789e3ca5ba176039f9a7aca046dc06') in 0.042 seconds [static dependencies only]. Details - ImportResultOutputID=8b070d450ea5b56d148c5f13a9beab16 DependenciesID=306a7dad6be71cc178dec10ce9be5c3c StaticDependenciesID=c18d4854efbac79f65ca849fc4ce412d 
+Asset Pipeline Refresh (id=44cc5b5c16fe0ec448d9d144338e9c61): Total: 0.124 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 00000000000000004000000000000000 - Path: ProjectSettings/ProjectSettings.asset' with importer (LibraryAssetImporter)
 Imported 'GUID: 00000000000000004000000000000000' -> (Import Result ID: '2a7f5ff7a0f757de5f3eaae34fee40cc') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=054c890a8f4b6dddbea933bc5e4b7df4 DependenciesID=f588abe21f1ac11a7fdad2ce120bd2a4 StaticDependenciesID=3bc5f495cb401adf81ea376fef10630f 
 Importing 'GUID: 2e498d1c8094910479dc3e1b768306a4 - Path: Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset' with importer (NativeFormatImporter)
 Imported 'GUID: 2e498d1c8094910479dc3e1b768306a4' -> (Import Result ID: '632ff03ccef77c9d91eec1e76bcf57f7') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=15c8c079d336d28f621b2cb41a27d1c5 DependenciesID=9e1712e1a89c24953b2e2522391c8636 StaticDependenciesID=f4b9ea77a87a231e44986e0077d3f57a 
-Asset Pipeline Refresh (id=55ad8140ef08f1840ba97d2180929c20): Total: 0.021 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=740be511f89bc9045a1f00c0b477219d): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aESkipCompile.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 0s956ms
+ExitCode: 0 Duration: 0s492ms
 [2/3        0s] BuildPlayerDataGenerator Library/BuildPlayerData/Editor/TypeDb-All.json
-*** Tundra build success (0.90 seconds), 1 items updated, 3 evaluated
-Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2047 ms: Could not connect to server
-Asset Pipeline Refresh (id=5bf4a4fe71a63d843b53b7eb9d0f680f): Total: 0.003 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+*** Tundra build success (0.44 seconds), 1 items updated, 3 evaluated
+Asset Pipeline Refresh (id=bef048a05eb65af4996b124d14f756ad): Total: 0.002 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
 [ScriptCompilation] Requested script compilation because: Recompiling scripts for player build.
 BuildPlayer: start building target 20
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aP.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
-Curl error 7: Failed to connect to config.uca.cloud.unity3d.com port 443 after 2288 ms: Could not connect to server
-Worker ready: AssetImportWorkerHW0 0
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.6635127
-ExitCode: 0 Duration: 8s55ms
-[126/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[132/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
-[133/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
-[134/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
-[135/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
-[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
-[137/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.pdb
-[138/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.dll
-[139/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.dll
-[140/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
-[141/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
-[BUSY       6s] Csc Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll (+2 others)
-[142/148    6s] Csc Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll (+2 others)
+ExitCode: 4 Duration: 0s515ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aP-inputdata.json
+[118/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[119/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.dll (+2 others)
+*** Tundra requires additional run (0.48 seconds), 2 items updated, 117 evaluated
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aP.dag.json" "Library/Bee/2000b0aP-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+Total cache size after purge 268293840, took 00:00:00.6463926
+ExitCode: 0 Duration: 0s369ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aP.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aP.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssembliesAndTypeDB
+WorkingDir: D:/HITME GAME/unity-client
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2250 ms: Could not connect to server
+Curl error 7: Failed to connect to config.uca.cloud.unity3d.com port 443 after 2262 ms: Could not connect to server
+Worker ready: AssetImportWorkerHW0 0
+ExitCode: 0 Duration: 2s655ms
+Finished compiling graph: 149 nodes, 815 flattened edges (751 ToBuild, 12 ToUse), maximum node priority 73
+[111/148    0s] WriteText Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.rsp
+[124/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[128/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
+[129/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
+[130/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
+[131/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
+[132/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
+[133/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
+[134/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.dll (+2 others)
+[135/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/HitMe.Core.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.dll, with 111 defines and 133 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
+[137/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.dll
+[138/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Game.dll (+2 others)
+Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Scripts\Game\WebGLPointerDiagnostics.cs(14,5): warning UAC0009: DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.
+[139/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/HitMe.Game.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aP.dag/HitMe.Game.dll, with 111 defines and 217 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[140/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.pdb
+[141/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.dll
+[142/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll (+2 others)
 Assets\Scripts\Gameplay\AimController.cs(15,22): warning CS0414: The field 'AimController._isAimDragging' is assigned but its value is never used
 [143/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/Assembly-CSharp.dll (+pdb)
 Processing assembly Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll, with 111 defines and 219 references
@@ -336,7 +365,9 @@ processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
 [144/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.pdb
 [145/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll
 [147/148    0s] BuildPlayerDataGenerator Library/BuildPlayerData/Player/RuntimeInitializeOnLoads.json (+1 other)
-*** Tundra build success (8.01 seconds), 16 items updated, 148 evaluated
+*** Tundra build success (2.61 seconds), 21 items updated, 148 evaluated
+Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Scripts\Game\WebGLPointerDiagnostics.cs(14,5): warning UAC0009: DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.
 Assets\Scripts\Gameplay\AimController.cs(15,22): warning CS0414: The field 'AimController._isAimDragging' is assigned but its value is never used
 Rebuilding Data files because Assets/Scenes/MainMatch.unity is dirty (hash)
 
@@ -574,95 +605,82 @@ Dependency assembly - System.Security.Cryptography.Encoding.dll
 Dependency assembly - System.Runtime.DurableInstancing.dll
 
 Opening scene 'Assets/Scenes/MainMatch.unity'
-Unloading 40 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 44 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/MainMatch.unity'
-	Deserialize:            44.922 ms
-	Integration:            88.615 ms
-	Integration of assets:  1.894 ms
-	Thread Wait Time:       0.033 ms
-	Total Operation Time:   135.464 ms
-Unloading 26 unused Assets / (0.8 MB). Loaded Objects now: 2491.
-Memory consumption went from 268.0 MB to 267.2 MB.
-Total: 9.746500 ms (FindLiveObjects: 0.372200 ms CreateObjectMapping: 0.025200 ms MarkObjects: 8.754800 ms  DeleteObjects: 0.405000 ms)
+	Deserialize:            58.675 ms
+	Integration:            116.448 ms
+	Integration of assets:  2.032 ms
+	Thread Wait Time:       0.026 ms
+	Total Operation Time:   177.180 ms
+Unloading 26 unused Assets / (0.8 MB). Loaded Objects now: 2584.
+Memory consumption went from 269.2 MB to 268.4 MB.
+Total: 11.016200 ms (FindLiveObjects: 0.412500 ms CreateObjectMapping: 0.028500 ms MarkObjects: 9.746300 ms  DeleteObjects: 0.651800 ms)
 
 Opening scene 'Assets/Scenes/AimVisual_Staging.unity'
 Unloading 61 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/AimVisual_Staging.unity'
-	Deserialize:            2.802 ms
-	Integration:            8.985 ms
-	Integration of assets:  0.589 ms
-	Thread Wait Time:       0.021 ms
-	Total Operation Time:   12.397 ms
-Unloading 104 unused Assets / (1.9 MB). Loaded Objects now: 1820.
-Memory consumption went from 266.7 MB to 264.9 MB.
-Total: 8.044000 ms (FindLiveObjects: 0.221300 ms CreateObjectMapping: 0.019000 ms MarkObjects: 7.123400 ms  DeleteObjects: 0.563500 ms)
+	Deserialize:            3.216 ms
+	Integration:            8.279 ms
+	Integration of assets:  0.802 ms
+	Thread Wait Time:       0.032 ms
+	Total Operation Time:   12.329 ms
+Unloading 104 unused Assets / (1.9 MB). Loaded Objects now: 1828.
+Memory consumption went from 268.0 MB to 266.1 MB.
+Total: 10.929200 ms (FindLiveObjects: 0.291100 ms CreateObjectMapping: 0.029100 ms MarkObjects: 9.638000 ms  DeleteObjects: 0.834100 ms)
 
-Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.6085141
 Opening scene 'Assets/Scenes/Phase2_Step1_HitboxTest.unity'
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/Phase2_Step1_HitboxTest.unity'
-	Deserialize:            6.331 ms
-	Integration:            91.843 ms
+	Deserialize:            5.564 ms
+	Integration:            80.842 ms
 	Integration of assets:  0.003 ms
-	Thread Wait Time:       0.018 ms
-	Total Operation Time:   98.196 ms
-Unloading 92 unused Assets / (0.9 MB). Loaded Objects now: 2052.
-Memory consumption went from 265.5 MB to 264.6 MB.
-Total: 16.766700 ms (FindLiveObjects: 0.427100 ms CreateObjectMapping: 0.032000 ms MarkObjects: 14.549700 ms  DeleteObjects: 1.077600 ms)
+	Thread Wait Time:       0.020 ms
+	Total Operation Time:   86.429 ms
+Unloading 92 unused Assets / (0.9 MB). Loaded Objects now: 2056.
+Memory consumption went from 266.1 MB to 265.2 MB.
+Total: 8.360100 ms (FindLiveObjects: 0.257400 ms CreateObjectMapping: 0.019500 ms MarkObjects: 7.434700 ms  DeleteObjects: 0.526400 ms)
 
 Opening scene 'Assets/Scenes/Phase2_Step1_AssetTest.unity'
-Unloading 50 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 46 Unused Serialized files (Serialized files now loaded: 0)
+Total cache size 268293840
+Total cache size after purge 268293840, took 00:00:00.8033782
 Loaded scene 'Assets/Scenes/Phase2_Step1_AssetTest.unity'
-	Deserialize:            3.117 ms
-	Integration:            40.734 ms
-	Integration of assets:  0.004 ms
-	Thread Wait Time:       0.017 ms
-	Total Operation Time:   43.872 ms
-Unloading 25 unused Assets / (0.8 MB). Loaded Objects now: 2081.
-Memory consumption went from 259.5 MB to 258.7 MB.
-Total: 9.781300 ms (FindLiveObjects: 0.425500 ms CreateObjectMapping: 0.047000 ms MarkObjects: 8.709700 ms  DeleteObjects: 0.474300 ms)
+	Deserialize:            2.895 ms
+	Integration:            28.252 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       0.028 ms
+	Total Operation Time:   31.177 ms
+Unloading 25 unused Assets / (0.8 MB). Loaded Objects now: 2085.
+Memory consumption went from 260.1 MB to 259.4 MB.
+Total: 11.659300 ms (FindLiveObjects: 0.259600 ms CreateObjectMapping: 0.022300 ms MarkObjects: 10.644200 ms  DeleteObjects: 0.595000 ms)
 
 Opening scene 'Assets/Scenes/Graybox.unity'
 Unloading 18 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            2.533 ms
-	Integration:            16.375 ms
-	Integration of assets:  0.016 ms
-	Thread Wait Time:       0.020 ms
-	Total Operation Time:   18.944 ms
-Unloading 187 unused Assets / (0.9 MB). Loaded Objects now: 1712.
-Memory consumption went from 258.2 MB to 257.3 MB.
-Total: 14.343200 ms (FindLiveObjects: 0.352700 ms CreateObjectMapping: 0.032300 ms MarkObjects: 11.816200 ms  DeleteObjects: 1.205000 ms)
+	Deserialize:            2.362 ms
+	Integration:            8.005 ms
+	Integration of assets:  0.013 ms
+	Thread Wait Time:       0.027 ms
+	Total Operation Time:   10.407 ms
+Unloading 187 unused Assets / (1.0 MB). Loaded Objects now: 1716.
+Memory consumption went from 258.9 MB to 257.9 MB.
+Total: 9.183800 ms (FindLiveObjects: 0.223700 ms CreateObjectMapping: 0.020500 ms MarkObjects: 7.902500 ms  DeleteObjects: 0.895500 ms)
 
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 1 unused Assets / (1.4 KB). Loaded Objects now: 1704.
-Memory consumption went from 249.8 MB to 249.8 MB.
-Total: 10.998200 ms (FindLiveObjects: 0.170400 ms CreateObjectMapping: 0.014600 ms MarkObjects: 10.608400 ms  DeleteObjects: 0.039300 ms)
+Unloading 1 unused Assets / (1.5 KB). Loaded Objects now: 1708.
+Memory consumption went from 250.3 MB to 250.3 MB.
+Total: 8.859400 ms (FindLiveObjects: 0.339500 ms CreateObjectMapping: 0.035500 ms MarkObjects: 8.290400 ms  DeleteObjects: 0.043800 ms)
 
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1704.
-Memory consumption went from 249.8 MB to 249.8 MB.
-Total: 7.398700 ms (FindLiveObjects: 0.241300 ms CreateObjectMapping: 0.020700 ms MarkObjects: 6.997200 ms  DeleteObjects: 0.005300 ms)
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1708.
+Memory consumption went from 250.3 MB to 250.3 MB.
+Total: 7.848400 ms (FindLiveObjects: 0.330200 ms CreateObjectMapping: 0.023100 ms MarkObjects: 7.243500 ms  DeleteObjects: 0.007600 ms)
 
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 177 unused Assets / (149.4 MB). Loaded Objects now: 1704.
-Memory consumption went from 400.3 MB to 250.8 MB.
-Total: 24.007500 ms (FindLiveObjects: 0.302700 ms CreateObjectMapping: 0.031400 ms MarkObjects: 8.909400 ms  DeleteObjects: 14.441200 ms)
+Unloading 177 unused Assets / (149.5 MB). Loaded Objects now: 1708.
+Memory consumption went from 400.8 MB to 251.4 MB.
+Total: 24.847000 ms (FindLiveObjects: 0.181200 ms CreateObjectMapping: 0.018600 ms MarkObjects: 9.296000 ms  DeleteObjects: 15.173700 ms)
 
-Compiling shader "TextMeshPro/Mobile/Distance Field"
-  Pass "" (vp)
-    Target graphics API: gles3
-    Full variant space:         12
-    After settings filtering:   12
-    After built-in stripping:   12
-    After scriptable stripping: 12
-    Processed in 0.01 seconds
-  Pass  (vp, gles3) finished in 0.03 seconds. Local cache hits 12 (0.18s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
-    Prepared data for serialisation in 0.00s
-Serialized binary data for shader TextMeshPro/Mobile/Distance Field in 0.00s
-    gles3 (total internal programs: 12, unique: 12)
-Shader warning in 'TextMeshPro/Mobile/Distance Field': #pragma enable_d3d11_debug_symbols has been deprecated, instead please use #pragma enable_debug_symbols at line 84
 Compiling shader "Skybox/Procedural"
   Pass "" (vp)
     Target graphics API: gles3
@@ -670,11 +688,24 @@ Compiling shader "Skybox/Procedural"
     After settings filtering:   3
     After built-in stripping:   3
     After scriptable stripping: 3
-    Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 3 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+    Processed in 0.01 seconds
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 3 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Skybox/Procedural in 0.00s
     gles3 (total internal programs: 3, unique: 3)
+Compiling shader "TextMeshPro/Mobile/Distance Field"
+  Pass "" (vp)
+    Target graphics API: gles3
+    Full variant space:         12
+    After settings filtering:   12
+    After built-in stripping:   12
+    After scriptable stripping: 12
+    Processed in 0.00 seconds
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 12 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+    Prepared data for serialisation in 0.00s
+Serialized binary data for shader TextMeshPro/Mobile/Distance Field in 0.00s
+    gles3 (total internal programs: 12, unique: 12)
+Shader warning in 'TextMeshPro/Mobile/Distance Field': #pragma enable_d3d11_debug_symbols has been deprecated, instead please use #pragma enable_debug_symbols at line 84
 Compiling shader "Legacy Shaders/VertexLit"
   Pass "" (vp)
     Target graphics API: gles3
@@ -697,11 +728,11 @@ Compiling shader "Legacy Shaders/VertexLit"
     After built-in stripping:   2
     After scriptable stripping: 2
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 3 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 3 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass ShadowCaster (vp, gles3) finished in 0.01 seconds. Local cache hits 2 (0.02s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass ShadowCaster (vp, gles3) finished in 0.00 seconds. Local cache hits 2 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Legacy Shaders/VertexLit in 0.00s
     gles3 (total internal programs: 6, unique: 6)
@@ -727,11 +758,11 @@ Compiling shader "Legacy Shaders/Diffuse"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass FORWARD (vp, gles3) finished in 0.02 seconds. Local cache hits 8 (0.12s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass FORWARD (vp, gles3) finished in 0.00 seconds. Local cache hits 8 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass FORWARD (vp, gles3) finished in 0.02 seconds. Local cache hits 5 (0.07s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass FORWARD (vp, gles3) finished in 0.00 seconds. Local cache hits 5 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass DEFERRED (vp, gles3) finished in 0.02 seconds. Local cache hits 4 (0.05s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass DEFERRED (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Legacy Shaders/Diffuse in 0.00s
     gles3 (total internal programs: 17, unique: 17)
@@ -743,7 +774,7 @@ Compiling shader "Hidden/Internal-StencilWrite"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-StencilWrite in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -818,25 +849,25 @@ Compiling shader "Hidden/Internal-DepthNormalsTexture"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-DepthNormalsTexture in 0.00s
     gles3 (total internal programs: 10, unique: 10)
@@ -869,13 +900,13 @@ Compiling shader "Hidden/Internal-ScreenSpaceShadows"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.05s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.02 seconds. Local cache hits 4 (0.05s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.02 seconds. Local cache hits 4 (0.05s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-ScreenSpaceShadows in 0.00s
     gles3 (total internal programs: 16, unique: 16)
@@ -887,7 +918,7 @@ Compiling shader "Hidden/Internal-CombineDepthNormals"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-CombineDepthNormals in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -899,7 +930,7 @@ Compiling shader "Hidden/BlitCopy"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitCopy in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -911,7 +942,7 @@ Compiling shader "Hidden/BlitCopyDepth"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitCopyDepth in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -923,7 +954,7 @@ Compiling shader "Hidden/ConvertTexture"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/ConvertTexture in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -942,9 +973,9 @@ Compiling shader "Hidden/Internal-DeferredShading"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.03 seconds. Local cache hits 26 (0.33s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 26 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.02 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-DeferredShading in 0.00s
     gles3 (total internal programs: 27, unique: 27)
@@ -963,9 +994,9 @@ Compiling shader "Hidden/Internal-DeferredReflections"
     After built-in stripping:   2
     After scriptable stripping: 2
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 2 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 2 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-DeferredReflections in 0.00s
     gles3 (total internal programs: 3, unique: 3)
@@ -991,11 +1022,11 @@ Compiling shader "Hidden/Internal-MotionVectors"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-MotionVectors in 0.00s
     gles3 (total internal programs: 3, unique: 3)
@@ -1007,7 +1038,7 @@ Compiling shader "Hidden/Internal-Flare"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-Flare in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1019,7 +1050,7 @@ Compiling shader "Hidden/Internal-Halo"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-Halo in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1031,7 +1062,7 @@ Compiling shader "Hidden/BlitCopyWithDepth"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitCopyWithDepth in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1043,7 +1074,7 @@ Compiling shader "Hidden/BlitToDepth"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitToDepth in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1055,7 +1086,7 @@ Compiling shader "Hidden/BlitToDepth_MSAA"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitToDepth_MSAA in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1067,7 +1098,7 @@ Compiling shader "Hidden/BlitCopyHDRTonemap"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/BlitCopyHDRTonemap in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1093,11 +1124,11 @@ Compiling shader "Hidden/Internal-DebugPattern"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass Target Color and DepthStencil (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Target Color and DepthStencil (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass Target only Color (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Target only Color (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass Target only DepthStencil (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Target only DepthStencil (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-DebugPattern in 0.00s
     gles3 (total internal programs: 3, unique: 3)
@@ -1116,9 +1147,9 @@ Compiling shader "Hidden/Internal-GUITextureClip"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUITextureClip in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1137,9 +1168,9 @@ Compiling shader "Hidden/Internal-GUITextureClipText"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUITextureClipText in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1158,9 +1189,9 @@ Compiling shader "Hidden/Internal-GUITexture"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUITexture in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1179,9 +1210,9 @@ Compiling shader "Hidden/Internal-GUITextureBlit"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUITextureBlit in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1200,9 +1231,9 @@ Compiling shader "Hidden/Internal-GUIRoundedRect"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUIRoundedRect in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1221,9 +1252,9 @@ Compiling shader "Hidden/Internal-GUIRoundedRectWithColorPerBorder"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-GUIRoundedRectWithColorPerBorder in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1235,7 +1266,7 @@ Compiling shader "Hidden/Internal-UIRDefault"
     After built-in stripping:   40
     After scriptable stripping: 40
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.04 seconds. Local cache hits 40 (0.46s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 40 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-UIRDefault in 0.00s
     gles3 (total internal programs: 40, unique: 40)
@@ -1247,7 +1278,7 @@ Compiling shader "Hidden/Internal-UIRAtlasBlitCopy"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-UIRAtlasBlitCopy in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1259,7 +1290,7 @@ Compiling shader "Sprites/Default"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Sprites/Default in 0.00s
     gles3 (total internal programs: 4, unique: 4)
@@ -1271,7 +1302,7 @@ Compiling shader "Sprites/Mask"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Sprites/Mask in 0.00s
     gles3 (total internal programs: 4, unique: 4)
@@ -1290,9 +1321,9 @@ Compiling shader "UI/Default"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass Default (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Default (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass XRMotionVectors (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass XRMotionVectors (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader UI/Default in 0.00s
     gles3 (total internal programs: 8, unique: 8)
@@ -1311,9 +1342,9 @@ Compiling shader "UI/DefaultETC1"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass Default (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Default (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass XRMotionVectors (vp, gles3) finished in 0.01 seconds. Local cache hits 4 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass XRMotionVectors (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader UI/DefaultETC1 in 0.00s
     gles3 (total internal programs: 8, unique: 8)
@@ -1332,9 +1363,9 @@ Compiling shader "Hidden/CubeBlur"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/CubeBlur in 0.00s
     gles3 (total internal programs: 2, unique: 2)
@@ -1353,9 +1384,9 @@ Compiling shader "Hidden/CubeCopy"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/CubeCopy in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1374,9 +1405,9 @@ Compiling shader "Hidden/CubeBlend"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/CubeBlend in 0.00s
     gles3 (total internal programs: 2, unique: 1)
@@ -1388,7 +1419,7 @@ Compiling shader "Hidden/VR/BlitTexArraySlice"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/VR/BlitTexArraySlice in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1463,25 +1494,25 @@ Compiling shader "Hidden/Internal-ODSWorldTexture"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-ODSWorldTexture in 0.00s
     gles3 (total internal programs: 10, unique: 9)
@@ -1493,7 +1524,7 @@ Compiling shader "Hidden/Internal-CubemapToEquirect"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-CubemapToEquirect in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1512,9 +1543,9 @@ Compiling shader "Hidden/VR/BlitFromTex2DToTexArraySlice"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/VR/BlitFromTex2DToTexArraySlice in 0.00s
     gles3 (total internal programs: 2, unique: 2)
@@ -1526,7 +1557,7 @@ Compiling shader "Hidden/VideoComposite"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass Default (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass Default (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/VideoComposite in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1538,7 +1569,7 @@ Compiling shader "Hidden/TextCore/Distance Field SSD"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/TextCore/Distance Field SSD in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1550,7 +1581,7 @@ Compiling shader "Hidden/Physics2D/SDF_CircleGeometry"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Physics2D/SDF_CircleGeometry in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1562,7 +1593,7 @@ Compiling shader "Hidden/Physics2D/SDF_CapsuleGeometry"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Physics2D/SDF_CapsuleGeometry in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1574,7 +1605,7 @@ Compiling shader "Hidden/Physics2D/SDF_PolygonGeometry"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Physics2D/SDF_PolygonGeometry in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1586,7 +1617,7 @@ Compiling shader "Hidden/Physics2D/SDF_Line"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Physics2D/SDF_Line in 0.00s
     gles3 (total internal programs: 1, unique: 1)
@@ -1598,35 +1629,23 @@ Compiling shader "Hidden/Physics2D/SDF_Point"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Physics2D/SDF_Point in 0.00s
     gles3 (total internal programs: 1, unique: 1)
 
 ***Player size statistics***
-Level 0 'Assets/Scenes/MainMatch.unity' uses 9.2 MB compressed / 20.5 MB uncompressed.
-Level 1 'Assets/Scenes/AimVisual_Staging.unity' uses 20.1 KB compressed / 128.0 KB uncompressed.
-Level 2 'Assets/Scenes/Phase2_Step1_HitboxTest.unity' uses 4.1 MB compressed / 5.0 MB uncompressed.
-Level 3 'Assets/Scenes/Phase2_Step1_AssetTest.unity' uses 2.4 MB compressed / 6.2 MB uncompressed.
-Level 4 'Assets/Scenes/Graybox.unity' uses 0.7 MB compressed / 2.5 MB uncompressed.
-Total compressed size 16.4 MB. Total uncompressed size 34.3 MB.
+Level 0 'Assets/Scenes/MainMatch.unity' uses 9.4 MB compressed / 21.5 MB uncompressed.
+Level 1 'Assets/Scenes/AimVisual_Staging.unity' uses 18.1 KB compressed / 128.0 KB uncompressed.
+Level 2 'Assets/Scenes/Phase2_Step1_HitboxTest.unity' uses 4.1 MB compressed / 5.1 MB uncompressed.
+Level 3 'Assets/Scenes/Phase2_Step1_AssetTest.unity' uses 2.4 MB compressed / 6.1 MB uncompressed.
+Level 4 'Assets/Scenes/Graybox.unity' uses 0.6 MB compressed / 1.5 MB uncompressed.
+Total compressed size 16.4 MB. Total uncompressed size 34.4 MB.
 SpriteAtlasDatabase::Cleanup
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player645a0a7c.dag" --profile="Library/Bee/backend1.traceevents" Player
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 4 Duration: 0s96ms
-Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\WebGLPlayerBuildProgram.exe" "D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Bee;D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player645a0a7c.dag.json" "Library/Bee/Player645a0a7c-inputdata.json" "Library\Bee\buildprogram0.traceevents"
-WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Incremental Player Build
-ExitCode: 0 Duration: 2s702ms
-Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player645a0a7c.dag" --dagfilejson="Library\Bee\Player645a0a7c.dag.json" --profile="Library/Bee/backend2.traceevents" Player
-WorkingDir: D:/HITME GAME/unity-client
-Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\WebGLPlayerBuildProgram.exe" "D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Bee;D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player645a0a7c.dag.json" "Library/Bee/Player645a0a7c-inputdata.json" "Library\Bee\buildprogram1.traceevents"
-WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 4 Duration: 16s
-ExitCode: 0 Duration: 0s637ms
-Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player645a0a7c.dag" --dagfilejson="Library\Bee\Player645a0a7c.dag.json" --profile="Library/Bee/backend3.traceevents" Player
-WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 1m:59s
+ExitCode: 0 Duration: 2m:11s
 D:\HITME GAME\unity-client\Library\Bee\artifacts\WebGL\il2cppOutput\cpp: [Unity.TextMeshPro] - System.Void TMPro.TMP_TextParsingUtilities::.cctor() - Method was given it's own cpp file because it is large and costly to compile
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
@@ -1692,22 +1711,22 @@ HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/P
 -------------------------------------------------------------------------------
 Build Report
 Uncompressed usage by category (Percentages based on user generated assets only):
-Textures               32.1 mb	 91.9% 
+Textures               32.1 mb	 91.8% 
 Meshes                 0.0 kb	 0.0% 
 Animations             68.6 kb	 0.2% 
-Sounds                 1013.8 kb	 2.8% 
+Sounds                 1.0 mb	 2.9% 
 Shaders                20.2 kb	 0.1% 
 Other Assets           1.7 mb	 4.8% 
 Levels                 0.0 kb	 0.0% 
-File headers           55.7 kb	 0.2% 
+File headers           58.5 kb	 0.2% 
 Total User Assets      34.9 mb	 100.0% 
-Complete build size    49.9 mb
+Complete build size    50.0 mb
 Used Assets and files from the Resources folder, sorted by uncompressed size:
  4.5 mb	 9.0% Assets/Sprites/arena_background.png
  4.5 mb	 9.0% Assets/Sprites/ARENA.png
  2.7 mb	 5.3% Built-in Texture2D: Splash Screen Unity Logo
  1.0 mb	 2.1% Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
- 1.0 mb	 2.1% Assets/Fonts/BeVietnamPro-Bold SDF.asset
+ 1.0 mb	 2.0% Assets/Fonts/BeVietnamPro-Bold SDF.asset
  1.0 mb	 2.0% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png
  1.0 mb	 2.0% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F03.png
  1.0 mb	 2.0% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F06.png
@@ -1729,7 +1748,7 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  379.2 kb	 0.7% Assets/Audio/bgm_match_loop.wav
  351.8 kb	 0.7% Assets/Art/UI/Kit/ui_card_slot_selected_cyan.png
  344.5 kb	 0.7% Assets/TextMesh Pro/Fonts/LiberationSans.ttf
- 281.1 kb	 0.6% Assets/Art/UI/Kit/ui_banner_wood.png
+ 281.1 kb	 0.5% Assets/Art/UI/Kit/ui_banner_wood.png
  259.5 kb	 0.5% Assets/HITME_AimKit/Art/Aim_Origin_Ring.png
  259.0 kb	 0.5% Assets/HITME_AimKit/Art/Aim_Target_Reticle.png
  259.0 kb	 0.5% Assets/HITME_AimKit/Art/Aim_Target_Invalid.png
@@ -1753,7 +1772,7 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  150.8 kb	 0.3% Assets/Sprites/anh_nui_idle.png
  128.9 kb	 0.3% Assets/HITME_AimKit/Art/Aim_Beam_Soft.png
  127.5 kb	 0.2% Assets/Art/UI/Kit/ui_timer_circle_gold.png
- 74.6 kb	 0.1% Assets/Scenes/MainMatch.unity
+ 88.0 kb	 0.2% Assets/Scenes/MainMatch.unity
  66.0 kb	 0.1% Assets/Sprites/destination_marker.png
  65.4 kb	 0.1% Assets/Art/Weapons/dep_to_ong_projectile.png
  65.3 kb	 0.1% Assets/Art/Weapons/chao_chong_dinh_icon.png
@@ -1773,6 +1792,7 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  34.7 kb	 0.1% Assets/Scenes/Phase2_Step1_AssetTest.unity
  34.2 kb	 0.1% Assets/Audio/sfx_lose.wav
  33.8 kb	 0.1% Assets/Scenes/Phase2_Step1_HitboxTest.unity
+ 22.2 kb	 0.0% Assets/Audio/sfx_eliminate.wav
  20.0 kb	 0.0% Assets/Audio/sfx_ready.wav
  16.8 kb	 0.0% Assets/HITME_AimKit/Art/Aim_Dot_Bright.png
  16.8 kb	 0.0% Assets/HITME_AimKit/Art/Aim_Dot_Soft.png
@@ -1782,6 +1802,8 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  10.7 kb	 0.0% Assets/Audio/sfx_reveal.wav
  9.6 kb	 0.0% Assets/Audio/sfx_hit_bop.wav
  6.5 kb	 0.0% Assets/Scenes/AimVisual_Staging.unity
+ 5.8 kb	 0.0% Assets/Audio/sfx_countdown_last.wav
+ 4.6 kb	 0.0% Assets/Audio/sfx_tap_place.wav
  3.3 kb	 0.0% Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
  3.1 kb	 0.0% Assets/Audio/sfx_countdown_tick.wav
  2.7 kb	 0.0% Assets/Art/Animations/Cau_Be_Lang/Cau_Be_Lang_Throw.anim
@@ -1830,13 +1852,13 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_SpriteAssetImportFormats.cs
  0.1 kb	 0.0% Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Layout/HorizontalOrVerticalLayoutGroup.cs
+ 0.1 kb	 0.0% Assets/ScriptableObjects/GameConfig_Phase1.asset
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_DynamicFontAssetUtilities.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/EventSystem/UIElements/WorldDocumentRaycaster.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/EventSystem/InputModules/StandaloneInputModule.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_ScrollbarEventHandler.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_PackageResourceImporter.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/InternalBridge/ObjectUtilsBridge.cs
- 0.1 kb	 0.0% Assets/ScriptableObjects/GameConfig_Phase1.asset
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Utility/ReflectionMethodsCache.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/UI/Core/MultipleDisplayUtilities.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Layout/HorizontalLayoutGroup.cs
@@ -1880,6 +1902,7 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  0.1 kb	 0.0% Assets/Scripts/Game/WebGLPointerDiagnostics.cs
  0.1 kb	 0.0% Assets/Scripts/Game/Phase1ScreenshotCapture.cs
  0.1 kb	 0.0% Assets/Scripts/Core/Phase1/PlacementGestureState.cs
+ 0.1 kb	 0.0% Assets/Scripts/Core/Phase1/ArenaCoordinateMapper.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMPro_EventManager.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_UpdateRegistery.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_UpdateManager.cs
@@ -1927,6 +1950,7 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  0.1 kb	 0.0% Assets/Scripts/Gameplay/ProjectileView.cs
  0.1 kb	 0.0% Assets/Scripts/Gameplay/AimController.cs
  0.1 kb	 0.0% Assets/Scripts/Game/Phase2Step1Capture.cs
+ 0.1 kb	 0.0% Assets/Scripts/Core/Phase1/LocalizationTable.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TextMeshProUGUI.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TextContainer.cs
  0.1 kb	 0.0% Packages/com.unity.ugui/Runtime/TMP/TMP_TextElement.cs
@@ -2006,29 +2030,29 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  0.1 kb	 0.0% Assets/Scripts/Game/HitFx.cs
  0.1 kb	 0.0% Assets/Scripts/Core/Phase1/Vec2.cs
 -------------------------------------------------------------------------------
-Unloading 120 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 246 unused Assets / (7.2 MB). Loaded Objects now: 1738.
-Memory consumption went from 287.2 MB to 280.0 MB.
-Total: 12.658600 ms (FindLiveObjects: 0.252900 ms CreateObjectMapping: 0.026300 ms MarkObjects: 11.190700 ms  DeleteObjects: 1.048700 ms)
+Unloading 123 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 246 unused Assets / (7.2 MB). Loaded Objects now: 1742.
+Memory consumption went from 287.1 MB to 279.9 MB.
+Total: 9.538700 ms (FindLiveObjects: 0.261400 ms CreateObjectMapping: 0.035300 ms MarkObjects: 8.550800 ms  DeleteObjects: 0.555200 ms)
 
 DisplayProgressNotification: Build Successful
 Build Finished, Result: Success.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Temp/__Backupscenes/0.backup'
-	Deserialize:            1.216 ms
-	Integration:            35.353 ms
+	Deserialize:            1.135 ms
+	Integration:            18.256 ms
 	Integration of assets:  0.002 ms
-	Thread Wait Time:       0.026 ms
-	Total Operation Time:   36.598 ms
-Unloading 0 unused Assets / (16.0 KB). Loaded Objects now: 1730.
-Memory consumption went from 255.9 MB to 255.8 MB.
-Total: 12.687400 ms (FindLiveObjects: 0.231100 ms CreateObjectMapping: 0.023800 ms MarkObjects: 12.291200 ms  DeleteObjects: 0.009200 ms)
+	Thread Wait Time:       0.020 ms
+	Total Operation Time:   19.413 ms
+Unloading 0 unused Assets / (0 B). Loaded Objects now: 1734.
+Memory consumption went from 255.7 MB to 255.7 MB.
+Total: 12.190400 ms (FindLiveObjects: 0.200500 ms CreateObjectMapping: 0.016300 ms MarkObjects: 11.692700 ms  DeleteObjects: 0.011100 ms)
 
 [Licensing::Client] Successfully resolved entitlement details
-##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793209437123,"processId":39784,"steps":[{"description":"Call PrepareForBuild callbacks","duration":1},{"description":"Call internal build started callbacks","duration":2},{"description":"Preprocess Player","duration":88},{"description":"Save scenes before build","duration":0},{"description":"Prepare For Build","duration":2},{"description":"ProducePlayerScriptAssemblies","duration":9332},{"description":"Verify Build setup","duration":145},{"description":"Prepare assets for target platform","duration":3},{"description":"Prepare splash screen","duration":8},{"description":"Build scripts DLLs","duration":26},{"description":"Building scenes","duration":671},{"description":"Build GlobalGameManagers file","duration":212},{"description":"Writing asset files","duration":371},{"description":"Building Resources/unity_builtin_extra","duration":581},{"description":"Creating compressed player package","duration":2748},{"description":"Write data build dirty tracking information","duration":51},{"description":"Postprocess built player","duration":142358},{"description":"Call Post-Process callbacks","duration":47}],"duration":156646}
+##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793212102324,"processId":36072,"steps":[{"description":"Call PrepareForBuild callbacks","duration":1},{"description":"Call internal build started callbacks","duration":1},{"description":"Preprocess Player","duration":80},{"description":"Save scenes before build","duration":1},{"description":"Prepare For Build","duration":3},{"description":"ProducePlayerScriptAssemblies","duration":4356},{"description":"Verify Build setup","duration":44},{"description":"Prepare assets for target platform","duration":3},{"description":"Prepare splash screen","duration":1},{"description":"Build scripts DLLs","duration":14},{"description":"Building scenes","duration":766},{"description":"Build GlobalGameManagers file","duration":290},{"description":"Writing asset files","duration":304},{"description":"Building Resources/unity_builtin_extra","duration":115},{"description":"Creating compressed player package","duration":2915},{"description":"Write data build dirty tracking information","duration":55},{"description":"Postprocess built player","duration":131737},{"description":"Call Post-Process callbacks","duration":35}],"duration":140721}
 [websockify wrapper] Proxying from :35020 to localhost:34999
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.9902351
+Total cache size after purge 268293840, took 00:00:00.8648452
 Batchmode quit successfully invoked - shutting down!
 [websockify wrapper] Kill
 [websockify wrapper] Process killed

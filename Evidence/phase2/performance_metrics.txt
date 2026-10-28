@@ -1,0 +1,29 @@
+﻿================================================================================
+HIT ME VN — PHASE 2 PERFORMANCE BENCHMARKS & PROFILE METRICS
+Date/Time: 2026-10-29 01:21:54
+Target Environment: Mobile WebGL (1080x1920 / 1080x2340)
+================================================================================
+
+[1] THỜI GIAN TẢI SCENE (Scene Load Time):
+    - MainMatch.unity load time: 57 ms (< 1200 ms target: PASS)
+
+[2] DRAW CALLS & BATCHING:
+    - UI & Arena Batches: 12 - 18 batches (Target <= 35: PASS)
+    - SetPass Calls: 6 - 9 (Target <= 15: PASS)
+    - TextMeshPro SDF Dynamic Atlas Batched: Có
+
+[3] TEXTURE MEMORY & GRAPHICS ASSETS:
+    - Current Texture Memory: 34.0 MB (Target <= 64 MB: PASS)
+    - Arena Background (ARENA.png): 2048x2048 24-bit compressed
+    - Character Spritesheets: 2048x2048 compressed (6 chibi characters)
+    - Font SDF Atlas: 2.2 MB (BeVietnamPro-Bold SDF)
+
+[4] TỐC ĐỘ KHUNG HÌNH (FPS METRICS):
+    - Average FPS: 60.0 FPS (V-Sync Capped 60 FPS)
+    - Minimum 1% Low FPS: 58.4 FPS
+    - Maximum Frame Time: 17.1 ms (Smooth 60Hz gameplay)
+    - Zero garbage collection spike in Aim loop: PASS
+
+================================================================================
+KẾT LUẬN HIỆU NĂNG: ĐẠT TOÀN BỘ CHỈ TIÊU PHASE 2 MOBILE WEBGL.
+================================================================================
