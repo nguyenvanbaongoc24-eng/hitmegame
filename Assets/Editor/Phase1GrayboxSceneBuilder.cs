@@ -68,6 +68,7 @@ namespace HitMe.Editor
             var hud = new GameObject("HUD").AddComponent<HudView>();
             var controllerGo = new GameObject("Match Controller"); var controller = controllerGo.AddComponent<MatchController>(); controller.configAsset = config; controller.arena = arena; controller.hud = hud;
             var input = controllerGo.AddComponent<PlacementInput>(); input.viewCamera = camera; input.controller = controller;
+            var capture = controllerGo.AddComponent<Phase1ScreenshotCapture>(); capture.controller = controller;
             EditorSceneManager.SaveScene(scene, "Assets/Scenes/Graybox.unity");
             var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes) { new EditorBuildSettingsScene("Assets/Scenes/Graybox.unity", true) };
             EditorBuildSettings.scenes = scenes.ToArray();

@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &517198159
+--- !u!1 &47288663
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,79 +127,67 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 517198161}
-  - component: {fileID: 517198160}
+  - component: {fileID: 47288667}
+  - component: {fileID: 47288666}
+  - component: {fileID: 47288665}
+  - component: {fileID: 47288664}
   m_Layer: 0
-  m_Name: HUD
+  m_Name: Match Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &517198160
+--- !u!114 &47288664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517198159}
+  m_GameObject: {fileID: 47288663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98f4094e6f1b3d843ac803240857ed91, type: 3}
+  m_Script: {fileID: 11500000, guid: 23d14694204f2da4a972ae60252c128d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.HudView
---- !u!4 &517198161
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517198159}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &834397414
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 834397416}
-  - component: {fileID: 834397415}
-  m_Layer: 0
-  m_Name: Arena
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &834397415
+  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.Phase1ScreenshotCapture
+  controller: {fileID: 47288666}
+--- !u!114 &47288665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 834397414}
+  m_GameObject: {fileID: 47288663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 862878065c1d15343a9244669f435bc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b529d30a751df4478601377f331bab2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.ArenaView
+  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.PlacementInput
+  viewCamera: {fileID: 50789419}
+  controller: {fileID: 47288666}
+--- !u!114 &47288666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47288663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2cb3091df771164493556a77d5737cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.MatchController
   configAsset: {fileID: 11400000, guid: a578f894c98eba64282cbd29c3bfdbdd, type: 2}
---- !u!4 &834397416
+  arena: {fileID: 1108993909}
+  hud: {fileID: 694150184}
+  autoPlay: 0
+--- !u!4 &47288667
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 834397414}
+  m_GameObject: {fileID: 47288663}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -208,7 +196,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1178278421
+--- !u!1 &50789418
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -216,8 +204,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1178278423}
-  - component: {fileID: 1178278422}
+  - component: {fileID: 50789420}
+  - component: {fileID: 50789419}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -225,13 +213,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!20 &1178278422
+--- !u!20 &50789419
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1178278421}
+  m_GameObject: {fileID: 50789418}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -276,13 +264,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1178278423
+--- !u!4 &50789420
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1178278421}
+  m_GameObject: {fileID: 50789418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
@@ -291,7 +279,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1551798280
+--- !u!1 &694150183
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,52 +287,79 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1551798283}
-  - component: {fileID: 1551798282}
-  - component: {fileID: 1551798281}
+  - component: {fileID: 694150185}
+  - component: {fileID: 694150184}
   m_Layer: 0
-  m_Name: Match Controller
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1551798281
+--- !u!114 &694150184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551798280}
+  m_GameObject: {fileID: 694150183}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b529d30a751df4478601377f331bab2, type: 3}
+  m_Script: {fileID: 11500000, guid: 98f4094e6f1b3d843ac803240857ed91, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.PlacementInput
-  viewCamera: {fileID: 1178278422}
-  controller: {fileID: 1551798282}
---- !u!114 &1551798282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551798280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2cb3091df771164493556a77d5737cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.MatchController
-  configAsset: {fileID: 11400000, guid: a578f894c98eba64282cbd29c3bfdbdd, type: 2}
-  arena: {fileID: 834397415}
-  hud: {fileID: 517198160}
---- !u!4 &1551798283
+  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.HudView
+--- !u!4 &694150185
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551798280}
+  m_GameObject: {fileID: 694150183}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1108993908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1108993910}
+  - component: {fileID: 1108993909}
+  m_Layer: 0
+  m_Name: Arena
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1108993909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108993908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862878065c1d15343a9244669f435bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HitMe.Game::HitMe.Game.ArenaView
+  configAsset: {fileID: 11400000, guid: a578f894c98eba64282cbd29c3bfdbdd, type: 2}
+--- !u!4 &1108993910
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108993908}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -357,7 +372,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1178278423}
-  - {fileID: 834397416}
-  - {fileID: 517198161}
-  - {fileID: 1551798283}
+  - {fileID: 50789420}
+  - {fileID: 1108993910}
+  - {fileID: 694150185}
+  - {fileID: 47288667}

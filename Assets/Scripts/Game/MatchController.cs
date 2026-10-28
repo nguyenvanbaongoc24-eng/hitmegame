@@ -21,7 +21,12 @@ namespace HitMe.Game
         private Vec2 _localPlacement;
         private Vec2 _localDirection = Vec2.Up;
 
-        private void Start() { StartCoroutine(NewMatch()); }
+        private void Start()
+        {
+            var args = System.Environment.GetCommandLineArgs();
+            for (int i = 0; i < args.Length; i++) if (args[i] == "-capturePhase1") autoPlay = true;
+            StartCoroutine(NewMatch());
+        }
         private void Update() { if (hud != null && hud.ReplayPressed) { hud.ResetButtons(); StartCoroutine(NewMatch()); } }
         public void SetLocalPlacement(Vector2 position) { _localPlacement = State.ConstrainPlacement("player", new Vec2(position.x, position.y)); Present(true); }
         public void SetLocalDirection(Vector2 direction) { if (direction.sqrMagnitude > .03f) _localDirection = new Vec2(direction.x, direction.y).Normalized; Present(true); }
