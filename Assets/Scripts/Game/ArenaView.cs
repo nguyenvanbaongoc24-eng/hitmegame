@@ -13,7 +13,9 @@ namespace HitMe.Game
 
         private void Awake()
         {
-            _white = _white ?? Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), new Vector2(.5f, .5f));
+            // WhiteTexture is one pixel. Use one pixel per world unit so the
+            // configured 10 x 16 scale is an arena, not a 0.1 x 0.16 dot.
+            _white = _white ?? Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), new Vector2(.5f, .5f), 1f);
             var config = Config;
             _floor = Make("Floor", new Color(.23f, .25f, .27f), Vector2.zero, new Vector2(config.ArenaWidth, config.ArenaHeight), -1);
             float t = .12f;
