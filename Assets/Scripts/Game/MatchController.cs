@@ -16,6 +16,8 @@ namespace HitMe.Game
         public float SecondsRemaining { get; private set; }
         public bool CapturePhase1 { get; private set; }
         public Vector2 LocalPosition { get { var p = State == null ? null : State.FindPlayer("player"); return p == null ? Vector2.zero : new Vector2(p.Position.X, p.Position.Y); } }
+        public PlacementGestureMode GestureMode { get { return _gesture == null ? PlacementGestureMode.Idle : _gesture.Mode; } }
+        public bool HasGestureAim { get { return _gesture != null && _gesture.HasAim; } }
         private readonly Dictionary<string, PlayerView> _views = new Dictionary<string, PlayerView>();
         private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>();
         private readonly List<GameObject> _weapons = new List<GameObject>();
@@ -24,6 +26,7 @@ namespace HitMe.Game
 
         private void Start()
         {
+            if (WebGLPointerDiagnostics.IsRequested()) gameObject.AddComponent<WebGLPointerDiagnostics>();
             var args = System.Environment.GetCommandLineArgs();
             for (int i = 0; i < args.Length; i++)
             {
