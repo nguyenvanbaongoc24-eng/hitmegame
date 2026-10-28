@@ -134,6 +134,20 @@ namespace HitMe.Tests
             Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
         }
 
+        [TestCase(RoundLimitTiebreakPolicy.ContinueUntilElimination)]
+        [TestCase(RoundLimitTiebreakPolicy.HighestHp)]
+        [TestCase(RoundLimitTiebreakPolicy.SharedWin)]
+        public void RoundLimitTiebreakIsPreparedButInactiveUntilApproved(RoundLimitTiebreakPolicy policy)
+        {
+            var config = Config();
+            config.MaxRounds = 1;
+            config.RoundLimitTiebreak = policy;
+            var match = new MatchState(config, new[] { Player("a", new Vec2(-2f, 0f)), Player("b", new Vec2(2f, 0f)) });
+            match.StartRound(); match.SetInput(Throw("a", Vec2.Up)); match.SetInput(Throw("b", Vec2.Up));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+        }
+
         [Test]
         public void SameSeedAndInputsAreDeterministicAndThousandBotMatchesFinish()
         {

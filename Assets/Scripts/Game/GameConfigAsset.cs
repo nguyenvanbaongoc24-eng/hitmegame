@@ -10,6 +10,8 @@ namespace HitMe.Game
         public int startHp = 3;
         public float placeSeconds = 5f;
         public int maxRounds = 5;
+        [Tooltip("Prepared for a future approved round cap. Phase 1 currently continues until elimination.")]
+        public RoundLimitTiebreakPolicy roundLimitTiebreak = RoundLimitTiebreakPolicy.ContinueUntilElimination;
         public float arenaWidth = 10f;
         public float arenaHeight = 16f;
         public float playerRadius = 0.45f;
@@ -29,7 +31,7 @@ namespace HitMe.Game
 
         public GameConfig ToCore()
         {
-            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, NoAimRule = noAimRule, Seed = seed };
+            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, RoundLimitTiebreak = roundLimitTiebreak, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, NoAimRule = noAimRule, Seed = seed };
         }
     }
 }

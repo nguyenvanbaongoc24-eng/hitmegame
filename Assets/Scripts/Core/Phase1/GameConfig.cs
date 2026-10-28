@@ -9,6 +9,15 @@ namespace HitMe.Core
         RepeatLastAim = 2
     }
 
+    // Prepared for a future approved round cap. Phase 1 keeps its current
+    // elimination-only ending rule regardless of this configured value.
+    public enum RoundLimitTiebreakPolicy
+    {
+        ContinueUntilElimination = 0,
+        HighestHp = 1,
+        SharedWin = 2
+    }
+
     [Serializable]
     public sealed class GameConfig
     {
@@ -16,6 +25,7 @@ namespace HitMe.Core
         public int StartHp = 3;
         public float PlaceSeconds = 5f;
         public int MaxRounds = 5;
+        public RoundLimitTiebreakPolicy RoundLimitTiebreak = RoundLimitTiebreakPolicy.ContinueUntilElimination;
         public float ArenaWidth = 10f;
         public float ArenaHeight = 16f;
         public float PlayerRadius = 0.45f;

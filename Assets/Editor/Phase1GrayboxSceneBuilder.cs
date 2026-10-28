@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using HitMe.Core;
 using HitMe.Game;
@@ -15,16 +16,28 @@ namespace HitMe.Editor
         public static void GenerateSimulationEvidence()
         {
             var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset").ToCore();
-            var wins = new int[config.MaxPlayers]; int totalRounds = 0;
+            var wins = new int[config.MaxPlayers];
+            var roundCounts = new SortedDictionary<int, int>();
+            var roundsBySeed = new List<int>();
+            int totalRounds = 0;
             for (uint seed = 1; seed <= 1000; seed++)
             {
                 var result = MatchSimulator.RunBotMatchDetailed(config, seed); totalRounds += result.Rounds;
+                roundsBySeed.Add(result.Rounds);
+                int count;
+                roundCounts.TryGetValue(result.Rounds, out count);
+                roundCounts[result.Rounds] = count + 1;
                 for (int w = 0; w < result.WinnerIds.Count; w++)
                 {
                     int index; if (int.TryParse(result.WinnerIds[w].Replace("bot-", ""), out index) && index >= 0 && index < wins.Length) wins[index]++;
                 }
             }
             var text = new StringBuilder(); text.AppendLine("Phase 1 bot simulation"); text.AppendLine("Matches: 1000"); text.AppendLine("Average rounds: " + (totalRounds / 1000f).ToString("0.000"));
+            text.AppendLine("Minimum rounds: " + roundsBySeed.Min()); text.AppendLine("Maximum rounds: " + roundsBySeed.Max());
+            text.AppendLine("Round distribution (rounds: matches):");
+            foreach (var pair in roundCounts) text.AppendLine(pair.Key + ": " + pair.Value);
+            text.AppendLine("Rounds by seed (seed: rounds):");
+            for (int i = 0; i < roundsBySeed.Count; i++) text.AppendLine((i + 1) + ": " + roundsBySeed[i]);
             for (int i = 0; i < wins.Length; i++) text.AppendLine("Bot position " + (i + 1) + ": " + wins[i] + " shared/sole wins (" + (wins[i] / 10f).ToString("0.0") + "%)");
             Directory.CreateDirectory("Evidence/phase1"); File.WriteAllText("Evidence/phase1/sim.txt", text.ToString()); Debug.Log(text.ToString());
         }
