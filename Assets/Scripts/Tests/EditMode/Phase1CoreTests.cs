@@ -127,25 +127,96 @@ namespace HitMe.Tests
         [Test]
         public void MaxRoundsDoesNotOverrideLastSurvivorRule()
         {
-            var config = Config(); config.MaxRounds = 1;
+            var config = Config();
+            config.MaxRounds = 1;
+            config.RoundLimitTiebreak = RoundLimitTiebreakPolicy.ContinueUntilElimination;
             var match = new MatchState(config, new[] { Player("a", new Vec2(-2f, 0f)), Player("b", new Vec2(2f, 0f)) });
             match.StartRound(); match.SetInput(Throw("a", Vec2.Up)); match.SetInput(Throw("b", Vec2.Up));
             match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
             Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
         }
 
-        [TestCase(RoundLimitTiebreakPolicy.ContinueUntilElimination)]
-        [TestCase(RoundLimitTiebreakPolicy.HighestHp)]
-        [TestCase(RoundLimitTiebreakPolicy.SharedWin)]
-        public void RoundLimitTiebreakIsPreparedButInactiveUntilApproved(RoundLimitTiebreakPolicy policy)
+        [Test]
+        public void RoundLimit_EndsAtMaxRounds_AndWinnerHasHighestHp()
+        {
+            var config = Config();
+            config.MaxRounds = 5;
+            config.RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
+            var a = Player("a", new Vec2(0f, -2f), 3);
+            var b = Player("b", new Vec2(0f, 2f), 2);
+            var match = new MatchState(config, new[] { a, b });
+            for (int r = 1; r <= 5; r++)
+            {
+                match.StartRound();
+                match.SetInput(Throw("a", new Vec2(-1f, 0f)));
+                match.SetInput(Throw("b", new Vec2(1f, 0f)));
+                match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+                if (r < 5)
+                {
+                    Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+                }
+            }
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a" }));
+        }
+
+        [Test]
+        public void RoundLimit_TiedHp_ResolvedByHitsLanded()
         {
             var config = Config();
             config.MaxRounds = 1;
-            config.RoundLimitTiebreak = policy;
-            var match = new MatchState(config, new[] { Player("a", new Vec2(-2f, 0f)), Player("b", new Vec2(2f, 0f)) });
-            match.StartRound(); match.SetInput(Throw("a", Vec2.Up)); match.SetInput(Throw("b", Vec2.Up));
+            config.RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
+            var a = Player("a", new Vec2(0f, -2f), 2);
+            var b = Player("b", new Vec2(0f, 2f), 3);
+            var match = new MatchState(config, new[] { a, b });
+            match.StartRound();
+            match.SetInput(Throw("a", Vec2.Up)); // hits b, so a lands 1 hit, b hp becomes 2
+            match.SetInput(Throw("b", new Vec2(1f, 0f))); // misses
             match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
-            Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+            Assert.That(a.Hp, Is.EqualTo(2));
+            Assert.That(b.Hp, Is.EqualTo(2));
+            Assert.That(a.HitsLanded, Is.EqualTo(1));
+            Assert.That(b.HitsLanded, Is.EqualTo(0));
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a" }));
+        }
+
+        [Test]
+        public void RoundLimit_TiedHpAndHits_SharedWin()
+        {
+            var config = Config();
+            config.MaxRounds = 1;
+            config.RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
+            var a = Player("a", new Vec2(0f, -2f), 2);
+            var b = Player("b", new Vec2(0f, 2f), 2);
+            var match = new MatchState(config, new[] { a, b });
+            match.StartRound();
+            match.SetInput(Throw("a", Vec2.Up)); // hits b
+            match.SetInput(Throw("b", new Vec2(0f, -1f))); // hits a
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(a.Hp, Is.EqualTo(1));
+            Assert.That(b.Hp, Is.EqualTo(1));
+            Assert.That(a.HitsLanded, Is.EqualTo(1));
+            Assert.That(b.HitsLanded, Is.EqualTo(1));
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a", "b" }));
+        }
+
+        [Test]
+        public void RoundLimit_SharedWinPolicy_AllAliveWin()
+        {
+            var config = Config();
+            config.MaxRounds = 1;
+            config.RoundLimitTiebreak = RoundLimitTiebreakPolicy.SharedWin;
+            var a = Player("a", new Vec2(0f, -2f), 3);
+            var b = Player("b", new Vec2(0f, 2f), 1);
+            var match = new MatchState(config, new[] { a, b });
+            match.StartRound();
+            match.SetInput(Throw("a", new Vec2(-1f, 0f)));
+            match.SetInput(Throw("b", new Vec2(1f, 0f)));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a", "b" }));
         }
 
         [Test]

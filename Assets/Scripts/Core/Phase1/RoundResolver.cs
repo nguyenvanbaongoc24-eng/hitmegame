@@ -28,6 +28,13 @@ namespace HitMe.Core
                     result.Damage.TryGetValue(hit.TargetId, out damage);
                     result.Damage[hit.TargetId] = damage + config.DamagePerHit;
                 }
+                if (hits.Count > 0)
+                {
+                    for (int p = 0; p < players.Count; p++)
+                    {
+                        if (players[p].Id == shooter.Id) players[p].HitsLanded += hits.Count;
+                    }
+                }
             }
 
             for (int i = 0; i < players.Count; i++)

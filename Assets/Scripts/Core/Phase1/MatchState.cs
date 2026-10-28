@@ -149,6 +149,49 @@ namespace HitMe.Core
                 for (int i = 0; i < aliveBefore.Count; i++) _winnerIds.Add(aliveBefore[i]);
                 Phase = Phase.MatchEnd; return;
             }
+
+            if (Config.RoundLimitTiebreak != RoundLimitTiebreakPolicy.ContinueUntilElimination && RoundNumber >= Config.MaxRounds)
+            {
+                _winnerIds.Clear();
+                if (Config.RoundLimitTiebreak == RoundLimitTiebreakPolicy.SharedWin)
+                {
+                    for (int i = 0; i < alive.Count; i++) _winnerIds.Add(alive[i]);
+                }
+                else if (Config.RoundLimitTiebreak == RoundLimitTiebreakPolicy.HighestHp)
+                {
+                    int maxHp = -1;
+                    for (int i = 0; i < alive.Count; i++)
+                    {
+                        var pl = FindPlayer(alive[i]);
+                        if (pl != null && pl.Hp > maxHp) maxHp = pl.Hp;
+                    }
+                    var topHp = new List<PlayerState>();
+                    for (int i = 0; i < alive.Count; i++)
+                    {
+                        var pl = FindPlayer(alive[i]);
+                        if (pl != null && pl.Hp == maxHp) topHp.Add(pl);
+                    }
+                    if (topHp.Count == 1)
+                    {
+                        _winnerIds.Add(topHp[0].Id);
+                    }
+                    else
+                    {
+                        int maxHits = -1;
+                        for (int i = 0; i < topHp.Count; i++)
+                        {
+                            if (topHp[i].HitsLanded > maxHits) maxHits = topHp[i].HitsLanded;
+                        }
+                        for (int i = 0; i < topHp.Count; i++)
+                        {
+                            if (topHp[i].HitsLanded == maxHits) _winnerIds.Add(topHp[i].Id);
+                        }
+                    }
+                }
+                Phase = Phase.MatchEnd;
+                return;
+            }
+
             Phase = Phase.RoundEnd;
         }
 

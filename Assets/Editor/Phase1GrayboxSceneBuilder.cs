@@ -20,26 +20,49 @@ namespace HitMe.Editor
             var roundCounts = new SortedDictionary<int, int>();
             var roundsBySeed = new List<int>();
             int totalRounds = 0;
+            int clearWinners = 0;
+            int hpDraws = 0;
             for (uint seed = 1; seed <= 1000; seed++)
             {
-                var result = MatchSimulator.RunBotMatchDetailed(config, seed); totalRounds += result.Rounds;
+                var result = MatchSimulator.RunBotMatchDetailed(config, seed);
+                totalRounds += result.Rounds;
                 roundsBySeed.Add(result.Rounds);
                 int count;
                 roundCounts.TryGetValue(result.Rounds, out count);
                 roundCounts[result.Rounds] = count + 1;
+                if (result.WinnerIds.Count == 1)
+                {
+                    clearWinners++;
+                }
+                else if (result.WinnerIds.Count > 1)
+                {
+                    hpDraws++;
+                }
                 for (int w = 0; w < result.WinnerIds.Count; w++)
                 {
-                    int index; if (int.TryParse(result.WinnerIds[w].Replace("bot-", ""), out index) && index >= 0 && index < wins.Length) wins[index]++;
+                    int index;
+                    if (int.TryParse(result.WinnerIds[w].Replace("bot-", ""), out index) && index >= 0 && index < wins.Length) wins[index]++;
                 }
             }
-            var text = new StringBuilder(); text.AppendLine("Phase 1 bot simulation"); text.AppendLine("Matches: 1000"); text.AppendLine("Average rounds: " + (totalRounds / 1000f).ToString("0.000"));
-            text.AppendLine("Minimum rounds: " + roundsBySeed.Min()); text.AppendLine("Maximum rounds: " + roundsBySeed.Max());
+            var text = new StringBuilder();
+            text.AppendLine("Phase 1 Bot Simulation v2 (Post-Audit Balance)");
+            text.AppendLine("Config: Arena=" + config.ArenaWidth + "x" + config.ArenaHeight + ", MaxRounds=" + config.MaxRounds + ", Tiebreak=" + config.RoundLimitTiebreak + ", NoAim=" + config.NoAimRule);
+            text.AppendLine("Matches: 1000");
+            text.AppendLine("Average rounds: " + (totalRounds / 1000f).ToString("0.000"));
+            text.AppendLine("Minimum rounds: " + roundsBySeed.Min());
+            text.AppendLine("Maximum rounds: " + roundsBySeed.Max());
+            text.AppendLine("Clear winner matches: " + clearWinners + " (" + (clearWinners / 10f).ToString("0.0") + "%)");
+            text.AppendLine("HP draw / shared win matches: " + hpDraws + " (" + (hpDraws / 10f).ToString("0.0") + "%)");
             text.AppendLine("Round distribution (rounds: matches):");
             foreach (var pair in roundCounts) text.AppendLine(pair.Key + ": " + pair.Value);
             text.AppendLine("Rounds by seed (seed: rounds):");
             for (int i = 0; i < roundsBySeed.Count; i++) text.AppendLine((i + 1) + ": " + roundsBySeed[i]);
             for (int i = 0; i < wins.Length; i++) text.AppendLine("Bot position " + (i + 1) + ": " + wins[i] + " shared/sole wins (" + (wins[i] / 10f).ToString("0.0") + "%)");
-            Directory.CreateDirectory("Evidence/phase1"); File.WriteAllText("Evidence/phase1/sim.txt", text.ToString()); Debug.Log(text.ToString());
+
+            Directory.CreateDirectory("Evidence/phase1");
+            File.WriteAllText("Evidence/phase1/sim_v2.txt", text.ToString());
+            File.WriteAllText("Evidence/phase1/sim.txt", text.ToString());
+            Debug.Log(text.ToString());
         }
 
         public static void GenerateAutoPlayEvidence()
