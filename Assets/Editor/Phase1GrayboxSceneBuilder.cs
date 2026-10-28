@@ -72,6 +72,9 @@ namespace HitMe.Editor
             var args = System.Environment.GetCommandLineArgs();
             for (int i = 0; i < args.Length - 1; i++) if (args[i] == "-buildOutput") output = args[i + 1];
             PlayerSettings.WebGL.template = "PROJECT:Phase1Mobile";
+            // Ensure a changed custom template is not served from the Editor's
+            // imported-template cache on the next evidence build.
+            AssetDatabase.ImportAsset("Assets/WebGLTemplates/Phase1Mobile/index.html", ImportAssetOptions.ForceUpdate);
             var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = new[] { "Assets/Scenes/Graybox.unity" }, locationPathName = output, target = UnityEditor.BuildTarget.WebGL, options = UnityEditor.BuildOptions.None });
             File.WriteAllText("Evidence/phase1/webgl-build.txt", "Target: WebGL\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n");
             if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new System.Exception("WebGL build failed; see Evidence/phase1/webgl-build.txt");
