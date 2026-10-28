@@ -243,6 +243,7 @@ namespace HitMe.Tests
         public void NoAimUsesCurrentFacingFallbackWhenTimerLocks()
         {
             var config = Config();
+            config.NoAimRule = NoAimPolicy.ThrowFacing;
             var player = new PlayerState("player", "player", false, 3, Vec2.Zero, new Vec2(-1f, 0f));
             var match = new MatchState(config, new[] { player, Player("other", new Vec2(3f, 0f)) });
             var gesture = new PlacementGestureState(Vec2.Zero, player.Facing);
@@ -251,6 +252,40 @@ namespace HitMe.Tests
             match.LockRound();
             Assert.That(gesture.HasAim, Is.False);
             Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(-1f, 0f)));
+        }
+
+        [Test]
+        public void NoAimPolicy_NoThrow_DoesNotThrowWeapon()
+        {
+            var config = Config();
+            config.NoAimRule = NoAimPolicy.NoThrow;
+            var player = new PlayerState("player", "player", false, 3, Vec2.Zero, new Vec2(1f, 0f));
+            var target = Player("target", new Vec2(3f, 0f));
+            var match = new MatchState(config, new[] { player, target });
+            match.StartRound();
+            match.SetInput(new RoundInput("player") { HasPlacement = true, Placement = Vec2.Zero, HasAim = false });
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing();
+            var resolution = match.ResolveRound();
+            Assert.That(match.LockedInputs["player"].HasAim, Is.False);
+            Assert.That(resolution.Hits.Count, Is.EqualTo(0));
+            Assert.That(target.Hp, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void NoAimPolicy_RepeatLastAim_ReusesThePreviousExplicitAim()
+        {
+            var config = Config();
+            config.NoAimRule = NoAimPolicy.RepeatLastAim;
+            var player = new PlayerState("player", "player", false, 3, Vec2.Zero, Vec2.Up);
+            var match = new MatchState(config, new[] { player, Player("target", new Vec2(5f, 0f)) });
+            match.StartRound();
+            match.SetInput(new RoundInput("player") { HasPlacement = true, Placement = Vec2.Zero, HasAim = true, AimDirection = new Vec2(1f, 0f) });
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            match.StartRound();
+            match.SetInput(new RoundInput("player") { HasPlacement = true, Placement = Vec2.Zero, HasAim = false });
+            match.LockRound();
+            Assert.That(match.LockedInputs["player"].HasAim, Is.True);
+            Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(1f, 0f)));
         }
 
     }

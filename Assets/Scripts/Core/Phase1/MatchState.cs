@@ -86,10 +86,35 @@ namespace HitMe.Core
                 RoundInput input;
                 if (!_inputs.TryGetValue(player.Id, out input)) input = new RoundInput(player.Id);
                 if (input.HasPlacement) player.Position = ConstrainPlacement(player.Id, input.Placement);
-                input.AimDirection = input.HasAim ? input.AimDirection.Normalized : player.Facing;
-                input.HasAim = true;
-                if (input.AimDirection.LengthSquared <= 0.00001f) input.AimDirection = Vec2.Up;
-                player.Facing = input.AimDirection;
+                if (input.HasAim)
+                {
+                    input.AimDirection = input.AimDirection.Normalized;
+                    if (input.AimDirection.LengthSquared <= 0.00001f) input.AimDirection = Vec2.Up;
+                    player.Facing = input.AimDirection;
+                    player.LastAim = input.AimDirection;
+                }
+                else
+                {
+                    switch (Config.NoAimRule)
+                    {
+                        case NoAimPolicy.NoThrow:
+                            input.HasAim = false;
+                            break;
+                        case NoAimPolicy.RepeatLastAim:
+                            input.AimDirection = player.LastAim.HasValue ? player.LastAim.Value : player.Facing;
+                            if (input.AimDirection.LengthSquared <= 0.00001f) input.AimDirection = Vec2.Up;
+                            player.Facing = input.AimDirection;
+                            input.HasAim = true;
+                            break;
+                        case NoAimPolicy.ThrowFacing:
+                        default:
+                            input.AimDirection = player.Facing;
+                            if (input.AimDirection.LengthSquared <= 0.00001f) input.AimDirection = Vec2.Up;
+                            player.Facing = input.AimDirection;
+                            input.HasAim = true;
+                            break;
+                    }
+                }
                 _inputs[player.Id] = input;
             }
             Phase = Phase.Locked;

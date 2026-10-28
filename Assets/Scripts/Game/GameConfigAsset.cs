@@ -23,11 +23,13 @@ namespace HitMe.Game
         public float aimTouchRadiusMultiplier = 1.75f;
         [Tooltip("World-space distance that extends the aim ruler beyond the pointer.")]
         public float aimLineExtraLength = 0.35f;
+        [Tooltip("Fallback used when the placement timer ends without an aim.")]
+        public NoAimPolicy noAimRule = NoAimPolicy.ThrowFacing;
         public uint seed = 12345;
 
         public GameConfig ToCore()
         {
-            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, Seed = seed };
+            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, MaxRounds = maxRounds, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, NoAimRule = noAimRule, Seed = seed };
         }
     }
 }

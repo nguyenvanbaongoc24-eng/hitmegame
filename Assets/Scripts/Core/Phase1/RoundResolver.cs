@@ -18,7 +18,7 @@ namespace HitMe.Core
             {
                 var shooter = snapshot[i];
                 RoundInput input;
-                if (!shooter.IsAlive || !inputs.TryGetValue(shooter.Id, out input)) continue;
+                if (!shooter.IsAlive || !inputs.TryGetValue(shooter.Id, out input) || !input.HasAim) continue;
                 var hits = HitCalculator.CalculateHits(shooter, snapshot, input.AimDirection, config);
                 for (int h = 0; h < hits.Count; h++)
                 {

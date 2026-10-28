@@ -2,6 +2,13 @@ using System;
 
 namespace HitMe.Core
 {
+    public enum NoAimPolicy
+    {
+        ThrowFacing = 0,
+        NoThrow = 1,
+        RepeatLastAim = 2
+    }
+
     [Serializable]
     public sealed class GameConfig
     {
@@ -21,6 +28,8 @@ namespace HitMe.Core
         public float MinAimDrag = 0.55f;
         public float AimTouchRadiusMultiplier = 1.75f;
         public float AimLineExtraLength = 0.35f;
+        // Default preserves Phase 1's existing fallback behavior.
+        public NoAimPolicy NoAimRule = NoAimPolicy.ThrowFacing;
         public uint Seed = 12345;
 
         public float MinX { get { return -ArenaWidth * 0.5f + PlayerRadius; } }

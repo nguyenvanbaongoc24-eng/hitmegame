@@ -107,7 +107,7 @@ namespace HitMe.Game
                 _views[p.Id].Present(p, !placing || !p.IsBot, showAllAim || showLocalAim, placing && isLocal, State.Config.AimTouchRadius, State.Config.AimLineExtraLength, isLocal && _gesture != null ? _gesture.AimPreviewLength : 0f);
             }
         }
-        private void SpawnWeapons() { foreach (var p in State.Players) { if (!p.IsAlive) continue; var end = HitCalculator.GetWallPoint(p.Position, State.LockedInputs[p.Id].AimDirection, State.Config); var go = new GameObject("Weapon"); go.AddComponent<WeaponFlightView>().Initialise(new Vector3(p.Position.X, p.Position.Y), new Vector3(end.X, end.Y), 1f); _weapons.Add(go); } }
+        private void SpawnWeapons() { foreach (var p in State.Players) { RoundInput input; if (!p.IsAlive || !State.LockedInputs.TryGetValue(p.Id, out input) || !input.HasAim) continue; var end = HitCalculator.GetWallPoint(p.Position, input.AimDirection, State.Config); var go = new GameObject("Weapon"); go.AddComponent<WeaponFlightView>().Initialise(new Vector3(p.Position.X, p.Position.Y), new Vector3(end.X, end.Y), 1f); _weapons.Add(go); } }
         private void ClearWeapons() { foreach (var weapon in _weapons) if (weapon != null) Destroy(weapon); _weapons.Clear(); }
     }
 }
