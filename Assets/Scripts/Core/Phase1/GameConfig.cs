@@ -24,6 +24,10 @@ namespace HitMe.Core
         public int MaxPlayers = 6;
         public int StartHp = 3;
         public float PlaceSeconds = 5f;
+        public float RevealSeconds = 0.8f;
+        public float ThrowSeconds = 1.35f;
+        public float ResolveSeconds = 1.2f;
+        public float TotalResolutionSeconds => RevealSeconds + ThrowSeconds + ResolveSeconds;
         public int MaxRounds = 5;
         public RoundLimitTiebreakPolicy RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
         public float ArenaWidth = 9.0f;
