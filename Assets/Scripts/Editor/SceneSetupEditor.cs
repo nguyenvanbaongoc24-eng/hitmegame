@@ -8,6 +8,7 @@ using HitMe.Core;
 using HitMe.Gameplay;
 using HitMe.UI;
 using HitMe.Audio;
+using TMPro;
 
 namespace HitMe.Editor
 {
@@ -350,7 +351,7 @@ namespace HitMe.Editor
             ui.btnCreateRoom = btnCreateObj.GetComponent<Button>();
 
             // Notice text for unsupported modes
-            Text txtNotice = CreateUIText("TxtNotice", menuPanel.transform, "", 24, FontStyle.Bold, new Color(1f, 0.85f, 0.2f),
+            TMP_Text txtNotice = CreateUIText("TxtNotice", menuPanel.transform, "", 24, FontStyle.Bold, new Color(1f, 0.85f, 0.2f),
                 new Vector2(0f, -730f), new Vector2(800f, 60f), font);
             ui.txtNotice = txtNotice;
 
@@ -378,27 +379,27 @@ namespace HitMe.Editor
             topImg.raycastTarget = false;
 
             // Round Text ("VÒNG 1/5" already on artwork, only update on round > 1)
-            Text txtRound = CreateUIText("TxtRound", topBar.transform, "", 28, FontStyle.Bold, new Color(1f, 0.88f, 0.2f),
+            TMP_Text txtRound = CreateUIText("TxtRound", topBar.transform, "", 28, FontStyle.Bold, new Color(1f, 0.88f, 0.2f),
                 new Vector2(-320f, -118f), new Vector2(200f, 50f), font);
             ui.txtRound = txtRound;
 
             // Countdown Timer (Centered right inside golden clock circle)
-            Text txtTimer = CreateUIText("TxtTimer", topBar.transform, "5", 34, FontStyle.Bold, new Color(0.12f, 0.10f, 0.08f),
+            TMP_Text txtTimer = CreateUIText("TxtTimer", topBar.transform, "5", 34, FontStyle.Bold, new Color(0.12f, 0.10f, 0.08f),
                 new Vector2(0f, -118f), new Vector2(90f, 60f), font);
             ui.txtTimer = txtTimer;
 
             // Player HP (under BẠN)
-            Text txtPlayerHp = CreateUIText("TxtPlayerHP", topBar.transform, "", 22, FontStyle.Bold, new Color(1f, 0.3f, 0.3f),
+            TMP_Text txtPlayerHp = CreateUIText("TxtPlayerHP", topBar.transform, "", 22, FontStyle.Bold, new Color(1f, 0.3f, 0.3f),
                 new Vector2(-365f, -250f), new Vector2(120f, 60f), font);
             ui.txtPlayerHP = txtPlayerHp;
 
             // Bot 1 HP (under Bot 1)
-            Text txtBotHp = CreateUIText("TxtBotHP", topBar.transform, "", 22, FontStyle.Bold, new Color(1f, 0.3f, 0.3f),
+            TMP_Text txtBotHp = CreateUIText("TxtBotHP", topBar.transform, "", 22, FontStyle.Bold, new Color(1f, 0.3f, 0.3f),
                 new Vector2(-220f, -250f), new Vector2(120f, 60f), font);
             ui.txtBotHP = txtBotHp;
 
             // Phase Banner ("CHỌN HƯỚNG NÉM | Đối thủ đang ẩn" already on artwork)
-            Text txtPhase = CreateUIText("TxtPhaseBanner", topBar.transform, "", 24, FontStyle.Bold, new Color(0.2f, 0.95f, 1f),
+            TMP_Text txtPhase = CreateUIText("TxtPhaseBanner", topBar.transform, "", 24, FontStyle.Bold, new Color(0.2f, 0.95f, 1f),
                 new Vector2(0f, -360f), new Vector2(650f, 50f), font);
             ui.txtPhaseBanner = txtPhase;
 
@@ -422,7 +423,7 @@ namespace HitMe.Editor
             ui.btnReady = btnReadyObj.GetComponent<Button>();
 
             // Overlay indicator for "ĐÃ KHÓA" when ready
-            Text txtReadyBtn = CreateUIText("TxtReadyBtn", btnReadyObj.transform, "ĐÃ KHÓA", 32, FontStyle.Bold, new Color(0.2f, 0.9f, 1f),
+            TMP_Text txtReadyBtn = CreateUIText("TxtReadyBtn", btnReadyObj.transform, "ĐÃ KHÓA", 32, FontStyle.Bold, new Color(0.2f, 0.9f, 1f),
                 Vector2.zero, new Vector2(400f, 100f), font);
             txtReadyBtn.gameObject.SetActive(false);
             ui.txtReadyBtn = txtReadyBtn;
@@ -432,22 +433,22 @@ namespace HitMe.Editor
             GameObject resPanel = CreateUIPanel("ResultPanel", canvasTr, new Color(0.05f, 0.04f, 0.03f, 0.92f), true);
             ui.resultPanel = resPanel;
 
-            Text txtResTitle = CreateUIText("TxtResultTitle", resPanel.transform, "CHIẾN THẮNG!", 54, FontStyle.Bold, new Color(1f, 0.85f, 0.2f),
+            TMP_Text txtResTitle = CreateUIText("TxtResultTitle", resPanel.transform, "CHIẾN THẮNG!", 54, FontStyle.Bold, new Color(1f, 0.85f, 0.2f),
                 new Vector2(0f, 460f), new Vector2(800f, 90f), font);
             ui.txtResultTitle = txtResTitle;
 
-            Text txtResSub = CreateUIText("TxtResultSubtitle", resPanel.transform, "Bạn đã hạ gục đối thủ xuất sắc!", 26, FontStyle.Normal, Color.white,
+            TMP_Text txtResSub = CreateUIText("TxtResultSubtitle", resPanel.transform, "Bạn đã hạ gục đối thủ xuất sắc!", 26, FontStyle.Normal, Color.white,
                 new Vector2(0f, 380f), new Vector2(800f, 60f), font);
             ui.txtResultSubtitle = txtResSub;
 
             GameObject statsCard = CreateUIPanel("StatsCard", resPanel.transform, new Color(0.12f, 0.09f, 0.08f, 0.95f), false);
             SetRectTransform(statsCard.GetComponent<RectTransform>(), new Vector2(0f, 140f), new Vector2(750f, 340f));
 
-            Text txtPStats = CreateUIText("TxtPlayerStats", statsCard.transform, "", 26, FontStyle.Normal, new Color(0.2f, 0.9f, 1f),
+            TMP_Text txtPStats = CreateUIText("TxtPlayerStats", statsCard.transform, "", 26, FontStyle.Normal, new Color(0.2f, 0.9f, 1f),
                 new Vector2(0f, 70f), new Vector2(700f, 110f), font);
             ui.txtPlayerStats = txtPStats;
 
-            Text txtBStats = CreateUIText("TxtBotStats", statsCard.transform, "", 26, FontStyle.Normal, new Color(1f, 0.5f, 0.5f),
+            TMP_Text txtBStats = CreateUIText("TxtBotStats", statsCard.transform, "", 26, FontStyle.Normal, new Color(1f, 0.5f, 0.5f),
                 new Vector2(0f, -70f), new Vector2(700f, 110f), font);
             ui.txtBotStats = txtBStats;
 
@@ -480,18 +481,19 @@ namespace HitMe.Editor
             return obj;
         }
 
-        private static Text CreateUIText(string name, Transform parent, string text, int fontSize,
+        private static TMP_Text CreateUIText(string name, Transform parent, string text, int fontSize,
             FontStyle style, Color color, Vector2 pos, Vector2 size, Font font, TextAnchor align = TextAnchor.MiddleCenter)
         {
             GameObject obj = new GameObject(name);
             obj.transform.SetParent(parent, false);
-            Text txt = obj.AddComponent<Text>();
+            TextMeshProUGUI txt = obj.AddComponent<TextMeshProUGUI>();
+            var tmpFont = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
+            if (tmpFont != null) txt.font = tmpFont;
             txt.text = text;
             txt.fontSize = fontSize;
-            txt.fontStyle = style;
+            txt.fontStyle = (style == FontStyle.Bold) ? FontStyles.Bold : FontStyles.Normal;
             txt.color = color;
-            txt.alignment = align;
-            txt.font = font;
+            txt.alignment = TextAlignmentOptions.Center;
             RectTransform rt = obj.GetComponent<RectTransform>();
             SetRectTransform(rt, pos, size);
             return txt;

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using HitMe.Core;
 using HitMe.Audio;
 
@@ -17,24 +18,24 @@ namespace HitMe.UI
         public Button btnTrainWithBot;
         public Button btnQuickMatch;
         public Button btnCreateRoom;
-        public Text txtNotice;
+        public TMP_Text txtNotice;
 
         [Header("InGame HUD Controls")]
-        public Text txtRound;
-        public Text txtTimer;
-        public Text txtPhaseBanner;
-        public Text txtPlayerHP;
-        public Text txtBotHP;
+        public TMP_Text txtRound;
+        public TMP_Text txtTimer;
+        public TMP_Text txtPhaseBanner;
+        public TMP_Text txtPlayerHP;
+        public TMP_Text txtBotHP;
         public Button btnReady;
-        public Text txtReadyBtn;
+        public TMP_Text txtReadyBtn;
         public Image imgWeaponSlot;
-        public Text txtWeaponName;
+        public TMP_Text txtWeaponName;
 
         [Header("Result Controls")]
-        public Text txtResultTitle;
-        public Text txtResultSubtitle;
-        public Text txtPlayerStats;
-        public Text txtBotStats;
+        public TMP_Text txtResultTitle;
+        public TMP_Text txtResultSubtitle;
+        public TMP_Text txtPlayerStats;
+        public TMP_Text txtBotStats;
         public Button btnRematch;
         public Button btnBackToHome;
 
@@ -247,8 +248,8 @@ namespace HitMe.UI
             }
             if (txtReadyBtn != null)
             {
-                txtReadyBtn.text = isLocked ? "ĐÃ KHÓA" : "";
-                txtReadyBtn.gameObject.SetActive(isLocked);
+                txtReadyBtn.text = isLocked ? "ĐÃ KHÓA" : "SẴN SÀNG";
+                txtReadyBtn.gameObject.SetActive(true);
             }
         }
     }
