@@ -1,26 +1,26 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 33204)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 20472)
-VBCSCompiler prewarm took 36.04 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 39600)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 18760)
+VBCSCompiler prewarm took 36.43 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T07:52:22.0600097Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T07:57:18.6600419Z"
 OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-10-28T07:52:22Z
+Date: 2026-10-28T07:57:18Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.3+d7ffd15
-  Session Id:              cc212b30681041a2bc5c67c356167d51
+  Session Id:              3ec313bf14a14ce798927a958191d357
   Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
-  External correlation Id: 9095116172544564491
+  External correlation Id: 1179858701138941113
   Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
 [Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.08s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T07:52:22.1402666Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T07:57:18.7452206Z"
 [Licensing::Client] Successfully updated the access token
-[Licensing::Module] Successfully updated the access token Jm1fuvqCnT...
+[Licensing::Module] Successfully updated the access token Z_cHdC19s-...
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 18968517174167-UnityPersXXXX
@@ -47,9 +47,9 @@ D:\HITME GAME\unity-client\Evidence\phase1\webgl-build.log
 -buildOutput
 D:\HITME GAME\unity-client\Evidence\phase1\WebGLBuild
 -hubSessionId
-551546ab-30f3-4533-811e-7932dbfb9774
+f2ffb49f-8a17-4903-b411-086096340445
 -accessToken
-Jm1fuvqCnTXDe8zw-HeMgMROXDoMsiv3JOYOdAsPw7g011f
+Z_cHdC19s-l3hGwdTDOsls2sAJws8Xjja91EEJB5xXA011f
 Successfully changed project path to: D:\HITME GAME\unity-client
 D:/HITME GAME/unity-client
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -90,16 +90,16 @@ D:/HITME GAME/unity-client
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [35068]  Target information:
+Player connection [39604]  Target information:
 
-Player connection [35068]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 470374503 [EditorId] 470374503 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [39604]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 1930197106 [EditorId] 1930197106 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [35068] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [35068] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [39604] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [39604] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-31968" after 0.3 seconds.
+[Package Manager] Connected to IPC stream "Upm-36068" after 0.4 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Initialising UDS system complete:
@@ -134,7 +134,7 @@ Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
 Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56968
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56068
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -142,31 +142,31 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.002210 seconds.
+Registered in 0.002146 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.939 seconds
-Domain Reload Profiling: 1674ms
-	BeginReloadAssembly (159ms)
-		CreateAndSetChildDomain (7ms)
-	RebuildCommonClasses (8ms)
-	RebuildNativeTypeToScriptingClass (24ms)
-	initialDomainReloadingComplete (83ms)
-	LoadAllAssembliesAndSetupDomain (460ms)
-		LoadAssemblies (151ms)
-		TypeCache.Refresh (305ms)
-			TypeCache.ScanAssembly (283ms)
-		AnalyzeDomain (1ms)
-	FinalizeReload (940ms)
+- Finished resetting the current domain, in  0.920 seconds
+Domain Reload Profiling: 1669ms
+	BeginReloadAssembly (164ms)
+		CreateAndSetChildDomain (14ms)
+	RebuildCommonClasses (9ms)
+	RebuildNativeTypeToScriptingClass (25ms)
+	initialDomainReloadingComplete (81ms)
+	LoadAllAssembliesAndSetupDomain (469ms)
+		LoadAssemblies (149ms)
+		TypeCache.Refresh (319ms)
+			TypeCache.ScanAssembly (302ms)
+		AnalyzeDomain (3ms)
+	FinalizeReload (921ms)
 		SetupLoadedEditorAssemblies (0ms)
 			LogAssemblyErrors (3ms)
-			InitializePlatformSupportModulesInManaged (5ms)
-			BeforeProcessingInitializeOnLoad (147ms)
-			ProcessInitializeOnLoadAttributes (165ms)
-			ProcessInitializeOnLoadMethodAttributes (315ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (152ms)
+			ProcessInitializeOnLoadAttributes (171ms)
+			ProcessInitializeOnLoadMethodAttributes (303ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -222,137 +222,136 @@ Application.AssetDatabase Initial Refresh Start
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Compiling Scripts
-ExitCode: 0 Duration: 0s258ms
+ExitCode: 0 Duration: 0s277ms
 [279/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-*** Tundra build success (0.20 seconds), 1 items updated, 319 evaluated
-AssetDatabase: script compilation time: 0.781852s
+*** Tundra build success (0.22 seconds), 1 items updated, 319 evaluated
+AssetDatabase: script compilation time: 0.839651s
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.779 seconds
-Domain Reload Profiling: 1620ms
-	BeginReloadAssembly (411ms)
-		DisableScriptedObjects (40ms)
-		CreateAndSetChildDomain (162ms)
-	RebuildCommonClasses (16ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (52ms)
-	LoadAllAssembliesAndSetupDomain (336ms)
-		LoadAssemblies (271ms)
-		TypeCache.Refresh (31ms)
-			TypeCache.ScanAssembly (24ms)
-		AnalyzeDomain (16ms)
-			BuildScriptInfoCaches (12ms)
-	FinalizeReload (784ms)
+- Finished resetting the current domain, in  0.728 seconds
+Domain Reload Profiling: 1536ms
+	BeginReloadAssembly (422ms)
+		DisableScriptedObjects (38ms)
+		CreateAndSetChildDomain (172ms)
+	RebuildCommonClasses (12ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (46ms)
+	LoadAllAssembliesAndSetupDomain (302ms)
+		LoadAssemblies (254ms)
+		TypeCache.Refresh (24ms)
+			TypeCache.ScanAssembly (16ms)
+		AnalyzeDomain (15ms)
+			BuildScriptInfoCaches (11ms)
+	FinalizeReload (729ms)
 		SetupLoadedEditorAssemblies (0ms)
 			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (155ms)
-			ProcessInitializeOnLoadAttributes (243ms)
-			ProcessInitializeOnLoadMethodAttributes (68ms)
-			AfterProcessingInitializeOnLoad (4ms)
-		AwakeInstancesAfterBackupRestoration (50ms)
+			BeforeProcessingInitializeOnLoad (141ms)
+			ProcessInitializeOnLoadAttributes (219ms)
+			ProcessInitializeOnLoadMethodAttributes (58ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (42ms)
 Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: 52b1bd4378d114b43a07620cff9e1853 - Path: Assets/WebGLTemplates/Phase1Mobile/index.html' with importer (DefaultImporter)
+Imported 'GUID: 52b1bd4378d114b43a07620cff9e1853' -> (Import Result ID: '8d271a1331dc1658a28389b271448e52') in 0.058 seconds [static dependencies only]. Details - ImportResultOutputID=8b070d450ea5b56d148c5f13a9beab16 DependenciesID=1fce718b89fa24407264e676002f7c2d StaticDependenciesID=c5b28edff789bf0cdca532c879d8864e 
 
-Asset Pipeline Refresh (id=279e6e9604edfa845b3a609e9206c6f8): Total: 2.835 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=e83d5066a4045f447aa1c2d370e910b5): Total: 2.980 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
-		Imports: total=0 (actual=0, local cache=0, cache server=0)
-		Asset DB Process Time: managed=0 ms, native=1116 ms
-		Asset DB Callback time: managed=29 ms, native=22 ms
-		Scripting: domain reloads=1, domain reload time=869 ms, compile time=786 ms, other=11 ms
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=2 ms, native=1160 ms
+		Asset DB Callback time: managed=94 ms, native=27 ms
+		Scripting: domain reloads=1, domain reload time=838 ms, compile time=843 ms, other=12 ms
 		Project Asset Count: scripts=314, non-scripts=328
-		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 24.614ms
-	ApplyChangesToAssetFolders: 0.761ms
-	Scan: 116.037ms
-	Collect global state as custom dependencies: 9.541ms
-	CategorizeScriptCompilationAssets: 7.091ms
-	ProcessAssetsWithTransientArtifactChanges: 25.940ms
-	CategorizeAssets: 7.311ms
-	CompileScripts: 786.194ms
-	ImportOutOfDateAssets: 809.051ms (784.946ms without children)
-		UnloadImportedAssets: 1.662ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.168ms
-		ImportSchedulerStart: 22.271ms
-	PostProcessAllAssets: 29.486ms
-		MonoPostProcessAllAssets: 29.370ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 11.479ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.345ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.099ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.589ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.382ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.232ms
-			SyncVS.PostprocessSyncProject 0.203ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.141ms
-	UnloadStreamsBegin: 1.917ms
-	GenerateScriptTypeSerializationHashes: 0.050ms
-	Untracked: 973.984ms
+	InvokePackagesCallback: 27.244ms
+	ApplyChangesToAssetFolders: 1.262ms
+	Scan: 174.474ms
+	Collect global state as custom dependencies: 10.169ms
+	OnSourceAssetsModified: 0.806ms
+	CategorizeScriptCompilationAssets: 7.736ms
+	ProcessAssetsWithTransientArtifactChanges: 18.024ms
+	CategorizeAssets: 5.202ms
+	CompileScripts: 842.892ms
+	ImportOutOfDateAssets: 813.437ms (730.435ms without children)
+		ImportManagerImport: 60.224ms (1.948ms without children)
+		UnloadImportedAssets: 2.056ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.115ms
+		ImportSchedulerStart: 20.596ms
+	PostProcessAllAssets: 95.531ms
+		VCAutoAddAssetPostprocess 0.951ms
+		MonoPostProcessAllAssets: 94.119ms
+			AssetPostprocessor.OnPostprocessAllAssets 30.302ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 12.912ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 11.357ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 11.255ms
+			AssetChangedListener.OnPostprocessAllAssets 2.491ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.239ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.437ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.037ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.955ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.894ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.509ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.428ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.339ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.311ms
+			AssetEvents.OnPostprocessAllAssets 0.302ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.276ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.235ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.205ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.190ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.170ms
+			SyncVS.PostprocessSyncProject 0.162ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.139ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.124ms
+	PostAssetChangesProfiler: 0.560ms
+	UnloadStreamsBegin: 1.685ms
+	PersistCurrentRevisions: 0.289ms
+	GenerateScriptTypeSerializationHashes: 0.058ms
+	Untracked: 942.229ms
 
 Application.AssetDatabase Initial Refresh End
-Scanning for USB devices : 1.248ms
+Scanning for USB devices : 1.351ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 903 unused Assets / (0.9 MB). Loaded Objects now: 1642.
-Memory consumption went from 231.2 MB to 230.4 MB.
-Total: 8.794200 ms (FindLiveObjects: 0.229500 ms CreateObjectMapping: 0.044800 ms MarkObjects: 7.734700 ms  DeleteObjects: 0.652700 ms)
+Unloading 903 unused Assets / (0.7 MB). Loaded Objects now: 1644.
+Memory consumption went from 232.6 MB to 231.9 MB.
+Total: 8.637700 ms (FindLiveObjects: 0.270400 ms CreateObjectMapping: 0.032200 ms MarkObjects: 7.767600 ms  DeleteObjects: 0.433600 ms)
 
 Importing 'GUID: 00000000000000004000000000000000 - Path: ProjectSettings/ProjectSettings.asset' with importer (LibraryAssetImporter)
-Imported 'GUID: 00000000000000004000000000000000' -> (Import Result ID: '2a7f5ff7a0f757de5f3eaae34fee40cc') in 0.005 seconds [static dependencies only]. Details - ImportResultOutputID=054c890a8f4b6dddbea933bc5e4b7df4 DependenciesID=f588abe21f1ac11a7fdad2ce120bd2a4 StaticDependenciesID=3bc5f495cb401adf81ea376fef10630f 
-Asset Pipeline Refresh (id=ca54c4e707e96a3418b5a450c113f537): Total: 0.061 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Imported 'GUID: 00000000000000004000000000000000' -> (Import Result ID: '2a7f5ff7a0f757de5f3eaae34fee40cc') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=054c890a8f4b6dddbea933bc5e4b7df4 DependenciesID=f588abe21f1ac11a7fdad2ce120bd2a4 StaticDependenciesID=3bc5f495cb401adf81ea376fef10630f 
+Asset Pipeline Refresh (id=33cb6fcb35d472649b130f12bc998313): Total: 0.028 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aESkipCompile.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 0s468ms
-[2/3        0s] BuildPlayerDataGenerator Library/BuildPlayerData/Editor/TypeDb-All.json
-*** Tundra build success (0.41 seconds), 1 items updated, 3 evaluated
-Asset Pipeline Refresh (id=9235b807d3e1e46448afff3adbc13c06): Total: 0.003 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+ExitCode: 0 Duration: 0s141ms
+*** Tundra build success (0.09 seconds), 0 items updated, 3 evaluated
+Asset Pipeline Refresh (id=972c5ad5b32943a4196a96bd56621be7): Total: 0.004 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
 [ScriptCompilation] Requested script compilation because: Recompiling scripts for player build.
 BuildPlayer: start building target 20
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aP.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
-Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.9924316
-Worker ready: AssetImportWorkerHW0 0
-ExitCode: 0 Duration: 1s930ms
-[125/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[130/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
-[131/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
-[132/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
-[133/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
-[134/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
-[135/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
-[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.dll
-[137/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
-[138/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Game.dll (+2 others)
-Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Scripts\Game\WebGLPointerDiagnostics.cs(14,5): warning UAC0009: DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.
-[140/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/HitMe.Game.dll (+pdb)
-Processing assembly Library/Bee/artifacts/2000b0aP.dag/HitMe.Game.dll, with 111 defines and 216 references
-
-processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-[141/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/Assembly-CSharp.dll (+pdb)
-Processing assembly Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll, with 111 defines and 219 references
-
-processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-[142/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.pdb
-[143/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.pdb
-[144/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll
-[145/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.dll
-[147/148    0s] BuildPlayerDataGenerator Library/BuildPlayerData/Player/RuntimeInitializeOnLoads.json (+1 other)
-*** Tundra build success (1.88 seconds), 17 items updated, 148 evaluated
-Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Scripts\Game\WebGLPointerDiagnostics.cs(14,5): warning UAC0009: DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.
+ExitCode: 0 Duration: 0s810ms
+[127/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[134/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.pdb
+[135/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
+[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
+[137/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.dll
+[138/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
+[139/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
+[140/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
+[141/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.dll
+[142/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
+[143/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
+[144/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.pdb
+[145/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll
+*** Tundra build success (0.76 seconds), 13 items updated, 148 evaluated
 Not rebuilding Data files -- no changes
 
 
@@ -588,58 +587,33 @@ Dependency assembly - System.Xml.XPath.XDocument.dll
 Dependency assembly - System.Security.Cryptography.Encoding.dll
 Dependency assembly - System.Runtime.DurableInstancing.dll
 
+Total cache size 268293840
+Total cache size after purge 268293840, took 00:00:01.1334870
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player645a0a7c.dag" --profile="Library/Bee/backend1.traceevents" Player
 WorkingDir: D:/HITME GAME/unity-client
-DisplayProgressbar: Incremental Player Build
-Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.9262207
 [           0s] ComputeLeafInputSignature Lib_WebGL_wasm Library/Bee/artifacts/WebGL/il2cpp/release_WebGL_wasm/il2cpp.a [pending dependencies]
 [           0s] ComputeLeafInputSignature Lib_WebGL_wasm Library/Bee/artifacts/WebGL/il2cpp/release_WebGL_wasm/il2cpp.a [success 533298053b6f1256a732c95389419aa9]
-[ 12/268    0s] AddBootConfigGUID Library/Bee/artifacts/WebGL/boot.config
-[BUSY       6s] UnityLinker D:/HITME GAME/unity-client/Library/Bee/artifacts/unitylinker_ber2.traceevents
-[ 13/268    7s] UnityLinker D:/HITME GAME/unity-client/Library/Bee/artifacts/unitylinker_ber2.traceevents
-D:\App\UNITY\6000.6.4f1\Editor\Data\il2cpp\build\deploy\UnityLinker.exe @Library\Bee\artifacts\rsp\8760909773510073966.rsp
-[ 16/268    0s] CopyFiles Temp/EditorBuildOutput/UnityLinkerToEditorData.json
-[ 17/268    0s] ICallRegistrationGenerator D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/UnityICallRegistration.cpp
-[BUSY       6s] IL2CPP_CodeGen D:/HITME GAME/unity-client/Library/Bee/artifacts/il2cpp_conv_hztv.traceevents
-[BUSY      16s] IL2CPP_CodeGen D:/HITME GAME/unity-client/Library/Bee/artifacts/il2cpp_conv_hztv.traceevents
-[ 19/268   21s] IL2CPP_CodeGen D:/HITME GAME/unity-client/Library/Bee/artifacts/il2cpp_conv_hztv.traceevents
-D:\App\UNITY\6000.6.4f1\Editor\Data\il2cpp\build\deploy\il2cpp.exe --convert-to-cpp --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/Assembly-CSharp.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/HitMe.Core.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/HitMe.Game.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/Mono.Security.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/mscorlib.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/System.Configuration.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/System.Core.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/System.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/System.Runtime.CompilerServices.Unsafe.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/System.Xml.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/Unity.Scripting.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.AnimationModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.AudioModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.BurstModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.ContentLoadModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.CoreModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.GridModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.HierarchyCoreModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.ImageConversionModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.IMGUIModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.InputForUIModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.InputLegacyModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.MathematicsModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.Physics2DModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.PhysicsModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.PropertiesModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.ScreenCaptureModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.ScriptingModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.SpriteShapeModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.TextCoreFontEngineModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.TextCoreTextEngineModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.TextRenderingModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.TilemapModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.U2DRuntimeModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.UI.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.UIElementsModule.dll --assembly=Library/Bee/artifacts/WebGL/ManagedStripped/UnityEngine.UIModule.dll --generatedcppdir=D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/cpp --symbols-folder=D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/cpp/Symbols --enable-analytics --emit-method-map --dotnetprofile=unityaot-linux --usymtool-path=D:/App/UNITY/6000.6.4f1/Editor/Data/Tools\usymtool.exe --profiler-report --profiler-output-file=D:/HITME GAME/unity-client/Library/Bee/artifacts/il2cpp_conv_hztv.traceevents --print-command-line --static-lib-il2-cpp --data-folder=D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/data
-[244/268    0s] CopyFiles D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/build/Data/Resources/mscorlib.dll-resources.dat
-[247/268    0s] CopyFiles D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/build/Data/Metadata/global-metadata.dat
-[251/268    0s] CopyFiles Temp/EditorBuildOutput/MethodMap.tsv
-[252/268    0s] Assemble WebGL Data Library/Bee/artifacts/WebGL/webgl.data
-[253/268    0s] CopyFiles Evidence/phase1/WebGLBuild/Build/WebGLBuild.data
-[254/268    0s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/lbqfvqip4rcu.o
-[255/268    2s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/5r02g3yvlh0z.o
-[256/268    2s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/ctrw457s23k6.o
-[257/268    3s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/lvybwevxpk1c.o
-[258/268    7s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/h74auiaemibx.o
-[BUSY      12s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/rus1a4shj9ai.o
-[259/268   14s] C_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/rus1a4shj9ai.o
-[260/268    0s] Lib_WebGL_wasm Library/Bee/artifacts/WebGL/GameAssembly/release_WebGL_wasm/GameAssembly.a
-[261/268    0s] CopyFiles D:/HITME GAME/unity-client/Library/Bee/artifacts/WebGL/il2cppOutput/build/GameAssembly.a
-[BUSY       6s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      16s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      26s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      36s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      47s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      57s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      67s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      77s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[BUSY      87s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-[262/268   90s] Link_WebGL_wasm Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.js (+wasm)
-warning: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/lib/lib_webgpu.js:7: #warning "Firefox browser before version 149 has issues with WebGPU (e.g. https://bugzil.la/2023423 )"
-warning: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/lib/lib_webgpu.js:11: #warning "Firefox browser before version 152 has issues with WebGPU .mapAsync() function: https://bugzil.la/2023418"
-warning: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/lib/lib_webgpu.js:7: #warning "Firefox browser before version 149 has issues with WebGPU (e.g. https://bugzil.la/2023423 )"
-warning: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/lib/lib_webgpu.js:11: #warning "Firefox browser before version 152 has issues with WebGPU .mapAsync() function: https://bugzil.la/2023418"
-warning: JS library symbol '$stackTrace' is deprecated. Please open a bug if you have a continuing need for this symbol [-Wdeprecated]
-emcc: warning: warnings in JS library compilation [-Wjs-compiler]
-[263/268    0s] CopyFiles Evidence/phase1/WebGLBuild/Build/WebGLBuild.wasm
-[264/268    0s] Merging JavaScript Code Library/Bee/artifacts/WebGL/build/debug_WebGL_wasm/build.framework.js
-[265/268    0s] CopyFiles Evidence/phase1/WebGLBuild/Build/WebGLBuild.framework.js
-*** Tundra build success (134.59 seconds - 0:02:14), 22 items updated, 268 evaluated
-ExitCode: 0 Duration: 2m:14s
+DisplayProgressbar: Incremental Player Build
+*** Tundra requires additional run (0.10 seconds), 0 items updated, 268 evaluated
+*** Additional run caused by: contents change of Library/Bee/artifacts/WebGL/ManagedStripped
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\WebGLPlayerBuildProgram.exe" "D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Bee;D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player645a0a7c.dag.json" "Library/Bee/Player645a0a7c-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 4 Duration: 0s148ms
+Worker ready: AssetImportWorkerHW0 0
+Total cache size 268293840
+ExitCode: 0 Duration: 0s712ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player645a0a7c.dag" --dagfilejson="Library\Bee\Player645a0a7c.dag.json" --profile="Library/Bee/backend2.traceevents" Player
+WorkingDir: D:/HITME GAME/unity-client
+Finished compiling graph: 460 nodes, 1168 flattened edges (1164 ToBuild, 3 ToUse), maximum node priority 2147483647
+[ 16/267    0s] CopyFiles Temp/EditorBuildOutput/UnityLinkerToEditorData.json
+[           0s] ComputeLeafInputSignature Lib_WebGL_wasm Library/Bee/artifacts/WebGL/il2cpp/release_WebGL_wasm/il2cpp.a [pending dependencies]
+[257/268    0s] CopyFiles Temp/EditorBuildOutput/MethodMap.tsv
+[           0s] ComputeLeafInputSignature Lib_WebGL_wasm Library/Bee/artifacts/WebGL/il2cpp/release_WebGL_wasm/il2cpp.a [success 533298053b6f1256a732c95389419aa9]
+[265/268    0s] PreprocessJS Evidence/phase1/WebGLBuild/index.html
+[266/268    0s] PreprocessJS Library/Bee/artifacts/WebGLWebGLBuild.loader.js
+[267/268    0s] CopyFiles Evidence/phase1/WebGLBuild/Build/WebGLBuild.loader.js
+*** Tundra build success (0.70 seconds), 5 items updated, 268 evaluated
+ExitCode: 0 Duration: 0s749ms
 [websockify wrapper] Start node and websockify.js
 
 -------------------------------------------------------------------------------
@@ -647,29 +621,28 @@ Build Report
 Information on used Assets is not available, since player data was not rebuilt.
 Do a clean build to view the Asset build report information.
 -------------------------------------------------------------------------------
-[websockify wrapper] Proxying from :35020 to localhost:34999
-[Licensing::Client] Successfully resolved entitlement details
 Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
 Unloading 26 unused Assets / (0.8 MB). Loaded Objects now: 1661.
-Memory consumption went from 246.5 MB to 245.8 MB.
-Total: 10.334600 ms (FindLiveObjects: 0.216900 ms CreateObjectMapping: 0.022700 ms MarkObjects: 9.597300 ms  DeleteObjects: 0.376500 ms)
+Memory consumption went from 246.0 MB to 245.2 MB.
+Total: 9.721100 ms (FindLiveObjects: 0.210300 ms CreateObjectMapping: 0.025600 ms MarkObjects: 8.894300 ms  DeleteObjects: 0.446000 ms)
 
 DisplayProgressNotification: Build Successful
 Build Finished, Result: Success.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Temp/__Backupscenes/0.backup'
-	Deserialize:            0.438 ms
-	Integration:            8.443 ms
+	Deserialize:            0.602 ms
+	Integration:            7.000 ms
 	Integration of assets:  0.002 ms
-	Thread Wait Time:       0.016 ms
-	Total Operation Time:   8.898 ms
-Unloading 0 unused Assets / (15.6 KB). Loaded Objects now: 1660.
-Memory consumption went from 243.1 MB to 243.1 MB.
-Total: 7.764900 ms (FindLiveObjects: 0.193600 ms CreateObjectMapping: 0.015100 ms MarkObjects: 7.434700 ms  DeleteObjects: 0.006500 ms)
+	Thread Wait Time:       0.021 ms
+	Total Operation Time:   7.625 ms
+Unloading 0 unused Assets / (83 B). Loaded Objects now: 1660.
+Memory consumption went from 242.5 MB to 242.5 MB.
+Total: 8.576500 ms (FindLiveObjects: 0.250100 ms CreateObjectMapping: 0.056500 ms MarkObjects: 8.137700 ms  DeleteObjects: 0.007200 ms)
 
-##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793174086271,"processId":31968,"steps":[{"description":"Call PrepareForBuild callbacks","duration":1},{"description":"Call internal build started callbacks","duration":1},{"description":"Preprocess Player","duration":27},{"description":"Save scenes before build","duration":0},{"description":"Prepare For Build","duration":3},{"description":"ProducePlayerScriptAssemblies","duration":2729},{"description":"Verify Build setup","duration":71},{"description":"Prepare assets for target platform","duration":2},{"description":"Prepare splash screen","duration":1},{"description":"Run script only build","duration":18},{"description":"Build scripts DLLs","duration":15},{"description":"Postprocess built player","duration":135015},{"description":"Call Post-Process callbacks","duration":22}],"duration":137905}
+##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793174248349,"processId":36068,"steps":[{"description":"Call PrepareForBuild callbacks","duration":0},{"description":"Call internal build started callbacks","duration":1},{"description":"Preprocess Player","duration":24},{"description":"Save scenes before build","duration":0},{"description":"Prepare For Build","duration":2},{"description":"ProducePlayerScriptAssemblies","duration":1264},{"description":"Verify Build setup","duration":72},{"description":"Prepare assets for target platform","duration":2},{"description":"Prepare splash screen","duration":0},{"description":"Run script only build","duration":19},{"description":"Build scripts DLLs","duration":13},{"description":"Postprocess built player","duration":2017},{"description":"Call Post-Process callbacks","duration":24}],"duration":3438}
+[websockify wrapper] Proxying from :35020 to localhost:34999
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.9190293
+Total cache size after purge 268293840, took 00:00:00.9898183
 Batchmode quit successfully invoked - shutting down!
 [websockify wrapper] Kill
 [websockify wrapper] Process killed
@@ -680,18 +653,22 @@ Input Polling Thread exited.
 Input System module state changed to: Shutdown.
 [Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
 [Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Shut down UDS service system complete
 Lingering sessions upon destruction of worker manager
 Unity Data Store service was successfully shut down
 UDS shutting down local client system
-Shut down UDS service system complete
 AcceleratorClientConnectionCallback - disconnected - :0
 Cleanup mono
 CodeReloadManager destroyed
 [websockify wrapper] Kill
-abort_threads: Failed aborting id: 0000000000006EF4, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000001BE0, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000006EF4, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 00000000000073C4, mono_thread_manage will ignore it
 
-debugger-agent: Unable to listen on 3452
+abort_threads: Failed aborting id: 0000000000001BE0, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000073C4, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3424
 Exiting batchmode successfully now!
 [ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

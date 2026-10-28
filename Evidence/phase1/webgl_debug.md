@@ -38,3 +38,8 @@
 
 - Pixel inspection of the first repaired capture showed the canvas background rather than the configured floor. `ArenaView` used Unity's default 100 pixels-per-unit for a one-pixel white sprite, so the nominal `10 x 16` floor rendered as `0.1 x 0.16` world units.
 - Commit `3a8cb36` creates that sprite with one pixel per world unit. The final Chrome Device Toolbar capture `webgl_chrome_device_fixed.png` shows the full gray floor and white arena border together with HUD, BẠN, and the yellow touch ring.
+
+## Safari cache mitigation
+
+- The supplied iPhone capture still showed the original skybox-only artifact after the desktop repair. Its visual state predates the Solid Color camera, HUD, and arena fixes, indicating cached fixed-name WebGL resources rather than the current build.
+- Commit `fc09c38` applies the `v` query parameter to loader, data, framework, and wasm URLs. Use `?v=fc09c38` (and `&debugPointer=1` for telemetry) to force Safari to load one matching build set.
