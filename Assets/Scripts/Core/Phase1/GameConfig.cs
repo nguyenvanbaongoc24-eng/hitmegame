@@ -26,9 +26,9 @@ namespace HitMe.Core
         public float PlaceSeconds = 5f;
         public int MaxRounds = 5;
         public RoundLimitTiebreakPolicy RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
-        public float ArenaWidth = 8.5f;
-        public float ArenaHeight = 12.0f;
-        public float PlayerRadius = 0.45f;
+        public float ArenaWidth = 9.0f;
+        public float ArenaHeight = 11.4f;
+        public float PlayerRadius = 0.55f;
         public float WeaponSpeed = 14f;
         public int DamagePerHit = 1;
         public int MaxHitsPerThrow = 1;

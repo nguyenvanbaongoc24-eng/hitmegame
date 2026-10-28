@@ -65,6 +65,56 @@ namespace HitMe.Editor
             Debug.Log(text.ToString());
         }
 
+        [MenuItem("Tools/HIT ME/Run Bot Simulation v4 (PlayerRadius 0.55)")]
+        public static void GenerateSimulationEvidenceV4()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset").ToCore();
+            var wins = new int[config.MaxPlayers];
+            var roundCounts = new SortedDictionary<int, int>();
+            var roundsBySeed = new List<int>();
+            int totalRounds = 0;
+            int clearWinners = 0;
+            int hpDraws = 0;
+            for (uint seed = 1; seed <= 1000; seed++)
+            {
+                var result = MatchSimulator.RunBotMatchDetailed(config, seed);
+                totalRounds += result.Rounds;
+                roundsBySeed.Add(result.Rounds);
+                int count;
+                roundCounts.TryGetValue(result.Rounds, out count);
+                roundCounts[result.Rounds] = count + 1;
+                if (result.WinnerIds.Count == 1)
+                {
+                    clearWinners++;
+                }
+                else if (result.WinnerIds.Count > 1)
+                {
+                    hpDraws++;
+                }
+                for (int w = 0; w < result.WinnerIds.Count; w++)
+                {
+                    int index;
+                    if (int.TryParse(result.WinnerIds[w].Replace("bot-", ""), out index) && index >= 0 && index < wins.Length) wins[index]++;
+                }
+            }
+            var text = new StringBuilder();
+            text.AppendLine("Phase 2 Bot Simulation v4 (Arena 9.0x11.4, PlayerRadius 0.55)");
+            text.AppendLine("Config: Arena=" + config.ArenaWidth + "x" + config.ArenaHeight + ", PlayerRadius=" + config.PlayerRadius + ", MaxRounds=" + config.MaxRounds + ", Tiebreak=" + config.RoundLimitTiebreak + ", NoAim=" + config.NoAimRule);
+            text.AppendLine("Matches: 1000");
+            text.AppendLine("Average rounds: " + (totalRounds / 1000f).ToString("0.000"));
+            text.AppendLine("Minimum rounds: " + roundsBySeed.Min());
+            text.AppendLine("Maximum rounds: " + roundsBySeed.Max());
+            text.AppendLine("Clear winner matches: " + clearWinners + " (" + (clearWinners / 10f).ToString("0.0") + "%)");
+            text.AppendLine("HP draw / shared win matches: " + hpDraws + " (" + (hpDraws / 10f).ToString("0.0") + "%)");
+            text.AppendLine("Round distribution (rounds: matches):");
+            foreach (var pair in roundCounts) text.AppendLine(pair.Key + ": " + pair.Value);
+            for (int i = 0; i < wins.Length; i++) text.AppendLine("Bot position " + (i + 1) + ": " + wins[i] + " shared/sole wins (" + (wins[i] / 10f).ToString("0.0") + "%)");
+
+            Directory.CreateDirectory("Evidence/phase2");
+            File.WriteAllText("Evidence/phase2/sim_v4.txt", text.ToString());
+            Debug.Log(text.ToString());
+        }
+
         public static void GenerateAutoPlayEvidence()
         {
             var config = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset").ToCore();

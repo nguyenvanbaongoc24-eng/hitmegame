@@ -101,7 +101,7 @@ namespace HitMe.Game
 
             EnsureStaticResources();
 
-            // 1. Shadow: Standardized to match playerRadius = 0.45f for all characters
+            // 1. Shadow: Standardized procedural soft shadow for playerRadius = 0.55f (width = 1.125u, 12.5% arena width)
             if (_shadow == null)
             {
                 var sGo = new GameObject("Shadow");
@@ -111,31 +111,34 @@ namespace HitMe.Game
                 _shadow.sprite = _defaultShadow;
                 _shadow.sortingOrder = 0;
                 _shadow.color = new Color(0f, 0f, 0f, 0.45f);
-                sGo.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
+                sGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
             }
             else
             {
-                _shadow.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
+                _shadow.sprite = _defaultShadow;
+                _shadow.color = new Color(0f, 0f, 0f, 0.45f);
+                _shadow.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
                 _shadow.transform.localPosition = new Vector3(0f, -0.05f, 0f);
             }
 
-            // 2. Foot Ring: Standardized to match playerRadius = 0.45f (width = 0.90u) for all characters
+            // 2. Foot Ring: Standardized procedural ring for playerRadius = 0.55f (width = 1.125u, height = 0.675u, h/w = 0.6)
             if (_footRing == null)
             {
                 var rGo = new GameObject("FootRing");
                 rGo.transform.SetParent(transform, false);
-                rGo.transform.localPosition = new Vector3(0f, 0.05f, 0f);
+                rGo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
                 _footRing = rGo.AddComponent<SpriteRenderer>();
                 _footRing.sprite = _defaultRing;
                 _footRing.sortingOrder = 1;
                 _footRing.color = color;
-                rGo.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
+                rGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
             }
             else
             {
+                _footRing.sprite = _defaultRing;
                 _footRing.color = color;
-                _footRing.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
-                _footRing.transform.localPosition = new Vector3(0f, 0.05f, 0f);
+                _footRing.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
+                _footRing.transform.localPosition = new Vector3(0f, 0.02f, 0f);
             }
 
             // 3. Body & Animator
@@ -204,15 +207,16 @@ namespace HitMe.Game
                 _body.sprite = _defaultSprites[assetIdx];
             }
 
-            // Character 4 is Chú Chó Vàng: scale 1.65 to ensure visual height >= 70% of human height
-            // (1.496u = 72.2% of Nam Làng 2.073u, 79.6% of human average)
+            // Target scale: Nam Lang height reduced from 2.073 to 1.50 world units (-28%, matching mockup ~13% arena height)
+            // Scale factor for humans = 1.50 / 2.0733 = 0.7235f
+            // Chú Chó Vàng height = 72.5% of human = 1.0875 units -> scale 1.182f
             if (assetIdx == 4)
             {
-                _body.transform.localScale = new Vector3(1.65f, 1.65f, 1f);
+                _body.transform.localScale = new Vector3(1.182f, 1.182f, 1f);
             }
             else
             {
-                _body.transform.localScale = Vector3.one;
+                _body.transform.localScale = new Vector3(0.7235f, 0.7235f, 1f);
             }
 
             // 6th player reuses character 0 with a color tint (Magenta / Purple)
@@ -226,7 +230,7 @@ namespace HitMe.Game
             }
         }
 
-        public void SetHitboxVisible(bool visible, float radius = 0.45f)
+        public void SetHitboxVisible(bool visible, float radius = 0.55f)
         {
             if (_hitboxCircle == null)
             {
@@ -329,15 +333,11 @@ namespace HitMe.Game
 #if UNITY_EDITOR
             if (_defaultShadow == null)
             {
-                _defaultShadow = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/shadow.png");
+                _defaultShadow = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_shadow.png");
             }
             if (_defaultRing == null)
             {
-                _defaultRing = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/selection_ring.png");
-                if (_defaultRing == null)
-                {
-                    _defaultRing = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_player_foot_ring_cyan.png");
-                }
+                _defaultRing = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_foot_ring.png");
             }
             if (_defaultFont == null)
             {

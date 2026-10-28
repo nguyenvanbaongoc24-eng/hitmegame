@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using System.IO;
 using System.Linq;
+using HitMe.Core;
+using HitMe.Editor;
 using HitMe.Game;
 using TMPro;
 using UnityEditor;
@@ -13,8 +15,11 @@ public static class Phase2PrefabBuilder
     [MenuItem("Tools/HIT ME/Build Phase 2 Prefabs and Test Scene")]
     public static void BuildAll()
     {
+        ProceduralFootElements.GenerateAll();
         BuildPrefabs();
         BuildTestScene();
+        BuildHitboxComparisonScene();
+        BuildTrueArenaScene();
     }
 
     public static void BuildPrefabs()
@@ -76,34 +81,38 @@ public static class Phase2PrefabBuilder
         var playerGo = new GameObject("PlayerView");
         var playerComp = playerGo.AddComponent<PlayerView>();
 
+        // Procedural soft shadow (smooth alpha gradient, zero checkerboard)
         var shadowGo = new GameObject("Shadow");
         shadowGo.transform.SetParent(playerGo.transform, false);
         shadowGo.transform.localPosition = new Vector3(0f, -0.05f, 0f);
-        shadowGo.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
+        shadowGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
         var shadowSr = shadowGo.AddComponent<SpriteRenderer>();
-        shadowSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/shadow.png");
+        shadowSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_shadow.png");
         shadowSr.sortingOrder = 0;
         shadowSr.color = new Color(0f, 0f, 0f, 0.45f);
 
+        // Procedural thin elliptical foot ring (perspective 0.6, width = 1.125u matching 12.5% arena width)
         var ringGo = new GameObject("FootRing");
         ringGo.transform.SetParent(playerGo.transform, false);
-        ringGo.transform.localPosition = new Vector3(0f, 0.05f, 0f);
-        ringGo.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
+        ringGo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+        ringGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
         var ringSr = ringGo.AddComponent<SpriteRenderer>();
-        ringSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/selection_ring.png");
-        if (ringSr.sprite == null) ringSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_player_foot_ring_cyan.png");
+        ringSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_foot_ring.png");
         ringSr.sortingOrder = 1;
         ringSr.color = Color.cyan;
 
+        // Body: Visual scale 0.7235 brings Nam Lang height down from 2.07u to 1.50u (~13% arena height)
         var bodyGo = new GameObject("Body");
         bodyGo.transform.SetParent(playerGo.transform, false);
         bodyGo.transform.localPosition = Vector3.zero;
+        bodyGo.transform.localScale = new Vector3(0.7235f, 0.7235f, 1f);
         var bodySr = bodyGo.AddComponent<SpriteRenderer>();
         bodySr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
         bodySr.sortingOrder = 2;
         var bodyAnim = bodyGo.AddComponent<Animator>();
         bodyAnim.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/Cau_Be_Lang/Cau_Be_Lang_Controller.controller");
 
+        // Debug Hitbox: Standardized R = 0.55f for all characters (DISABLED by default)
         var hbGo = new GameObject("DebugHitbox");
         hbGo.transform.SetParent(playerGo.transform, false);
         hbGo.transform.localPosition = Vector3.zero;
@@ -117,21 +126,26 @@ public static class Phase2PrefabBuilder
         hbLr.endColor = new Color(0.1f, 1f, 0.4f, 0.95f);
         hbLr.sharedMaterial = bodySr.sharedMaterial;
         hbLr.sortingOrder = 4;
-        float hbRadius = 0.45f;
+        float hbRadius = 0.55f;
         for (int i = 0; i < 36; i++)
         {
             float angle = Mathf.PI * 2f * i / 36;
             hbLr.SetPosition(i, new Vector3(Mathf.Cos(angle) * hbRadius, Mathf.Sin(angle) * hbRadius, 0f));
         }
-        hbLr.enabled = false;
+        hbLr.enabled = false; // Tắt mặc định, chỉ bật bằng cờ debug
+
+        // Separate physical touch collider (diameter >= 9mm, invisible)
+        var touchCol = playerGo.AddComponent<CircleCollider2D>();
+        touchCol.radius = 0.75f;
+        touchCol.isTrigger = true;
 
         var labelGo = new GameObject("Label");
         labelGo.transform.SetParent(playerGo.transform, false);
-        labelGo.transform.localPosition = new Vector3(0f, 2.2f, 0f);
+        labelGo.transform.localPosition = new Vector3(0f, 1.75f, 0f);
         var labelTmp = labelGo.AddComponent<TextMeshPro>();
-        labelTmp.rectTransform.sizeDelta = new Vector2(2.4f, 0.9f);
+        labelTmp.rectTransform.sizeDelta = new Vector2(2.4f, 0.8f);
         labelTmp.alignment = TextAlignmentOptions.Center;
-        labelTmp.fontSize = 1.05f;
+        labelTmp.fontSize = 0.95f;
         labelTmp.color = Color.white;
         var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
         if (fontAsset != null) labelTmp.font = fontAsset;
@@ -245,14 +259,14 @@ public static class Phase2PrefabBuilder
             pGo.transform.position = positions[i];
             var pv = pGo.GetComponent<PlayerView>();
             pv.Initialise("p" + i, ringColors[i], i);
-            pv.SetHitboxVisible(true, 0.45f);
+            pv.SetHitboxVisible(false); // Turned off by default in gameplay test
 
             var label = pGo.GetComponentInChildren<TextMeshPro>();
             if (label != null)
             {
                 label.rectTransform.sizeDelta = new Vector2(2.3f, 0.8f);
                 label.fontSize = 0.95f;
-                float labelY = (i == 4 ? 2.1f : 2.4f);
+                float labelY = (i == 4 ? 1.40f : 1.75f);
                 label.transform.localPosition = new Vector3(0f, labelY, 0f);
                 label.rectTransform.anchoredPosition = new Vector2(0f, labelY);
                 label.text = playerNames[i] + "\n3/3 HP";
@@ -292,10 +306,6 @@ public static class Phase2PrefabBuilder
         // 8. Footer Info
         CreateText("FooterInfo", "Sprite Atlases: Characters, UI, VFX, Env  •  Tất cả Prefabs & Tiếng Việt hợp lệ", new Vector3(0f, -6.1f, 0f), new Vector2(7.6f, 0.6f), 0.85f, new Color(0.4f, 0.48f, 0.6f), fontAsset);
 
-        // Add automated evidence screenshot capture component
-        var captureGo = new GameObject("EvidenceCapture");
-        captureGo.AddComponent<Phase2Step1Capture>();
-
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/Phase2_Step1_AssetTest.unity");
         Debug.Log("Saved Test Scene: Assets/Scenes/Phase2_Step1_AssetTest.unity");
     }
@@ -308,15 +318,15 @@ public static class Phase2PrefabBuilder
         var camGo = new GameObject("Main Camera");
         var cam = camGo.AddComponent<Camera>();
         cam.orthographic = true;
-        cam.orthographicSize = 2.85f;
+        cam.orthographicSize = 2.45f;
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = new Color(0.06f, 0.08f, 0.12f);
         camGo.tag = "MainCamera";
-        camGo.transform.position = new Vector3(0f, 0.45f, -10f);
+        camGo.transform.position = new Vector3(0f, 0.25f, -10f);
 
         var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
 
-        // 1. Sân (Arena 8.5 x 12.0)
+        // 1. Sân (Arena 9.0 x 11.4)
         var arenaGo = new GameObject("Arena");
         var arenaSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/arena_background.png");
         if (arenaSprite != null)
@@ -324,15 +334,15 @@ public static class Phase2PrefabBuilder
             var arenaBgGo = new GameObject("ArenaBackground");
             arenaBgGo.transform.SetParent(arenaGo.transform);
             arenaBgGo.transform.position = Vector3.zero;
-            arenaBgGo.transform.localScale = new Vector3(1.25f, 1.25f, 1f); // 8.53 x 12.8 world units
+            arenaBgGo.transform.localScale = new Vector3(1.32f, 1.25f, 1f); // 9.0 x 12.8 units
             var bgSr = arenaBgGo.AddComponent<SpriteRenderer>();
             bgSr.sprite = arenaSprite;
             bgSr.sortingOrder = -5;
         }
 
         // 2. Titles inside Arena
-        CreateText("ArenaTitle", "HIT ME – CHUẨN HÓA 6 NHÂN VẬT & HITBOX TRONG SÂN (R = 0.45)", new Vector3(0f, 2.75f, 0f), new Vector2(8.0f, 0.55f), 1.05f, new Color(1f, 0.88f, 0.2f), fontAsset);
-        CreateText("ArenaSubtitle", "Chú Chó Vàng scale x1.65 (cao 1.50u = 72.2% Nam Làng, 80% TB)  •  Bóng & vòng chân cùng kích thước  •  Chung 1 Hitbox R = 0.45", new Vector3(0f, 2.45f, 0f), new Vector2(8.0f, 0.45f), 0.72f, new Color(0.2f, 0.95f, 0.65f), fontAsset);
+        CreateText("ArenaTitle", "HIT ME – CHUẨN HÓA 6 NHÂN VẬT & HITBOX TRONG SÂN (R = 0.55, SÂN 9.0 x 11.4)", new Vector3(0f, 2.40f, 0f), new Vector2(8.5f, 0.45f), 0.95f, new Color(1f, 0.88f, 0.2f), fontAsset);
+        CreateText("ArenaSubtitle", "Nam Làng cao 1.50u (13% sân)  •  Chó Vàng cao 1.08u (72.5% người)  •  Bóng & vòng chân dẹt 0.6 (rộng 1.125u = 12.5% sân)  •  Hitbox R = 0.55", new Vector3(0f, 2.15f, 0f), new Vector2(8.5f, 0.40f), 0.68f, new Color(0.2f, 0.95f, 0.65f), fontAsset);
 
         // 3. Six characters standing side by side
         string[] names = new[]
@@ -347,15 +357,15 @@ public static class Phase2PrefabBuilder
 
         string[] heightLabels = new[]
         {
-            "Cao: 2.07u (311px)\nHitbox: R=0.45",
-            "Cao: 1.85u (278px)\nHitbox: R=0.45",
-            "Cao: 1.71u (257px)\nHitbox: R=0.45",
-            "Cao: 1.87u (281px)\nHitbox: R=0.45",
-            "Cao: 1.50u (224px)\nHitbox: R=0.45",
-            "Cao: 2.07u (311px)\nHitbox: R=0.45"
+            "Cao: 1.50u (13% sân)\nHitbox: R=0.55",
+            "Cao: 1.34u (12% sân)\nHitbox: R=0.55",
+            "Cao: 1.24u (11% sân)\nHitbox: R=0.55",
+            "Cao: 1.35u (12% sân)\nHitbox: R=0.55",
+            "Cao: 1.08u (72.5% người)\nHitbox: R=0.55",
+            "Cao: 1.50u (13% sân)\nHitbox: R=0.55"
         };
 
-        float[] xPositions = new[] { -2.75f, -1.65f, -0.55f, 0.55f, 1.65f, 2.75f };
+        float[] xPositions = new[] { -2.85f, -1.71f, -0.57f, 0.57f, 1.71f, 2.85f };
         float groundY = -0.55f;
 
         Color[] ringColors = new[]
@@ -380,14 +390,14 @@ public static class Phase2PrefabBuilder
             pGo.transform.position = new Vector3(xPositions[i], groundY, 0f);
             var pv = pGo.GetComponent<PlayerView>();
             pv.Initialise("p" + i, ringColors[i], i);
-            pv.SetHitboxVisible(true, 0.45f);
+            pv.SetHitboxVisible(true, 0.55f); // Enabled specifically for this hitbox comparison scene
 
             var label = pGo.GetComponentInChildren<TextMeshPro>();
             if (label != null)
             {
-                label.rectTransform.sizeDelta = new Vector2(1.25f, 0.95f);
-                label.fontSize = 0.72f;
-                float labelY = (i == 4 ? 1.75f : 2.25f);
+                label.rectTransform.sizeDelta = new Vector2(1.25f, 0.85f);
+                label.fontSize = 0.65f;
+                float labelY = (i == 4 ? 1.45f : 1.80f);
                 label.transform.localPosition = new Vector3(0f, labelY, 0f);
                 label.rectTransform.anchoredPosition = new Vector2(0f, labelY);
                 label.text = names[i] + "\n" + heightLabels[i];
@@ -395,13 +405,131 @@ public static class Phase2PrefabBuilder
         }
 
         // 4. Legend below characters
-        CreateText("Legend", "Vòng xanh neon: Hitbox Core thực tế (Bán kính R = 0.45)   |   Vòng màu: Vòng viền chân (D = 0.90)\nBóng đen: Bóng đổ dưới chân chuẩn hóa cùng kích thước   |   Pivot: Chân nhân vật (Bottom Center)", new Vector3(0f, -1.35f, 0f), new Vector2(8.0f, 0.65f), 0.70f, new Color(0.95f, 0.95f, 0.98f), fontAsset);
+        CreateText("Legend", "Vòng xanh neon: Hitbox Core thực tế (R = 0.55, D = 1.10)   |   Vòng màu: Vòng viền chân mỏng procedural (Rộng 1.125u = 12.5% sân, Dẹt 0.6)\nBóng đen: Bóng elip mềm sinh bằng Code (Không ô vuông)   |   Touch: Vùng chạm vô hình D >= 9mm tách biệt hiển thị", new Vector3(0f, -1.30f, 0f), new Vector2(8.5f, 0.65f), 0.65f, new Color(0.95f, 0.95f, 0.98f), fontAsset);
 
         // 5. Arena dimension markers
-        CreateText("ArenaDim", "SÂN THỰC TẾ: 8.5 x 12.0 (DIỆN TÍCH 102.0)  •  MỌI NHÂN VẬT DÙNG CHUNG 1 HITBOX R = 0.45", new Vector3(0f, -1.80f, 0f), new Vector2(8.0f, 0.45f), 0.65f, new Color(0.85f, 0.75f, 0.45f), fontAsset);
+        CreateText("ArenaDim", "SÂN GAME: 9.0 x 11.4 (DIỆN TÍCH 102.6)  •  MỌI NHÂN VẬT DÙNG CHUNG 1 HITBOX R = 0.55", new Vector3(0f, -1.75f, 0f), new Vector2(8.5f, 0.40f), 0.65f, new Color(0.85f, 0.75f, 0.45f), fontAsset);
 
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/Phase2_Step1_HitboxTest.unity");
         Debug.Log("Saved Hitbox Test Scene: Assets/Scenes/Phase2_Step1_HitboxTest.unity");
+    }
+
+    [MenuItem("Tools/HIT ME/Build True Arena Scene")]
+    public static void BuildTrueArenaScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+        var camGo = new GameObject("Main Camera");
+        var cam = camGo.AddComponent<Camera>();
+        cam.orthographic = true;
+        cam.orthographicSize = 6.20f; // Formatted for 1080x2340 (9:19.5 iPhone aspect)
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.04f, 0.05f, 0.08f);
+        camGo.tag = "MainCamera";
+        camGo.transform.position = new Vector3(0f, 0.15f, -10f);
+
+        var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
+
+        // 1. True Arena Background (ARENA.png)
+        var arenaGo = new GameObject("TrueArena");
+        var arenaSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/ARENA.png");
+        if (arenaSprite == null) arenaSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/arena_background.png");
+        if (arenaSprite != null)
+        {
+            var arenaBgGo = new GameObject("ArenaBackground");
+            arenaBgGo.transform.SetParent(arenaGo.transform);
+            arenaBgGo.transform.position = new Vector3(0f, 0.15f, 0f);
+            // ARENA.png is 1024x1536 at 150 PPU -> 6.827 x 10.24 units.
+            // Scale by 1.22 gives playable arena width matching 9.0 units.
+            arenaBgGo.transform.localScale = new Vector3(1.22f, 1.22f, 1f);
+            var bgSr = arenaBgGo.AddComponent<SpriteRenderer>();
+            bgSr.sprite = arenaSprite;
+            bgSr.sortingOrder = -10;
+        }
+
+        // 2. Place 6 Characters across arena in combat positions
+        // (including top, center lotus, sides, bottom)
+        Vector3[] combatPositions = new[]
+        {
+            new Vector3(0.0f, -2.4f, 0f),   // Player 0: BẠN (Nam Làng) - lower center
+            new Vector3(2.2f, -0.6f, 0f),   // Player 1: Bot 1 (Anh Nón Lá) - mid right
+            new Vector3(-2.1f, 0.5f, 0f),   // Player 2: Bot 2 (Anh Núi) - mid left
+            new Vector3(-1.8f, 3.1f, 0f),   // Player 3: Bot 3 (Mai Hồng) - upper left near top edge
+            new Vector3(1.8f, 3.1f, 0f),    // Player 4: Bot 4 (Chú Chó Vàng) - upper right near top edge
+            new Vector3(0.0f, 1.2f, 0f)     // Player 5: Bot 5 (Tinted Nam Làng) - center lotus
+        };
+
+        // Perspective depth scale factor based on Y: objects higher up (farther) are scaled down (~0.90 at top, 1.0 at bottom)
+        float[] depthScales = new[] { 1.00f, 0.96f, 0.94f, 0.89f, 0.89f, 0.93f };
+
+        Color[] ringColors = new[]
+        {
+            Color.cyan,
+            new Color(1f, 0.35f, 0.35f),
+            new Color(0.35f, 1f, 0.45f),
+            new Color(1f, 0.85f, 0.25f),
+            new Color(0.85f, 0.45f, 1f),
+            new Color(1f, 0.55f, 0.85f)
+        };
+
+        var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PlayerView.prefab");
+
+        for (int i = 0; i < 6; i++)
+        {
+            GameObject pGo;
+            if (playerPrefab != null) pGo = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
+            else { pGo = new GameObject("Player_" + i); pGo.AddComponent<PlayerView>(); }
+
+            pGo.name = "Player_Arena_" + i;
+            pGo.transform.position = combatPositions[i];
+            var pv = pGo.GetComponent<PlayerView>();
+            pv.Initialise("p" + i, ringColors[i], i);
+            pv.SetHitboxVisible(false); // DEBUG hitbox circle is OFF by default in true arena
+
+            // Apply depth perspective scale
+            float ds = depthScales[i];
+            var body = pGo.transform.Find("Body");
+            if (body != null)
+            {
+                body.localScale = new Vector3(body.localScale.x * ds, body.localScale.y * ds, 1f);
+                var sr = body.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.sortingOrder = (int)(100 - combatPositions[i].y * 10);
+            }
+            var shadow = pGo.transform.Find("Shadow");
+            if (shadow != null)
+            {
+                shadow.localScale = new Vector3(shadow.localScale.x * ds, shadow.localScale.y * ds, 1f);
+            }
+            var footRing = pGo.transform.Find("FootRing");
+            if (footRing != null)
+            {
+                footRing.localScale = new Vector3(footRing.localScale.x * ds, footRing.localScale.y * ds, 1f);
+            }
+
+            var label = pGo.GetComponentInChildren<TextMeshPro>();
+            if (label != null)
+            {
+                label.gameObject.SetActive(false); // Clean view without labels on gameplay arena
+            }
+        }
+
+        // Aim indicator demo for Player 0 (BẠN) towards Mai Hồng
+        var p0Aim = GameObject.Find("Player_Arena_0/Aim Ruler");
+        if (p0Aim != null)
+        {
+            var lr = p0Aim.GetComponent<LineRenderer>();
+            if (lr != null)
+            {
+                lr.enabled = true;
+                Vector3 p0Pos = combatPositions[0];
+                Vector3 targetDir = (combatPositions[3] - p0Pos).normalized;
+                lr.SetPosition(0, p0Pos + targetDir * 0.75f);
+                lr.SetPosition(1, p0Pos + targetDir * 3.5f);
+            }
+        }
+
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Phase2_Step1_TrueArenaTest.unity");
+        Debug.Log("Saved True Arena Test Scene: Assets/Scenes/Phase2_Step1_TrueArenaTest.unity");
     }
 
     private static TextMeshPro CreateText(string name, string text, Vector3 pos, Vector2 size, float fontSize, Color color, TMP_FontAsset font)
@@ -436,17 +564,28 @@ public static class Phase2PrefabBuilder
         if (cam != null)
         {
             // Landscape (16:9): characters fill horizontal width nicely
-            cam.orthographicSize = 2.50f;
-            cam.transform.position = new Vector3(0f, 0.40f, -10f);
+            cam.orthographicSize = 2.45f;
+            cam.transform.position = new Vector3(0f, 0.25f, -10f);
             RenderAndSave(cam, 1920, 1080, Path.Combine(outDir, "step1_hitbox_standardization.png"));
 
             // Portrait (9:16): full arena view
             cam.orthographicSize = 5.80f;
-            cam.transform.position = new Vector3(0f, 0.20f, -10f);
+            cam.transform.position = new Vector3(0f, 0.15f, -10f);
             RenderAndSave(cam, 1080, 1920, Path.Combine(outDir, "step1_hitbox_standardization_portrait.png"));
         }
 
-        // 2. Capture Asset Test Scene
+        // 2. Capture True Arena Scene (1080x2340 iPhone standard)
+        BuildTrueArenaScene();
+        EditorSceneManager.OpenScene("Assets/Scenes/Phase2_Step1_TrueArenaTest.unity");
+        cam = Camera.main ?? Object.FindAnyObjectByType<Camera>();
+        if (cam != null)
+        {
+            cam.orthographicSize = 6.20f;
+            cam.transform.position = new Vector3(0f, 0.15f, -10f);
+            RenderAndSave(cam, 1080, 2340, Path.Combine(outDir, "arena_scale_1080x2340.png"));
+        }
+
+        // 3. Capture Asset Test Scene
         BuildTestScene();
         EditorSceneManager.OpenScene("Assets/Scenes/Phase2_Step1_AssetTest.unity");
         cam = Camera.main ?? Object.FindAnyObjectByType<Camera>();

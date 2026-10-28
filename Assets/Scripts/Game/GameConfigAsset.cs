@@ -12,9 +12,9 @@ namespace HitMe.Game
         public int maxRounds = 5;
         [Tooltip("Prepared for a future approved round cap. Phase 1 currently continues until elimination.")]
         public RoundLimitTiebreakPolicy roundLimitTiebreak = RoundLimitTiebreakPolicy.ContinueUntilElimination;
-        public float arenaWidth = 10f;
-        public float arenaHeight = 16f;
-        public float playerRadius = 0.45f;
+        public float arenaWidth = 9.0f;
+        public float arenaHeight = 11.4f;
+        public float playerRadius = 0.55f;
         public float weaponSpeed = 14f;
         public int damagePerHit = 1;
         public int maxHitsPerThrow = 1;

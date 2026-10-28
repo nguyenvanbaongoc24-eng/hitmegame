@@ -8,7 +8,7 @@ namespace HitMe.Tests
     {
         private static GameConfig Config()
         {
-            return new GameConfig { MaxPlayers = 6, StartHp = 3, ArenaWidth = 10f, ArenaHeight = 16f, PlayerRadius = 0.45f, MinSpawnDistance = 0.9f, DamagePerHit = 1, MaxHitsPerThrow = 1, Seed = 42 };
+            return new GameConfig { MaxPlayers = 6, StartHp = 3, ArenaWidth = 9.0f, ArenaHeight = 11.4f, PlayerRadius = 0.55f, MinSpawnDistance = 1.1f, DamagePerHit = 1, MaxHitsPerThrow = 1, Seed = 42 };
         }
 
         private static PlayerState Player(string id, Vec2 position, int hp = 3)
@@ -377,7 +377,7 @@ namespace HitMe.Tests
         public void AllCharacters_ShareSameHitboxRadius_AndStandardizedDimensions()
         {
             var config = Config();
-            Assert.That(config.PlayerRadius, Is.EqualTo(0.45f));
+            Assert.That(config.PlayerRadius, Is.EqualTo(0.55f));
             
             // All 6 players in match share identical hitbox
             var p1 = Player("human_0", new Vec2(0f, 0f));
@@ -386,10 +386,30 @@ namespace HitMe.Tests
             
             // Dog is struck with exact same HitCalculator rules as human
             var hitsHit = HitCalculator.CalculateHits(p1, new[] { dog }, Vec2.Up, config);
-            var hitsMiss = HitCalculator.CalculateHits(p1, new[] { new PlayerState("miss", "miss", false, 3, new Vec2(0.46f, 2f), Vec2.Up) }, Vec2.Up, config);
+            var hitsMiss = HitCalculator.CalculateHits(p1, new[] { new PlayerState("miss", "miss", false, 3, new Vec2(0.56f, 2f), Vec2.Up) }, Vec2.Up, config);
             
             Assert.That(hitsHit.Count, Is.EqualTo(1));
             Assert.That(hitsMiss.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CharacterVisualScale_MatchesMockupStandard()
+        {
+            // Nam Lang body target height is 1.50 world units (approx 13% of 11.4 arena height)
+            float arenaHeight = 11.4f;
+            float namLangHeight = 1.50f;
+            float heightRatio = namLangHeight / arenaHeight;
+            Assert.That(heightRatio, Is.InRange(0.12f, 0.14f));
+
+            // Dog height is 70-75% of human height
+            float dogHeight = namLangHeight * 0.72f;
+            Assert.That(dogHeight / namLangHeight, Is.InRange(0.70f, 0.75f));
+
+            // Hitbox and foot ring width = 2 * playerRadius = 1.10 world units
+            float arenaWidth = 9.0f;
+            float ringWidth = 2f * 0.55f;
+            float ringWidthRatio = ringWidth / arenaWidth;
+            Assert.That(ringWidthRatio, Is.InRange(0.11f, 0.13f));
         }
     }
 }

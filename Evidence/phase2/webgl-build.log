@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 19008)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 11724)
-VBCSCompiler prewarm took 38.12 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 28096)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 25484)
+VBCSCompiler prewarm took 40.66 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T10:16:54.3366752Z"
 OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-10-28T10:16:54Z
+Date: 2026-10-28T11:53:50Z
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T11:53:50.2555178Z"
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.3+d7ffd15
-  Session Id:              fe654281bb224e338214ed723c253e0a
+  Session Id:              279c3e3f75b5435ab219575d2174cdac
   Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
-  External correlation Id: 8739901168275246552
+  External correlation Id: 7495628836223566581
   Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.07s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T10:16:54.405328Z"
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.08s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T11:53:50.3400878Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -28,7 +28,7 @@ Date: 2026-10-28T10:16:54Z
   Expiration: Unlimited
 [Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
 [Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] Licensing Background thread has ended after 0.08s
+[Licensing::Module] Licensing Background thread has ended after 0.09s
 
 COMMAND LINE ARGUMENTS:
 D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
@@ -82,16 +82,16 @@ D:/HITME GAME/unity-client
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [39028]  Target information:
+Player connection [36664]  Target information:
 
-Player connection [39028]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 2767100589 [EditorId] 2767100589 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [36664]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 1687486740 [EditorId] 1687486740 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [39028] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [39028] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [36664] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [36664] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-33836" after 0.4 seconds.
+[Package Manager] Connected to IPC stream "Upm-35168" after 0.5 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
@@ -121,7 +121,7 @@ Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
 Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56836
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56168
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -129,31 +129,31 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.001485 seconds.
+Registered in 0.001909 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.903 seconds
-Domain Reload Profiling: 1618ms
-	BeginReloadAssembly (171ms)
-		CreateAndSetChildDomain (9ms)
-	RebuildCommonClasses (7ms)
-	RebuildNativeTypeToScriptingClass (20ms)
-	initialDomainReloadingComplete (83ms)
-	LoadAllAssembliesAndSetupDomain (432ms)
-		LoadAssemblies (163ms)
-		TypeCache.Refresh (299ms)
-			TypeCache.ScanAssembly (282ms)
-		AnalyzeDomain (1ms)
-	FinalizeReload (904ms)
+- Finished resetting the current domain, in  1.176 seconds
+Domain Reload Profiling: 2072ms
+	BeginReloadAssembly (194ms)
+		CreateAndSetChildDomain (5ms)
+	RebuildCommonClasses (9ms)
+	RebuildNativeTypeToScriptingClass (27ms)
+	initialDomainReloadingComplete (114ms)
+	LoadAllAssembliesAndSetupDomain (550ms)
+		LoadAssemblies (188ms)
+		TypeCache.Refresh (347ms)
+			TypeCache.ScanAssembly (327ms)
+		AnalyzeDomain (4ms)
+	FinalizeReload (1178ms)
 		SetupLoadedEditorAssemblies (0ms)
 			LogAssemblyErrors (3ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (138ms)
-			ProcessInitializeOnLoadAttributes (172ms)
-			ProcessInitializeOnLoadMethodAttributes (297ms)
+			InitializePlatformSupportModulesInManaged (5ms)
+			BeforeProcessingInitializeOnLoad (172ms)
+			ProcessInitializeOnLoadAttributes (217ms)
+			ProcessInitializeOnLoadMethodAttributes (420ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -205,153 +205,132 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
     com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.02 seconds
-[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+[Package Manager] Done registering packages in 0.03 seconds
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Compiling Scripts
-ExitCode: 0 Duration: 1s503ms
-[278/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[315/319    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
-Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
-[316/319    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
-Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 311 references
-
-processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
-
-1 processor(s) skipped this assembly
-[317/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
-[318/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
-*** Tundra build success (1.41 seconds), 5 items updated, 319 evaluated
-Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
-AssetDatabase: script compilation time: 2.379340s
+ExitCode: 0 Duration: 0s347ms
+[279/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra build success (0.26 seconds), 1 items updated, 319 evaluated
+AssetDatabase: script compilation time: 1.027356s
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.784 seconds
-Domain Reload Profiling: 1699ms
-	BeginReloadAssembly (472ms)
-		DisableScriptedObjects (40ms)
+- Finished resetting the current domain, in  0.933 seconds
+Domain Reload Profiling: 1948ms
+	BeginReloadAssembly (521ms)
+		DisableScriptedObjects (42ms)
 		CreateAndSetChildDomain (188ms)
-	RebuildCommonClasses (17ms)
+	RebuildCommonClasses (18ms)
 	RebuildNativeTypeToScriptingClass (27ms)
-	initialDomainReloadingComplete (54ms)
-	LoadAllAssembliesAndSetupDomain (343ms)
-		LoadAssemblies (311ms)
-		TypeCache.Refresh (26ms)
-			TypeCache.ScanAssembly (18ms)
-		AnalyzeDomain (19ms)
-			BuildScriptInfoCaches (15ms)
-	FinalizeReload (786ms)
+	initialDomainReloadingComplete (56ms)
+	LoadAllAssembliesAndSetupDomain (391ms)
+		LoadAssemblies (344ms)
+		TypeCache.Refresh (33ms)
+			TypeCache.ScanAssembly (23ms)
+		AnalyzeDomain (23ms)
+			BuildScriptInfoCaches (18ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (935ms)
 		SetupLoadedEditorAssemblies (0ms)
 			InitializePlatformSupportModulesInManaged (4ms)
-			BeforeProcessingInitializeOnLoad (160ms)
-			ProcessInitializeOnLoadAttributes (231ms)
-			ProcessInitializeOnLoadMethodAttributes (68ms)
-			AfterProcessingInitializeOnLoad (3ms)
-		AwakeInstancesAfterBackupRestoration (39ms)
+			BeforeProcessingInitializeOnLoad (208ms)
+			ProcessInitializeOnLoadAttributes (268ms)
+			ProcessInitializeOnLoadMethodAttributes (67ms)
+			AfterProcessingInitializeOnLoad (4ms)
+		AwakeInstancesAfterBackupRestoration (54ms)
 Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
 
-Asset Pipeline Refresh (id=d06b97edaf42ef64fa452fedc5fca31a): Total: 4.582 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=f5870d8b17da1774cbdc485e37ccc4c6): Total: 3.439 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
 		Imports: total=0 (actual=0, local cache=0, cache server=0)
-		Asset DB Process Time: managed=0 ms, native=1105 ms
-		Asset DB Callback time: managed=101 ms, native=30 ms
-		Scripting: domain reloads=1, domain reload time=950 ms, compile time=2383 ms, other=11 ms
-		Project Asset Count: scripts=324, non-scripts=405
-		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Asset DB Process Time: managed=0 ms, native=1263 ms
+		Asset DB Callback time: managed=35 ms, native=36 ms
+		Scripting: domain reloads=1, domain reload time=1052 ms, compile time=1032 ms, other=19 ms
+		Project Asset Count: scripts=324, non-scripts=409
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 28.437ms
-	ApplyChangesToAssetFolders: 0.749ms
-	Scan: 107.673ms
-	Collect global state as custom dependencies: 11.848ms
-	OnSourceAssetsModified: 0.867ms
-	CategorizeScriptCompilationAssets: 8.907ms
-	ProcessAssetsWithTransientArtifactChanges: 16.621ms
-	CategorizeAssets: 7.872ms
-	CompileScripts: 2382.860ms
-	ImportOutOfDateAssets: 808.130ms (786.622ms without children)
-		UnloadImportedAssets: 1.436ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.163ms
-		ImportSchedulerStart: 19.904ms
-	PostProcessAllAssets: 102.455ms
-		VCAutoAddAssetPostprocess 1.329ms
-		PostProcessCallbackCreateDeferredMaterials 0.055ms
-		MonoPostProcessAllAssets: 100.471ms
-			AssetPostprocessor.OnPostprocessAllAssets 35.296ms
-			StyleCatalogPostProcessor.OnPostprocessAllAssets 21.066ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 10.317ms
-			BuilderAssetPostprocessor.OnPostprocessAllAssets 7.372ms
-			AssetChangedListener.OnPostprocessAllAssets 3.268ms
-			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.513ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.072ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.960ms
-			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.957ms
-			TextAssetPostProcessor.OnPostprocessAllAssets 0.698ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.682ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.609ms
-			AssetEvents.OnPostprocessAllAssets 0.552ms
-			AudioMixerPostprocessor.OnPostprocessAllAssets 0.525ms
-			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.347ms
-			ConfigAssetsTracker.OnPostprocessAllAssets 0.311ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.280ms
-			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.238ms
-			SpeedTreePostProcessor.OnPostprocessAllAssets 0.190ms
-			ThemePostprocessor.OnPostprocessAllAssets 0.176ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.171ms
-			AudioContainerPostProcessor.OnPostprocessAllAssets 0.159ms
-			SyncVS.PostprocessSyncProject 0.153ms
-	PostAssetChangesProfiler: 2.147ms
-	UnloadStreamsBegin: 1.411ms
-	GenerateScriptTypeHashes: 0.791ms
-	GenerateScriptTypeSerializationHashes: 2.394ms
-	Untracked: 1055.462ms
+	InvokePackagesCallback: 39.448ms
+	ApplyChangesToAssetFolders: 0.785ms
+	Scan: 70.979ms
+	Collect global state as custom dependencies: 16.860ms
+	CategorizeScriptCompilationAssets: 11.585ms
+	ProcessAssetsWithTransientArtifactChanges: 22.651ms
+	CategorizeAssets: 8.674ms
+	CompileScripts: 1031.707ms
+	ImportOutOfDateAssets: 961.973ms (936.615ms without children)
+		UnloadImportedAssets: 1.928ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.216ms
+		ImportSchedulerStart: 23.209ms
+	PostProcessAllAssets: 35.501ms
+		MonoPostProcessAllAssets: 35.398ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 16.293ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.462ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.215ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.432ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.358ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.274ms
+			SyncVS.PostprocessSyncProject 0.177ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.146ms
+	UnloadStreamsBegin: 2.025ms
+	GenerateScriptTypeHashes: 0.790ms
+	GenerateScriptTypeSerializationHashes: 2.383ms
+	Untracked: 1193.939ms
 
 Application.AssetDatabase Initial Refresh End
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
-Scanning for USB devices : 0.985ms
+Scanning for USB devices : 1.562ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
 Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 928 unused Assets / (1.8 MB). Loaded Objects now: 1655.
-Memory consumption went from 238.6 MB to 236.7 MB.
-Total: 9.106800 ms (FindLiveObjects: 0.251700 ms CreateObjectMapping: 0.044400 ms MarkObjects: 6.393800 ms  DeleteObjects: 2.294200 ms)
+Unloading 929 unused Assets / (1.9 MB). Loaded Objects now: 1656.
+Memory consumption went from 236.5 MB to 234.6 MB.
+Total: 15.467800 ms (FindLiveObjects: 0.277100 ms CreateObjectMapping: 0.034000 ms MarkObjects: 11.929100 ms  DeleteObjects: 3.059000 ms)
 
 Importing 'GUID: 52b1bd4378d114b43a07620cff9e1853 - Path: Assets/WebGLTemplates/Phase1Mobile/index.html' with importer (DefaultImporter)
-Imported 'GUID: 52b1bd4378d114b43a07620cff9e1853' -> (Import Result ID: '3b789e3ca5ba176039f9a7aca046dc06') in 0.050 seconds [static dependencies only]. Details - ImportResultOutputID=8b070d450ea5b56d148c5f13a9beab16 DependenciesID=306a7dad6be71cc178dec10ce9be5c3c StaticDependenciesID=c18d4854efbac79f65ca849fc4ce412d 
-Asset Pipeline Refresh (id=f617e1ed1f8706e49a364a2c992b8e0f): Total: 0.107 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 52b1bd4378d114b43a07620cff9e1853' -> (Import Result ID: '3b789e3ca5ba176039f9a7aca046dc06') in 0.093 seconds [static dependencies only]. Details - ImportResultOutputID=8b070d450ea5b56d148c5f13a9beab16 DependenciesID=306a7dad6be71cc178dec10ce9be5c3c StaticDependenciesID=c18d4854efbac79f65ca849fc4ce412d 
+Asset Pipeline Refresh (id=3d805f5a14c97764d966520b99bde21a): Total: 0.223 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Importing 'GUID: 00000000000000004000000000000000 - Path: ProjectSettings/ProjectSettings.asset' with importer (LibraryAssetImporter)
-Imported 'GUID: 00000000000000004000000000000000' -> (Import Result ID: '2a7f5ff7a0f757de5f3eaae34fee40cc') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=054c890a8f4b6dddbea933bc5e4b7df4 DependenciesID=f588abe21f1ac11a7fdad2ce120bd2a4 StaticDependenciesID=3bc5f495cb401adf81ea376fef10630f 
+Imported 'GUID: 00000000000000004000000000000000' -> (Import Result ID: '2a7f5ff7a0f757de5f3eaae34fee40cc') in 0.003 seconds [static dependencies only]. Details - ImportResultOutputID=054c890a8f4b6dddbea933bc5e4b7df4 DependenciesID=f588abe21f1ac11a7fdad2ce120bd2a4 StaticDependenciesID=3bc5f495cb401adf81ea376fef10630f 
 Importing 'GUID: 2e498d1c8094910479dc3e1b768306a4 - Path: Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset' with importer (NativeFormatImporter)
-Imported 'GUID: 2e498d1c8094910479dc3e1b768306a4' -> (Import Result ID: '632ff03ccef77c9d91eec1e76bcf57f7') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=15c8c079d336d28f621b2cb41a27d1c5 DependenciesID=9e1712e1a89c24953b2e2522391c8636 StaticDependenciesID=f4b9ea77a87a231e44986e0077d3f57a 
-Asset Pipeline Refresh (id=a762a09ef461e6249a2da40e217ee157): Total: 0.015 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Imported 'GUID: 2e498d1c8094910479dc3e1b768306a4' -> (Import Result ID: '632ff03ccef77c9d91eec1e76bcf57f7') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=15c8c079d336d28f621b2cb41a27d1c5 DependenciesID=9e1712e1a89c24953b2e2522391c8636 StaticDependenciesID=f4b9ea77a87a231e44986e0077d3f57a 
+Asset Pipeline Refresh (id=e5eed1d88b85e5943aaca37a2716be65): Total: 0.027 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aESkipCompile.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 0s547ms
+ExitCode: 0 Duration: 0s650ms
 [2/3        0s] BuildPlayerDataGenerator Library/BuildPlayerData/Editor/TypeDb-All.json
-*** Tundra build success (0.50 seconds), 1 items updated, 3 evaluated
-Asset Pipeline Refresh (id=8dc729be764b010488a5be35253bda5e): Total: 0.002 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+*** Tundra build success (0.58 seconds), 1 items updated, 3 evaluated
+Asset Pipeline Refresh (id=9a422fd5bd8ed5f489dc44795020e17e): Total: 0.004 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
 [ScriptCompilation] Requested script compilation because: Recompiling scripts for player build.
 BuildPlayer: start building target 20
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aP.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
 WorkingDir: D:/HITME GAME/unity-client
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2251 ms: Could not connect to server
+Curl error 7: Failed to connect to config.uca.cloud.unity3d.com port 443 after 2248 ms: Could not connect to server
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.6850114
+Total cache size after purge 268293840, took 00:00:01.3601723
 Worker ready: AssetImportWorkerHW0 0
-ExitCode: 0 Duration: 2s913ms
-[125/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+ExitCode: 0 Duration: 3s56ms
+[124/148    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[128/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
+[129/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
 [130/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
-[131/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
-[132/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
-[133/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
-[134/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
-[135/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
-[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
+[131/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
+[132/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
+[133/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
+[134/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.dll (+2 others)
+[135/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/HitMe.Core.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aP.dag/HitMe.Core.dll, with 111 defines and 133 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[136/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.pdb
 [137/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Core.dll
 [138/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/HitMe.Game.dll (+2 others)
 Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
@@ -365,7 +344,7 @@ processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
 1 processor(s) skipped this assembly
 [140/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.pdb
 [141/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/HitMe.Game.dll
-[142/148    1s] Csc Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll (+2 others)
+[142/148    0s] Csc Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll (+2 others)
 Assets\Scripts\Gameplay\AimController.cs(15,22): warning CS0414: The field 'AimController._isAimDragging' is assigned but its value is never used
 [143/148    0s] ILPostProcess Library/Bee/artifacts/2000b0aP.dag/post-processed/Assembly-CSharp.dll (+pdb)
 Processing assembly Library/Bee/artifacts/2000b0aP.dag/Assembly-CSharp.dll, with 111 defines and 219 references
@@ -376,11 +355,11 @@ processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
 [144/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.pdb
 [145/148    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll
 [147/148    0s] BuildPlayerDataGenerator Library/BuildPlayerData/Player/RuntimeInitializeOnLoads.json (+1 other)
-*** Tundra build success (2.86 seconds), 18 items updated, 148 evaluated
+*** Tundra build success (3.00 seconds), 20 items updated, 148 evaluated
 Assets\Scripts\Game\HudView.cs(15,30): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Scripts\Game\WebGLPointerDiagnostics.cs(14,5): warning UAC0009: DEVELOPMENT_BUILD preprocessor directive has been deprecated. Please use one of the managed code variant directives (such as DEBUG, UNITY_ENABLE_CHECKS or UNITY_INCLUDE_INSTRUMENTATION) if different code paths are desired for different managed code variants. Checking for development build is possible at runtime using Debug.isDebugBuild. See the Conditional Compilation manual page for more details.
 Assets\Scripts\Gameplay\AimController.cs(15,22): warning CS0414: The field 'AimController._isAimDragging' is assigned but its value is never used
-Rebuilding Data files because the scene list is dirty
+Rebuilding Data files because Assets/Scenes/Phase2_Step1_HitboxTest.unity is dirty (hash)
 
 
 Mono dependencies included in the build
@@ -618,55 +597,55 @@ Dependency assembly - System.Runtime.DurableInstancing.dll
 Opening scene 'Assets/Scenes/Phase2_Step1_HitboxTest.unity'
 Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/Phase2_Step1_HitboxTest.unity'
-	Deserialize:            12.912 ms
-	Integration:            80.907 ms
-	Integration of assets:  0.004 ms
-	Thread Wait Time:       12.679 ms
-	Total Operation Time:   106.501 ms
-Unloading 26 unused Assets / (0.8 MB). Loaded Objects now: 2034.
-Memory consumption went from 259.7 MB to 258.9 MB.
-Total: 9.525600 ms (FindLiveObjects: 0.291900 ms CreateObjectMapping: 0.036800 ms MarkObjects: 8.512600 ms  DeleteObjects: 0.539800 ms)
+	Deserialize:            17.098 ms
+	Integration:            112.443 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       18.488 ms
+	Total Operation Time:   148.031 ms
+Unloading 26 unused Assets / (0.8 MB). Loaded Objects now: 2042.
+Memory consumption went from 259.7 MB to 259.0 MB.
+Total: 9.553300 ms (FindLiveObjects: 0.318100 ms CreateObjectMapping: 0.031800 ms MarkObjects: 8.353400 ms  DeleteObjects: 0.672900 ms)
 
 Opening scene 'Assets/Scenes/Phase2_Step1_AssetTest.unity'
 Unloading 56 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/Phase2_Step1_AssetTest.unity'
-	Deserialize:            3.980 ms
-	Integration:            22.042 ms
-	Integration of assets:  0.003 ms
-	Thread Wait Time:       0.026 ms
-	Total Operation Time:   26.051 ms
-Unloading 27 unused Assets / (0.8 MB). Loaded Objects now: 2068.
-Memory consumption went from 258.2 MB to 257.4 MB.
-Total: 10.084800 ms (FindLiveObjects: 0.225100 ms CreateObjectMapping: 0.019700 ms MarkObjects: 9.186400 ms  DeleteObjects: 0.524600 ms)
+	Deserialize:            2.927 ms
+	Integration:            23.236 ms
+	Integration of assets:  0.005 ms
+	Thread Wait Time:       0.022 ms
+	Total Operation Time:   26.189 ms
+Unloading 27 unused Assets / (0.8 MB). Loaded Objects now: 2073.
+Memory consumption went from 258.4 MB to 257.5 MB.
+Total: 9.323700 ms (FindLiveObjects: 0.294800 ms CreateObjectMapping: 0.024100 ms MarkObjects: 8.400500 ms  DeleteObjects: 0.439500 ms)
 
 Opening scene 'Assets/Scenes/Graybox.unity'
 Unloading 18 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            2.473 ms
-	Integration:            6.419 ms
-	Integration of assets:  0.025 ms
-	Thread Wait Time:       0.030 ms
-	Total Operation Time:   8.947 ms
-Unloading 186 unused Assets / (0.9 MB). Loaded Objects now: 1703.
-Memory consumption went from 257.0 MB to 256.0 MB.
-Total: 7.596100 ms (FindLiveObjects: 0.203200 ms CreateObjectMapping: 0.018600 ms MarkObjects: 6.620400 ms  DeleteObjects: 0.635600 ms)
+	Deserialize:            3.116 ms
+	Integration:            10.292 ms
+	Integration of assets:  0.020 ms
+	Thread Wait Time:       0.050 ms
+	Total Operation Time:   13.477 ms
+Unloading 187 unused Assets / (0.9 MB). Loaded Objects now: 1704.
+Memory consumption went from 257.1 MB to 256.2 MB.
+Total: 10.227800 ms (FindLiveObjects: 0.295900 ms CreateObjectMapping: 0.034500 ms MarkObjects: 8.996600 ms  DeleteObjects: 0.734200 ms)
 
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 1 unused Assets / (1.5 KB). Loaded Objects now: 1695.
+Unloading 1 unused Assets / (1.4 KB). Loaded Objects now: 1696.
 Memory consumption went from 248.5 MB to 248.5 MB.
-Total: 9.633000 ms (FindLiveObjects: 0.242500 ms CreateObjectMapping: 0.021100 ms MarkObjects: 9.194200 ms  DeleteObjects: 0.041700 ms)
+Total: 10.826800 ms (FindLiveObjects: 0.236400 ms CreateObjectMapping: 0.027200 ms MarkObjects: 10.338500 ms  DeleteObjects: 0.046900 ms)
 
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1695.
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1696.
 Memory consumption went from 248.5 MB to 248.5 MB.
-Total: 7.240400 ms (FindLiveObjects: 0.266900 ms CreateObjectMapping: 0.026600 ms MarkObjects: 6.821100 ms  DeleteObjects: 0.006200 ms)
+Total: 10.338100 ms (FindLiveObjects: 0.280200 ms CreateObjectMapping: 0.029900 ms MarkObjects: 9.851900 ms  DeleteObjects: 0.007900 ms)
 
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.6606259
+Total cache size after purge 268293840, took 00:00:00.9527275
 Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 177 unused Assets / (149.4 MB). Loaded Objects now: 1695.
+Unloading 177 unused Assets / (149.4 MB). Loaded Objects now: 1696.
 Memory consumption went from 399.2 MB to 249.8 MB.
-Total: 27.409100 ms (FindLiveObjects: 0.189500 ms CreateObjectMapping: 0.021100 ms MarkObjects: 10.067500 ms  DeleteObjects: 17.007500 ms)
+Total: 25.487300 ms (FindLiveObjects: 0.223000 ms CreateObjectMapping: 0.023200 ms MarkObjects: 10.543900 ms  DeleteObjects: 14.469800 ms)
 
 Compiling shader "Skybox/Procedural"
   Pass "" (vp)
@@ -675,7 +654,7 @@ Compiling shader "Skybox/Procedural"
     After settings filtering:   3
     After built-in stripping:   3
     After scriptable stripping: 3
-    Processed in 0.01 seconds
+    Processed in 0.02 seconds
   Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 3 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Skybox/Procedural in 0.00s
@@ -745,7 +724,7 @@ Compiling shader "Legacy Shaders/Diffuse"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass FORWARD (vp, gles3) finished in 0.00 seconds. Local cache hits 8 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass FORWARD (vp, gles3) finished in 0.00 seconds. Local cache hits 8 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
   Pass FORWARD (vp, gles3) finished in 0.00 seconds. Local cache hits 5 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
@@ -887,7 +866,7 @@ Compiling shader "Hidden/Internal-ScreenSpaceShadows"
     After built-in stripping:   4
     After scriptable stripping: 4
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
   Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 4 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
@@ -960,7 +939,7 @@ Compiling shader "Hidden/Internal-DeferredShading"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 26 (0.01s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 26 (0.02s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
   Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
@@ -1253,7 +1232,7 @@ Compiling shader "Hidden/Internal-UIRDefault"
     After built-in stripping:   40
     After scriptable stripping: 40
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 40 (0.03s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 40 (0.04s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
 Serialized binary data for shader Hidden/Internal-UIRDefault in 0.00s
     gles3 (total internal programs: 40, unique: 40)
@@ -1481,15 +1460,15 @@ Compiling shader "Hidden/Internal-ODSWorldTexture"
     After built-in stripping:   1
     After scriptable stripping: 1
     Processed in 0.00 seconds
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
-  Pass  (vp, gles3) finished in 0.01 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
+  Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
   Pass  (vp, gles3) finished in 0.00 seconds. Local cache hits 1 (0.00s CPU time), remote cache hits 0 (0.00s CPU time), compiled 0 variants (0.00s CPU time), skipped 0 variants.
     Prepared data for serialisation in 0.00s
@@ -1622,21 +1601,27 @@ Serialized binary data for shader Hidden/Physics2D/SDF_Point in 0.00s
     gles3 (total internal programs: 1, unique: 1)
 
 ***Player size statistics***
-Level 0 'Assets/Scenes/Phase2_Step1_HitboxTest.unity' uses 4.9 MB compressed / 10.2 MB uncompressed.
+Level 0 'Assets/Scenes/Phase2_Step1_HitboxTest.unity' uses 4.9 MB compressed / 10.4 MB uncompressed.
 Level 1 'Assets/Scenes/Phase2_Step1_AssetTest.unity' uses 2.4 MB compressed / 6.2 MB uncompressed.
 Level 2 'Assets/Scenes/Graybox.unity' uses 0.6 MB compressed / 1.4 MB uncompressed.
-Total compressed size 7.8 MB. Total uncompressed size 17.9 MB.
+Total compressed size 7.8 MB. Total uncompressed size 18.1 MB.
 SpriteAtlasDatabase::Cleanup
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player6226d0db.dag" --profile="Library/Bee/backend1.traceevents" Player
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Incremental Player Build
-ExitCode: 4 Duration: 7s469ms
+ExitCode: 4 Duration: 8s60ms
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\WebGLPlayerBuildProgram.exe" "D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Bee;D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player6226d0db.dag.json" "Library/Bee/Player6226d0db-inputdata.json" "Library\Bee\buildprogram0.traceevents"
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 0s715ms
+ExitCode: 0 Duration: 0s919ms
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player6226d0db.dag" --dagfilejson="Library\Bee\Player6226d0db.dag.json" --profile="Library/Bee/backend2.traceevents" Player
 WorkingDir: D:/HITME GAME/unity-client
-ExitCode: 0 Duration: 1m:47s
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\WebGLPlayerBuildProgram.exe" "D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Bee;D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player6226d0db.dag.json" "Library/Bee/Player6226d0db-inputdata.json" "Library\Bee\buildprogram1.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 4 Duration: 21s
+ExitCode: 0 Duration: 0s832ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player6226d0db.dag" --dagfilejson="Library\Bee\Player6226d0db.dag.json" --profile="Library/Bee/backend3.traceevents" Player
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 2m:48s
 D:\HITME GAME\unity-client\Library\Bee\artifacts\WebGL\il2cppOutput\cpp: [Unity.TextMeshPro] - System.Void TMPro.TMP_TextParsingUtilities::.cctor() - Method was given it's own cpp file because it is large and costly to compile
 UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
 UnityEngine.StackTraceUtility:ExtractStackTrace ()
@@ -1653,7 +1638,7 @@ UnityEditor.Modules.BeeBuildPostprocessor:PostProcess (UnityEditor.Modules.Build
 UnityEditor.PostprocessBuildPlayer:Postprocess (UnityEditor.BuildTarget,int,string,string,string,UnityEditor.BuildOptions,UnityEditor.RuntimeClassRegistry,UnityEditor.Build.Reporting.BuildReport,string[])
 UnityEditor.BuildPipeline:BuildPlayerInternal (string[],string,string,UnityEditor.BuildTargetGroup,UnityEditor.BuildTarget,int,UnityEditor.BuildOptions,string[],string[],bool)
 UnityEditor.BuildPipeline:BuildPlayer (UnityEditor.BuildPlayerOptions)
-HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:102)
+HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:152)
 
 (Filename: /home/bokken/build/output/unity/unity/PlatformDependent/WebGL/Extensions/Unity.WebGL.extensions/BuildPostprocessor.cs Line: 392)
 
@@ -1673,7 +1658,7 @@ UnityEditor.Modules.BeeBuildPostprocessor:PostProcess (UnityEditor.Modules.Build
 UnityEditor.PostprocessBuildPlayer:Postprocess (UnityEditor.BuildTarget,int,string,string,string,UnityEditor.BuildOptions,UnityEditor.RuntimeClassRegistry,UnityEditor.Build.Reporting.BuildReport,string[])
 UnityEditor.BuildPipeline:BuildPlayerInternal (string[],string,string,UnityEditor.BuildTargetGroup,UnityEditor.BuildTarget,int,UnityEditor.BuildOptions,string[],string[],bool)
 UnityEditor.BuildPipeline:BuildPlayer (UnityEditor.BuildPlayerOptions)
-HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:102)
+HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:152)
 
 (Filename: /home/bokken/build/output/unity/unity/PlatformDependent/WebGL/Extensions/Unity.WebGL.extensions/BuildPostprocessor.cs Line: 392)
 
@@ -1693,7 +1678,7 @@ UnityEditor.Modules.BeeBuildPostprocessor:PostProcess (UnityEditor.Modules.Build
 UnityEditor.PostprocessBuildPlayer:Postprocess (UnityEditor.BuildTarget,int,string,string,string,UnityEditor.BuildOptions,UnityEditor.RuntimeClassRegistry,UnityEditor.Build.Reporting.BuildReport,string[])
 UnityEditor.BuildPipeline:BuildPlayerInternal (string[],string,string,UnityEditor.BuildTargetGroup,UnityEditor.BuildTarget,int,UnityEditor.BuildOptions,string[],string[],bool)
 UnityEditor.BuildPipeline:BuildPlayer (UnityEditor.BuildPlayerOptions)
-HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:102)
+HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/Phase1GrayboxSceneBuilder.cs:152)
 
 (Filename: /home/bokken/build/output/unity/unity/PlatformDependent/WebGL/Extensions/Unity.WebGL.extensions/BuildPostprocessor.cs Line: 392)
 
@@ -1702,39 +1687,39 @@ HitMe.Editor.Phase1GrayboxSceneBuilder:BuildWebGLEvidence () (at Assets/Editor/P
 -------------------------------------------------------------------------------
 Build Report
 Uncompressed usage by category (Percentages based on user generated assets only):
-Textures               16.8 mb	 96.2% 
+Textures               17.0 mb	 96.3% 
 Meshes                 0.0 kb	 0.0% 
 Animations             68.6 kb	 0.4% 
 Sounds                 0.0 kb	 0.0% 
 Shaders                20.2 kb	 0.1% 
-Other Assets           542.0 kb	 3.0% 
+Other Assets           542.1 kb	 3.0% 
 Levels                 0.0 kb	 0.0% 
-File headers           24.5 kb	 0.1% 
-Total User Assets      17.5 mb	 100.0% 
-Complete build size    39.5 mb
+File headers           24.9 kb	 0.1% 
+Total User Assets      17.6 mb	 100.0% 
+Complete build size    40.3 mb
 Used Assets and files from the Resources folder, sorted by uncompressed size:
- 4.5 mb	 11.4% Assets/Sprites/arena_background.png
- 2.7 mb	 6.8% Built-in Texture2D: Splash Screen Unity Logo
+ 4.5 mb	 11.2% Assets/Sprites/arena_background.png
+ 2.7 mb	 6.6% Built-in Texture2D: Splash Screen Unity Logo
  1.0 mb	 2.6% Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
- 1.0 mb	 2.6% Assets/Fonts/BeVietnamPro-Bold SDF.asset
- 1.0 mb	 2.6% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png
- 1.0 mb	 2.6% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F03.png
- 1.0 mb	 2.6% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F06.png
- 1.0 mb	 2.6% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F02.png
- 1.0 mb	 2.6% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F05.png
+ 1.0 mb	 2.5% Assets/Fonts/BeVietnamPro-Bold SDF.asset
+ 1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png
+ 1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F03.png
+ 1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F06.png
+ 1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F02.png
+ 1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F05.png
  1.0 mb	 2.5% Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F04.png
  519.8 kb	 1.3% Resources/unity_builtin_extra
- 344.5 kb	 0.9% Assets/TextMesh Pro/Fonts/LiberationSans.ttf
+ 344.5 kb	 0.8% Assets/TextMesh Pro/Fonts/LiberationSans.ttf
  231.7 kb	 0.6% Assets/Sprites/anh_non_la_idle.png
  227.4 kb	 0.6% Assets/Sprites/cau_be_lang_idle.png
  209.1 kb	 0.5% Assets/Sprites/mai_hong_idle.png
+ 156.2 kb	 0.4% Assets/Sprites/procedural_foot_ring.png
  155.3 kb	 0.4% Assets/Sprites/dep_projectile.png
+ 155.0 kb	 0.4% Assets/Sprites/procedural_shadow.png
  150.8 kb	 0.4% Assets/Sprites/anh_nui_idle.png
- 146.7 kb	 0.4% Assets/Sprites/selection_ring.png
- 52.9 kb	 0.1% Assets/Sprites/chu_cho_vang_idle.png
- 34.2 kb	 0.1% Assets/Scenes/Phase2_Step1_AssetTest.unity
- 33.1 kb	 0.1% Assets/Scenes/Phase2_Step1_HitboxTest.unity
- 26.1 kb	 0.1% Assets/Sprites/shadow.png
+ 53.7 kb	 0.1% Assets/Sprites/chu_cho_vang_idle.png
+ 34.7 kb	 0.1% Assets/Scenes/Phase2_Step1_AssetTest.unity
+ 33.8 kb	 0.1% Assets/Scenes/Phase2_Step1_HitboxTest.unity
  13.1 kb	 0.0% Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
  3.3 kb	 0.0% Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
  2.7 kb	 0.0% Assets/Art/Animations/Cau_Be_Lang/Cau_Be_Lang_Throw.anim
@@ -1956,28 +1941,28 @@ Used Assets and files from the Resources folder, sorted by uncompressed size:
  0.1 kb	 0.0% Assets/Scripts/Core/Phase1/Vec2.cs
 -------------------------------------------------------------------------------
 Unloading 62 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 147 unused Assets / (197.8 KB). Loaded Objects now: 1726.
-Memory consumption went from 268.9 MB to 268.7 MB.
-Total: 14.345700 ms (FindLiveObjects: 0.245500 ms CreateObjectMapping: 0.033400 ms MarkObjects: 13.582100 ms  DeleteObjects: 0.324100 ms)
+Unloading 147 unused Assets / (197.4 KB). Loaded Objects now: 1727.
+Memory consumption went from 269.9 MB to 269.7 MB.
+Total: 11.249300 ms (FindLiveObjects: 0.260400 ms CreateObjectMapping: 0.028500 ms MarkObjects: 10.386200 ms  DeleteObjects: 0.383100 ms)
 
 DisplayProgressNotification: Build Successful
 Build Finished, Result: Success.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
 Loaded scene 'Temp/__Backupscenes/0.backup'
-	Deserialize:            1.102 ms
-	Integration:            14.738 ms
+	Deserialize:            1.292 ms
+	Integration:            15.124 ms
 	Integration of assets:  0.002 ms
-	Thread Wait Time:       0.058 ms
-	Total Operation Time:   15.900 ms
-Unloading 0 unused Assets / (16.1 KB). Loaded Objects now: 1718.
-Memory consumption went from 254.1 MB to 254.1 MB.
-Total: 10.811700 ms (FindLiveObjects: 0.223600 ms CreateObjectMapping: 0.024500 ms MarkObjects: 10.057000 ms  DeleteObjects: 0.033500 ms)
+	Thread Wait Time:       0.022 ms
+	Total Operation Time:   16.440 ms
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1719.
+Memory consumption went from 255.0 MB to 255.0 MB.
+Total: 11.258200 ms (FindLiveObjects: 0.303600 ms CreateObjectMapping: 0.026900 ms MarkObjects: 10.751000 ms  DeleteObjects: 0.007000 ms)
 
 [Licensing::Client] Successfully resolved entitlement details
-##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793182745353,"processId":33836,"steps":[{"description":"Call PrepareForBuild callbacks","duration":0},{"description":"Call internal build started callbacks","duration":1},{"description":"Preprocess Player","duration":82},{"description":"Save scenes before build","duration":0},{"description":"Prepare For Build","duration":2},{"description":"ProducePlayerScriptAssemblies","duration":3760},{"description":"Verify Build setup","duration":51},{"description":"Prepare assets for target platform","duration":2},{"description":"Prepare splash screen","duration":1},{"description":"Build scripts DLLs","duration":12},{"description":"Building scenes","duration":342},{"description":"Build GlobalGameManagers file","duration":203},{"description":"Writing asset files","duration":186},{"description":"Building Resources/unity_builtin_extra","duration":124},{"description":"Creating compressed player package","duration":1718},{"description":"Write data build dirty tracking information","duration":47},{"description":"Postprocess built player","duration":115831},{"description":"Call Post-Process callbacks","duration":38}],"duration":122400}
+##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1793188646606,"processId":35168,"steps":[{"description":"Call PrepareForBuild callbacks","duration":1},{"description":"Call internal build started callbacks","duration":2},{"description":"Preprocess Player","duration":122},{"description":"Save scenes before build","duration":1},{"description":"Prepare For Build","duration":2},{"description":"ProducePlayerScriptAssemblies","duration":4095},{"description":"Verify Build setup","duration":91},{"description":"Prepare assets for target platform","duration":4},{"description":"Prepare splash screen","duration":2},{"description":"Build scripts DLLs","duration":33},{"description":"Building scenes","duration":420},{"description":"Build GlobalGameManagers file","duration":281},{"description":"Writing asset files","duration":216},{"description":"Building Resources/unity_builtin_extra","duration":137},{"description":"Creating compressed player package","duration":2182},{"description":"Write data build dirty tracking information","duration":43},{"description":"Postprocess built player","duration":200232},{"description":"Call Post-Process callbacks","duration":37}],"duration":207901}
 [websockify wrapper] Proxying from :35020 to localhost:34999
 Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.8842303
+Total cache size after purge 268293840, took 00:00:01.0089803
 Batchmode quit successfully invoked - shutting down!
 [websockify wrapper] Kill
 [websockify wrapper] Process killed
