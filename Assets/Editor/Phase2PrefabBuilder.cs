@@ -79,7 +79,7 @@ public static class Phase2PrefabBuilder
         var shadowGo = new GameObject("Shadow");
         shadowGo.transform.SetParent(playerGo.transform, false);
         shadowGo.transform.localPosition = new Vector3(0f, -0.05f, 0f);
-        shadowGo.transform.localScale = new Vector3(0.9f, 0.5f, 1f);
+        shadowGo.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
         var shadowSr = shadowGo.AddComponent<SpriteRenderer>();
         shadowSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/shadow.png");
         shadowSr.sortingOrder = 0;
@@ -88,7 +88,7 @@ public static class Phase2PrefabBuilder
         var ringGo = new GameObject("FootRing");
         ringGo.transform.SetParent(playerGo.transform, false);
         ringGo.transform.localPosition = new Vector3(0f, 0.05f, 0f);
-        ringGo.transform.localScale = new Vector3(0.65f, 0.35f, 1f);
+        ringGo.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
         var ringSr = ringGo.AddComponent<SpriteRenderer>();
         ringSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/selection_ring.png");
         if (ringSr.sprite == null) ringSr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_player_foot_ring_cyan.png");
@@ -103,6 +103,27 @@ public static class Phase2PrefabBuilder
         bodySr.sortingOrder = 2;
         var bodyAnim = bodyGo.AddComponent<Animator>();
         bodyAnim.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/Cau_Be_Lang/Cau_Be_Lang_Controller.controller");
+
+        var hbGo = new GameObject("DebugHitbox");
+        hbGo.transform.SetParent(playerGo.transform, false);
+        hbGo.transform.localPosition = Vector3.zero;
+        var hbLr = hbGo.AddComponent<LineRenderer>();
+        hbLr.useWorldSpace = false;
+        hbLr.loop = true;
+        hbLr.positionCount = 36;
+        hbLr.startWidth = 0.035f;
+        hbLr.endWidth = 0.035f;
+        hbLr.startColor = new Color(0.1f, 1f, 0.4f, 0.95f);
+        hbLr.endColor = new Color(0.1f, 1f, 0.4f, 0.95f);
+        hbLr.sharedMaterial = bodySr.sharedMaterial;
+        hbLr.sortingOrder = 4;
+        float hbRadius = 0.45f;
+        for (int i = 0; i < 36; i++)
+        {
+            float angle = Mathf.PI * 2f * i / 36;
+            hbLr.SetPosition(i, new Vector3(Mathf.Cos(angle) * hbRadius, Mathf.Sin(angle) * hbRadius, 0f));
+        }
+        hbLr.enabled = false;
 
         var labelGo = new GameObject("Label");
         labelGo.transform.SetParent(playerGo.transform, false);
@@ -224,14 +245,16 @@ public static class Phase2PrefabBuilder
             pGo.transform.position = positions[i];
             var pv = pGo.GetComponent<PlayerView>();
             pv.Initialise("p" + i, ringColors[i], i);
+            pv.SetHitboxVisible(true, 0.45f);
 
             var label = pGo.GetComponentInChildren<TextMeshPro>();
             if (label != null)
             {
                 label.rectTransform.sizeDelta = new Vector2(2.3f, 0.8f);
                 label.fontSize = 0.95f;
-                label.transform.localPosition = new Vector3(0f, i == 4 ? 1.4f : 2.2f, 0f);
-                label.rectTransform.anchoredPosition = new Vector2(0f, i == 4 ? 1.4f : 2.2f);
+                float labelY = (i == 4 ? 2.1f : 2.4f);
+                label.transform.localPosition = new Vector3(0f, labelY, 0f);
+                label.rectTransform.anchoredPosition = new Vector2(0f, labelY);
                 label.text = playerNames[i] + "\n3/3 HP";
             }
         }
@@ -277,6 +300,110 @@ public static class Phase2PrefabBuilder
         Debug.Log("Saved Test Scene: Assets/Scenes/Phase2_Step1_AssetTest.unity");
     }
 
+    [MenuItem("Tools/HIT ME/Build Hitbox Comparison Scene")]
+    public static void BuildHitboxComparisonScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+        var camGo = new GameObject("Main Camera");
+        var cam = camGo.AddComponent<Camera>();
+        cam.orthographic = true;
+        cam.orthographicSize = 2.85f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.06f, 0.08f, 0.12f);
+        camGo.tag = "MainCamera";
+        camGo.transform.position = new Vector3(0f, 0.45f, -10f);
+
+        var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
+
+        // 1. Sân (Arena 8.5 x 12.0)
+        var arenaGo = new GameObject("Arena");
+        var arenaSprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/arena_background.png");
+        if (arenaSprite != null)
+        {
+            var arenaBgGo = new GameObject("ArenaBackground");
+            arenaBgGo.transform.SetParent(arenaGo.transform);
+            arenaBgGo.transform.position = Vector3.zero;
+            arenaBgGo.transform.localScale = new Vector3(1.25f, 1.25f, 1f); // 8.53 x 12.8 world units
+            var bgSr = arenaBgGo.AddComponent<SpriteRenderer>();
+            bgSr.sprite = arenaSprite;
+            bgSr.sortingOrder = -5;
+        }
+
+        // 2. Titles inside Arena
+        CreateText("ArenaTitle", "HIT ME – CHUẨN HÓA 6 NHÂN VẬT & HITBOX TRONG SÂN (R = 0.45)", new Vector3(0f, 2.75f, 0f), new Vector2(8.0f, 0.55f), 1.05f, new Color(1f, 0.88f, 0.2f), fontAsset);
+        CreateText("ArenaSubtitle", "Chú Chó Vàng scale x1.65 (cao 1.50u = 72.2% Nam Làng, 80% TB)  •  Bóng & vòng chân cùng kích thước  •  Chung 1 Hitbox R = 0.45", new Vector3(0f, 2.45f, 0f), new Vector2(8.0f, 0.45f), 0.72f, new Color(0.2f, 0.95f, 0.65f), fontAsset);
+
+        // 3. Six characters standing side by side
+        string[] names = new[]
+        {
+            "BẠN (Nam Làng)",
+            "Bot 1 (Anh Nón Lá)",
+            "Bot 2 (Anh Núi)",
+            "Bot 3 (Mai Hồng)",
+            "Bot 4 (Chó Vàng)",
+            "Bot 5 (Tinted)"
+        };
+
+        string[] heightLabels = new[]
+        {
+            "Cao: 2.07u (311px)\nHitbox: R=0.45",
+            "Cao: 1.85u (278px)\nHitbox: R=0.45",
+            "Cao: 1.71u (257px)\nHitbox: R=0.45",
+            "Cao: 1.87u (281px)\nHitbox: R=0.45",
+            "Cao: 1.50u (224px)\nHitbox: R=0.45",
+            "Cao: 2.07u (311px)\nHitbox: R=0.45"
+        };
+
+        float[] xPositions = new[] { -2.75f, -1.65f, -0.55f, 0.55f, 1.65f, 2.75f };
+        float groundY = -0.55f;
+
+        Color[] ringColors = new[]
+        {
+            Color.cyan,
+            new Color(1f, 0.35f, 0.35f),
+            new Color(0.35f, 1f, 0.45f),
+            new Color(1f, 0.85f, 0.25f),
+            new Color(0.85f, 0.45f, 1f),
+            new Color(1f, 0.55f, 0.85f)
+        };
+
+        var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PlayerView.prefab");
+
+        for (int i = 0; i < 6; i++)
+        {
+            GameObject pGo;
+            if (playerPrefab != null) pGo = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab);
+            else { pGo = new GameObject("Player_" + i); pGo.AddComponent<PlayerView>(); }
+
+            pGo.name = "Player_SideBySide_" + i;
+            pGo.transform.position = new Vector3(xPositions[i], groundY, 0f);
+            var pv = pGo.GetComponent<PlayerView>();
+            pv.Initialise("p" + i, ringColors[i], i);
+            pv.SetHitboxVisible(true, 0.45f);
+
+            var label = pGo.GetComponentInChildren<TextMeshPro>();
+            if (label != null)
+            {
+                label.rectTransform.sizeDelta = new Vector2(1.25f, 0.95f);
+                label.fontSize = 0.72f;
+                float labelY = (i == 4 ? 1.75f : 2.25f);
+                label.transform.localPosition = new Vector3(0f, labelY, 0f);
+                label.rectTransform.anchoredPosition = new Vector2(0f, labelY);
+                label.text = names[i] + "\n" + heightLabels[i];
+            }
+        }
+
+        // 4. Legend below characters
+        CreateText("Legend", "Vòng xanh neon: Hitbox Core thực tế (Bán kính R = 0.45)   |   Vòng màu: Vòng viền chân (D = 0.90)\nBóng đen: Bóng đổ dưới chân chuẩn hóa cùng kích thước   |   Pivot: Chân nhân vật (Bottom Center)", new Vector3(0f, -1.35f, 0f), new Vector2(8.0f, 0.65f), 0.70f, new Color(0.95f, 0.95f, 0.98f), fontAsset);
+
+        // 5. Arena dimension markers
+        CreateText("ArenaDim", "SÂN THỰC TẾ: 8.5 x 12.0 (DIỆN TÍCH 102.0)  •  MỌI NHÂN VẬT DÙNG CHUNG 1 HITBOX R = 0.45", new Vector3(0f, -1.80f, 0f), new Vector2(8.0f, 0.45f), 0.65f, new Color(0.85f, 0.75f, 0.45f), fontAsset);
+
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Phase2_Step1_HitboxTest.unity");
+        Debug.Log("Saved Hitbox Test Scene: Assets/Scenes/Phase2_Step1_HitboxTest.unity");
+    }
+
     private static TextMeshPro CreateText(string name, string text, Vector3 pos, Vector2 size, float fontSize, Color color, TMP_FontAsset font)
     {
         var go = new GameObject(name);
@@ -299,17 +426,40 @@ public static class Phase2PrefabBuilder
     [MenuItem("Tools/HIT ME/Capture Phase 2 Step 1 Evidence")]
     public static void CaptureEvidence()
     {
-        EditorSceneManager.OpenScene("Assets/Scenes/Phase2_Step1_AssetTest.unity");
-        var cam = Camera.main;
-        if (cam == null) cam = Object.FindAnyObjectByType<Camera>();
-        if (cam == null)
+        string outDir = "Evidence/phase2";
+        if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
+
+        // 1. Capture Hitbox Standardization Scene
+        BuildHitboxComparisonScene();
+        EditorSceneManager.OpenScene("Assets/Scenes/Phase2_Step1_HitboxTest.unity");
+        var cam = Camera.main ?? Object.FindAnyObjectByType<Camera>();
+        if (cam != null)
         {
-            Debug.LogError("No camera found in scene");
-            return;
+            // Landscape (16:9): characters fill horizontal width nicely
+            cam.orthographicSize = 2.50f;
+            cam.transform.position = new Vector3(0f, 0.40f, -10f);
+            RenderAndSave(cam, 1920, 1080, Path.Combine(outDir, "step1_hitbox_standardization.png"));
+
+            // Portrait (9:16): full arena view
+            cam.orthographicSize = 5.80f;
+            cam.transform.position = new Vector3(0f, 0.20f, -10f);
+            RenderAndSave(cam, 1080, 1920, Path.Combine(outDir, "step1_hitbox_standardization_portrait.png"));
         }
 
-        int width = 1080;
-        int height = 1920;
+        // 2. Capture Asset Test Scene
+        BuildTestScene();
+        EditorSceneManager.OpenScene("Assets/Scenes/Phase2_Step1_AssetTest.unity");
+        cam = Camera.main ?? Object.FindAnyObjectByType<Camera>();
+        if (cam != null)
+        {
+            RenderAndSave(cam, 1080, 1920, Path.Combine(outDir, "step1_asset_test.png"));
+            RenderAndSave(cam, 1080, 1920, Path.Combine(outDir, "step1_vietnamese_text.png"));
+        }
+        Debug.Log("Captured all evidence images to " + outDir);
+    }
+
+    private static void RenderAndSave(Camera cam, int width, int height, string filePath)
+    {
         RenderTexture rt = new RenderTexture(width, height, 24);
         cam.targetTexture = rt;
         Texture2D screenShot = new Texture2D(width, height, TextureFormat.RGB24, false);
@@ -323,12 +473,8 @@ public static class Phase2PrefabBuilder
 
         byte[] bytes = screenShot.EncodeToPNG();
         Object.DestroyImmediate(screenShot);
-
-        string outDir = "Evidence/phase2";
-        if (!Directory.Exists(outDir)) Directory.CreateDirectory(outDir);
-        File.WriteAllBytes(Path.Combine(outDir, "step1_asset_test.png"), bytes);
-        File.WriteAllBytes(Path.Combine(outDir, "step1_vietnamese_text.png"), bytes);
-        Debug.Log("Saved screenshot evidence to " + Path.Combine(outDir, "step1_asset_test.png"));
+        File.WriteAllBytes(filePath, bytes);
+        Debug.Log("Saved screenshot: " + filePath);
     }
 }
 #endif

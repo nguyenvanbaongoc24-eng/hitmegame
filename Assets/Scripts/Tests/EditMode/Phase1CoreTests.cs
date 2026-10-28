@@ -373,5 +373,23 @@ namespace HitMe.Tests
             Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(1f, 0f)));
         }
 
+        [Test]
+        public void AllCharacters_ShareSameHitboxRadius_AndStandardizedDimensions()
+        {
+            var config = Config();
+            Assert.That(config.PlayerRadius, Is.EqualTo(0.45f));
+            
+            // All 6 players in match share identical hitbox
+            var p1 = Player("human_0", new Vec2(0f, 0f));
+            var dog = Player("dog_4", new Vec2(0f, 2f));
+            var tinted = Player("tinted_5", new Vec2(2f, 0f));
+            
+            // Dog is struck with exact same HitCalculator rules as human
+            var hitsHit = HitCalculator.CalculateHits(p1, new[] { dog }, Vec2.Up, config);
+            var hitsMiss = HitCalculator.CalculateHits(p1, new[] { new PlayerState("miss", "miss", false, 3, new Vec2(0.46f, 2f), Vec2.Up) }, Vec2.Up, config);
+            
+            Assert.That(hitsHit.Count, Is.EqualTo(1));
+            Assert.That(hitsMiss.Count, Is.EqualTo(0));
+        }
     }
 }

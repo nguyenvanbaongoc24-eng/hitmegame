@@ -98,7 +98,7 @@ namespace HitMe.Editor
             // Ensure a changed custom template is not served from the Editor's
             // imported-template cache on the next evidence build.
             AssetDatabase.ImportAsset("Assets/WebGLTemplates/Phase1Mobile/index.html", ImportAssetOptions.ForceUpdate);
-            var scenes = new[] { "Assets/Scenes/Phase2_Step1_AssetTest.unity", "Assets/Scenes/Graybox.unity" };
+            var scenes = new[] { "Assets/Scenes/Phase2_Step1_HitboxTest.unity", "Assets/Scenes/Phase2_Step1_AssetTest.unity", "Assets/Scenes/Graybox.unity" };
             var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = scenes, locationPathName = output, target = UnityEditor.BuildTarget.WebGL, options = UnityEditor.BuildOptions.None });
             var summary = "Target: WebGL\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n";
             File.WriteAllText("Evidence/phase1/webgl-build.txt", summary);

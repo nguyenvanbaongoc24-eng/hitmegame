@@ -15,6 +15,7 @@ namespace HitMe.Game
         [SerializeField] private Animator _animator;
         [SerializeField] private SpriteRenderer _shadow;
         [SerializeField] private SpriteRenderer _footRing;
+        [SerializeField] private LineRenderer _hitboxCircle;
         [SerializeField] private TextMeshPro _label;
         [SerializeField] private LineRenderer _aim;
         [SerializeField] private LineRenderer _touchRing;
@@ -41,6 +42,11 @@ namespace HitMe.Game
             {
                 var r = transform.Find("FootRing");
                 if (r != null) _footRing = r.GetComponent<SpriteRenderer>();
+            }
+            if (_hitboxCircle == null)
+            {
+                var hb = transform.Find("DebugHitbox");
+                if (hb != null) _hitboxCircle = hb.GetComponent<LineRenderer>();
             }
             if (_body == null)
             {
@@ -95,7 +101,7 @@ namespace HitMe.Game
 
             EnsureStaticResources();
 
-            // 1. Shadow
+            // 1. Shadow: Standardized to match playerRadius = 0.45f for all characters
             if (_shadow == null)
             {
                 var sGo = new GameObject("Shadow");
@@ -105,10 +111,15 @@ namespace HitMe.Game
                 _shadow.sprite = _defaultShadow;
                 _shadow.sortingOrder = 0;
                 _shadow.color = new Color(0f, 0f, 0f, 0.45f);
-                sGo.transform.localScale = new Vector3(0.9f, 0.5f, 1f);
+                sGo.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
+            }
+            else
+            {
+                _shadow.transform.localScale = new Vector3(1.07f, 0.55f, 1f);
+                _shadow.transform.localPosition = new Vector3(0f, -0.05f, 0f);
             }
 
-            // 2. Foot Ring
+            // 2. Foot Ring: Standardized to match playerRadius = 0.45f (width = 0.90u) for all characters
             if (_footRing == null)
             {
                 var rGo = new GameObject("FootRing");
@@ -118,11 +129,13 @@ namespace HitMe.Game
                 _footRing.sprite = _defaultRing;
                 _footRing.sortingOrder = 1;
                 _footRing.color = color;
-                rGo.transform.localScale = new Vector3(0.65f, 0.35f, 1f);
+                rGo.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
             }
             else
             {
                 _footRing.color = color;
+                _footRing.transform.localScale = new Vector3(0.53f, 0.32f, 1f);
+                _footRing.transform.localPosition = new Vector3(0f, 0.05f, 0f);
             }
 
             // 3. Body & Animator
@@ -191,7 +204,18 @@ namespace HitMe.Game
                 _body.sprite = _defaultSprites[assetIdx];
             }
 
-            // 6th player reuses character 0 with a color tint (Orange / Purple)
+            // Character 4 is Chú Chó Vàng: scale 1.65 to ensure visual height >= 70% of human height
+            // (1.496u = 72.2% of Nam Làng 2.073u, 79.6% of human average)
+            if (assetIdx == 4)
+            {
+                _body.transform.localScale = new Vector3(1.65f, 1.65f, 1f);
+            }
+            else
+            {
+                _body.transform.localScale = Vector3.one;
+            }
+
+            // 6th player reuses character 0 with a color tint (Magenta / Purple)
             if (index == 5)
             {
                 _body.color = new Color(1f, 0.55f, 0.85f, 1f); // Distinct tinted tint
@@ -199,6 +223,36 @@ namespace HitMe.Game
             else
             {
                 _body.color = Color.white;
+            }
+        }
+
+        public void SetHitboxVisible(bool visible, float radius = 0.45f)
+        {
+            if (_hitboxCircle == null)
+            {
+                var hbGo = new GameObject("DebugHitbox");
+                hbGo.transform.SetParent(transform, false);
+                hbGo.transform.localPosition = Vector3.zero;
+                _hitboxCircle = hbGo.AddComponent<LineRenderer>();
+                _hitboxCircle.useWorldSpace = false;
+                _hitboxCircle.loop = true;
+                _hitboxCircle.positionCount = 36;
+                _hitboxCircle.startWidth = 0.035f;
+                _hitboxCircle.endWidth = 0.035f;
+                _hitboxCircle.startColor = new Color(0.1f, 1f, 0.4f, 0.95f); // Vibrant neon green
+                _hitboxCircle.endColor = new Color(0.1f, 1f, 0.4f, 0.95f);
+                if (_body != null && _body.sharedMaterial != null) _hitboxCircle.sharedMaterial = _body.sharedMaterial;
+                _hitboxCircle.sortingOrder = 4;
+                for (int i = 0; i < 36; i++)
+                {
+                    float angle = Mathf.PI * 2f * i / 36;
+                    _hitboxCircle.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f));
+                }
+            }
+            if (_hitboxCircle != null)
+            {
+                _hitboxCircle.useWorldSpace = false;
+                _hitboxCircle.enabled = visible;
             }
         }
 
