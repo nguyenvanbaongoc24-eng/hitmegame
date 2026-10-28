@@ -1,26 +1,26 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 28436)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 39380)
-VBCSCompiler prewarm took 40.67 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 11952)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 15096)
+VBCSCompiler prewarm took 40.06 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T07:50:50.7909751Z"
 Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T07:55:57.0742687Z"
 OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-10-28T07:50:50Z
+Date: 2026-10-28T07:55:57Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.3+d7ffd15
-  Session Id:              db78916cb7914a058f5156c770dfa448
+  Session Id:              f5c83fadcb0b49c48e51b0e6f9acbf4e
   Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
-  External correlation Id: 6775254811632709745
+  External correlation Id: 5001156016574855964
   Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
 [Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.09s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T07:50:50.8863694Z"
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T07:55:57.166845Z"
 [Licensing::Client] Successfully updated the access token
-[Licensing::Module] Successfully updated the access token Jm1fuvqCnT...
+[Licensing::Module] Successfully updated the access token Z_cHdC19s-...
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 18968517174167-UnityPersXXXX
@@ -29,7 +29,7 @@ Date: 2026-10-28T07:50:50Z
   Expiration: Unlimited
 [Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
 [Licensing::Client] Successfully resolved entitlement details
-[Licensing::Module] Licensing Background thread has ended after 0.11s
+[Licensing::Module] Licensing Background thread has ended after 0.10s
 
 COMMAND LINE ARGUMENTS:
 D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
@@ -43,9 +43,9 @@ D:\HITME GAME\unity-client\Evidence\phase1\autoplay-run.log
 -executeMethod
 HitMe.Editor.Phase1GrayboxSceneBuilder.GenerateAutoPlayEvidence
 -hubSessionId
-44dd2250-4f75-48d9-b570-0091cc882d3f
+65787bd4-b96d-42d9-9b4f-c11cef25dee9
 -accessToken
-Jm1fuvqCnTXDe8zw-HeMgMROXDoMsiv3JOYOdAsPw7g011f
+Z_cHdC19s-l3hGwdTDOsls2sAJws8Xjja91EEJB5xXA011f
 Successfully changed project path to: D:\HITME GAME\unity-client
 D:/HITME GAME/unity-client
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -86,16 +86,16 @@ D:/HITME GAME/unity-client
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [14608]  Target information:
+Player connection [29736]  Target information:
 
-Player connection [14608]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 1113958353 [EditorId] 1113958353 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [29736]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 1462039790 [EditorId] 1462039790 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [14608] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [14608] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [29736] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [29736] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-20564" after 0.4 seconds.
+[Package Manager] Connected to IPC stream "Upm-39520" after 0.4 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Initialising UDS system complete:
@@ -129,7 +129,7 @@ Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
 Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56564
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56520
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -137,30 +137,31 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.001677 seconds.
+Registered in 0.001651 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.955 seconds
-Domain Reload Profiling: 1740ms
-	BeginReloadAssembly (182ms)
-		CreateAndSetChildDomain (18ms)
-	RebuildCommonClasses (6ms)
-	RebuildNativeTypeToScriptingClass (22ms)
-	initialDomainReloadingComplete (85ms)
-	LoadAllAssembliesAndSetupDomain (489ms)
-		LoadAssemblies (164ms)
-		TypeCache.Refresh (333ms)
-			TypeCache.ScanAssembly (315ms)
-		AnalyzeDomain (1ms)
-	FinalizeReload (956ms)
+- Finished resetting the current domain, in  0.976 seconds
+Domain Reload Profiling: 1755ms
+	BeginReloadAssembly (173ms)
+		CreateAndSetChildDomain (6ms)
+	RebuildCommonClasses (7ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (78ms)
+	LoadAllAssembliesAndSetupDomain (496ms)
+		LoadAssemblies (165ms)
+		TypeCache.Refresh (351ms)
+			TypeCache.ScanAssembly (333ms)
+		AnalyzeDomain (3ms)
+	FinalizeReload (978ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (5ms)
-			BeforeProcessingInitializeOnLoad (171ms)
-			ProcessInitializeOnLoadAttributes (173ms)
-			ProcessInitializeOnLoadMethodAttributes (307ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (175ms)
+			ProcessInitializeOnLoadAttributes (172ms)
+			ProcessInitializeOnLoadMethodAttributes (317ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -216,84 +217,86 @@ Application.AssetDatabase Initial Refresh Start
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Compiling Scripts
-ExitCode: 0 Duration: 0s274ms
+ExitCode: 0 Duration: 0s264ms
 [279/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-*** Tundra build success (0.22 seconds), 1 items updated, 319 evaluated
-AssetDatabase: script compilation time: 0.830602s
+*** Tundra build success (0.20 seconds), 1 items updated, 319 evaluated
+AssetDatabase: script compilation time: 0.797855s
 Begin MonoManager ReloadAssembly
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.722 seconds
-Domain Reload Profiling: 1577ms
-	BeginReloadAssembly (426ms)
-		DisableScriptedObjects (38ms)
-		CreateAndSetChildDomain (168ms)
-	RebuildCommonClasses (19ms)
-	RebuildNativeTypeToScriptingClass (28ms)
-	initialDomainReloadingComplete (50ms)
-	LoadAllAssembliesAndSetupDomain (330ms)
-		LoadAssemblies (276ms)
-		TypeCache.Refresh (32ms)
+- Finished resetting the current domain, in  0.783 seconds
+Domain Reload Profiling: 1671ms
+	BeginReloadAssembly (464ms)
+		DisableScriptedObjects (44ms)
+		CreateAndSetChildDomain (179ms)
+	RebuildCommonClasses (13ms)
+	RebuildNativeTypeToScriptingClass (24ms)
+	initialDomainReloadingComplete (51ms)
+	LoadAllAssembliesAndSetupDomain (334ms)
+		LoadAssemblies (301ms)
+		TypeCache.Refresh (29ms)
 			TypeCache.ScanAssembly (22ms)
-		AnalyzeDomain (15ms)
-			BuildScriptInfoCaches (12ms)
-	FinalizeReload (724ms)
+		AnalyzeDomain (18ms)
+			BuildScriptInfoCaches (13ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (784ms)
 		SetupLoadedEditorAssemblies (0ms)
-			BeforeProcessingInitializeOnLoad (144ms)
-			ProcessInitializeOnLoadAttributes (218ms)
-			ProcessInitializeOnLoadMethodAttributes (52ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (149ms)
+			ProcessInitializeOnLoadAttributes (254ms)
+			ProcessInitializeOnLoadMethodAttributes (62ms)
 			AfterProcessingInitializeOnLoad (3ms)
-		AwakeInstancesAfterBackupRestoration (43ms)
+		AwakeInstancesAfterBackupRestoration (44ms)
 Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
 
-Asset Pipeline Refresh (id=e2630ddda1aa9a34c8cd57d2702b5806): Total: 2.819 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+Asset Pipeline Refresh (id=d0a30dc1d50a2d14da78fa852625a7ed): Total: 2.908 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
 	(Values over 0.05ms)
 	Summary:
 		Imports: total=0 (actual=0, local cache=0, cache server=0)
-		Asset DB Process Time: managed=0 ms, native=1032 ms
-		Asset DB Callback time: managed=25 ms, native=25 ms
-		Scripting: domain reloads=1, domain reload time=887 ms, compile time=834 ms, other=12 ms
+		Asset DB Process Time: managed=0 ms, native=1112 ms
+		Asset DB Callback time: managed=31 ms, native=24 ms
+		Scripting: domain reloads=1, domain reload time=924 ms, compile time=802 ms, other=12 ms
 		Project Asset Count: scripts=314, non-scripts=328
 		Asset File Changes: new=0, changed=0, moved=0, deleted=0
 		Scan Filter Count: 0
-	InvokePackagesCallback: 31.280ms
-	ApplyChangesToAssetFolders: 0.843ms
-	Scan: 92.437ms
-	Collect global state as custom dependencies: 10.396ms
-	CategorizeScriptCompilationAssets: 8.702ms
-	ProcessAssetsWithTransientArtifactChanges: 19.099ms
-	CategorizeAssets: 7.116ms
-	CompileScripts: 834.335ms
-	ImportOutOfDateAssets: 752.056ms (724.828ms without children)
-		UnloadImportedAssets: 1.762ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.137ms
-		ImportSchedulerStart: 25.325ms
-	PostProcessAllAssets: 26.058ms
-		MonoPostProcessAllAssets: 25.951ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 11.556ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.595ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.122ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.416ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.320ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.201ms
-			SyncVS.PostprocessSyncProject 0.188ms
+	InvokePackagesCallback: 26.487ms
+	ApplyChangesToAssetFolders: 0.779ms
+	Scan: 98.179ms
+	Collect global state as custom dependencies: 10.388ms
+	CategorizeScriptCompilationAssets: 6.940ms
+	ProcessAssetsWithTransientArtifactChanges: 16.603ms
+	CategorizeAssets: 5.433ms
+	CompileScripts: 802.168ms
+	ImportOutOfDateAssets: 808.630ms (785.200ms without children)
+		UnloadImportedAssets: 2.046ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.166ms
+		ImportSchedulerStart: 21.212ms
+	PostProcessAllAssets: 31.968ms
+		MonoPostProcessAllAssets: 31.872ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 13.354ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.249ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.943ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.326ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.251ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.209ms
+			SyncVS.PostprocessSyncProject 0.144ms
 			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.108ms
-	UnloadStreamsBegin: 2.523ms
-	GenerateScriptTypeSerializationHashes: 0.060ms
-	Untracked: 992.872ms
+	UnloadStreamsBegin: 2.428ms
+	Untracked: 1030.594ms
 
 Application.AssetDatabase Initial Refresh End
-Scanning for USB devices : 0.898ms
+Scanning for USB devices : 0.932ms
 Initializing Unity extensions:
 [MODES] ModeService[none].Initialize
 [MODES] ModeService[none].LoadModes
 [MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
 Unloading 903 unused Assets / (0.7 MB). Loaded Objects now: 1642.
-Memory consumption went from 231.8 MB to 231.1 MB.
-Total: 7.533900 ms (FindLiveObjects: 0.274000 ms CreateObjectMapping: 0.042900 ms MarkObjects: 5.970800 ms  DeleteObjects: 1.106900 ms)
+Memory consumption went from 232.3 MB to 231.6 MB.
+Total: 7.420400 ms (FindLiveObjects: 0.496100 ms CreateObjectMapping: 0.035100 ms MarkObjects: 6.221900 ms  DeleteObjects: 0.443500 ms)
 
 Phase 1 AutoPlay batchmode evidence
 Mode: every participant, including player, is driven by Phase1BotBrain.
@@ -326,24 +329,20 @@ Input Polling Thread exited.
 Input System module state changed to: Shutdown.
 [Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
 [Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
-Shut down UDS service system complete
 Unity Data Store service was successfully shut down
 UDS shutting down local client system
+Shut down UDS service system complete
 AcceleratorClientConnectionCallback - disconnected - :0
 Cleanup mono
 CodeReloadManager destroyed
-abort_threads: Failed aborting id: 0000000000008448, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000008DB0, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 00000000000020B4, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000004FC0, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000004DD4, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000008DB0, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 0000000000008448, mono_thread_manage will ignore it
+abort_threads: Failed aborting id: 0000000000004FC0, mono_thread_manage will ignore it
 
-abort_threads: Failed aborting id: 00000000000020B4, mono_thread_manage will ignore it
-
-abort_threads: Failed aborting id: 0000000000004DD4, mono_thread_manage will ignore it
-
-debugger-agent: Unable to listen on 3436
+debugger-agent: Unable to listen on 3464
 Exiting batchmode successfully now!
 [ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

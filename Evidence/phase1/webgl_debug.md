@@ -33,3 +33,8 @@
 - Chrome Device Toolbar receives the automation's **mouse** event (`touchCount=0`); a blank-canvas click moved BẠN, demonstrating the canvas-to-world path for mouse. This automation cannot synthesize a trusted physical iPhone touch, so it is not evidence that `Input.touches` has been received on iPhone.
 - Legacy Input stays in place: it already maps both mouse and `Input.touches` through `PointerSample → PlacementGestureState`. There is no observed Legacy-touch failure after the rendering fix that justifies adding Input System yet.
 - Physical iPhone verification remains required: open `http://<PC-IP>:8080/?debugPointer=1`, touch/drag, and provide a screenshot of the overlay.
+
+## Step 2 supplemental — arena scale
+
+- Pixel inspection of the first repaired capture showed the canvas background rather than the configured floor. `ArenaView` used Unity's default 100 pixels-per-unit for a one-pixel white sprite, so the nominal `10 x 16` floor rendered as `0.1 x 0.16` world units.
+- Commit `3a8cb36` creates that sprite with one pixel per world unit. The final Chrome Device Toolbar capture `webgl_chrome_device_fixed.png` shows the full gray floor and white arena border together with HUD, BẠN, and the yellow touch ring.
