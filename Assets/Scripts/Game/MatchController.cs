@@ -34,24 +34,10 @@ namespace HitMe.Game
             StartCoroutine(NewMatch());
         }
         private void Update() { if (hud != null && hud.ReplayPressed) { hud.ResetButtons(); StartCoroutine(NewMatch()); } }
-        public void BeginLocalGesture(Vector2 point)
+        public void HandlePointer(PointerSample pointer)
         {
             if (_gesture == null || State == null || State.Phase != Phase.Placing) return;
-            _gesture.PointerDown(new Vec2(point.x, point.y), State.Config.PlayerRadius);
-            SyncGesturePreview();
-        }
-
-        public void MoveLocalGesture(Vector2 point)
-        {
-            if (_gesture == null || State == null || State.Phase != Phase.Placing) return;
-            _gesture.PointerMove(new Vec2(point.x, point.y), State.Config.MinAimDrag);
-            SyncGesturePreview();
-        }
-
-        public void EndLocalGesture()
-        {
-            if (_gesture == null) return;
-            _gesture.PointerUp();
+            if (_gesture.ApplyPointer(pointer, State.Config.PlayerRadius, State.Config.MinAimDrag)) SyncGesturePreview();
         }
 
         private IEnumerator NewMatch()

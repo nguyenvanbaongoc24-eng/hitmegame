@@ -1,6 +1,14 @@
 namespace HitMe.Core
 {
     public enum PlacementGestureMode { Idle, Moving, Aiming }
+    public enum PointerPhase { Began, Moved, Ended, Canceled }
+
+    public struct PointerSample
+    {
+        public Vec2 Position;
+        public PointerPhase Phase;
+        public PointerSample(Vec2 position, PointerPhase phase) { Position = position; Phase = phase; }
+    }
 
     /// <summary>
     /// Pure input state for one player's placement phase. It deliberately knows
@@ -69,6 +77,14 @@ namespace HitMe.Core
         }
 
         public void PointerUp() { Mode = PlacementGestureMode.Idle; }
+
+        public bool ApplyPointer(PointerSample pointer, float playerHitRadius, float minAimDrag)
+        {
+            if (pointer.Phase == PointerPhase.Began) { PointerDown(pointer.Position, playerHitRadius); return true; }
+            if (pointer.Phase == PointerPhase.Moved) { PointerMove(pointer.Position, minAimDrag); return true; }
+            if (pointer.Phase == PointerPhase.Ended || pointer.Phase == PointerPhase.Canceled) { PointerUp(); return false; }
+            return false;
+        }
 
         public RoundInput BuildRoundInput(string playerId, bool ready)
         {
