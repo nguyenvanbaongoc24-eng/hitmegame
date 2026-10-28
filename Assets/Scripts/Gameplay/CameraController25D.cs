@@ -21,20 +21,25 @@ namespace HitMe.Gameplay
         [Range(0.01f, 1.0f)]
         [SerializeField] private float smoothTime = 0.15f;
 
+        [Header("Arena Overview Mode")]
+        [Tooltip("Khóa camera nhìn toàn cảnh sân đình (chuẩn mobile battle 1 màn hình)")]
+        [SerializeField] private bool lockToArenaOverview = true;
+        [SerializeField] private Vector3 arenaCenter = new Vector3(0f, 0.15f, 0f);
+
         [Header("2.5D Angle & Offset Configuration")]
-        [Tooltip("Góc nghiêng từ trên xuống (chuẩn 45 độ theo đặc tả)")]
-        [Range(30f, 60f)]
-        [SerializeField] private float pitchAngle = 45f;
+        [Tooltip("Góc nghiêng từ trên xuống (0 độ cho 2D sprite arena)")]
+        [Range(0f, 60f)]
+        [SerializeField] private float pitchAngle = 0f;
         [Tooltip("Góc xoay ngang Yaw (0 độ = nhìn thẳng về trục Z+)")]
         [SerializeField] private float yawAngle = 0f;
         [Tooltip("Khoảng cách từ Camera đến mặt đất/Target")]
-        [SerializeField] private float distance = 14f;
-        [Tooltip("Tâm nhìn dịch chuyển so với Target (VD: nâng lên ngang ngực nhân vật)")]
-        [SerializeField] private Vector3 lookOffset = new Vector3(0f, 0.8f, 0f);
+        [SerializeField] private float distance = 10f;
+        [Tooltip("Tâm nhìn dịch chuyển so với Target")]
+        [SerializeField] private Vector3 lookOffset = Vector3.zero;
 
         [Header("Arena Bounds Clamping")]
         [Tooltip("Có kích hoạt giới hạn camera trong sân không")]
-        [SerializeField] private bool enableBoundsClamping = true;
+        [SerializeField] private bool enableBoundsClamping = false;
         [Tooltip("Tọa độ biên sân đấu (Min X, Max X, Min Z, Max Z)")]
         [SerializeField] private Vector2 arenaBoundsX = new Vector2(-6f, 6f);
         [SerializeField] private Vector2 arenaBoundsZ = new Vector2(-10f, 10f);
@@ -42,7 +47,7 @@ namespace HitMe.Gameplay
         [Header("Camera Projection Mode")]
         [Tooltip("Sử dụng Orthographic (chuẩn 2.5D Pixel-clean) hoặc Perspective")]
         [SerializeField] private bool useOrthographic = true;
-        [SerializeField] private float orthographicSize = 7.5f;
+        [SerializeField] private float orthographicSize = 7.2f;
 
         [Header("Camera Shake (Impact Feedback)")]
         private float shakeDuration = 0f;
@@ -54,6 +59,18 @@ namespace HitMe.Gameplay
         {
             get => target;
             set => target = value;
+        }
+
+        public bool LockToArenaOverview
+        {
+            get => lockToArenaOverview;
+            set => lockToArenaOverview = value;
+        }
+
+        public float OrthographicSize
+        {
+            get => orthographicSize;
+            set { orthographicSize = value; if (cam != null) cam.orthographicSize = value; }
         }
 
         private void Awake()
@@ -78,33 +95,51 @@ namespace HitMe.Gameplay
                     cam.orthographicSize = orthographicSize;
                 }
             }
-            // Khóa góc xoay cố định 45 độ chuẩn 2.5D
-            transform.rotation = Quaternion.Euler(pitchAngle, yawAngle, 0f);
+            if (lockToArenaOverview)
+            {
+                pitchAngle = 0f;
+                yawAngle = 0f;
+                distance = 10f;
+                transform.rotation = Quaternion.identity;
+            }
+            else
+            {
+                transform.rotation = Quaternion.Euler(pitchAngle, yawAngle, 0f);
+            }
         }
 
         private void LateUpdate()
         {
             Vector3 focusPoint = Vector3.zero;
 
-            if (target != null)
+            if (lockToArenaOverview)
             {
-                focusPoint = target.position + lookOffset;
+                pitchAngle = 0f;
+                yawAngle = 0f;
+                distance = 10f;
+                focusPoint = arenaCenter;
+            }
+            else
+            {
+                if (target != null)
+                {
+                    focusPoint = target.position + lookOffset;
+                }
+
+                // Kẹp vị trí trong giới hạn biên sân nếu bật bounds clamping
+                if (enableBoundsClamping)
+                {
+                    focusPoint.x = Mathf.Clamp(focusPoint.x, arenaBoundsX.x, arenaBoundsX.y);
+                    focusPoint.z = Mathf.Clamp(focusPoint.z, arenaBoundsZ.x, arenaBoundsZ.y);
+                }
             }
 
-            // Kẹp vị trí trong giới hạn biên sân nếu bật bounds clamping
-            if (enableBoundsClamping)
-            {
-                focusPoint.x = Mathf.Clamp(focusPoint.x, arenaBoundsX.x, arenaBoundsX.y);
-                focusPoint.z = Mathf.Clamp(focusPoint.z, arenaBoundsZ.x, arenaBoundsZ.y);
-            }
-
-            // Tính toán vị trí camera dựa trên góc nghiêng 45 độ
-            // Offset hướng lùi về phía sau và lên trên:
-            Quaternion rotation = Quaternion.Euler(pitchAngle, yawAngle, 0f);
+            // Tính toán vị trí camera
+            Quaternion rotation = lockToArenaOverview ? Quaternion.identity : Quaternion.Euler(pitchAngle, yawAngle, 0f);
             Vector3 targetPosition = focusPoint - (rotation * Vector3.forward * distance);
 
             // Bám theo mượt mà bằng SmoothDamp (tránh snap giật viền sprite trên mobile)
-            if (Application.isPlaying)
+            if (Application.isPlaying && !lockToArenaOverview)
             {
                 transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
             }

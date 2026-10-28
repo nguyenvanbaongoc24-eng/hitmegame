@@ -207,3 +207,32 @@ aimVisual.Hide();
 - **EditMode Tests:** **27/27 tests PASSED (100% Green, 0 failed)**.
 - **WebGL Build:** Đã cập nhật thành công tại [`Evidence/phase2/WebGLBuild`](file:///D:/HITME%20GAME/unity-client/Evidence/phase2/WebGLBuild).
 - **Trạng thái:** **VISUAL INTEGRATION COMPLETE & RUNTIME VERIFIED**
+
+---
+
+## 9. NÂNG CẤP TOÀN DIỆN: UI - ARENA - NHÂN VẬT - CONTEXT - GAMEPLAY (28/10/2026)
+
+Theo yêu cầu tiếp nối của Chủ dự án: *"tiếp tục xử lý các vấn đề về giao diện game, UI-AREN-NHÂN VẬT-CONTEXT-GAMEPLAY"*, hệ thống đã hoàn thiện bước đại tu toàn diện màn chơi chính `MainMatch.unity`:
+
+![UI Arena Gameplay Composite](file:///D:/HITME%20GAME/unity-client/Evidence/phase2/ui_arena_gameplay_composite.png)
+
+### 9.1. UI (User Interface 9-Slice & Typography)
+- **Thay thế mockup tĩnh bằng UI Kit Clean:** Toàn bộ 18 asset UI vector/9-slice sạch (`Assets/Art/UI/Kit/`) đã được import và cấu hình `spriteBorder` chính xác (`ui_banner_wood.png`, `ui_btn_cta_yellow.png`, `ui_btn_cta_blue.png`, `ui_btn_cta_green.png`, `ui_panel_dark_gold.png`, `ui_hud_pill_dark.png`, `ui_timer_circle_gold.png`, `ui_card_slot_selected_cyan.png`, `ui_input_box_cyan.png`).
+- **Khắc phục lỗi z-order text/image:** Tạo các GameObject nền (`_Bg`) làm anh em cùng cấp (sibling) ngay trước Text để chữ luôn nổi lên mặt trên, độ tương phản sắc nét tuyệt đối trên màn hình mobile.
+- **Header TopBar:** Pill máu Cyan cho Bạn (`BẠN: ♥ ♥ ♥`), pill máu Coral cho Bot (`BOT: ♥ ♥ ♥`), đồng hồ vàng đếm ngược 5 giây ở tâm (`5`), và thanh thông báo giai đoạn màu cyan.
+- **Toolbar BottomBar:** Slot thẻ vũ khí (`WeaponCardSlot`) hiển thị Dép Tổ Ong cùng hiệu ứng viền phát sáng cyan; nút bấm "SẴN SÀNG!" xanh lá nổi bật.
+- **Result Panel:** Card kết quả nền vàng đồng sang trọng (`ui_panel_dark_gold`), bảng thống kê tỉ số/tỉ lệ ném trúng, nút "ĐẤU LẠI" vàng và "VỀ MENU" xanh dương.
+
+### 9.2. ARENA & CONTEXT (Sân Đình Làng Việt Nam Đích Thực)
+- **Tích hợp `ARENA.png` authentic:** Đưa bức tranh sân đình làng cổ truyền với mái ngói đỏ, cột gạch, hoa cúc vàng rực rỡ, hàng cờ ngũ sắc và hoa sen vào vị trí chuẩn `(0, 0.15, 0)` scale `1.22`.
+- **Khắc phục góc nghiêng camera 45°:** `CameraController25D` được bổ sung chế độ `lockToArenaOverview = true` cố định `pitchAngle = 0°`, góc xoay `Quaternion.identity`, `orthographicSize = 7.2f`, loại bỏ hiện tượng méo góc và nửa màn hình bị cắt đen; giữ nguyên tính năng rung màn hình (Screen Shake) khi va chạm.
+- **Tắt decor thừa:** Tắt `ArenaBoundary` và `ArenaCenterLotus` trùng lặp vì tranh `ARENA.png` đã có sẵn viền đá và họa tiết hoa sen trung tâm tinh xảo.
+
+### 9.3. NHÂN VẬT (Chuẩn hóa Kích thước & Tránh AI Checkerboard)
+- **Scale chuẩn hóa:** Cả Người chơi (Nam Làng) và Bot (Anh Nón Lá) được chuẩn hóa hiển thị kích thước $1.50\text{u}$ (scale $0.7235$).
+- **Bóng & Vòng chân chân thực:** Sử dụng `procedural_shadow.png` và `procedural_foot_ring.png` khử 100% hiện tượng ô vuông checkerboard AI. Vòng viền cyan cho người chơi, vòng coral đỏ cho Bot.
+- **Nhân vật Bot:** Trang bị sprite chính hiệu `Assets/Sprites/anh_non_la_idle.png` (Anh Nón Lá đội nón lá truyền thống, áo bà ba vàng), phân biệt rõ rệt với Nam Làng.
+
+### 9.4. GAMEPLAY
+- Gắn prefab `HITME_AimVisual.prefab` vào `PlayerActor`, kết nối icon vũ khí Dép Tổ Ong, hỗ trợ kéo ngắm 360°, dải rẻ quạt phát sáng, 10 chấm định hướng, tâm ngắm xoay theo hướng và vòng khóa mục tiêu vàng rực khi ấn "SẴN SÀNG!".
+
