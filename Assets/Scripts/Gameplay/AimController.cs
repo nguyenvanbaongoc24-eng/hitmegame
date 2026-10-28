@@ -133,6 +133,8 @@ namespace HitMe.Gameplay
             _targetDestination = CombatRules.ClampToArena(worldTarget);
             _isMovingToDestination = true;
 
+            HitMe.Audio.AudioManager.Instance?.PlayPlace();
+
             if (destinationMarker != null)
             {
                 destinationMarker.position = new Vector3(_targetDestination.x, _targetDestination.y, -0.05f);

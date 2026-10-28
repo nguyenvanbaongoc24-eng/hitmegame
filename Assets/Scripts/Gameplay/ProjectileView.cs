@@ -28,6 +28,28 @@ namespace HitMe.Gameplay
             transform.position = new Vector3(startPos.x, startPos.y, -0.3f);
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+            // Audio: slipper flight (uses silent placeholder per Asset QA)
+            HitMe.Audio.AudioManager.Instance?.PlayFly();
+
+            // TrailRenderer for flight trail ("vệt bay")
+            var trail = GetComponent<TrailRenderer>();
+            if (trail == null)
+            {
+                trail = gameObject.AddComponent<TrailRenderer>();
+                trail.time = 0.16f;
+                trail.startWidth = 0.22f;
+                trail.endWidth = 0.02f;
+                trail.sortingOrder = 14;
+                var shader = Shader.Find("Sprites/Default");
+                if (shader != null) trail.material = new Material(shader);
+                Gradient grad = new Gradient();
+                grad.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(new Color(1f, 0.95f, 0.4f), 0f), new GradientColorKey(new Color(1f, 0.6f, 0.2f), 1f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(0.8f, 0f), new GradientAlphaKey(0.0f, 1f) }
+                );
+                trail.colorGradient = grad;
+            }
         }
 
         private void Update()
@@ -36,6 +58,9 @@ namespace HitMe.Gameplay
 
             float dt = Time.deltaTime;
             _elapsed += dt;
+
+            // Spinning slipper visual ("ném dép xoay")
+            transform.Rotate(0f, 0f, -1080f * dt);
 
             Vector2 prevPos = transform.position;
             Vector2 step = direction * (speed * dt);

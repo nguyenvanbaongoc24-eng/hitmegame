@@ -16,6 +16,7 @@ namespace HitMe.Core
         public ActorView playerActor;
         public ActorView botActor;
         public GameObject projectilePrefab;
+        public HitMe.Game.GameConfigAsset configAsset;
 
         [Header("State")]
         public LegacyMatchState currentState = LegacyMatchState.Initializing;
@@ -123,8 +124,8 @@ namespace HitMe.Core
 
             // 4. Start 5-second Window (GP-003): Player can move anywhere in arena + aim!
             currentState = LegacyMatchState.Aiming;
-            uiManager.UpdatePhaseBanner("CHẠM ĐỂ ĐI — KÉO ĐỂ NGẮM (5s)");
-            _phaseTimer = CombatRules.AimDuration;
+            uiManager.UpdatePhaseBanner("CHỌN HƯỚNG NÉM • Đối thủ đang ẩn");
+            _phaseTimer = configAsset != null ? configAsset.placeSeconds : CombatRules.AimDuration;
             _lastTickSec = Mathf.CeilToInt(_phaseTimer);
 
             aimController.EnableInput(currentPlayerPos, Vector2.up);
@@ -138,7 +139,11 @@ namespace HitMe.Core
                 if (curSec != _lastTickSec && curSec > 0)
                 {
                     _lastTickSec = curSec;
-                    AudioManager.Instance?.PlayTick();
+                    // Countdown tick: last 3 seconds
+                    if (curSec == 1)
+                        AudioManager.Instance?.PlayCountdownLast();
+                    else if (curSec <= 3)
+                        AudioManager.Instance?.PlayTick();
                 }
 
                 uiManager.UpdateTimer(_phaseTimer);
@@ -232,7 +237,8 @@ namespace HitMe.Core
                 botActor.SetPose(CharacterPose.Aim);
             }
 
-            yield return new WaitForSeconds(0.8f);
+            float revealDur = configAsset != null ? configAsset.revealSeconds : 0.8f;
+            yield return new WaitForSeconds(revealDur);
 
             // Transition to Resolving
             yield return StartCoroutine(ResolvingRoutine());
@@ -242,6 +248,9 @@ namespace HitMe.Core
         {
             currentState = LegacyMatchState.Resolving;
             uiManager.UpdatePhaseBanner("ĐỒNG THỜI NÉM VŨ KHÍ!");
+
+            float throwDur = configAsset != null ? configAsset.throwSeconds : 1.35f;
+            float resolveDur = configAsset != null ? configAsset.resolveSeconds : 1.2f;
 
             // Wind up animation
             if (playerActor != null) playerActor.SetPose(CharacterPose.ThrowWindup);
@@ -266,15 +275,15 @@ namespace HitMe.Core
             // Spawn projectiles simultaneously from exact locked positions
             SpawnProjectiles();
 
-            // Wait for projectiles flight and impact (max ~1.0s)
-            yield return new WaitForSeconds(1.0f);
+            // Wait for projectiles flight and impact
+            yield return new WaitForSeconds(Mathf.Max(0.5f, throwDur - 0.35f));
 
             // BATCH DAMAGE RESOLVE (GP-008): Apply all hits gathered during this batch
             ApplyBatchDamage();
 
             uiManager.UpdateHP(playerActor.currentHP, playerActor.maxHP, botActor.currentHP, botActor.maxHP);
 
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSeconds(resolveDur);
 
             // Transition to Round Summary
             EvaluateRoundSummary();
@@ -357,6 +366,11 @@ namespace HitMe.Core
                 {
                     botActor.TakeDamage(hit.damage);
                 }
+            }
+
+            if ((playerActor != null && playerActor.currentHP <= 0) || (botActor != null && botActor.currentHP <= 0))
+            {
+                AudioManager.Instance?.PlayDeath();
             }
         }
 
