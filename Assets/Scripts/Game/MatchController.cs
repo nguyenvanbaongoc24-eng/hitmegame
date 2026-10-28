@@ -14,9 +14,11 @@ namespace HitMe.Game
         public bool autoPlay;
         public MatchState State { get; private set; }
         public float SecondsRemaining { get; private set; }
+        public bool CapturePhase1 { get; private set; }
         public Vector2 LocalPosition { get { var p = State == null ? null : State.FindPlayer("player"); return p == null ? Vector2.zero : new Vector2(p.Position.X, p.Position.Y); } }
         private readonly Dictionary<string, PlayerView> _views = new Dictionary<string, PlayerView>();
         private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>();
+        private readonly List<GameObject> _weapons = new List<GameObject>();
         private SeededRandom _random;
         private Vec2 _localPlacement;
         private Vec2 _localDirection = Vec2.Up;
@@ -24,7 +26,12 @@ namespace HitMe.Game
         private void Start()
         {
             var args = System.Environment.GetCommandLineArgs();
-            for (int i = 0; i < args.Length; i++) if (args[i] == "-capturePhase1") autoPlay = true;
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i] != "-capturePhase1") continue;
+                autoPlay = true;
+                CapturePhase1 = true;
+            }
             StartCoroutine(NewMatch());
         }
         private void Update() { if (hud != null && hud.ReplayPressed) { hud.ResetButtons(); StartCoroutine(NewMatch()); } }
@@ -52,19 +59,32 @@ namespace HitMe.Game
                 {
                     var autoBrain = new Phase1BotBrain(BotLevel.Predictor, _random);
                     State.SetInput(autoBrain.MakeInput(State.FindPlayer("player"), config));
+                    // The capture run deliberately leaves round one visible long enough for
+                    // ScreenCapture to render the placing state. Normal AutoPlay stays instant.
+                    if (CapturePhase1 && State.RoundNumber == 1)
+                    {
+                        Present(true);
+                        yield return new WaitForSeconds(.8f);
+                    }
                     SecondsRemaining = 0f;
                 }
                 while (!autoPlay && SecondsRemaining > 0 && !hud.ReadyPressed) { SecondsRemaining -= Time.deltaTime; State.SetInput(new RoundInput("player") { HasPlacement = true, Placement = _localPlacement, HasAim = true, AimDirection = _localDirection, IsReady = false }); Present(true); yield return null; }
-                State.SetInput(new RoundInput("player") { HasPlacement = true, Placement = _localPlacement, HasAim = true, AimDirection = _localDirection, IsReady = true }); State.LockRound(); hud.ResetButtons(); Present(false); yield return new WaitForSeconds(.25f);
-                State.BeginReveal(); Present(false); yield return new WaitForSeconds(.65f);
-                State.BeginThrowing(); SpawnWeapons(); yield return new WaitForSeconds(1f);
-                State.ResolveRound(); Present(false); yield return new WaitForSeconds(1f);
+                State.SetInput(new RoundInput("player") { HasPlacement = true, Placement = _localPlacement, HasAim = true, AimDirection = _localDirection, IsReady = true }); State.LockRound(); hud.ResetButtons(); Present(false); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .25f : .02f);
+                State.BeginReveal(); Present(false, true); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .8f : .02f);
+                State.BeginThrowing(); Present(false); SpawnWeapons(); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? 1f : .02f);
+                State.ResolveRound(); ClearWeapons(); Present(false); yield return new WaitForSeconds(CapturePhase1 ? .02f : 1f);
             }
             Present(false);
         }
 
         private void CreateView(PlayerState p, int index) { var go = new GameObject(p.Id); var view = go.AddComponent<PlayerView>(); view.Initialise(p.Id, index == 0 ? Color.cyan : Color.HSVToRGB(index / 6f, .7f, 1)); _views[p.Id] = view; }
-        private void Present(bool placing) { if (State == null) return; foreach (var p in State.Players) _views[p.Id].Present(p, !placing || !p.IsBot, placing && !p.IsBot); }
-        private void SpawnWeapons() { foreach (var p in State.Players) { if (!p.IsAlive) continue; var end = HitCalculator.GetWallPoint(p.Position, State.LockedInputs[p.Id].AimDirection, State.Config); var go = new GameObject("Weapon"); go.AddComponent<WeaponFlightView>().Initialise(new Vector3(p.Position.X, p.Position.Y), new Vector3(end.X, end.Y), 1f); } }
+        private void Present(bool placing, bool showAllAim = false)
+        {
+            if (State == null) return;
+            foreach (var p in State.Players)
+                _views[p.Id].Present(p, true, showAllAim || (placing && !p.IsBot));
+        }
+        private void SpawnWeapons() { foreach (var p in State.Players) { if (!p.IsAlive) continue; var end = HitCalculator.GetWallPoint(p.Position, State.LockedInputs[p.Id].AimDirection, State.Config); var go = new GameObject("Weapon"); go.AddComponent<WeaponFlightView>().Initialise(new Vector3(p.Position.X, p.Position.Y), new Vector3(end.X, end.Y), 1f); _weapons.Add(go); } }
+        private void ClearWeapons() { foreach (var weapon in _weapons) if (weapon != null) Destroy(weapon); _weapons.Clear(); }
     }
 }

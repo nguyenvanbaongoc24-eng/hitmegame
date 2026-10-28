@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using HitMe.Core;
 using UnityEngine;
 
@@ -19,9 +20,28 @@ namespace HitMe.Game
             if (state.Phase == Phase.Placing && GUI.Button(new Rect(Screen.width - 150, 24, 120, 44), "SẴN SÀNG")) ReadyPressed = true;
             if (state.Phase == Phase.MatchEnd)
             {
-                GUI.Box(new Rect(Screen.width / 2 - 175, Screen.height / 2 - 85, 350, 170), "KẾT QUẢ\n" + string.Join(", ", state.WinnerIds) + " thắng");
-                if (GUI.Button(new Rect(Screen.width / 2 - 70, Screen.height / 2 + 30, 140, 35), "CHƠI LẠI")) ReplayPressed = true;
+                DrawResult(state);
             }
+        }
+
+        private void DrawResult(MatchState state)
+        {
+            const float panelWidth = 540f;
+            const float rowHeight = 38f;
+            var ranked = state.Players.OrderByDescending(p => p.IsAlive).ThenByDescending(p => p.Hp).ThenBy(p => p.Name).ToList();
+            var height = 154f + ranked.Count * rowHeight;
+            var x = (Screen.width - panelWidth) * .5f;
+            var y = (Screen.height - height) * .5f;
+            GUI.Box(new Rect(x, y, panelWidth, height), "KẾT QUẢ");
+            GUI.Label(new Rect(x + 28, y + 42, panelWidth - 56, 30), "NGƯỜI THẮNG: " + string.Join(", ", state.WinnerIds));
+            GUI.Label(new Rect(x + 28, y + 70, panelWidth - 56, 25), "XẾP HẠNG");
+            for (int i = 0; i < ranked.Count; i++)
+            {
+                var player = ranked[i];
+                var suffix = state.WinnerIds.Contains(player.Id) ? "  ★ THẮNG" : (player.IsAlive ? "  còn sống" : "  đã loại");
+                GUI.Label(new Rect(x + 28, y + 98 + i * rowHeight, panelWidth - 56, rowHeight), (i + 1) + ". " + player.Name + " — " + player.Hp + " HP" + suffix);
+            }
+            if (GUI.Button(new Rect(x + panelWidth * .5f - 90f, y + height - 52f, 180f, 36f), "CHƠI LẠI")) ReplayPressed = true;
         }
     }
 }

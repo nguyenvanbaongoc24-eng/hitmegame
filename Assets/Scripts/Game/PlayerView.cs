@@ -16,7 +16,7 @@ namespace HitMe.Game
             playerId = id;
             _circle = _circle ?? MakeCircle();
             _body = gameObject.AddComponent<SpriteRenderer>(); _body.sprite = _circle; _body.color = color; _body.sortingOrder = 2;
-            var text = new GameObject("Label"); text.transform.SetParent(transform); text.transform.localPosition = new Vector3(0, .65f, 0); _label = text.AddComponent<TextMesh>(); _label.anchor = TextAnchor.MiddleCenter; _label.alignment = TextAlignment.Center; _label.characterSize = .16f; _label.fontSize = 42; _label.color = Color.white;
+            var text = new GameObject("Label"); text.transform.SetParent(transform); text.transform.localPosition = new Vector3(0, .65f, 0); _label = text.AddComponent<TextMesh>(); _label.anchor = TextAnchor.MiddleCenter; _label.alignment = TextAlignment.Center; _label.characterSize = .07f; _label.fontSize = 28; _label.color = Color.white;
             _aim = gameObject.AddComponent<LineRenderer>(); _aim.positionCount = 2; _aim.startWidth = .06f; _aim.endWidth = .025f; _aim.material = new Material(Shader.Find("Sprites/Default")); _aim.startColor = Color.yellow; _aim.endColor = Color.yellow; _aim.sortingOrder = 1;
         }
 
