@@ -1,0 +1,427 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 12592)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 34072)
+VBCSCompiler prewarm took 39.28 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-28T09:15:47.7278583Z"
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-10-28T09:15:47Z
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              bab9b754ac284a5d85b17304f9591513
+  Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
+  External correlation Id: 4588827042095648354
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.06s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-28T09:15:47.7934069Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.07s
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:\HITME GAME\unity-client
+-executeMethod
+Phase2SpriteAtlasBuilder.BuildAtlases
+-logFile
+D:\HITME GAME\unity-client\Evidence\phase1\atlas-build.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [36436]  Target information:
+
+Player connection [36436]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 1012606226 [EditorId] 1012606226 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [36436] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [36436] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-38228" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56228
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001477 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.982 seconds
+Domain Reload Profiling: 1754ms
+	BeginReloadAssembly (178ms)
+		CreateAndSetChildDomain (18ms)
+	RebuildCommonClasses (6ms)
+	RebuildNativeTypeToScriptingClass (24ms)
+	initialDomainReloadingComplete (77ms)
+	LoadAllAssembliesAndSetupDomain (485ms)
+		LoadAssemblies (160ms)
+		TypeCache.Refresh (334ms)
+			TypeCache.ScanAssembly (316ms)
+		AnalyzeDomain (3ms)
+	FinalizeReload (983ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (154ms)
+			ProcessInitializeOnLoadAttributes (190ms)
+			ProcessInitializeOnLoadMethodAttributes (325ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 43 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.accessibility@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aE.dag.json" "Library/Bee/2000b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 4 Duration: 0s260ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aE-inputdata.json
+[279/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (0.20 seconds), 1 items updated, 278 evaluated
+ExitCode: 0 Duration: 0s477ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 1s466ms
+Finished compiling graph: 322 nodes, 3169 flattened edges (2887 ToBuild, 30 ToUse), maximum node priority 181
+[237/319    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp
+[278/319    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[315/319    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+[316/319    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 311 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[317/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[318/319    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (1.43 seconds), 6 items updated, 319 evaluated
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+AssetDatabase: script compilation time: 2.978871s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.819 seconds
+Domain Reload Profiling: 1745ms
+	BeginReloadAssembly (453ms)
+		DisableScriptedObjects (44ms)
+		CreateAndSetChildDomain (167ms)
+	RebuildCommonClasses (17ms)
+	RebuildNativeTypeToScriptingClass (27ms)
+	initialDomainReloadingComplete (53ms)
+	LoadAllAssembliesAndSetupDomain (374ms)
+		LoadAssemblies (292ms)
+		TypeCache.Refresh (29ms)
+			TypeCache.ScanAssembly (20ms)
+		AnalyzeDomain (21ms)
+			BuildScriptInfoCaches (16ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (821ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (194ms)
+			ProcessInitializeOnLoadAttributes (237ms)
+			ProcessInitializeOnLoadMethodAttributes (56ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (48ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: 3f5b5dff67a942289a9defa416b206f3 - Path: Assets/TextMesh Pro/Resources/TMP Settings.asset' with importer (NativeFormatImporter)
+Imported 'GUID: 3f5b5dff67a942289a9defa416b206f3' -> (Import Result ID: '7fffdd886d2a30a633558470f9a42e17') in 0.033 seconds [static dependencies only]. Details - ImportResultOutputID=603efaa7f5869716d3b798bcf98e4051 DependenciesID=22c7633c1fbe41db2ef27164ef28eb6e StaticDependenciesID=7d4e1e4f50d65ba8fe31f31bc71e5cbd 
+
+Asset Pipeline Refresh (id=54d3a79294b32914fa29712200f14ed6): Total: 5.302 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=3 ms, native=1209 ms
+		Asset DB Callback time: managed=106 ms, native=27 ms
+		Scripting: domain reloads=1, domain reload time=961 ms, compile time=2983 ms, other=10 ms
+		Project Asset Count: scripts=323, non-scripts=393
+		Asset File Changes: new=1, changed=2, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 26.164ms
+	ApplyChangesToAssetFolders: 0.681ms
+	Scan: 143.886ms
+	Collect global state as custom dependencies: 11.273ms
+	OnSourceAssetsModified: 0.799ms
+	CategorizeScriptCompilationAssets: 7.288ms
+	ProcessAssetsWithTransientArtifactChanges: 20.808ms
+	CategorizeAssets: 8.682ms
+	CompileScripts: 2983.446ms
+	ImportOutOfDateAssets: 880.874ms (822.538ms without children)
+		ImportManagerImport: 35.526ms (2.021ms without children)
+		UnloadImportedAssets: 2.202ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.176ms
+		ImportSchedulerStart: 20.419ms
+	PostProcessAllAssets: 107.164ms
+		VCAutoAddAssetPostprocess 1.343ms
+		VersionControlSettings.HiddenFilePostprocess 0.065ms
+		MonoPostProcessAllAssets: 105.132ms
+			AssetPostprocessor.OnPostprocessAllAssets 33.560ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 17.079ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 14.314ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 12.390ms
+			AssetChangedListener.OnPostprocessAllAssets 3.026ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.799ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.763ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.982ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.745ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.737ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.540ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.431ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.374ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.365ms
+			AssetEvents.OnPostprocessAllAssets 0.311ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.308ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.273ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.242ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.199ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.167ms
+			SyncVS.PostprocessSyncProject 0.147ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.131ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.097ms
+	PostAssetChangesProfiler: 1.820ms
+	UnloadStreamsBegin: 1.698ms
+	PersistCurrentRevisions: 0.102ms
+	GenerateScriptTypeHashes: 0.051ms
+	GenerateScriptTypeSerializationHashes: 0.063ms
+	Untracked: 1064.735ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Scanning for USB devices : 1.183ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME VN
+Unloading 21 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 923 unused Assets / (1.9 MB). Loaded Objects now: 1648.
+Memory consumption went from 237.5 MB to 235.6 MB.
+Total: 10.198600 ms (FindLiveObjects: 0.215600 ms CreateObjectMapping: 0.029000 ms MarkObjects: 6.739900 ms  DeleteObjects: 3.088400 ms)
+
+Importing 'GUID: a5773da3d66c2194d945282a1d52f8aa - Path: Assets/Art/Atlases' with importer (DefaultImporter)
+Imported 'GUID: a5773da3d66c2194d945282a1d52f8aa' -> (Import Result ID: 'faa77884a6a5ea83d149745bbf3f441b') in 0.014 seconds [static dependencies only]. Details - ImportResultOutputID=7eb4c382a4d3845a7db81627a7789c89 DependenciesID=23310710617629a3c51d07477898a680 StaticDependenciesID=b8dc85675eb77aaf0f2c2157b740a531 
+Asset Pipeline Refresh (id=7568b179176ac3d44b488292b321383b): Total: 0.108 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Importing 'GUID: 0f3df292ad6cbba45827bf5df6b45901 - Path: Assets/Art/Atlases/Characters_Atlas.spriteatlas' with importer (NativeFormatImporter)
+Imported 'GUID: 0f3df292ad6cbba45827bf5df6b45901' -> (Import Result ID: '2b25bff7c1a66fa78a50ebe1f6c3282f') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=df5a2aeb27ecfae70b0c9889c2874981 DependenciesID=978a39db9f69ef3785314fdd67116cab StaticDependenciesID=d01b0ef70d5821df3226a3e1f068ae4f 
+Asset Pipeline Refresh (id=217a46a1e2f936b46926a00985bf33e7): Total: 0.025 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Created Sprite Atlas: Assets/Art/Atlases/Characters_Atlas.spriteatlas
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2SpriteAtlasBuilder:CreateAtlas (string,string[],string) (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:89)
+Phase2SpriteAtlasBuilder:BuildAtlases () (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:20)
+
+(Filename: Assets/Editor/Phase2SpriteAtlasBuilder.cs Line: 89)
+
+Importing 'GUID: cf1c885738b5d7d4fbab83fd68bd48c4 - Path: Assets/Art/Atlases/UI_Atlas.spriteatlas' with importer (NativeFormatImporter)
+Imported 'GUID: cf1c885738b5d7d4fbab83fd68bd48c4' -> (Import Result ID: '9d5a473e786446a8fd41e5422659c28c') in 0.006 seconds [static dependencies only]. Details - ImportResultOutputID=869d7262c8442cee4d434f440a0187bb DependenciesID=ca42d9fe21ee94533c486d256b4ff7f6 StaticDependenciesID=a0f78e90ba68878476363676a1f889fb 
+Asset Pipeline Refresh (id=fd40dae800364864daceaa7e73b2b5f2): Total: 0.029 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Created Sprite Atlas: Assets/Art/Atlases/UI_Atlas.spriteatlas
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2SpriteAtlasBuilder:CreateAtlas (string,string[],string) (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:89)
+Phase2SpriteAtlasBuilder:BuildAtlases () (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:21)
+
+(Filename: Assets/Editor/Phase2SpriteAtlasBuilder.cs Line: 89)
+
+Importing 'GUID: c2b5f6ac49ab2d84b8f4d23bd86608a1 - Path: Assets/Art/Atlases/VFX_Atlas.spriteatlas' with importer (NativeFormatImporter)
+Imported 'GUID: c2b5f6ac49ab2d84b8f4d23bd86608a1' -> (Import Result ID: '03f7801782073ead137c93b89150d23d') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=dbaf730fcae0521b376da350308659eb DependenciesID=a037539ccb25cbd46dfa91e0ad8392fd StaticDependenciesID=c02b9bd7df016ae0ab6e14638443da31 
+Asset Pipeline Refresh (id=e646a20aefbea0e4998fd2d87071d432): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Created Sprite Atlas: Assets/Art/Atlases/VFX_Atlas.spriteatlas
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2SpriteAtlasBuilder:CreateAtlas (string,string[],string) (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:89)
+Phase2SpriteAtlasBuilder:BuildAtlases () (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:22)
+
+(Filename: Assets/Editor/Phase2SpriteAtlasBuilder.cs Line: 89)
+
+Importing 'GUID: 615f7646b07bba24090444c353f87e26 - Path: Assets/Art/Atlases/Env_Atlas.spriteatlas' with importer (NativeFormatImporter)
+Imported 'GUID: 615f7646b07bba24090444c353f87e26' -> (Import Result ID: 'c32544439d54a44eff0672a6b5169e1b') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=d666b9d86fb4ed7ee123da407d4e45cb DependenciesID=6155b1d9c02290f2e4db3bdf0d0fc27a StaticDependenciesID=f650a2c90a3ad8ad6151edc14a264592 
+Asset Pipeline Refresh (id=ca5dbc35b81c77945bc18afd4f327720): Total: 0.023 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Created Sprite Atlas: Assets/Art/Atlases/Env_Atlas.spriteatlas
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2SpriteAtlasBuilder:CreateAtlas (string,string[],string) (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:89)
+Phase2SpriteAtlasBuilder:BuildAtlases () (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:23)
+
+(Filename: Assets/Editor/Phase2SpriteAtlasBuilder.cs Line: 89)
+
+Asset Pipeline Refresh (id=f1dcf274cf82cd34abb6e8521ca44fc4): Total: 0.009 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Successfully created 4 Sprite Atlases in Assets/Art/Atlases/
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2SpriteAtlasBuilder:BuildAtlases () (at Assets/Editor/Phase2SpriteAtlasBuilder.cs:27)
+
+(Filename: Assets/Editor/Phase2SpriteAtlasBuilder.cs Line: 27)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

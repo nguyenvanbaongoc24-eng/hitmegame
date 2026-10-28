@@ -98,9 +98,13 @@ namespace HitMe.Editor
             // Ensure a changed custom template is not served from the Editor's
             // imported-template cache on the next evidence build.
             AssetDatabase.ImportAsset("Assets/WebGLTemplates/Phase1Mobile/index.html", ImportAssetOptions.ForceUpdate);
-            var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = new[] { "Assets/Scenes/Graybox.unity" }, locationPathName = output, target = UnityEditor.BuildTarget.WebGL, options = UnityEditor.BuildOptions.None });
-            File.WriteAllText("Evidence/phase1/webgl-build.txt", "Target: WebGL\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n");
-            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new System.Exception("WebGL build failed; see Evidence/phase1/webgl-build.txt");
+            var scenes = new[] { "Assets/Scenes/Phase2_Step1_AssetTest.unity", "Assets/Scenes/Graybox.unity" };
+            var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = scenes, locationPathName = output, target = UnityEditor.BuildTarget.WebGL, options = UnityEditor.BuildOptions.None });
+            var summary = "Target: WebGL\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n";
+            File.WriteAllText("Evidence/phase1/webgl-build.txt", summary);
+            Directory.CreateDirectory("Evidence/phase2");
+            File.WriteAllText("Evidence/phase2/webgl-build.txt", summary);
+            if (report.summary.result != UnityEditor.Build.Reporting.BuildResult.Succeeded) throw new System.Exception("WebGL build failed; see Evidence/phase2/webgl-build.txt");
         }
 
         public static void CreateGrayboxScene()
