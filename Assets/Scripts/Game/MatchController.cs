@@ -80,7 +80,13 @@ namespace HitMe.Game
                     }
                     SecondsRemaining = 0f;
                 }
-                while (!autoPlay && SecondsRemaining > 0 && !hud.ReadyPressed) { SecondsRemaining -= Time.deltaTime; State.SetInput(_gesture.BuildRoundInput("player", false)); Present(true); yield return null; }
+                while (!autoPlay && SecondsRemaining > 0 && !hud.ReadyPressed)
+                {
+                    // The URL-gated pointer probe holds Placing so mobile telemetry can be read;
+                    // normal builds retain the five-second timeout unchanged.
+                    if (!WebGLPointerDiagnostics.IsRequested()) SecondsRemaining -= Time.deltaTime;
+                    State.SetInput(_gesture.BuildRoundInput("player", false)); Present(true); yield return null;
+                }
                 State.SetInput(_gesture.BuildRoundInput("player", true)); State.LockRound(); hud.ResetButtons(); Present(false); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .25f : .02f);
                 State.BeginReveal(); Present(false, true); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .8f : .02f);
                 State.BeginThrowing(); Present(false); SpawnWeapons(); yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? 1f : .02f);
