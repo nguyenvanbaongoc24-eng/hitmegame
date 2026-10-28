@@ -21,6 +21,7 @@ namespace HitMe.Core
         public Vec2 Placement { get; private set; }
         public Vec2 FallbackDirection { get; private set; }
         public Vec2 AimDirection { get; private set; }
+        public float AimPreviewLength { get; private set; }
         public bool HasAim { get; private set; }
         public Vec2 EffectiveDirection { get { return HasAim ? AimDirection : FallbackDirection; } }
 
@@ -29,6 +30,7 @@ namespace HitMe.Core
             Placement = placement;
             FallbackDirection = fallbackDirection.LengthSquared > 0.00001f ? fallbackDirection.Normalized : Vec2.Up;
             AimDirection = FallbackDirection;
+            AimPreviewLength = 0f;
             Mode = PlacementGestureMode.Idle;
         }
 
@@ -43,6 +45,7 @@ namespace HitMe.Core
         {
             if (direction.LengthSquared <= 0.00001f) return;
             AimDirection = direction.Normalized;
+            AimPreviewLength = 0f;
             HasAim = true;
         }
 
@@ -70,9 +73,11 @@ namespace HitMe.Core
             {
                 HasAim = false;
                 AimDirection = FallbackDirection;
+                AimPreviewLength = 0f;
                 return;
             }
             AimDirection = delta.Normalized;
+            AimPreviewLength = delta.Length;
             HasAim = true;
         }
 
@@ -97,5 +102,26 @@ namespace HitMe.Core
                 IsReady = ready
             };
         }
+    }
+
+    /// <summary>Tracks one active physical pointer so a second finger cannot alter an in-progress gesture.</summary>
+    public sealed class ActivePointerGate
+    {
+        private int _activePointerId = int.MinValue;
+        public bool IsCapturing { get { return _activePointerId != int.MinValue; } }
+
+        public bool TryAccept(int pointerId, PointerPhase phase)
+        {
+            if (!IsCapturing)
+            {
+                if (phase != PointerPhase.Began) return false;
+                _activePointerId = pointerId;
+            }
+            if (_activePointerId != pointerId) return false;
+            if (phase == PointerPhase.Ended || phase == PointerPhase.Canceled) _activePointerId = int.MinValue;
+            return true;
+        }
+
+        public void Reset() { _activePointerId = int.MinValue; }
     }
 }

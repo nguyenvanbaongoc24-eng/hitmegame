@@ -16,13 +16,18 @@ namespace HitMe.Core
         public int DamagePerHit = 1;
         public int MaxHitsPerThrow = 1;
         public float MinSpawnDistance = 0.9f;
-        public float MinAimDrag = 0.25f;
+        // 0.55 world units is about 59 pixels in the 1080px-wide portrait arena.
+        // This avoids turning normal thumb jitter into an aim on a six-inch phone.
+        public float MinAimDrag = 0.55f;
+        public float AimTouchRadiusMultiplier = 1.75f;
+        public float AimLineExtraLength = 0.35f;
         public uint Seed = 12345;
 
         public float MinX { get { return -ArenaWidth * 0.5f + PlayerRadius; } }
         public float MaxX { get { return ArenaWidth * 0.5f - PlayerRadius; } }
         public float MinY { get { return -ArenaHeight * 0.5f + PlayerRadius; } }
         public float MaxY { get { return ArenaHeight * 0.5f - PlayerRadius; } }
+        public float AimTouchRadius { get { return PlayerRadius * AimTouchRadiusMultiplier; } }
 
         public GameConfig Clone()
         {

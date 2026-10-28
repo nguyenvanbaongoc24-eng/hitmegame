@@ -188,6 +188,31 @@ namespace HitMe.Tests
         }
 
         [Test]
+        public void GestureUsesTheConfiguredAimThreshold()
+        {
+            var config = Config();
+            config.MinAimDrag = .55f;
+            var gesture = new PlacementGestureState(Vec2.Zero, Vec2.Up);
+            gesture.PointerDown(Vec2.Zero, config.AimTouchRadius);
+            gesture.PointerMove(new Vec2(.54f, 0f), config.MinAimDrag);
+            Assert.That(gesture.HasAim, Is.False);
+            gesture.PointerMove(new Vec2(.55f, 0f), config.MinAimDrag);
+            Assert.That(gesture.HasAim, Is.True);
+        }
+
+        [Test]
+        public void ActivePointerGateIgnoresSecondFingerUntilTheFirstEnds()
+        {
+            var gate = new ActivePointerGate();
+            Assert.That(gate.TryAccept(10, PointerPhase.Began), Is.True);
+            Assert.That(gate.TryAccept(11, PointerPhase.Began), Is.False);
+            Assert.That(gate.TryAccept(11, PointerPhase.Moved), Is.False);
+            Assert.That(gate.TryAccept(10, PointerPhase.Moved), Is.True);
+            Assert.That(gate.TryAccept(10, PointerPhase.Ended), Is.True);
+            Assert.That(gate.TryAccept(11, PointerPhase.Began), Is.True);
+        }
+
+        [Test]
         public void GestureDraggingBackNearPlayerCancelsAim()
         {
             var gesture = new PlacementGestureState(Vec2.Zero, Vec2.Up);
@@ -227,5 +252,6 @@ namespace HitMe.Tests
             Assert.That(gesture.HasAim, Is.False);
             Assert.That(match.LockedInputs["player"].AimDirection, Is.EqualTo(new Vec2(-1f, 0f)));
         }
+
     }
 }

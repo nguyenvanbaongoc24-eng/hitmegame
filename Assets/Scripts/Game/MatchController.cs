@@ -37,7 +37,7 @@ namespace HitMe.Game
         public void HandlePointer(PointerSample pointer)
         {
             if (_gesture == null || State == null || State.Phase != Phase.Placing) return;
-            if (_gesture.ApplyPointer(pointer, State.Config.PlayerRadius, State.Config.MinAimDrag)) SyncGesturePreview();
+            if (_gesture.ApplyPointer(pointer, State.Config.AimTouchRadius, State.Config.MinAimDrag)) SyncGesturePreview();
         }
 
         private IEnumerator NewMatch()
@@ -101,7 +101,11 @@ namespace HitMe.Game
         {
             if (State == null) return;
             foreach (var p in State.Players)
-                _views[p.Id].Present(p, !placing || !p.IsBot, showAllAim || (placing && !p.IsBot && _gesture != null && _gesture.HasAim));
+            {
+                bool isLocal = p.Id == "player";
+                bool showLocalAim = placing && isLocal && _gesture != null && _gesture.HasAim;
+                _views[p.Id].Present(p, !placing || !p.IsBot, showAllAim || showLocalAim, placing && isLocal, State.Config.AimTouchRadius, State.Config.AimLineExtraLength, isLocal && _gesture != null ? _gesture.AimPreviewLength : 0f);
+            }
         }
         private void SpawnWeapons() { foreach (var p in State.Players) { if (!p.IsAlive) continue; var end = HitCalculator.GetWallPoint(p.Position, State.LockedInputs[p.Id].AimDirection, State.Config); var go = new GameObject("Weapon"); go.AddComponent<WeaponFlightView>().Initialise(new Vector3(p.Position.X, p.Position.Y), new Vector3(end.X, end.Y), 1f); _weapons.Add(go); } }
         private void ClearWeapons() { foreach (var weapon in _weapons) if (weapon != null) Destroy(weapon); _weapons.Clear(); }

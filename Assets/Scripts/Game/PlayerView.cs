@@ -9,6 +9,7 @@ namespace HitMe.Game
         private SpriteRenderer _body;
         private TextMesh _label;
         private LineRenderer _aim;
+        private LineRenderer _touchRing;
         private static Sprite _circle;
 
         public void Initialise(string id, Color color)
@@ -18,16 +19,19 @@ namespace HitMe.Game
             _body = gameObject.AddComponent<SpriteRenderer>(); _body.sprite = _circle; _body.color = color; _body.sortingOrder = 2;
             var text = new GameObject("Label"); text.transform.SetParent(transform); text.transform.localPosition = new Vector3(0, .65f, 0); _label = text.AddComponent<TextMesh>(); _label.anchor = TextAnchor.MiddleCenter; _label.alignment = TextAlignment.Center; _label.characterSize = .07f; _label.fontSize = 28; _label.color = Color.white;
             _aim = gameObject.AddComponent<LineRenderer>(); _aim.positionCount = 2; _aim.startWidth = .06f; _aim.endWidth = .025f; _aim.material = new Material(Shader.Find("Sprites/Default")); _aim.startColor = Color.yellow; _aim.endColor = Color.yellow; _aim.sortingOrder = 1;
+            _touchRing = gameObject.AddComponent<LineRenderer>(); _touchRing.loop = true; _touchRing.positionCount = 32; _touchRing.startWidth = .025f; _touchRing.endWidth = .025f; _touchRing.material = new Material(Shader.Find("Sprites/Default")); _touchRing.startColor = new Color(1f, .85f, 0f, .65f); _touchRing.endColor = new Color(1f, .85f, 0f, .65f); _touchRing.sortingOrder = 1;
         }
 
-        public void Present(PlayerState player, bool visible, bool showAim)
+        public void Present(PlayerState player, bool visible, bool showAim, bool showTouchRing, float touchRadius, float aimLineExtraLength, float aimPreviewLength)
         {
             if (_body == null) return;
             transform.position = new Vector3(player.Position.X, player.Position.Y, 0);
             _body.enabled = visible; _label.gameObject.SetActive(visible); _label.text = player.Name + "\nHP " + player.Hp;
             _body.color = player.IsAlive ? _body.color : new Color(.3f, .3f, .3f, .45f);
             _aim.enabled = visible && showAim && player.IsAlive;
-            if (_aim.enabled) { _aim.SetPosition(0, transform.position); var end = transform.position + new Vector3(player.Facing.X, player.Facing.Y, 0) * 2f; _aim.SetPosition(1, end); }
+            _touchRing.enabled = visible && showTouchRing && player.IsAlive;
+            if (_touchRing.enabled) for (int i = 0; i < _touchRing.positionCount; i++) { float angle = Mathf.PI * 2f * i / _touchRing.positionCount; _touchRing.SetPosition(i, transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * touchRadius); }
+            if (_aim.enabled) { var direction = new Vector3(player.Facing.X, player.Facing.Y, 0); float start = touchRadius; float length = Mathf.Max(2f, aimPreviewLength + aimLineExtraLength); _aim.SetPosition(0, transform.position + direction * start); _aim.SetPosition(1, transform.position + direction * (start + length)); }
         }
 
         private static Sprite MakeCircle()
