@@ -5,6 +5,7 @@ It changes only the generated evidence file, ranking character/foot assets first
 """
 from __future__ import annotations
 import csv
+import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -33,7 +34,8 @@ def main() -> None:
         cleaned = OUT / "cleaned" / f"{stem}_cleaned.png"
         severity = {"high": 3, "medium": 2, "low": 1, "none": 0}[checker]
         severity = max(severity, 2 if len(defects) >= 2 else 1)
-        priority = 0 if any(k in path.lower() for k in PRIORITY) else 1
+        normalized = re.sub(r"[^a-z0-9]+", "_", path.lower())
+        priority = 0 if any(re.search(rf"(?:^|_){re.escape(k)}(?:_|$)", normalized) for k in PRIORITY) else 1
         result.append((priority, -severity, {"file_goc": path, "loi": "; ".join(defects), "muc_do": ("cao" if severity == 3 else "trung" if severity == 2 else "thấp"), "ban_da_lam_sach": str(cleaned.relative_to(REPO)) if cleaned.exists() else "", "dung_cho": usage(path)}))
     result.sort(key=lambda item: (item[0], item[1], item[2]["file_goc"].lower()))
     with (OUT / "REPLACE_LIST.csv").open("w", newline="", encoding="utf-8") as file:
