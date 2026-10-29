@@ -66,6 +66,17 @@ public sealed class ProtocolGateway
         };
     }
 
+    public IReadOnlyList<GatewayMessage> Tick()
+    {
+        var output = new List<GatewayMessage>();
+        foreach (var room in rooms.Snapshot())
+        {
+            if (room.RoundSession is null) continue;
+            output.AddRange(Target(room, room.RoundSession.Tick()));
+        }
+        return output;
+    }
+
     private string Join(string connectionId, ClientEnvelope request)
     {
         if (sessions.ContainsKey(connectionId)) return Error("already_joined");

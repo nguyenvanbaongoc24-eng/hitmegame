@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
@@ -104,5 +105,33 @@ public sealed class ProtocolGatewayTests
         Assert.Equal(4, afterLock.Count);
         Assert.Contains(afterLock, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
         Assert.Contains(afterLock, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
+    }
+
+    [Fact]
+    public void GatewayTickLocksAndBroadcastsAfterTheServerDeadline()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        gateway.HandleMessages("c1", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = -2f, positionY = 0f }));
+
+        clock.Advance(TimeSpan.FromSeconds(5));
+        var messages = gateway.Tick();
+
+        Assert.Equal(4, messages.Count);
+        Assert.Contains(messages, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
+        Assert.Contains(messages, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
+        var lateCommit = Json(gateway.Handle("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f })));
+        Assert.Equal("round_locked", lateCommit.GetProperty("code").GetString());
+    }
+
+    private sealed class FakeTimeProvider : TimeProvider
+    {
+        private DateTimeOffset now;
+        public FakeTimeProvider(DateTimeOffset now) => this.now = now;
+        public override DateTimeOffset GetUtcNow() => now;
+        public void Advance(TimeSpan elapsed) => now += elapsed;
     }
 }

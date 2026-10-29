@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<RoomDirectory>();
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
+builder.Services.AddHostedService<RoundDeadlineService>();
 var app = builder.Build();
 app.UseWebSockets();
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));

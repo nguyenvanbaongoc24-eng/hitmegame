@@ -104,6 +104,11 @@ public sealed class RoomDirectory
         lock (gate) return rooms.TryGetValue(code, out room!);
     }
 
+    public IReadOnlyList<RoomAuthority> Snapshot()
+    {
+        lock (gate) return rooms.Values.ToArray();
+    }
+
     public bool Join(string code, string playerId, string playerName, out RoomAuthority? room, out string error)
     {
         lock (gate)
