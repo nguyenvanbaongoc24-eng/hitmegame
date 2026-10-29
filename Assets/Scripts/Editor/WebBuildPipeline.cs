@@ -16,7 +16,7 @@ namespace HitMe.Editor
             // 1. Build Production UI for Graybox scene
             ProductionUISetup.BuildProductionUI();
 
-            // 2. Configure WebGL settings
+            // 2. Configure WebGL settings. Legacy scene generation must never run before a build.
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
 
             PlayerSettings.productName = "HIT ME";
@@ -35,7 +35,7 @@ namespace HitMe.Editor
                 Directory.CreateDirectory(buildDir);
             }
 
-            string[] scenes = new string[] { "Assets/Scenes/Graybox.unity", "Assets/Scenes/MainMatch.unity" };
+            string[] scenes = BuildScenes.Production;
 
             BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
             {

@@ -384,11 +384,10 @@ namespace HitMe.Editor
                 uiCtrl.matchController = matchCtrl;
             }
 
-            // 8. Configure Build Scenes (Graybox is Scene 0, MainMatch kept intact)
+            // 8. Configure Build Scenes (Graybox is sole production scene, MainMatch kept intact)
             var scenes = new List<EditorBuildSettingsScene>
             {
-                new EditorBuildSettingsScene(GrayboxScenePath, true),
-                new EditorBuildSettingsScene("Assets/Scenes/MainMatch.unity", true)
+                new EditorBuildSettingsScene(GrayboxScenePath, true)
             };
             EditorBuildSettings.scenes = scenes.ToArray();
 

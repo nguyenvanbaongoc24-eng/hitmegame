@@ -14,7 +14,8 @@ namespace HitMe.Editor
 {
     public static class SceneSetupEditor
     {
-        [MenuItem("Tools/HIT ME/Build Sample Scene")]
+        [System.Obsolete("Legacy MainMatch generator. It is not part of the production build path.")]
+        [MenuItem("Tools/HIT ME/Legacy/Build Sample Scene")]
         public static void BuildSampleScene()
         {
             // 1. Ensure directories and configure sprites
@@ -205,11 +206,6 @@ namespace HitMe.Editor
             EditorSceneManager.SaveScene(scene, scenePath);
             Debug.Log("Sample Scene with full authentic UI and arena movement saved to " + scenePath);
 
-            EditorBuildSettingsScene[] scenes = new EditorBuildSettingsScene[]
-            {
-                new EditorBuildSettingsScene(scenePath, true)
-            };
-            EditorBuildSettings.scenes = scenes;
             AssetDatabase.SaveAssets();
         }
 
