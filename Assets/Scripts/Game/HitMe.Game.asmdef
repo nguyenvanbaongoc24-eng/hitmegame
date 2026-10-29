@@ -1,7 +1,11 @@
 {
   "name": "HitMe.Game",
   "rootNamespace": "HitMe.Game",
-  "references": ["HitMe.Core", "Unity.TextMeshPro"],
+  "references": [
+    "HitMe.Core",
+    "HitMe.Audio",
+    "Unity.TextMeshPro"
+  ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

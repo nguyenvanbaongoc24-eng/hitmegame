@@ -111,6 +111,7 @@ namespace HitMe.Audio
         public void PlayHit() => PlaySfx(sfxHit);
         public void PlayDeath() => PlaySfx(sfxDeath);
         public void PlayTick() => PlaySfx(sfxCountdownTick);
+        public void PlayCountdownTick() => PlayTick();
         public void PlayCountdownLast() => PlaySfx(sfxCountdownLast != null ? sfxCountdownLast : sfxCountdownTick);
         public void PlayWin() => PlaySfx(sfxWin);
         public void PlayLose() => PlaySfx(sfxLose);
