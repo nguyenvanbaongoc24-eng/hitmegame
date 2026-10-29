@@ -8,5 +8,6 @@
   <ItemGroup>
     <ProjectReference Include="..\HitMe.Server.csproj" />
     <Compile Include="..\..\tools\patches\gesture_v2\PlacementGestureV2.cs" Link="Gesture\PlacementGestureV2.cs" />
+    <None Include="golden\rounds.json" Link="golden\rounds.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

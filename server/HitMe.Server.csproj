@@ -3,5 +3,6 @@
   <ItemGroup>
     <Compile Include="..\Assets\Scripts\Core\Phase1\**\*.cs" Link="Core\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Remove="Tests\**\*.cs" />
+    <Compile Remove="Tools\**\*.cs" />
   </ItemGroup>
 </Project>
