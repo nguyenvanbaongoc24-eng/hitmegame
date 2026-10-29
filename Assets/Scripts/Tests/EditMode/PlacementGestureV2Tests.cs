@@ -237,5 +237,29 @@ namespace HitMe.Tests
             Assert.AreEqual(0f, PlacementGestureV2.MmToPixels(-5f, 160f));
             Assert.AreEqual(25.197f, PlacementGestureV2.MmToPixels(4f, -1f), 0.01f); // default to 160 dpi
         }
+
+        [Test]
+        public void Test16_AllReplayFixturesMatchExpectedState()
+        {
+            string replaysDir = System.IO.Path.GetFullPath("tools/patches/gesture_v2/replays");
+            if (!System.IO.Directory.Exists(replaysDir)) return;
+
+            var files = System.IO.Directory.GetFiles(replaysDir, "*.json");
+            Assert.AreEqual(6, files.Length);
+            foreach (var file in files)
+            {
+                string json = System.IO.File.ReadAllText(file);
+                var fixture = HitMe.GestureV2.GestureReplay.Load(json);
+                var s = HitMe.GestureV2.GestureReplay.Play(fixture);
+                var e = fixture.Expected;
+                Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{file} HasPlaced mismatch");
+                Assert.AreEqual(e.AimActive, s.AimActive, $"{file} AimActive mismatch");
+                Assert.AreEqual(e.Locked, s.Locked, $"{file} Locked mismatch");
+                Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{file} PositionX mismatch");
+                Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{file} PositionY mismatch");
+                Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{file} FacingX mismatch");
+                Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{file} FacingY mismatch");
+            }
+        }
     }
 }
