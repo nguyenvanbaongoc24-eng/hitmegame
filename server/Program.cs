@@ -26,7 +26,7 @@ app.Map("/ws", async context => {
             var result = await socket.ReceiveAsync(buffer, context.RequestAborted);
             if (result.MessageType == WebSocketMessageType.Close) { await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", context.RequestAborted); break; }
             var replies = gateway.HandleMessages(connectionId, Encoding.UTF8.GetString(buffer, 0, result.Count));
-            foreach (var reply in replies) await connections.SendAsync(reply, context.RequestAborted);
+            await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
         }
     }
     finally

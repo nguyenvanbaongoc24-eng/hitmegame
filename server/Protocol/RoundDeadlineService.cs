@@ -17,8 +17,7 @@ public sealed class RoundDeadlineService : BackgroundService
         using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(100));
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
-            foreach (var message in gateway.Tick())
-                await connections.SendAsync(message, stoppingToken);
+            await Task.WhenAll(gateway.Tick().Select(message => connections.SendAsync(message, stoppingToken)));
         }
     }
 }
