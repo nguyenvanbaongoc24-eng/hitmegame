@@ -1,3 +1,15 @@
+# R2 safety inventory (generated against origin/main 4a166fc):
+# - Move CharacterData.cs + .meta to Scripts/Game/Data; GUID 1b788... stays linked
+#   to NamLang.asset and AnhNonLa.asset (2 serialized ScriptableObjects).
+# - Move WeaponData.cs + .meta to Scripts/Game/Data; GUID b4d4... stays linked
+#   to 12 serialized weapon assets.
+# - Keep MatchStateMachine.cs: its GUID 3b6a... is serialized in MainMatch.unity.
+# - Keep BotBrain.cs and GameModels.cs: although not serialized by GUID, they are
+#   compiled dependencies of MatchStateMachine, ActorView, and SceneSetupEditor.
+# - No legacy file is eligible for Assets/_Archive in this patch. Apply with
+#   `git apply --3way tools/patches/core_cleanup.patch`, then open Unity to check
+#   compilation and Missing Script references. This patch is intentionally unapplied.
+
 diff --git a/Assets/Scripts/Game/Data.meta b/Assets/Scripts/Game/Data.meta
 new file mode 100644
 index 0000000..2659109
