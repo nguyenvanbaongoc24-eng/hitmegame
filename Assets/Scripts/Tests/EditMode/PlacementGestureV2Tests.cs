@@ -275,6 +275,18 @@ namespace HitMe.Tests
         }
 
         [Test]
+        public void Test16_07_Replay_SecondFingerIgnored()
+        {
+            AssertReplayFixture("07_second_finger_ignored.json");
+        }
+
+        [Test]
+        public void Test16_08_Replay_LockBlocksInput()
+        {
+            AssertReplayFixture("08_lock_blocks_input.json");
+        }
+
+        [Test]
         public void Test17_CancelAimByDraggingBackUnder4mmRestoresDefaultFacing()
         {
             var g = CreateGesture();
@@ -334,6 +346,39 @@ namespace HitMe.Tests
             }
         }
 
+        private sealed class StepReplayEvent
+        {
+            public string Kind { get; set; } = "";
+            public int PointerId { get; set; }
+            public float Sx { get; set; }
+            public float Sy { get; set; }
+            public float Gx { get; set; }
+            public float Gy { get; set; }
+            public bool Inside { get; set; }
+            public HitMe.GestureV2.ReplayExpected Expected { get; set; }
+        }
+
+        private sealed class StepReplayFixture
+        {
+            public System.Collections.Generic.List<StepReplayEvent> Events { get; set; } = new System.Collections.Generic.List<StepReplayEvent>();
+            public HitMe.GestureV2.ReplayExpected Expected { get; set; } = new HitMe.GestureV2.ReplayExpected();
+        }
+
+        private static readonly System.Text.Json.JsonSerializerOptions StepJsonOptions =
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+        private static void AssertExpectedState(string context, HitMe.GestureV2.ReplayExpected e, GestureSnapshot s)
+        {
+            Assert.IsNotNull(e, $"{context}: Expected state is null");
+            Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{context}: HasPlaced mismatch");
+            Assert.AreEqual(e.AimActive, s.AimActive, $"{context}: AimActive mismatch");
+            Assert.AreEqual(e.Locked, s.Locked, $"{context}: Locked mismatch");
+            Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{context}: PositionX mismatch");
+            Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{context}: PositionY mismatch");
+            Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{context}: FacingX mismatch");
+            Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{context}: FacingY mismatch");
+        }
+
         private static void AssertReplayFixture(string filename)
         {
             string replaysDir = System.IO.Path.GetFullPath("tools/patches/gesture_v2/replays");
@@ -341,17 +386,59 @@ namespace HitMe.Tests
             Assert.IsTrue(System.IO.File.Exists(path), "Replay file exists: " + path);
 
             string json = System.IO.File.ReadAllText(path);
+            var stepFixture = System.Text.Json.JsonSerializer.Deserialize<StepReplayFixture>(json, StepJsonOptions);
+            Assert.IsNotNull(stepFixture, $"{filename}: stepFixture deserialized");
+
+            var g = new PlacementGestureV2();
+            g.BeginRound(Vec2.Zero, PlacementGestureV2.DefaultFacing);
+            for (int i = 0; i < stepFixture.Events.Count; i++)
+            {
+                var ev = stepFixture.Events[i];
+                var screen = new Vec2(ev.Sx, ev.Sy);
+                var game = new Vec2(ev.Gx, ev.Gy);
+                if (ev.Kind == "down") g.PointerDown(ev.PointerId, screen, game, ev.Inside, 0);
+                else if (ev.Kind == "move") g.PointerMove(ev.PointerId, screen, game, ev.Inside, 0, 10f);
+                else if (ev.Kind == "up") g.PointerUp(ev.PointerId, screen, game, ev.Inside, 0);
+                else if (ev.Kind == "lock") g.Lock();
+
+                AssertExpectedState($"{filename}[step {i}:{ev.Kind}]", ev.Expected, g.Snapshot());
+            }
+
             var fixture = HitMe.GestureV2.GestureReplay.Load(json);
             var s = HitMe.GestureV2.GestureReplay.Play(fixture, 10f);
-            var e = fixture.Expected;
+            AssertExpectedState($"{filename}[final]", fixture.Expected, s);
+        }
 
-            Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{filename}: HasPlaced mismatch");
-            Assert.AreEqual(e.AimActive, s.AimActive, $"{filename}: AimActive mismatch");
-            Assert.AreEqual(e.Locked, s.Locked, $"{filename}: Locked mismatch");
-            Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{filename}: PositionX mismatch");
-            Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{filename}: PositionY mismatch");
-            Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{filename}: FacingX mismatch");
-            Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{filename}: FacingY mismatch");
+        [Test]
+        public void Test19_SteadyStateFrameAllocationIsZeroBytesAcross3600Frames()
+        {
+            var g = CreateGesture();
+            float minAim = PlacementGestureV2.MmToPixels(4.0f, 160f);
+            g.PointerDown(1, new Vec2(100f, 100f), new Vec2(1.5f, -1.0f), true, 0);
+
+            // Warm up static label table and gesture methods
+            _ = HitMe.Game.PlayerView.GetPrebuiltHpLabel(0, 3);
+            g.PointerMove(1, new Vec2(160f, 120f), new Vec2(3.5f, 1.0f), true, 16, minAim);
+            _ = g.Snapshot();
+
+            long beforeBytes = System.GC.GetAllocatedBytesForCurrentThread();
+            for (int frame = 0; frame < 3600; frame++)
+            {
+                float angle = (frame % 360) * 0.01745329f;
+                float sx = 100f + (float)System.Math.Cos(angle) * 80f;
+                float sy = 100f + (float)System.Math.Sin(angle) * 80f;
+                g.PointerMove(1, new Vec2(sx, sy), new Vec2(1.5f, -1.0f), true, frame * 16L, minAim);
+                var snap = g.Snapshot();
+                for (int c = 0; c < 6; c++)
+                {
+                    string lbl = HitMe.Game.PlayerView.GetPrebuiltHpLabel(c, 3);
+                    if (lbl.Length == 0) Assert.Fail();
+                }
+                if (!snap.HasPlaced) Assert.Fail();
+            }
+            long afterBytes = System.GC.GetAllocatedBytesForCurrentThread();
+            long deltaBytes = afterBytes - beforeBytes;
+            Assert.AreEqual(0L, deltaBytes, $"Expected 0 bytes allocated across 3,600 steady-state frames (60s @ 60fps), but got {deltaBytes} B.");
         }
     }
 }

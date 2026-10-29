@@ -51,7 +51,34 @@ namespace HitMe.Game
         private static Sprite[] _namLangPoses;
         private static Sprite[] _anhNonLaPoses;
 
+        private static readonly string[][] PrebuiltCharacterHpLabels = BuildCharacterHpLabels();
+
+        private static string[][] BuildCharacterHpLabels()
+        {
+            var table = new string[TotalCharacterCount][];
+            for (int c = 0; c < TotalCharacterCount; c++)
+            {
+                string name = CharacterNames[c];
+                table[c] = new[]
+                {
+                    name + "\n0/3 HP",
+                    name + "\n1/3 HP",
+                    name + "\n2/3 HP",
+                    name + "\n3/3 HP"
+                };
+            }
+            return table;
+        }
+
+        public static string GetPrebuiltHpLabel(int characterIndex, int hp)
+        {
+            int c = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            int h = Mathf.Clamp(hp, 0, 3);
+            return PrebuiltCharacterHpLabels[c][h];
+        }
+
         private string _lastLabelName;
+        private int _lastLabelCharIdx = -1;
         private int _lastLabelHp = -999;
         private readonly string[] _cachedHpLabels = new string[4];
         private float _lastTouchRadius = -1f;
@@ -374,6 +401,19 @@ namespace HitMe.Game
         private void UpdateLabelCached(string playerName, int hp)
         {
             int clampedHp = Mathf.Clamp(hp, 0, 3);
+            int charIdx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            if (charIdx >= 0 && charIdx < TotalCharacterCount &&
+                string.Equals(CharacterNames[charIdx], playerName, StringComparison.Ordinal))
+            {
+                if (_lastLabelCharIdx != charIdx || _lastLabelHp != clampedHp)
+                {
+                    _lastLabelCharIdx = charIdx;
+                    _lastLabelHp = clampedHp;
+                    _label.text = PrebuiltCharacterHpLabels[charIdx][clampedHp];
+                }
+                return;
+            }
+
             if (!string.Equals(_lastLabelName, playerName, StringComparison.Ordinal))
             {
                 _lastLabelName = playerName;

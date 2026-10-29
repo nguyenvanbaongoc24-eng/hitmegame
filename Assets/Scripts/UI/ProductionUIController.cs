@@ -743,10 +743,12 @@ namespace HitMe.UI
         {
             bool isUrlAutoPlay = Application.absoluteURL != null &&
                                  Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
-            if (!isUrlAutoPlay)
+            if (isUrlAutoPlay)
             {
-                ShowScreen(ProductionScreen.Result);
+                return;
             }
+
+            ShowScreen(ProductionScreen.Result);
 
             bool isLocalWinner = winnerIds.Contains("player");
             if (txtResultTitle != null)

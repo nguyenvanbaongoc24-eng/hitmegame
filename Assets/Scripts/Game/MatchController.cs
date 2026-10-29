@@ -55,6 +55,7 @@ namespace HitMe.Game
         public Action<List<PlayerState>, List<string>> OnMatchEnded;
 
         private const int MaxPoolSize = 6;
+        private static readonly string[] CachedPlayerIds = { "player", "bot-1", "bot-2", "bot-3", "bot-4", "bot-5" };
         private readonly List<PlayerView> _playerPool = new List<PlayerView>(MaxPoolSize);
         private readonly List<WeaponFlightView> _weaponPool = new List<WeaponFlightView>(MaxPoolSize);
         private readonly List<HitFx> _hitFxPool = new List<HitFx>(MaxPoolSize);
@@ -64,6 +65,7 @@ namespace HitMe.Game
         private readonly List<string> _winnerIdsBuffer = new List<string>(MaxPoolSize);
 
         private SeededRandom _random;
+        private Phase1BotBrain _autoBrain;
         private PlacementGestureV2 _gestureV2;
         private Coroutine _matchCoroutine;
         private int _lastTickSecond = -1;
@@ -85,11 +87,15 @@ namespace HitMe.Game
         private int _webAutoPlayTotalMatches;
         private bool _fastAutoPlayTimings;
         private int _profileFrames;
+        private int _profileSteadyFrames;
         private long _profileStartBytes;
         private long _profilePositiveAllocBytes;
+        private long _profileSteadyAllocBytes;
         private long _profilePrevBytes;
         private int _profileStartGcCount;
         private float _profileStartTime;
+        private float _profileMinFps = 999f;
+        private bool _inTransitionFrame;
 
         /// <summary>
         /// Deterministic selection of up to 6 distinct characters from the 7-character roster.
@@ -187,7 +193,10 @@ namespace HitMe.Game
         private void StartProfilingWindow()
         {
             _profileFrames = 0;
+            _profileSteadyFrames = 0;
             _profilePositiveAllocBytes = 0;
+            _profileSteadyAllocBytes = 0;
+            _profileMinFps = float.MaxValue;
             _profileStartBytes = GC.GetTotalMemory(false);
             _profilePrevBytes = _profileStartBytes;
             _profileStartGcCount = GC.CollectionCount(0);
@@ -199,9 +208,28 @@ namespace HitMe.Game
             if (State != null && State.Phase != Phase.MatchEnd)
             {
                 _profileFrames++;
+                if (Time.unscaledDeltaTime > 0.0001f)
+                {
+                    float instFps = 1f / Time.unscaledDeltaTime;
+                    if (_profileFrames > 5 && instFps < _profileMinFps)
+                    {
+                        _profileMinFps = instFps;
+                    }
+                }
                 long curBytes = GC.GetTotalMemory(false);
                 long delta = curBytes - _profilePrevBytes;
-                if (delta > 0) _profilePositiveAllocBytes += delta;
+                if (delta > 0)
+                {
+                    _profilePositiveAllocBytes += delta;
+                    if (State.Phase == Phase.Placing || State.Phase == Phase.Throwing)
+                    {
+                        _profileSteadyAllocBytes += delta;
+                    }
+                }
+                if (State.Phase == Phase.Placing || State.Phase == Phase.Throwing)
+                {
+                    _profileSteadyFrames++;
+                }
                 _profilePrevBytes = curBytes;
             }
 
@@ -336,7 +364,7 @@ namespace HitMe.Game
             var players = new List<PlayerState>(playerCount);
             for (int i = 0; i < playerCount; i++)
             {
-                string id = i == 0 ? "player" : "bot-" + i;
+                string id = i < CachedPlayerIds.Length ? CachedPlayerIds[i] : ("bot-" + i);
                 bool bot = i != 0;
                 int charIdx = rosterIndices[i];
                 string displayName = PlayerView.CharacterNames[charIdx];
@@ -347,6 +375,7 @@ namespace HitMe.Game
                 BindPooledView(p, i, charIdx);
                 if (bot) _bots[id] = new Phase1BotBrain((BotLevel)((i - 1) % 3), _random);
             }
+            _autoBrain = new Phase1BotBrain(BotLevel.Predictor, _random);
 
             State = new MatchState(config, players);
             if (hud != null) hud.ResetButtons();
@@ -386,8 +415,7 @@ namespace HitMe.Game
 
                 if (autoPlay)
                 {
-                    var autoBrain = new Phase1BotBrain(BotLevel.Predictor, _random);
-                    var autoInput = autoBrain.MakeInput(localPlayer, config);
+                    var autoInput = _autoBrain.MakeInput(localPlayer, config);
                     State.SetInput(autoInput);
 
                     _gestureV2.PointerDown(0, Vec2.Zero, autoInput.Placement, true, 0);
@@ -423,17 +451,6 @@ namespace HitMe.Game
                             else AudioManager.Instance.PlayTick();
                         }
                     }
-
-                    var snap = _gestureV2.Snapshot();
-                    RoundInput liveInput = new RoundInput("player")
-                    {
-                        HasPlacement = snap.HasPlaced,
-                        Placement = snap.Position,
-                        HasAim = snap.AimActive,
-                        AimDirection = snap.Facing,
-                        IsReady = false
-                    };
-                    State.SetInput(liveInput);
 
                     Present(true);
                     yield return null;
@@ -536,10 +553,12 @@ namespace HitMe.Game
                 {
                     float elapsedSec = Mathf.Max(0.01f, Time.realtimeSinceStartup - _profileStartTime);
                     float avgFps = _profileFrames / elapsedSec;
+                    float minFps = _profileMinFps < float.MaxValue ? _profileMinFps : avgFps;
                     long avgAllocPerFrame = _profileFrames > 0 ? (_profilePositiveAllocBytes / _profileFrames) : 0;
+                    long steadyAllocPerFrame = _profileSteadyFrames > 0 ? (_profileSteadyAllocBytes / _profileSteadyFrames) : 0;
                     int gcCollections = GC.CollectionCount(0) - _profileStartGcCount;
                     Debug.Log($"[WebGLAutoPlay] All {_webAutoPlayTotalMatches}/{_webAutoPlayTotalMatches} matches completed with 0 errors! " +
-                              $"Frames={_profileFrames}, Elapsed={elapsedSec:F2}s, AvgFPS={avgFps:F1}, ManagedAllocPerFrame={avgAllocPerFrame} B/frame, GCGen0={gcCollections}");
+                              $"Frames={_profileFrames}, Elapsed={elapsedSec:F2}s, AvgFPS={avgFps:F1}, MinFPS={minFps:F1}, SteadyAllocPerFrame={steadyAllocPerFrame} B/frame, ManagedAllocPerFrame={avgAllocPerFrame} B/frame, GCGen0={gcCollections}");
                 }
             }
         }
