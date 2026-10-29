@@ -17,8 +17,8 @@ public sealed class SimulationTests
     }
 
     [Fact]
-    public void ServerAndGestureDefaultFacingUseTheCoreUpDirection()
+    public void ServerAndGestureDefaultFacingAreIdentical()
     {
-        Assert.Equal(Vec2.Up, ServerMatch.DefaultFacing);
+        Assert.Equal(PlacementGestureV2.DefaultFacing, ServerMatch.DefaultFacing);
     }
 }

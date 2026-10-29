@@ -5,5 +5,8 @@
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
-  <ItemGroup><ProjectReference Include="..\HitMe.Server.csproj" /></ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HitMe.Server.csproj" />
+    <Compile Include="..\..\tools\patches\gesture_v2\PlacementGestureV2.cs" Link="Gesture\PlacementGestureV2.cs" />
+  </ItemGroup>
 </Project>
