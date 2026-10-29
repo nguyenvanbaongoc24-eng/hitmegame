@@ -13,13 +13,13 @@ namespace HitMe.Editor
         {
             Debug.Log("Starting HIT ME WebGL Build...");
 
-            // 1. Build Sample Scene first to ensure fresh scene and assets
-            SceneSetupEditor.BuildSampleScene();
+            // 1. Build Production UI for Graybox scene
+            ProductionUISetup.BuildProductionUI();
 
             // 2. Configure WebGL settings
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
 
-            PlayerSettings.productName = "HIT ME VN";
+            PlayerSettings.productName = "HIT ME";
             PlayerSettings.companyName = "HitMeStudio";
             PlayerSettings.bundleVersion = "1.0.0";
             PlayerSettings.defaultWebScreenWidth = 540;
@@ -29,13 +29,13 @@ namespace HitMe.Editor
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
             PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
 
-            string buildDir = "D:/HIT ME VN GAME/Builds/WebLocal";
+            string buildDir = Path.GetFullPath("Builds/WebGL");
             if (!Directory.Exists(buildDir))
             {
                 Directory.CreateDirectory(buildDir);
             }
 
-            string[] scenes = new string[] { "Assets/Scenes/MainMatch.unity" };
+            string[] scenes = new string[] { "Assets/Scenes/Graybox.unity", "Assets/Scenes/MainMatch.unity" };
 
             BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
             {
