@@ -1,0 +1,30 @@
+diff --git a/Assets/Scripts/Game/Data.meta b/Assets/Scripts/Game/Data.meta
+new file mode 100644
+index 0000000..2659109
+--- /dev/null
++++ b/Assets/Scripts/Game/Data.meta
+@@ -0,0 +1,8 @@
++fileFormatVersion: 2
++guid: 6ed3512bfbb24e0094bd1ed9b52c68f2
++folderAsset: yes
++DefaultImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
+diff --git a/Assets/Scripts/Core/CharacterData.cs b/Assets/Scripts/Game/Data/CharacterData.cs
+similarity index 100%
+rename from Assets/Scripts/Core/CharacterData.cs
+rename to Assets/Scripts/Game/Data/CharacterData.cs
+diff --git a/Assets/Scripts/Core/CharacterData.cs.meta b/Assets/Scripts/Game/Data/CharacterData.cs.meta
+similarity index 100%
+rename from Assets/Scripts/Core/CharacterData.cs.meta
+rename to Assets/Scripts/Game/Data/CharacterData.cs.meta
+diff --git a/Assets/Scripts/Core/WeaponData.cs b/Assets/Scripts/Game/Data/WeaponData.cs
+similarity index 100%
+rename from Assets/Scripts/Core/WeaponData.cs
+rename to Assets/Scripts/Game/Data/WeaponData.cs
+diff --git a/Assets/Scripts/Core/WeaponData.cs.meta b/Assets/Scripts/Game/Data/WeaponData.cs.meta
+similarity index 100%
+rename from Assets/Scripts/Core/WeaponData.cs.meta
+rename to Assets/Scripts/Game/Data/WeaponData.cs.meta
