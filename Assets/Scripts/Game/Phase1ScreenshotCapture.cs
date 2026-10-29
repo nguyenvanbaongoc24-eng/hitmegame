@@ -13,6 +13,7 @@ namespace HitMe.Game
         private string _directory;
         private Phase _observedPhase = Phase.RoundEnd;
         private float _phaseStartedAt;
+        private Texture2D _reusableOutput;
 
         private void Start()
         {
@@ -31,8 +32,6 @@ namespace HitMe.Game
             if (camera != null && camera.orthographic)
             {
                 const float captureAspect = 1080f / 2340f;
-                // Keep the camera projection at the requested portrait ratio even
-                // when the desktop clamps the temporary game window height.
                 camera.aspect = captureAspect;
                 camera.orthographicSize = Mathf.Max(10f, 5.1f / captureAspect);
             }
@@ -61,25 +60,27 @@ namespace HitMe.Game
             StartCoroutine(CaptureAtEndOfFrame(name));
         }
 
-        // Some desktop drivers clamp a tall window to the available display height.
-        // The evidence is still taken from ScreenCapture; it is resampled only into
-        // the requested portrait canvas so each saved PNG is consistently 1080x2340.
         private IEnumerator CaptureAtEndOfFrame(string name)
         {
             yield return new WaitForEndOfFrame();
-            var source = ScreenCapture.CaptureScreenshotAsTexture();
-            var target = RenderTexture.GetTemporary(1080, 2340, 0, RenderTextureFormat.ARGB32);
-            Graphics.Blit(source, target);
+            var cam = Camera.main;
+            if (cam == null) yield break;
+            var target = RenderTexture.GetTemporary(1080, 2340, 24, RenderTextureFormat.ARGB32);
+            var prevCamRt = cam.targetTexture;
             var previous = RenderTexture.active;
+            cam.targetTexture = target;
+            cam.Render();
             RenderTexture.active = target;
-            var output = new Texture2D(1080, 2340, TextureFormat.RGBA32, false);
-            output.ReadPixels(new Rect(0, 0, 1080, 2340), 0, 0);
-            output.Apply(false, false);
-            File.WriteAllBytes(Path.Combine(_directory, name), output.EncodeToPNG());
+            if (_reusableOutput == null)
+            {
+                _reusableOutput = new Texture2D(1080, 2340, TextureFormat.RGBA32, false);
+            }
+            _reusableOutput.ReadPixels(new Rect(0, 0, 1080, 2340), 0, 0);
+            _reusableOutput.Apply(false, false);
+            File.WriteAllBytes(Path.Combine(_directory, name), _reusableOutput.EncodeToPNG());
+            cam.targetTexture = prevCamRt;
             RenderTexture.active = previous;
             RenderTexture.ReleaseTemporary(target);
-            Destroy(source);
-            Destroy(output);
         }
     }
 }

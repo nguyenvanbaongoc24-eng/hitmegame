@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using HitMe.Audio;
 using HitMe.Core;
 using HitMe.Game;
@@ -16,6 +18,7 @@ namespace HitMe.Editor
     public static class ProductionEvidenceCapture
     {
         private const string ScenePath = "Assets/Scenes/Graybox.unity";
+        private const string SceneName = "Graybox";
         private const string EvidenceDir = "Evidence/phase3";
         private const int ShotWidth = 1080;
         private const int ShotHeight = 2340;
@@ -25,11 +28,26 @@ namespace HitMe.Editor
         {
             Directory.CreateDirectory(EvidenceDir);
 
-            // Rebuild UI layout to ensure fresh styling
-            ProductionUISetup.BuildProductionUI();
+            string commitShort = WebBuildPipeline.WriteBuildFingerprintResource(SceneName);
+            string dateTag = DateTime.Now.ToString("yyyyMMdd");
+            string buildId = $"WebGL_{dateTag}_{commitShort}";
 
-            // Open Graybox scene
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var canvasObj = GameObject.Find("ProductionCanvas");
+            if (canvasObj == null)
+            {
+                ProductionUISetup.BuildProductionUI();
+                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+                canvasObj = GameObject.Find("ProductionCanvas");
+            }
+
+            var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset != null)
+            {
+                PlayerView.ConfigureSharedResources(configAsset);
+                WeaponFlightView.ConfigureSharedResources(configAsset);
+            }
+
             var cam = Camera.main;
             if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
             if (cam == null)
@@ -42,12 +60,12 @@ namespace HitMe.Editor
             cam.orthographicSize = 7.5f;
             cam.transform.position = new Vector3(0f, 0.2f, -10f);
 
-            var canvasObj = GameObject.Find("ProductionCanvas");
             var canvas = canvasObj.GetComponent<Canvas>();
             var ui = canvasObj.GetComponent<ProductionUIController>();
             var scaler = canvasObj.GetComponent<CanvasScaler>();
 
-            // Setup ScreenSpaceCamera so batchmode Camera.Render() renders Canvas + World
+            ui.EnsureAndRefreshBuildFingerprint();
+
             var originalRenderMode = canvas.renderMode;
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
             canvas.worldCamera = cam;
@@ -56,33 +74,35 @@ namespace HitMe.Editor
             scaler.referenceResolution = new Vector2(ShotWidth, ShotHeight);
             scaler.matchWidthOrHeight = 1.0f;
 
-            // Player views setup
-            var players = CreateMockPlayers();
-            var views = CreatePlayerViews(players);
+            // 6 distinct characters in a 6-player match (indices: 0, 1, 2, 3, 5, 6 -> includes Nữ Năng Động, Chó Vàng, Mèo Mun)
+            int[] matchRosterIndices = { 0, 1, 2, 3, 5, 6 };
+            var players = CreateMockPlayers(matchRosterIndices);
+            var views = CreatePlayerViews(players, matchRosterIndices);
 
             try
             {
                 // ==================== 1. HOME SCREEN ====================
                 SetPlayersVisible(views, false);
                 ui.ShowScreen(ProductionScreen.Home);
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "01_home.png"));
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "01_home.png"), commitShort, buildId);
 
                 // ==================== 2. LOBBY SCREEN ====================
                 ui.ShowScreen(ProductionScreen.Lobby);
                 ui.txtLobbyHeader.text = "PHÒNG CHIẾN HỮU • SÂN LÀNG";
                 ui.txtLobbyRoomCode.text = "MÃ PHÒNG: HM8888 • SÂN LÀNG";
                 ui.txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
+                ui.EnsureAndRefreshBuildFingerprint();
                 SetPlayersVisible(views, false);
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "02_lobby.png"));
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "02_lobby.png"), commitShort, buildId);
 
                 // ==================== 3. PLACING (LOCAL ONLY + AIM RULER) ====================
-                // UX Rule: Trong pha Placing CHỈ hiện nhân vật người chơi và thước ngắm của họ.
-                // Không hiện đối thủ, vị trí, hướng ngắm hoặc dép của đối thủ.
                 ui.ShowScreen(ProductionScreen.Gameplay);
                 ui.txtRound.text = "VÒNG 1/5";
                 ui.txtTimer.text = "4.2s";
                 ui.txtTimer.color = Color.white;
                 ui.txtPhaseBanner.text = "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm";
+                ui.EnsureAndRefreshBuildFingerprint();
 
                 UpdateHudHp(ui, players, isPlacing: true);
 
@@ -96,12 +116,12 @@ namespace HitMe.Editor
                         kvp.Value.Present(p, true, true, true, 1.2f, 1.5f, 2.0f);
                     }
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "03_placing_local_only.png"));
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "03_placing_local_only.png"), commitShort, buildId);
 
-                // ==================== 4. REVEAL (ALL 6 PLAYERS) ====================
-                // UX Rule: Reveal mới hiện toàn bộ 6 người.
+                // ==================== 4. REVEAL (ALL 6 DISTINCT PLAYERS, NO TINT) ====================
                 ui.txtPhaseBanner.text = "LỘ DIỆN ĐỐI THỦ!";
                 ui.txtTimer.text = "0.0s";
+                ui.EnsureAndRefreshBuildFingerprint();
                 UpdateHudHp(ui, players, isPlacing: false);
 
                 foreach (var kvp in views)
@@ -110,11 +130,13 @@ namespace HitMe.Editor
                     var p = players.Find(x => x.Id == kvp.Key);
                     kvp.Value.Present(p, true, true, false, 1.2f, 1.5f, 0f);
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "04_reveal_6players.png"));
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "04_reveal_6players.png"), commitShort, buildId);
+                File.Copy(Path.Combine(EvidenceDir, "04_reveal_6players.png"), Path.Combine("Evidence/phase2", "step2_characters.png"), true);
+                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step2_characters.png"), commitShort, buildId);
 
                 // ==================== 5. THROWING (FLYING SLIPPERS) ====================
-                // UX Rule: Throwing mới hiện dép bay. Vũ khí dừng ở người đầu tiên trúng.
                 ui.txtPhaseBanner.text = "NÉM DÉP!";
+                ui.EnsureAndRefreshBuildFingerprint();
                 var slippers = SpawnTestSlippers(players);
                 foreach (var kvp in views)
                 {
@@ -122,20 +144,50 @@ namespace HitMe.Editor
                     var p = players.Find(x => x.Id == kvp.Key);
                     kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "05_throwing_slippers.png"));
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "05_throwing_slippers.png"), commitShort, buildId);
+                File.Copy(Path.Combine(EvidenceDir, "05_throwing_slippers.png"), Path.Combine("Evidence/phase2", "step3_sandal_throw.png"), true);
+                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step3_sandal_throw.png"), commitShort, buildId);
                 ClearTestSlippers(slippers);
 
                 // ==================== 6. RESULT (FULL RANKINGS TABLE) ====================
-                // UX Rule: Result hiển thị toàn bộ bảng xếp hạng.
                 ui.ShowScreen(ProductionScreen.Result);
+                ui.EnsureAndRefreshBuildFingerprint();
                 SetPlayersVisible(views, false);
 
                 var ranked = new List<PlayerState>(players);
                 var winners = new List<string> { "player" };
                 FillResultTable(ui, ranked, winners);
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "06_result_full_rankings.png"));
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "06_result_full_rankings.png"), commitShort, buildId);
 
-                Debug.Log("[EvidenceCapture] All 6 screenshots captured successfully to " + EvidenceDir);
+                // ==================== 7. FULL 7-CHARACTER ROSTER SHOWCASE (F1) ====================
+                ui.ShowScreen(ProductionScreen.Gameplay);
+                ui.txtRound.text = "ROSTER 7/7";
+                ui.txtTimer.text = "F1";
+                ui.txtPhaseBanner.text = "ĐỦ 7 NHÂN VẬT THẬT • KHÔNG TINT MÀU";
+                ui.EnsureAndRefreshBuildFingerprint();
+                SetPlayersVisible(views, false);
+
+                var all7Players = CreateAll7RosterPlayers();
+                var all7Views = CreatePlayerViews(all7Players, new[] { 0, 1, 2, 3, 4, 5, 6 });
+                try
+                {
+                    foreach (var kvp in all7Views)
+                    {
+                        kvp.Value.gameObject.SetActive(true);
+                        var p = all7Players.Find(x => x.Id == kvp.Key);
+                        kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                    }
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, "07_roster_7characters.png"), commitShort, buildId);
+                }
+                finally
+                {
+                    foreach (var kvp in all7Views)
+                    {
+                        if (kvp.Value != null) UnityEngine.Object.DestroyImmediate(kvp.Value.gameObject);
+                    }
+                }
+
+                Debug.Log("[EvidenceCapture] All evidence screenshots captured with provenance to " + EvidenceDir);
             }
             finally
             {
@@ -145,11 +197,12 @@ namespace HitMe.Editor
                 }
 
                 canvas.renderMode = originalRenderMode;
-                EditorSceneManager.SaveScene(scene);
+                // Re-open clean scene without saving temporary render mode changes so working tree stays clean
+                EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             }
         }
 
-        private static void RenderAndSave(Camera cam, string outputPath)
+        private static void RenderAndSave(Camera cam, string outputPath, string commitShort, string buildId)
         {
             Canvas.ForceUpdateCanvases();
 
@@ -167,9 +220,12 @@ namespace HitMe.Editor
                 tex.ReadPixels(new Rect(0, 0, ShotWidth, ShotHeight), 0, 0);
                 tex.Apply();
 
-                File.WriteAllBytes(outputPath, tex.EncodeToPNG());
+                byte[] pngBytes = tex.EncodeToPNG();
+                File.WriteAllBytes(outputPath, pngBytes);
                 UnityEngine.Object.DestroyImmediate(tex);
-                Debug.Log($"[EvidenceCapture] Saved: {outputPath} ({ShotWidth}x{ShotHeight})");
+
+                WriteProvenanceJson(outputPath, commitShort, buildId);
+                Debug.Log($"[EvidenceCapture] Saved: {outputPath} ({ShotWidth}x{ShotHeight}) [commit={commitShort}]");
             }
             finally
             {
@@ -179,20 +235,89 @@ namespace HitMe.Editor
             }
         }
 
-        private static List<PlayerState> CreateMockPlayers()
+        private static void WriteProvenanceJson(string filePath, string commitShort, string buildId)
         {
-            return new List<PlayerState>
+            byte[] bytes = File.ReadAllBytes(filePath);
+            string sha256;
+            using (var hasher = SHA256.Create())
             {
-                new PlayerState("player", "Nam Làng", false, 3, new Vec2(0f, -3.2f), new Vec2(0.6f, 0.8f)),
-                new PlayerState("bot_1", "Nữ Năng Động", true, 3, new Vec2(-2.4f, -1.2f), new Vec2(0.8f, 0.4f)),
-                new PlayerState("bot_2", "Quậy Boy", true, 2, new Vec2(2.4f, -1.0f), new Vec2(-0.7f, 0.5f)),
-                new PlayerState("bot_3", "Cô Ba", true, 1, new Vec2(-2.2f, 2.4f), new Vec2(0.5f, -0.8f)),
-                new PlayerState("bot_4", "Anh Teen", true, 2, new Vec2(2.2f, 2.5f), new Vec2(-0.6f, -0.7f)),
-                new PlayerState("bot_5", "Chú Chó Vàng", true, 1, new Vec2(0f, 3.8f), new Vec2(0f, -1f))
-            };
+                byte[] hash = hasher.ComputeHash(bytes);
+                var sb = new StringBuilder(hash.Length * 2);
+                for (int i = 0; i < hash.Length; i++) sb.Append(hash[i].ToString("x2"));
+                sha256 = sb.ToString();
+            }
+
+            string timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ssK");
+            string normalizedPath = filePath.Replace('\\', '/');
+            string json = "{\n" +
+                          $"  \"file\": \"{normalizedPath}\",\n" +
+                          $"  \"sha256\": \"{sha256}\",\n" +
+                          $"  \"commit\": \"{commitShort}\",\n" +
+                          $"  \"scene\": \"{SceneName}\",\n" +
+                          $"  \"build_id\": \"{buildId}\",\n" +
+                          $"  \"resolution\": \"{ShotWidth}x{ShotHeight}\",\n" +
+                          $"  \"timestamp\": \"{timestamp}\",\n" +
+                          "  \"command\": \"HitMe.Editor.ProductionEvidenceCapture.CaptureAllEvidence\",\n" +
+                          "  \"tool\": \"AG / Unity Batchmode Camera.Render\"\n" +
+                          "}\n";
+            File.WriteAllText(filePath + ".json", json, Encoding.UTF8);
         }
 
-        private static Dictionary<string, PlayerView> CreatePlayerViews(List<PlayerState> players)
+        private static List<PlayerState> CreateMockPlayers(int[] charIndices)
+        {
+            Vec2[] positions =
+            {
+                new Vec2(0f, -3.2f),
+                new Vec2(-2.4f, -1.2f),
+                new Vec2(2.4f, -1.0f),
+                new Vec2(-2.2f, 2.4f),
+                new Vec2(2.2f, 2.5f),
+                new Vec2(0f, 3.8f)
+            };
+            Vec2[] aims =
+            {
+                new Vec2(0.6f, 0.8f),
+                new Vec2(0.8f, 0.4f),
+                new Vec2(-0.7f, 0.5f),
+                new Vec2(0.5f, -0.8f),
+                new Vec2(-0.6f, -0.7f),
+                new Vec2(0f, -1f)
+            };
+            int[] hps = { 3, 3, 2, 1, 2, 3 };
+
+            var list = new List<PlayerState>(6);
+            for (int i = 0; i < 6; i++)
+            {
+                string id = i == 0 ? "player" : $"bot_{i}";
+                string name = PlayerView.CharacterNames[charIndices[i]];
+                list.Add(new PlayerState(id, name, i > 0, hps[i], positions[i], aims[i]));
+            }
+            return list;
+        }
+
+        private static List<PlayerState> CreateAll7RosterPlayers()
+        {
+            Vec2[] positions =
+            {
+                new Vec2(-2.5f, 2.6f),
+                new Vec2(0.0f, 2.6f),
+                new Vec2(2.5f, 2.6f),
+                new Vec2(-2.5f, -0.2f),
+                new Vec2(0.0f, -0.2f),
+                new Vec2(2.5f, -0.2f),
+                new Vec2(0.0f, -3.1f)
+            };
+            var list = new List<PlayerState>(7);
+            for (int i = 0; i < 7; i++)
+            {
+                string id = i == 0 ? "player" : $"roster_{i}";
+                string name = PlayerView.CharacterNames[i];
+                list.Add(new PlayerState(id, name, i > 0, 3, positions[i], new Vec2(0f, 1f)));
+            }
+            return list;
+        }
+
+        private static Dictionary<string, PlayerView> CreatePlayerViews(List<PlayerState> players, int[] charIndices)
         {
             var dict = new Dictionary<string, PlayerView>();
             for (int i = 0; i < players.Count; i++)
@@ -200,7 +325,8 @@ namespace HitMe.Editor
                 var p = players[i];
                 var go = new GameObject("View_" + p.Id);
                 var view = go.AddComponent<PlayerView>();
-                view.Initialise(p.Id, Color.white, i % 6);
+                int charIdx = (charIndices != null && i < charIndices.Length) ? charIndices[i] : i;
+                view.Initialise(p.Id, Color.white, charIdx);
                 go.transform.position = new Vector3(p.Position.X, p.Position.Y, 0f);
                 dict[p.Id] = view;
             }

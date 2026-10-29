@@ -32,6 +32,10 @@ namespace HitMe.Game
             {
                 spriteRenderer.sprite = weaponSprite;
             }
+            if (!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         private void Update()
@@ -46,9 +50,9 @@ namespace HitMe.Game
                 _isFlying = false;
                 if (hitFxPrefab != null)
                 {
-                    Instantiate(hitFxPrefab, _end, Quaternion.identity);
+                    hitFxPrefab.PlayAt(_end);
                 }
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }

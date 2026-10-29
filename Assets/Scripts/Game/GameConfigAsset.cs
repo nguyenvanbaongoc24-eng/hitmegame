@@ -32,6 +32,16 @@ namespace HitMe.Game
         public NoAimPolicy noAimRule = NoAimPolicy.ThrowFacing;
         public uint seed = 12345;
 
+        [Header("Shared Runtime Visual Assets (WebGL + Editor)")]
+        public Sprite shadowSprite;
+        public Sprite footRingSprite;
+        public TMPro.TMP_FontAsset vietnameseFont;
+        public Sprite[] characterIdleSprites;
+        public Sprite[] namLangPoseSprites;
+        public Sprite[] anhNonLaPoseSprites;
+        public Sprite sandalProjectileSprite;
+        public Sprite[] hitFxFrames;
+
         public GameConfig ToCore()
         {
             return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, RevealSeconds = revealSeconds, ThrowSeconds = throwSeconds, ResolveSeconds = resolveSeconds, MaxRounds = maxRounds, RoundLimitTiebreak = roundLimitTiebreak, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, NoAimRule = noAimRule, Seed = seed };

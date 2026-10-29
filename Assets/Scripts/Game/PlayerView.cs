@@ -7,6 +7,30 @@ namespace HitMe.Game
 {
     public sealed class PlayerView : MonoBehaviour
     {
+        public const int TotalCharacterCount = 7;
+
+        public static readonly string[] CharacterNames =
+        {
+            "Nam Làng",
+            "Nữ Năng Động",
+            "Quậy Boy",
+            "Cô Ba",
+            "Anh Teen",
+            "Chó Vàng",
+            "Mèo Mun"
+        };
+
+        private static readonly float[] CharacterBodyScales =
+        {
+            0.7235f, // 0: Nam Làng (311px @ 150 PPU = 2.073u -> 1.50u)
+            1.2016f, // 1: Nữ Năng Động (181px @ 150 PPU = 1.207u -> 1.45u)
+            0.8638f, // 2: Quậy Boy (257px @ 150 PPU = 1.713u -> 1.48u)
+            0.7740f, // 3: Cô Ba (281px @ 150 PPU = 1.873u -> 1.45u)
+            0.7985f, // 4: Anh Teen (278px @ 150 PPU = 1.853u -> 1.48u)
+            1.1820f, // 5: Chó Vàng (138px @ 150 PPU = 0.920u -> 1.0875u, 72.5% human)
+            1.0660f  // 6: Mèo Mun (153px @ 150 PPU = 1.020u -> 1.0875u, 72.5% human)
+        };
+
         public string playerId;
         public int characterIndex;
 
@@ -23,8 +47,34 @@ namespace HitMe.Game
         private static Sprite _defaultShadow;
         private static Sprite _defaultRing;
         private static TMP_FontAsset _defaultFont;
-        private static RuntimeAnimatorController[] _controllers;
         private static Sprite[] _defaultSprites;
+        private static Sprite[] _namLangPoses;
+        private static Sprite[] _anhNonLaPoses;
+
+        private string _lastLabelName;
+        private int _lastLabelHp = -999;
+        private readonly string[] _cachedHpLabels = new string[4];
+        private float _lastTouchRadius = -1f;
+
+        public static void ConfigureSharedResources(GameConfigAsset configAsset)
+        {
+            if (configAsset == null) return;
+            if (configAsset.shadowSprite != null) _defaultShadow = configAsset.shadowSprite;
+            if (configAsset.footRingSprite != null) _defaultRing = configAsset.footRingSprite;
+            if (configAsset.vietnameseFont != null) _defaultFont = configAsset.vietnameseFont;
+            if (configAsset.characterIdleSprites != null && configAsset.characterIdleSprites.Length >= TotalCharacterCount)
+            {
+                _defaultSprites = configAsset.characterIdleSprites;
+            }
+            if (configAsset.namLangPoseSprites != null && configAsset.namLangPoseSprites.Length >= 5)
+            {
+                _namLangPoses = configAsset.namLangPoseSprites;
+            }
+            if (configAsset.anhNonLaPoseSprites != null && configAsset.anhNonLaPoseSprites.Length >= 5)
+            {
+                _anhNonLaPoses = configAsset.anhNonLaPoseSprites;
+            }
+        }
 
         private void Awake()
         {
@@ -82,12 +132,12 @@ namespace HitMe.Game
         {
             playerId = id;
             int idx = 0;
-            if (id.StartsWith("bot-"))
+            if (id.StartsWith("bot-", StringComparison.Ordinal))
             {
                 int botNum;
-                if (int.TryParse(id.Replace("bot-", ""), out botNum))
+                if (int.TryParse(id.Substring(4), out botNum))
                 {
-                    idx = (botNum % 5) + 1; // 1 to 5
+                    idx = ((botNum - 1) % (TotalCharacterCount - 1)) + 1;
                 }
             }
             Initialise(id, color, idx);
@@ -96,7 +146,9 @@ namespace HitMe.Game
         public void Initialise(string id, Color color, int charIndex)
         {
             playerId = id;
-            characterIndex = charIndex;
+            characterIndex = ((charIndex % TotalCharacterCount) + TotalCharacterCount) % TotalCharacterCount;
+            _lastLabelName = null;
+            _lastLabelHp = -999;
             BindComponents();
 
             EnsureStaticResources();
@@ -141,18 +193,23 @@ namespace HitMe.Game
                 _footRing.transform.localPosition = new Vector3(0f, 0.02f, 0f);
             }
 
-            // 3. Body & Animator
+            // 3. Body
             if (_body == null)
             {
                 var bGo = new GameObject("Body");
                 bGo.transform.SetParent(transform, false);
                 bGo.transform.localPosition = Vector3.zero;
                 _body = bGo.AddComponent<SpriteRenderer>();
-                _animator = bGo.AddComponent<Animator>();
+            }
+
+            if (_animator != null)
+            {
+                _animator.runtimeAnimatorController = null;
+                _animator.enabled = false;
             }
 
             _body.sortingOrder = 2;
-            ApplyCharacterVisual(charIndex);
+            ApplyCharacterVisual(characterIndex);
 
             // 4. Label (TextMeshPro with Vietnamese Font)
             if (_label == null)
@@ -182,6 +239,7 @@ namespace HitMe.Game
             if (_touchRing == null)
             {
                 _touchRing = CreateLine("Aim Touch Ring");
+                _touchRing.useWorldSpace = false;
                 _touchRing.loop = true;
                 _touchRing.positionCount = 32;
                 _touchRing.startWidth = 0.025f;
@@ -189,45 +247,26 @@ namespace HitMe.Game
                 _touchRing.startColor = new Color(1f, 0.85f, 0f, 0.65f);
                 _touchRing.endColor = new Color(1f, 0.85f, 0f, 0.65f);
             }
+            else
+            {
+                _touchRing.useWorldSpace = false;
+            }
         }
 
         public void ApplyCharacterVisual(int index)
         {
-            characterIndex = index;
+            int assetIdx = ((index % TotalCharacterCount) + TotalCharacterCount) % TotalCharacterCount;
+            characterIndex = assetIdx;
             if (_body == null) return;
-
-            int assetIdx = index % 5;
-            if (_controllers != null && assetIdx < _controllers.Length && _controllers[assetIdx] != null && _animator != null)
-            {
-                _animator.runtimeAnimatorController = _controllers[assetIdx];
-            }
 
             if (_defaultSprites != null && assetIdx < _defaultSprites.Length && _defaultSprites[assetIdx] != null)
             {
                 _body.sprite = _defaultSprites[assetIdx];
             }
 
-            // Target scale: Nam Lang height reduced from 2.073 to 1.50 world units (-28%, matching mockup ~13% arena height)
-            // Scale factor for humans = 1.50 / 2.0733 = 0.7235f
-            // Chú Chó Vàng height = 72.5% of human = 1.0875 units -> scale 1.182f
-            if (assetIdx == 4)
-            {
-                _body.transform.localScale = new Vector3(1.182f, 1.182f, 1f);
-            }
-            else
-            {
-                _body.transform.localScale = new Vector3(0.7235f, 0.7235f, 1f);
-            }
-
-            // 6th player reuses character 0 with a color tint (Magenta / Purple)
-            if (index == 5)
-            {
-                _body.color = new Color(1f, 0.55f, 0.85f, 1f); // Distinct tinted tint
-            }
-            else
-            {
-                _body.color = Color.white;
-            }
+            float scale = CharacterBodyScales[assetIdx];
+            _body.transform.localScale = new Vector3(scale, scale, 1f);
+            _body.color = Color.white;
         }
 
         public void SetHitboxVisible(bool visible, float radius = 0.55f)
@@ -243,7 +282,7 @@ namespace HitMe.Game
                 _hitboxCircle.positionCount = 36;
                 _hitboxCircle.startWidth = 0.035f;
                 _hitboxCircle.endWidth = 0.035f;
-                _hitboxCircle.startColor = new Color(0.1f, 1f, 0.4f, 0.95f); // Vibrant neon green
+                _hitboxCircle.startColor = new Color(0.1f, 1f, 0.4f, 0.95f);
                 _hitboxCircle.endColor = new Color(0.1f, 1f, 0.4f, 0.95f);
                 if (_body != null && _body.sharedMaterial != null) _hitboxCircle.sharedMaterial = _body.sharedMaterial;
                 _hitboxCircle.sortingOrder = 4;
@@ -262,16 +301,18 @@ namespace HitMe.Game
 
         public void PlayAnimation(string stateName)
         {
-            if (_animator != null && _animator.runtimeAnimatorController != null)
+            if (_body == null) return;
+            int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
             {
-                _animator.Play(stateName);
+                _body.sprite = _defaultSprites[idx];
             }
         }
 
         public void Present(PlayerState player, bool visible, bool showAim, bool showTouchRing, float touchRadius, float aimLineExtraLength, float aimPreviewLength)
         {
             if (_body == null) return;
-            gameObject.SetActive(true);
+            if (!gameObject.activeSelf) gameObject.SetActive(true);
             transform.position = new Vector3(player.Position.X, player.Position.Y, 0f);
 
             _body.enabled = visible;
@@ -280,29 +321,25 @@ namespace HitMe.Game
 
             if (_label != null)
             {
-                _label.gameObject.SetActive(visible);
-                _label.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-                _label.fontSize = 0.85f;
-                _label.text = player.Name + "\n" + player.Hp + "/3 HP";
-            }
-
-            if (_animator != null && _animator.runtimeAnimatorController != null)
-            {
-                if (!player.IsAlive)
+                if (_label.gameObject.activeSelf != visible)
                 {
-                    _animator.SetBool("IsEliminated", true);
+                    _label.gameObject.SetActive(visible);
                 }
-                else
+                if (visible)
                 {
-                    _animator.SetBool("IsEliminated", false);
-                    _animator.SetBool("IsAiming", showAim);
+                    _label.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+                    _label.fontSize = 0.85f;
+                    UpdateLabelCached(player.Name, player.Hp);
                 }
             }
 
-            if (!player.IsAlive)
+            int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
             {
-                _body.color = new Color(0.35f, 0.35f, 0.35f, 0.5f);
+                _body.sprite = _defaultSprites[idx];
             }
+
+            _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.5f);
 
             if (_aim != null)
             {
@@ -320,14 +357,37 @@ namespace HitMe.Game
             if (_touchRing != null)
             {
                 _touchRing.enabled = visible && showTouchRing && player.IsAlive;
-                if (_touchRing.enabled)
+                if (_touchRing.enabled && Mathf.Abs(touchRadius - _lastTouchRadius) > 0.001f)
                 {
-                    for (int i = 0; i < _touchRing.positionCount; i++)
+                    _lastTouchRadius = touchRadius;
+                    _touchRing.useWorldSpace = false;
+                    int count = _touchRing.positionCount;
+                    for (int i = 0; i < count; i++)
                     {
-                        float angle = Mathf.PI * 2f * i / _touchRing.positionCount;
-                        _touchRing.SetPosition(i, transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * touchRadius);
+                        float angle = Mathf.PI * 2f * i / count;
+                        _touchRing.SetPosition(i, new Vector3(Mathf.Cos(angle) * touchRadius, Mathf.Sin(angle) * touchRadius, 0f));
                     }
                 }
+            }
+        }
+
+        private void UpdateLabelCached(string playerName, int hp)
+        {
+            int clampedHp = Mathf.Clamp(hp, 0, 3);
+            if (!string.Equals(_lastLabelName, playerName, StringComparison.Ordinal))
+            {
+                _lastLabelName = playerName;
+                _cachedHpLabels[0] = playerName + "\n0/3 HP";
+                _cachedHpLabels[1] = playerName + "\n1/3 HP";
+                _cachedHpLabels[2] = playerName + "\n2/3 HP";
+                _cachedHpLabels[3] = playerName + "\n3/3 HP";
+                _lastLabelHp = -999;
+            }
+
+            if (_lastLabelHp != clampedHp)
+            {
+                _lastLabelHp = clampedHp;
+                _label.text = _cachedHpLabels[clampedHp];
             }
         }
 
@@ -346,45 +406,37 @@ namespace HitMe.Game
             {
                 _defaultFont = UnityEditor.AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
             }
-            if (_controllers == null)
+            if (_defaultSprites == null || _defaultSprites.Length < TotalCharacterCount)
             {
-                _controllers = new RuntimeAnimatorController[5];
-                _controllers[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/Cau_Be_Lang/Cau_Be_Lang_Controller.controller");
-                _controllers[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/Anh_Non_La/Anh_Non_La_Controller.controller");
-                _controllers[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/ANH_NÚI/ANH_NÚI_Controller.controller");
-                _controllers[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/CÔ_NÀNG_THỂ_THAO/CÔ_NÀNG_THỂ_THAO_Controller.controller");
-                _controllers[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Art/Animations/CHÚ_CHÓ_VÀNG/CHÚ_CHÓ_VÀNG_Controller.controller");
-            }
-            if (_defaultSprites == null)
-            {
-                _defaultSprites = new Sprite[5];
+                _defaultSprites = new Sprite[TotalCharacterCount];
                 _defaultSprites[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
-                _defaultSprites[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _defaultSprites[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/co_nang_the_thao_idle.png");
                 _defaultSprites[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_nui_idle.png");
                 _defaultSprites[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/mai_hong_idle.png");
-                _defaultSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/chu_cho_vang_idle.png");
+                _defaultSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _defaultSprites[5] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/chu_cho_vang_idle.png");
+                _defaultSprites[6] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/meo_mun_idle.png");
+            }
+            if (_namLangPoses == null || _namLangPoses.Length < 5)
+            {
+                _namLangPoses = new Sprite[5];
+                _namLangPoses[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
+                _namLangPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_aim.png");
+                _namLangPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_throw_release.png");
+                _namLangPoses[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_hit.png");
+                _namLangPoses[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_defeat.png");
+            }
+            if (_anhNonLaPoses == null || _anhNonLaPoses.Length < 5)
+            {
+                _anhNonLaPoses = new Sprite[5];
+                _anhNonLaPoses[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _anhNonLaPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_aim.png");
+                _anhNonLaPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_throw_release.png");
+                _anhNonLaPoses[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_hit.png");
+                _anhNonLaPoses[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_defeat.png");
             }
 #endif
         }
-
-#if UNITY_EDITOR
-        private static Sprite FindSubSprite(string path, string pattern)
-        {
-            var assets = UnityEditor.AssetDatabase.LoadAllAssetsAtPath(path);
-            foreach (var a in assets)
-            {
-                if (a is Sprite s && s.name.IndexOf(pattern, StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return s;
-                }
-            }
-            foreach (var a in assets)
-            {
-                if (a is Sprite s) return s;
-            }
-            return null;
-        }
-#endif
 
         private LineRenderer CreateLine(string name)
         {

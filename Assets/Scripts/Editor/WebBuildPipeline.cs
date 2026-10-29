@@ -1,22 +1,77 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace HitMe.Editor
 {
     public static class WebBuildPipeline
     {
-        [MenuItem("Tools/HIT ME/Build WebGL (Localhost)")]
+        public static string GetGitShortCommit()
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "git",
+                    Arguments = "rev-parse --short HEAD",
+                    WorkingDirectory = Directory.GetParent(Application.dataPath)?.FullName ?? ".",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (var proc = Process.Start(psi))
+                {
+                    if (proc != null)
+                    {
+                        string output = proc.StandardOutput.ReadToEnd().Trim();
+                        proc.WaitForExit(3000);
+                        if (!string.IsNullOrEmpty(output))
+                        {
+                            return output;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[WebBuildPipeline] Failed to read git commit: {ex.Message}");
+            }
+            return "unknown";
+        }
+
+        public static string WriteBuildFingerprintResource(string sceneName = "Graybox")
+        {
+            string commitShort = GetGitShortCommit();
+            string dateTimeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            string fingerprint = $"build {commitShort} · {dateTimeStr} · {sceneName}";
+
+            Directory.CreateDirectory("Assets/Resources");
+            string resourcePath = "Assets/Resources/BuildFingerprint.txt";
+            File.WriteAllText(resourcePath, fingerprint);
+            AssetDatabase.ImportAsset(resourcePath, ImportAssetOptions.ForceSynchronousImport);
+            Debug.Log($"[WebBuildPipeline] Wrote BuildFingerprint: {fingerprint}");
+            return commitShort;
+        }
+
+        [MenuItem("Tools/HIT ME/Build WebGL (Fingerprinted)")]
         public static void BuildWeb()
         {
-            Debug.Log("Starting HIT ME WebGL Build...");
+            string commitShort = WriteBuildFingerprintResource("Graybox");
+            string dateTag = DateTime.Now.ToString("yyyyMMdd");
 
-            // 1. Build Production UI for Graybox scene
-            ProductionUISetup.BuildProductionUI();
+            Debug.Log($"Starting HIT ME Clean Fingerprinted WebGL Build (commit={commitShort}, date={dateTag})...");
 
-            // 2. Configure WebGL settings. Legacy scene generation must never run before a build.
+            var configAsset = AssetDatabase.LoadAssetAtPath<HitMe.Game.GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset == null || configAsset.characterIdleSprites == null || configAsset.characterIdleSprites.Length < 7)
+            {
+                ProductionUISetup.BuildProductionUI();
+            }
+
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
 
             PlayerSettings.productName = "HIT ME";
@@ -25,15 +80,18 @@ namespace HitMe.Editor
             PlayerSettings.defaultWebScreenWidth = 540;
             PlayerSettings.defaultWebScreenHeight = 960;
 
-            // Set compression format to Disabled for instant, reliable loading on local HTTP server
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
             PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
 
-            string buildDir = Path.GetFullPath("Builds/WebGL");
-            if (!Directory.Exists(buildDir))
+            string folderName = $"WebGL_{dateTag}_{commitShort}";
+            string buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));
+            if (Directory.Exists(buildDir))
             {
-                Directory.CreateDirectory(buildDir);
+                string timeSuffix = DateTime.Now.ToString("HHmmss");
+                folderName = $"WebGL_{dateTag}_{commitShort}_{timeSuffix}";
+                buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));
             }
+            Directory.CreateDirectory(buildDir);
 
             string[] scenes = BuildScenes.Production;
 
@@ -50,11 +108,17 @@ namespace HitMe.Editor
 
             if (summary.result == BuildResult.Succeeded)
             {
-                Debug.Log($"WebGL Build succeeded: {summary.totalSize} bytes at {buildDir}");
+                DateTime buildCompleteUtc = DateTime.UtcNow;
+                foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
+                {
+                    File.SetLastWriteTimeUtc(file, buildCompleteUtc);
+                }
+                Debug.Log($"Build completed with a result of 'Succeeded' in {summary.totalTime.TotalSeconds:F2} seconds ({summary.totalSize} bytes)");
+                Debug.Log($"WebGL Build succeeded: {summary.totalSize} bytes at {buildDir} (commit={commitShort})");
             }
-            else if (summary.result == BuildResult.Failed)
+            else
             {
-                Debug.LogError($"WebGL Build failed! Errors: {summary.totalErrors}");
+                Debug.LogError($"WebGL Build failed! Result: {summary.result}, Errors: {summary.totalErrors}");
                 throw new Exception($"WebGL Build failed with {summary.totalErrors} errors!");
             }
         }

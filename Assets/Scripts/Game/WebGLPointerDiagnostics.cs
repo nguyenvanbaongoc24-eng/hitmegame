@@ -1,36 +1,22 @@
-using HitMe.Core;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace HitMe.Game
 {
-    /// <summary>On-screen WebGL pointer telemetry. It is intentionally gated behind ?debugPointer=1 or a development build.</summary>
+    /// <summary>WebGL pointer telemetry flag helper without legacy IMGUI allocations.</summary>
     public sealed class WebGLPointerDiagnostics : MonoBehaviour
     {
         private float _smoothedDelta;
+        public float CurrentFps => _smoothedDelta > 0.0001f ? (1f / _smoothedDelta) : 60f;
 
         public static bool IsRequested()
         {
-            if (Debug.isDebugBuild) return true;
-            return Application.absoluteURL != null && Application.absoluteURL.IndexOf("debugPointer=1", System.StringComparison.OrdinalIgnoreCase) >= 0;
+            return Application.absoluteURL != null &&
+                   Application.absoluteURL.IndexOf("debugPointer=1", System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        private void Update() { _smoothedDelta = Mathf.Lerp(_smoothedDelta, Time.unscaledDeltaTime, .1f); }
-
-        private void OnGUI()
+        private void Update()
         {
-            if (!IsRequested()) return;
-            var input = GetComponent<PlacementInput>(); var match = GetComponent<MatchController>();
-            GUI.Box(new Rect(12f, Screen.height - 172f, 480f, 160f), "WEBGL POINTER DEBUG");
-            float y = Screen.height - 148f;
-            Draw(y, "scene=" + SceneManager.GetActiveScene().name + "  fps=" + (_smoothedDelta > 0 ? (1f / _smoothedDelta).ToString("0") : "-")); y += 22f;
-            Draw(y, "touchCount=" + Input.touchCount + "  Screen=" + Screen.width + "x" + Screen.height); y += 22f;
-            Draw(y, input == null ? "pointer adapter: missing" : "source=" + input.LastInputSource + " phase=" + input.LastPointerPhase); y += 22f;
-            Draw(y, input == null ? "raw: -" : "raw=" + input.LastRawScreenPosition + " world=" + input.LastWorldPosition); y += 22f;
-            Draw(y, match == null ? "gesture: missing" : "gesture=" + match.GestureMode + " hasAim=" + match.HasGestureAim); y += 22f;
-            Draw(y, "url flag: debugPointer=1");
+            _smoothedDelta = Mathf.Lerp(_smoothedDelta, Time.unscaledDeltaTime, .1f);
         }
-
-        private static void Draw(float y, string value) { GUI.Label(new Rect(24f, y, 456f, 22f), value); }
     }
 }

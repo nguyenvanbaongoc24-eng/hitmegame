@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using HitMe.Core;
 using HitMe.Audio;
 using HitMe.Game;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace HitMe.UI
@@ -22,6 +24,49 @@ namespace HitMe.UI
 
     public sealed class ProductionUIController : MonoBehaviour
     {
+        private static readonly string[] CachedTenthsTimerStrings = BuildTenthsTimerCache(150);
+        private static readonly string[] CachedRound5Strings =
+        {
+            "VÒNG 0/5",
+            "VÒNG 1/5",
+            "VÒNG 2/5",
+            "VÒNG 3/5",
+            "VÒNG 4/5",
+            "VÒNG 5/5"
+        };
+        private static readonly string[] CachedHpCardStrings =
+        {
+            "HP: 0/3",
+            "HP: 1/3",
+            "HP: 2/3",
+            "HP: 3/3"
+        };
+        private static readonly string[] CachedRankStrings =
+        {
+            "#1", "#2", "#3", "#4", "#5", "#6"
+        };
+        private static readonly string[] CachedResultHpStrings =
+        {
+            "0 HP", "1 HP", "2 HP", "3 HP"
+        };
+
+        private const string HpHiddenText = "HP: ???";
+        private const string StatusHiddenText = "ẨN";
+        private const string StatusAliveText = "CÒN SỐNG";
+        private const string StatusEliminatedText = "ĐÃ LOẠI";
+
+        private static string[] BuildTenthsTimerCache(int maxTenths)
+        {
+            var table = new string[maxTenths + 1];
+            for (int i = 0; i <= maxTenths; i++)
+            {
+                int whole = i / 10;
+                int tenth = i % 10;
+                table[i] = whole + "." + tenth + "s";
+            }
+            return table;
+        }
+
         [Header("Controller Reference")]
         public MatchController matchController;
 
@@ -36,6 +81,9 @@ namespace HitMe.UI
         [Header("Toast Notification")]
         public GameObject toastObject;
         public TextMeshProUGUI txtToast;
+
+        [Header("Build Fingerprint Watermark")]
+        public TextMeshProUGUI txtBuildFingerprint;
 
         [Header("Home Screen Controls")]
         public TextMeshProUGUI txtHomeLogo;
@@ -96,7 +144,13 @@ namespace HitMe.UI
         private bool _isLocalPlayerReady;
         private string _activeRoomCode = "HM4826";
 
-        [System.Serializable]
+        private int _lastDisplayedRound = -1;
+        private int _lastDisplayedMaxRounds = -1;
+        private int _lastDisplayedTimerTenths = -1;
+        private bool _lastTimerLowWarning;
+        private Phase _lastDisplayedPhase = (Phase)(-1);
+
+        [Serializable]
         public class LobbySlotUI
         {
             public GameObject root;
@@ -106,7 +160,7 @@ namespace HitMe.UI
             public bool isReady;
         }
 
-        [System.Serializable]
+        [Serializable]
         public class PlayerHpCardUI
         {
             public GameObject root;
@@ -114,9 +168,13 @@ namespace HitMe.UI
             public TextMeshProUGUI txtHearts;
             public TextMeshProUGUI txtHpNum;
             public string playerId;
+
+            [NonSerialized] public string lastDisplayedName;
+            [NonSerialized] public int lastDisplayedHpCode = -999; // -1 = hidden, 0..3 = hp
+            [NonSerialized] public int lastDisplayedStatusCode = -999; // -1 = hidden, 0 = dead, 1 = alive
         }
 
-        [System.Serializable]
+        [Serializable]
         public class ResultRowUI
         {
             public GameObject root;
@@ -148,19 +206,86 @@ namespace HitMe.UI
                 matchController.OnMatchEnded += HandleMatchEnded;
             }
 
-            // Start by default in Home screen
-            ShowScreen(ProductionScreen.Home);
+            EnsureAndRefreshBuildFingerprint();
+
+            bool isUrlAutoPlay = Application.absoluteURL != null &&
+                                 Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (isUrlAutoPlay)
+            {
+                ShowScreen(ProductionScreen.Gameplay);
+            }
+            else
+            {
+                ShowScreen(ProductionScreen.Home);
+            }
+        }
+
+        public void EnsureAndRefreshBuildFingerprint()
+        {
+            if (txtBuildFingerprint == null)
+            {
+                var existing = transform.Find("SafeAreaRoot/BuildFingerprintWatermark") ?? transform.Find("BuildFingerprintWatermark");
+                if (existing != null)
+                {
+                    txtBuildFingerprint = existing.GetComponent<TextMeshProUGUI>();
+                }
+            }
+
+            if (txtBuildFingerprint == null)
+            {
+                Transform parent = transform.Find("SafeAreaRoot") ?? transform;
+                var go = new GameObject("BuildFingerprintWatermark", typeof(RectTransform));
+                go.transform.SetParent(parent, false);
+                var rt = go.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(1f, 0f);
+                rt.pivot = new Vector2(0.5f, 0f);
+                rt.anchoredPosition = new Vector2(0f, 8f);
+                rt.sizeDelta = new Vector2(-36f, 24f);
+
+                txtBuildFingerprint = go.AddComponent<TextMeshProUGUI>();
+                if (txtHomeLogo != null && txtHomeLogo.font != null)
+                {
+                    txtBuildFingerprint.font = txtHomeLogo.font;
+                }
+                else if (txtRound != null && txtRound.font != null)
+                {
+                    txtBuildFingerprint.font = txtRound.font;
+                }
+                txtBuildFingerprint.fontSize = 15f;
+                txtBuildFingerprint.color = new Color(0.92f, 0.95f, 1f, 0.48f);
+                txtBuildFingerprint.alignment = TextAlignmentOptions.BottomRight;
+                txtBuildFingerprint.raycastTarget = false;
+            }
+
+            txtBuildFingerprint.transform.SetAsLastSibling();
+            string fingerprint = ResolveBuildFingerprint();
+            txtBuildFingerprint.text = fingerprint;
+            Debug.Log("[BuildFingerprint] " + fingerprint);
+        }
+
+        public static string ResolveBuildFingerprint()
+        {
+            var asset = Resources.Load<TextAsset>("BuildFingerprint");
+            if (asset != null && !string.IsNullOrWhiteSpace(asset.text))
+            {
+                return asset.text.Trim();
+            }
+
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (string.IsNullOrEmpty(sceneName)) sceneName = "Graybox";
+            string ver = string.IsNullOrEmpty(Application.version) ? "dev" : Application.version;
+            return "build " + ver + " · " + sceneName;
         }
 
         private void BindEvents()
         {
-            // Home screen buttons
             if (btnQuickMatch != null)
             {
                 btnQuickMatch.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    _activeRoomCode = "HM" + Random.Range(1000, 9999);
+                    _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
                     EnterLobbyWithAutoFill("Phòng Chơi Nhanh", _activeRoomCode);
                 });
             }
@@ -192,7 +317,6 @@ namespace HitMe.UI
                 });
             }
 
-            // Create Room buttons
             if (btnSubmitCreateRoom != null)
             {
                 btnSubmitCreateRoom.onClick.AddListener(() =>
@@ -201,7 +325,7 @@ namespace HitMe.UI
                     string roomName = inputRoomName != null && !string.IsNullOrEmpty(inputRoomName.text)
                         ? inputRoomName.text
                         : "Phòng Chiến Hữu";
-                    _activeRoomCode = "HM" + Random.Range(1000, 9999);
+                    _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
                     EnterLobbyWithAutoFill(roomName, _activeRoomCode);
                 });
             }
@@ -215,7 +339,6 @@ namespace HitMe.UI
                 });
             }
 
-            // Join Room buttons
             if (btnPasteCode != null)
             {
                 btnPasteCode.onClick.AddListener(() =>
@@ -242,7 +365,7 @@ namespace HitMe.UI
                 {
                     AudioManager.Instance?.PlayClick();
                     string code = inputRoomCode != null && !string.IsNullOrEmpty(inputRoomCode.text)
-                        ? inputRoomCode.text.ToUpper()
+                        ? inputRoomCode.text.ToUpperInvariant()
                         : "HM4826";
                     EnterLobbyWithAutoFill("Phòng Chiến Hữu", code);
                 });
@@ -257,13 +380,9 @@ namespace HitMe.UI
                 });
             }
 
-            // Lobby buttons
             if (btnLobbyReady != null)
             {
-                btnLobbyReady.onClick.AddListener(() =>
-                {
-                    ToggleLobbyReady();
-                });
+                btnLobbyReady.onClick.AddListener(ToggleLobbyReady);
             }
 
             if (btnLeaveRoom != null)
@@ -276,7 +395,6 @@ namespace HitMe.UI
                 });
             }
 
-            // InGame HUD buttons
             if (btnInGameReady != null)
             {
                 btnInGameReady.onClick.AddListener(() =>
@@ -290,7 +408,6 @@ namespace HitMe.UI
                 });
             }
 
-            // Result buttons
             if (btnReplay != null)
             {
                 btnReplay.onClick.AddListener(() =>
@@ -320,6 +437,11 @@ namespace HitMe.UI
             if (lobbyPanel != null) lobbyPanel.SetActive(screen == ProductionScreen.Lobby);
             if (gameplayHudPanel != null) gameplayHudPanel.SetActive(screen == ProductionScreen.Gameplay);
             if (resultPanel != null) resultPanel.SetActive(screen == ProductionScreen.Result);
+
+            if (txtBuildFingerprint != null)
+            {
+                txtBuildFingerprint.transform.SetAsLastSibling();
+            }
 
             if (screen == ProductionScreen.Home && AudioManager.Instance != null)
             {
@@ -372,17 +494,19 @@ namespace HitMe.UI
             ShowScreen(ProductionScreen.Lobby);
             _isLocalPlayerReady = false;
 
-            if (txtLobbyHeader != null) txtLobbyHeader.text = roomName.ToUpper() + " • SÂN LÀNG";
+            if (txtLobbyHeader != null) txtLobbyHeader.text = roomName.ToUpperInvariant() + " • SÂN LÀNG";
             if (txtLobbyRoomCode != null) txtLobbyRoomCode.text = "MÃ PHÒNG: " + code;
             if (txtLobbyCountdown != null) txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
             if (txtLobbyReadyLabel != null) txtLobbyReadyLabel.text = "SẴN SÀNG";
 
-            string[] names = new string[] { "Nam Làng (Bạn)", "Nữ Năng Động", "Quậy Boy", "Cô Ba", "Anh Teen", "Chú Chó Vàng" };
-            for (int i = 0; i < lobbySlots.Count && i < names.Length; i++)
+            for (int i = 0; i < lobbySlots.Count && i < PlayerView.CharacterNames.Length; i++)
             {
                 var slot = lobbySlots[i];
                 if (slot.root != null) slot.root.SetActive(true);
-                if (slot.txtName != null) slot.txtName.text = names[i];
+                if (slot.txtName != null)
+                {
+                    slot.txtName.text = i == 0 ? "Nam Làng (Bạn)" : PlayerView.CharacterNames[i];
+                }
 
                 if (i == 0)
                 {
@@ -395,7 +519,6 @@ namespace HitMe.UI
                 }
                 else
                 {
-                    // Mock participants are ready in lobby
                     slot.isReady = true;
                     if (slot.txtStatus != null)
                     {
@@ -423,8 +546,16 @@ namespace HitMe.UI
                 txtLobbyReadyLabel.text = _isLocalPlayerReady ? "HỦY SẴN SÀNG" : "SẴN SÀNG";
             }
 
-            // UX Rule: "Tất cả người chơi bấm 'Sẵn sàng' thì tự bắt đầu. Không dùng nút host 'Bắt đầu' riêng."
-            bool allReady = lobbySlots.Count > 0 && lobbySlots.All(s => s.isReady);
+            bool allReady = lobbySlots.Count > 0;
+            for (int i = 0; i < lobbySlots.Count; i++)
+            {
+                if (!lobbySlots[i].isReady)
+                {
+                    allReady = false;
+                    break;
+                }
+            }
+
             if (allReady)
             {
                 if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
@@ -439,11 +570,18 @@ namespace HitMe.UI
 
         private IEnumerator LobbyCountdownRoutine()
         {
+            string[] countdownMsgs =
+            {
+                "",
+                "Tất cả đã sẵn sàng! Trận đấu bắt đầu sau 1...",
+                "Tất cả đã sẵn sàng! Trận đấu bắt đầu sau 2...",
+                "Tất cả đã sẵn sàng! Trận đấu bắt đầu sau 3..."
+            };
             for (int sec = 3; sec >= 1; sec--)
             {
                 if (txtLobbyCountdown != null)
                 {
-                    txtLobbyCountdown.text = "Tất cả đã sẵn sàng! Trận đấu bắt đầu sau " + sec + "...";
+                    txtLobbyCountdown.text = countdownMsgs[sec];
                 }
                 AudioManager.Instance?.PlayCountdownTick();
                 yield return new WaitForSeconds(1.0f);
@@ -471,7 +609,20 @@ namespace HitMe.UI
 
         private void HandleRoundStarted(int round, int maxRounds)
         {
-            if (txtRound != null) txtRound.text = "VÒNG " + round + "/" + maxRounds;
+            if (txtRound != null && (round != _lastDisplayedRound || maxRounds != _lastDisplayedMaxRounds))
+            {
+                _lastDisplayedRound = round;
+                _lastDisplayedMaxRounds = maxRounds;
+                if (maxRounds == 5 && round >= 0 && round < CachedRound5Strings.Length)
+                {
+                    txtRound.text = CachedRound5Strings[round];
+                }
+                else
+                {
+                    txtRound.text = "VÒNG " + round + "/" + maxRounds;
+                }
+            }
+
             if (btnInGameReady != null)
             {
                 btnInGameReady.interactable = true;
@@ -482,8 +633,9 @@ namespace HitMe.UI
 
         private void HandlePhaseChanged(Phase phase)
         {
-            if (txtPhaseBanner != null)
+            if (txtPhaseBanner != null && phase != _lastDisplayedPhase)
             {
+                _lastDisplayedPhase = phase;
                 switch (phase)
                 {
                     case Phase.Placing:
@@ -509,10 +661,19 @@ namespace HitMe.UI
 
         private void HandleTimerTick(float secondsRemaining)
         {
-            if (txtTimer != null)
+            if (txtTimer == null) return;
+            int tenths = Mathf.Clamp(Mathf.RoundToInt(Mathf.Max(0f, secondsRemaining) * 10f), 0, CachedTenthsTimerStrings.Length - 1);
+            if (tenths != _lastDisplayedTimerTenths)
             {
-                txtTimer.text = Mathf.Max(0f, secondsRemaining).ToString("0.0") + "s";
-                txtTimer.color = secondsRemaining <= 3f ? new Color(1f, 0.3f, 0.3f) : Color.white;
+                _lastDisplayedTimerTenths = tenths;
+                txtTimer.text = CachedTenthsTimerStrings[tenths];
+            }
+
+            bool lowWarning = secondsRemaining <= 3f;
+            if (lowWarning != _lastTimerLowWarning)
+            {
+                _lastTimerLowWarning = lowWarning;
+                txtTimer.color = lowWarning ? new Color(1f, 0.3f, 0.3f) : Color.white;
             }
         }
 
@@ -528,36 +689,50 @@ namespace HitMe.UI
                 var player = state.Players[i];
                 card.playerId = player.Id;
 
-                if (card.root != null) card.root.SetActive(true);
-                if (card.txtName != null) card.txtName.text = player.Name;
+                if (card.root != null && !card.root.activeSelf)
+                {
+                    card.root.SetActive(true);
+                }
 
-                // UX Rule: Trong pha Placing, đối thủ đang ẩn.
+                if (card.txtName != null && !string.Equals(card.lastDisplayedName, player.Name, StringComparison.Ordinal))
+                {
+                    card.lastDisplayedName = player.Name;
+                    card.txtName.text = player.Name;
+                }
+
                 bool isLocal = player.Id == "player";
                 if (phase == Phase.Placing && !isLocal)
                 {
-                    if (card.txtHearts != null)
+                    if (card.txtHearts != null && card.lastDisplayedHpCode != -1)
                     {
-                        card.txtHearts.text = "HP: ???";
+                        card.lastDisplayedHpCode = -1;
+                        card.txtHearts.text = HpHiddenText;
                         card.txtHearts.color = new Color(0.6f, 0.65f, 0.7f);
                     }
-                    if (card.txtHpNum != null)
+                    if (card.txtHpNum != null && card.lastDisplayedStatusCode != -1)
                     {
-                        card.txtHpNum.text = "ẨN";
+                        card.lastDisplayedStatusCode = -1;
+                        card.txtHpNum.text = StatusHiddenText;
                         card.txtHpNum.color = new Color(0.6f, 0.65f, 0.7f);
                     }
                 }
                 else
                 {
-                    if (card.txtHearts != null)
+                    int clampedHp = Mathf.Clamp(player.Hp, 0, 3);
+                    if (card.txtHearts != null && card.lastDisplayedHpCode != clampedHp)
                     {
-                        card.txtHearts.text = $"HP: {player.Hp}/3";
+                        card.lastDisplayedHpCode = clampedHp;
+                        card.txtHearts.text = CachedHpCardStrings[clampedHp];
                         card.txtHearts.color = player.IsAlive
-                            ? (player.Hp == 3 ? new Color(0.2f, 1f, 0.4f) : (player.Hp == 2 ? new Color(1f, 0.85f, 0.2f) : new Color(1f, 0.3f, 0.3f)))
+                            ? (clampedHp == 3 ? new Color(0.2f, 1f, 0.4f) : (clampedHp == 2 ? new Color(1f, 0.85f, 0.2f) : new Color(1f, 0.3f, 0.3f)))
                             : Color.gray;
                     }
-                    if (card.txtHpNum != null)
+
+                    int statusCode = player.IsAlive ? 1 : 0;
+                    if (card.txtHpNum != null && card.lastDisplayedStatusCode != statusCode)
                     {
-                        card.txtHpNum.text = player.IsAlive ? "CÒN SỐNG" : "ĐÃ LOẠI";
+                        card.lastDisplayedStatusCode = statusCode;
+                        card.txtHpNum.text = player.IsAlive ? StatusAliveText : StatusEliminatedText;
                         card.txtHpNum.color = player.IsAlive ? new Color(0.8f, 0.9f, 1f) : Color.gray;
                     }
                 }
@@ -566,7 +741,12 @@ namespace HitMe.UI
 
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winnerIds)
         {
-            ShowScreen(ProductionScreen.Result);
+            bool isUrlAutoPlay = Application.absoluteURL != null &&
+                                 Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (!isUrlAutoPlay)
+            {
+                ShowScreen(ProductionScreen.Result);
+            }
 
             bool isLocalWinner = winnerIds.Contains("player");
             if (txtResultTitle != null)
@@ -577,18 +757,33 @@ namespace HitMe.UI
 
             if (txtResultSubtitle != null)
             {
-                txtResultSubtitle.text = "Người thắng: " + string.Join(", ", ranked.Where(p => winnerIds.Contains(p.Id)).Select(p => p.Name));
+                var sb = new StringBuilder("Người thắng: ");
+                bool first = true;
+                for (int i = 0; i < ranked.Count; i++)
+                {
+                    if (!winnerIds.Contains(ranked[i].Id)) continue;
+                    if (!first) sb.Append(", ");
+                    sb.Append(ranked[i].Name);
+                    first = false;
+                }
+                txtResultSubtitle.text = sb.ToString();
             }
 
-            // Fill full ranking table (all 6 players)
             for (int i = 0; i < resultRows.Count && i < ranked.Count; i++)
             {
                 var row = resultRows[i];
                 var p = ranked[i];
                 if (row.root != null) row.root.SetActive(true);
-                if (row.txtRank != null) row.txtRank.text = "#" + (i + 1);
+                if (row.txtRank != null)
+                {
+                    row.txtRank.text = i < CachedRankStrings.Length ? CachedRankStrings[i] : ("#" + (i + 1));
+                }
                 if (row.txtName != null) row.txtName.text = p.Name;
-                if (row.txtHp != null) row.txtHp.text = p.Hp + " HP";
+                if (row.txtHp != null)
+                {
+                    int hpIdx = Mathf.Clamp(p.Hp, 0, CachedResultHpStrings.Length - 1);
+                    row.txtHp.text = CachedResultHpStrings[hpIdx];
+                }
 
                 bool won = winnerIds.Contains(p.Id);
                 if (row.txtStatus != null)

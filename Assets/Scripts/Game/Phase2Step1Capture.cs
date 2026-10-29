@@ -20,13 +20,5 @@ namespace HitMe.Game
             ScreenCapture.CaptureScreenshot(Path.Combine(outDir, "step1_vietnamese_text.png"));
             Debug.Log("Captured Phase 2 Step 1 evidence screenshots to " + outDir);
         }
-
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(Screen.width - 220, Screen.height - 60, 200, 44), "Vào Trận Đấu (Graybox) ->"))
-            {
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Graybox.unity");
-            }
-        }
     }
 }

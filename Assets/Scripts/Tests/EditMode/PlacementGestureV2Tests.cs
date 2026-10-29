@@ -239,27 +239,119 @@ namespace HitMe.Tests
         }
 
         [Test]
-        public void Test16_AllReplayFixturesMatchExpectedState()
+        public void Test16_01_Replay_PlaceAndAim()
+        {
+            AssertReplayFixture("01_place_and_aim.json");
+        }
+
+        [Test]
+        public void Test16_02_Replay_RetapResets()
+        {
+            AssertReplayFixture("02_retap_resets.json");
+        }
+
+        [Test]
+        public void Test16_03_Replay_DragUnder4mmCancels()
+        {
+            AssertReplayFixture("03_drag_under_4mm_cancels.json");
+        }
+
+        [Test]
+        public void Test16_04_Replay_NoTouch()
+        {
+            AssertReplayFixture("04_no_touch.json");
+        }
+
+        [Test]
+        public void Test16_05_Replay_NoAim()
+        {
+            AssertReplayFixture("05_no_aim.json");
+        }
+
+        [Test]
+        public void Test16_06_Replay_OutsideStart()
+        {
+            AssertReplayFixture("06_outside_start.json");
+        }
+
+        [Test]
+        public void Test17_CancelAimByDraggingBackUnder4mmRestoresDefaultFacing()
+        {
+            var g = CreateGesture();
+            float minAim = PlacementGestureV2.MmToPixels(4.0f, 160f); // ~25.2 px
+
+            // 1. Touch down at screen (100, 100), game (2, 2)
+            g.PointerDown(1, new Vec2(100f, 100f), new Vec2(2f, 2f), true, 0);
+            var s1 = g.Snapshot();
+            Assert.IsTrue(s1.HasPlaced);
+            Assert.IsFalse(s1.AimActive);
+            Assert.AreEqual(Vec2.Up.X, s1.Facing.X, 0.001f);
+            Assert.AreEqual(Vec2.Up.Y, s1.Facing.Y, 0.001f);
+
+            // 2. Drag right by 60 px (> 25.2 px) -> aim active, facing (1, 0)
+            g.PointerMove(1, new Vec2(160f, 100f), new Vec2(6f, 2f), true, 0, minAim);
+            var s2 = g.Snapshot();
+            Assert.IsTrue(s2.AimActive);
+            Assert.AreEqual(1f, s2.Facing.X, 0.001f);
+            Assert.AreEqual(0f, s2.Facing.Y, 0.001f);
+
+            // 3. Drag back to (103, 100) (3 px < 25.2 px threshold) -> aim canceled, facing restored to DefaultFacing
+            g.PointerMove(1, new Vec2(103f, 100f), new Vec2(2.3f, 2f), true, 0, minAim);
+            var s3 = g.Snapshot();
+            Assert.IsFalse(s3.AimActive, "Aim must be inactive when dragged back under 4mm");
+            Assert.AreEqual(Vec2.Up.X, s3.Facing.X, 0.001f, "Facing must restore to DefaultFacing (Up) under 4mm");
+            Assert.AreEqual(Vec2.Up.Y, s3.Facing.Y, 0.001f, "Facing must restore to DefaultFacing (Up) under 4mm");
+
+            // 4. Release pointer -> facing stays DefaultFacing (Up), aim inactive
+            g.PointerUp(1, new Vec2(103f, 100f), new Vec2(2.3f, 2f), true, 0);
+            var s4 = g.Snapshot();
+            Assert.IsFalse(s4.AimActive);
+            Assert.AreEqual(Vec2.Up.X, s4.Facing.X, 0.001f);
+            Assert.AreEqual(Vec2.Up.Y, s4.Facing.Y, 0.001f);
+        }
+
+        [Test]
+        public void Test18_RosterSelection_200Seeds_AllPlayerChoices_NeverDuplicatesCharacter()
+        {
+            Assert.AreEqual(7, HitMe.Game.PlayerView.TotalCharacterCount, "Roster must contain all 7 real characters.");
+            for (int localChoice = 0; localChoice < HitMe.Game.PlayerView.TotalCharacterCount; localChoice++)
+            {
+                for (uint seed = 1; seed <= 200; seed++)
+                {
+                    var rng = new SeededRandom(seed);
+                    int[] roster = HitMe.Game.MatchController.SelectMatchRoster(localChoice, 6, rng);
+                    Assert.AreEqual(6, roster.Length);
+                    Assert.AreEqual(localChoice, roster[0], "Local player character choice must be preserved at index 0.");
+
+                    var seen = new System.Collections.Generic.HashSet<int>();
+                    for (int i = 0; i < roster.Length; i++)
+                    {
+                        int c = roster[i];
+                        Assert.IsTrue(c >= 0 && c < 7, $"Character index {c} out of valid range [0..6]");
+                        Assert.IsTrue(seen.Add(c), $"Duplicate character {c} found in match roster for seed={seed}, localChoice={localChoice}");
+                    }
+                }
+            }
+        }
+
+        private static void AssertReplayFixture(string filename)
         {
             string replaysDir = System.IO.Path.GetFullPath("tools/patches/gesture_v2/replays");
-            if (!System.IO.Directory.Exists(replaysDir)) return;
+            string path = System.IO.Path.Combine(replaysDir, filename);
+            Assert.IsTrue(System.IO.File.Exists(path), "Replay file exists: " + path);
 
-            var files = System.IO.Directory.GetFiles(replaysDir, "*.json");
-            Assert.AreEqual(6, files.Length);
-            foreach (var file in files)
-            {
-                string json = System.IO.File.ReadAllText(file);
-                var fixture = HitMe.GestureV2.GestureReplay.Load(json);
-                var s = HitMe.GestureV2.GestureReplay.Play(fixture);
-                var e = fixture.Expected;
-                Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{file} HasPlaced mismatch");
-                Assert.AreEqual(e.AimActive, s.AimActive, $"{file} AimActive mismatch");
-                Assert.AreEqual(e.Locked, s.Locked, $"{file} Locked mismatch");
-                Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{file} PositionX mismatch");
-                Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{file} PositionY mismatch");
-                Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{file} FacingX mismatch");
-                Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{file} FacingY mismatch");
-            }
+            string json = System.IO.File.ReadAllText(path);
+            var fixture = HitMe.GestureV2.GestureReplay.Load(json);
+            var s = HitMe.GestureV2.GestureReplay.Play(fixture, 10f);
+            var e = fixture.Expected;
+
+            Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{filename}: HasPlaced mismatch");
+            Assert.AreEqual(e.AimActive, s.AimActive, $"{filename}: AimActive mismatch");
+            Assert.AreEqual(e.Locked, s.Locked, $"{filename}: Locked mismatch");
+            Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{filename}: PositionX mismatch");
+            Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{filename}: PositionY mismatch");
+            Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{filename}: FacingX mismatch");
+            Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{filename}: FacingY mismatch");
         }
     }
 }

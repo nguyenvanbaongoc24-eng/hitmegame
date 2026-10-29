@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using HitMe.Core;
 using HitMe.Audio;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace HitMe.Game
         public GameConfigAsset configAsset;
         public ArenaView arena;
         public HudView hud;
+        public int localCharacterIndex = 0;
 
         [Tooltip("Automation only: lets the local player use BotBrain and lock every round immediately.")]
         public bool autoPlay;
@@ -54,13 +54,87 @@ namespace HitMe.Game
         public Action<float> OnTimerTick;
         public Action<List<PlayerState>, List<string>> OnMatchEnded;
 
-        private readonly Dictionary<string, PlayerView> _views = new Dictionary<string, PlayerView>();
-        private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>();
-        private readonly List<GameObject> _weapons = new List<GameObject>();
+        private const int MaxPoolSize = 6;
+        private readonly List<PlayerView> _playerPool = new List<PlayerView>(MaxPoolSize);
+        private readonly List<WeaponFlightView> _weaponPool = new List<WeaponFlightView>(MaxPoolSize);
+        private readonly List<HitFx> _hitFxPool = new List<HitFx>(MaxPoolSize);
+        private readonly Dictionary<string, PlayerView> _views = new Dictionary<string, PlayerView>(MaxPoolSize);
+        private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>(MaxPoolSize);
+        private readonly List<PlayerState> _rankedBuffer = new List<PlayerState>(MaxPoolSize);
+        private readonly List<string> _winnerIdsBuffer = new List<string>(MaxPoolSize);
+
         private SeededRandom _random;
         private PlacementGestureV2 _gestureV2;
         private Coroutine _matchCoroutine;
         private int _lastTickSecond = -1;
+        private bool _poolsInitialized;
+        private bool _readyRequested;
+        private uint _matchCounter;
+
+        // Pre-allocated WaitForSeconds to avoid per-round GC allocations
+        private readonly WaitForSeconds _waitLockNormal = new WaitForSeconds(0.05f);
+        private readonly WaitForSeconds _waitLockCapture = new WaitForSeconds(0.25f);
+        private readonly WaitForSeconds _waitReveal = new WaitForSeconds(0.8f);
+        private readonly WaitForSeconds _waitThrowNormal = new WaitForSeconds(0.85f);
+        private readonly WaitForSeconds _waitThrowCapture = new WaitForSeconds(1.0f);
+        private readonly WaitForSeconds _waitResolveNormal = new WaitForSeconds(1.2f);
+        private readonly WaitForSeconds _waitResolveCapture = new WaitForSeconds(0.02f);
+        private readonly WaitForSeconds _waitFastAuto = new WaitForSeconds(0.05f);
+
+        private int _webAutoPlayRemainingMatches;
+        private int _webAutoPlayTotalMatches;
+        private bool _fastAutoPlayTimings;
+        private int _profileFrames;
+        private long _profileStartBytes;
+        private long _profilePositiveAllocBytes;
+        private long _profilePrevBytes;
+        private int _profileStartGcCount;
+        private float _profileStartTime;
+
+        /// <summary>
+        /// Deterministic selection of up to 6 distinct characters from the 7-character roster.
+        /// Slot 0 uses localCharacterIndex; remaining slots are shuffled using SeededRandom without duplicates.
+        /// </summary>
+        public static int[] SelectMatchRoster(int localCharIndex, int maxPlayers, SeededRandom random)
+        {
+            int count = Mathf.Clamp(maxPlayers, 1, PlayerView.TotalCharacterCount);
+            int chosenLocal = ((localCharIndex % PlayerView.TotalCharacterCount) + PlayerView.TotalCharacterCount) % PlayerView.TotalCharacterCount;
+
+            int[] remaining = new int[PlayerView.TotalCharacterCount - 1];
+            int rIdx = 0;
+            for (int c = 0; c < PlayerView.TotalCharacterCount; c++)
+            {
+                if (c == chosenLocal) continue;
+                remaining[rIdx++] = c;
+            }
+
+            // Deterministic Fisher-Yates shuffle using SeededRandom
+            for (int i = remaining.Length - 1; i > 0; i--)
+            {
+                int swapIdx = Mathf.Clamp((int)random.Range(0f, i + 0.9999f), 0, i);
+                int tmp = remaining[i];
+                remaining[i] = remaining[swapIdx];
+                remaining[swapIdx] = tmp;
+            }
+
+            int[] roster = new int[count];
+            roster[0] = chosenLocal;
+            for (int i = 1; i < count; i++)
+            {
+                roster[i] = remaining[i - 1];
+            }
+            return roster;
+        }
+
+        private void Awake()
+        {
+            if (configAsset != null)
+            {
+                PlayerView.ConfigureSharedResources(configAsset);
+                WeaponFlightView.ConfigureSharedResources(configAsset);
+            }
+            EnsurePoolsInitialized();
+        }
 
         private void Start()
         {
@@ -73,6 +147,19 @@ namespace HitMe.Game
                 CapturePhase1 = true;
             }
 
+            int urlAutoMatches = ParseAutoPlayQueryCount();
+            if (urlAutoMatches > 0)
+            {
+                autoPlay = true;
+                _fastAutoPlayTimings = true;
+                _webAutoPlayTotalMatches = urlAutoMatches;
+                _webAutoPlayRemainingMatches = urlAutoMatches;
+                StartProfilingWindow();
+                Debug.Log($"[WebGLAutoPlay] Starting automated verification of {_webAutoPlayTotalMatches} matches on build...");
+                StartMatch();
+                return;
+            }
+
             // If no canvas exists (e.g. running standalone headless test), start match immediately
             var canvas = FindAnyObjectByType<Canvas>();
             if (canvas == null)
@@ -81,8 +168,43 @@ namespace HitMe.Game
             }
         }
 
+        private static int ParseAutoPlayQueryCount()
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return 0;
+            int idx = url.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0) return 0;
+            idx += "autoPlay=".Length;
+            int val = 0;
+            while (idx < url.Length && char.IsDigit(url[idx]))
+            {
+                val = val * 10 + (url[idx] - '0');
+                idx++;
+            }
+            return val > 0 ? val : 1;
+        }
+
+        private void StartProfilingWindow()
+        {
+            _profileFrames = 0;
+            _profilePositiveAllocBytes = 0;
+            _profileStartBytes = GC.GetTotalMemory(false);
+            _profilePrevBytes = _profileStartBytes;
+            _profileStartGcCount = GC.CollectionCount(0);
+            _profileStartTime = Time.realtimeSinceStartup;
+        }
+
         private void Update()
         {
+            if (State != null && State.Phase != Phase.MatchEnd)
+            {
+                _profileFrames++;
+                long curBytes = GC.GetTotalMemory(false);
+                long delta = curBytes - _profilePrevBytes;
+                if (delta > 0) _profilePositiveAllocBytes += delta;
+                _profilePrevBytes = curBytes;
+            }
+
             if (hud != null && hud.ReplayPressed)
             {
                 hud.ResetButtons();
@@ -90,8 +212,45 @@ namespace HitMe.Game
             }
         }
 
+        private void EnsurePoolsInitialized()
+        {
+            if (_poolsInitialized) return;
+            _poolsInitialized = true;
+
+            var poolRoot = new GameObject("MatchObjectPools");
+            poolRoot.transform.SetParent(transform, false);
+
+            for (int i = 0; i < MaxPoolSize; i++)
+            {
+                var pGo = new GameObject("PooledPlayer_" + i);
+                pGo.transform.SetParent(poolRoot.transform, false);
+                var pv = pGo.AddComponent<PlayerView>();
+                pv.Initialise("pool-" + i, Color.white, i);
+                pGo.SetActive(false);
+                _playerPool.Add(pv);
+
+                var fxGo = new GameObject("PooledHitFx_" + i);
+                fxGo.transform.SetParent(poolRoot.transform, false);
+                var fx = fxGo.AddComponent<HitFx>();
+                if (configAsset != null && configAsset.hitFxFrames != null)
+                {
+                    fx.frames = configAsset.hitFxFrames;
+                }
+                fxGo.SetActive(false);
+                _hitFxPool.Add(fx);
+
+                var wGo = new GameObject("PooledWeapon_" + i);
+                wGo.transform.SetParent(poolRoot.transform, false);
+                var wf = wGo.AddComponent<WeaponFlightView>();
+                wf.Initialise(Vector3.zero, Vector3.zero, 0.75f, false, fx);
+                wGo.SetActive(false);
+                _weaponPool.Add(wf);
+            }
+        }
+
         public void StartMatch()
         {
+            EnsurePoolsInitialized();
             if (_matchCoroutine != null) StopCoroutine(_matchCoroutine);
             _matchCoroutine = StartCoroutine(NewMatch());
         }
@@ -99,14 +258,11 @@ namespace HitMe.Game
         public void RequestReady()
         {
             if (hud != null) hud.ResetButtons();
-            // Signal ready to break placing loop early
             if (State != null && State.Phase == Phase.Placing)
             {
                 _readyRequested = true;
             }
         }
-
-        private bool _readyRequested;
 
         public void HandlePointer(int pointerId, Vector2 screenPos, Vector2 worldPos, PointerPhase phase)
         {
@@ -145,7 +301,6 @@ namespace HitMe.Game
 
         public void HandlePointer(PointerSample pointer)
         {
-            // Backward compatibility with PointerSample
             int pid = 0;
             Vector2 screen = Camera.main != null ? Camera.main.WorldToScreenPoint(new Vector3(pointer.Position.X, pointer.Position.Y, 0f)) : Vector2.zero;
             Vector2 world = new Vector2(pointer.Position.X, pointer.Position.Y);
@@ -155,34 +310,57 @@ namespace HitMe.Game
         private IEnumerator NewMatch()
         {
             yield return null;
-            var config = configAsset.ToCore();
-            _random = new SeededRandom(config.Seed);
-            _bots.Clear();
-
-            foreach (var view in _views.Values)
+            EnsurePoolsInitialized();
+            if (configAsset != null)
             {
-                if (view != null && view.gameObject != null) Destroy(view.gameObject);
+                PlayerView.ConfigureSharedResources(configAsset);
+                WeaponFlightView.ConfigureSharedResources(configAsset);
             }
+
+            var config = configAsset.ToCore();
+            uint matchSeed = config.Seed + (_matchCounter * 97u);
+            _matchCounter++;
+            _random = new SeededRandom(matchSeed);
+            _bots.Clear();
             _views.Clear();
 
-            var players = new List<PlayerState>();
-            string[] botNames = new string[] { "Nữ Năng Động", "Quậy Boy", "Cô Ba", "Anh Teen", "Chú Chó Vàng" };
-            for (int i = 0; i < config.MaxPlayers; i++)
+            for (int i = 0; i < _playerPool.Count; i++)
+            {
+                if (_playerPool[i] != null) _playerPool[i].gameObject.SetActive(false);
+            }
+            ClearWeapons();
+
+            int playerCount = Mathf.Clamp(config.MaxPlayers, 1, MaxPoolSize);
+            int[] rosterIndices = SelectMatchRoster(localCharacterIndex, playerCount, _random);
+
+            var players = new List<PlayerState>(playerCount);
+            for (int i = 0; i < playerCount; i++)
             {
                 string id = i == 0 ? "player" : "bot-" + i;
                 bool bot = i != 0;
-                string displayName = bot ? botNames[(i - 1) % botNames.Length] : "Nam Làng";
+                int charIdx = rosterIndices[i];
+                string displayName = PlayerView.CharacterNames[charIdx];
                 var p = new PlayerState(id, displayName, bot, config.StartHp,
                     new Vec2(_random.Range(config.MinX, config.MaxX), _random.Range(config.MinY, config.MaxY)),
                     Vec2.Up);
                 players.Add(p);
-                CreateView(p, i);
+                BindPooledView(p, i, charIdx);
                 if (bot) _bots[id] = new Phase1BotBrain((BotLevel)((i - 1) % 3), _random);
             }
 
             State = new MatchState(config, players);
             if (hud != null) hud.ResetButtons();
             _readyRequested = false;
+
+            if (_gestureV2 == null)
+            {
+                _gestureV2 = new PlacementGestureV2();
+            }
+
+            if (_matchCounter == 1)
+            {
+                StartProfilingWindow();
+            }
 
             if (AudioManager.Instance != null)
             {
@@ -193,7 +371,6 @@ namespace HitMe.Game
             {
                 State.StartRound();
                 var localPlayer = State.FindPlayer("player");
-                _gestureV2 = new PlacementGestureV2();
                 _gestureV2.BeginRound(localPlayer.Position, Vec2.Up);
                 SecondsRemaining = config.PlaceSeconds;
                 _readyRequested = false;
@@ -221,7 +398,7 @@ namespace HitMe.Game
                     if (CapturePhase1 && State.RoundNumber == 1)
                     {
                         Present(true);
-                        yield return new WaitForSeconds(.8f);
+                        yield return _waitReveal;
                     }
                     SecondsRemaining = 0f;
                 }
@@ -236,7 +413,6 @@ namespace HitMe.Game
 
                     OnTimerTick?.Invoke(SecondsRemaining);
 
-                    // Countdown audio tick in last 3 seconds
                     int currentSec = Mathf.CeilToInt(SecondsRemaining);
                     if (currentSec <= 3 && currentSec > 0 && currentSec != _lastTickSecond)
                     {
@@ -266,15 +442,12 @@ namespace HitMe.Game
                 if (SecondsRemaining <= 0f && !autoPlay)
                 {
                     timedOut = true;
-                    // UX Rule: Hết 5 giây: hiện toast "Tự ném theo hướng cuối".
                     TriggerToast("Tự ném theo hướng cuối");
                 }
 
-                // Lock Placement Phase
                 var lockSnap = _gestureV2.Snapshot();
                 _gestureV2.Lock();
 
-                // If no manual aim drag was done, aim in facing direction (NoAimPolicy = ThrowFacing)
                 RoundInput finalInput = new RoundInput("player")
                 {
                     HasPlacement = true,
@@ -295,7 +468,7 @@ namespace HitMe.Game
                 }
 
                 Present(false);
-                yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .25f : .05f);
+                yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitLockCapture : _waitLockNormal);
 
                 // Reveal Phase
                 State.BeginReveal();
@@ -305,41 +478,77 @@ namespace HitMe.Game
                     AudioManager.Instance.PlayReveal();
                 }
                 Present(false, true);
-                yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? .8f : 0.8f);
+                yield return _fastAutoPlayTimings ? _waitFastAuto : _waitReveal;
 
                 // Throwing Phase
                 State.BeginThrowing();
                 OnPhaseChanged?.Invoke(Phase.Throwing);
                 Present(false);
                 SpawnWeapons();
-                yield return new WaitForSeconds(CapturePhase1 && State.RoundNumber == 1 ? 1f : 0.85f);
+                yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitThrowCapture : _waitThrowNormal);
 
                 // Resolve Phase
                 State.ResolveRound();
                 ClearWeapons();
                 OnPhaseChanged?.Invoke(Phase.Resolve);
                 Present(false);
-                yield return new WaitForSeconds(CapturePhase1 ? .02f : 1.2f);
+                yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 ? _waitResolveCapture : _waitResolveNormal);
             }
 
             // Match End Phase
             Present(false);
             OnPhaseChanged?.Invoke(Phase.MatchEnd);
 
-            var ranked = State.Players
-                .OrderByDescending(p => p.IsAlive)
-                .ThenByDescending(p => p.Hp)
-                .ThenBy(p => p.Name)
-                .ToList();
+            _rankedBuffer.Clear();
+            for (int i = 0; i < State.Players.Count; i++)
+            {
+                _rankedBuffer.Add(State.Players[i]);
+            }
+            _rankedBuffer.Sort(ComparePlayersForRanking);
 
-            bool isWinner = State.WinnerIds.Contains("player");
+            _winnerIdsBuffer.Clear();
+            for (int i = 0; i < State.WinnerIds.Count; i++)
+            {
+                _winnerIdsBuffer.Add(State.WinnerIds[i]);
+            }
+
+            bool isWinner = _winnerIdsBuffer.Contains("player");
             if (AudioManager.Instance != null)
             {
                 if (isWinner) AudioManager.Instance.PlayWin();
                 else AudioManager.Instance.PlayLose();
             }
 
-            OnMatchEnded?.Invoke(ranked, State.WinnerIds.ToList());
+            OnMatchEnded?.Invoke(_rankedBuffer, _winnerIdsBuffer);
+
+            if (_webAutoPlayRemainingMatches > 0)
+            {
+                int doneIndex = _webAutoPlayTotalMatches - _webAutoPlayRemainingMatches + 1;
+                _webAutoPlayRemainingMatches--;
+                Debug.Log($"[WebGLAutoPlay] Match {doneIndex}/{_webAutoPlayTotalMatches} completed: rounds={State.RoundNumber}, winners=[{string.Join(", ", _winnerIdsBuffer)}]");
+
+                if (_webAutoPlayRemainingMatches > 0)
+                {
+                    yield return _waitFastAuto;
+                    StartMatch();
+                }
+                else
+                {
+                    float elapsedSec = Mathf.Max(0.01f, Time.realtimeSinceStartup - _profileStartTime);
+                    float avgFps = _profileFrames / elapsedSec;
+                    long avgAllocPerFrame = _profileFrames > 0 ? (_profilePositiveAllocBytes / _profileFrames) : 0;
+                    int gcCollections = GC.CollectionCount(0) - _profileStartGcCount;
+                    Debug.Log($"[WebGLAutoPlay] All {_webAutoPlayTotalMatches}/{_webAutoPlayTotalMatches} matches completed with 0 errors! " +
+                              $"Frames={_profileFrames}, Elapsed={elapsedSec:F2}s, AvgFPS={avgFps:F1}, ManagedAllocPerFrame={avgAllocPerFrame} B/frame, GCGen0={gcCollections}");
+                }
+            }
+        }
+
+        private static int ComparePlayersForRanking(PlayerState a, PlayerState b)
+        {
+            if (a.IsAlive != b.IsAlive) return b.IsAlive.CompareTo(a.IsAlive);
+            if (a.Hp != b.Hp) return b.Hp.CompareTo(a.Hp);
+            return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
         }
 
         private void TriggerToast(string message)
@@ -347,12 +556,12 @@ namespace HitMe.Game
             OnToastRequested?.Invoke(message);
         }
 
-        private void CreateView(PlayerState p, int index)
+        private void BindPooledView(PlayerState p, int slotIndex, int characterIndex)
         {
-            var go = new GameObject(p.Id);
-            var view = go.AddComponent<PlayerView>();
-            // Color tint removed: All 6 characters have distinct visual index without tint
-            view.Initialise(p.Id, Color.white, index % 6);
+            var view = _playerPool[slotIndex];
+            view.gameObject.name = p.Id;
+            view.gameObject.SetActive(true);
+            view.Initialise(p.Id, Color.white, characterIndex);
             _views[p.Id] = view;
         }
 
@@ -377,12 +586,11 @@ namespace HitMe.Game
             if (State == null) return;
             var snap = _gestureV2 != null ? _gestureV2.Snapshot() : default;
 
-            foreach (var p in State.Players)
+            for (int i = 0; i < State.Players.Count; i++)
             {
+                var p = State.Players[i];
                 bool isLocal = p.Id == "player";
 
-                // UX Rule: Trong pha Placing CHỈ hiện nhân vật người chơi và thước ngắm của họ.
-                // Không hiện đối thủ, vị trí, hướng ngắm hoặc dép của đối thủ.
                 bool visible = placing ? isLocal : p.IsAlive;
                 bool showAim = placing ? (isLocal && snap.AimActive) : (showAllAim && p.IsAlive);
                 bool showTouchRing = placing && isLocal;
@@ -398,18 +606,20 @@ namespace HitMe.Game
         private void SpawnWeapons()
         {
             ClearWeapons();
-            foreach (var p in State.Players)
+            float duration = _fastAutoPlayTimings ? 0.04f : 0.75f;
+            for (int i = 0; i < State.Players.Count && i < _weaponPool.Count; i++)
             {
+                var p = State.Players[i];
                 RoundInput input;
                 if (!p.IsAlive || !State.LockedInputs.TryGetValue(p.Id, out input)) continue;
 
                 Vec2 throwDir = input.HasAim ? input.AimDirection : p.Facing;
                 if (throwDir.Length <= 0.0001f) throwDir = Vec2.Up;
 
-                // Rule: Vũ khí dừng ở người đầu tiên trúng.
                 var hits = HitCalculator.CalculateHits(p, State.Players, throwDir, State.Config);
                 Vec2 endPoint;
-                if (hits.Count > 0)
+                bool didHit = hits.Count > 0;
+                if (didHit)
                 {
                     endPoint = hits[0].Point;
                 }
@@ -418,26 +628,39 @@ namespace HitMe.Game
                     endPoint = HitCalculator.GetWallPoint(p.Position, throwDir, State.Config);
                 }
 
-                var go = new GameObject("Weapon_" + p.Id);
-                var flight = go.AddComponent<WeaponFlightView>();
-                flight.Initialise(new Vector3(p.Position.X, p.Position.Y, 0f), new Vector3(endPoint.X, endPoint.Y, 0f), 0.75f);
-                _weapons.Add(go);
+                var flight = _weaponPool[i];
+                var hitFx = _hitFxPool[i];
+                flight.Initialise(
+                    new Vector3(p.Position.X, p.Position.Y, 0f),
+                    new Vector3(endPoint.X, endPoint.Y, 0f),
+                    duration,
+                    didHit,
+                    hitFx);
             }
 
             if (AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlayThrow();
-                AudioManager.Instance.PlayFly(); // Placeholder cue
+                AudioManager.Instance.PlayFly();
             }
         }
 
         private void ClearWeapons()
         {
-            foreach (var weapon in _weapons)
+            for (int i = 0; i < _weaponPool.Count; i++)
             {
-                if (weapon != null) Destroy(weapon);
+                if (_weaponPool[i] != null && _weaponPool[i].gameObject.activeSelf)
+                {
+                    _weaponPool[i].gameObject.SetActive(false);
+                }
             }
-            _weapons.Clear();
+            for (int i = 0; i < _hitFxPool.Count; i++)
+            {
+                if (_hitFxPool[i] != null && _hitFxPool[i].gameObject.activeSelf)
+                {
+                    _hitFxPool[i].gameObject.SetActive(false);
+                }
+            }
         }
     }
 }

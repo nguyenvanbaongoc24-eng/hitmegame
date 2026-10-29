@@ -72,6 +72,10 @@ namespace HitMe.Editor
                 sr.sortingOrder = -2;
             }
             var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset != null)
+            {
+                PopulateConfigVisualAssets(configAsset, fontAsset);
+            }
             arenaView.configAsset = configAsset;
 
             // 3. Setup AudioManager in Scene
@@ -377,11 +381,23 @@ namespace HitMe.Editor
             CreateTMP(btnHome.transform, "Label", fontAsset, "VỀ TRANG CHỦ", 38, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnBackToHome = btnHome.GetComponent<Button>();
 
+            // ==================== F. BUILD FINGERPRINT WATERMARK (A3) ====================
+            var fpTxt = CreateTMP(rootTr, "BuildFingerprintWatermark", fontAsset,
+                ProductionUIController.ResolveBuildFingerprint(),
+                20, new Color(0.85f, 0.90f, 0.95f, 0.65f),
+                TextAlignmentOptions.BottomRight,
+                new Vector2(0.985f, 0.008f), new Vector2(960f, 36f), wrap: false, pivot: new Vector2(1f, 0f));
+            fpTxt.transform.SetAsLastSibling();
+            uiCtrl.txtBuildFingerprint = fpTxt;
+
             // 7. Update MatchController references
             var matchCtrl = GameObject.Find("Match Controller")?.GetComponent<MatchController>();
             if (matchCtrl != null)
             {
+                matchCtrl.configAsset = configAsset;
+                matchCtrl.arena = arenaView;
                 uiCtrl.matchController = matchCtrl;
+                EditorUtility.SetDirty(matchCtrl);
             }
 
             // 8. Configure Build Scenes (Graybox is sole production scene, MainMatch kept intact)
@@ -493,6 +509,50 @@ namespace HitMe.Editor
             audio.sfxLose = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_lose.wav");
             audio.bgmMenu = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_menu_loop.wav");
             audio.bgmMatch = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_match_loop.wav");
+        }
+
+        private static void PopulateConfigVisualAssets(GameConfigAsset configAsset, TMP_FontAsset fontAsset)
+        {
+            configAsset.shadowSprite = LoadSprite("Assets/Sprites/procedural_shadow.png");
+            configAsset.footRingSprite = LoadSprite("Assets/Sprites/procedural_foot_ring.png");
+            configAsset.vietnameseFont = fontAsset;
+            configAsset.characterIdleSprites = new Sprite[]
+            {
+                LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
+                LoadSprite("Assets/Sprites/co_nang_the_thao_idle.png"),
+                LoadSprite("Assets/Sprites/anh_nui_idle.png"),
+                LoadSprite("Assets/Sprites/mai_hong_idle.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
+                LoadSprite("Assets/Sprites/chu_cho_vang_idle.png"),
+                LoadSprite("Assets/Sprites/meo_mun_idle.png")
+            };
+            configAsset.namLangPoseSprites = new Sprite[]
+            {
+                LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
+                LoadSprite("Assets/Sprites/cau_be_lang_aim.png"),
+                LoadSprite("Assets/Sprites/cau_be_lang_throw_release.png"),
+                LoadSprite("Assets/Sprites/cau_be_lang_hit.png"),
+                LoadSprite("Assets/Sprites/cau_be_lang_defeat.png")
+            };
+            configAsset.anhNonLaPoseSprites = new Sprite[]
+            {
+                LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_aim.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_throw_release.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_hit.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_defeat.png")
+            };
+            configAsset.sandalProjectileSprite = LoadSprite("Assets/Sprites/dep_projectile.png") ?? LoadSprite("Assets/Sprites/dep_icon.png");
+            configAsset.hitFxFrames = new Sprite[]
+            {
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png"),
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F02.png"),
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F03.png"),
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F04.png"),
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F05.png"),
+                LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F06.png")
+            };
+            EditorUtility.SetDirty(configAsset);
         }
     }
 }
