@@ -1,0 +1,175 @@
+# V1 entry-scene patch (generated against origin/main 63768be).
+# Apply after core_cleanup.patch; both touch SceneSetupEditor.cs, so use git apply --3way if needed.
+# Centralizes production build at Graybox/Core Phase1; test scenes remain in repo; patch is unapplied.
+diff --git a/Assets/Editor/BuildScenes.cs b/Assets/Editor/BuildScenes.cs
+new file mode 100644
+index 0000000..a805f66
+--- /dev/null
++++ b/Assets/Editor/BuildScenes.cs
+@@ -0,0 +1,8 @@
++namespace HitMe.Editor
++{
++    // Single source of truth for production player builds. Test scenes stay in the repo.
++    public static class BuildScenes
++    {
++        public static readonly string[] Production = { "Assets/Scenes/Graybox.unity" };
++    }
++}
+diff --git a/Assets/Editor/BuildScenes.cs.meta b/Assets/Editor/BuildScenes.cs.meta
+new file mode 100644
+index 0000000..5f91cd8
+--- /dev/null
++++ b/Assets/Editor/BuildScenes.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 9d163572abf54f12a706b44261418289
+diff --git a/Assets/Editor/EntrySceneContractTests.cs b/Assets/Editor/EntrySceneContractTests.cs
+new file mode 100644
+index 0000000..d117805
+--- /dev/null
++++ b/Assets/Editor/EntrySceneContractTests.cs
+@@ -0,0 +1,40 @@
++using System.Linq;
++using HitMe.Core;
++using HitMe.Game;
++using NUnit.Framework;
++using UnityEditor;
++using UnityEditor.SceneManagement;
++using UnityEngine;
++using UnityEngine.SceneManagement;
++
++namespace HitMe.Editor
++{
++    public sealed class EntrySceneContractTests
++    {
++        [Test]
++        public void BuildSettingsExactlyMatchProductionSceneList()
++        {
++            var enabled = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray();
++            CollectionAssert.AreEqual(BuildScenes.Production, enabled);
++            Assert.That(enabled.Distinct().Count(), Is.EqualTo(enabled.Length));
++        }
++
++        [Test]
++        public void EntrySceneUsesCorePhase1ControllerOnly()
++        {
++            EditorSceneManager.OpenScene(BuildScenes.Production[0], OpenSceneMode.Single);
++            Assert.That(Object.FindFirstObjectByType<MatchController>(), Is.Not.Null);
++            Assert.That(Object.FindFirstObjectByType<MatchStateMachine>(), Is.Null);
++        }
++
++        [Test]
++        public void NoBuildSceneReferencesLegacyMatchStateMachine()
++        {
++            foreach (var path in BuildScenes.Production)
++            {
++                EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
++                Assert.That(Object.FindFirstObjectByType<MatchStateMachine>(), Is.Null, path);
++            }
++        }
++    }
++}
+diff --git a/Assets/Editor/EntrySceneContractTests.cs.meta b/Assets/Editor/EntrySceneContractTests.cs.meta
+new file mode 100644
+index 0000000..0c128b4
+--- /dev/null
++++ b/Assets/Editor/EntrySceneContractTests.cs.meta
+@@ -0,0 +1,2 @@
++fileFormatVersion: 2
++guid: 729cd1db948e4e0597fa7fa3eb3aa1be
+diff --git a/Assets/Editor/Phase1GrayboxSceneBuilder.cs b/Assets/Editor/Phase1GrayboxSceneBuilder.cs
+index 16adc19..99299ba 100644
+--- a/Assets/Editor/Phase1GrayboxSceneBuilder.cs
++++ b/Assets/Editor/Phase1GrayboxSceneBuilder.cs
+@@ -148,13 +148,7 @@ namespace HitMe.Editor
+             // Ensure a changed custom template is not served from the Editor's
+             // imported-template cache on the next evidence build.
+             AssetDatabase.ImportAsset("Assets/WebGLTemplates/Phase1Mobile/index.html", ImportAssetOptions.ForceUpdate);
+-            var scenes = new[] {
+-                "Assets/Scenes/MainMatch.unity",
+-                "Assets/Scenes/AimVisual_Staging.unity",
+-                "Assets/Scenes/Phase2_Step1_HitboxTest.unity",
+-                "Assets/Scenes/Phase2_Step1_AssetTest.unity",
+-                "Assets/Scenes/Graybox.unity"
+-            };
++            var scenes = BuildScenes.Production;
+             var report = UnityEditor.BuildPipeline.BuildPlayer(new UnityEditor.BuildPlayerOptions { scenes = scenes, locationPathName = output, target = UnityEditor.BuildTarget.WebGL, options = UnityEditor.BuildOptions.None });
+             var summary = "Target: WebGL\nResult: " + report.summary.result + "\nErrors: " + report.summary.totalErrors + "\nWarnings: " + report.summary.totalWarnings + "\nOutput: " + output + "\n";
+             File.WriteAllText("Evidence/phase1/webgl-build.txt", summary);
+@@ -181,8 +175,6 @@ namespace HitMe.Editor
+             var input = controllerGo.AddComponent<PlacementInput>(); input.viewCamera = camera; input.controller = controller;
+             var capture = controllerGo.AddComponent<Phase1ScreenshotCapture>(); capture.controller = controller;
+             EditorSceneManager.SaveScene(scene, "Assets/Scenes/Graybox.unity");
+-            var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes) { new EditorBuildSettingsScene("Assets/Scenes/Graybox.unity", true) };
+-            EditorBuildSettings.scenes = scenes.ToArray();
+             AssetDatabase.SaveAssets();
+             Debug.Log("Phase 1 Graybox scene created.");
+         }
+diff --git a/Assets/Scripts/Editor/SceneSetupEditor.cs b/Assets/Scripts/Editor/SceneSetupEditor.cs
+index 6df93c8..6696cec 100644
+--- a/Assets/Scripts/Editor/SceneSetupEditor.cs
++++ b/Assets/Scripts/Editor/SceneSetupEditor.cs
+@@ -14,7 +14,8 @@ namespace HitMe.Editor
+ {
+     public static class SceneSetupEditor
+     {
+-        [MenuItem("Tools/HIT ME/Build Sample Scene")]
++        [System.Obsolete("Legacy MainMatch generator. It is not part of the production build path.")]
++        [MenuItem("Tools/HIT ME/Legacy/Build Sample Scene")]
+         public static void BuildSampleScene()
+         {
+             // 1. Ensure directories and configure sprites
+@@ -205,11 +206,6 @@ namespace HitMe.Editor
+             EditorSceneManager.SaveScene(scene, scenePath);
+             Debug.Log("Sample Scene with full authentic UI and arena movement saved to " + scenePath);
+ 
+-            EditorBuildSettingsScene[] scenes = new EditorBuildSettingsScene[]
+-            {
+-                new EditorBuildSettingsScene(scenePath, true)
+-            };
+-            EditorBuildSettings.scenes = scenes;
+             AssetDatabase.SaveAssets();
+         }
+ 
+diff --git a/Assets/Scripts/Editor/WebBuildPipeline.cs b/Assets/Scripts/Editor/WebBuildPipeline.cs
+index 3cfc734..1dd2a24 100644
+--- a/Assets/Scripts/Editor/WebBuildPipeline.cs
++++ b/Assets/Scripts/Editor/WebBuildPipeline.cs
+@@ -13,10 +13,7 @@ namespace HitMe.Editor
+         {
+             Debug.Log("Starting HIT ME WebGL Build...");
+ 
+-            // 1. Build Sample Scene first to ensure fresh scene and assets
+-            SceneSetupEditor.BuildSampleScene();
+-
+-            // 2. Configure WebGL settings
++            // Configure WebGL settings. Legacy scene generation must never run before a build.
+             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
+ 
+             PlayerSettings.productName = "HIT ME VN";
+@@ -35,7 +32,7 @@ namespace HitMe.Editor
+                 Directory.CreateDirectory(buildDir);
+             }
+ 
+-            string[] scenes = new string[] { "Assets/Scenes/MainMatch.unity" };
++            string[] scenes = BuildScenes.Production;
+ 
+             BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+             {
+diff --git a/ProjectSettings/EditorBuildSettings.asset b/ProjectSettings/EditorBuildSettings.asset
+index 62249f9..8547a29 100644
+--- a/ProjectSettings/EditorBuildSettings.asset
++++ b/ProjectSettings/EditorBuildSettings.asset
+@@ -5,12 +5,6 @@ EditorBuildSettings:
+   m_ObjectHideFlags: 0
+   serializedVersion: 2
+   m_Scenes:
+-  - enabled: 1
+-    path: Assets/Scenes/MainMatch.unity
+-    guid: 45ced5fbe41c5fe469271875916b87aa
+-  - enabled: 1
+-    path: Assets/Scenes/Graybox.unity
+-    guid: caf319bfa22fcba44ab8e48cb674f131
+   - enabled: 1
+     path: Assets/Scenes/Graybox.unity
+     guid: caf319bfa22fcba44ab8e48cb674f131
