@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
@@ -125,6 +126,57 @@ public sealed class ProtocolGatewayTests
         Assert.Contains(messages, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
         var lateCommit = Json(gateway.Handle("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f })));
         Assert.Equal("round_locked", lateCommit.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void SixConnectionPreLockTranscriptNeverLeaksTraceCommitToAnyOpponent()
+    {
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM3141"));
+        var transcript = new Dictionary<string, List<string>>();
+        void Send(string connectionId, string raw)
+        {
+            foreach (var message in gateway.HandleMessages(connectionId, raw))
+            {
+                if (!transcript.TryGetValue(message.ConnectionId, out var messages))
+                    transcript[message.ConnectionId] = messages = new List<string>();
+                messages.Add(message.Payload);
+            }
+        }
+
+        Send("c1", Request("join", "p1", "One"));
+        for (var player = 2; player <= 6; player++)
+            Send($"c{player}", Request("join", $"p{player}", $"P{player}", "HM3141"));
+        Send("c1", Request("ready", "p1", "One", ready: true, start: true));
+
+        // Deliberately unusual values make accidental serialization detectable.
+        Send("c2", JsonSerializer.Serialize(new
+        {
+            v = 1,
+            type = "commit",
+            roundId = 1,
+            positionX = 3.14159f,
+            positionY = -2.71828f,
+            aimX = 0.12345f,
+            aimY = -0.98765f
+        }));
+        Send("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 99, positionX = 3.14159f, positionY = -2.71828f }));
+        Send("c2", Request("ready", "p2", "Two", ready: false));
+
+        foreach (var connectionId in new[] { "c1", "c3", "c4", "c5", "c6" })
+        {
+            Assert.True(transcript.TryGetValue(connectionId, out var messages), $"No transcript for {connectionId}.");
+            foreach (var payload in messages!)
+            {
+                Assert.DoesNotContain("3.14159", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("3.142", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("-2.71828", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("-2.718", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("0.12345", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("-0.98765", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("\"position\"", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("\"aim\"", payload, StringComparison.Ordinal);
+            }
+        }
     }
 
     private sealed class FakeTimeProvider : TimeProvider
