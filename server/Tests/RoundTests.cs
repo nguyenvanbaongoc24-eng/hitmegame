@@ -15,14 +15,14 @@ public sealed class RoundTests
 
         Assert.True(round.TryCommit("a", Commit(1, 1, 1), out _));
         Assert.True(round.TryCommit("a", Commit(1, 4, 5), out _));
-        Assert.Equal(new Vec2(4, 5), round.Commits["a"].Position);
+        Assert.Equal(new Vec2(round.Config.MaxX, 5), round.Commits["a"].Position);
 
         clock.Advance(TimeSpan.FromSeconds(5));
         Assert.True(round.TryLockIfDue());
         Assert.Equal(RoundLockReason.Deadline, round.LockReason);
         Assert.False(round.TryCommit("a", Commit(1, 7, 8), out var error));
         Assert.Equal("round_locked", error);
-        Assert.Equal(new Vec2(4, 5), round.Commits["a"].Position);
+        Assert.Equal(new Vec2(round.Config.MaxX, 5), round.Commits["a"].Position);
     }
 
     [Fact]
@@ -64,6 +64,27 @@ public sealed class RoundTests
         Assert.False(round.TryCommit("a", Commit(1, 1, 1), out var late));
         Assert.Equal("round_locked", late);
         Assert.Empty(round.Commits);
+    }
+
+    [Fact]
+    public void RejectsNonFinitePlacementAndClampsOutOfArenaPlacement()
+    {
+        var round = Create(new FakeTimeProvider(Start));
+        Assert.False(round.TryCommit("a", Commit(1, float.NaN, 1), out var invalid));
+        Assert.Equal("invalid_commit", invalid);
+        Assert.True(round.TryCommit("a", Commit(1, 999, -999), out _));
+        Assert.Equal(round.Config.MaxX, round.Commits["a"].Position.X);
+        Assert.Equal(round.Config.MinY, round.Commits["a"].Position.Y);
+    }
+
+    [Fact]
+    public void InvalidOrZeroAimBecomesNoAimForThrowFacing()
+    {
+        var round = Create(new FakeTimeProvider(Start));
+        Assert.True(round.TryCommit("a", new RoundCommit(1, new Vec2(1, 1), new Vec2(float.PositiveInfinity, 0)), out _));
+        Assert.Null(round.Commits["a"].AimDirection);
+        Assert.True(round.TryCommit("a", new RoundCommit(1, new Vec2(1, 1), Vec2.Zero), out _));
+        Assert.Null(round.Commits["a"].AimDirection);
     }
 
     private static Round Create(FakeTimeProvider clock)

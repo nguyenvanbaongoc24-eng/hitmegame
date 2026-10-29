@@ -52,8 +52,10 @@ public sealed class Round
         if (!playerIds.Contains(playerId)) { error = "not_in_round"; return false; }
         if (commit.RoundId != RoundId) { error = "wrong_round"; return false; }
 
+        if (!TryNormalize(commit, out var normalized)) { error = "invalid_commit"; return false; }
+
         // Last commit is authoritative until the server locks this placement window.
-        commits[playerId] = commit;
+        commits[playerId] = normalized;
         error = string.Empty;
         return true;
     }
@@ -86,4 +88,20 @@ public sealed class Round
         IsLocked = true;
         LockReason = reason;
     }
+
+    private bool TryNormalize(RoundCommit commit, out RoundCommit normalized)
+    {
+        if (!Finite(commit.Position)) { normalized = default!; return false; }
+        var position = new Vec2(
+            Math.Clamp(commit.Position.X, Config.MinX, Config.MaxX),
+            Math.Clamp(commit.Position.Y, Config.MinY, Config.MaxY));
+        var aim = commit.AimDirection;
+        if (aim.HasValue && (!Finite(aim.Value) || aim.Value.LengthSquared <= 0.00001f)) aim = null;
+        normalized = new RoundCommit(commit.RoundId, position, aim);
+        return true;
+    }
+
+    private static bool Finite(Vec2 value) =>
+        !float.IsNaN(value.X) && !float.IsNaN(value.Y) &&
+        !float.IsInfinity(value.X) && !float.IsInfinity(value.Y);
 }

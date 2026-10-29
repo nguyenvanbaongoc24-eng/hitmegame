@@ -9,6 +9,7 @@ namespace HitMe.Server.Authority;
 public sealed class ServerMatch
 {
     private readonly GameConfig config;
+    public static Vec2 DefaultFacing => Vec2.Up;
 
     public ServerMatch(GameConfig config, IEnumerable<string> playerIds)
     {
@@ -88,7 +89,7 @@ public sealed class ServerMatch
             var position = new Vec2(
                 random.Range(config.MinX, config.MaxX),
                 random.Range(config.MinY, config.MaxY));
-            yield return new PlayerState(playerId, playerId, false, config.StartHp, position, Vec2.Up);
+            yield return new PlayerState(playerId, playerId, false, config.StartHp, position, DefaultFacing);
         }
     }
 }
