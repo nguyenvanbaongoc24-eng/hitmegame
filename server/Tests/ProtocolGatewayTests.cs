@@ -179,6 +179,37 @@ public sealed class ProtocolGatewayTests
         }
     }
 
+    [Fact]
+    public void ReconnectWithinThirtySecondsKeepsRoomStateWithoutLeakingOpponentCommit()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, clock);
+        var firstJoin = Json(gateway.Handle("c1", Request("join")));
+        var token = firstJoin.GetProperty("reconnectToken").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(token));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 3.14159f, positionY = -2.71828f, aimX = 0.12345f, aimY = -0.98765f }));
+
+        gateway.Disconnect("c1");
+        var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "p1", name = "One", reconnectToken = token })));
+        Assert.Equal("room_state", rejoined.GetProperty("type").GetString());
+        var payload = rejoined.GetRawText();
+        Assert.DoesNotContain("3.14159", payload);
+        Assert.DoesNotContain("-2.71828", payload);
+        Assert.DoesNotContain("\"position\"", payload);
+        Assert.DoesNotContain("\"aim\"", payload);
+
+        gateway.Disconnect("c1r");
+        clock.Advance(TimeSpan.FromSeconds(31));
+        gateway.Tick();
+        Assert.True(rooms.TryGet("HM0001", out var room));
+        Assert.DoesNotContain(room.Players, player => player.Id == "p1");
+        var expired = Json(gateway.Handle("c1e", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "p1", name = "One", reconnectToken = token })));
+        Assert.Equal("reconnect_invalid", expired.GetProperty("code").GetString());
+    }
+
     private sealed class FakeTimeProvider : TimeProvider
     {
         private DateTimeOffset now;

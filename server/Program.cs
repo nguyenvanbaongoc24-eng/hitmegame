@@ -31,6 +31,7 @@ app.Map("/ws", async context => {
     }
     finally
     {
+        gateway.Disconnect(connectionId);
         connections.Remove(connectionId);
     }
 });
