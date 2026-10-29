@@ -4,6 +4,8 @@ using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
 
 var builder = WebApplication.CreateBuilder(args);
+var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
+if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<RoomDirectory>();
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
@@ -11,6 +13,7 @@ builder.Services.AddHostedService<RoundDeadlineService>();
 var app = builder.Build();
 app.UseWebSockets();
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.Map("/ws", async context => {
     if (!context.WebSockets.IsWebSocketRequest) { context.Response.StatusCode = 400; return; }
     using var socket = await context.WebSockets.AcceptWebSocketAsync();

@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: hit-me-server
+    env: docker
+    dockerfilePath: ./server/Dockerfile
+    healthCheckPath: /healthz
+    autoDeploy: false
