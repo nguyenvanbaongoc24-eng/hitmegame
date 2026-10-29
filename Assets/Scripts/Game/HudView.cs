@@ -10,10 +10,12 @@ namespace HitMe.Game
         public bool ReadyPressed { get; private set; }
         public bool ReplayPressed { get; private set; }
         public void ResetButtons() { ReadyPressed = false; ReplayPressed = false; }
+        private MatchController _controller;
         public void OnGUI()
         {
-            var controller = FindFirstObjectByType<MatchController>(); if (controller == null || controller.State == null) return;
-            var state = controller.State; GUI.color = Color.white;
+            if (_controller == null) _controller = FindAnyObjectByType<MatchController>();
+            if (_controller == null || _controller.State == null) return;
+            var state = _controller.State; GUI.color = Color.white;
             GUI.Label(new Rect(20, 20, 360, 32), "VÒNG " + state.RoundNumber + "  •  " + state.Phase + "  •  " + controller.SecondsRemaining.ToString("0.0") + "s");
             GUI.Label(new Rect(20, 50, 500, 26), "Chạm để đặt · Kéo từ vòng tròn để chọn hướng");
             int y = 84;

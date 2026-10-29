@@ -41,8 +41,15 @@ namespace HitMe.Gameplay
                 trail.startWidth = 0.22f;
                 trail.endWidth = 0.02f;
                 trail.sortingOrder = 14;
-                var shader = Shader.Find("Sprites/Default");
-                if (shader != null) trail.material = new Material(shader);
+                if (_sharedTrailMaterial == null)
+                {
+                    var shader = Shader.Find("Sprites/Default");
+                    if (shader != null)
+                    {
+                        _sharedTrailMaterial = new Material(shader) { hideFlags = HideFlags.DontSave };
+                    }
+                }
+                if (_sharedTrailMaterial != null) trail.sharedMaterial = _sharedTrailMaterial;
                 Gradient grad = new Gradient();
                 grad.SetKeys(
                     new GradientColorKey[] { new GradientColorKey(new Color(1f, 0.95f, 0.4f), 0f), new GradientColorKey(new Color(1f, 0.6f, 0.2f), 1f) },
@@ -51,6 +58,8 @@ namespace HitMe.Gameplay
                 trail.colorGradient = grad;
             }
         }
+
+        private static Material _sharedTrailMaterial;
 
         private void Update()
         {

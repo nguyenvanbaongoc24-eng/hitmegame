@@ -11,11 +11,8 @@ namespace HitMe.Game
 
         public static bool IsRequested()
         {
-#if DEVELOPMENT_BUILD
-            return true;
-#else
-            return Application.absoluteURL.IndexOf("debugPointer=1", System.StringComparison.OrdinalIgnoreCase) >= 0;
-#endif
+            if (Debug.isDebugBuild) return true;
+            return Application.absoluteURL != null && Application.absoluteURL.IndexOf("debugPointer=1", System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void Update() { _smoothedDelta = Mathf.Lerp(_smoothedDelta, Time.unscaledDeltaTime, .1f); }

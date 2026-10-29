@@ -12,7 +12,6 @@ namespace HitMe.Gameplay
         public SpriteRenderer destinationMarkerSr;
 
         private bool _isInputActive = false;
-        private bool _isAimDragging = false;
         private Vector2 _targetDestination;
         private bool _isMovingToDestination = false;
 
@@ -50,7 +49,6 @@ namespace HitMe.Gameplay
         public void DisableInput()
         {
             _isInputActive = false;
-            _isAimDragging = false;
             _isMovingToDestination = false;
 
             ShowDestinationMarker(false);
