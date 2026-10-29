@@ -37,6 +37,27 @@ public sealed class GestureReplaySyncTests
         }
     }
 
+    [TestCase(160f, 25.19685f)]
+    [TestCase(326f, 51.33858f)]
+    [TestCase(460f, 72.44095f)]
+    public void FourMillimetresUsesTheRequiredDpiConversion(float dpi, float expectedPixels)
+    {
+        Assert.That(PlacementGestureV2.MmToPixels(4f, dpi), Is.EqualTo(expectedPixels).Within(Epsilon));
+    }
+
+    [Test]
+    public void NewRoundKeepsPreviousPositionAsHintAndResetsFacing()
+    {
+        var gesture = new PlacementGestureV2();
+        gesture.BeginRound(new Vec2(3f, -2f), new Vec2(1f, 0f));
+        var first = gesture.Snapshot();
+        gesture.BeginRound(first.Position, PlacementGestureV2.DefaultFacing);
+        var next = gesture.Snapshot();
+        Assert.That(next.HasPlaced, Is.False, "new round: HasPlaced");
+        Assert.That(next.Position, Is.EqualTo(new Vec2(3f, -2f)), "new round: Position");
+        Assert.That(next.Facing, Is.EqualTo(Vec2.Up), "new round: Facing");
+    }
+
     static GestureSnapshot NewRoundSnapshot()
     {
         var gesture = new PlacementGestureV2();
