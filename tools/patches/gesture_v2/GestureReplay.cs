@@ -1,0 +1,4 @@
+using System; using System.Collections.Generic; using System.Text.Json; using HitMe.Core;
+namespace HitMe.GestureV2 { public sealed class ReplayEvent { public string Kind {get;set;}=""; public int PointerId {get;set;} public float Sx {get;set;} public float Sy {get;set;} public float Gx {get;set;} public float Gy {get;set;} public bool Inside {get;set;} }
+ public static class GestureReplay { public static GestureSnapshot Play(string json,float threshold=10){var g=new PlacementGestureV2();g.BeginRound(Vec2.Zero,PlacementGestureV2.DefaultFacing);foreach(var e in JsonSerializer.Deserialize<List<ReplayEvent>>(json)??new()){var s=new Vec2(e.Sx,e.Sy);var p=new Vec2(e.Gx,e.Gy);if(e.Kind=="down")g.PointerDown(e.PointerId,s,p,e.Inside,0);else if(e.Kind=="move")g.PointerMove(e.PointerId,s,p,e.Inside,0,threshold);else if(e.Kind=="up")g.PointerUp(e.PointerId,s,p,e.Inside,0);else if(e.Kind=="lock")g.Lock();}return g.Snapshot();} }
+}
