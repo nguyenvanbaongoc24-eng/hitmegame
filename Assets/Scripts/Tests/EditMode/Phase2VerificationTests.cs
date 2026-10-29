@@ -86,6 +86,35 @@ namespace HitMe.Tests
             Assert.That(LocalizationTable.Get(LocalizationTable.KeyBtnReady), Is.EqualTo("SẴN SÀNG"));
             Assert.That(LocalizationTable.Get(LocalizationTable.KeyResultWin), Is.EqualTo("Thắng"));
             Assert.That(LocalizationTable.Get(LocalizationTable.KeyResultLose), Is.EqualTo("Thua"));
+            Assert.That(LocalizationTable.Get(LocalizationTable.KeyResultTitle), Is.EqualTo("Kết quả"));
+            Assert.That(LocalizationTable.Get(LocalizationTable.KeyHintTapPlace), Is.EqualTo("Chạm để đặt nhân vật"));
+            Assert.That(LocalizationTable.Get(LocalizationTable.KeyHintHoldDrag), Is.EqualTo("Giữ và kéo để chọn hướng ném"));
+            Assert.That(LocalizationTable.Get(LocalizationTable.KeyHintRetapReset), Is.EqualTo("Chạm chỗ khác để đặt lại · Giữ và kéo để đổi hướng"));
+        }
+
+        [Test]
+        public void Homography_FourCorners_Invertible_WithinOneHundredth()
+        {
+            // 4 corners of the arena: Top-Left, Top-Right, Bottom-Left, Bottom-Right
+            Vec2[] corners = new Vec2[]
+            {
+                new Vec2(ArenaCoordinateMapper.WorldMinX, ArenaCoordinateMapper.WorldMinY), // Bottom-Left (-3.2, -5.0)
+                new Vec2(ArenaCoordinateMapper.WorldMaxX, ArenaCoordinateMapper.WorldMinY), // Bottom-Right (3.2, -5.0)
+                new Vec2(ArenaCoordinateMapper.WorldMinX, ArenaCoordinateMapper.WorldMaxY), // Top-Left (-3.2, 4.2)
+                new Vec2(ArenaCoordinateMapper.WorldMaxX, ArenaCoordinateMapper.WorldMaxY)  // Top-Right (3.2, 4.2)
+            };
+
+            foreach (var corner in corners)
+            {
+                Vec2 gamePos = ArenaCoordinateMapper.WorldToGame(corner);
+                Vec2 backToWorld = ArenaCoordinateMapper.GameToWorld(gamePos);
+
+                float errorX = System.Math.Abs(backToWorld.X - corner.X);
+                float errorY = System.Math.Abs(backToWorld.Y - corner.Y);
+
+                Assert.That(errorX, Is.LessThan(0.01f), $"Corner {corner} X homography error {errorX} >= 0.01");
+                Assert.That(errorY, Is.LessThan(0.01f), $"Corner {corner} Y homography error {errorY} >= 0.01");
+            }
         }
 
         [Test]

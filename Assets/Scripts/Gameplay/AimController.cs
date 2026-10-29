@@ -31,7 +31,6 @@ namespace HitMe.Gameplay
         public void EnableInput(Vector2 initialPos, Vector2 initialDir)
         {
             _isInputActive = true;
-            _isAimDragging = false;
             _isMovingToDestination = false;
             CurrentDirection = initialDir.normalized;
 

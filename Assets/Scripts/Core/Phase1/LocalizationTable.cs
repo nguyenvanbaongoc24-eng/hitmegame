@@ -20,6 +20,10 @@ namespace HitMe.Core
         public const string KeyRoundPrefix = "ROUND_PREFIX";
         public const string KeyHpPlayer = "HP_PLAYER";
         public const string KeyHpBot = "HP_BOT";
+        public const string KeyResultTitle = "RESULT_TITLE";
+        public const string KeyHintTapPlace = "HINT_TAP_PLACE";
+        public const string KeyHintHoldDrag = "HINT_HOLD_DRAG";
+        public const string KeyHintRetapReset = "HINT_RETAP_RESET";
 
         private static readonly Dictionary<string, string> Strings = new Dictionary<string, string>
         {
@@ -33,7 +37,11 @@ namespace HitMe.Core
             { KeyActionLocked, "ĐÃ KHÓA" },
             { KeyRoundPrefix, "VÒNG" },
             { KeyHpPlayer, "BẠN" },
-            { KeyHpBot, "BOT" }
+            { KeyHpBot, "BOT" },
+            { KeyResultTitle, "Kết quả" },
+            { KeyHintTapPlace, "Chạm để đặt nhân vật" },
+            { KeyHintHoldDrag, "Giữ và kéo để chọn hướng ném" },
+            { KeyHintRetapReset, "Chạm chỗ khác để đặt lại · Giữ và kéo để đổi hướng" }
         };
 
         public static string Get(string key)

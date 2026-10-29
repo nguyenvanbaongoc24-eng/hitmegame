@@ -16,7 +16,7 @@ namespace HitMe.Game
             if (_controller == null) _controller = FindAnyObjectByType<MatchController>();
             if (_controller == null || _controller.State == null) return;
             var state = _controller.State; GUI.color = Color.white;
-            GUI.Label(new Rect(20, 20, 360, 32), "VÒNG " + state.RoundNumber + "  •  " + state.Phase + "  •  " + controller.SecondsRemaining.ToString("0.0") + "s");
+            GUI.Label(new Rect(20, 20, 360, 32), "VÒNG " + state.RoundNumber + "  •  " + state.Phase + "  •  " + _controller.SecondsRemaining.ToString("0.0") + "s");
             GUI.Label(new Rect(20, 50, 500, 26), "Chạm để đặt · Kéo từ vòng tròn để chọn hướng");
             int y = 84;
             for (int i = 0; i < state.Players.Count; i++)

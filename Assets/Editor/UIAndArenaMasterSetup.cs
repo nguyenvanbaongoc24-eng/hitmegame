@@ -807,12 +807,17 @@ namespace HitMe.Editor
             }
             Canvas.ForceUpdateCanvases();
 
-            // Ratios to capture
+            // Ratios and resolutions to capture
             var ratios = new (int w, int h, string name, int notchH, int homeH)[]
             {
                 (1080, 1920, "aspect_9_16.png", 90, 50),
                 (1080, 2340, "aspect_9_19_5.png", 110, 70),
-                (1080, 2520, "aspect_9_21.png", 120, 80)
+                (1080, 2520, "aspect_9_21.png", 120, 80),
+                (1080, 1920, "res_1080x1920.png", 90, 50),
+                (1179, 2556, "res_1179x2556.png", 110, 70),
+                (1080, 2400, "res_1080x2400.png", 100, 60),
+                (1080, 2520, "res_1080x2520.png", 120, 80),
+                (1620, 2160, "res_1620x2160.png", 60, 40)
             };
 
             foreach (var r in ratios)
