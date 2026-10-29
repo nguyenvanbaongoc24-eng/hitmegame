@@ -200,6 +200,9 @@ public sealed class ProtocolGatewayTests
         Assert.DoesNotContain("-2.71828", payload);
         Assert.DoesNotContain("\"position\"", payload);
         Assert.DoesNotContain("\"aim\"", payload);
+        Assert.True(rooms.TryGet("HM0001", out var reconnectedRoom));
+        Assert.True(reconnectedRoom.Players.Single(player => player.Id == "p1").Ready);
+        Assert.Equal(reconnectedRoom.Config.StartHp, reconnectedRoom.RoundSession!.Match.State.FindPlayer("p1")!.Hp);
 
         gateway.Disconnect("c1r");
         clock.Advance(TimeSpan.FromSeconds(31));
