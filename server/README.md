@@ -6,4 +6,8 @@ WebSocket dùng JSON `{ "v": 1, "type": "..." }`. Client gửi `join`, `ready`, 
 
 Server dùng đồng hồ riêng cho 5 giây đặt, kẹp vị trí vào sân, coi aim 0/NaN/vô cực là không ngắm để Core áp `ThrowFacing`; người mất kết nối được giữ 30 giây bằng reconnect token. Socket chậm có tối đa bốn lượt gửi chờ và bị ngắt khi timeout. `Dockerfile` và `render.yaml` chỉ là bản nháp, không tự triển khai.
 
-Đang dở: hook AFK, vector vàng, kiểm thử WebSocket đầu-cuối 20 trận, transport Unity/WebGL và review triển khai thật. Không deploy server WIP này.
+Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; test server và bản vá NUnit Unity cùng đọc định dạng trường công khai để so Core theo từng hit và trạng thái người chơi.
+
+Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
+
+Đang dở: kiểm thử WebSocket đầu-cuối 20 trận (Z1), transport Unity/WebGL (Z2), hook AFK và thử tải. Không deploy server WIP này.
