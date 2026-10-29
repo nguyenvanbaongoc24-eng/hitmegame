@@ -20,7 +20,8 @@ public sealed class ProtocolGatewayTests
         var joined = Json(gateway.Handle("c2", Request("join", "p2", "Two", "HM0001")));
         Assert.Equal(2, joined.GetProperty("players").GetArrayLength());
         var started = Json(gateway.Handle("c1", Request("ready", start: true, ready: true)));
-        Assert.True(started.GetProperty("started").GetBoolean());
+        Assert.Equal("round_start", started.GetProperty("type").GetString());
+        Assert.Equal(1, started.GetProperty("roundId").GetInt32());
     }
 
     [Fact] public void CodeCollisionGeneratesAnotherCode()
@@ -61,5 +62,47 @@ public sealed class ProtocolGatewayTests
         for (var i = 0; i < ProtocolGateway.MaxMessagesPerSecond; i++) gateway.Handle("c1", Request("wat"));
         var reply = Json(gateway.Handle("c1", Request("wat")));
         Assert.Equal("rate_limited", reply.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void GatewayDoesNotSendAnOpponentsCommitBeforeLock()
+    {
+        var gateway = Gateway();
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        var start = gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        Assert.Equal(2, start.Count);
+        Assert.All(start, message => Assert.Contains("round_start", message.Payload));
+
+        var commit = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 777.125f, positionY = -555.875f, aimX = 0.3f, aimY = 0.7f });
+        var sent = gateway.HandleMessages("c2", commit);
+        Assert.DoesNotContain(sent, message => message.ConnectionId == "c1");
+        Assert.All(sent, message =>
+        {
+            Assert.DoesNotContain("777.125", message.Payload);
+            Assert.DoesNotContain("-555.875", message.Payload);
+            Assert.DoesNotContain("\"position\"", message.Payload);
+            Assert.DoesNotContain("\"aim\"", message.Payload);
+        });
+    }
+
+    [Fact]
+    public void GatewayBroadcastsRevealOnlyWhenTheRoundLocks()
+    {
+        var gateway = Gateway();
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+
+        var commitOne = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = -2f, positionY = 0f, aimX = 1f, aimY = 0f });
+        var commitTwo = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f, aimX = -1f, aimY = 0f });
+        gateway.HandleMessages("c1", commitOne);
+        gateway.HandleMessages("c2", commitTwo);
+
+        Assert.Empty(gateway.HandleMessages("c1", Request("ready", ready: true)));
+        var afterLock = gateway.HandleMessages("c2", Request("ready", "p2", "Two", ready: true));
+        Assert.Equal(4, afterLock.Count);
+        Assert.Contains(afterLock, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
+        Assert.Contains(afterLock, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
     }
 }

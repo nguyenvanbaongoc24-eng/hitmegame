@@ -27,6 +27,7 @@ public sealed class RoomAuthority
     public string HostId { get; private set; }
     public GameConfig Config { get; }
     public bool Started { get; private set; }
+    public ServerRoundSession? RoundSession { get; private set; }
     public IReadOnlyList<RoomPlayer> Players => players;
 
     public bool TryJoin(string playerId, string name, out string error)
@@ -60,6 +61,7 @@ public sealed class RoomAuthority
             if (playerId != HostId) { error = "host_only"; return false; }
             if (players.Count < MinPlayers) { error = "not_enough_players"; return false; }
             Started = true;
+            RoundSession = new ServerRoundSession(Config, players.Select(p => p.Id));
         }
         error = string.Empty;
         return true;

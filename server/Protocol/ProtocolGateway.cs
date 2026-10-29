@@ -14,7 +14,14 @@ public sealed class ClientEnvelope
     public string? Name { get; set; }
     public bool Ready { get; set; }
     public bool Start { get; set; }
+    public int RoundId { get; set; }
+    public float? PositionX { get; set; }
+    public float? PositionY { get; set; }
+    public float? AimX { get; set; }
+    public float? AimY { get; set; }
 }
+
+public sealed record GatewayMessage(string ConnectionId, string Payload);
 
 public sealed class ProtocolGateway
 {
@@ -35,21 +42,27 @@ public sealed class ProtocolGateway
 
     public string Handle(string connectionId, string raw)
     {
-        if (Encoding.UTF8.GetByteCount(raw) > MaxMessageBytes) return Error("message_too_large");
-        if (!Allow(connectionId)) return Error("rate_limited");
+        var messages = HandleMessages(connectionId, raw);
+        return messages.FirstOrDefault(message => message.ConnectionId == connectionId)?.Payload ?? Error("no_response");
+    }
+
+    public IReadOnlyList<GatewayMessage> HandleMessages(string connectionId, string raw)
+    {
+        if (Encoding.UTF8.GetByteCount(raw) > MaxMessageBytes) return Reply(connectionId, Error("message_too_large"));
+        if (!Allow(connectionId)) return Reply(connectionId, Error("rate_limited"));
 
         ClientEnvelope? request;
         try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
-        catch (JsonException) { return Error("invalid_json"); }
-        if (request is null || request.V != Version || string.IsNullOrWhiteSpace(request.Type)) return Error("invalid_envelope");
+        catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
+        if (request is null || request.V != Version || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
 
         return request.Type switch
         {
-            "join" => Join(connectionId, request),
-            "leave" => Leave(connectionId),
-            "ready" => Ready(connectionId, request),
-            "commit" => Error("not_available_until_s2"),
-            _ => Error("unknown_type")
+            "join" => Reply(connectionId, Join(connectionId, request)),
+            "leave" => Reply(connectionId, Leave(connectionId)),
+            "ready" => ReadyMessages(connectionId, request),
+            "commit" => CommitMessages(connectionId, request),
+            _ => Reply(connectionId, Error("unknown_type"))
         };
     }
 
@@ -85,6 +98,43 @@ public sealed class ProtocolGateway
             ? RoomState(session.Room) : Error(error);
     }
 
+    private IReadOnlyList<GatewayMessage> ReadyMessages(string connectionId, ClientEnvelope request)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        if (session.Room.RoundSession is not null)
+        {
+            if (!request.Ready) return Reply(connectionId, Error("ready_required"));
+            var roundMessages = session.Room.RoundSession.TryMarkReady(session.PlayerId, out var roundError);
+            return string.IsNullOrEmpty(roundError)
+                ? Target(session.Room, roundMessages)
+                : Reply(connectionId, Error(roundError));
+        }
+
+        var wasStarted = session.Room.Started;
+        var response = Ready(connectionId, request);
+        if (!wasStarted && session.Room.Started && session.Room.RoundSession is not null)
+            return Target(session.Room, session.Room.RoundSession.BeginRound(clock));
+        return Reply(connectionId, response);
+    }
+
+    private IReadOnlyList<GatewayMessage> CommitMessages(string connectionId, ClientEnvelope request)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        var roundSession = session.Room.RoundSession;
+        if (roundSession is null) return Reply(connectionId, Error("match_not_started"));
+        if (!request.PositionX.HasValue || !request.PositionY.HasValue)
+            return Reply(connectionId, Error("invalid_commit"));
+
+        Vec2? aim = request.AimX.HasValue && request.AimY.HasValue
+            ? new Vec2(request.AimX.Value, request.AimY.Value)
+            : null;
+        var commit = new RoundCommit(request.RoundId, new Vec2(request.PositionX.Value, request.PositionY.Value), aim);
+        if (!roundSession.TryCommit(session.PlayerId, commit, out var error)) return Reply(connectionId, Error(error));
+
+        // Deliberately only acknowledge the submitting client while placement is private.
+        return Reply(connectionId, RoomState(session.Room));
+    }
+
     private bool Allow(string connectionId)
     {
         var now = clock.GetUtcNow();
@@ -106,6 +156,22 @@ public sealed class ProtocolGateway
     }, Json);
 
     private static string Error(string code) => JsonSerializer.Serialize(new { v = Version, type = "error", code }, Json);
+
+    private static IReadOnlyList<GatewayMessage> Reply(string connectionId, string payload) => new[] { new GatewayMessage(connectionId, payload) };
+
+    private IReadOnlyList<GatewayMessage> Target(RoomAuthority room, IReadOnlyList<OutboundMessage> messages)
+    {
+        var output = new List<GatewayMessage>();
+        foreach (var message in messages)
+        {
+            foreach (var session in sessions)
+            {
+                if (ReferenceEquals(session.Value.Room, room) && session.Value.PlayerId == message.PlayerId)
+                    output.Add(new GatewayMessage(session.Key, message.Payload));
+            }
+        }
+        return output;
+    }
 
     private sealed class Session
     {
