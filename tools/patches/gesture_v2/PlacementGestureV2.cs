@@ -5,7 +5,8 @@
  * Only pass insideArena=true for a pointer that began in the arena; keep capture on move.
  * At placement timeout/Ready call Lock and submit Snapshot position plus aimActive/facing.
  * Port GestureV2Tests and replays to NUnit EditMode after adopting the file.
- * DefaultFacing is Vec2.Up; server ThrowFacing must use this same shared value.
+ * DefaultFacing is currently Vec2.Up. Promote it to one shared Core constant before
+ * multiplayer work; the server must assert equality with that value in its tests.
  */
 using System;
 namespace HitMe.Core {
