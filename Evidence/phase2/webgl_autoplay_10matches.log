@@ -1,0 +1,147 @@
+================================================================================
+HIT ME — WEBGL LIVE VERIFICATION & 10-MATCH AUTOPLAY + GC ALLOCATION REPORT (A4, F2)
+URL: http://localhost:8090/index.html?autoPlay=10
+Build Directory: D:\HITME GAME\unity-client\Builds\WebGL_20261029_942ee08
+Commit: 942ee08
+Console Errors: 0
+AutoPlay 10 Matches Completed: YES (10/10)
+================================================================================
+[2026-10-29T12:47:06.954Z] [console.log] [UnityCache] 'http://localhost:8090/Build/WebGL_20261029_942ee08.data?v=phase1-closed-20261028' successfully downloaded and stored in the browser cache
+[2026-10-29T12:47:07.256Z] [console.log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
+
+[2026-10-29T12:47:07.256Z] [console.log]     "memorysetup-bucket-allocator-granularity=16"
+
+[2026-10-29T12:47:07.257Z] [console.log]     "memorysetup-bucket-allocator-bucket-count=8"
+
+[2026-10-29T12:47:07.257Z] [console.log]     "memorysetup-bucket-allocator-block-size=4194304"
+
+[2026-10-29T12:47:07.258Z] [console.log]     "memorysetup-bucket-allocator-block-count=1"
+
+[2026-10-29T12:47:07.258Z] [console.log]     "memorysetup-main-allocator-block-size=16777216"
+
+[2026-10-29T12:47:07.258Z] [console.log]     "memorysetup-thread-allocator-block-size=16777216"
+
+[2026-10-29T12:47:07.258Z] [console.log]     "memorysetup-main-allocator-mimalloc-enabled=1"
+
+[2026-10-29T12:47:07.259Z] [console.log]     "memorysetup-gfx-main-allocator-block-size=16777216"
+
+[2026-10-29T12:47:07.259Z] [console.log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
+
+[2026-10-29T12:47:07.259Z] [console.log]     "memorysetup-cache-allocator-block-size=4194304"
+
+[2026-10-29T12:47:07.259Z] [console.log]     "memorysetup-typetree-allocator-block-size=2097152"
+
+[2026-10-29T12:47:07.259Z] [console.log]     "memorysetup-profiler-bucket-allocator-granularity=16"
+
+[2026-10-29T12:47:07.260Z] [console.log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+
+[2026-10-29T12:47:07.261Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+
+[2026-10-29T12:47:07.262Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-count=1"
+
+[2026-10-29T12:47:07.262Z] [console.log]     "memorysetup-profiler-allocator-block-size=16777216"
+
+[2026-10-29T12:47:07.262Z] [console.log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
+
+[2026-10-29T12:47:07.262Z] [console.log]     "memorysetup-temp-allocator-size-main=4194304"
+
+[2026-10-29T12:47:07.263Z] [console.log]     "memorysetup-job-temp-allocator-block-size=2097152"
+
+[2026-10-29T12:47:07.263Z] [console.log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
+
+[2026-10-29T12:47:07.263Z] [console.log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+
+[2026-10-29T12:47:07.264Z] [console.log]     "memorysetup-temp-allocator-size-background-worker=32768"
+
+[2026-10-29T12:47:07.264Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
+
+[2026-10-29T12:47:07.264Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+
+[2026-10-29T12:47:07.265Z] [console.log]     "memorysetup-temp-allocator-size-audio-worker=65536"
+
+[2026-10-29T12:47:07.265Z] [console.log]     "memorysetup-remapper-allocator-initial-capacity=32768"
+
+[2026-10-29T12:47:07.315Z] [console.log] CodeReloadManager initialized
+
+[2026-10-29T12:47:07.324Z] [console.log] [Physics::Module] Initialized fallback backend.
+
+[2026-10-29T12:47:07.324Z] [console.log] [Physics::Module] Id: 0xdecafbad
+
+[2026-10-29T12:47:07.325Z] [console.log] Loading player data from data.unity3d
+
+[2026-10-29T12:47:07.338Z] [console.log] Initialize engine version: 6000.6.4f1 (12bfff696524)
+
+[2026-10-29T12:47:07.339Z] [console.log] [EntityIdStore] init: page-table path, blockCount=1048576, entitiesPerBlock=256, top-level=8388608 bytes, sizeof(Block)=4128 (lazily allocated per committed block)
+
+[2026-10-29T12:47:07.341Z] [console.log] Creating WebGL 2.0 context.
+[2026-10-29T12:47:07.366Z] [console.log] Renderer: WebKit WebGL
+
+[2026-10-29T12:47:07.366Z] [console.log] Vendor:   WebKit
+
+[2026-10-29T12:47:07.366Z] [console.log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
+
+[2026-10-29T12:47:07.366Z] [console.log] GLES:     3
+
+[2026-10-29T12:47:07.367Z] [console.log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_norm16 KHR_parallel_shader_compile NV_shader_noperspective_interpolation OES_texture_float_linear WEBGL_blend_func_extended WEBGL_clip_cull_distance WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_norm16 GL_KHR_parallel_shader_compile GL_NV_shader_noperspective_interpolation GL_OES_texture_float_linear GL
+
+[2026-10-29T12:47:07.367Z] [console.log] _WEBGL_blend_func_extended GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode
+
+[2026-10-29T12:47:07.384Z] [console.log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
+
+[2026-10-29T12:47:07.504Z] [console.log] [Physics::Module] Selected backend (deferred post-plugins).
+
+[2026-10-29T12:47:07.504Z] [console.log] [Physics::Module] Name: PhysX
+
+[2026-10-29T12:47:07.505Z] [console.log] [Physics::Module] Id: 0xf2b8ea05
+
+[2026-10-29T12:47:07.505Z] [console.log] [Physics::Module] SDK Version: 4.1.2
+
+[2026-10-29T12:47:07.506Z] [console.log] [Physics::Module] Integration Version: 1.0.0
+
+[2026-10-29T12:47:07.506Z] [console.log] [Physics::Module] Threading Mode: Single-Threaded
+
+[2026-10-29T12:47:07.526Z] [console.log] Input Manager initialize...
+
+[2026-10-29T12:47:07.627Z] [console.log] UnloadTime: 1.000000 ms
+
+[2026-10-29T12:47:09.702Z] [console.log] [WebGLAutoPlay] Starting automated verification of 10 matches on build...
+
+[2026-10-29T12:47:09.705Z] [console.log] [BuildFingerprint] build 942ee08 · 2026-10-29 19:43 · Graybox
+
+[2026-10-29T12:47:09.721Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
+
+[2026-10-29T12:47:09.721Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
+
+[2026-10-29T12:47:09.895Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:09.896Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:09.898Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:09.899Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:09.946Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:09.947Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:10.015Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:10.015Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:11.197Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:11.197Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:11.198Z] [console.log] [WebGLAutoPlay] Match 1/10 completed: rounds=5, winners=[player]
+
+[2026-10-29T12:47:12.579Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-29T12:47:12.580Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-29T12:47:12.581Z] [console.log] [WebGLAutoPlay] Match 2/10 completed: rounds=5, winners=[bot-3, bot-5]
+
+[2026-10-29T12:47:13.963Z] [console.log] [WebGLAutoPlay] Match 3/10 completed: rounds=5, winners=[bot-3]
+
+[2026-10-29T12:47:15.346Z] [console.log] [WebGLAutoPlay] Match 4/10 completed: rounds=5, winners=[bot-3]
+
+[2026-10-29T12:47:16.662Z] [console.log] [WebGLAutoPlay] Match 5/10 completed: rounds=5, winners=[bot-4]
+
+[2026-10-29T12:47:18.011Z] [console.log] [WebGLAutoPlay] Match 6/10 completed: rounds=5, winners=[player, bot-1]
+
+[2026-10-29T12:47:19.344Z] [console.log] [WebGLAutoPlay] Match 7/10 completed: rounds=5, winners=[bot-5]
+
+[2026-10-29T12:47:20.661Z] [console.log] [WebGLAutoPlay] Match 8/10 completed: rounds=5, winners=[bot-1]
+
+[2026-10-29T12:47:22.010Z] [console.log] [WebGLAutoPlay] Match 9/10 completed: rounds=5, winners=[player, bot-3]
+
+[2026-10-29T12:47:23.377Z] [console.log] [WebGLAutoPlay] Match 10/10 completed: rounds=5, winners=[bot-5]
+
+[2026-10-29T12:47:23.378Z] [console.log] [WebGLAutoPlay] All 10/10 matches completed with 0 errors! Frames=730, Elapsed=13.48s, AvgFPS=54.1, ManagedAllocPerFrame=460 B/frame, GCGen0=0
