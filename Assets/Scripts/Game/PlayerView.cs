@@ -271,6 +271,7 @@ namespace HitMe.Game
         public void Present(PlayerState player, bool visible, bool showAim, bool showTouchRing, float touchRadius, float aimLineExtraLength, float aimPreviewLength)
         {
             if (_body == null) return;
+            gameObject.SetActive(true);
             transform.position = new Vector3(player.Position.X, player.Position.Y, 0f);
 
             _body.enabled = visible;
@@ -280,6 +281,8 @@ namespace HitMe.Game
             if (_label != null)
             {
                 _label.gameObject.SetActive(visible);
+                _label.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+                _label.fontSize = 0.85f;
                 _label.text = player.Name + "\n" + player.Hp + "/3 HP";
             }
 

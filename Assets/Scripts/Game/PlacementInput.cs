@@ -28,25 +28,36 @@ namespace HitMe.Game
                     var touch = Input.GetTouch(i);
                     var phase = ToPointerPhase(touch.phase);
                     if (!_touchGate.TryAccept(touch.fingerId, phase)) continue;
-                    Forward("touch#" + touch.fingerId, touch.position, phase);
+                    Forward("touch#" + touch.fingerId, touch.position, phase, touch.fingerId);
                     break;
                 }
                 return;
             }
 
             _touchGate.Reset();
-            var mouse = World(Input.mousePosition);
-            if (Input.GetMouseButtonDown(0)) Forward("mouse", Input.mousePosition, PointerPhase.Began);
-            else if (Input.GetMouseButton(0)) Forward("mouse", Input.mousePosition, PointerPhase.Moved);
-            else if (Input.GetMouseButtonUp(0)) Forward("mouse", Input.mousePosition, PointerPhase.Ended);
+            if (Input.GetMouseButtonDown(0)) Forward("mouse", Input.mousePosition, PointerPhase.Began, 0);
+            else if (Input.GetMouseButton(0)) Forward("mouse", Input.mousePosition, PointerPhase.Moved, 0);
+            else if (Input.GetMouseButtonUp(0)) Forward("mouse", Input.mousePosition, PointerPhase.Ended, 0);
         }
-        private void Forward(string source, Vector2 raw, PointerPhase phase)
+
+        private void Forward(string source, Vector2 raw, PointerPhase phase, int pointerId)
         {
-            var world = World(raw); LastInputSource = source; LastPointerPhase = phase; LastRawScreenPosition = raw; LastWorldPosition = world;
-            controller.HandlePointer(new PointerSample(ToCore(world), phase));
+            if (viewCamera == null) viewCamera = Camera.main;
+            var world = World(raw);
+            LastInputSource = source;
+            LastPointerPhase = phase;
+            LastRawScreenPosition = raw;
+            LastWorldPosition = world;
+            controller.HandlePointer(pointerId, raw, world, phase);
         }
-        private Vector2 World(Vector3 screen) { var point = viewCamera.ScreenToWorldPoint(screen); return new Vector2(point.x, point.y); }
-        private static Vec2 ToCore(Vector2 point) { return new Vec2(point.x, point.y); }
+
+        private Vector2 World(Vector3 screen)
+        {
+            if (viewCamera == null) return Vector2.zero;
+            var point = viewCamera.ScreenToWorldPoint(screen);
+            return new Vector2(point.x, point.y);
+        }
+
         private static PointerPhase ToPointerPhase(TouchPhase phase)
         {
             if (phase == TouchPhase.Began) return PointerPhase.Began;
