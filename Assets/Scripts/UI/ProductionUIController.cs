@@ -277,9 +277,22 @@ namespace HitMe.UI
             EnsureAndRefreshBuildFingerprint();
             EnsureAndRefreshFpsOverlay();
 
+            int practiceBots = GetUrlInt("practiceBots", -1);
+            if (practiceBots < 0) practiceBots = GetUrlInt("bots", -1);
+
             if (IsUrlAutoPlay())
             {
                 ShowScreen(ProductionScreen.Gameplay);
+            }
+            else if (practiceBots >= 1)
+            {
+                int charIdx = GetUrlInt("practiceChar", 0);
+                EnsureBotTrainingPanel();
+                StartPracticeWithBots(practiceBots, charIdx);
+                if (GetUrlInt("autoReady", 0) == 1)
+                {
+                    StartCoroutine(AutoReadyCoroutine());
+                }
             }
             else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=botTraining", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -316,6 +329,28 @@ namespace HitMe.UI
                    Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        private static int GetUrlInt(string key, int defaultValue)
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return defaultValue;
+            int idx = url.IndexOf(key + "=", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0) return defaultValue;
+            idx += key.Length + 1;
+            int end = url.IndexOf('&', idx);
+            string valStr = end > idx ? url.Substring(idx, end - idx) : url.Substring(idx);
+            int res;
+            return int.TryParse(valStr, out res) ? res : defaultValue;
+        }
+
+        private System.Collections.IEnumerator AutoReadyCoroutine()
+        {
+            yield return new WaitForSeconds(0.8f);
+            if (btnInGameReady != null && btnInGameReady.interactable)
+            {
+                btnInGameReady.onClick.Invoke();
+            }
+        }
+
         private static void ParseAndApplyUrlScales()
         {
             string url = Application.absoluteURL;
@@ -329,8 +364,8 @@ namespace HitMe.UI
                 float parsed;
                 if (float.TryParse(valStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out parsed) && parsed > 0.1f)
                 {
-                    PlayerView.VisualCharacterScale = parsed;
-                    WeaponFlightView.VisualWeaponScale = parsed;
+                    PlayerView.SetVisualCharacterScale(parsed, true);
+                    WeaponFlightView.SetVisualWeaponScale(parsed, true);
                     Debug.Log($"[ProductionUI] Applied charScale={parsed} from URL");
                 }
             }
@@ -354,10 +389,10 @@ namespace HitMe.UI
                 go.transform.SetParent(parent, false);
                 var rt = go.GetComponent<RectTransform>();
                 rt.anchorMin = new Vector2(0f, 0f);
-                rt.anchorMax = new Vector2(1f, 0f);
-                rt.pivot = new Vector2(0.50f, 0f);
-                rt.anchoredPosition = new Vector2(0f, 8f);
-                rt.sizeDelta = new Vector2(-36f, 24f);
+                rt.anchorMax = new Vector2(0f, 0f);
+                rt.pivot = new Vector2(0f, 0f);
+                rt.anchoredPosition = new Vector2(24f, 16f);
+                rt.sizeDelta = new Vector2(700f, 40f);
 
                 txtBuildFingerprint = go.AddComponent<TextMeshProUGUI>();
                 if (txtHomeLogo != null && txtHomeLogo.font != null)
@@ -368,10 +403,24 @@ namespace HitMe.UI
                 {
                     txtBuildFingerprint.font = txtRound.font;
                 }
-                txtBuildFingerprint.fontSize = 15f;
-                txtBuildFingerprint.color = new Color(0.92f, 0.95f, 1f, 0.48f);
-                txtBuildFingerprint.alignment = TextAlignmentOptions.BottomRight;
+                txtBuildFingerprint.fontSize = 22f;
+                txtBuildFingerprint.fontStyle = FontStyles.Bold;
+                txtBuildFingerprint.color = new Color(1f, 0.92f, 0.23f, 0.95f);
+                txtBuildFingerprint.alignment = TextAlignmentOptions.BottomLeft;
                 txtBuildFingerprint.raycastTarget = false;
+            }
+            else
+            {
+                var rt = txtBuildFingerprint.rectTransform;
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(0f, 0f);
+                rt.pivot = new Vector2(0f, 0f);
+                rt.anchoredPosition = new Vector2(24f, 16f);
+                rt.sizeDelta = new Vector2(700f, 40f);
+                txtBuildFingerprint.fontSize = 22f;
+                txtBuildFingerprint.fontStyle = FontStyles.Bold;
+                txtBuildFingerprint.color = new Color(1f, 0.92f, 0.23f, 0.95f);
+                txtBuildFingerprint.alignment = TextAlignmentOptions.BottomLeft;
             }
 
             txtBuildFingerprint.transform.SetAsLastSibling();

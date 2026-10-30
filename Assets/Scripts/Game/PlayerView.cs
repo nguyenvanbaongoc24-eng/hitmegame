@@ -35,8 +35,15 @@ namespace HitMe.Game
         public int characterIndex;
 
         // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant (0.55f)
-        public static float VisualCharacterScale = 1.8f;
+        public static float VisualCharacterScale = 2.0f;
         public static float VisualHitRingScale = 1.0f;
+        public static bool CustomScaleApplied;
+
+        public static void SetVisualCharacterScale(float scale, bool fromUrl = false)
+        {
+            VisualCharacterScale = scale;
+            if (fromUrl) CustomScaleApplied = true;
+        }
 
         [Header("Visual Components")]
         [SerializeField] private SpriteRenderer _body;
@@ -90,7 +97,7 @@ namespace HitMe.Game
         public static void ConfigureSharedResources(GameConfigAsset configAsset)
         {
             if (configAsset == null) return;
-            if (configAsset.characterScale > 0.01f) VisualCharacterScale = configAsset.characterScale;
+            if (!CustomScaleApplied && configAsset.characterScale > 0.01f) VisualCharacterScale = configAsset.characterScale;
             if (configAsset.hitRingScale > 0.01f) VisualHitRingScale = configAsset.hitRingScale;
             if (configAsset.shadowSprite != null) _defaultShadow = configAsset.shadowSprite;
             if (configAsset.footRingSprite != null) _defaultRing = configAsset.footRingSprite;
@@ -396,6 +403,15 @@ namespace HitMe.Game
             if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
             {
                 _body.sprite = _defaultSprites[idx];
+            }
+
+            float baseScale = CharacterBodyScales[idx];
+            float scale = baseScale * VisualCharacterScale;
+            _body.transform.localScale = new Vector3(scale, scale, 1f);
+            if (_shadow != null)
+            {
+                float shadowScale = 0.66f * VisualCharacterScale * 0.70f;
+                _shadow.transform.localScale = new Vector3(shadowScale, shadowScale, 1f);
             }
 
             _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.50f);

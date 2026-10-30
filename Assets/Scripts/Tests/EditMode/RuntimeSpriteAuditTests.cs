@@ -95,6 +95,105 @@ namespace HitMe.Tests
             Assert.That(assetPath.ToLowerInvariant(), Does.Contain("dep"), "Standard weapon per rules v1.2 must be Dep");
         }
 
+        [Test]
+        public void H4_AllBuildScenesAndPrefabs_ContainNoForbiddenSpriteSheets()
+        {
+            // Requirement H4(a): Scan all prefabs and scenes in Build Settings (YAML/AssetDatabase)
+            // Assert that all SpriteRenderer / Image / Animator textures are clean and not forbidden sheets.
+            var buildScenes = EditorBuildSettings.scenes;
+            Assert.That(buildScenes.Length, Is.GreaterThan(0), "Build settings must contain at least 1 scene");
+
+            var explicitForbidden = new[] { "anh_non_la_spritesheet", "spritesheet", "sheet", "reference", "contact", "atlas_labeled" };
+
+            // 1. Scan Build Scenes
+            foreach (var scene in buildScenes)
+            {
+                if (!scene.enabled) continue;
+                string[] dependencies = AssetDatabase.GetDependencies(scene.path, true);
+                foreach (var dep in dependencies)
+                {
+                    string depLower = dep.ToLowerInvariant();
+                    if (!depLower.EndsWith(".png") && !depLower.EndsWith(".jpg")) continue;
+
+                    foreach (var kw in explicitForbidden)
+                    {
+                        Assert.That(depLower, Does.Not.Contain(kw),
+                            $"Scene '{scene.path}' references forbidden sprite/texture '{dep}' containing '{kw}'!");
+                    }
+                }
+            }
+
+            // 2. Scan All Prefabs in Assets/Prefabs
+            string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Prefabs" });
+            foreach (var guid in prefabGuids)
+            {
+                string prefabPath = AssetDatabase.GUIDToAssetPath(guid);
+                string[] dependencies = AssetDatabase.GetDependencies(prefabPath, true);
+                foreach (var dep in dependencies)
+                {
+                    string depLower = dep.ToLowerInvariant();
+                    if (!depLower.EndsWith(".png") && !depLower.EndsWith(".jpg")) continue;
+
+                    foreach (var kw in explicitForbidden)
+                    {
+                        Assert.That(depLower, Does.Not.Contain(kw),
+                            $"Prefab '{prefabPath}' references forbidden sprite/texture '{dep}' containing '{kw}'!");
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void H4_FourPlayerMatch_AllSpawnedPlayerViews_UseCleanApprovedSprites()
+        {
+            // Requirement H4(b): In a 4-player match, traverse all spawned PlayerViews and SpriteRenderers
+            // Assert all active sprites and textures are clean, non-sheet, and <= 512x512.
+            var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>(ConfigAssetPath);
+            Assert.That(configAsset, Is.Not.Null);
+
+            PlayerView.ConfigureSharedResources(configAsset);
+            var root = new GameObject("TestMatchRoot_4P");
+
+            try
+            {
+                var playerViews = new PlayerView[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    var pGo = new GameObject("Player_" + i);
+                    pGo.transform.SetParent(root.transform);
+                    var pv = pGo.AddComponent<PlayerView>();
+                    pv.Initialise(i == 0 ? "player" : "bot-" + i, Color.white, i);
+                    playerViews[i] = pv;
+                }
+
+                // Check all SpriteRenderers on all 4 characters
+                var renderers = root.GetComponentsInChildren<SpriteRenderer>(true);
+                Assert.That(renderers.Length, Is.GreaterThanOrEqualTo(8), "Should have body, shadow, ring renderers");
+
+                foreach (var sr in renderers)
+                {
+                    if (sr.sprite == null) continue;
+                    string spriteName = sr.sprite.name;
+                    string texPath = AssetDatabase.GetAssetPath(sr.sprite).ToLowerInvariant();
+
+                    foreach (var kw in ForbiddenKeywords)
+                    {
+                        Assert.That(texPath, Does.Not.Contain(kw),
+                            $"Spawned player sprite '{spriteName}' at '{texPath}' contains forbidden keyword '{kw}'!");
+                    }
+                    Assert.That(texPath, Does.Not.Contain("anh_non_la_spritesheet"));
+
+                    // Verify dimensions <= 512x512
+                    Assert.That(sr.sprite.rect.width, Is.LessThanOrEqualTo(512));
+                    Assert.That(sr.sprite.rect.height, Is.LessThanOrEqualTo(512));
+                }
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(root);
+            }
+        }
+
         private static void AssertCleanSprite(Sprite sprite, string context)
         {
             Assert.That(sprite, Is.Not.Null, $"Sprite in {context} must not be null");

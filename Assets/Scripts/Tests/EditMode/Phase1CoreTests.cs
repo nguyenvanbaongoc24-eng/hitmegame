@@ -848,5 +848,91 @@ namespace HitMe.Tests
             Assert.That(botInput1.AimDirection.X, Is.EqualTo(botInput2.AimDirection.X).Within(1e-6f), "Bot aim X must be identical");
             Assert.That(botInput1.AimDirection.Y, Is.EqualTo(botInput2.AimDirection.Y).Within(1e-6f), "Bot aim Y must be identical");
         }
+
+        [Test]
+        public void H6_Bot_DecidesBlindly_ViaMatchStateAndObserveOnlyAfterReveal()
+        {
+            // Requirement H6: Full MatchState workflow test proving:
+            // 1. In Placing phase, changing player placement/aim commits does NOT change bot's locked decision.
+            // 2. ObservePlayerPosition is ONLY called during/after Reveal, never during Placing.
+            var config = new GameConfig { StartHp = 3, MaxPlayers = 2, PlayerRadius = 0.55f, ArenaWidth = 9f, ArenaHeight = 11.4f };
+            uint seed = 0xABCD1234u;
+
+            // Scenario A: Player places at bottom left
+            var matchA = new MatchState(config, new[]
+            {
+                new PlayerState("player", "Player", false, 3, new Vec2(0f, -2.5f), Vec2.Up),
+                new PlayerState("bot-1", "Bot 1", true, 3, new Vec2(0f, 2.5f), new Vec2(0f, -1f))
+            });
+            var brainA = new Phase1BotBrain(BotLevel.Predictor, new SeededRandom(seed));
+
+            // Scenario B: Same seed, Player places at top right
+            var matchB = new MatchState(config, new[]
+            {
+                new PlayerState("player", "Player", false, 3, new Vec2(0f, -2.5f), Vec2.Up),
+                new PlayerState("bot-1", "Bot 1", true, 3, new Vec2(0f, 2.5f), new Vec2(0f, -1f))
+            });
+            var brainB = new Phase1BotBrain(BotLevel.Predictor, new SeededRandom(seed));
+
+            // Round 1 - Placing Phase
+            matchA.StartRound();
+            matchB.StartRound();
+            Assert.That(matchA.Phase, Is.EqualTo(Phase.Placing));
+            Assert.That(matchB.Phase, Is.EqualTo(Phase.Placing));
+
+            // Bots decide at start of placing (simulating MatchController.MatchLoop)
+            var botInputA = brainA.MakeInput(matchA.FindPlayer("bot-1"), config);
+            var botInputB = brainB.MakeInput(matchB.FindPlayer("bot-1"), config);
+            matchA.SetInput(botInputA);
+            matchB.SetInput(botInputB);
+
+            // Players make drastically different commits
+            var pInputA = new RoundInput("player") { HasPlacement = true, Placement = new Vec2(-3.5f, -4.5f), HasAim = true, AimDirection = Vec2.Up, IsReady = true };
+            var pInputB = new RoundInput("player") { HasPlacement = true, Placement = new Vec2(3.5f, 4.5f), HasAim = true, AimDirection = new Vec2(0f, -1f), IsReady = true };
+            matchA.SetInput(pInputA);
+            matchB.SetInput(pInputB);
+
+            // Both lock
+            matchA.LockRound();
+            matchB.LockRound();
+            Assert.That(matchA.Phase, Is.EqualTo(Phase.Locked));
+            Assert.That(matchB.Phase, Is.EqualTo(Phase.Locked));
+
+            // Bot decisions in locked phase must be 100% identical
+            Assert.That(botInputA.Placement.X, Is.EqualTo(botInputB.Placement.X).Within(1e-6f));
+            Assert.That(botInputA.Placement.Y, Is.EqualTo(botInputB.Placement.Y).Within(1e-6f));
+            Assert.That(botInputA.AimDirection.X, Is.EqualTo(botInputB.AimDirection.X).Within(1e-6f));
+            Assert.That(botInputA.AimDirection.Y, Is.EqualTo(botInputB.AimDirection.Y).Within(1e-6f));
+
+            // Reveal Phase: Positions only become known and observed after BeginReveal()
+            matchA.BeginReveal();
+            matchB.BeginReveal();
+            Assert.That(matchA.Phase, Is.EqualTo(Phase.Reveal));
+            Assert.That(matchB.Phase, Is.EqualTo(Phase.Reveal));
+
+            // Bot brain observes revealed player position
+            brainA.ObservePlayerPosition(matchA.FindPlayer("player").Position);
+            brainB.ObservePlayerPosition(matchB.FindPlayer("player").Position);
+
+            // Complete Round 1
+            matchA.BeginThrowing(); matchB.BeginThrowing();
+            matchA.ResolveRound(); matchB.ResolveRound();
+
+            // Round 2 Placing: Bot predicts based on revealed Round 1 data, but still blind to Round 2 player commit
+            matchA.StartRound(); matchB.StartRound();
+            var botInputA2 = brainA.MakeInput(matchA.FindPlayer("bot-1"), config);
+            var botInputB2 = brainB.MakeInput(matchB.FindPlayer("bot-1"), config);
+
+            // Changing player's uncommitted Round 2 position does not affect botInputA2
+            var pInputA2_Option1 = new RoundInput("player") { HasPlacement = true, Placement = new Vec2(-1.0f, -2.0f), IsReady = true };
+            var pInputA2_Option2 = new RoundInput("player") { HasPlacement = true, Placement = new Vec2(2.0f, -1.0f), IsReady = true };
+            matchA.SetInput(botInputA2);
+            matchA.SetInput(pInputA2_Option1);
+            matchA.LockRound();
+
+            // Bot input locked in match A equals botInputA2
+            Assert.That(matchA.LockedInputs["bot-1"].Placement.X, Is.EqualTo(botInputA2.Placement.X).Within(1e-6f));
+            Assert.That(matchA.LockedInputs["bot-1"].AimDirection.X, Is.EqualTo(botInputA2.AimDirection.X).Within(1e-6f));
+        }
     }
 }

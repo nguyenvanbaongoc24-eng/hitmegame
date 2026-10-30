@@ -540,6 +540,23 @@ namespace HitMe.Game
                 }
 
                 bool timedOut = false;
+                string captureUrl = Application.absoluteURL ?? "";
+                if (captureUrl.IndexOf("dragAim=1", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    _gestureV2.PointerDown(0, Vec2.Zero, new Vec2(0f, -2.5f), true, 0);
+                    _gestureV2.PointerMove(0, new Vec2(0f, 150f), new Vec2(0f, -1.0f), true, 10, 10f);
+                    SyncGesturePreview();
+                }
+
+                if (captureUrl.IndexOf("captureHold=placing", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    while (true)
+                    {
+                        Present(true);
+                        yield return null;
+                    }
+                }
+
                 while (!autoPlay && SecondsRemaining > 0 && !_readyRequested && (hud == null || !hud.ReadyPressed))
                 {
                     if (!WebGLPointerDiagnostics.IsRequested())
@@ -591,17 +608,41 @@ namespace HitMe.Game
                 }
 
                 Present(false);
+                if (captureUrl.IndexOf("captureHold=locked", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    while (true)
+                    {
+                        Present(false);
+                        yield return null;
+                    }
+                }
                 SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitLockCapture : _waitLockNormal);
 
                 // Reveal Phase
                 State.BeginReveal();
+                foreach (var pair in _bots)
+                {
+                    var lp = State.FindPlayer("player");
+                    if (lp != null && lp.IsAlive)
+                    {
+                        pair.Value.ObservePlayerPosition(lp.Position);
+                    }
+                }
                 OnPhaseChanged?.Invoke(State.Phase);
                 if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlayReveal();
                 }
                 Present(false, true);
+                if (captureUrl.IndexOf("captureHold=reveal", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    while (true)
+                    {
+                        Present(false, true);
+                        yield return null;
+                    }
+                }
                 SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : _waitReveal;
 
@@ -610,6 +651,14 @@ namespace HitMe.Game
                 OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
                 SpawnWeapons();
+                if (captureUrl.IndexOf("captureHold=throwing", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    yield return new WaitForSeconds(0.35f);
+                    while (true)
+                    {
+                        yield return null;
+                    }
+                }
                 SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitThrowCapture : _waitThrowNormal);
 
@@ -623,6 +672,14 @@ namespace HitMe.Game
                 }
                 OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
+                if (captureUrl.IndexOf("captureHold=roundResult", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    while (true)
+                    {
+                        Present(false);
+                        yield return null;
+                    }
+                }
                 SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 ? _waitResolveCapture : _waitResolveNormal);
             }
