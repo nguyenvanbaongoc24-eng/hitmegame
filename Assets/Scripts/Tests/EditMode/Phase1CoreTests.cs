@@ -411,5 +411,220 @@ namespace HitMe.Tests
             float ringWidthRatio = ringWidth / arenaWidth;
             Assert.That(ringWidthRatio, Is.InRange(0.11f, 0.13f));
         }
+
+        [Test]
+        public void S1_Ranking_MaxRoundsMultipleSurvivors_RanksByAliveThenHpThenHits()
+        {
+            var players = new List<PlayerState>
+            {
+                new PlayerState("p1", "Nam Làng", false, 1, Vec2.Zero, Vec2.Up) { HitsLanded = 4 },
+                new PlayerState("p2", "Anh Teen", true, 3, Vec2.Zero, Vec2.Up) { HitsLanded = 1 },
+                new PlayerState("p3", "Cô Ba", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 2 }
+            };
+
+            var res = MatchRanking.Evaluate(players);
+            Assert.That(res.WinnerIds, Is.EqualTo(new[] { "p2" }));
+            Assert.That(res.IsSharedWin, Is.False);
+            Assert.That(res.RankedPlayers[0].Id, Is.EqualTo("p2"));
+            Assert.That(res.RankedPlayers[0].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[1].Id, Is.EqualTo("p3"));
+            Assert.That(res.RankedPlayers[1].Rank, Is.EqualTo(2));
+            Assert.That(res.RankedPlayers[2].Id, Is.EqualTo("p1"));
+            Assert.That(res.RankedPlayers[2].Rank, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void S1_Ranking_TiedHpDifferentHits_HigherHitsWinsSoleRank1()
+        {
+            var players = new List<PlayerState>
+            {
+                new PlayerState("player", "Nam Làng", false, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 1 },
+                new PlayerState("bot-1", "Anh Teen", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 3 },
+                new PlayerState("bot-2", "Cô Ba", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 2 }
+            };
+
+            var res = MatchRanking.Evaluate(players);
+            Assert.That(res.WinnerIds, Is.EqualTo(new[] { "bot-1" }));
+            Assert.That(res.IsSharedWin, Is.False);
+            Assert.That(res.RankedPlayers[0].Id, Is.EqualTo("bot-1"));
+            Assert.That(res.RankedPlayers[0].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[1].Id, Is.EqualTo("bot-2"));
+            Assert.That(res.RankedPlayers[1].Rank, Is.EqualTo(2));
+            Assert.That(res.RankedPlayers[2].Id, Is.EqualTo("player"));
+            Assert.That(res.RankedPlayers[2].Rank, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void S1_Ranking_TiedAliveHpAndHits_SharesRank1AndBothWin_DisplayOrderNeverAffectsWinner()
+        {
+            var players = new List<PlayerState>
+            {
+                new PlayerState("bot-2", "Zeta", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 3 },
+                new PlayerState("player", "Nam Làng", false, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 3 },
+                new PlayerState("bot-1", "Alpha", true, 1, Vec2.Zero, Vec2.Up) { HitsLanded = 4 }
+            };
+
+            var res = MatchRanking.Evaluate(players);
+            Assert.That(res.IsSharedWin, Is.True);
+            Assert.That(res.WinnerIds, Is.EquivalentTo(new[] { "player", "bot-2" }));
+            // Display order puts local "player" first among equals, but BOTH have Rank == 1 and IsWinner == true
+            Assert.That(res.RankedPlayers[0].Id, Is.EqualTo("player"));
+            Assert.That(res.RankedPlayers[0].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[0].IsSharedRank, Is.True);
+            Assert.That(res.RankedPlayers[0].IsWinner, Is.True);
+
+            Assert.That(res.RankedPlayers[1].Id, Is.EqualTo("bot-2"));
+            Assert.That(res.RankedPlayers[1].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[1].IsSharedRank, Is.True);
+            Assert.That(res.RankedPlayers[1].IsWinner, Is.True);
+
+            // Next player after two tied Rank 1 players gets competition Rank 3
+            Assert.That(res.RankedPlayers[2].Id, Is.EqualTo("bot-1"));
+            Assert.That(res.RankedPlayers[2].Rank, Is.EqualTo(3));
+            Assert.That(res.RankedPlayers[2].IsWinner, Is.False);
+        }
+
+        [Test]
+        public void S1_Ranking_EliminatedPlayers_OrderedByEliminationRoundDesc_ThenHitsDesc_ThenSharedRank()
+        {
+            var players = new List<PlayerState>
+            {
+                new PlayerState("alive", "Alive", false, 1, Vec2.Zero, Vec2.Up) { HitsLanded = 0 },
+                new PlayerState("elim_r1", "Elim R1", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 1) { HitsLanded = 5 },
+                new PlayerState("elim_r3_low", "Elim R3 Low", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 3) { HitsLanded = 1 },
+                new PlayerState("elim_r3_high", "Elim R3 High", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 3) { HitsLanded = 3 },
+                new PlayerState("elim_r2_a", "Elim R2 A", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 2) { HitsLanded = 2 },
+                new PlayerState("elim_r2_b", "Elim R2 B", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 2) { HitsLanded = 2 }
+            };
+
+            var ranked = MatchRanking.Rank(players);
+            Assert.That(ranked[0].Id, Is.EqualTo("alive"));
+            Assert.That(ranked[0].Rank, Is.EqualTo(1));
+
+            Assert.That(ranked[1].Id, Is.EqualTo("elim_r3_high"));
+            Assert.That(ranked[1].Rank, Is.EqualTo(2));
+
+            Assert.That(ranked[2].Id, Is.EqualTo("elim_r3_low"));
+            Assert.That(ranked[2].Rank, Is.EqualTo(3));
+
+            // Two players eliminated in round 2 with equal HitsLanded = 2 share Rank 4
+            Assert.That(ranked[3].Id, Is.EqualTo("elim_r2_a"));
+            Assert.That(ranked[3].Rank, Is.EqualTo(4));
+            Assert.That(ranked[3].IsSharedRank, Is.True);
+
+            Assert.That(ranked[4].Id, Is.EqualTo("elim_r2_b"));
+            Assert.That(ranked[4].Rank, Is.EqualTo(4));
+            Assert.That(ranked[4].IsSharedRank, Is.True);
+
+            // Eliminated in round 1 is last (Rank 6) despite having 5 hits
+            Assert.That(ranked[5].Id, Is.EqualTo("elim_r1"));
+            Assert.That(ranked[5].Rank, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void S1_Ranking_FullSixPlayerMatch_ProducesExpectedRanks1To6()
+        {
+            var players = new List<PlayerState>
+            {
+                new PlayerState("player", "Nam Làng", false, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 3 },
+                new PlayerState("bot-1", "Anh Teen", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 3 },
+                new PlayerState("bot-2", "Cô Ba", true, 1, Vec2.Zero, Vec2.Up) { HitsLanded = 2 },
+                new PlayerState("bot-3", "Chó Vàng", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 4) { HitsLanded = 1 },
+                new PlayerState("bot-4", "Nữ Năng Động", true, 2, Vec2.Zero, Vec2.Up) { HitsLanded = 1 },
+                new PlayerState("bot-5", "Mèo Mun", true, 0, Vec2.Zero, Vec2.Up, eliminatedAtRound: 2) { HitsLanded = 0 }
+            };
+
+            var res = MatchRanking.Evaluate(players);
+            Assert.That(res.WinnerIds, Is.EquivalentTo(new[] { "player", "bot-1" }));
+            // Expected order: player (R1), bot-1 (R1), bot-4 (2HP 1Hit -> R3), bot-2 (1HP 2Hit -> R4), bot-3 (elim R4 -> R5), bot-5 (elim R2 -> R6)
+            Assert.That(res.RankedPlayers[0].Id, Is.EqualTo("player"));
+            Assert.That(res.RankedPlayers[0].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[1].Id, Is.EqualTo("bot-1"));
+            Assert.That(res.RankedPlayers[1].Rank, Is.EqualTo(1));
+            Assert.That(res.RankedPlayers[2].Id, Is.EqualTo("bot-4"));
+            Assert.That(res.RankedPlayers[2].Rank, Is.EqualTo(3));
+            Assert.That(res.RankedPlayers[3].Id, Is.EqualTo("bot-2"));
+            Assert.That(res.RankedPlayers[3].Rank, Is.EqualTo(4));
+            Assert.That(res.RankedPlayers[4].Id, Is.EqualTo("bot-3"));
+            Assert.That(res.RankedPlayers[4].Rank, Is.EqualTo(5));
+            Assert.That(res.RankedPlayers[5].Id, Is.EqualTo("bot-5"));
+            Assert.That(res.RankedPlayers[5].Rank, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void S1_Ranking_SingleSurvivor_WinsRank1_AndEliminatedOrderedByRound()
+        {
+            var config = Config();
+            var a = Player("a", new Vec2(0f, -2f), 3);
+            var b = Player("b", new Vec2(0f, 0f), 1);
+            var c = Player("c", new Vec2(0f, 2f), 1);
+            var match = new MatchState(config, new[] { a, b, c });
+
+            // Round 1: a hits b (b eliminated at round 1)
+            match.StartRound();
+            match.SetInput(Throw("a", Vec2.Up));
+            match.SetInput(Throw("b", new Vec2(1f, 0f)));
+            match.SetInput(Throw("c", Vec2.Up));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(b.IsAlive, Is.False);
+            Assert.That(b.EliminatedAtRound, Is.EqualTo(1));
+            Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+
+            // Round 2: a hits c (c eliminated at round 2, only a survives)
+            match.StartRound();
+            match.SetInput(Throw("a", Vec2.Up));
+            match.SetInput(Throw("c", Vec2.Up));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(c.IsAlive, Is.False);
+            Assert.That(c.EliminatedAtRound, Is.EqualTo(2));
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EqualTo(new[] { "a" }));
+
+            var ranked = match.GetRankings();
+            Assert.That(ranked[0].Id, Is.EqualTo("a"));
+            Assert.That(ranked[0].Rank, Is.EqualTo(1));
+            Assert.That(ranked[1].Id, Is.EqualTo("c"));
+            Assert.That(ranked[1].Rank, Is.EqualTo(2));
+            Assert.That(ranked[2].Id, Is.EqualTo("b"));
+            Assert.That(ranked[2].Rank, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void S1_Ranking_ZeroSurvivors_MutualEliminationInFinalRound_RanksByRoundThenHits()
+        {
+            var config = Config();
+            var early = Player("early", new Vec2(-3f, -2f), 1);
+            var a = Player("a", new Vec2(0f, -2f), 2);
+            var b = Player("b", new Vec2(0f, 2f), 1);
+            var match = new MatchState(config, new[] { early, a, b });
+
+            // Round 1: a hits early (early dies R1, a has 1 hit); b hits a (a has 1 HP, b has 1 hit)
+            match.StartRound();
+            match.SetInput(Throw("a", new Vec2(-1f, 0f)));
+            match.SetInput(Throw("b", new Vec2(0f, -1f)));
+            match.SetInput(Throw("early", new Vec2(-1f, 0f)));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+            Assert.That(early.EliminatedAtRound, Is.EqualTo(1));
+            Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+
+            // Round 2: a and b shoot each other and both die in Round 2 (a has 2 hits total, b has 2 hits total)
+            match.StartRound();
+            match.SetInput(Throw("a", Vec2.Up));
+            match.SetInput(Throw("b", new Vec2(0f, -1f)));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(a.EliminatedAtRound, Is.EqualTo(2));
+            Assert.That(b.EliminatedAtRound, Is.EqualTo(2));
+            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a", "b" }));
+
+            var ranked = match.GetRankings();
+            Assert.That(ranked[0].Rank, Is.EqualTo(1));
+            Assert.That(ranked[0].IsSharedRank, Is.True);
+            Assert.That(ranked[1].Rank, Is.EqualTo(1));
+            Assert.That(ranked[1].IsSharedRank, Is.True);
+            Assert.That(ranked[2].Id, Is.EqualTo("early"));
+            Assert.That(ranked[2].Rank, Is.EqualTo(3));
+        }
     }
 }

@@ -276,10 +276,76 @@ namespace HitMe.Game
             }
         }
 
+        public int ActiveWeaponCount
+        {
+            get
+            {
+                int c = 0;
+                for (int i = 0; i < _weaponPool.Count; i++)
+                    if (_weaponPool[i] != null && _weaponPool[i].gameObject.activeSelf) c++;
+                return c;
+            }
+        }
+
+        public int ActiveHitFxCount
+        {
+            get
+            {
+                int c = 0;
+                for (int i = 0; i < _hitFxPool.Count; i++)
+                    if (_hitFxPool[i] != null && _hitFxPool[i].gameObject.activeSelf) c++;
+                return c;
+            }
+        }
+
+        public int ActivePlayerViewCount
+        {
+            get
+            {
+                int c = 0;
+                for (int i = 0; i < _playerPool.Count; i++)
+                    if (_playerPool[i] != null && _playerPool[i].gameObject.activeSelf) c++;
+                return c;
+            }
+        }
+
+        public GestureSnapshot CurrentGestureSnapshot
+        {
+            get { return _gestureV2 != null ? _gestureV2.Snapshot() : default; }
+        }
+
+        public void StopAndCleanupMatch()
+        {
+            if (_matchCoroutine != null)
+            {
+                StopCoroutine(_matchCoroutine);
+                _matchCoroutine = null;
+            }
+            ClearWeapons();
+            for (int i = 0; i < _playerPool.Count; i++)
+            {
+                if (_playerPool[i] != null) _playerPool[i].gameObject.SetActive(false);
+            }
+            _views.Clear();
+            _bots.Clear();
+            _readyRequested = false;
+            if (_gestureV2 != null)
+            {
+                _gestureV2.BeginRound(Vec2.Zero, Vec2.Up);
+            }
+            State = null;
+        }
+
         public void StartMatch()
         {
             EnsurePoolsInitialized();
-            if (_matchCoroutine != null) StopCoroutine(_matchCoroutine);
+            if (_matchCoroutine != null)
+            {
+                StopCoroutine(_matchCoroutine);
+                _matchCoroutine = null;
+            }
+            InitializeMatchSession();
+            BeginNextRound();
             _matchCoroutine = StartCoroutine(NewMatch());
         }
 
@@ -335,9 +401,8 @@ namespace HitMe.Game
             HandlePointer(pid, screen, world, pointer.Phase);
         }
 
-        private IEnumerator NewMatch()
+        private void InitializeMatchSession()
         {
-            yield return null;
             EnsurePoolsInitialized();
             if (configAsset != null)
             {
@@ -345,7 +410,7 @@ namespace HitMe.Game
                 WeaponFlightView.ConfigureSharedResources(configAsset);
             }
 
-            var config = configAsset.ToCore();
+            var config = configAsset != null ? configAsset.ToCore() : new GameConfig();
             uint matchSeed = config.Seed + (_matchCounter * 97u);
             _matchCounter++;
             _random = new SeededRandom(matchSeed);
@@ -395,23 +460,49 @@ namespace HitMe.Game
             {
                 AudioManager.Instance.PlayMatchBgm();
             }
+        }
 
-            while (State.Phase != Phase.MatchEnd)
+        private void BeginNextRound()
+        {
+            if (State == null || State.Phase == Phase.MatchEnd) return;
+            var config = State.Config;
+            State.StartRound();
+            var localPlayer = State.FindPlayer("player");
+            if (_gestureV2 == null) _gestureV2 = new PlacementGestureV2();
+            _gestureV2.BeginRound(localPlayer != null ? localPlayer.Position : Vec2.Zero, Vec2.Up);
+            SecondsRemaining = config.PlaceSeconds;
+            _readyRequested = false;
+            _lastTickSecond = -1;
+
+            OnRoundStarted?.Invoke(State.RoundNumber, State.Config.MaxRounds);
+            OnPhaseChanged?.Invoke(Phase.Placing);
+            OnTimerTick?.Invoke(SecondsRemaining);
+
+            foreach (var pair in _bots)
             {
-                State.StartRound();
-                var localPlayer = State.FindPlayer("player");
-                _gestureV2.BeginRound(localPlayer.Position, Vec2.Up);
-                SecondsRemaining = config.PlaceSeconds;
-                _readyRequested = false;
-                _lastTickSecond = -1;
+                State.SetInput(pair.Value.MakeInput(State.FindPlayer(pair.Key), config));
+            }
 
-                OnRoundStarted?.Invoke(State.RoundNumber, State.Config.MaxRounds);
-                OnPhaseChanged?.Invoke(Phase.Placing);
+            Present(true);
+        }
 
-                foreach (var pair in _bots)
+        private IEnumerator NewMatch()
+        {
+            yield return null;
+            if (State == null)
+            {
+                InitializeMatchSession();
+                BeginNextRound();
+            }
+
+            var config = State.Config;
+            while (State != null && State.Phase != Phase.MatchEnd)
+            {
+                if (State.Phase != Phase.Placing)
                 {
-                    State.SetInput(pair.Value.MakeInput(State.FindPlayer(pair.Key), config));
+                    BeginNextRound();
                 }
+                var localPlayer = State.FindPlayer("player");
 
                 if (autoPlay)
                 {
@@ -521,7 +612,7 @@ namespace HitMe.Game
             Present(false);
             OnPhaseChanged?.Invoke(State.Phase);
 
-            BuildRankingsAndWinners(State, _rankedBuffer, _winnerIdsBuffer);
+            MatchRanking.BuildRankingsAndWinners(State, _rankedBuffer, _winnerIdsBuffer);
 
             bool isWinner = _winnerIdsBuffer.Contains("player");
             if (AudioManager.Instance != null)
@@ -555,32 +646,6 @@ namespace HitMe.Game
                               $"Frames={_profileFrames}, Elapsed={elapsedSec:F2}s, AvgFPS={avgFps:F1}, MinFPS={minFps:F1}, SteadyAllocPerFrame={steadyAllocPerFrame} B/frame, ManagedAllocPerFrame={avgAllocPerFrame} B/frame, GCGen0={gcCollections}");
                 }
             }
-        }
-
-        public static void BuildRankingsAndWinners(MatchState state, List<PlayerState> outRanked, List<string> outWinnerIds)
-        {
-            outRanked.Clear();
-            outWinnerIds.Clear();
-            if (state == null) return;
-
-            for (int i = 0; i < state.Players.Count; i++)
-            {
-                outRanked.Add(state.Players[i]);
-            }
-            outRanked.Sort(ComparePlayersForRanking);
-
-            for (int i = 0; i < state.WinnerIds.Count; i++)
-            {
-                outWinnerIds.Add(state.WinnerIds[i]);
-            }
-        }
-
-        public static int ComparePlayersForRanking(PlayerState a, PlayerState b)
-        {
-            if (a.IsAlive != b.IsAlive) return b.IsAlive.CompareTo(a.IsAlive);
-            if (a.Hp != b.Hp) return b.Hp.CompareTo(a.Hp);
-            if (a.HitsLanded != b.HitsLanded) return b.HitsLanded.CompareTo(a.HitsLanded);
-            return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
         }
 
         private void TriggerToast(string message)

@@ -57,13 +57,15 @@ namespace HitMe.Editor
             }
 
             cam.orthographic = true;
-            cam.orthographicSize = 7.5f;
-            cam.transform.position = new Vector3(0f, 0.2f, -10f);
+            cam.orthographicSize = 7.8f;
+            cam.transform.position = new Vector3(0f, 0.80f, -10f);
 
             var canvas = canvasObj.GetComponent<Canvas>();
             var ui = canvasObj.GetComponent<ProductionUIController>();
             var scaler = canvasObj.GetComponent<CanvasScaler>();
+            var fitter = canvasObj.GetComponentInChildren<SafeAreaFitter>(true);
 
+            ui.ResolveHudElementContainers();
             ui.EnsureAndRefreshBuildFingerprint();
 
             var originalRenderMode = canvas.renderMode;
@@ -74,8 +76,13 @@ namespace HitMe.Editor
             scaler.referenceResolution = new Vector2(ShotWidth, ShotHeight);
             scaler.matchWidthOrHeight = 1.0f;
 
-            // 6 distinct characters in a 6-player match (indices: 0, 1, 2, 3, 5, 6 -> includes Nữ Năng Động, Chó Vàng, Mèo Mun)
-            int[] matchRosterIndices = { 0, 1, 2, 3, 5, 6 };
+            if (fitter != null)
+            {
+                fitter.ApplyForScreen(ShotWidth, ShotHeight, new Rect(0f, 0f, ShotWidth, ShotHeight), false);
+            }
+
+            // 6 distinct characters in a 6-player match (indices: 0, 4, 3, 5, 1, 6 -> Nam Làng, Anh Teen, Cô Ba, Chó Vàng, Nữ Năng Động, Mèo Mun)
+            int[] matchRosterIndices = { 0, 4, 3, 5, 1, 6 };
             var players = CreateMockPlayers(matchRosterIndices);
             var views = CreatePlayerViews(players, matchRosterIndices);
 
@@ -85,7 +92,7 @@ namespace HitMe.Editor
                 SetPlayersVisible(views, false);
                 ui.ShowScreen(ProductionScreen.Home);
                 ui.EnsureAndRefreshBuildFingerprint();
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "01_home.png"), commitShort, buildId);
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "01_home.png"), commitShort, buildId, ShotWidth, ShotHeight);
 
                 // ==================== 2. LOBBY SCREEN ====================
                 ui.ShowScreen(ProductionScreen.Lobby);
@@ -94,14 +101,14 @@ namespace HitMe.Editor
                 ui.txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
                 ui.EnsureAndRefreshBuildFingerprint();
                 SetPlayersVisible(views, false);
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "02_lobby.png"), commitShort, buildId);
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "02_lobby.png"), commitShort, buildId, ShotWidth, ShotHeight);
 
-                // ==================== 3. PLACING (LOCAL ONLY + AIM RULER) ====================
+                // ==================== 3. PLACING (1080x2340) ====================
                 ui.ShowScreen(ProductionScreen.Gameplay);
-                ui.txtRound.text = "VÒNG 1/5";
+                ui.txtRound.text = "VÒNG 2/5";
                 ui.txtTimer.text = "4.2s";
                 ui.txtTimer.color = Color.white;
-                ui.txtPhaseBanner.text = "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm";
+                ui.ApplyPhaseState(Phase.Placing);
                 ui.EnsureAndRefreshBuildFingerprint();
 
                 UpdateHudHp(ui, players, isPlacing: true);
@@ -116,53 +123,95 @@ namespace HitMe.Editor
                         kvp.Value.Present(p, true, true, true, 1.2f, 1.5f, 2.0f);
                     }
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "03_placing_local_only.png"), commitShort, buildId);
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "03_placing_local_only.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                File.Copy(Path.Combine(EvidenceDir, "03_placing_local_only.png"), Path.Combine(EvidenceDir, "p4_01_placing_1080x2340.png"), true);
+                WriteProvenanceJson(Path.Combine(EvidenceDir, "p4_01_placing_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
 
-                // ==================== 4. REVEAL (ALL 6 DISTINCT PLAYERS, NO TINT) ====================
-                ui.txtPhaseBanner.text = "LỘ DIỆN ĐỐI THỦ!";
-                ui.txtTimer.text = "0.0s";
+                // Capture iPhone Safe Area Portrait & Wide Desktop 1920x1080 in Placing (P2)
+                if (fitter != null)
+                {
+                    fitter.ApplyForScreen(ShotWidth, ShotHeight, new Rect(0f, 0f, ShotWidth, ShotHeight), true);
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, "p2_iphone_safearea_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                    fitter.ApplyForScreen(1920, 1080, new Rect(0f, 0f, 1920f, 1080f), false);
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, "p2_desktop_wide_1920x1080.png"), commitShort, buildId, 1920, 1080);
+
+                    fitter.ApplyForScreen(ShotWidth, ShotHeight, new Rect(0f, 0f, ShotWidth, ShotHeight), false);
+                }
+
+                // ==================== 4. REVEAL (1080x2340) ====================
+                ui.ApplyPhaseState(Phase.Reveal);
                 ui.EnsureAndRefreshBuildFingerprint();
                 UpdateHudHp(ui, players, isPlacing: false);
 
                 foreach (var kvp in views)
                 {
-                    kvp.Value.gameObject.SetActive(true);
                     var p = players.Find(x => x.Id == kvp.Key);
-                    kvp.Value.Present(p, true, true, false, 1.2f, 1.5f, 0f);
+                    kvp.Value.gameObject.SetActive(p.IsAlive);
+                    if (p.IsAlive)
+                    {
+                        kvp.Value.Present(p, true, true, false, 1.2f, 1.5f, 0f);
+                    }
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "04_reveal_6players.png"), commitShort, buildId);
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "04_reveal_6players.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                File.Copy(Path.Combine(EvidenceDir, "04_reveal_6players.png"), Path.Combine(EvidenceDir, "p4_02_reveal_1080x2340.png"), true);
+                WriteProvenanceJson(Path.Combine(EvidenceDir, "p4_02_reveal_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
                 File.Copy(Path.Combine(EvidenceDir, "04_reveal_6players.png"), Path.Combine("Evidence/phase2", "step2_characters.png"), true);
-                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step2_characters.png"), commitShort, buildId);
+                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step2_characters.png"), commitShort, buildId, ShotWidth, ShotHeight);
 
-                // ==================== 5. THROWING (FLYING SLIPPERS) ====================
-                ui.txtPhaseBanner.text = "NÉM DÉP!";
+                // ==================== 5. THROWING (1080x2340) ====================
+                ui.ApplyPhaseState(Phase.Throwing);
                 ui.EnsureAndRefreshBuildFingerprint();
                 var slippers = SpawnTestSlippers(players);
                 foreach (var kvp in views)
                 {
-                    kvp.Value.gameObject.SetActive(true);
                     var p = players.Find(x => x.Id == kvp.Key);
-                    kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                    kvp.Value.gameObject.SetActive(p.IsAlive);
+                    if (p.IsAlive)
+                    {
+                        kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                    }
                 }
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "05_throwing_slippers.png"), commitShort, buildId);
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "05_throwing_slippers.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                File.Copy(Path.Combine(EvidenceDir, "05_throwing_slippers.png"), Path.Combine(EvidenceDir, "p4_03_throwing_1080x2340.png"), true);
+                WriteProvenanceJson(Path.Combine(EvidenceDir, "p4_03_throwing_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
                 File.Copy(Path.Combine(EvidenceDir, "05_throwing_slippers.png"), Path.Combine("Evidence/phase2", "step3_sandal_throw.png"), true);
-                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step3_sandal_throw.png"), commitShort, buildId);
+                WriteProvenanceJson(Path.Combine("Evidence/phase2", "step3_sandal_throw.png"), commitShort, buildId, ShotWidth, ShotHeight);
                 ClearTestSlippers(slippers);
 
-                // ==================== 6. RESULT (FULL RANKINGS TABLE) ====================
-                ui.ShowScreen(ProductionScreen.Result);
+                // ==================== 6. ROUND END (1080x2340) ====================
+                ui.ApplyPhaseState(Phase.RoundEnd);
                 ui.EnsureAndRefreshBuildFingerprint();
+                UpdateHudHp(ui, players, isPlacing: false);
+                foreach (var kvp in views)
+                {
+                    var p = players.Find(x => x.Id == kvp.Key);
+                    kvp.Value.gameObject.SetActive(p.IsAlive);
+                    if (p.IsAlive)
+                    {
+                        kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                    }
+                }
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "p4_04_roundend_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // ==================== 7. MATCH END / RESULT (1080x2340) ====================
                 SetPlayersVisible(views, false);
-
                 var ranked = new List<PlayerState>(players);
-                var winners = new List<string> { "player" };
-                FillResultTable(ui, ranked, winners);
-                RenderAndSave(cam, Path.Combine(EvidenceDir, "06_result_full_rankings.png"), commitShort, buildId);
+                ranked.Sort(MatchRanking.DisplayOrderComparison);
+                var winners = new List<string>(MatchRanking.Winners(players));
+                ui.ApplyPhaseState(Phase.MatchEnd);
+                ui.PopulateResultBoard(ranked, winners);
+                ui.EnsureAndRefreshBuildFingerprint();
 
-                // ==================== 7. FULL 7-CHARACTER ROSTER SHOWCASE (F1) ====================
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "06_result_full_rankings.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                File.Copy(Path.Combine(EvidenceDir, "06_result_full_rankings.png"), Path.Combine(EvidenceDir, "p4_05_matchend_1080x2340.png"), true);
+                WriteProvenanceJson(Path.Combine(EvidenceDir, "p4_05_matchend_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                File.Copy(Path.Combine(EvidenceDir, "06_result_full_rankings.png"), Path.Combine(EvidenceDir, "p1_matchend_after.png"), true);
+                WriteProvenanceJson(Path.Combine(EvidenceDir, "p1_matchend_after.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // ==================== 8. FULL 7-CHARACTER ROSTER SHOWCASE (F1) ====================
                 ui.ShowScreen(ProductionScreen.Gameplay);
-                ui.txtRound.text = "ROSTER 7/7";
-                ui.txtTimer.text = "F1";
+                ui.ApplyPhaseState(Phase.Reveal);
                 ui.txtPhaseBanner.text = "ĐỦ 7 NHÂN VẬT THẬT • KHÔNG TINT MÀU";
                 ui.EnsureAndRefreshBuildFingerprint();
                 SetPlayersVisible(views, false);
@@ -177,7 +226,7 @@ namespace HitMe.Editor
                         var p = all7Players.Find(x => x.Id == kvp.Key);
                         kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
                     }
-                    RenderAndSave(cam, Path.Combine(EvidenceDir, "07_roster_7characters.png"), commitShort, buildId);
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, "07_roster_7characters.png"), commitShort, buildId, ShotWidth, ShotHeight);
                 }
                 finally
                 {
@@ -202,11 +251,17 @@ namespace HitMe.Editor
             }
         }
 
-        private static void RenderAndSave(Camera cam, string outputPath, string commitShort, string buildId)
+        private static void RenderAndSave(Camera cam, string outputPath, string commitShort, string buildId, int width, int height)
         {
             Canvas.ForceUpdateCanvases();
+            var tmps = UnityEngine.Object.FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < tmps.Length; i++)
+            {
+                tmps[i].ForceMeshUpdate(true, true);
+            }
+            Canvas.ForceUpdateCanvases();
 
-            var rt = RenderTexture.GetTemporary(ShotWidth, ShotHeight, 24, RenderTextureFormat.ARGB32);
+            var rt = RenderTexture.GetTemporary(width, height, 24, RenderTextureFormat.ARGB32);
             var prevCamRt = cam.targetTexture;
             var prevRt = RenderTexture.active;
 
@@ -216,16 +271,16 @@ namespace HitMe.Editor
                 cam.Render();
 
                 RenderTexture.active = rt;
-                var tex = new Texture2D(ShotWidth, ShotHeight, TextureFormat.RGB24, false);
-                tex.ReadPixels(new Rect(0, 0, ShotWidth, ShotHeight), 0, 0);
+                var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
                 tex.Apply();
 
                 byte[] pngBytes = tex.EncodeToPNG();
                 File.WriteAllBytes(outputPath, pngBytes);
                 UnityEngine.Object.DestroyImmediate(tex);
 
-                WriteProvenanceJson(outputPath, commitShort, buildId);
-                Debug.Log($"[EvidenceCapture] Saved: {outputPath} ({ShotWidth}x{ShotHeight}) [commit={commitShort}]");
+                WriteProvenanceJson(outputPath, commitShort, buildId, width, height);
+                Debug.Log($"[EvidenceCapture] Saved: {outputPath} ({width}x{height}) [commit={commitShort}]");
             }
             finally
             {
@@ -235,7 +290,7 @@ namespace HitMe.Editor
             }
         }
 
-        private static void WriteProvenanceJson(string filePath, string commitShort, string buildId)
+        private static void WriteProvenanceJson(string filePath, string commitShort, string buildId, int width, int height)
         {
             byte[] bytes = File.ReadAllBytes(filePath);
             string sha256;
@@ -255,7 +310,7 @@ namespace HitMe.Editor
                           $"  \"commit\": \"{commitShort}\",\n" +
                           $"  \"scene\": \"{SceneName}\",\n" +
                           $"  \"build_id\": \"{buildId}\",\n" +
-                          $"  \"resolution\": \"{ShotWidth}x{ShotHeight}\",\n" +
+                          $"  \"resolution\": \"{width}x{height}\",\n" +
                           $"  \"timestamp\": \"{timestamp}\",\n" +
                           "  \"command\": \"HitMe.Editor.ProductionEvidenceCapture.CaptureAllEvidence\",\n" +
                           "  \"tool\": \"AG / Unity Batchmode Camera.Render\"\n" +
@@ -267,30 +322,34 @@ namespace HitMe.Editor
         {
             Vec2[] positions =
             {
-                new Vec2(0f, -3.2f),
-                new Vec2(-2.4f, -1.2f),
-                new Vec2(2.4f, -1.0f),
-                new Vec2(-2.2f, 2.4f),
-                new Vec2(2.2f, 2.5f),
-                new Vec2(0f, 3.8f)
+                new Vec2(1.8f, -3.1f),
+                new Vec2(-2.1f, -2.8f),
+                new Vec2(1.1f, -1.2f),
+                new Vec2(-1.8f, 1.5f),
+                new Vec2(-2.1f, -1.7f),
+                new Vec2(2.0f, 1.8f)
             };
             Vec2[] aims =
             {
-                new Vec2(0.6f, 0.8f),
-                new Vec2(0.8f, 0.4f),
-                new Vec2(-0.7f, 0.5f),
+                new Vec2(-0.5f, 0.86f),
+                new Vec2(0.7f, 0.7f),
+                new Vec2(-0.7f, -0.7f),
                 new Vec2(0.5f, -0.8f),
-                new Vec2(-0.6f, -0.7f),
-                new Vec2(0f, -1f)
+                new Vec2(0.8f, 0.6f),
+                new Vec2(-0.6f, -0.8f)
             };
-            int[] hps = { 3, 3, 2, 1, 2, 3 };
+            // Matches user screenshot scenario: 4 alive (2/3, 2/3, 1/3, 2/3 HP) and 2 eliminated (0/3 HP)
+            int[] hps = { 2, 2, 1, 0, 2, 0 };
+            int[] hits = { 3, 3, 2, 1, 1, 0 };
 
             var list = new List<PlayerState>(6);
             for (int i = 0; i < 6; i++)
             {
-                string id = i == 0 ? "player" : $"bot_{i}";
+                string id = i == 0 ? "player" : $"bot-{i}";
                 string name = PlayerView.CharacterNames[charIndices[i]];
-                list.Add(new PlayerState(id, name, i > 0, hps[i], positions[i], aims[i]));
+                var p = new PlayerState(id, name, i > 0, hps[i], positions[i], aims[i]);
+                p.HitsLanded = hits[i];
+                list.Add(p);
             }
             return list;
         }
@@ -350,33 +409,50 @@ namespace HitMe.Editor
                 if (card.root != null) card.root.SetActive(true);
                 if (card.txtName != null) card.txtName.text = p.Name;
 
-                bool isLocal = p.Id == "player";
-                if (isPlacing && !isLocal)
+                // S3: HP is ALWAYS public in all phases (only position & aim direction are hidden during Placing).
+                if (card.txtHearts != null)
                 {
-                    if (card.txtHearts != null)
-                    {
-                        card.txtHearts.text = "HP: ???";
-                        card.txtHearts.color = new Color(0.6f, 0.65f, 0.7f);
-                    }
+                    card.txtHearts.text = $"HP: {p.Hp}/3";
+                    card.txtHearts.color = p.IsAlive
+                        ? (p.Hp == 3 ? new Color(0.25f, 1f, 0.45f) : (p.Hp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
+                        : new Color(1f, 0.45f, 0.45f);
+                }
+
+                bool isLocal = p.Id == "player";
+                if (!p.IsAlive)
+                {
                     if (card.txtHpNum != null)
                     {
-                        card.txtHpNum.text = "ẨN";
-                        card.txtHpNum.color = new Color(0.6f, 0.65f, 0.7f);
+                        card.txtHpNum.text = "ĐÃ LOẠI";
+                        card.txtHpNum.color = new Color(1f, 0.42f, 0.42f);
+                    }
+                    if (card.imgBg != null)
+                    {
+                        card.imgBg.color = new Color(0.55f, 0.42f, 0.45f, 0.92f);
+                    }
+                }
+                else if (isPlacing && !isLocal)
+                {
+                    if (card.txtHpNum != null)
+                    {
+                        card.txtHpNum.text = "ĐANG ẨN";
+                        card.txtHpNum.color = new Color(0.65f, 0.72f, 0.80f);
+                    }
+                    if (card.imgBg != null)
+                    {
+                        card.imgBg.color = new Color(0.92f, 0.95f, 1f, 1f);
                     }
                 }
                 else
                 {
-                    if (card.txtHearts != null)
-                    {
-                        card.txtHearts.text = $"HP: {p.Hp}/3";
-                        card.txtHearts.color = p.IsAlive
-                            ? (p.Hp == 3 ? new Color(0.2f, 1f, 0.4f) : (p.Hp == 2 ? new Color(1f, 0.85f, 0.2f) : new Color(1f, 0.3f, 0.3f)))
-                            : Color.gray;
-                    }
                     if (card.txtHpNum != null)
                     {
-                        card.txtHpNum.text = p.IsAlive ? "CÒN SỐNG" : "ĐÃ LOẠI";
-                        card.txtHpNum.color = p.IsAlive ? new Color(0.8f, 0.9f, 1f) : Color.gray;
+                        card.txtHpNum.text = "CÒN SỐNG";
+                        card.txtHpNum.color = new Color(0.45f, 0.95f, 0.65f);
+                    }
+                    if (card.imgBg != null)
+                    {
+                        card.imgBg.color = Color.white;
                     }
                 }
             }
@@ -391,8 +467,9 @@ namespace HitMe.Editor
             for (int i = 0; i < players.Count; i++)
             {
                 var p = players[i];
+                if (!p.IsAlive) continue;
                 var target = players[(i + 1) % players.Count];
-                var mid = Vector3.Lerp(new Vector3(p.Position.X, p.Position.Y, 0f), new Vector3(target.Position.X, target.Position.Y, 0f), 0.5f);
+                var mid = Vector3.Lerp(new Vector3(p.Position.X, p.Position.Y, 0f), new Vector3(target.Position.X, target.Position.Y, 0f), 0.45f);
 
                 var go = new GameObject("TestSlipper_" + p.Id);
                 var sr = go.AddComponent<SpriteRenderer>();
@@ -415,42 +492,6 @@ namespace HitMe.Editor
                 if (go != null) UnityEngine.Object.DestroyImmediate(go);
             }
             slippers.Clear();
-        }
-
-        private static void FillResultTable(ProductionUIController ui, List<PlayerState> ranked, List<string> winnerIds)
-        {
-            if (ui.txtResultTitle != null)
-            {
-                ui.txtResultTitle.text = "CHIẾN THẮNG! 🏆";
-                ui.txtResultTitle.color = new Color(1f, 0.9f, 0.2f);
-            }
-            if (ui.txtResultSubtitle != null)
-            {
-                ui.txtResultSubtitle.text = "Người thắng: Nam Làng";
-            }
-
-            for (int i = 0; i < ui.resultRows.Count && i < ranked.Count; i++)
-            {
-                var row = ui.resultRows[i];
-                var p = ranked[i];
-                if (row.root != null) row.root.SetActive(true);
-                if (row.txtRank != null) row.txtRank.text = "#" + (i + 1);
-                if (row.txtName != null) row.txtName.text = p.Name;
-                if (row.txtHp != null) row.txtHp.text = p.Hp + " HP";
-
-                bool won = winnerIds.Contains(p.Id);
-                if (row.txtStatus != null)
-                {
-                    row.txtStatus.text = won ? "★ THẮNG" : (p.IsAlive ? "Còn sống" : "Đã loại");
-                    row.txtStatus.color = won ? new Color(1f, 0.9f, 0.2f) : (p.IsAlive ? Color.white : Color.gray);
-                }
-
-                if (row.imgBg != null)
-                {
-                    bool isMe = p.Id == "player";
-                    row.imgBg.color = isMe ? new Color(0.2f, 0.7f, 1f, 0.35f) : new Color(0.1f, 0.15f, 0.2f, 0.6f);
-                }
-            }
         }
     }
 }

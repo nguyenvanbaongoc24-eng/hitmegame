@@ -313,7 +313,7 @@ namespace HitMe.Editor
             uiCtrl.txtPhaseBanner = phaseTxt;
 
             // P3: 6 HP Cards in 2 rows x 3 columns (above village gate, non-overlapping text, clear eliminated state)
-            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.872f), new Vector2(0.5f, 0.872f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 116f), null, Color.clear);
+            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.868f), new Vector2(0.5f, 0.868f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 128f), null, Color.clear);
             uiCtrl.hpCardsContainer = hpContainer.transform;
             uiCtrl.hpCards.Clear();
 
@@ -327,20 +327,20 @@ namespace HitMe.Editor
                 int col = i % 3;
                 int row = i / 3;
                 Vector2 cardAnchor = new Vector2(colAnchors[col], rowAnchors[row]);
-                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(324f, 54f), spriteHudPill, Color.white);
+                var cardSprite = i == 0 ? spriteRowMe : spriteRowLeaderboard;
+                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(328f, 60f), cardSprite, Color.white);
+                var cardImg = cardObj.GetComponent<Image>();
+                if (cardImg != null) cardImg.type = Image.Type.Simple;
 
-                // Top-left: Name (186x24), Top-right: Hearts/HP (110x24), Bottom: Status (300x22) -> zero overlap
-                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 19, new Color(1f, 0.88f, 0.32f), TextAlignmentOptions.MidlineLeft, new Vector2(0.04f, 0.72f), new Vector2(186f, 24f), wrap: false, pivot: new Vector2(0f, 0.5f));
-                cName.overflowMode = TextOverflowModes.Ellipsis;
-
-                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 19, new Color(0.25f, 1f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.96f, 0.72f), new Vector2(110f, 24f), wrap: false, pivot: new Vector2(1f, 0.5f));
-
-                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "● CÒN SỐNG", 17, new Color(0.45f, 0.95f, 0.65f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.25f), new Vector2(300f, 22f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                // Top-left: Name (184x26 at x=0.33, y=0.68), Top-right: Hearts/HP (104x26 at x=0.80, y=0.68), Bottom: Status (290x24 at x=0.50, y=0.25) -> zero overlap
+                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 19, new Color(1f, 0.90f, 0.35f), TextAlignmentOptions.MidlineLeft, new Vector2(0.33f, 0.68f), new Vector2(184f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 19, new Color(0.25f, 1f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.80f, 0.68f), new Vector2(104f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 17, new Color(0.45f, 0.95f, 0.65f), TextAlignmentOptions.Center, new Vector2(0.50f, 0.25f), new Vector2(290f, 24f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
                 {
                     root = cardObj,
-                    imgBg = cardObj.GetComponent<Image>(),
+                    imgBg = cardImg,
                     txtName = cName,
                     txtHearts = cHearts,
                     txtHpNum = cHpNum,
@@ -361,10 +361,13 @@ namespace HitMe.Editor
             uiCtrl.resultPanel = resultPanel;
 
             var resultHeader = CreateImage(resultPanel.transform, "ResultBanner", spriteBannerWood, new Vector2(0.5f, 0.92f), new Vector2(0.5f, 0.92f), new Vector2(0.5f, 0.5f), new Vector2(920f, 150f));
-            var resTitle = CreateTMP(resultHeader.transform, "Title", fontAsset, "CHIẾN THẮNG! 🏆", 46, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center, wrap: false);
+            var resTitle = CreateTMP(resultHeader.transform, "Title", fontAsset, "CHIẾN THẮNG!", 46, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtResultTitle = resTitle;
 
-            var resSubtitle = CreateTMP(resultPanel.transform, "Subtitle", fontAsset, "Người thắng: Nam Làng", 30, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.85f), new Vector2(960f, 50f), wrap: false);
+            var resSubtitle = CreateTMP(resultPanel.transform, "Subtitle", fontAsset, "Người thắng: Nam Làng", 25, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.85f), new Vector2(1000f, 54f), wrap: false);
+            resSubtitle.enableAutoSizing = true;
+            resSubtitle.fontSizeMin = 18f;
+            resSubtitle.fontSizeMax = 26f;
             uiCtrl.txtResultSubtitle = resSubtitle;
 
             // Full Ranking Board (all 6 players)
@@ -449,6 +452,7 @@ namespace HitMe.Editor
             if (anchorMin == anchorMax)
             {
                 rt.sizeDelta = size;
+                rt.anchoredPosition = Vector2.zero;
             }
             else
             {
@@ -487,6 +491,7 @@ namespace HitMe.Editor
                 rt.anchorMax = anchor.Value;
                 rt.pivot = pivot ?? new Vector2(0.5f, 0.5f);
                 rt.sizeDelta = size ?? new Vector2(400f, 80f);
+                rt.anchoredPosition = Vector2.zero;
             }
             else
             {

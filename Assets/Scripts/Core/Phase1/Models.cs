@@ -16,12 +16,13 @@ namespace HitMe.Core
         public Vec2 Facing;
         [NonSerialized] public Vec2? LastAim;
         public int HitsLanded;
+        public int EliminatedAtRound;
 
         public bool IsAlive { get { return Hp > 0; } }
 
-        public PlayerState(string id, string name, bool isBot, int hp, Vec2 position, Vec2 facing)
+        public PlayerState(string id, string name, bool isBot, int hp, Vec2 position, Vec2 facing, int eliminatedAtRound = 0)
         {
-            Id = id; Name = name; IsBot = isBot; Hp = hp; Position = position; Facing = facing.Normalized;
+            Id = id; Name = name; IsBot = isBot; Hp = hp; Position = position; Facing = facing.Normalized; EliminatedAtRound = eliminatedAtRound;
         }
     }
 

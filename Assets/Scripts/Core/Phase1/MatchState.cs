@@ -128,66 +128,50 @@ namespace HitMe.Core
         {
             if (Phase != Phase.Throwing) return LastResolution;
             Phase = Phase.Resolve;
-            var aliveBefore = new List<string>();
-            for (int i = 0; i < Players.Count; i++) if (Players[i].IsAlive) aliveBefore.Add(Players[i].Id);
+            var aliveBefore = new HashSet<string>(StringComparer.Ordinal);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].IsAlive) aliveBefore.Add(Players[i].Id);
+            }
+
             LastResolution = RoundResolver.Resolve(Players, _inputs, Config);
-            EvaluateEnd(aliveBefore);
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var p = Players[i];
+                if (!p.IsAlive && aliveBefore.Contains(p.Id) && p.EliminatedAtRound <= 0)
+                {
+                    p.EliminatedAtRound = RoundNumber;
+                }
+            }
+
+            EvaluateEnd();
             return LastResolution;
         }
 
-        private void EvaluateEnd(List<string> aliveBefore)
+        public RankedPlayer[] GetRankings()
         {
-            var alive = new List<string>();
-            for (int i = 0; i < Players.Count; i++) if (Players[i].IsAlive) alive.Add(Players[i].Id);
-            if (alive.Count == 1)
+            return MatchRanking.Rank(Players, Config.RoundLimitTiebreak);
+        }
+
+        private void EvaluateEnd()
+        {
+            int aliveCount = 0;
+            for (int i = 0; i < Players.Count; i++)
             {
-                _winnerIds.Clear(); _winnerIds.Add(alive[0]); Phase = Phase.MatchEnd; return;
+                if (Players[i].IsAlive) aliveCount++;
             }
-            if (alive.Count == 0)
+
+            if (aliveCount <= 1)
             {
-                _winnerIds.Clear();
-                for (int i = 0; i < aliveBefore.Count; i++) _winnerIds.Add(aliveBefore[i]);
-                Phase = Phase.MatchEnd; return;
+                MatchRanking.FillWinners(Players, Config.RoundLimitTiebreak, _winnerIds);
+                Phase = Phase.MatchEnd;
+                return;
             }
 
             if (Config.RoundLimitTiebreak != RoundLimitTiebreakPolicy.ContinueUntilElimination && RoundNumber >= Config.MaxRounds)
             {
-                _winnerIds.Clear();
-                if (Config.RoundLimitTiebreak == RoundLimitTiebreakPolicy.SharedWin)
-                {
-                    for (int i = 0; i < alive.Count; i++) _winnerIds.Add(alive[i]);
-                }
-                else if (Config.RoundLimitTiebreak == RoundLimitTiebreakPolicy.HighestHp)
-                {
-                    int maxHp = -1;
-                    for (int i = 0; i < alive.Count; i++)
-                    {
-                        var pl = FindPlayer(alive[i]);
-                        if (pl != null && pl.Hp > maxHp) maxHp = pl.Hp;
-                    }
-                    var topHp = new List<PlayerState>();
-                    for (int i = 0; i < alive.Count; i++)
-                    {
-                        var pl = FindPlayer(alive[i]);
-                        if (pl != null && pl.Hp == maxHp) topHp.Add(pl);
-                    }
-                    if (topHp.Count == 1)
-                    {
-                        _winnerIds.Add(topHp[0].Id);
-                    }
-                    else
-                    {
-                        int maxHits = -1;
-                        for (int i = 0; i < topHp.Count; i++)
-                        {
-                            if (topHp[i].HitsLanded > maxHits) maxHits = topHp[i].HitsLanded;
-                        }
-                        for (int i = 0; i < topHp.Count; i++)
-                        {
-                            if (topHp[i].HitsLanded == maxHits) _winnerIds.Add(topHp[i].Id);
-                        }
-                    }
-                }
+                MatchRanking.FillWinners(Players, Config.RoundLimitTiebreak, _winnerIds);
                 Phase = Phase.MatchEnd;
                 return;
             }

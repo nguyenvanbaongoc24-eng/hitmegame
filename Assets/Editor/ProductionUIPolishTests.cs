@@ -277,5 +277,116 @@ namespace HitMe.Editor
             Vector2 min = anchorPos - Vector2.Scale(size, childRt.pivot);
             return new Rect(min, size);
         }
+
+        [Test]
+        public void S2_MatchEndStateChain_NeverReturnsToPlacing_AndReplayOrHomeCleansUp()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            var match = Object.FindFirstObjectByType<MatchController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(match, Is.Not.Null);
+
+            ui.matchController = match;
+            ui.ResolveHudElementContainers();
+
+            // 1. Start a match -> synchronously initializes Round 1 in Phase.Placing
+            ui.StartGameplayMatch();
+            Assert.That(match.State, Is.Not.Null);
+            Assert.That(match.State.RoundNumber, Is.EqualTo(1));
+            Assert.That(match.State.Phase, Is.EqualTo(Phase.Placing));
+
+            // Advance through 5 rounds to MatchEnd
+            for (int r = 1; r <= 5; r++)
+            {
+                if (match.State.Phase != Phase.Placing) match.State.StartRound();
+                for (int i = 0; i < match.State.Players.Count; i++)
+                {
+                    var p = match.State.Players[i];
+                    if (!p.IsAlive) continue;
+                    match.State.SetInput(new RoundInput(p.Id)
+                    {
+                        HasPlacement = true,
+                        Placement = p.Position,
+                        HasAim = true,
+                        AimDirection = Vec2.Up,
+                        IsReady = true
+                    });
+                }
+                match.State.LockRound();
+                match.State.BeginReveal();
+                match.State.BeginThrowing();
+                match.State.ResolveRound();
+            }
+
+            Assert.That(match.State.Phase, Is.EqualTo(Phase.MatchEnd));
+            // Attempting StartRound() after MatchEnd must be a no-op (never returns to Placing)
+            match.State.StartRound();
+            Assert.That(match.State.Phase, Is.EqualTo(Phase.MatchEnd), "MatchState must never return to Placing after MatchEnd");
+            Assert.That(match.State.RoundNumber, Is.EqualTo(5));
+
+            ui.ApplyPhaseState(match.State.Phase);
+            Assert.That(ui.CurrentScreen, Is.EqualTo(ProductionScreen.Result));
+
+            // 2. Click CHƠI LẠI (OnReplayClicked) -> resets to Round 1 with clean HP=3, 0 HitsLanded, 0 weapons, reset gesture
+            ui.OnReplayClicked();
+            Assert.That(ui.CurrentScreen, Is.EqualTo(ProductionScreen.Gameplay));
+            Assert.That(match.State, Is.Not.Null);
+            Assert.That(match.State.RoundNumber, Is.EqualTo(1));
+            Assert.That(match.State.Phase, Is.EqualTo(Phase.Placing));
+            Assert.That(match.ActiveWeaponCount, Is.EqualTo(0));
+            Assert.That(match.ActiveHitFxCount, Is.EqualTo(0));
+            Assert.That(match.CurrentGestureSnapshot.HasPlaced, Is.False);
+            Assert.That(match.CurrentGestureSnapshot.AimActive, Is.False);
+            for (int i = 0; i < match.State.Players.Count; i++)
+            {
+                Assert.That(match.State.Players[i].Hp, Is.EqualTo(3));
+                Assert.That(match.State.Players[i].HitsLanded, Is.EqualTo(0));
+                Assert.That(match.State.Players[i].EliminatedAtRound, Is.EqualTo(0));
+            }
+
+            // 3. Click VỀ TRANG CHỦ (OnBackToHomeClicked) -> cleans up all active objects and returns to Home
+            ui.OnBackToHomeClicked();
+            Assert.That(ui.CurrentScreen, Is.EqualTo(ProductionScreen.Home));
+            Assert.That(match.State, Is.Null);
+            Assert.That(match.ActiveWeaponCount, Is.EqualTo(0));
+            Assert.That(match.ActiveHitFxCount, Is.EqualTo(0));
+            Assert.That(match.ActivePlayerViewCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void S3_HpIsAlwaysPublicInAllPhases_IncludingPlacing()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            var match = Object.FindFirstObjectByType<MatchController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(match, Is.Not.Null);
+
+            ui.matchController = match;
+            ui.StartGameplayMatch();
+
+            // Set varied HPs during Placing
+            match.State.Players[0].Hp = 3;
+            match.State.Players[1].Hp = 2;
+            match.State.Players[2].Hp = 1;
+            match.State.Players[3].Hp = 0;
+
+            ui.UpdateHpCards();
+
+            // Even in Phase.Placing, every player's HP must be publicly shown ("HP: x/3"), never "HP: ???"
+            Assert.That(match.State.Phase, Is.EqualTo(Phase.Placing));
+            for (int i = 0; i < 6; i++)
+            {
+                string hpText = ui.hpCards[i].txtHearts.text;
+                Assert.That(hpText, Does.Not.Contain("???"), $"Card {i} must never hide HP as ??? in Placing");
+                Assert.That(hpText, Is.EqualTo($"HP: {match.State.Players[i].Hp}/3"));
+            }
+
+            // Alive bots in Placing show "ĐANG ẨN" for hidden position/aim; eliminated bot shows "ĐÃ LOẠI"
+            Assert.That(ui.hpCards[0].txtHpNum.text, Does.Contain("CÒN SỐNG"));
+            Assert.That(ui.hpCards[1].txtHpNum.text, Does.Contain("ĐANG ẨN"));
+            Assert.That(ui.hpCards[3].txtHpNum.text, Does.Contain("ĐÃ LOẠI"));
+        }
     }
 }
