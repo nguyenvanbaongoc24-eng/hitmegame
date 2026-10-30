@@ -279,6 +279,15 @@ namespace HitMe.UI
             {
                 ShowScreen(ProductionScreen.Gameplay);
             }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=botTraining", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                EnsureBotTrainingPanel();
+                ShowScreen(ProductionScreen.BotTraining);
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=lobby1p", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                UpdateLobbyRoster(1, "Phòng Chiến Hữu", "HM4826");
+            }
             else
             {
                 ShowScreen(ProductionScreen.Home);
