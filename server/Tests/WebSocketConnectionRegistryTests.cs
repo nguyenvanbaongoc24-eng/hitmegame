@@ -29,6 +29,38 @@ public sealed class WebSocketConnectionRegistryTests
         Assert.True(watch.Elapsed < TimeSpan.FromMilliseconds(250), "A slow socket delayed fast clients too long.");
     }
 
+    [Fact]
+    public async Task IdleSocketIsClosedAndRecentSocketRemainsOpen()
+    {
+        var registry = new WebSocketConnectionRegistry();
+        var idle = new ImmediateWebSocket();
+        var live = new ImmediateWebSocket();
+        var epoch = DateTimeOffset.UnixEpoch;
+        registry.Register("idle", idle);
+        registry.Register("live", live);
+        registry.Touch("idle", epoch);
+        registry.Touch("live", epoch.AddSeconds(89));
+
+        var closed = await registry.CloseIdleAsync(TimeSpan.FromSeconds(90), epoch.AddSeconds(90));
+
+        Assert.Equal(new[] { "idle" }, closed);
+        Assert.NotEqual(WebSocketState.Open, idle.State);
+        Assert.Equal(WebSocketState.Open, live.State);
+    }
+
+    [Fact]
+    public async Task ShutdownClosesEverySocket()
+    {
+        var registry = new WebSocketConnectionRegistry();
+        var first = new ImmediateWebSocket();
+        var second = new ImmediateWebSocket();
+        registry.Register("first", first);
+        registry.Register("second", second);
+        await registry.CloseAllAsync("server_shutdown");
+        Assert.NotEqual(WebSocketState.Open, first.State);
+        Assert.NotEqual(WebSocketState.Open, second.State);
+    }
+
     private class ImmediateWebSocket : WebSocket
     {
         private WebSocketState state = WebSocketState.Open;

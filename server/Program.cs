@@ -4,15 +4,18 @@ using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
 
 var builder = WebApplication.CreateBuilder(args);
+var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<RoomDirectory>();
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
-builder.Services.AddSingleton<ConnectionAdmission>();
+builder.Services.AddSingleton(runtime);
+builder.Services.AddSingleton(new ConnectionAdmission(allowedOrigins: runtime.AllowedOrigins));
 builder.Services.AddHostedService<RoundDeadlineService>();
+builder.Services.AddHostedService<ShutdownNotifier>();
 var app = builder.Build();
-app.UseWebSockets();
+app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.Map("/ws", async context => {
@@ -26,6 +29,7 @@ app.Map("/ws", async context => {
     var gateway = context.RequestServices.GetRequiredService<ProtocolGateway>();
     var connections = context.RequestServices.GetRequiredService<WebSocketConnectionRegistry>();
     var connectionId = Guid.NewGuid().ToString("N");
+    var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.WebSocket");
     connections.Register(connectionId, socket);
     try
     {
@@ -35,6 +39,9 @@ app.Map("/ws", async context => {
             try { raw = await WebSocketMessageReader.ReceiveTextAsync(socket, context.RequestAborted); }
             catch (WebSocketException) { await socket.CloseOutputAsync(WebSocketCloseStatus.MessageTooBig, "message_too_large", CancellationToken.None); break; }
             if (raw is null) { await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", context.RequestAborted); break; }
+            connections.Touch(connectionId);
+            var type = SafeProtocolLog.TypeOf(raw);
+            logger.LogInformation("{@ProtocolMessage}", SafeProtocolLog.Record(connectionId, type));
             var replies = gateway.HandleMessages(connectionId, raw);
             await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
         }
