@@ -18,6 +18,7 @@ namespace HitMe.UI
         CreateRoom,
         JoinRoom,
         Lobby,
+        BotTraining,
         Gameplay,
         Result
     }
@@ -75,6 +76,7 @@ namespace HitMe.UI
         public GameObject createRoomPanel;
         public GameObject joinRoomPanel;
         public GameObject lobbyPanel;
+        public GameObject botTrainingPanel;
         public GameObject gameplayHudPanel;
         public GameObject resultPanel;
 
@@ -118,6 +120,18 @@ namespace HitMe.UI
         public TextMeshProUGUI txtLobbyReadyLabel;
         public Button btnLeaveRoom;
         public TextMeshProUGUI txtLobbyCountdown;
+        public Button btnLobbyToBotTraining;
+
+        [Header("Bot Training Controls")]
+        public TextMeshProUGUI txtBotTrainingHeader;
+        public TextMeshProUGUI txtSelectedBotCount;
+        public TextMeshProUGUI txtSelectedCharacter;
+        public Button btnDecreaseBots;
+        public Button btnIncreaseBots;
+        public Button btnPrevChar;
+        public Button btnNextChar;
+        public Button btnStartBotTraining;
+        public Button btnBackFromBotTraining;
 
         [Header("Gameplay HUD Controls")]
         public GameObject topPlacingBar;
@@ -148,6 +162,8 @@ namespace HitMe.UI
         private Coroutine _lobbyCountdownCoroutine;
         private bool _isLocalPlayerReady;
         private string _activeRoomCode = "HM4826";
+        private int _selectedBotCount = 3;
+        private int _selectedPracticeCharIndex = 0;
 
         private int _lastDisplayedRound = -1;
         private int _lastDisplayedMaxRounds = -1;
@@ -361,7 +377,8 @@ namespace HitMe.UI
                 btnBotTraining.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    StartPracticeWithBots(3);
+                    EnsureBotTrainingPanel();
+                    ShowScreen(ProductionScreen.BotTraining);
                 });
             }
 
@@ -493,6 +510,7 @@ namespace HitMe.UI
             if (createRoomPanel != null) createRoomPanel.SetActive(screen == ProductionScreen.CreateRoom);
             if (joinRoomPanel != null) joinRoomPanel.SetActive(screen == ProductionScreen.JoinRoom);
             if (lobbyPanel != null) lobbyPanel.SetActive(screen == ProductionScreen.Lobby);
+            if (botTrainingPanel != null) botTrainingPanel.SetActive(screen == ProductionScreen.BotTraining);
             if (gameplayHudPanel != null) gameplayHudPanel.SetActive(screen == ProductionScreen.Gameplay);
             if (resultPanel != null) resultPanel.SetActive(screen == ProductionScreen.Result);
 
@@ -632,6 +650,16 @@ namespace HitMe.UI
                     }
                 }
             }
+
+            EnsureLobbyToBotTrainingButton();
+            if (btnLobbyToBotTraining != null)
+            {
+                btnLobbyToBotTraining.gameObject.SetActive(_currentLobbyHumanCount < 2);
+            }
+            if (btnLobbyReady != null)
+            {
+                btnLobbyReady.interactable = _currentLobbyHumanCount >= 2;
+            }
         }
 
         private void ToggleLobbyReady()
@@ -701,11 +729,343 @@ namespace HitMe.UI
             StartGameplayMatch();
         }
 
-        public void StartPracticeWithBots(int botCount = 3)
+        public void EnsureLobbyToBotTrainingButton()
         {
-            if (matchController != null && matchController.configAsset != null)
+            if (btnLobbyToBotTraining != null) return;
+            if (lobbyPanel == null) return;
+
+            var existing = lobbyPanel.transform.Find("BtnGoToBotTraining");
+            if (existing != null)
             {
-                matchController.configAsset.maxPlayers = Mathf.Clamp(botCount + 1, 2, 6);
+                btnLobbyToBotTraining = existing.GetComponent<Button>();
+                return;
+            }
+
+            var go = new GameObject("BtnGoToBotTraining", typeof(RectTransform));
+            go.transform.SetParent(lobbyPanel.transform, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.12f, 0.13f);
+            rt.anchorMax = new Vector2(0.88f, 0.19f);
+            rt.sizeDelta = Vector2.zero;
+            var img = go.AddComponent<Image>();
+            img.color = new Color(0.15f, 0.45f, 0.85f, 0.95f);
+            btnLobbyToBotTraining = go.AddComponent<Button>();
+            btnLobbyToBotTraining.onClick.AddListener(() =>
+            {
+                AudioManager.Instance?.PlayClick();
+                EnsureBotTrainingPanel();
+                ShowScreen(ProductionScreen.BotTraining);
+            });
+
+            var txtObj = new GameObject("Text", typeof(RectTransform));
+            txtObj.transform.SetParent(go.transform, false);
+            var txtRt = txtObj.GetComponent<RectTransform>();
+            txtRt.anchorMin = Vector2.zero; txtRt.anchorMax = Vector2.one; txtRt.sizeDelta = Vector2.zero;
+            var txt = txtObj.AddComponent<TextMeshProUGUI>();
+            if (txtLobbyHeader != null && txtLobbyHeader.font != null) txt.font = txtLobbyHeader.font;
+            txt.fontSize = 17f;
+            txt.fontStyle = FontStyles.Bold;
+            txt.alignment = TextAlignmentOptions.Center;
+            txt.color = Color.white;
+            txt.text = "SANG MENU LUYỆN VỚI BOT";
+        }
+
+        public void EnsureBotTrainingPanel()
+        {
+            if (botTrainingPanel != null) return;
+
+            Transform safeArea = transform.Find("SafeAreaRoot") ?? transform;
+            var existing = safeArea.Find("BotTrainingPanel");
+            if (existing != null)
+            {
+                botTrainingPanel = existing.gameObject;
+                return;
+            }
+
+            var panelObj = new GameObject("BotTrainingPanel", typeof(RectTransform));
+            panelObj.transform.SetParent(safeArea, false);
+            var rt = panelObj.GetComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+            rt.anchoredPosition = Vector2.zero;
+
+            var bgImg = panelObj.AddComponent<Image>();
+            bgImg.color = new Color(0.06f, 0.09f, 0.15f, 0.98f);
+
+            var titleObj = new GameObject("Title", typeof(RectTransform));
+            titleObj.transform.SetParent(panelObj.transform, false);
+            var titleRt = titleObj.GetComponent<RectTransform>();
+            titleRt.anchorMin = new Vector2(0.08f, 0.83f);
+            titleRt.anchorMax = new Vector2(0.92f, 0.91f);
+            titleRt.sizeDelta = Vector2.zero;
+            var txtTitle = titleObj.AddComponent<TextMeshProUGUI>();
+            if (txtHomeLogo != null && txtHomeLogo.font != null) txtTitle.font = txtHomeLogo.font;
+            else if (txtLobbyHeader != null && txtLobbyHeader.font != null) txtTitle.font = txtLobbyHeader.font;
+            txtTitle.fontSize = 26f;
+            txtTitle.fontStyle = FontStyles.Bold;
+            txtTitle.alignment = TextAlignmentOptions.Center;
+            txtTitle.color = new Color(1f, 0.85f, 0.25f);
+            txtTitle.text = "LUYỆN VỚI BOT (CỤC BỘ)";
+
+            var subObj = new GameObject("Subtitle", typeof(RectTransform));
+            subObj.transform.SetParent(panelObj.transform, false);
+            var subRt = subObj.GetComponent<RectTransform>();
+            subRt.anchorMin = new Vector2(0.06f, 0.74f);
+            subRt.anchorMax = new Vector2(0.94f, 0.82f);
+            subRt.sizeDelta = Vector2.zero;
+            var txtSub = subObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtSub.font = txtTitle.font;
+            txtSub.fontSize = 15f;
+            txtSub.alignment = TextAlignmentOptions.Center;
+            txtSub.color = new Color(0.80f, 0.88f, 0.95f);
+            txtSub.text = "Chế độ một mình trên máy • Không cần mạng\nĐúng luật v1.2 (3 HP, 5s đặt, ném đồng thời)";
+
+            // Bot selector card
+            var botCard = new GameObject("BotSelectorCard", typeof(RectTransform));
+            botCard.transform.SetParent(panelObj.transform, false);
+            var botCardRt = botCard.GetComponent<RectTransform>();
+            botCardRt.anchorMin = new Vector2(0.10f, 0.54f);
+            botCardRt.anchorMax = new Vector2(0.90f, 0.69f);
+            botCardRt.sizeDelta = Vector2.zero;
+            var botCardBg = botCard.AddComponent<Image>();
+            botCardBg.color = new Color(0.12f, 0.16f, 0.25f, 0.95f);
+
+            var botHeaderObj = new GameObject("Label", typeof(RectTransform));
+            botHeaderObj.transform.SetParent(botCard.transform, false);
+            var botHeaderRt = botHeaderObj.GetComponent<RectTransform>();
+            botHeaderRt.anchorMin = new Vector2(0.05f, 0.55f);
+            botHeaderRt.anchorMax = new Vector2(0.95f, 0.92f);
+            botHeaderRt.sizeDelta = Vector2.zero;
+            var txtBotHeader = botHeaderObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtBotHeader.font = txtTitle.font;
+            txtBotHeader.fontSize = 15f;
+            txtBotHeader.alignment = TextAlignmentOptions.Center;
+            txtBotHeader.color = new Color(0.68f, 0.78f, 0.90f);
+            txtBotHeader.text = "SỐ LƯỢNG BOT (1–5 BOT):";
+
+            var botValObj = new GameObject("Value", typeof(RectTransform));
+            botValObj.transform.SetParent(botCard.transform, false);
+            var botValRt = botValObj.GetComponent<RectTransform>();
+            botValRt.anchorMin = new Vector2(0.20f, 0.10f);
+            botValRt.anchorMax = new Vector2(0.80f, 0.50f);
+            botValRt.sizeDelta = Vector2.zero;
+            txtSelectedBotCount = botValObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtSelectedBotCount.font = txtTitle.font;
+            txtSelectedBotCount.fontSize = 19f;
+            txtSelectedBotCount.fontStyle = FontStyles.Bold;
+            txtSelectedBotCount.alignment = TextAlignmentOptions.Center;
+            txtSelectedBotCount.color = Color.white;
+
+            // Bot decrease button
+            var btnDecBotObj = new GameObject("BtnDecBot", typeof(RectTransform));
+            btnDecBotObj.transform.SetParent(botCard.transform, false);
+            var btnDecBotRt = btnDecBotObj.GetComponent<RectTransform>();
+            btnDecBotRt.anchorMin = new Vector2(0.06f, 0.10f);
+            btnDecBotRt.anchorMax = new Vector2(0.22f, 0.50f);
+            btnDecBotRt.sizeDelta = Vector2.zero;
+            var btnDecBotBg = btnDecBotObj.AddComponent<Image>();
+            btnDecBotBg.color = new Color(0.25f, 0.32f, 0.44f);
+            btnDecreaseBots = btnDecBotObj.AddComponent<Button>();
+            btnDecreaseBots.onClick.AddListener(() => ChangeBotCount(-1));
+            var txtDecObj = new GameObject("Text", typeof(RectTransform));
+            txtDecObj.transform.SetParent(btnDecBotObj.transform, false);
+            var txtDecRt = txtDecObj.GetComponent<RectTransform>();
+            txtDecRt.anchorMin = Vector2.zero; txtDecRt.anchorMax = Vector2.one; txtDecRt.sizeDelta = Vector2.zero;
+            var txtDec = txtDecObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtDec.font = txtTitle.font;
+            txtDec.fontSize = 22f; txtDec.alignment = TextAlignmentOptions.Center; txtDec.color = Color.white; txtDec.text = "-";
+
+            // Bot increase button
+            var btnIncBotObj = new GameObject("BtnIncBot", typeof(RectTransform));
+            btnIncBotObj.transform.SetParent(botCard.transform, false);
+            var btnIncBotRt = btnIncBotObj.GetComponent<RectTransform>();
+            btnIncBotRt.anchorMin = new Vector2(0.78f, 0.10f);
+            btnIncBotRt.anchorMax = new Vector2(0.94f, 0.50f);
+            btnIncBotRt.sizeDelta = Vector2.zero;
+            var btnIncBotBg = btnIncBotObj.AddComponent<Image>();
+            btnIncBotBg.color = new Color(0.25f, 0.32f, 0.44f);
+            btnIncreaseBots = btnIncBotObj.AddComponent<Button>();
+            btnIncreaseBots.onClick.AddListener(() => ChangeBotCount(1));
+            var txtIncObj = new GameObject("Text", typeof(RectTransform));
+            txtIncObj.transform.SetParent(btnIncBotObj.transform, false);
+            var txtIncRt = txtIncObj.GetComponent<RectTransform>();
+            txtIncRt.anchorMin = Vector2.zero; txtIncRt.anchorMax = Vector2.one; txtIncRt.sizeDelta = Vector2.zero;
+            var txtInc = txtIncObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtInc.font = txtTitle.font;
+            txtInc.fontSize = 22f; txtInc.alignment = TextAlignmentOptions.Center; txtInc.color = Color.white; txtInc.text = "+";
+
+            // Character selector card
+            var charCard = new GameObject("CharSelectorCard", typeof(RectTransform));
+            charCard.transform.SetParent(panelObj.transform, false);
+            var charCardRt = charCard.GetComponent<RectTransform>();
+            charCardRt.anchorMin = new Vector2(0.10f, 0.36f);
+            charCardRt.anchorMax = new Vector2(0.90f, 0.51f);
+            charCardRt.sizeDelta = Vector2.zero;
+            var charCardBg = charCard.AddComponent<Image>();
+            charCardBg.color = new Color(0.12f, 0.16f, 0.25f, 0.95f);
+
+            var charHeaderObj = new GameObject("Label", typeof(RectTransform));
+            charHeaderObj.transform.SetParent(charCard.transform, false);
+            var charHeaderRt = charHeaderObj.GetComponent<RectTransform>();
+            charHeaderRt.anchorMin = new Vector2(0.05f, 0.55f);
+            charHeaderRt.anchorMax = new Vector2(0.95f, 0.92f);
+            charHeaderRt.sizeDelta = Vector2.zero;
+            var txtCharHeader = charHeaderObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtCharHeader.font = txtTitle.font;
+            txtCharHeader.fontSize = 15f;
+            txtCharHeader.alignment = TextAlignmentOptions.Center;
+            txtCharHeader.color = new Color(0.68f, 0.78f, 0.90f);
+            txtCharHeader.text = "NHÂN VẬT CỦA BẠN:";
+
+            var charValObj = new GameObject("Value", typeof(RectTransform));
+            charValObj.transform.SetParent(charCard.transform, false);
+            var charValRt = charValObj.GetComponent<RectTransform>();
+            charValRt.anchorMin = new Vector2(0.20f, 0.10f);
+            charValRt.anchorMax = new Vector2(0.80f, 0.50f);
+            charValRt.sizeDelta = Vector2.zero;
+            txtSelectedCharacter = charValObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtSelectedCharacter.font = txtTitle.font;
+            txtSelectedCharacter.fontSize = 19f;
+            txtSelectedCharacter.fontStyle = FontStyles.Bold;
+            txtSelectedCharacter.alignment = TextAlignmentOptions.Center;
+            txtSelectedCharacter.color = new Color(0.35f, 0.85f, 1f);
+
+            // Prev char button
+            var btnPrevObj = new GameObject("BtnPrevChar", typeof(RectTransform));
+            btnPrevObj.transform.SetParent(charCard.transform, false);
+            var btnPrevRt = btnPrevObj.GetComponent<RectTransform>();
+            btnPrevRt.anchorMin = new Vector2(0.06f, 0.10f);
+            btnPrevRt.anchorMax = new Vector2(0.22f, 0.50f);
+            btnPrevRt.sizeDelta = Vector2.zero;
+            var btnPrevBg = btnPrevObj.AddComponent<Image>();
+            btnPrevBg.color = new Color(0.25f, 0.32f, 0.44f);
+            btnPrevChar = btnPrevObj.AddComponent<Button>();
+            btnPrevChar.onClick.AddListener(() => ChangePracticeCharacter(-1));
+            var txtPrevObj = new GameObject("Text", typeof(RectTransform));
+            txtPrevObj.transform.SetParent(btnPrevObj.transform, false);
+            var txtPrevRt = txtPrevObj.GetComponent<RectTransform>();
+            txtPrevRt.anchorMin = Vector2.zero; txtPrevRt.anchorMax = Vector2.one; txtPrevRt.sizeDelta = Vector2.zero;
+            var txtPrev = txtPrevObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtPrev.font = txtTitle.font;
+            txtPrev.fontSize = 18f; txtPrev.alignment = TextAlignmentOptions.Center; txtPrev.color = Color.white; txtPrev.text = "<";
+
+            // Next char button
+            var btnNextObj = new GameObject("BtnNextChar", typeof(RectTransform));
+            btnNextObj.transform.SetParent(charCard.transform, false);
+            var btnNextRt = btnNextObj.GetComponent<RectTransform>();
+            btnNextRt.anchorMin = new Vector2(0.78f, 0.10f);
+            btnNextRt.anchorMax = new Vector2(0.94f, 0.50f);
+            btnNextRt.sizeDelta = Vector2.zero;
+            var btnNextBg = btnNextObj.AddComponent<Image>();
+            btnNextBg.color = new Color(0.25f, 0.32f, 0.44f);
+            btnNextChar = btnNextObj.AddComponent<Button>();
+            btnNextChar.onClick.AddListener(() => ChangePracticeCharacter(1));
+            var txtNextObj = new GameObject("Text", typeof(RectTransform));
+            txtNextObj.transform.SetParent(btnNextObj.transform, false);
+            var txtNextRt = txtNextObj.GetComponent<RectTransform>();
+            txtNextRt.anchorMin = Vector2.zero; txtNextRt.anchorMax = Vector2.one; txtNextRt.sizeDelta = Vector2.zero;
+            var txtNext = txtNextObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtNext.font = txtTitle.font;
+            txtNext.fontSize = 18f; txtNext.alignment = TextAlignmentOptions.Center; txtNext.color = Color.white; txtNext.text = ">";
+
+            // Action Start button
+            var btnStartObj = new GameObject("BtnStartPractice", typeof(RectTransform));
+            btnStartObj.transform.SetParent(panelObj.transform, false);
+            var btnStartRt = btnStartObj.GetComponent<RectTransform>();
+            btnStartRt.anchorMin = new Vector2(0.12f, 0.20f);
+            btnStartRt.anchorMax = new Vector2(0.88f, 0.28f);
+            btnStartRt.sizeDelta = Vector2.zero;
+            var btnStartBg = btnStartObj.AddComponent<Image>();
+            btnStartBg.color = new Color(0.12f, 0.65f, 0.35f, 0.98f);
+            btnStartBotTraining = btnStartObj.AddComponent<Button>();
+            btnStartBotTraining.onClick.AddListener(() =>
+            {
+                AudioManager.Instance?.PlayClick();
+                StartPracticeWithBots(_selectedBotCount, _selectedPracticeCharIndex);
+            });
+            var btnStartTxtObj = new GameObject("Text", typeof(RectTransform));
+            btnStartTxtObj.transform.SetParent(btnStartObj.transform, false);
+            var btnStartTxtRt = btnStartTxtObj.GetComponent<RectTransform>();
+            btnStartTxtRt.anchorMin = Vector2.zero; btnStartTxtRt.anchorMax = Vector2.one; btnStartTxtRt.sizeDelta = Vector2.zero;
+            var txtStart = btnStartTxtObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtStart.font = txtTitle.font;
+            txtStart.fontSize = 20f;
+            txtStart.fontStyle = FontStyles.Bold;
+            txtStart.alignment = TextAlignmentOptions.Center;
+            txtStart.color = Color.white;
+            txtStart.text = "BẮT ĐẦU LUYỆN TẬP";
+
+            // Back button
+            var btnBackObj = new GameObject("BtnBack", typeof(RectTransform));
+            btnBackObj.transform.SetParent(panelObj.transform, false);
+            var btnBackRt = btnBackObj.GetComponent<RectTransform>();
+            btnBackRt.anchorMin = new Vector2(0.20f, 0.09f);
+            btnBackRt.anchorMax = new Vector2(0.80f, 0.16f);
+            btnBackRt.sizeDelta = Vector2.zero;
+            var btnBackBg = btnBackObj.AddComponent<Image>();
+            btnBackBg.color = new Color(0.25f, 0.30f, 0.42f, 0.95f);
+            btnBackFromBotTraining = btnBackObj.AddComponent<Button>();
+            btnBackFromBotTraining.onClick.AddListener(() =>
+            {
+                AudioManager.Instance?.PlayClick();
+                ShowScreen(ProductionScreen.Home);
+            });
+            var btnBackTxtObj = new GameObject("Text", typeof(RectTransform));
+            btnBackTxtObj.transform.SetParent(btnBackObj.transform, false);
+            var btnBackTxtRt = btnBackTxtObj.GetComponent<RectTransform>();
+            btnBackTxtRt.anchorMin = Vector2.zero; btnBackTxtRt.anchorMax = Vector2.one; btnBackTxtRt.sizeDelta = Vector2.zero;
+            var txtBack = btnBackTxtObj.AddComponent<TextMeshProUGUI>();
+            if (txtTitle.font != null) txtBack.font = txtTitle.font;
+            txtBack.fontSize = 16f;
+            txtBack.alignment = TextAlignmentOptions.Center;
+            txtBack.color = new Color(0.9f, 0.9f, 0.9f);
+            txtBack.text = "QUAY LẠI TRANG CHỦ";
+
+            botTrainingPanel = panelObj;
+            RefreshBotTrainingDisplay();
+        }
+
+        public void ChangeBotCount(int delta)
+        {
+            AudioManager.Instance?.PlayClick();
+            _selectedBotCount = Mathf.Clamp(_selectedBotCount + delta, 1, 5);
+            RefreshBotTrainingDisplay();
+        }
+
+        public void ChangePracticeCharacter(int delta)
+        {
+            AudioManager.Instance?.PlayClick();
+            int total = PlayerView.CharacterNames.Length;
+            _selectedPracticeCharIndex = ((_selectedPracticeCharIndex + delta) % total + total) % total;
+            RefreshBotTrainingDisplay();
+        }
+
+        public void RefreshBotTrainingDisplay()
+        {
+            if (txtSelectedBotCount != null)
+            {
+                int totalPlayers = _selectedBotCount + 1;
+                txtSelectedBotCount.text = $"{_selectedBotCount} BOT (1v{_selectedBotCount} • Tổng {totalPlayers} người)";
+            }
+            if (txtSelectedCharacter != null)
+            {
+                string charName = (_selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < PlayerView.CharacterNames.Length)
+                    ? PlayerView.CharacterNames[_selectedPracticeCharIndex]
+                    : "Nam Làng";
+                txtSelectedCharacter.text = charName;
+            }
+        }
+
+        public void StartPracticeWithBots(int botCount = 3, int characterIndex = 0)
+        {
+            if (matchController != null)
+            {
+                matchController.localCharacterIndex = characterIndex;
+                if (matchController.configAsset != null)
+                {
+                    matchController.configAsset.maxPlayers = Mathf.Clamp(botCount + 1, 2, 6);
+                }
             }
             StartGameplayMatch();
         }

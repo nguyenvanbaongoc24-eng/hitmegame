@@ -96,12 +96,22 @@ namespace HitMe.Editor
 
                 // ==================== 2. LOBBY SCREEN ====================
                 ui.ShowScreen(ProductionScreen.Lobby);
-                ui.txtLobbyHeader.text = "PHÒNG CHIẾN HỮU • SÂN LÀNG";
-                ui.txtLobbyRoomCode.text = "MÃ PHÒNG: HM8888 • SÂN LÀNG";
-                ui.txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
+                ui.UpdateLobbyRoster(4, "Phòng Chiến Hữu", "HM8888");
                 ui.EnsureAndRefreshBuildFingerprint();
                 SetPlayersVisible(views, false);
                 RenderAndSave(cam, Path.Combine(EvidenceDir, "02_lobby.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 2B. LOBBY SCREEN 1P WAITING (Start locked, redirect to Bot Training)
+                ui.UpdateLobbyRoster(1, "Phòng Chiến Hữu", "HM4826");
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "res_1080x2340_lobby_waiting_1p.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 2C. BOT TRAINING DEDICATED MENU (Local bot mode)
+                ui.EnsureBotTrainingPanel();
+                ui.ShowScreen(ProductionScreen.BotTraining);
+                ui.RefreshBotTrainingDisplay();
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(EvidenceDir, "res_1080x2340_bot_training_menu.png"), commitShort, buildId, ShotWidth, ShotHeight);
 
                 // ==================== 3. PLACING (1080x2340) ====================
                 ui.ShowScreen(ProductionScreen.Gameplay);
@@ -498,6 +508,7 @@ namespace HitMe.Editor
                           $"  \"sha256\": \"{sha256}\",\n" +
                           $"  \"commit\": \"{commitShort}\",\n" +
                           $"  \"scene\": \"{SceneName}\",\n" +
+                          $"  \"capture_source\": \"Unity Editor (Batchmode Render)\",\n" +
                           $"  \"build_id\": \"{buildId}\",\n" +
                           $"  \"resolution\": \"{width}x{height}\",\n" +
                           $"  \"timestamp\": \"{timestamp}\",\n" +
