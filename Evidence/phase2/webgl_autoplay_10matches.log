@@ -1,643 +1,643 @@
 ================================================================================
 HIT ME — WEBGL LIVE VERIFICATION & 10-MATCH AUTOPLAY + GC ALLOCATION REPORT (S4, S6)
-URL: http://localhost:8092/index.html?autoPlay=10
+URL: http://localhost:8093/index.html?autoPlay=10
 Build Directory: D:\HITME GAME\unity-client\Builds\WebGL_20261030_6e0da22
 Commit: 6e0da22
 Console Errors: 0
 AutoPlay 10 Matches Completed: YES (10/10)
 ================================================================================
-[2026-10-30T08:35:30.670Z] [console.log] [UnityCache] 'http://localhost:8092/Build/WebGL_20261030_f14c587.data?v=phase1-closed-20261028' successfully downloaded and stored in the browser cache
-[2026-10-30T08:35:31.145Z] [console.log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
+[2026-10-30T09:54:20.741Z] [console.log] [UnityCache] 'http://localhost:8093/Build/WebGL_20261030_f53a648.data?v=phase1-closed-20261028' successfully downloaded and stored in the browser cache
+[2026-10-30T09:54:21.014Z] [console.log] [UnityMemory] Configuration Parameters - Can be set up in boot.config
 
-[2026-10-30T08:35:31.146Z] [console.log]     "memorysetup-bucket-allocator-granularity=16"
+[2026-10-30T09:54:21.015Z] [console.log]     "memorysetup-bucket-allocator-granularity=16"
 
-[2026-10-30T08:35:31.146Z] [console.log]     "memorysetup-bucket-allocator-bucket-count=8"
+[2026-10-30T09:54:21.015Z] [console.log]     "memorysetup-bucket-allocator-bucket-count=8"
 
-[2026-10-30T08:35:31.147Z] [console.log]     "memorysetup-bucket-allocator-block-size=4194304"
+[2026-10-30T09:54:21.016Z] [console.log]     "memorysetup-bucket-allocator-block-size=4194304"
 
-[2026-10-30T08:35:31.148Z] [console.log]     "memorysetup-bucket-allocator-block-count=1"
+[2026-10-30T09:54:21.016Z] [console.log]     "memorysetup-bucket-allocator-block-count=1"
 
-[2026-10-30T08:35:31.149Z] [console.log]     "memorysetup-main-allocator-block-size=16777216"
+[2026-10-30T09:54:21.017Z] [console.log]     "memorysetup-main-allocator-block-size=16777216"
 
-[2026-10-30T08:35:31.149Z] [console.log]     "memorysetup-thread-allocator-block-size=16777216"
+[2026-10-30T09:54:21.017Z] [console.log]     "memorysetup-thread-allocator-block-size=16777216"
 
-[2026-10-30T08:35:31.150Z] [console.log]     "memorysetup-main-allocator-mimalloc-enabled=1"
+[2026-10-30T09:54:21.017Z] [console.log]     "memorysetup-main-allocator-mimalloc-enabled=1"
 
-[2026-10-30T08:35:31.150Z] [console.log]     "memorysetup-gfx-main-allocator-block-size=16777216"
+[2026-10-30T09:54:21.017Z] [console.log]     "memorysetup-gfx-main-allocator-block-size=16777216"
 
-[2026-10-30T08:35:31.152Z] [console.log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
+[2026-10-30T09:54:21.018Z] [console.log]     "memorysetup-gfx-thread-allocator-block-size=16777216"
 
-[2026-10-30T08:35:31.152Z] [console.log]     "memorysetup-cache-allocator-block-size=4194304"
+[2026-10-30T09:54:21.019Z] [console.log]     "memorysetup-cache-allocator-block-size=4194304"
 
-[2026-10-30T08:35:31.152Z] [console.log]     "memorysetup-typetree-allocator-block-size=2097152"
+[2026-10-30T09:54:21.019Z] [console.log]     "memorysetup-typetree-allocator-block-size=2097152"
 
-[2026-10-30T08:35:31.152Z] [console.log]     "memorysetup-profiler-bucket-allocator-granularity=16"
+[2026-10-30T09:54:21.019Z] [console.log]     "memorysetup-profiler-bucket-allocator-granularity=16"
 
-[2026-10-30T08:35:31.153Z] [console.log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
+[2026-10-30T09:54:21.020Z] [console.log]     "memorysetup-profiler-bucket-allocator-bucket-count=8"
 
-[2026-10-30T08:35:31.153Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
+[2026-10-30T09:54:21.020Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-size=4194304"
 
-[2026-10-30T08:35:31.154Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-count=1"
+[2026-10-30T09:54:21.020Z] [console.log]     "memorysetup-profiler-bucket-allocator-block-count=1"
 
-[2026-10-30T08:35:31.154Z] [console.log]     "memorysetup-profiler-allocator-block-size=16777216"
+[2026-10-30T09:54:21.020Z] [console.log]     "memorysetup-profiler-allocator-block-size=16777216"
 
-[2026-10-30T08:35:31.154Z] [console.log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
+[2026-10-30T09:54:21.021Z] [console.log]     "memorysetup-profiler-editor-allocator-block-size=1048576"
 
-[2026-10-30T08:35:31.155Z] [console.log]     "memorysetup-temp-allocator-size-main=4194304"
+[2026-10-30T09:54:21.021Z] [console.log]     "memorysetup-temp-allocator-size-main=4194304"
 
-[2026-10-30T08:35:31.155Z] [console.log]     "memorysetup-job-temp-allocator-block-size=2097152"
+[2026-10-30T09:54:21.021Z] [console.log]     "memorysetup-job-temp-allocator-block-size=2097152"
 
-[2026-10-30T08:35:31.155Z] [console.log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
+[2026-10-30T09:54:21.021Z] [console.log]     "memorysetup-job-temp-allocator-block-size-background=1048576"
 
-[2026-10-30T08:35:31.155Z] [console.log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+[2026-10-30T09:54:21.021Z] [console.log]     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 
-[2026-10-30T08:35:31.156Z] [console.log]     "memorysetup-temp-allocator-size-background-worker=32768"
+[2026-10-30T09:54:21.022Z] [console.log]     "memorysetup-temp-allocator-size-background-worker=32768"
 
-[2026-10-30T08:35:31.156Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
+[2026-10-30T09:54:21.022Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-main=262144"
 
-[2026-10-30T08:35:31.156Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
+[2026-10-30T09:54:21.022Z] [console.log]     "memorysetup-allocator-temp-initial-block-size-worker=262144"
 
-[2026-10-30T08:35:31.157Z] [console.log]     "memorysetup-temp-allocator-size-audio-worker=65536"
+[2026-10-30T09:54:21.022Z] [console.log]     "memorysetup-temp-allocator-size-audio-worker=65536"
 
-[2026-10-30T08:35:31.157Z] [console.log]     "memorysetup-remapper-allocator-initial-capacity=32768"
+[2026-10-30T09:54:21.023Z] [console.log]     "memorysetup-remapper-allocator-initial-capacity=32768"
 
-[2026-10-30T08:35:31.215Z] [console.log] CodeReloadManager initialized
+[2026-10-30T09:54:21.071Z] [console.log] CodeReloadManager initialized
 
-[2026-10-30T08:35:31.221Z] [console.log] [Physics::Module] Initialized fallback backend.
+[2026-10-30T09:54:21.079Z] [console.log] [Physics::Module] Initialized fallback backend.
 
-[2026-10-30T08:35:31.221Z] [console.log] [Physics::Module] Id: 0xdecafbad
+[2026-10-30T09:54:21.079Z] [console.log] [Physics::Module] Id: 0xdecafbad
 
-[2026-10-30T08:35:31.223Z] [console.log] Loading player data from data.unity3d
+[2026-10-30T09:54:21.080Z] [console.log] Loading player data from data.unity3d
 
-[2026-10-30T08:35:31.236Z] [console.log] Initialize engine version: 6000.6.4f1 (12bfff696524)
+[2026-10-30T09:54:21.089Z] [console.log] Initialize engine version: 6000.6.4f1 (12bfff696524)
 
-[2026-10-30T08:35:31.236Z] [console.log] [EntityIdStore] init: page-table path, blockCount=1048576, entitiesPerBlock=256, top-level=8388608 bytes, sizeof(Block)=4128 (lazily allocated per committed block)
+[2026-10-30T09:54:21.090Z] [console.log] [EntityIdStore] init: page-table path, blockCount=1048576, entitiesPerBlock=256, top-level=8388608 bytes, sizeof(Block)=4128 (lazily allocated per committed block)
 
-[2026-10-30T08:35:31.240Z] [console.log] Creating WebGL 2.0 context.
-[2026-10-30T08:35:31.267Z] [console.log] Renderer: WebKit WebGL
+[2026-10-30T09:54:21.091Z] [console.log] Creating WebGL 2.0 context.
+[2026-10-30T09:54:21.116Z] [console.log] Renderer: WebKit WebGL
 
-[2026-10-30T08:35:31.267Z] [console.log] Vendor:   WebKit
+[2026-10-30T09:54:21.116Z] [console.log] Vendor:   WebKit
 
-[2026-10-30T08:35:31.268Z] [console.log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
+[2026-10-30T09:54:21.116Z] [console.log] Version:  OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium))
 
-[2026-10-30T08:35:31.268Z] [console.log] GLES:     3
+[2026-10-30T09:54:21.116Z] [console.log] GLES:     3
 
-[2026-10-30T08:35:31.269Z] [console.log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_norm16 KHR_parallel_shader_compile NV_shader_noperspective_interpolation OES_texture_float_linear WEBGL_blend_func_extended WEBGL_clip_cull_distance WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_norm16 GL_KHR_parallel_shader_compile GL_NV_shader_noperspective_interpolation GL_OES_texture_float_linear GL
+[2026-10-30T09:54:21.117Z] [console.log]  EXT_clip_control EXT_color_buffer_float EXT_color_buffer_half_float EXT_conservative_depth EXT_depth_clamp EXT_disjoint_timer_query_webgl2 EXT_float_blend EXT_polygon_offset_clamp EXT_texture_compression_bptc EXT_texture_compression_rgtc EXT_texture_filter_anisotropic EXT_texture_norm16 KHR_parallel_shader_compile NV_shader_noperspective_interpolation OES_texture_float_linear WEBGL_blend_func_extended WEBGL_clip_cull_distance WEBGL_compressed_texture_s3tc WEBGL_compressed_texture_s3tc_srgb WEBGL_debug_renderer_info WEBGL_debug_shaders WEBGL_lose_context WEBGL_multi_draw WEBGL_polygon_mode GL_EXT_clip_control GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_depth_clamp GL_EXT_disjoint_timer_query_webgl2 GL_EXT_float_blend GL_EXT_polygon_offset_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_rgtc GL_EXT_texture_filter_anisotropic GL_EXT_texture_norm16 GL_KHR_parallel_shader_compile GL_NV_shader_noperspective_interpolation GL_OES_texture_float_linear GL
 
-[2026-10-30T08:35:31.269Z] [console.log] _WEBGL_blend_func_extended GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode
+[2026-10-30T09:54:21.117Z] [console.log] _WEBGL_blend_func_extended GL_WEBGL_clip_cull_distance GL_WEBGL_compressed_texture_s3tc GL_WEBGL_compressed_texture_s3tc_srgb GL_WEBGL_debug_renderer_info GL_WEBGL_debug_shaders GL_WEBGL_lose_context GL_WEBGL_multi_draw GL_WEBGL_polygon_mode
 
-[2026-10-30T08:35:31.283Z] [console.log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
+[2026-10-30T09:54:21.135Z] [console.log] OPENGL LOG: Creating OpenGL ES 3.0 graphics device ; Context level  <OpenGL ES 3.0> ; Context handle 1
 
-[2026-10-30T08:35:31.410Z] [console.log] [Physics::Module] Selected backend (deferred post-plugins).
+[2026-10-30T09:54:21.239Z] [console.log] [Physics::Module] Selected backend (deferred post-plugins).
 
-[2026-10-30T08:35:31.411Z] [console.log] [Physics::Module] Name: PhysX
+[2026-10-30T09:54:21.239Z] [console.log] [Physics::Module] Name: PhysX
 
-[2026-10-30T08:35:31.411Z] [console.log] [Physics::Module] Id: 0xf2b8ea05
+[2026-10-30T09:54:21.240Z] [console.log] [Physics::Module] Id: 0xf2b8ea05
 
-[2026-10-30T08:35:31.411Z] [console.log] [Physics::Module] SDK Version: 4.1.2
+[2026-10-30T09:54:21.240Z] [console.log] [Physics::Module] SDK Version: 4.1.2
 
-[2026-10-30T08:35:31.412Z] [console.log] [Physics::Module] Integration Version: 1.0.0
+[2026-10-30T09:54:21.240Z] [console.log] [Physics::Module] Integration Version: 1.0.0
 
-[2026-10-30T08:35:31.412Z] [console.log] [Physics::Module] Threading Mode: Single-Threaded
+[2026-10-30T09:54:21.240Z] [console.log] [Physics::Module] Threading Mode: Single-Threaded
 
-[2026-10-30T08:35:31.435Z] [console.log] Input Manager initialize...
+[2026-10-30T09:54:21.263Z] [console.log] Input Manager initialize...
 
-[2026-10-30T08:35:31.560Z] [console.log] UnloadTime: 1.399999 ms
+[2026-10-30T09:54:21.367Z] [console.log] UnloadTime: 1.700000 ms
 
-[2026-10-30T08:35:33.668Z] [console.log] [WebGLAutoPlay] Starting automated verification of 10 matches on build (targetSeconds=0)...
+[2026-10-30T09:54:23.466Z] [console.log] [WebGLAutoPlay] Starting automated verification of 10 matches on build (targetSeconds=0)...
 
-[2026-10-30T08:35:33.678Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:33.678Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:33.679Z] [console.log] [BuildFingerprint] build f14c587 · 2026-10-30 15:32 · Graybox
+[2026-10-30T09:54:23.467Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:23.467Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:23.471Z] [console.log] [BuildFingerprint] build f53a648 · 2026-10-30 16:48 · Graybox
 
-[2026-10-30T08:35:33.698Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
+[2026-10-30T09:54:23.505Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
 
-[2026-10-30T08:35:33.698Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
+[2026-10-30T09:54:23.506Z] [console.warning] The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
 
-[2026-10-30T08:35:33.899Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:33.900Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:33.901Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.743Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:23.744Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:23.747Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.902Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.748Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.902Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.748Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.902Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.755Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.903Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.758Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.903Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.760Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:33.961Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:33.962Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:34.027Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:34.027Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:34.163Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.793Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:23.794Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:23.860Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:23.862Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:23.989Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.164Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.989Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.164Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.990Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.164Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.991Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.165Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:23.993Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.427Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.227Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.428Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.428Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.428Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.429Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.229Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.477Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.477Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.477Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.478Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.695Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.478Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.960Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.728Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.961Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.728Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.961Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.728Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.961Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.729Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:34.962Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.729Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.143Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:35.144Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:35.144Z] [console.log] [WebGLAutoPlay] Match 1/10 completed: rounds=5, winners=[player]
+[2026-10-30T09:54:24.927Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:24.927Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:24.928Z] [console.log] [WebGLAutoPlay] Match 1/10 completed: rounds=5, winners=[player]
 
-[2026-10-30T08:35:35.144Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.928Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.227Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.993Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.227Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:24.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.477Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.260Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.477Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.260Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.478Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.261Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.481Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.261Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.482Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.261Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.676Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.460Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.727Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.727Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.727Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.728Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.778Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.994Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.779Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.995Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.779Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:35.995Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:25.779Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.027Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.027Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.028Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.244Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.028Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.442Z] [console.log] Trying to get length of sound which is not loaded yet.
-[2026-10-30T08:35:36.443Z] [console.log] Trying to get metadata of sound which is not loaded.
-[2026-10-30T08:35:36.443Z] [console.log] [WebGLAutoPlay] Match 2/10 completed: rounds=5, winners=[bot-3, bot-5]
+[2026-10-30T09:54:26.210Z] [console.log] Trying to get length of sound which is not loaded yet.
+[2026-10-30T09:54:26.210Z] [console.log] Trying to get metadata of sound which is not loaded.
+[2026-10-30T09:54:26.211Z] [console.log] [WebGLAutoPlay] Match 2/10 completed: rounds=5, winners=[bot-3, bot-5]
 
-[2026-10-30T08:35:36.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.295Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.296Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.527Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.297Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.297Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.297Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.726Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.493Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.793Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.560Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.793Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.561Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.793Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.561Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:36.794Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.561Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.059Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.827Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.060Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.827Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.060Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.828Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.060Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:26.828Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.259Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.027Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.260Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.027Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.326Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.093Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.326Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.093Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.327Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.093Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.592Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.359Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.592Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.359Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.593Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.360Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.792Z] [console.log] [WebGLAutoPlay] Match 3/10 completed: rounds=5, winners=[bot-3]
+[2026-10-30T09:54:27.544Z] [console.log] [WebGLAutoPlay] Match 3/10 completed: rounds=5, winners=[bot-3]
 
-[2026-10-30T08:35:37.842Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.609Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.859Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.626Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.860Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.626Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.860Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.627Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.861Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.627Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:37.861Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.627Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.128Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.893Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.128Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.893Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.129Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.894Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.129Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.894Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.129Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:27.894Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.325Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.092Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.143Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.144Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.144Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.394Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.144Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.592Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.342Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.659Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.859Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.592Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.859Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.593Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.926Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.659Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:38.926Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.659Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.125Z] [console.log] [WebGLAutoPlay] Match 4/10 completed: rounds=5, winners=[bot-3]
+[2026-10-30T09:54:28.859Z] [console.log] [WebGLAutoPlay] Match 4/10 completed: rounds=5, winners=[bot-3]
 
-[2026-10-30T08:35:39.176Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.928Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.192Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.943Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.944Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.945Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.946Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:28.946Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.459Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.192Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.459Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.459Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.460Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.460Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.193Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.658Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.376Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.725Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.442Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.726Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.442Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.726Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.443Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.727Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.443Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.727Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.443Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.992Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.992Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.694Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.993Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.695Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.993Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.695Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:39.993Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.696Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.191Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.877Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.259Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.943Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.259Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.944Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.259Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.944Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.260Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:29.944Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.458Z] [console.log] [WebGLAutoPlay] Match 5/10 completed: rounds=5, winners=[bot-4]
+[2026-10-30T09:54:30.127Z] [console.log] [WebGLAutoPlay] Match 5/10 completed: rounds=5, winners=[bot-4]
 
-[2026-10-30T08:35:40.459Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.128Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.525Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.194Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.541Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.212Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.542Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.212Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.542Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.212Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.542Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.212Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.542Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.213Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.809Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.460Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.809Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.460Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.810Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.461Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.810Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.461Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:40.811Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.462Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.058Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.710Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.059Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.710Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.059Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.710Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.059Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.711Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.060Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.711Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.242Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.908Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.309Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.977Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.309Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.978Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.309Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.978Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.310Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:30.978Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.492Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.177Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.559Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.559Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.559Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.243Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.759Z] [console.log] [WebGLAutoPlay] Match 6/10 completed: rounds=5, winners=[player, bot-1]
+[2026-10-30T09:54:31.442Z] [console.log] [WebGLAutoPlay] Match 6/10 completed: rounds=5, winners=[player, bot-1]
 
-[2026-10-30T08:35:41.759Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.443Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.759Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.443Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.842Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.843Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.843Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.843Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:41.844Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.528Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.042Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.728Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.109Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.793Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.109Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.794Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.109Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.794Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.110Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.794Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.308Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:31.992Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.376Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.061Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.376Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.062Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.376Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.062Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.624Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.326Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.625Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.327Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.625Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.327Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.875Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.592Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.875Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.592Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:42.876Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.593Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.074Z] [console.log] [WebGLAutoPlay] Match 7/10 completed: rounds=5, winners=[bot-5]
+[2026-10-30T09:54:32.775Z] [console.log] [WebGLAutoPlay] Match 7/10 completed: rounds=5, winners=[bot-5]
 
-[2026-10-30T08:35:43.158Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.860Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.159Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.861Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.159Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.861Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.159Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.861Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.160Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:32.862Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.126Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.127Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.409Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.127Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.410Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.127Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.410Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.128Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.659Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.659Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.393Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.394Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.394Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.825Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.592Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.892Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.660Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.892Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.661Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.892Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.661Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.892Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.661Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:43.893Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.662Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.090Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.858Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.091Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.859Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.158Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.926Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.158Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.926Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.158Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:33.927Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.341Z] [console.log] [WebGLAutoPlay] Match 8/10 completed: rounds=5, winners=[bot-1]
+[2026-10-30T09:54:34.127Z] [console.log] [WebGLAutoPlay] Match 8/10 completed: rounds=5, winners=[bot-1]
 
-[2026-10-30T08:35:44.408Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.194Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.424Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.210Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.425Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.211Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.425Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.211Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.425Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.211Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.426Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.211Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.691Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.461Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.691Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.462Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.692Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.462Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.692Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.463Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.692Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.463Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.941Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.710Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.942Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.710Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.942Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.711Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.942Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.711Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:44.942Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.711Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.141Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.893Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.208Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.959Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.208Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.959Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.208Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.959Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.209Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:34.959Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.457Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.209Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.458Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.210Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.458Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.210Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.459Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.211Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.658Z] [console.log] [WebGLAutoPlay] Match 9/10 completed: rounds=5, winners=[player, bot-3]
+[2026-10-30T09:54:35.409Z] [console.log] [WebGLAutoPlay] Match 9/10 completed: rounds=5, winners=[player, bot-3]
 
-[2026-10-30T08:35:45.659Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.410Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.742Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.493Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.742Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.494Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.742Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.494Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.743Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.494Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.743Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.494Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.975Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.759Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.976Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.759Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.976Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.760Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.976Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.761Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:45.976Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:35.761Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.226Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.011Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.226Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.011Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.227Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.013Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.227Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.013Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.228Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.013Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.491Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.262Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.491Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.262Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.491Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.263Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.492Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.263Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.492Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.263Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.690Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.459Z] [console.warning] The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.758Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.525Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.759Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.526Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.759Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.526Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.760Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
+[2026-10-30T09:54:36.526Z] [console.warning] The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
 
-[2026-10-30T08:35:46.941Z] [console.log] [WebGLAutoPlay] Match 10/10 completed: rounds=5, winners=[bot-5]
+[2026-10-30T09:54:36.724Z] [console.log] [WebGLAutoPlay] Match 10/10 completed: rounds=5, winners=[bot-5]
 
-[2026-10-30T08:35:46.942Z] [console.log] [WebGLAutoPlay] All 10/10 matches completed with 0 errors! Frames=752, Elapsed=13.27s, AvgFPS=56.7, MinFPS=52.6, SteadyAllocPerFrame=2177 B/frame, ManagedAllocPerFrame=1301 B/frame, GCGen0=2
+[2026-10-30T09:54:36.725Z] [console.log] [WebGLAutoPlay] All 10/10 matches completed with 0 errors! Frames=746, Elapsed=13.26s, AvgFPS=56.3, MinFPS=30.3, SteadyAllocPerFrame=2273 B/frame, ManagedAllocPerFrame=1306 B/frame, GCGen0=2

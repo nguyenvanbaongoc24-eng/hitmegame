@@ -30,9 +30,10 @@ Toàn bộ số lượng test dưới đây được truy xuất trực tiếp t
 | **P2 & P3 SafeArea/HUD** | `Evidence/phase3/test-results-p2p3.xml` | **77** | 77 | 0 | 0 | Căn chỉnh SafeArea 1080×2340, thẻ HP 2×3 trên cổng làng, thanh đặt trên đỉnh |
 | **S1, S2, S3 & S6 Prep** | `Evidence/phase3/test-results-s1-s3.xml` | **86** | 86 | 0 | 0 | MatchRanking trong Core/Phase1, MatchEnd dọn dẹp, HP công khai mọi pha |
 | **Luật v1.3 & Phase 2 Final** | `Evidence/phase3/test-results-p4.xml` | **92** | 92 | 0 | 0 | Thẻ HP động N=2..6, kiểm tra phòng 1-6 người thật, xếp hạng N=2..6 |
+| **Đợt 27 Visual & Sprite Audit** | `Evidence/phase3/test-results-round27.xml` | **98** | 98 | 0 | 0 | Bổ sung 4 audit test sprite/vũ khí sạch + 1 test F9 bot quyết định độc lập (mù) |
 
 > [!NOTE]
-> **Hiện trạng bộ test hiện tại**: **92/92 bài kiểm thử ĐẠT 100% (0 lỗi, 0 bỏ qua)**.
+> **Hiện trạng bộ test hiện tại**: **98/98 bài kiểm thử ĐẠT 100% (0 lỗi, 0 bỏ qua)**.
 
 ---
 
@@ -232,7 +233,7 @@ public interface IInventoryService
 
 ## 6. HƯỚNG DẪN THỬ NGHIỆM TRÊN ĐIỆN THOẠI THẬT DÀNH CHO CHỦ DỰ ÁN (S5)
 
-> **Địa chỉ WebGL LAN (IPv4 hiện tại)**: **`http://10.0.0.108:8092/`**  
+> **Địa chỉ WebGL LAN (IPv4 hiện tại)**: **`http://10.0.0.108:8093/`**  
 > *(Lưu ý: Điện thoại cần kết nối chung mạng Wi-Fi với PC chạy máy chủ. Nếu đổi Wi-Fi, chạy `ipconfig` để lấy IPv4 mới).*
 
 ### 6.1. Quy trình thử nghiệm 3 trận
@@ -297,6 +298,71 @@ Dưới đây là danh sách chi tiết các hạng mục được bảo lưu ch
 | **S5** | **Đo kiểm FPS và cảm ứng trên điện thoại vật lý thực tế** | Phép đo tự động PC đạt 60 FPS 0 B/frame; trải nghiệm cảm ứng thực tế cần màn hình cảm ứng điện thoại của Chủ dự án | Quan trọng (Trải nghiệm) | Thực hiện ở bước S5 (Chủ dự án chơi thử 3 trận theo mục 6) trước khi gắn tag `v0.2-rc1` |
 | **NET** | **Kết nối mạng thời gian thực WebSocket** | Phía server Codex đang hoàn thiện giao vận `net_client_v1` (Z1, Z2); chưa bàn giao SERVER READY | Quan trọng (Tính năng) | Kết nối mạng sẽ được tích hợp ngay khi Codex công bố SERVER READY ở đầu Phase 3 |
 | **AUDIO** | **Hiệu ứng âm thanh mở rộng (BGM đa dạng, SFX theo vũ khí)** | Đã tích hợp đầy đủ âm thanh cơ bản (Click, Ready, Countdown, Ném, Trúng dép, Thắng, Thua); cần bổ sung nhạc nền theo mùa | Thấp (Thị giác/Thính giác) | Bổ sung khi có bộ asset audio hoàn chỉnh từ nhà sản xuất âm nhạc |
+
+## 9. ĐỢT 27: SỬA HÌNH ẢNH TRONG TRẬN THEO ẢNH ĐIỆN THOẠI THẬT (V1–V6)
+
+> **Mục tiêu**: Xử lý triệt để toàn bộ 6 lỗi thị giác trong trận đấu do Chủ dự án phát hiện trực tiếp trên iPhone Safari (`hit-me-ag-round27.md`). Toàn bộ bằng chứng được chụp từ bản WebGL đang chạy thực tế trên cổng **8093** (`http://10.0.0.108:8093/`).
+
+### 9.1. Tóm tắt kết quả xử lý 6 lỗi hình ảnh (V1–V6)
+1. **V1 (Bảng sprite tham chiếu đè lên Bot)**:
+   - *Nguyên nhân*: Các sprite `anh_non_la_aim.png`, `defeat.png`, `hit.png`, `throw_release.png` trong `Assets/Sprites/` trước đó là ảnh crop 384×512 từ bảng tổng hợp tham khảo (có dính chú thích chữ "Quần / Dép / Lá quạt...", "ANIMATION - ELIMINATION").
+   - *Khắc phục*: Thay thế bằng các khung hình đơn lẻ được trích xuất trực tiếp từ chuỗi animation sạch trong `ASSET HITME FINAL/ANH NÓN LÁ/NÉM DÉP/sprites/` (`sprite_001.png`, `sprite_006.png`, `sprite_010.png`, `sprite_013.png`, `sprite_020.png`). Cả Bot và Người chơi dùng chung bộ sprite sạch này.
+   - *Chặn tái phát*: Thêm `Assets/Scripts/Tests/EditMode/RuntimeSpriteAuditTests.cs` (4 test tự động kiểm tra: không chứa từ khóa cấm `sheet`/`reference`/`contact`, kích thước $\le 512\times 512$, manifest `ApprovedRuntimeSprites.json` phê duyệt 100%).
+2. **V2 (Nhân vật bị cắt dở / đen)**:
+   - *Khắc phục*: Trích xuất sạch và đệm viền alpha 16 px cho toàn bộ 7 nhân vật × 4 tư thế (idle, throw, hit, defeat).
+   - *Kiểm định*: Sinh ảnh ghép kiểm định `Evidence/asset_qa/contact/characters_20261030.png` và nhật ký `characters_20261030.log` xác nhận **28/28 khung hình ĐẠT 100% (0 khung chạm mép)**.
+3. **V3 (Chữ "CHẢO", "DÉP" in trên sprite)**:
+   - *Khắc phục*: Thay thế toàn bộ sprite vũ khí và icon trong `Assets/Sprites/` bằng khung hình sạch từ `ASSET WEAPONS/` (`dep_projectile.png`, `chao_projectile.png`, `pickleball_projectile.png`, và các thẻ vũ khí `weapon_*_full.png` đã xóa sạch chữ).
+   - *Quy tắc luật*: Theo Luật v1.2, toàn bộ 7 nhân vật và bot đều trang bị vũ khí mặc định là **Dép Tổ Ong xanh**. Test `Weapon_Sandal_AssignedToAllCharactersPerRulesV12` xác nhận điều này.
+4. **V4 (Nhân vật quá nhỏ trên mobile)**:
+   - *Khắc phục*: Bổ sung tham số cấu hình `CharacterScale = 1.8f`, `WeaponScale = 1.8f`, `HitRingScale = 1.0f` vào `GameConfig.cs` và `GameConfigAsset.cs`.
+   - *Bảo toàn cơ chế vật lý*: Bán kính va chạm `PlayerRadius = 0.55f` được giữ nguyên 100%. Vòng chân thể hiện chuẩn xác bán kính va chạm thực tế.
+   - *Tùy chọn URL*: Hỗ trợ tham số `?charScale=1.6`, `2.0`, `2.4` và đã chụp đầy đủ 3 phương án ở viewport iPhone 1170×2532 để Chủ dự án lựa chọn.
+5. **V5 (HUD khó đọc)**:
+   - Nhãn "VÒNG 3/5": Chuyển vào `RoundPill` nền đen mờ bo tròn nổi bật, font 34pt đậm.
+   - Nút "SẴN SÀNG": Loại bỏ hoàn toàn lớp chữ lặp; khi người chơi khóa vị trí, nút hiển thị rõ ràng "ĐÃ KHÓA" với màu nền xám mờ (30pt đậm).
+   - Thẻ HP: Tăng kích thước tên người chơi (24pt đậm), tim máu (24pt đậm), chỉ số HP (21pt) $\ge 2.2\%$ chiều cao màn hình.
+6. **V6 (Hiển thị Bot trên sân)**:
+   - Bot hiển thị đúng tên nhân vật đại diện, cùng tỉ lệ scale với người chơi và sử dụng cùng bộ sprite sạch.
+7. **F9 (Kiểm thử Bot quyết định độc lập / mù)**:
+   - Đã bổ sung bài kiểm thử `Phase1CoreTests.Bot_DecidesBlindly_PlayerPositionChangeDoesNotAlterBotInput`: Chạy 2 lần cùng một seed, thay đổi vị trí và hướng ngắm của Người chơi $\rightarrow$ quyết định của Bot (vị trí đặt và hướng ném) hoàn toàn giống nhau 100%.
+
+---
+
+### 9.2. Bảng bằng chứng chụp thực tế từ WebGL Build (`WebGL_20261030_f53a648`)
+
+Toàn bộ 28 ảnh chụp dưới đây được chụp trực tiếp từ trình duyệt kết nối tới bản build WebGL trên cổng **8093**, kèm file đặc tả nguồn gốc sidecar `.json` tương ứng:
+
+| # | Tên tệp ảnh chụp WebGL | Tệp sidecar JSON | Viewport | Nội dung & Pha trận đấu | Trạng thái nghiệm thu |
+|---|---|---|:---:|---|:---:|
+| 1 | `Evidence/phase3/v4_charScale_1.6_placing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 1.6 (Pha Đặt) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 2 | `Evidence/phase3/v4_charScale_1.6_throwing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 1.6 (Pha Ném) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 3 | `Evidence/phase3/v4_charScale_2_placing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 2.0 (Pha Đặt) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 4 | `Evidence/phase3/v4_charScale_2_throwing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 2.0 (Pha Ném) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 5 | `Evidence/phase3/v4_charScale_2.4_placing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 2.4 (Pha Đặt) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 6 | `Evidence/phase3/v4_charScale_2.4_throwing_1170x2532.png` | `.json` | 1170×2532 | Phương án Scale 2.4 (Pha Ném) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 7 | `Evidence/phase3/phase_placing_N2_1170x2532.png` | `.json` | 1170×2532 | N=2 Pha Đặt (kéo thước ngắm) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 8 | `Evidence/phase3/phase_locked_N2_1170x2532.png` | `.json` | 1170×2532 | N=2 Pha Khóa (ĐÃ KHÓA) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 9 | `Evidence/phase3/phase_reveal_N2_1170x2532.png` | `.json` | 1170×2532 | N=2 Pha Lộ diện | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 10 | `Evidence/phase3/phase_throwing_N2_1170x2532.png` | `.json` | 1170×2532 | N=2 Pha Ném (dép đang bay) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 11 | `Evidence/phase3/phase_round_result_N2_1170x2532.png` | `.json` | 1170×2532 | N=2 Kết quả vòng | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 12 | `Evidence/phase3/phase_placing_N4_1170x2532.png` | `.json` | 1170×2532 | N=4 Pha Đặt (4 người) | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 13 | `Evidence/phase3/phase_locked_N4_1170x2532.png` | `.json` | 1170×2532 | N=4 Pha Khóa | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 14 | `Evidence/phase3/phase_reveal_N4_1170x2532.png` | `.json` | 1170×2532 | N=4 Pha Lộ diện | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 15 | `Evidence/phase3/phase_throwing_N4_1170x2532.png` | `.json` | 1170×2532 | N=4 Pha Ném | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 16 | `Evidence/phase3/phase_round_result_N4_1170x2532.png` | `.json` | 1170×2532 | N=4 Kết quả vòng | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 17 | `Evidence/phase3/phase_match_end_1170x2532.png` | `.json` | 1170×2532 | Kết thúc trận & Bảng xếp hạng | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 18 | `Evidence/phase3/phase_placing_N2_1080x2340.png` | `.json` | 1080×2340 | N=2 Pha Đặt | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 19 | `Evidence/phase3/phase_locked_N2_1080x2340.png` | `.json` | 1080×2340 | N=2 Pha Khóa | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 20 | `Evidence/phase3/phase_reveal_N2_1080x2340.png` | `.json` | 1080×2340 | N=2 Pha Lộ diện | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 21 | `Evidence/phase3/phase_throwing_N2_1080x2340.png` | `.json` | 1080×2340 | N=2 Pha Ném | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 22 | `Evidence/phase3/phase_round_result_N2_1080x2340.png` | `.json` | 1080×2340 | N=2 Kết quả vòng | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 23 | `Evidence/phase3/phase_placing_N4_1080x2340.png` | `.json` | 1080×2340 | N=4 Pha Đặt | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 24 | `Evidence/phase3/phase_locked_N4_1080x2340.png` | `.json` | 1080×2340 | N=4 Pha Khóa | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 25 | `Evidence/phase3/phase_reveal_N4_1080x2340.png` | `.json` | 1080×2340 | N=4 Pha Lộ diện | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 26 | `Evidence/phase3/phase_throwing_N4_1080x2340.png` | `.json` | 1080×2340 | N=4 Pha Ném | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 27 | `Evidence/phase3/phase_round_result_N4_1080x2340.png` | `.json` | 1080×2340 | N=4 Kết quả vòng | Chủ dự án duyệt: CHƯA / ĐÃ |
+| 28 | `Evidence/phase3/phase_match_end_1080x2340.png` | `.json` | 1080×2340 | Kết thúc trận & Bảng xếp hạng | Chủ dự án duyệt: CHƯA / ĐÃ |
 
 ---
 *Báo cáo được cập nhật và nghiệm thu tại `docs/PHASE2_REPORT.md` phục vụ bàn giao chính thức Phase 2.*

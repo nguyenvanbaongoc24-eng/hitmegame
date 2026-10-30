@@ -3,7 +3,7 @@ import fs from 'fs';
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const port = 9234;
-const targetUrl = 'http://localhost:8092/index.html?autoPlay=10';
+const targetUrl = 'http://localhost:8093/index.html?autoPlay=10';
 const screenshotPath = 'D:\\HITME GAME\\unity-client\\Evidence\\phase2\\webgl_fingerprint_live.png';
 const screenshotPathPhase3 = 'D:\\HITME GAME\\unity-client\\Evidence\\phase3\\webgl_fingerprint_live.png';
 const logOutPath = 'D:\\HITME GAME\\unity-client\\Evidence\\phase2\\webgl_autoplay_10matches.log';
@@ -36,7 +36,7 @@ async function main() {
       try {
         const res = await fetch(`http://127.0.0.1:${port}/json/list`);
         const pages = await res.json();
-        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8092'));
+        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8093'));
         if (page && page.webSocketDebuggerUrl) {
           wsUrl = page.webSocketDebuggerUrl;
           break;

@@ -3,7 +3,7 @@ import fs from 'fs';
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const port = 9236;
-const targetUrl = 'http://localhost:8092/index.html?autoPlay=50&profileSeconds=62';
+const targetUrl = 'http://localhost:8093/index.html?autoPlay=50&profileSeconds=62';
 const reportOutPath = 'D:\\HITME GAME\\unity-client\\Evidence\\phase3\\gc_60s_profile_report.txt';
 
 async function sleep(ms) {
@@ -33,7 +33,7 @@ async function main() {
       try {
         const res = await fetch(`http://127.0.0.1:${port}/json/list`);
         const pages = await res.json();
-        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8092'));
+        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8093'));
         if (page && page.webSocketDebuggerUrl) {
           wsUrl = page.webSocketDebuggerUrl;
           break;
