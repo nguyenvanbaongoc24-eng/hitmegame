@@ -31,6 +31,7 @@ public sealed class ProtocolGateway
     public const int Version = 1;
     public const int MaxMessageBytes = 1024;
     public const int MaxMessagesPerSecond = 20;
+    public const int QuickMatchHintSeconds = 30;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
@@ -87,10 +88,10 @@ public sealed class ProtocolGateway
         {
             PruneDisconnected();
             var output = new List<GatewayMessage>();
-            foreach (var entry in quickMatch.Where(pair => !pair.Value.Hinted && clock.GetUtcNow() - pair.Value.QueuedAt >= TimeSpan.FromSeconds(30)).ToArray())
+            foreach (var entry in quickMatch.Where(pair => !pair.Value.Hinted && clock.GetUtcNow() - pair.Value.QueuedAt >= TimeSpan.FromSeconds(QuickMatchHintSeconds)).ToArray())
             {
                 entry.Value.Hinted = true;
-                output.Add(new GatewayMessage(entry.Key, JsonSerializer.Serialize(new { v = Version, type = "quick_match_hint", code = "no_opponent_yet", quickMatchHintSeconds = 30 }, Json)));
+                output.Add(new GatewayMessage(entry.Key, JsonSerializer.Serialize(new { v = Version, type = "quick_match_hint", code = "no_opponent_yet", quickMatchHintSeconds = QuickMatchHintSeconds }, Json)));
             }
             foreach (var room in rooms.Snapshot())
             {
@@ -139,7 +140,7 @@ public sealed class ProtocolGateway
         if (string.IsNullOrEmpty(opponent.Key))
         {
             quickMatch[connectionId] = new PendingQuickMatch(identity, clock.GetUtcNow());
-            return Reply(connectionId, JsonSerializer.Serialize(new { v = Version, type = "quick_match_waiting", quickMatchHintSeconds = 30 }, Json));
+            return Reply(connectionId, JsonSerializer.Serialize(new { v = Version, type = "quick_match_waiting", quickMatchHintSeconds = QuickMatchHintSeconds }, Json));
         }
 
         quickMatch.Remove(opponent.Key);
@@ -167,6 +168,9 @@ public sealed class ProtocolGateway
 
     private string Leave(string connectionId)
     {
+        if (quickMatch.Remove(connectionId))
+            return JsonSerializer.Serialize(new { v = Version, type = "quick_match_left" }, Json);
+
         if (!sessions.Remove(connectionId, out var session)) return Error("not_joined");
         disconnected.Remove(session.ReconnectToken);
         return rooms.Leave(session.Room.Code, session.PlayerId, out var room, out var error) ? RoomState(room!) : Error(error);

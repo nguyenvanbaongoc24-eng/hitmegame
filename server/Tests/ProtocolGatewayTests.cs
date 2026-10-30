@@ -170,6 +170,18 @@ public sealed class ProtocolGatewayTests
     }
 
     [Fact]
+    public void OnePlayerRoomRemainsAvailableWhileWaitingForAnotherHuman()
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        gateway.Handle("c1", Request("join"));
+
+        Assert.True(rooms.TryGet("HM0001", out var room));
+        Assert.Single(room!.Players);
+        Assert.False(room.Started);
+    }
+
+    [Fact]
     public void QuickMatchQueuesOnlyHumansThenPairsTwoReadyPlayersWithoutBots()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
@@ -202,6 +214,33 @@ public sealed class ProtocolGatewayTests
         Assert.Equal("quick_match_hint", Json(hint.Payload).GetProperty("type").GetString());
         Assert.DoesNotContain("bot", hint.Payload, StringComparison.OrdinalIgnoreCase);
         Assert.Empty(gateway.Tick());
+    }
+
+    [Fact]
+    public void LeavingQuickMatchQueuePreventsGhostPairing()
+    {
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), auth: new TestAuthVerifier());
+        gateway.Handle("c1", Request("quick_match"));
+
+        var left = Json(gateway.Handle("c1", Request("leave")));
+        Assert.Equal("quick_match_left", left.GetProperty("type").GetString());
+
+        var waiting = Json(gateway.Handle("c2", Request("quick_match", "p2", "Two")));
+        Assert.Equal("quick_match_waiting", waiting.GetProperty("type").GetString());
+    }
+
+    [Fact]
+    public void QuickMatchHintIsCancelledWhenAWaitingHumanIsPaired()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
+        gateway.Handle("c1", Request("quick_match"));
+        clock.Advance(TimeSpan.FromSeconds(ProtocolGateway.QuickMatchHintSeconds - 1));
+
+        gateway.HandleMessages("c2", Request("quick_match", "p2", "Two"));
+        clock.Advance(TimeSpan.FromSeconds(2));
+
+        Assert.DoesNotContain(gateway.Tick(), message => Json(message.Payload).GetProperty("type").GetString() == "quick_match_hint");
     }
 
     [Theory]
