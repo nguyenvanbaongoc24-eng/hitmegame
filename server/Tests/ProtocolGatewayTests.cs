@@ -252,22 +252,38 @@ public sealed class ProtocolGatewayTests
     public void PreLockCommitRemainsPrivateForEveryOnlineRosterSize(int players)
     {
         var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), auth: new TestAuthVerifier());
-        gateway.Handle("c1", Request("join"));
+        var transcript = new Dictionary<string, List<string>>();
+        void Send(string connectionId, string raw)
+        {
+            foreach (var message in gateway.HandleMessages(connectionId, raw))
+            {
+                if (!transcript.TryGetValue(message.ConnectionId, out var payloads))
+                    transcript[message.ConnectionId] = payloads = new List<string>();
+                payloads.Add(message.Payload);
+            }
+        }
+
+        Send("c1", Request("join"));
         for (var player = 2; player <= players; player++)
-            gateway.Handle($"c{player}", Request("join", $"p{player}", $"P{player}", "HM0001"));
-        gateway.HandleMessages("c1", Request("start"));
+            Send($"c{player}", Request("join", $"p{player}", $"P{player}", "HM0001"));
+        Send("c1", Request("start"));
 
         const float traceX = 3.14159f;
         const float traceY = -2.71828f;
-        var replies = gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = traceX, positionY = traceY, aimX = 0.12345f, aimY = -0.98765f }));
-        Assert.DoesNotContain(replies, message => message.ConnectionId != "c2");
-        Assert.All(replies, message =>
+        Send("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = traceX, positionY = traceY, aimX = 0.12345f, aimY = -0.98765f }));
+        for (var player = 1; player <= players; player++)
         {
-            Assert.DoesNotContain("3.14159", message.Payload);
-            Assert.DoesNotContain("-2.71828", message.Payload);
-            Assert.DoesNotContain("\"position\"", message.Payload);
-            Assert.DoesNotContain("\"aim\"", message.Payload);
-        });
+            Assert.True(transcript.TryGetValue($"c{player}", out var payloads), $"No transcript for c{player}.");
+            foreach (var payload in payloads!)
+            {
+                Assert.DoesNotContain("3.14159", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("-2.71828", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("0.12345", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("-0.98765", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("\"position\"", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("\"aim\"", payload, StringComparison.Ordinal);
+            }
+        }
     }
 
     [Fact] public void CodeCollisionGeneratesAnotherCode()
