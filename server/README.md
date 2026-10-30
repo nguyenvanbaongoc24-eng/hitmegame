@@ -18,4 +18,4 @@ Z3 (cục bộ, trong tiến trình, 2026-10-30) chạy đồng thời 50 phòng
 
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
-Đang dở: transport Unity/WebGL (Z2) và thử tải (Z3). Không deploy server WIP này.
+Z2 có sẵn tại `tools/patches/net_client_v1`: DTO thuần tương thích `JsonUtility`, loopback adapter và WebSocket Desktop; AG còn phải chép patch vào Unity và làm bridge `.jslib` cho WebGL. Z3 đã hoàn thành; chưa deploy server WIP này.
