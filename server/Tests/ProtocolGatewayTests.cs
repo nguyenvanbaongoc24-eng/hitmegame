@@ -8,9 +8,17 @@ using Xunit;
 
 public sealed class ProtocolGatewayTests
 {
-    private static ProtocolGateway Gateway() => new(new RoomDirectory(n => n == 1 ? "HM0001" : "HM0002"));
+    private sealed class TestAuthVerifier : IAuthVerifier
+    {
+        public bool TryVerify(string? token, out PlayerIdentity identity, out string error)
+        {
+            if (token?.StartsWith("test:", StringComparison.Ordinal) == true) { identity = new PlayerIdentity(token[5..], token[5..]); error = string.Empty; return true; }
+            identity = null!; error = "auth_invalid"; return false;
+        }
+    }
+    private static ProtocolGateway Gateway() => new(new RoomDirectory(n => n == 1 ? "HM0001" : "HM0002"), auth: new TestAuthVerifier());
     private static string Request(string type, string playerId = "p1", string name = "One", string? roomCode = null, bool ready = false, bool start = false)
-        => JsonSerializer.Serialize(new { v = 1, type, playerId, name, roomCode, ready, start });
+        => JsonSerializer.Serialize(new { v = 1, type, playerId, name, token = "test:" + playerId, roomCode, ready, start });
     private static JsonElement Json(string text) => JsonDocument.Parse(text).RootElement.Clone();
 
     [Fact] public void CreateJoinAndHostStartRoom()
@@ -28,10 +36,27 @@ public sealed class ProtocolGatewayTests
     }
 
     [Fact]
+    public void JoinRequiresVerifiedTokenAndIgnoresClientClaimedIdentity()
+    {
+        var gateway = Gateway();
+
+        var missing = Json(gateway.Handle("missing", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "forged", name = "Forged" })));
+        Assert.Equal("auth_required_use_join_token", missing.GetProperty("code").GetString());
+
+        var invalid = Json(gateway.Handle("invalid", JsonSerializer.Serialize(new { v = 1, type = "join", token = "not-a-token", playerId = "forged", name = "Forged" })));
+        Assert.Equal("auth_invalid", invalid.GetProperty("code").GetString());
+
+        var accepted = Json(gateway.Handle("trusted", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:trusted-player", playerId = "forged", name = "Forged" })));
+        var player = accepted.GetProperty("players")[0];
+        Assert.Equal("trusted-player", player.GetProperty("id").GetString());
+        Assert.Equal("trusted-player", player.GetProperty("name").GetString());
+    }
+
+    [Fact]
     public void AllRoomReadyStartsAfterThreeSecondServerCountdown()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
         Assert.All(gateway.HandleMessages("c1", Request("room_ready", ready: true)), message => Assert.Contains("room_state", message.Payload));
@@ -49,7 +74,7 @@ public sealed class ProtocolGatewayTests
     public void UnreadyOrLeaveCancelsLobbyCountdownAndReadinessMessagesArePhaseScoped()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
         gateway.HandleMessages("c1", Request("room_ready", ready: true));
@@ -66,7 +91,7 @@ public sealed class ProtocolGatewayTests
     public void LeavingRoomCancelsLobbyCountdown()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
         gateway.HandleMessages("c1", Request("room_ready", ready: true));
@@ -89,7 +114,7 @@ public sealed class ProtocolGatewayTests
     public void SixReadyPlayersStartTheCountdownWithoutWaitingForAnotherJoin()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
         gateway.Handle("c1", Request("join"));
         for (var player = 2; player <= 6; player++) gateway.Handle($"c{player}", Request("join", $"p{player}", $"P{player}", "HM0001"));
         for (var player = 1; player <= 6; player++) gateway.HandleMessages($"c{player}", Request("room_ready", $"p{player}", $"P{player}", ready: true));
@@ -197,7 +222,7 @@ public sealed class ProtocolGatewayTests
     public void GatewayTickLocksAndBroadcastsAfterTheServerDeadline()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
         gateway.HandleMessages("c1", Request("start"));
@@ -216,7 +241,7 @@ public sealed class ProtocolGatewayTests
     [Fact]
     public void SixConnectionPreLockTranscriptNeverLeaksTraceCommitToAnyOpponent()
     {
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM3141"));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM3141"), auth: new TestAuthVerifier());
         var transcript = new Dictionary<string, List<string>>();
         void Send(string connectionId, string raw)
         {
@@ -271,7 +296,7 @@ public sealed class ProtocolGatewayTests
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));
         var rooms = new RoomDirectory(n => "HM0001");
-        var gateway = new ProtocolGateway(rooms, clock);
+        var gateway = new ProtocolGateway(rooms, clock, new TestAuthVerifier());
         var firstJoin = Json(gateway.Handle("c1", Request("join")));
         var token = firstJoin.GetProperty("reconnectToken").GetString();
         Assert.False(string.IsNullOrWhiteSpace(token));
@@ -281,7 +306,7 @@ public sealed class ProtocolGatewayTests
         gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 3.14159f, positionY = -2.71828f, aimX = 0.12345f, aimY = -0.98765f }));
 
         gateway.Disconnect("c1");
-        var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "p1", name = "One", reconnectToken = token })));
+        var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "forged", token = "test:p1", reconnectToken = token })));
         Assert.Equal("room_state", rejoined.GetProperty("type").GetString());
         var payload = rejoined.GetRawText();
         Assert.DoesNotContain("3.14159", payload);
@@ -297,8 +322,31 @@ public sealed class ProtocolGatewayTests
         gateway.Tick();
         Assert.True(rooms.TryGet("HM0001", out var room));
         Assert.DoesNotContain(room.Players, player => player.Id == "p1");
-        var expired = Json(gateway.Handle("c1e", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "p1", name = "One", reconnectToken = token })));
+        var expired = Json(gateway.Handle("c1e", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "forged", token = "test:p1", reconnectToken = token })));
         Assert.Equal("reconnect_invalid", expired.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void ReconnectTokenIsRotatedAndBoundToTheVerifiedIdentity()
+    {
+        var gateway = Gateway();
+        var joined = Json(gateway.Handle("c1", Request("join")));
+        var firstToken = joined.GetProperty("reconnectToken").GetString();
+        Assert.NotNull(firstToken);
+        Assert.True(firstToken!.Length >= 43, "A 32-byte URL-safe Base64 token is at least 43 characters.");
+
+        gateway.Disconnect("c1");
+        var impersonation = Json(gateway.Handle("attacker", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:attacker", reconnectToken = firstToken })));
+        Assert.Equal("reconnect_invalid", impersonation.GetProperty("code").GetString());
+
+        var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:p1", reconnectToken = firstToken })));
+        var secondToken = rejoined.GetProperty("reconnectToken").GetString();
+        Assert.Equal("room_state", rejoined.GetProperty("type").GetString());
+        Assert.NotEqual(firstToken, secondToken);
+
+        gateway.Disconnect("c1r");
+        var replayed = Json(gateway.Handle("replay", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:p1", reconnectToken = firstToken })));
+        Assert.Equal("reconnect_invalid", replayed.GetProperty("code").GetString());
     }
 
     private sealed class FakeTimeProvider : TimeProvider

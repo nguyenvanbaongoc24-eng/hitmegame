@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Security.Cryptography;
 using HitMe.Core;
 using HitMe.Server.Authority;
 
@@ -12,6 +13,7 @@ public sealed class ClientEnvelope
     public string? RoomCode { get; set; }
     public string? PlayerId { get; set; }
     public string? Name { get; set; }
+    public string? Token { get; set; }
     public bool Ready { get; set; }
     public bool Start { get; set; }
     public string? ReconnectToken { get; set; }
@@ -32,14 +34,16 @@ public sealed class ProtocolGateway
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
+    private readonly IAuthVerifier auth;
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DisconnectedSession> disconnected = new(StringComparer.Ordinal);
     private readonly Dictionary<string, RateWindow> rateWindows = new(StringComparer.Ordinal);
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
+        this.auth = auth ?? new FakeAuthVerifier();
     }
 
     public string Handle(string connectionId, string raw)
@@ -91,20 +95,21 @@ public sealed class ProtocolGateway
     private string Join(string connectionId, ClientEnvelope request)
     {
         if (sessions.ContainsKey(connectionId)) return Error("already_joined");
-        if (!string.IsNullOrWhiteSpace(request.ReconnectToken)) return Reconnect(connectionId, request);
-        if (string.IsNullOrWhiteSpace(request.PlayerId) || string.IsNullOrWhiteSpace(request.Name)) return Error("invalid_player");
+        if (string.IsNullOrWhiteSpace(request.Token)) return Error("auth_required_use_join_token");
+        if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Error(authError);
+        if (!string.IsNullOrWhiteSpace(request.ReconnectToken)) return Reconnect(connectionId, request.ReconnectToken, identity.PlayerId);
         RoomAuthority? room;
         string error;
         if (string.IsNullOrWhiteSpace(request.RoomCode))
         {
-            room = rooms.Create(request.PlayerId, request.Name, new GameConfig(), out error);
+            room = rooms.Create(identity.PlayerId, identity.DisplayName, new GameConfig(), out error);
             if (room is null) return Error(error);
         }
-        else if (!rooms.Join(request.RoomCode, request.PlayerId, request.Name, out room, out error))
+        else if (!rooms.Join(request.RoomCode, identity.PlayerId, identity.DisplayName, out room, out error))
         {
             return Error(error);
         }
-        var session = new Session(room!, request.PlayerId, Guid.NewGuid().ToString("N"));
+        var session = new Session(room!, identity.PlayerId, NewReconnectToken());
         sessions[connectionId] = session;
         return RoomState(room!, session.ReconnectToken);
     }
@@ -165,18 +170,19 @@ public sealed class ProtocolGateway
         return Reply(connectionId, RoomState(session.Room));
     }
 
-    private string Reconnect(string connectionId, ClientEnvelope request)
+    private string Reconnect(string connectionId, string reconnectToken, string authenticatedPlayerId)
     {
         PruneDisconnected();
-        if (!disconnected.Remove(request.ReconnectToken!, out var detached)) return Error("reconnect_invalid");
-        if (!string.Equals(detached.Session.PlayerId, request.PlayerId, StringComparison.Ordinal))
+        if (!disconnected.Remove(reconnectToken, out var detached)) return Error("reconnect_invalid");
+        if (!string.Equals(detached.Session.PlayerId, authenticatedPlayerId, StringComparison.Ordinal))
         {
             disconnected[detached.Session.ReconnectToken] = detached;
             return Error("reconnect_invalid");
         }
 
-        sessions[connectionId] = detached.Session;
-        return RoomState(detached.Session.Room, detached.Session.ReconnectToken);
+        var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken());
+        sessions[connectionId] = session;
+        return RoomState(session.Room, session.ReconnectToken);
     }
 
     private void PruneDisconnected()
@@ -220,6 +226,13 @@ public sealed class ProtocolGateway
     }
 
     private static string Error(string code) => JsonSerializer.Serialize(new { v = Version, type = "error", code }, Json);
+
+    private static string NewReconnectToken()
+    {
+        Span<byte> bytes = stackalloc byte[32];
+        RandomNumberGenerator.Fill(bytes);
+        return Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
 
     private static IReadOnlyList<GatewayMessage> Reply(string connectionId, string payload) => new[] { new GatewayMessage(connectionId, payload) };
 
