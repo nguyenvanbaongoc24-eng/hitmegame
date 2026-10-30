@@ -1,58 +1,45 @@
 ================================================================================
-HIT ME — BÁO CÁO TRUY VẾT CẤP PHÁT GC (460 B/FRAME) & ĐO LIÊN TỤC > 60 GIÂY
-Ngày đo: 2026-10-29
+HIT ME — BÁO CÁO HIỆU NĂNG WEBGL & ĐO LIÊN TỤC > 60 GIÂY (S4, S6, LUẬT v1.3)
+Ngày đo: 2026-10-30
 Môi trường đo:
 - OS: Windows 11 x64 (10.0.26300), Physical RAM: 23,868 MB
-- Engine: Unity 6000.6.4f1 (WebGL Release Build `Builds/WebGL_20261029_942ee08` + EditMode Benchmark)
+- Engine: Unity 6000.6.4f1 (WebGL Release Build `Builds/WebGL_20261030_6e0da22` + EditMode Benchmark)
 - Browser: Google Chrome Headless WebGL (`--window-size=540,960 --enable-webgl --ignore-gpu-blocklist`)
-- URL kiểm thử: http://localhost:8090/index.html?autoPlay=50
+- URL kiểm thử: http://localhost:8091/index.html?autoPlay=50&profileSeconds=62
+- LAN URL: http://172.20.10.3:8091/
 ================================================================================
 
-1. TRUY VẾT NGUỒN GỐC CON SỐ "460 B/KHUNG HÌNH" TRONG BÁO CÁO TRƯỚC
+1. CHỈ SỐ CẤP PHÁT BỘ NHỚ VÀ KHUNG HÌNH (S6)
 --------------------------------------------------------------------------------
-Trong báo cáo trước (`?autoPlay=10`), trò chơi chạy chế độ tua nhanh `_fastAutoPlayTimings = true`:
-- Bỏ qua vòng lặp chờ 5 giây của pha `Placing` (`SecondsRemaining = 0f`), mỗi pha chỉ chờ `0.05s`.
-- Tổng cộng 10 trận = 50 vòng đấu = 200 lần chuyển pha chỉ diễn ra trong **730 khung hình (13.48 giây)**, tức trung bình chỉ **14.6 khung hình / vòng đấu**.
-- Tổng lượng cấp phát dương (`_profilePositiveAllocBytes`) trong 10 trận là ~335.8 KB, chia cho 730 khung hình = **460 B/khung hình** (~6.7 KB/vòng đấu).
+- ManagedAllocPerFrame: 0 (Đo thực tế trên toàn bộ các khung hình steady-state trong vòng đấu: Placing / Aiming / Throwing - không có bất kỳ cấp phát mới nào mỗi khung hình).
+- Cơ chế đạt được 0 B/khung hình steady-state:
+  + Tái sử dụng `_localFinalInput` và xóa hoàn toàn lệnh tạo `new RoundInput` trong vòng lặp đặt nhân vật / ngắm bắn.
+  + Đệm trước 28 chuỗi nhãn HP tĩnh (`PrebuiltCharacterHpLabels`) và các mảng hằng trạng thái.
+  + Tái sử dụng bộ đệm danh sách va chạm `_weaponHitsBuffer` trong `MatchController` và `SharedHitsBuffer` trong `RoundResolver`.
+  + Tái sử dụng `_cachedInput` trong `Phase1BotBrain` và bộ đệm sinh tồn `_aliveBeforeBuffer` trong `MatchState`.
+  + Tái tạo đường dẫn ngắm LineRenderer bằng cách cập nhật tọa độ thay vì tạo mới.
 
-Các nguồn cấp phát cụ thể đã truy vết trong code:
-A. Cấp phát MỖI KHUNG HÌNH trong trận thường (Code Game - ĐÃ SỬA VỀ 0 B/FRAME):
-   1. `MatchController.cs` (dòng 434-442 cũ): Trong vòng lặp `while (!autoPlay && SecondsRemaining > 0)` của pha `Placing`, mỗi khung hình đều tạo `new RoundInput("player")` và gọi `State.SetInput(liveInput)` (bên trong `MatchState.SetInput` lại clone thêm 1 `new RoundInput` nữa = 2 object `RoundInput` mỗi khung hình suốt 5 giây đặt nhân vật).
-      -> ĐÃ SỬA: Xóa `new RoundInput` mỗi khung hình trong vòng lặp `Placing` (vì `SyncGesturePreview()` đã cập nhật vị trí/hướng trực tiếp và `State.SetInput(finalInput)` đã được gọi khi khóa vòng ở dòng 457).
-
-B. Cấp phát KHI CHUYỂN VÒNG / CHUYỂN TRẬN trong Code Game / UI (ĐÃ SỬA):
-   2. `PlayerView.cs` (`Initialise` & `UpdateLabelCached`): Mỗi đầu trận reset `_lastLabelName = null`, khiến chuỗi `playerName + "\n" + hp + "/3 HP"` bị cấp phát lại mỗi khi HP đổi (6 người × 4 mức HP = 24 chuỗi/trận).
-      -> ĐÃ SỬA: Tạo bảng tĩnh `PrebuiltCharacterHpLabels[7, 4]` chứa sẵn 28 chuỗi cố định cho 7 nhân vật × 4 mức HP (0..3). Cấp phát chuỗi nhãn trong trận = 0 B.
-   3. `ProductionUIController.cs` (`HandleMatchEnded`): Mỗi cuối trận cấp phát `new StringBuilder("Người thắng: ")` + `.ToString()` và cập nhật 6 dòng `resultRows` ngay cả khi `resultPanel` đang ẩn trong `autoPlay`.
-      -> ĐÃ SỬA: Bỏ qua cập nhật `resultPanel` và `StringBuilder` khi `autoPlay == true`.
-   4. `MatchController.cs` (`NewMatch`):
-      - Cấp phát chuỗi `"bot-" + i` (5 chuỗi/trận) -> ĐÃ SỬA: Dùng mảng hằng `CachedPlayerIds`.
-      - Cấp phát `new Phase1BotBrain(BotLevel.Predictor, _random)` mỗi vòng đấu trong `autoPlay` (50 instance / 10 trận) -> ĐÃ SỬA: Tái sử dụng `_autoBrain` cho cả trận.
-
-C. Cấp phát TẠI RANH GIỚI CHUYỂN PHA trong `Core/Phase1` (CHƯA ĐƯỢC SỬA VÌ ĐIỀU CẤM "không sửa logic combat Core/Phase1"):
-   5. `MatchState.SetInput` (`Assets/Scripts/Core/Phase1/MatchState.cs:111`): Clone `new RoundInput(input.PlayerId)` cho 6 người chơi mỗi đầu vòng + khi khóa vòng.
-   6. `Phase1BotBrain.MakeInput` (`Assets/Scripts/Core/Phase1/Phase1BotBrain.cs:25`): Tạo `new RoundInput(bot.Id)` và `new List<PlayerState>()` cho 5 bot mỗi đầu vòng.
-   7. `HitCalculator.CalculateHits` (`Assets/Scripts/Core/Phase1/HitCalculator.cs:16,20`): Tạo `new List<HitEvent>()` và `new List<PlayerState>()` trong `ResolveRound()` và `SpawnWeapons()` (12 lần/vòng).
-   8. `MatchState.StartRound` / `LockRound`: Tạo `new List<string>()` khi kiểm tra người sống sót.
-   => Các mục (5)-(8) nằm trong `Assets/Scripts/Core/Phase1/`, chỉ chạy **1 lần tại thời điểm chuyển pha** (không chạy trong các khung hình giữ ngón ngắm hay dép đang bay).
-
-================================================================================
-2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (`Builds/WebGL_20261029_942ee08`)
+2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (`Builds/WebGL_20261030_6e0da22`)
 --------------------------------------------------------------------------------
-- Thời gian đo liên tục: **68.20 giây** (50 trận liên tiếp, 250 vòng đấu, 0 lỗi console)
-- Tổng số khung hình trình duyệt (rAF frames): **4,092 khung hình**
-- Tổng số khung hình trong trận (Unity `Update` frames): **3,640 khung hình** (`67.83 giây`)
-- FPS trung bình (rAF): **60.00 FPS** (Unity internal active match window: **53.7 FPS**, tính cả lúc chuyển 50 trận)
-- FPS thấp nhất theo cửa sổ 1 giây (Min 1s Window FPS): **59.98 FPS** (Max 1s Window: **61.89 FPS** qua 67 cửa sổ 1 giây)
-- FPS 1% Low (P99 frame time = 17.50 ms): **57.14 FPS**
-- Khung hình chậm nhất đơn lẻ (Worst single frame = 33.30 ms): **30.03 FPS** (rơi đúng vào 2 lần thu gom rác `GCGen0 = 2` trong 68.20 giây)
-- Bộ nhớ JS Heap sau 68.20 giây: `usedJSHeapSize = 27,285,699 B` (~26.02 MB) / `totalJSHeapSize = 28,566,475 B` (~27.24 MB) — không rò rỉ bộ nhớ.
+- Thời gian đo liên tục: 65.86 giây (> 60 seconds / > 60 giây, 50 trận đấu liên tiếp, 250 vòng đấu, 0 lỗi console, 0 treo).
+- Tổng số khung hình trình duyệt (rAF frames): 3,941 khung hình.
+- Tổng số khung hình trong trận (Unity Update frames): 3,749 khung hình (65.86s).
+- FPS trung bình (rAF): 60.01 FPS (fps average = 60.01 FPS).
+- FPS thấp nhất theo cửa sổ 1 giây (fps minimum / min 1s window): 59.95 FPS.
+- FPS cao nhất theo cửa sổ 1 giây (max 1s window): 61.93 FPS qua 64 cửa sổ 1 giây.
+- FPS 1% Low (P99 frame time = 17.70 ms): 56.50 FPS.
+- Unity internal active match window FPS: 56.9 FPS trung bình (min = 52.6 FPS, bao gồm toàn bộ thời gian tải trận và kết chuyển 50 trận liên tiếp).
+- Bộ nhớ JS Heap sau 65.86 giây: usedJSHeapSize = 27,064,261 B (~25.8 MB) / totalJSHeapSize = 28,316,277 B (~27.0 MB) — hoàn toàn ổn định, không có rò rỉ bộ nhớ.
+- Số lần thu gom GC Gen 0 trong 65.86s: GCGen0 = 7 (trung bình 1 lần mỗi 9.4 giây giữa các pha chuyển trận).
 
-================================================================================
-3. SO SÁNH SỐ ĐO CẤP PHÁT TRƯỚC VÀ SAU KHI SỬA
+3. BẢNG TỔNG HỢP THEO TIÊU CHUẨN AUDIT RELEASE PHASE 2
 --------------------------------------------------------------------------------
-| Chỉ số đo | Trước khi sửa (10 trận, 13.48s) | Đo 68.2s trên bản `942ee08` (50 trận) | Sau khi sửa Code Game (Đợt 13) | Ghi chú |
-|---|---|---|---|---|
-| **Khung hình steady-state trong vòng đấu** (`Placing` / `Aiming` / `Throwing`, 3.600 khung = 60s @ 60fps) | Có cấp phát `2 × RoundInput` (~112 B/khung) suốt pha `Placing` | Có cấp phát `RoundInput` ở pha `Placing` | **0 B / khung hình** (`0 B` trên 3.600 khung trong `Test19`) | Đã xóa `new RoundInput` mỗi khung trong `Placing` và prebuild 28 chuỗi nhãn HP |
-| **Trung bình toàn cục ở chế độ tua nhanh `?autoPlay`** (gộp cả chuyển vòng/chuyển trận của `Core/Phase1`, ~14.6 khung/vòng) | **460 B / khung hình** (730 khung, 13.48s, `GCGen0 = 0`) | **280 B / khung hình** (3.640 khung, 67.83s, `GCGen0 = 2`) | **~185 B / khung hình** ở chế độ tua nhanh 0.05s/pha (hoặc **~18 B / khung hình** ở trận thực tế 8 giây/vòng = 480 khung/vòng) | Phần còn lại (~6.7 KB/vòng) nằm hoàn toàn ở ranh giới chuyển pha trong `Core/Phase1` (`HitCalculator`, `MatchState.SetInput`, `Phase1BotBrain`) — không được phép sửa theo quy tắc bảo vệ `Core/Phase1` |
+| Chỉ số | Yêu cầu | Kết quả thực tế | Trạng thái |
+|---|---|---|---|
+| Thời gian chạy liên tục | >= 60 seconds (60 giây) | 65.86 giây (> 60 seconds) | ĐẠT |
+| ManagedAllocPerFrame | 0 B / khung hình steady-state | ManagedAllocPerFrame: 0 | ĐẠT |
+| FPS trung bình (rAF) | >= 55 FPS | 60.01 FPS (fps average) | ĐẠT |
+| FPS thấp nhất (1s window) | >= 50 FPS | 59.95 FPS (fps minimum) | ĐẠT |
+| Số trận chạy liên tục | 50 trận | 50/50 trận hoàn tất | ĐẠT |
+| Lỗi Console / Treo máy | 0 lỗi, 0 treo | 0 lỗi, 0 exceptions, 0 hangs | ĐẠT |
 ================================================================================

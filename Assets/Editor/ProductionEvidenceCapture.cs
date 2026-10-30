@@ -236,6 +236,86 @@ namespace HitMe.Editor
                     }
                 }
 
+                // ==================== 9. FIVE AUDIT RESOLUTIONS (PHASE 2 AUDIT CHECK #9) ====================
+                ui.ShowScreen(ProductionScreen.Gameplay);
+                ui.ApplyPhaseState(Phase.Placing);
+                ui.EnsureAndRefreshBuildFingerprint();
+                UpdateHudHp(ui, players, isPlacing: true);
+
+                foreach (var kvp in views)
+                {
+                    bool isLocal = kvp.Key == "player";
+                    kvp.Value.gameObject.SetActive(isLocal);
+                    if (isLocal)
+                    {
+                        var p = players.Find(x => x.Id == kvp.Key);
+                        kvp.Value.Present(p, true, true, true, 1.2f, 1.5f, 2.0f);
+                    }
+                }
+
+                (int w, int h)[] auditResolutions = new[]
+                {
+                    (1080, 1920),
+                    (1179, 2556),
+                    (1080, 2400),
+                    (1080, 2520),
+                    (1620, 2160)
+                };
+
+                foreach (var res in auditResolutions)
+                {
+                    if (fitter != null)
+                    {
+                        fitter.ApplyForScreen(res.w, res.h, new Rect(0f, 0f, res.w, res.h), false);
+                    }
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, $"res_{res.w}x{res.h}_placing.png"), commitShort, buildId, res.w, res.h);
+                }
+
+                if (fitter != null)
+                {
+                    fitter.ApplyForScreen(ShotWidth, ShotHeight, new Rect(0f, 0f, ShotWidth, ShotHeight), false);
+                }
+
+                // ==================== 10. RULE V1.3 PLAYER COUNTS N = 2..6 (1080x2340) ====================
+                for (int n = 2; n <= 6; n++)
+                {
+                    // HUD in Placing with N cards
+                    ui.ShowScreen(ProductionScreen.Gameplay);
+                    ui.ApplyPhaseState(Phase.Placing);
+                    ui.EnsureAndRefreshBuildFingerprint();
+                    ui.ConfigureHpCardsLayout(n);
+                    var subPlayers = players.GetRange(0, n);
+                    UpdateHudHp(ui, subPlayers, isPlacing: true);
+
+                    foreach (var kvp in views)
+                    {
+                        bool inMatch = subPlayers.Exists(x => x.Id == kvp.Key);
+                        bool isLocal = kvp.Key == "player";
+                        kvp.Value.gameObject.SetActive(inMatch && isLocal);
+                        if (inMatch && isLocal)
+                        {
+                            var p = subPlayers.Find(x => x.Id == kvp.Key);
+                            kvp.Value.Present(p, true, true, true, 1.2f, 1.5f, 2.0f);
+                        }
+                    }
+
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, $"res_1080x2340_hud_N{n}.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                    // Result Panel with N rows
+                    SetPlayersVisible(views, false);
+                    var subRanked = new List<PlayerState>(subPlayers);
+                    subRanked.Sort(MatchRanking.DisplayOrderComparison);
+                    var subWinners = new List<string>(MatchRanking.Winners(subPlayers));
+                    ui.ApplyPhaseState(Phase.MatchEnd);
+                    ui.PopulateResultBoard(subRanked, subWinners);
+                    ui.EnsureAndRefreshBuildFingerprint();
+
+                    RenderAndSave(cam, Path.Combine(EvidenceDir, $"res_1080x2340_result_N{n}.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                }
+
+                // ==================== 11. S9 W1 SANDAL SPRITE DIAGNOSIS ====================
+                CaptureW1SandalDiagnosis(cam, commitShort, buildId);
+
                 Debug.Log("[EvidenceCapture] All evidence screenshots captured with provenance to " + EvidenceDir);
             }
             finally
@@ -249,6 +329,115 @@ namespace HitMe.Editor
                 // Re-open clean scene without saving temporary render mode changes so working tree stays clean
                 EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             }
+        }
+
+        private static void CaptureW1SandalDiagnosis(Camera cam, string commitShort, string buildId)
+        {
+            string outPath = Path.Combine(EvidenceDir, "w1_sandal_sprite_diagnosis.png");
+            int width = 1024;
+            int height = 512;
+            var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+
+            Color darkBg = new Color(0.08f, 0.10f, 0.14f);
+            Color panelBg = new Color(0.13f, 0.16f, 0.22f);
+            Color[] pixels = new Color[width * height];
+            for (int i = 0; i < pixels.Length; i++) pixels[i] = darkBg;
+            tex.SetPixels(pixels);
+
+            // Draw two background panel rectangles
+            for (int y = 40; y < height - 60; y++)
+            {
+                for (int x = 40; x < (width / 2) - 20; x++)
+                {
+                    tex.SetPixel(x, y, panelBg);
+                }
+                for (int x = (width / 2) + 20; x < width - 40; x++)
+                {
+                    tex.SetPixel(x, y, panelBg);
+                }
+            }
+
+            // Blit sandal projectile sprite on the left panel
+            var sandalTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Sprites/dep_projectile.png");
+            if (sandalTex == null) sandalTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Weapons/dep_to_ong_projectile.png");
+
+            if (sandalTex != null)
+            {
+                RenderTexture tmpRt = RenderTexture.GetTemporary(sandalTex.width, sandalTex.height, 0, RenderTextureFormat.ARGB32);
+                Graphics.Blit(sandalTex, tmpRt);
+                RenderTexture prev = RenderTexture.active;
+                RenderTexture.active = tmpRt;
+                Texture2D readableSandal = new Texture2D(sandalTex.width, sandalTex.height, TextureFormat.RGBA32, false);
+                readableSandal.ReadPixels(new Rect(0, 0, sandalTex.width, sandalTex.height), 0, 0);
+                readableSandal.Apply();
+                RenderTexture.active = prev;
+                RenderTexture.ReleaseTemporary(tmpRt);
+
+                int targetSandalW = 280;
+                int targetSandalH = (int)(280f * readableSandal.height / readableSandal.width);
+                int startX = ((width / 2) - 60 - targetSandalW) / 2 + 40;
+                int startY = (height - targetSandalH) / 2;
+
+                for (int py = 0; py < targetSandalH; py++)
+                {
+                    for (int px = 0; px < targetSandalW; px++)
+                    {
+                        float u = (float)px / targetSandalW;
+                        float v = (float)py / targetSandalH;
+                        Color c = readableSandal.GetPixelBilinear(u, v);
+                        if (c.a > 0.05f)
+                        {
+                            Color bg = tex.GetPixel(startX + px, startY + py);
+                            tex.SetPixel(startX + px, startY + py, Color.Lerp(bg, c, c.a));
+                        }
+                    }
+                }
+                UnityEngine.Object.DestroyImmediate(readableSandal);
+            }
+
+            // Blit character Nam Lang on the right panel
+            var charTex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Sprites/nam_lang_idle.png");
+            if (charTex != null)
+            {
+                RenderTexture tmpRt = RenderTexture.GetTemporary(charTex.width, charTex.height, 0, RenderTextureFormat.ARGB32);
+                Graphics.Blit(charTex, tmpRt);
+                RenderTexture prev = RenderTexture.active;
+                RenderTexture.active = tmpRt;
+                Texture2D readableChar = new Texture2D(charTex.width, charTex.height, TextureFormat.RGBA32, false);
+                readableChar.ReadPixels(new Rect(0, 0, charTex.width, charTex.height), 0, 0);
+                readableChar.Apply();
+                RenderTexture.active = prev;
+                RenderTexture.ReleaseTemporary(tmpRt);
+
+                int targetCharH = 340;
+                int targetCharW = (int)(340f * readableChar.width / readableChar.height);
+                int startX = (width / 2) + 20 + ((width / 2) - 60 - targetCharW) / 2;
+                int startY = (height - targetCharH) / 2;
+
+                for (int py = 0; py < targetCharH; py++)
+                {
+                    for (int px = 0; px < targetCharW; px++)
+                    {
+                        float u = (float)px / targetCharW;
+                        float v = (float)py / targetCharH;
+                        Color c = readableChar.GetPixelBilinear(u, v);
+                        if (c.a > 0.05f)
+                        {
+                            Color bg = tex.GetPixel(startX + px, startY + py);
+                            tex.SetPixel(startX + px, startY + py, Color.Lerp(bg, c, c.a));
+                        }
+                    }
+                }
+                UnityEngine.Object.DestroyImmediate(readableChar);
+            }
+
+            tex.Apply();
+            byte[] bytes = tex.EncodeToPNG();
+            File.WriteAllBytes(outPath, bytes);
+            UnityEngine.Object.DestroyImmediate(tex);
+
+            WriteProvenanceJson(outPath, commitShort, buildId, width, height);
+            Debug.Log($"[EvidenceCapture] Saved W1 sandal diagnosis to {outPath}");
         }
 
         private static void RenderAndSave(Camera cam, string outputPath, string commitShort, string buildId, int width, int height)
