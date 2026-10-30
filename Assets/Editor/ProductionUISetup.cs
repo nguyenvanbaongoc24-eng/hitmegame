@@ -42,17 +42,17 @@ namespace HitMe.Editor
             var spriteCircleBack = LoadSprite(KitPath + "ui_btn_circle_back.png");
             var spriteArena = LoadSprite(SpritesPath + "ARENA.png");
 
-            // 1. Setup Camera for Portrait 1080x2340
+            // 1. Setup Camera for Portrait 1080x2340 (P2: keep arena aspect ratio, leave top clearance for SafeArea + 2-row HUD above village gate)
             var camGo = GameObject.Find("Main Camera");
             if (camGo == null) camGo = new GameObject("Main Camera");
             camGo.tag = "MainCamera";
             var cam = camGo.GetComponent<Camera>();
             if (cam == null) cam = camGo.AddComponent<Camera>();
             cam.orthographic = true;
-            cam.orthographicSize = 7.5f;
+            cam.orthographicSize = 7.8f;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.06f, 0.07f, 0.09f, 1f);
-            camGo.transform.position = new Vector3(0f, 0.2f, -10f);
+            camGo.transform.position = new Vector3(0f, 0.80f, -10f);
 
             // 2. Setup ArenaView
             var arenaGo = GameObject.Find("Arena");
@@ -94,7 +94,7 @@ namespace HitMe.Editor
             var existingCanvas = GameObject.Find("ProductionCanvas");
             if (existingCanvas != null) Object.DestroyImmediate(existingCanvas);
 
-            // 6. Build Canvas (1080x2340 Portrait)
+            // 6. Build Canvas (1080x2340 Portrait, Scale With Screen Size)
             var canvasGo = new GameObject("ProductionCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = canvasGo.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -107,8 +107,17 @@ namespace HitMe.Editor
 
             var uiCtrl = canvasGo.AddComponent<ProductionUIController>();
 
-            // Root container
-            var rootTr = canvasGo.transform;
+            // SafeAreaRoot (P2: constrains HUD to portrait 1080x2340 column and applies iPhone safe area)
+            var safeAreaGo = new GameObject("SafeAreaRoot", typeof(RectTransform), typeof(SafeAreaFitter));
+            safeAreaGo.transform.SetParent(canvasGo.transform, false);
+            var safeAreaRt = safeAreaGo.GetComponent<RectTransform>();
+            safeAreaRt.anchorMin = Vector2.zero;
+            safeAreaRt.anchorMax = Vector2.one;
+            safeAreaRt.pivot = new Vector2(0.5f, 0.5f);
+            safeAreaRt.offsetMin = Vector2.zero;
+            safeAreaRt.offsetMax = Vector2.zero;
+
+            var rootTr = safeAreaGo.transform;
 
             // ==================== A. TOAST OBJECT ====================
             var toastObj = CreatePanel(rootTr, "ToastContainer", new Vector2(0.5f, 0.72f), new Vector2(0.5f, 0.72f), new Vector2(0.5f, 0.5f), new Vector2(800f, 100f), spritePanelDarkGold, new Color(0.1f, 0.12f, 0.16f, 0.95f));
@@ -136,22 +145,18 @@ namespace HitMe.Editor
             uiCtrl.txtSelectedLoadout = loadoutTxt;
 
             // 4 Action Buttons
-            // Button 1: Chơi Nhanh (Yellow CTA)
             var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnYellow, new Vector2(0.5f, 0.44f), new Vector2(0.5f, 0.44f), new Vector2(0.5f, 0.5f), new Vector2(880f, 140f));
             CreateTMP(btnQuick.transform, "Label", fontAsset, "CHƠI NHANH", 46, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnQuickMatch = btnQuick.GetComponent<Button>();
 
-            // Button 2: Tạo Phòng (Blue CTA)
             var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue, new Vector2(0.5f, 0.33f), new Vector2(0.5f, 0.33f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
             CreateTMP(btnCreate.transform, "Label", fontAsset, "TẠO PHÒNG", 42, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
-            // Button 3: Vào Phòng (Green CTA)
             var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen, new Vector2(0.5f, 0.23f), new Vector2(0.5f, 0.23f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
             CreateTMP(btnJoin.transform, "Label", fontAsset, "VÀO PHÒNG", 42, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
 
-            // Button 4: Luyện với bot (Navy)
             var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spritePanelDarkGold, new Vector2(0.5f, 0.12f), new Vector2(0.5f, 0.12f), new Vector2(0.5f, 0.5f), new Vector2(880f, 120f));
             CreateTMP(btnBot.transform, "Label", fontAsset, "LUYỆN VỚI BOT (OFFLINE)", 34, new Color(1f, 0.85f, 0.4f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
@@ -161,14 +166,12 @@ namespace HitMe.Editor
             createRoomPanel.SetActive(false);
             uiCtrl.createRoomPanel = createRoomPanel;
 
-            // Back button
             var btnBackCreate = CreateButton(createRoomPanel.transform, "BtnBack", spriteCircleBack, new Vector2(0.12f, 0.94f), new Vector2(0.12f, 0.94f), new Vector2(0.5f, 0.5f), new Vector2(100f, 100f));
             uiCtrl.btnBackFromCreate = btnBackCreate.GetComponent<Button>();
 
             var createHeader = CreateImage(createRoomPanel.transform, "CreateBanner", spriteBannerWood, new Vector2(0.54f, 0.94f), new Vector2(0.54f, 0.94f), new Vector2(0.5f, 0.5f), new Vector2(650f, 140f));
             CreateTMP(createHeader.transform, "Title", fontAsset, "TẠO PHÒNG", 48, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center);
 
-            // Container Panel
             var createCard = CreatePanel(createRoomPanel.transform, "CreateCard", new Vector2(0.5f, 0.56f), new Vector2(0.5f, 0.56f), new Vector2(0.5f, 0.5f), new Vector2(940f, 750f), spritePanelDarkGold, Color.white);
             CreateTMP(createCard.transform, "L1", fontAsset, "TÊN PHÒNG:", 36, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Left, new Vector2(0.08f, 0.86f), new Vector2(300f, 50f));
 
@@ -220,7 +223,6 @@ namespace HitMe.Editor
             CreateTMP(btnScan.transform, "Label", fontAsset, "QUÉT MÃ QR", 34, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnScanQr = btnScan.GetComponent<Button>();
 
-            // Found room card
             var foundCard = CreatePanel(joinRoomPanel.transform, "FoundCard", new Vector2(0.5f, 0.40f), new Vector2(0.5f, 0.40f), new Vector2(0.5f, 0.5f), new Vector2(940f, 200f), spriteCardSlot, Color.white);
             var foundTxt = CreateTMP(foundCard.transform, "FoundText", fontAsset, "✅ Đã tìm thấy: Phòng Chiến Hữu\nChủ phòng: Nam Làng • 4/6 người • Sân Làng", 34, new Color(0.2f, 1f, 0.4f), TextAlignmentOptions.Center);
             FillRect(foundTxt.rectTransform, new Vector2(20f, 10f), new Vector2(-20f, -10f));
@@ -243,7 +245,6 @@ namespace HitMe.Editor
             var lobbyCodeTxt = CreateTMP(lobbyPanel.transform, "RoomCode", fontAsset, "MÃ PHÒNG: HM4826 • SÂN LÀNG", 32, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.87f), new Vector2(900f, 50f), wrap: false);
             uiCtrl.txtLobbyRoomCode = lobbyCodeTxt;
 
-            // Slots Grid
             var slotsRoot = CreatePanel(lobbyPanel.transform, "SlotsGrid", new Vector2(0.5f, 0.56f), new Vector2(0.5f, 0.56f), new Vector2(0.5f, 0.5f), new Vector2(940f, 700f), spritePanelDarkGold, Color.white);
             uiCtrl.lobbySlotsContainer = slotsRoot.transform;
             uiCtrl.lobbySlots.Clear();
@@ -278,51 +279,68 @@ namespace HitMe.Editor
             CreateTMP(btnLeave.transform, "Label", fontAsset, "RỜI PHÒNG", 36, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnLeaveRoom = btnLeave.GetComponent<Button>();
 
-            // ==================== F. GAMEPLAY HUD PANEL ====================
+            // ==================== F. GAMEPLAY HUD PANEL (P2 & P3) ====================
             var hudPanel = CreatePanel(rootTr, "GameplayHudPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, Color.clear);
             hudPanel.SetActive(false);
             uiCtrl.gameplayHudPanel = hudPanel;
 
-            // Top Bar: Round & Timer
-            var roundPill = CreateImage(hudPanel.transform, "RoundPill", spriteHudPill, new Vector2(0.18f, 0.96f), new Vector2(0.18f, 0.96f), new Vector2(0.5f, 0.5f), new Vector2(280f, 90f));
-            var roundTxt = CreateTMP(roundPill.transform, "Text", fontAsset, "VÒNG 1/5", 34, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center);
+            // P3: TopPlacingBar (Round, Timer, and Sẵn sàng in the same horizontal safe-area row; only shown in Placing)
+            var topPlacingBar = CreatePanel(hudPanel.transform, "TopPlacingBar", new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 68f), null, Color.clear);
+            uiCtrl.topPlacingBar = topPlacingBar;
+
+            var roundPill = CreateImage(topPlacingBar.transform, "RoundPill", spriteHudPill, new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(300f, 64f));
+            var roundTxt = CreateTMP(roundPill.transform, "Text", fontAsset, "VÒNG 1/5", 30, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center);
             FillRect(roundTxt.rectTransform, Vector2.zero, Vector2.zero);
+            uiCtrl.roundPill = roundPill;
             uiCtrl.txtRound = roundTxt;
 
-            var timerPill = CreateImage(hudPanel.transform, "TimerPill", spriteHudPill, new Vector2(0.50f, 0.96f), new Vector2(0.50f, 0.96f), new Vector2(0.5f, 0.5f), new Vector2(240f, 90f));
-            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 38, Color.white, TextAlignmentOptions.Center);
+            var timerPill = CreateImage(topPlacingBar.transform, "TimerPill", spriteHudPill, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(240f, 64f));
+            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 34, Color.white, TextAlignmentOptions.Center);
             FillRect(timerTxt.rectTransform, Vector2.zero, Vector2.zero);
+            uiCtrl.timerPill = timerPill;
             uiCtrl.txtTimer = timerTxt;
 
-            var btnReadyInGame = CreateButton(hudPanel.transform, "BtnReady", spriteBtnGreen, new Vector2(0.82f, 0.96f), new Vector2(0.82f, 0.96f), new Vector2(0.5f, 0.5f), new Vector2(280f, 90f));
-            var readyLabelInGame = CreateTMP(btnReadyInGame.transform, "Label", fontAsset, "SẴN SÀNG", 32, Color.white, TextAlignmentOptions.Center);
+            var btnReadyInGame = CreateButton(topPlacingBar.transform, "BtnReady", spriteBtnGreen, new Vector2(0.84f, 0.5f), new Vector2(0.84f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(300f, 64f));
+            var readyLabelInGame = CreateTMP(btnReadyInGame.transform, "Label", fontAsset, "SẴN SÀNG", 28, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnInGameReady = btnReadyInGame.GetComponent<Button>();
             uiCtrl.txtInGameReadyLabel = readyLabelInGame;
 
-            // Phase Banner
-            var phaseBanner = CreateImage(hudPanel.transform, "PhaseBanner", spriteInputCyan, new Vector2(0.5f, 0.90f), new Vector2(0.5f, 0.90f), new Vector2(0.5f, 0.5f), new Vector2(960f, 80f));
-            var phaseTxt = CreateTMP(phaseBanner.transform, "Text", fontAsset, "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm", 32, Color.white, TextAlignmentOptions.Center);
+            // Phase Banner (below TopPlacingBar)
+            var phaseBanner = CreateImage(hudPanel.transform, "PhaseBanner", spriteInputCyan, new Vector2(0.5f, 0.928f), new Vector2(0.5f, 0.928f), new Vector2(0.5f, 0.5f), new Vector2(1000f, 48f));
+            var phaseTxt = CreateTMP(phaseBanner.transform, "Text", fontAsset, "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm", 26, Color.white, TextAlignmentOptions.Center);
             FillRect(phaseTxt.rectTransform, Vector2.zero, Vector2.zero);
+            uiCtrl.phaseBannerObj = phaseBanner;
             uiCtrl.txtPhaseBanner = phaseTxt;
 
-            // 6 HP Cards strip
-            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.83f), new Vector2(0.5f, 0.83f), new Vector2(0.5f, 0.5f), new Vector2(1040f, 130f), null, Color.clear);
+            // P3: 6 HP Cards in 2 rows x 3 columns (above village gate, non-overlapping text, clear eliminated state)
+            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.872f), new Vector2(0.5f, 0.872f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 116f), null, Color.clear);
             uiCtrl.hpCardsContainer = hpContainer.transform;
             uiCtrl.hpCards.Clear();
 
             string[] playerIds = new string[] { "player", "bot-1", "bot-2", "bot-3", "bot-4", "bot-5" };
-            string[] shortNames = new string[] { "Nam Làng", "Nữ Động", "Quậy Boy", "Cô Ba", "Anh Teen", "Chó Vàng" };
+            string[] shortNames = new string[] { "Nam Làng", "Nữ Năng Động", "Quậy Boy", "Cô Ba", "Anh Teen", "Chú Chó Vàng" };
+            float[] colAnchors = new float[] { 0.17f, 0.50f, 0.83f };
+            float[] rowAnchors = new float[] { 0.76f, 0.24f };
+
             for (int i = 0; i < 6; i++)
             {
-                float xNorm = 0.083f + i * 0.166f;
-                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, new Vector2(xNorm, 0.5f), new Vector2(xNorm, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(158f, 115f), spriteHudPill, Color.white);
-                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 20, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.72f), new Vector2(148f, 28f), wrap: false);
-                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 22, new Color(0.2f, 1f, 0.4f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.40f), new Vector2(148f, 28f), wrap: false);
-                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 18, new Color(0.8f, 0.9f, 1f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.15f), new Vector2(148f, 24f), wrap: false);
+                int col = i % 3;
+                int row = i / 3;
+                Vector2 cardAnchor = new Vector2(colAnchors[col], rowAnchors[row]);
+                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(324f, 54f), spriteHudPill, Color.white);
+
+                // Top-left: Name (186x24), Top-right: Hearts/HP (110x24), Bottom: Status (300x22) -> zero overlap
+                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 19, new Color(1f, 0.88f, 0.32f), TextAlignmentOptions.MidlineLeft, new Vector2(0.04f, 0.72f), new Vector2(186f, 24f), wrap: false, pivot: new Vector2(0f, 0.5f));
+                cName.overflowMode = TextOverflowModes.Ellipsis;
+
+                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 19, new Color(0.25f, 1f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.96f, 0.72f), new Vector2(110f, 24f), wrap: false, pivot: new Vector2(1f, 0.5f));
+
+                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "● CÒN SỐNG", 17, new Color(0.45f, 0.95f, 0.65f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.25f), new Vector2(300f, 22f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
                 {
                     root = cardObj,
+                    imgBg = cardObj.GetComponent<Image>(),
                     txtName = cName,
                     txtHearts = cHearts,
                     txtHpNum = cHpNum,
@@ -330,13 +348,14 @@ namespace HitMe.Editor
                 });
             }
 
-            // Weapon Indicator at bottom
-            var weaponPill = CreateImage(hudPanel.transform, "WeaponPill", spriteHudPill, new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.5f), new Vector2(400f, 80f));
-            var weaponTxt = CreateTMP(weaponPill.transform, "Text", fontAsset, "VŨ KHÍ: Dép Tổ Ong", 30, Color.white, TextAlignmentOptions.Center);
+            // P3: Weapon Indicator placed right below the bottom of the arena ("sát đáy sân/hành động")
+            var weaponPill = CreateImage(hudPanel.transform, "WeaponPill", spriteHudPill, new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.5f), new Vector2(420f, 64f));
+            var weaponTxt = CreateTMP(weaponPill.transform, "Text", fontAsset, "VŨ KHÍ: Dép Tổ Ong", 28, Color.white, TextAlignmentOptions.Center);
             FillRect(weaponTxt.rectTransform, Vector2.zero, Vector2.zero);
+            uiCtrl.weaponPillObj = weaponPill;
             uiCtrl.txtWeaponIndicator = weaponTxt;
 
-            // ==================== G. RESULT PANEL ====================
+            // ==================== G. RESULT PANEL (P1) ====================
             var resultPanel = CreatePanel(rootTr, "ResultPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.05f, 0.07f, 0.95f));
             resultPanel.SetActive(false);
             uiCtrl.resultPanel = resultPanel;
@@ -345,7 +364,7 @@ namespace HitMe.Editor
             var resTitle = CreateTMP(resultHeader.transform, "Title", fontAsset, "CHIẾN THẮNG! 🏆", 46, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtResultTitle = resTitle;
 
-            var resSubtitle = CreateTMP(resultPanel.transform, "Subtitle", fontAsset, "Người thắng: Nam Làng", 32, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.85f), new Vector2(900f, 50f), wrap: false);
+            var resSubtitle = CreateTMP(resultPanel.transform, "Subtitle", fontAsset, "Người thắng: Nam Làng", 30, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.85f), new Vector2(960f, 50f), wrap: false);
             uiCtrl.txtResultSubtitle = resSubtitle;
 
             // Full Ranking Board (all 6 players)
@@ -357,10 +376,10 @@ namespace HitMe.Editor
             {
                 float yNorm = 0.88f - i * 0.155f;
                 var rowObj = CreatePanel(boardCard.transform, "RankRow_" + i, new Vector2(0.5f, yNorm), new Vector2(0.5f, yNorm), new Vector2(0.5f, 0.5f), new Vector2(860f, 95f), i == 0 ? spriteRowMe : spriteRowLeaderboard, Color.white);
-                var rRank = CreateTMP(rowObj.transform, "Rank", fontAsset, "#" + (i + 1), 32, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.07f, 0.5f), new Vector2(80f, 50f), wrap: false);
-                var rName = CreateTMP(rowObj.transform, "Name", fontAsset, defaultLobbyNames[i], 30, Color.white, TextAlignmentOptions.MidlineLeft, new Vector2(0.18f, 0.5f), new Vector2(320f, 50f), wrap: false, pivot: new Vector2(0f, 0.5f));
-                var rHp = CreateTMP(rowObj.transform, "Hp", fontAsset, (3 - i / 2) + " HP", 30, new Color(1f, 0.4f, 0.4f), TextAlignmentOptions.Center, new Vector2(0.66f, 0.5f), new Vector2(140f, 50f), wrap: false);
-                var rStatus = CreateTMP(rowObj.transform, "Status", fontAsset, i == 0 ? "★ THẮNG" : "Đã loại", 28, i == 0 ? new Color(1f, 0.9f, 0.2f) : Color.gray, TextAlignmentOptions.MidlineRight, new Vector2(0.94f, 0.5f), new Vector2(200f, 50f), wrap: false, pivot: new Vector2(1f, 0.5f));
+                var rRank = CreateTMP(rowObj.transform, "Rank", fontAsset, "#" + (i + 1), 30, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.06f, 0.5f), new Vector2(70f, 50f), wrap: false);
+                var rName = CreateTMP(rowObj.transform, "Name", fontAsset, defaultLobbyNames[i], 26, Color.white, TextAlignmentOptions.MidlineLeft, new Vector2(0.12f, 0.5f), new Vector2(280f, 50f), wrap: false, pivot: new Vector2(0f, 0.5f));
+                var rHp = CreateTMP(rowObj.transform, "Hp", fontAsset, "HP: " + Mathf.Max(0, 3 - i / 2) + "/3 • HIT: " + (3 - i / 2), 25, new Color(0.85f, 0.95f, 1f), TextAlignmentOptions.Center, new Vector2(0.58f, 0.5f), new Vector2(230f, 50f), wrap: false);
+                var rStatus = CreateTMP(rowObj.transform, "Status", fontAsset, i == 0 ? "★ THẮNG" : "✖ Đã loại", 24, i == 0 ? new Color(1f, 0.9f, 0.2f) : new Color(1f, 0.45f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.96f, 0.5f), new Vector2(200f, 50f), wrap: false, pivot: new Vector2(1f, 0.5f));
 
                 uiCtrl.resultRows.Add(new ProductionUIController.ResultRowUI
                 {
@@ -381,12 +400,12 @@ namespace HitMe.Editor
             CreateTMP(btnHome.transform, "Label", fontAsset, "VỀ TRANG CHỦ", 38, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnBackToHome = btnHome.GetComponent<Button>();
 
-            // ==================== F. BUILD FINGERPRINT WATERMARK (A3) ====================
+            // ==================== H. BUILD FINGERPRINT WATERMARK ====================
             var fpTxt = CreateTMP(rootTr, "BuildFingerprintWatermark", fontAsset,
                 ProductionUIController.ResolveBuildFingerprint(),
-                20, new Color(0.85f, 0.90f, 0.95f, 0.65f),
+                18, new Color(0.85f, 0.90f, 0.95f, 0.65f),
                 TextAlignmentOptions.BottomRight,
-                new Vector2(0.985f, 0.008f), new Vector2(960f, 36f), wrap: false, pivot: new Vector2(1f, 0f));
+                new Vector2(0.985f, 0.004f), new Vector2(960f, 32f), wrap: false, pivot: new Vector2(1f, 0f));
             fpTxt.transform.SetAsLastSibling();
             uiCtrl.txtBuildFingerprint = fpTxt;
 
