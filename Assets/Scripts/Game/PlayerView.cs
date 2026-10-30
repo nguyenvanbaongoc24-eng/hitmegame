@@ -34,7 +34,7 @@ namespace HitMe.Game
         public string playerId;
         public int characterIndex;
 
-        // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant (0.55f)
+        // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant per GameConfig
         public static float VisualCharacterScale = 2.0f;
         public static float VisualHitRingScale = 1.0f;
         public static bool CustomScaleApplied;

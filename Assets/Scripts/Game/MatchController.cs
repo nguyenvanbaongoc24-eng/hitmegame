@@ -543,7 +543,7 @@ namespace HitMe.Game
                 string captureUrl = Application.absoluteURL ?? "";
                 if (captureUrl.IndexOf("dragAim=1", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    _gestureV2.PointerDown(0, Vec2.Zero, new Vec2(0f, -2.5f), true, 0);
+                    _gestureV2.PointerDown(0, Vec2.Zero, State.Config.HeadlessAimDragOrigin, true, 0);
                     _gestureV2.PointerMove(0, new Vec2(0f, 150f), new Vec2(0f, -1.0f), true, 10, 10f);
                     SyncGesturePreview();
                 }

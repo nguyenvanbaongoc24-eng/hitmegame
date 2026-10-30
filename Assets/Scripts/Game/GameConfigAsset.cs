@@ -34,7 +34,7 @@ namespace HitMe.Game
         public NoAimPolicy noAimRule = Defaults.NoAimRule;
         public uint seed = Defaults.Seed;
 
-        [Header("V4 Visual Scaling (Core Hitbox remains strictly 0.55f)")]
+        [Header("V4 Visual Scaling")]
         public float characterScale = Defaults.CharacterScale;
         public float weaponScale = Defaults.WeaponScale;
         public float hitRingScale = Defaults.HitRingScale;
