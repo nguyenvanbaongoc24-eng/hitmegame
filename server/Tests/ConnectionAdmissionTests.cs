@@ -15,6 +15,16 @@ public sealed class ConnectionAdmissionTests
         Assert.True(admission.TryAdmit("10.0.0.1", out _));
     }
 
+    [Theory]
+    [InlineData(0, 1024, false)]
+    [InlineData(1023, 1, false)]
+    [InlineData(1024, 1, true)]
+    [InlineData(800, 225, true)]
+    public void FixedFrameReaderRejectsOnlyPayloadsAboveOneKilobyte(int read, int incoming, bool expected)
+    {
+        Assert.Equal(expected, WebSocketMessageReader.ExceedsFixedLimit(read, incoming));
+    }
+
     [Fact]
     public void OriginMustBeAllowListedExceptForNonBrowserClients()
     {

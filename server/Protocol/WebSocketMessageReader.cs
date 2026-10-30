@@ -9,6 +9,9 @@ public static class WebSocketMessageReader
     public const int MaxFrameBytes = 1024;
     private const int ChunkBytes = 256;
 
+    public static bool ExceedsFixedLimit(int bytesAlreadyRead, int incomingBytes) =>
+        bytesAlreadyRead < 0 || incomingBytes < 0 || incomingBytes > MaxFrameBytes - bytesAlreadyRead;
+
     public static async Task<string?> ReceiveTextAsync(WebSocket socket, CancellationToken cancellationToken)
     {
         var chunk = new byte[ChunkBytes];
@@ -20,7 +23,7 @@ public static class WebSocketMessageReader
             result = await socket.ReceiveAsync(chunk, cancellationToken);
             if (result.MessageType == WebSocketMessageType.Close) return null;
             if (result.MessageType != WebSocketMessageType.Text) throw new WebSocketException(WebSocketError.InvalidMessageType);
-            if (result.Count > MaxFrameBytes - total) throw new WebSocketException(WebSocketError.Faulted, "message_too_large");
+            if (ExceedsFixedLimit(total, result.Count)) throw new WebSocketException(WebSocketError.Faulted, "message_too_large");
             Buffer.BlockCopy(chunk, 0, frame, total, result.Count);
             total += result.Count;
         } while (!result.EndOfMessage);
