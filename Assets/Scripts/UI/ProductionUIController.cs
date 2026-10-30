@@ -133,10 +133,14 @@ namespace HitMe.UI
         public Button btnStartBotTraining;
         public Button btnBackFromBotTraining;
 
+        [Header("UI Theme Reference")]
+        public UiTheme theme;
+
         [Header("Gameplay HUD Controls")]
         public GameObject topPlacingBar;
         public GameObject roundPill;
         public GameObject timerPill;
+        public Image timerPulseRing;
         public GameObject phaseBannerObj;
         public GameObject weaponPillObj;
         public TextMeshProUGUI txtRound;
@@ -212,6 +216,7 @@ namespace HitMe.UI
             public TextMeshProUGUI txtName;
             public TextMeshProUGUI txtHearts;
             public TextMeshProUGUI txtHpNum;
+            public Image[] heartIcons;
             public string playerId;
 
             [NonSerialized] public string lastDisplayedName;
@@ -232,6 +237,11 @@ namespace HitMe.UI
 
         private void Awake()
         {
+            if (theme == null)
+            {
+                theme = UiTheme.Instance;
+            }
+
             if (matchController == null)
             {
                 matchController = FindAnyObjectByType<MatchController>();
@@ -661,8 +671,16 @@ namespace HitMe.UI
                     if (matchController != null)
                     {
                         matchController.RequestReady();
-                        if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = "ĐÃ KHÓA";
-                        if (btnInGameReady != null) btnInGameReady.interactable = false;
+                        if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = UiStrings.BtnLocked;
+                        if (btnInGameReady != null)
+                        {
+                            btnInGameReady.interactable = false;
+                            var btnImg = btnInGameReady.GetComponent<Image>();
+                            if (btnImg != null && theme != null && theme.btnCtaBlue != null)
+                            {
+                                btnImg.sprite = theme.btnCtaBlue;
+                            }
+                        }
                     }
                 });
             }
@@ -1275,7 +1293,12 @@ namespace HitMe.UI
             if (btnInGameReady != null)
             {
                 btnInGameReady.interactable = true;
-                if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = "SẴN SÀNG";
+                if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = UiStrings.BtnReady;
+                var btnImg = btnInGameReady.GetComponent<Image>();
+                if (btnImg != null && theme != null && theme.btnCtaYellow != null)
+                {
+                    btnImg.sprite = theme.btnCtaYellow;
+                }
             }
 
             if (matchController != null)
@@ -1303,7 +1326,12 @@ namespace HitMe.UI
             if (btnInGameReady != null)
             {
                 btnInGameReady.interactable = true;
-                if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = "SẴN SÀNG";
+                if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = UiStrings.BtnReady;
+                var btnImg = btnInGameReady.GetComponent<Image>();
+                if (btnImg != null && theme != null && theme.btnCtaYellow != null)
+                {
+                    btnImg.sprite = theme.btnCtaYellow;
+                }
             }
 
             Phase authoritativePhase = (matchController != null && matchController.State != null)
@@ -1442,7 +1470,22 @@ namespace HitMe.UI
             if (lowWarning != _lastTimerLowWarning)
             {
                 _lastTimerLowWarning = lowWarning;
-                txtTimer.color = lowWarning ? new Color(1f, 0.3f, 0.3f) : Color.white;
+                txtTimer.color = lowWarning ? new Color(1f, 0.3f, 0.3f) : (theme != null ? theme.creamText : Color.white);
+            }
+
+            // Pulse ring in final 2 seconds
+            if (timerPulseRing != null)
+            {
+                bool pulseActive = secondsRemaining > 0f && secondsRemaining <= 2.0f;
+                if (timerPulseRing.gameObject.activeSelf != pulseActive)
+                {
+                    timerPulseRing.gameObject.SetActive(pulseActive);
+                }
+                if (pulseActive)
+                {
+                    float pulse = 1f + 0.15f * Mathf.Sin(Time.time * 12f);
+                    timerPulseRing.transform.localScale = new Vector3(pulse, pulse, 1f);
+                }
             }
         }
 
@@ -1543,13 +1586,37 @@ namespace HitMe.UI
 
                 // S3: HP is ALWAYS public in all phases (only position & aim direction are hidden during Placing).
                 int clampedHp = Mathf.Clamp(player.Hp, 0, 3);
-                if (card.txtHearts != null && card.lastDisplayedHpCode != clampedHp)
+                if (card.lastDisplayedHpCode != clampedHp)
                 {
                     card.lastDisplayedHpCode = clampedHp;
-                    card.txtHearts.text = CachedHpCardStrings[clampedHp];
-                    card.txtHearts.color = player.IsAlive
-                        ? (clampedHp == 3 ? new Color(0.25f, 1f, 0.44f) : (clampedHp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
-                        : new Color(1f, 0.44f, 0.44f);
+                    if (card.txtHearts != null)
+                    {
+                        card.txtHearts.text = CachedHpCardStrings[clampedHp];
+                        card.txtHearts.color = player.IsAlive
+                            ? (clampedHp == 3 ? new Color(0.25f, 1f, 0.44f) : (clampedHp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
+                            : new Color(1f, 0.44f, 0.44f);
+                    }
+
+                    if (card.heartIcons != null && card.heartIcons.Length >= 3)
+                    {
+                        var fullSp = theme != null ? theme.heartFull : null;
+                        var breakSp = theme != null ? theme.heartBreak : null;
+                        for (int h = 0; h < 3; h++)
+                        {
+                            if (card.heartIcons[h] == null) continue;
+                            bool isFull = h < clampedHp;
+                            if (isFull)
+                            {
+                                if (fullSp != null) card.heartIcons[h].sprite = fullSp;
+                                card.heartIcons[h].color = Color.white;
+                            }
+                            else
+                            {
+                                if (breakSp != null) card.heartIcons[h].sprite = breakSp;
+                                card.heartIcons[h].color = new Color(1f, 1f, 1f, 0.35f);
+                            }
+                        }
+                    }
                 }
 
                 bool isLocal = player.Id == "player";

@@ -1,93 +1,88 @@
 # HIT ME — BẢNG ÁNH XẠ TÀI NGUYÊN GIAO DIỆN (UI ASSET MAP)
-*Tài liệu kiểm kê và quy hoạch toàn bộ thành phần giao diện theo bộ tài nguyên `ASSET HITME FINAL` phục vụ triển khai Đợt 29 (Round 29 UI Skin).*
+*Tài liệu kiểm kê và quy hoạch toàn bộ thành phần giao diện theo bộ tài nguyên `ASSET HITME FINAL` phục vụ triển khai Đợt 29 & 30 (Round 30 UI Skin U1 & U2-Lô 1).*
 
 ---
 
 ## 1. Nguyên tắc triển khai và bảo toàn tài nguyên
 1. **Tuyệt đối không sửa file gốc**: Mọi hình ảnh được sao chép nguyên trạng từ `D:\HITME GAME\ASSET HITME FINAL\` vào `Assets/Art/UI/` trong Unity client.
-2. **Không tự vẽ khung phẳng thay thế**: Nếu asset có sẵn $\rightarrow$ dùng đúng kit. Nếu thiếu $\rightarrow$ đánh dấu trạng thái `Thiếu` / `Cần vẽ lại` để xin ý kiến Chủ dự án, các khung tạm thời bắt buộc gắn nhãn `TẠM`.
-3. **Cơ chế 9-Slice chuẩn**: Cấu hình biên co giãn (Border L/R/T/B) chính xác trong Sprite Editor để không làm méo hoa văn góc viền gỗ và kim loại.
-4. **Hiệu năng & Bộ nhớ**:
-   - Đóng gói Sprite Atlas theo màn hình.
+2. **Không tự vẽ khung phẳng thay thế**: Dùng đúng kit. Thành phần thiếu bắt buộc gắn nhãn `[TẠM]` để Chủ dự án quyết định.
+3. **Phạm vi luật chơi v1.2**: Vũ khí duy nhất trong trận đấu là **Dép Tổ Ong**. Các asset Chảo gang, Vợt Pickleball được xếp vào mục "Ngoài phạm vi".
+4. **Ngôn ngữ thuần Việt**: Toàn bộ nhãn hiển thị bằng tiếng Việt chuẩn có dấu (dùng "HẠNG 1/2/3", không dùng "1ST/2ND/3RD").
+5. **Cơ chế 9-Slice chuẩn**: Cấu hình biên co giãn (Border L/R/T/B) chính xác trong Sprite Editor để không làm méo hoa văn góc viền gỗ và kim loại.
+6. **Hiệu năng & Bộ nhớ**:
+   - Vùng chạm tối thiểu $\ge 135\text{ px}$ (chuẩn mobile chiều rộng 1080px).
    - Dung lượng bản build WebGL tăng không quá $\le 4\text{ MB}$ (so sánh file `.data`).
    - 0 cấp phát bộ nhớ mỗi frame trong trận đấu (`ManagedAllocPerFrame: 0`), dùng pool UI, không `Instantiate`/`Destroy`.
 
 ---
 
-## 2. Bảng ánh xạ chi tiết từng thành phần giao diện
+## 2. Bảng ánh xạ chi tiết từng thành phần giao diện (Lô 1 – HUD Trong Trận)
 
-| # | Thành phần giao diện | Màn hình | Đường dẫn asset gốc trong `ASSET HITME FINAL` | Kích thước gốc | Cách dùng (9-slice / Cố định) | Trạng thái | Chủ dự án duyệt |
+| # | Thành phần giao diện | Màn hình | Đường dẫn asset gốc trong `ASSET HITME FINAL` | Kích thước gốc | Cách dùng (9-slice / Cố định) | Trạng thái kỹ thuật | Chủ dự án duyệt |
 |:---:|---|:---:|---|:---:|---|:---:|:---:|
-| **1** | Nút "CHƠI NGAY" / "BẮT ĐẦU" | Home, Bot Training | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **2** | Nút "LUYỆN VỚI BOT" | Home | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **3** | Nút "TẠO PHÒNG" / "VÀO PHÒNG" | Home | `HITME_UI_KIT_CLEAN/ui_btn_cta_green.png` | 360×110 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **4** | Khung nhập mã phòng (HM4826) | Home, Lobby | `HITME_UI_KIT_CLEAN/ui_input_box_cyan.png` | 480×100 | 9-slice (L:24, R:24, T:20, B:20) | **Có** | CHƯA |
-| **5** | Nút "RỜI PHÒNG" / "HỦY" | Lobby, Bot Training | `HITME_UI_KIT_CLEAN/ui_btn_cta_red.png` | 512×128 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **6** | Nút tròn quay lại (Back / Exit) | Bot Training, Lobby | `HITME_UI_KIT_CLEAN/ui_btn_circle_back.png` | 128×128 | Sprite cố định (1:1 tròn) | **Có** | CHƯA |
-| **7** | Khung Panel chính (Nền Modal) | Bot Training, Result | `HITME_UI_KIT_CLEAN/ui_panel_dark_gold.png` | 512×512 | 9-slice (L:48, R:48, T:48, B:48) | **Có** | CHƯA |
-| **8** | Khung Thẻ Nhân Vật (Bình thường) | Bot Training, Lobby, HUD | `HITME_UI_KIT_CLEAN/ui_card_char_normal.png` | 256×320 | 9-slice (L:24, R:24, T:24, B:24) | **Có** | CHƯA |
-| **9** | Khung Thẻ Nhân Vật (Được chọn) | Bot Training, Lobby | `HITME_UI_KIT_CLEAN/ui_card_char_selected.png` | 256×320 | 9-slice (L:24, R:24, T:24, B:24) | **Có** | CHƯA |
-| **10** | Banner Gỗ Biểu Ngữ Pha ("ĐẶT", "KHÓA", "LỘ DIỆN", "NÉM") | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_banner_wood.png` | 512×140 | 9-slice (L:64, R:64, T:20, B:20) | **Có** | CHƯA |
-| **11** | Nhãn "VÒNG 1/5" | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_banner_wood.png` (thu nhỏ) | 512×140 | 9-slice (L:40, R:40, T:20, B:20) | **Có** | CHƯA |
-| **12** | Đồng hồ đếm ngược (Icon + Viền) | Gameplay HUD | `HITME_AIM_KIT_V1/.../Art/PNG/Aim_Pulse_00.png` | 512×512 | Sprite cố định (co giãn nhịp pulse) | **Có** | CHƯA |
-| **13** | Trái tim máu đầy (Heart Full) | Gameplay HUD | `ASSET EFFECT/.../12_Heart_Heal/12_Heart_Heal_F01.png` | 512×512 | Sprite cố định (32×32 hiển thị) | **Có** | CHƯA |
-| **14** | Trái tim vỡ khi mất máu (Heart Break) | Gameplay HUD | `ASSET EFFECT/.../12_Heart_Heal/12_Heart_Heal_F04.png` | 512×512 | Sprite animation (chuỗi 6 frames) | **Có** | CHƯA |
-| **15** | Nút "SẴN SÀNG" (Chưa khóa) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **16** | Nút "ĐÃ KHÓA" (Sau khi khóa) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **17** | Ô chỉ báo vũ khí (Weapon Box) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_card_char_normal.png` (vuông) | 256×320 | 9-slice (L:24, R:24, T:24, B:24) | **Có** | CHƯA |
-| **18** | Biểu tượng vũ khí Chảo | Gameplay HUD | `ASSET WEAPONS/CHẢO/sprites/sprite_001.png` | 164×240 | Sprite cố định | **Có** | CHƯA |
-| **19** | Biểu tượng vũ khí Dép tổ ong | Gameplay HUD | `Assets/Art/Sprites/SandalProjectile.png` | 256×256 | Sprite cố định | **Có** | CHƯA |
-| **20** | Thước ngắm mềm (Aim Beam) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Art/PNG/Aim_Beam_Soft.png` | 1024×128 | Sprite co giãn theo độ dài kéo | **Có** | CHƯA |
-| **21** | Mũi tên hướng ngắm (Direction Arrow)| Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Art/PNG/Aim_Direction_Arrow.png` | 256×256 | Sprite cố định xoay theo góc ngắm | **Có** | CHƯA |
-| **22** | Vòng chân người chơi (Foot Ring) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Art/PNG/Aim_Origin_Ring.png` | 512×512 | Sprite cố định chân nhân vật | **Có** | CHƯA |
-| **23** | Tâm ngắm mục tiêu (Target Reticle) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Art/PNG/Aim_Target_Reticle.png` | 512×512 | Sprite xoay nhẹ tại điểm nhắm | **Có** | CHƯA |
-| **24** | Dòng xếp hạng đối thủ | Result Screen | `HITME_UI_KIT_CLEAN/ui_row_leaderboard.png` | 600×96 | 9-slice (L:32, R:32, T:20, B:20) | **Có** | CHƯA |
-| **25** | Dòng xếp hạng bản thân | Result Screen | `HITME_UI_KIT_CLEAN/ui_row_leaderboard_me.png` | 600×96 | 9-slice (L:32, R:32, T:20, B:20) | **Có** | CHƯA |
-| **26** | Nút "ĐẤU LẠI" | Result Screen | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **27** | Nút "VỀ TRANG CHỦ" | Result Screen | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (L:36, R:36, T:28, B:28) | **Có** | CHƯA |
-| **28** | Tranh nền màn hình chính (Bối cảnh làng quê) | Home Screen | `ASSET BỐI CẢNH/BỐI CẢNH/300b93e0-d734-4f09-93dd-4dc44de4e43a.png` | 941×1672 | Tranh nền dọc (Aspect Fit/Fill) | **Có** | CHƯA |
-| **29** | Huy chương Hạng 1st, 2nd, 3rd (Medals) | Result Screen | Chưa có sprite huy chương riêng biệt trong kit | N/A | Sprite cố định | **Thiếu** | CHƯA |
-| **30** | Icon Coin vàng đếm ngược | Gameplay HUD | Chưa có sprite đồng tiền vàng phẳng riêng lẻ | N/A | Sprite cố định | **Thiếu** | CHƯA |
-| **31** | Biểu tượng Vợt Pickleball (Vũ khí 3) | Gameplay HUD | Có trong pose ném của nhân vật, chưa có sprite độc lập | N/A | Sprite cố định | **Cần cắt** | CHƯA |
+| **1** | Nút "CHƠI NGAY" / "BẮT ĐẦU" | Home, Bot Training | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (L:35, R:35, T:25, B:25) | Đã triển khai | CHƯA |
+| **2** | Nút "LUYỆN VỚI BOT" | Home | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (L:35, R:35, T:25, B:25) | Đã triển khai | CHƯA |
+| **3** | Nút "TẠO PHÒNG" / "VÀO PHÒNG" | Home | `HITME_UI_KIT_CLEAN/ui_btn_cta_green.png` | 360×110 | 9-slice (L:35, R:35, T:25, B:25) | Đã triển khai | CHƯA |
+| **4** | Khung nhập mã phòng (HM4826) | Home, Lobby | `HITME_UI_KIT_CLEAN/ui_input_box_cyan.png` | 480×100 | 9-slice (L:25, R:25, T:25, B:25) | Đã triển khai | CHƯA |
+| **5** | Nút "RỜI PHÒNG" / "HỦY" | Lobby, Bot Training | `HITME_UI_KIT_CLEAN/ui_btn_cta_red.png` | 512×128 | 9-slice (L:35, R:35, T:25, B:25) | Đã triển khai | CHƯA |
+| **6** | Nút tròn quay lại (Back / Exit) | Bot Training, Lobby | `HITME_UI_KIT_CLEAN/ui_btn_circle_back.png` | 128×128 | Sprite cố định (1:1 tròn) | Đã triển khai | CHƯA |
+| **7** | Khung Panel chính (Nền Modal) | Bot Training, Result | `HITME_UI_KIT_CLEAN/ui_panel_dark_gold.png` | 512×512 | 9-slice (L:40, R:40, T:40, B:40) | Đã triển khai | CHƯA |
+| **8** | Khung Thẻ HP Nhân Vật (Bình thường) | HUD, Lobby | `HITME_UI_KIT_CLEAN/ui_card_char_normal.png` | 256×320 | 9-slice (L:30, R:30, T:30, B:30) | **Đã lên HUD Lô 1** | CHƯA |
+| **9** | Khung Thẻ HP Bản Thân (Được chọn) | HUD, Lobby | `HITME_UI_KIT_CLEAN/ui_card_char_selected.png` | 256×320 | 9-slice (L:30, R:30, T:30, B:30) | **Đã lên HUD Lô 1** | CHƯA |
+| **10** | Banner Gỗ Biểu Ngữ Pha ("ĐẶT VỊ TRÍ & HƯỚNG NÉM") | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_banner_wood.png` | 512×140 | 9-slice (L:40, R:40, T:20, B:20) | **Đã lên HUD Lô 1** | CHƯA |
+| **11** | Nhãn "VÒNG n/5" | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_banner_wood.png` | 512×140 | 9-slice (L:40, R:40, T:20, B:20) | **Đã lên HUD Lô 1** | CHƯA |
+| **12** | Đồng hồ đếm ngược (Coin Vàng + Pulse Ring 2s cuối) | Gameplay HUD | `ui_timer_circle_gold.png` + `ui_aim_pulse_gold.png` | 512×512 | Sprite cố định (PA1 mặc định) | **Đã lên HUD Lô 1** | CHƯA |
+| **13** | Trái tim máu đầy (Heart Full) | Gameplay HUD | `Assets/Art/UI/Kit/ui_icon_heart_full.png` | 512×512 | Sprite Image (thay ký tự "♥") | **Đã lên HUD Lô 1** | CHƯA |
+| **14** | Trái tim vỡ khi mất máu (Heart Break) | Gameplay HUD | `Assets/Art/UI/Kit/ui_icon_heart_break.png` | 512×512 | Sprite Image (thay ký tự "♥") | **Đã lên HUD Lô 1** | CHƯA |
+| **15** | Nút "SẴN SÀNG" (Trạng thái 1: CTA Vàng) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (320×76 px, >135px chạm) | **Đã lên HUD Lô 1** | CHƯA |
+| **16** | Nút "ĐÃ KHÓA" (Trạng thái 2: CTA Xanh Dương) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (320×76 px, >135px chạm) | **Đã lên HUD Lô 1** | CHƯA |
+| **17** | Ô chỉ báo vũ khí (Weapon Box Gỗ Ấm) | Gameplay HUD | `HITME_UI_KIT_CLEAN/ui_banner_wood.png` | 512×140 | 9-slice (460×72 px) | **Đã lên HUD Lô 1** | CHƯA |
+| **18** | Biểu tượng vũ khí Dép tổ ong + Tên rõ | Gameplay HUD | `Assets/Art/Weapons/dep_to_ong_icon.png` | 256×256 | Sprite cố định + Font chữ kem rõ | **Đã lên HUD Lô 1** | CHƯA |
+| **19** | Thước ngắm mềm (Aim Beam) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Aim_Beam_Soft.png` | 1024×128 | Co giãn theo hướng & độ dài kéo | **Đã lên HUD Lô 1** | CHƯA |
+| **20** | Mũi tên hướng ngắm (Direction Arrow)| Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Aim_Direction_Arrow.png` | 256×256 | Xoay theo góc ngắm | **Đã lên HUD Lô 1** | CHƯA |
+| **21** | Vòng chân người chơi (Foot Ring / Touch Ring) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Aim_Origin_Ring.png` | 512×512 | Vòng tròn bám chân nhân vật | **Đã lên HUD Lô 1** | CHƯA |
+| **22** | Tâm ngắm mục tiêu (Target Reticle) | Gameplay (Sân) | `HITME_AIM_KIT_V1/.../Aim_Target_Reticle.png` | 512×512 | Xoay nhẹ tại điểm nhắm | **Đã lên HUD Lô 1** | CHƯA |
+| **23** | Dòng xếp hạng đối thủ | Result Screen | `HITME_UI_KIT_CLEAN/ui_row_leaderboard.png` | 600×96 | 9-slice (L:30, R:30, T:30, B:30) | Sẵn sàng Lô 3 | CHƯA |
+| **24** | Dòng xếp hạng bản thân | Result Screen | `HITME_UI_KIT_CLEAN/ui_row_leaderboard_me.png` | 600×96 | 9-slice (L:30, R:30, T:30, B:30) | Sẵn sàng Lô 3 | CHƯA |
+| **25** | Nút "ĐẤU LẠI" | Result Screen | `HITME_UI_KIT_CLEAN/ui_btn_cta_yellow.png` | 512×128 | 9-slice (L:35, R:35, T:25, B:25) | Sẵn sàng Lô 3 | CHƯA |
+| **26** | Nút "VỀ TRANG CHỦ" | Result Screen | `HITME_UI_KIT_CLEAN/ui_btn_cta_blue.png` | 360×110 | 9-slice (L:35, R:35, T:25, B:25) | Sẵn sàng Lô 3 | CHƯA |
+| **27** | Tranh nền màn hình chính (Bối cảnh làng quê) | Home Screen | `ASSET BỐI CẢNH/BỐI CẢNH/300b93e0-d734-4f09-93dd-4dc44de4e43a.png` | 941×1672 | Tranh nền dọc (Aspect Fit/Fill) | Sẵn sàng Lô 2 | CHƯA |
+| **28** | Huy hiệu Hạng 1, Hạng 2, Hạng 3 (`[TẠM]`) | Result Screen | Nhãn số tiếng Việt tròn viền Vàng/Bạc/Đồng | N/A | Huy hiệu số vector/TMP `[TẠM]` | Đã định dạng tiếng Việt | CHƯA |
 
 ---
 
-## 3. Danh sách thành phần thiếu asset (Cần Chủ dự án quyết định)
-
-1. **Huy chương Hạng 1, 2, 3 (Medals)**:
-   - *Hiện trạng*: Trong `HITME_UI_KIT_CLEAN` chưa có bộ sprite huy chương vàng/bạc/đồng riêng lẻ.
-   - *Đề xuất tạm thời*: Dùng nhãn số nổi bật kết hợp màu sắc vàng (#FFD700) / bạc (#C0C0C0) / đồng (#CD7F32) đặt bên trong dòng `ui_row_leaderboard.png` gắn mác `[TẠM]`.
-   - *Quyết định của Chủ dự án*: [ ] Duyệt dùng nhãn số tạm / [ ] Cung cấp thêm bộ sprite huy chương.
-
-2. **Biểu tượng Đồng xu vàng đếm ngược (Coin Timer)**:
-   - *Hiện trạng*: Bộ `HITME_AIM_KIT_V1` có icon vòng pulse vàng sáng `Aim_Pulse_00.png` có thể làm nền đồng hồ rất đẹp và khớp chủ đề, nhưng chưa có sprite đồng xu đúc nét làng quê.
-   - *Đề xuất tạm thời*: Dùng vòng tròn vàng pulse của Aim Kit kết hợp chữ số đếm đậm gắn mác `[TẠM]`.
-   - *Quyết định của Chủ dự án*: [ ] Duyệt dùng vòng Aim Kit / [ ] Cung cấp sprite đồng xu.
-
-3. **Sprite vũ khí Vợt Pickleball đơn lẻ**:
-   - *Hiện trạng*: Đã có sprite Chảo gang và Dép tổ ong. Vợt Pickleball hiện nằm trong chuỗi animation `ANH NÓN LÁ/NÉM VỢT PICKLEBALL/`.
-   - *Đề xuất*: Trích xuất frame `sprite_011.png` (frame rơi riêng biệt của vợt) làm sprite biểu tượng vũ khí.
+## 3. Mục ngoài phạm vi (Out of Scope per Rules v1.2)
+*Theo luật chơi v1.2, vũ khí duy nhất được phép sử dụng là **Dép Tổ Ong**. Không đưa các vũ khí sau vào gameplay hay UI chọn vũ khí:*
+- **Chảo gang** (`ASSET WEAPONS/CHẢO/`): Ngoài phạm vi gameplay v1.2.
+- **Vợt Pickleball** (`ANH NÓN LÁ/NÉM VỢT PICKLEBALL/`): Ngoài phạm vi gameplay v1.2.
 
 ---
 
-## 4. Bảng màu chủ đạo (Theme Palette trích xuất từ Asset)
+## 4. Quyết định cần Chủ dự án chọn
 
-Bảng màu được trích xuất trực tiếp từ các file texture của bộ kit bằng thuật toán phân tích màu trung vị (median color clustering):
+1. **Chọn Phông chữ tiếng Việt (2 phương án OFL)**:
+   - **Phương án A (Mặc định hiện hành)**: `Be Vietnam Pro` (OFL 1.1) — Hình học hiện đại, hiển thị sắc nét trên màn hình retina mobile, hỗ trợ đầy đủ 100% dấu tiếng Việt ("Ế Ổ Ữ Ặ Đ Ằ Ẳ Ố Ậ Ứ Ớ Ệ Ồ Ẵ").
+   - **Phương án B**: `Nunito` / `Montserrat` (OFL) — Bo tròn thân thiện, phong cách casual game.
+   *(Xem ảnh thử so sánh trực quan trong thư mục bằng chứng).*
 
-| Tên màu | Mã HEX | RGB | Mục đích sử dụng trong UI |
+2. **Chọn Kiểu Đồng hồ đếm ngược (2 phương án)**:
+   - **Phương án 1 (PA1 - Mặc định)**: Đồng xu vàng hiện có (`ui_timer_circle_gold.png`) + vòng sáng pulse sau lưng trong 2 giây cuối.
+   - **Phương án 2 (PA2)**: Chỉ vòng sáng pulse (`ui_aim_pulse_gold.png`) và số đếm, không có đồng xu.
+   *(Xem ảnh thử so sánh trực quan trong thư mục bằng chứng).*
+
+---
+
+## 5. Bảng màu chủ đạo (UiTheme Palette)
+
+| Tên màu | Mã HEX | RGB (0..1) | Mục đích sử dụng trong UI |
 |---|:---:|:---:|---|
-| **Vàng Nắng Làng Quê (CTA Primary)** | `#F8B920` | `248, 185, 32` | Nút hành động chính ("CHƠI NGAY", "SẴN SÀNG", "BẮT ĐẦU"), điểm nhấn quan trọng |
-| **Đỏ Cờ Truyền Thống (Alert / Cancel)** | `#CD2B2B` | `205, 43, 43` | Nút hủy, rời phòng, cảnh báo nguy hiểm, tim máu |
-| **Xanh Lá Tre Đồng Quê (Action Secondary)** | `#09A372` | `9, 163, 114` | Nút tạo phòng, vào phòng, xác nhận thành công |
-| **Xanh Dương Sông Nước (Info / Action)** | `#2861E3` | `40, 97, 227` | Nút luyện với bot, nút đã khóa, nút về sảnh |
-| **Nâu Gỗ Mái Đình (Wood Banner)** | `#6C3313` | `108, 51, 19` | Nền biểu ngữ thông báo pha, khung nhãn vòng đấu |
-| **Vàng Kim Cổ Điển (Gold Border)** | `#DFB244` | `223, 178, 68` | Viền khung thẻ nhân vật, viền modal panel |
-| **Nền Tối Xanh Chàm (Dark Slate Background)**| `#0F172A` | `15, 23, 42` | Nền modal dialog, nền bảng xếp hạng (thay thế nền đen đặc) |
-| **Kem Gạo Chữ Đọc (Cream Text)** | `#FFF8DC` | `255, 248, 220` | Màu chữ trên nền gỗ và nền tối (dịu mắt, không chói như neon) |
-
----
-
-## 5. Ảnh ghép xem trước tài nguyên (Contact Sheet Preview)
-Toàn bộ asset đã được tập hợp và kết xuất thành ảnh xem trước độ phân giải cao tại:
-- Đường dẫn repository: `docs/ui_preview_contact_sheet.png`
-- Đường dẫn kiểm định artifact: `C:\Users\LENOVO\.gemini\antigravity\brain\15ef4497-c923-4d70-a855-259c984d1ed2\ui_preview_contact_sheet.png`
+| **Vàng Nắng Làng Quê (CTA Primary)** | `#F8B920` | `0.972, 0.725, 0.125` | Nút "SẴN SÀNG", "CHƠI NGAY", viền sáng |
+| **Đỏ Cờ Truyền Thống (Alert / Cancel)** | `#CD2B2B` | `0.804, 0.169, 0.169` | Nút hủy, cảnh báo, máu thấp, đã loại |
+| **Xanh Lá Tre Đồng Quê (Action Green)** | `#09A372` | `0.040, 0.640, 0.447` | Nút thành công, trạng thái "CÒN SỐNG" |
+| **Xanh Dương Sông Nước (Action Blue)** | `#2861E3` | `0.157, 0.380, 0.890` | Nút "ĐÃ KHÓA", "LUYỆN VỚI BOT", "VỀ TRANG CHỦ" |
+| **Nâu Gỗ Mái Đình (Wood Banner)** | `#6C3313` | `0.424, 0.200, 0.075` | Nền biểu ngữ thông báo pha, khung nhãn vòng |
+| **Vàng Kim Cổ Điển (Gold Border)** | `#DFB244` | `0.875, 0.698, 0.267` | Viền khung thẻ nhân vật, viền modal panel |
+| **Nền Tối Xanh Chàm (Dark Slate Background)**| `#0F172A` | `0.059, 0.090, 0.165` | Nền modal dialog (thay thế nền đen đặc) |
+| **Kem Gạo Chữ Đọc (Cream Text)** | `#FFF8DC` | `1.000, 0.973, 0.863` | Màu chữ chính trên nền gỗ và nền tối (dịu mắt) |
+| **Chữ Phụ Vàng Nắng (Subtitle Gold)** | `#FFE882` | `1.000, 0.910, 0.510` | Tên nhân vật, tiêu đề phụ |
+| **Watermark Góc Dưới-Trái (Watermark Yellow)** | `#FFE600` | `1.000, 0.902, 0.000` | Dòng `build <commit>` góc dưới màn hình |

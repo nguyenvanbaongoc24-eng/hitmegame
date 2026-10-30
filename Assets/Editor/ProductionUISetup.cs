@@ -41,6 +41,16 @@ namespace HitMe.Editor
             var spriteRowMe = LoadSprite(KitPath + "ui_row_leaderboard_me.png");
             var spriteCircleBack = LoadSprite(KitPath + "ui_btn_circle_back.png");
             var spriteArena = LoadSprite(SpritesPath + "ARENA.png");
+            var spriteTimerGold = LoadSprite(KitPath + "ui_timer_circle_gold.png");
+            var spriteTimerPulse = LoadSprite(KitPath + "ui_aim_pulse_gold.png");
+            var spriteHeartFull = LoadSprite(KitPath + "ui_icon_heart_full.png");
+            var spriteHeartBreak = LoadSprite(KitPath + "ui_icon_heart_break.png");
+            var spriteCardSelected = LoadSprite(KitPath + "ui_card_char_selected.png");
+            var spriteWeaponDep = LoadSprite("Assets/Art/Weapons/dep_to_ong_icon.png") ?? LoadSprite("Assets/Sprites/weapon_dep_full.png");
+
+            var colorCream = new Color(1.0f, 0.973f, 0.863f, 1f);
+            var colorGoldSub = new Color(1.0f, 0.910f, 0.510f, 1f);
+            var colorGreen = new Color(0.04f, 0.64f, 0.447f, 1f);
 
             // 1. Setup Camera for Portrait 1080x2340 (P2: keep arena aspect ratio, leave top clearance for SafeArea + 2-row HUD above village gate)
             var camGo = GameObject.Find("Main Camera");
@@ -288,35 +298,39 @@ namespace HitMe.Editor
             var topPlacingBar = CreatePanel(hudPanel.transform, "TopPlacingBar", new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 76f), null, Color.clear);
             uiCtrl.topPlacingBar = topPlacingBar;
 
-            var roundPill = CreateImage(topPlacingBar.transform, "RoundPill", spriteHudPill, new Vector2(0.18f, 0.5f), new Vector2(0.18f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(320f, 68f));
-            var roundTxt = CreateTMP(roundPill.transform, "Text", fontAsset, "VÒNG 1/5", 34, new Color(1f, 0.92f, 0.35f), TextAlignmentOptions.Center);
+            var roundPill = CreateImage(topPlacingBar.transform, "RoundPill", spriteBannerWood, new Vector2(0.18f, 0.5f), new Vector2(0.18f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(320f, 72f));
+            var roundTxt = CreateTMP(roundPill.transform, "Text", fontAsset, "VÒNG 1/5", 30, colorCream, TextAlignmentOptions.Center);
             roundTxt.fontStyle = FontStyles.Bold;
             FillRect(roundTxt.rectTransform, Vector2.zero, Vector2.zero);
             uiCtrl.roundPill = roundPill;
             uiCtrl.txtRound = roundTxt;
 
-            var timerPill = CreateImage(topPlacingBar.transform, "TimerPill", spriteHudPill, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(240f, 68f));
-            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 34, Color.white, TextAlignmentOptions.Center);
+            var timerPulse = CreateImage(topPlacingBar.transform, "TimerPulse", spriteTimerPulse, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(96f, 96f));
+            timerPulse.SetActive(false);
+            uiCtrl.timerPulseRing = timerPulse.GetComponent<Image>();
+
+            var timerPill = CreateImage(topPlacingBar.transform, "TimerPill", spriteTimerGold, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(80f, 80f));
+            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 28, colorCream, TextAlignmentOptions.Center);
             timerTxt.fontStyle = FontStyles.Bold;
             FillRect(timerTxt.rectTransform, Vector2.zero, Vector2.zero);
             uiCtrl.timerPill = timerPill;
             uiCtrl.txtTimer = timerTxt;
 
-            var btnReadyInGame = CreateButton(topPlacingBar.transform, "BtnReady", spriteBtnGreen, new Vector2(0.82f, 0.5f), new Vector2(0.82f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(300f, 68f));
-            var readyLabelInGame = CreateTMP(btnReadyInGame.transform, "Label", fontAsset, "SẴN SÀNG", 30, Color.white, TextAlignmentOptions.Center);
+            var btnReadyInGame = CreateButton(topPlacingBar.transform, "BtnReady", spriteBtnYellow, new Vector2(0.82f, 0.5f), new Vector2(0.82f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(320f, 76f));
+            var readyLabelInGame = CreateTMP(btnReadyInGame.transform, "Label", fontAsset, UiStrings.BtnReady, 30, Color.white, TextAlignmentOptions.Center);
             readyLabelInGame.fontStyle = FontStyles.Bold;
             uiCtrl.btnInGameReady = btnReadyInGame.GetComponent<Button>();
             uiCtrl.txtInGameReadyLabel = readyLabelInGame;
 
             // Phase Banner (below TopPlacingBar)
-            var phaseBanner = CreateImage(hudPanel.transform, "PhaseBanner", spriteInputCyan, new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.5f), new Vector2(1000f, 52f));
-            var phaseTxt = CreateTMP(phaseBanner.transform, "Text", fontAsset, "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm", 28, Color.white, TextAlignmentOptions.Center);
+            var phaseBanner = CreateImage(hudPanel.transform, "PhaseBanner", spriteBannerWood, new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.5f), new Vector2(1000f, 56f));
+            var phaseTxt = CreateTMP(phaseBanner.transform, "Text", fontAsset, UiStrings.PhasePlacing + " • Chạm để đặt, kéo để ngắm", 26, colorCream, TextAlignmentOptions.Center);
             phaseTxt.fontStyle = FontStyles.Bold;
             FillRect(phaseTxt.rectTransform, Vector2.zero, Vector2.zero);
             uiCtrl.phaseBannerObj = phaseBanner;
             uiCtrl.txtPhaseBanner = phaseTxt;
 
-            // P3: 6 HP Cards in 2 rows x 3 columns (enlarged text >= 2.2% screen height per V5)
+            // P3: 6 HP Cards in 2 rows x 3 columns
             var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 150f), null, Color.clear);
             uiCtrl.hpCardsContainer = hpContainer.transform;
             uiCtrl.hpCards.Clear();
@@ -331,17 +345,30 @@ namespace HitMe.Editor
                 int col = i % 3;
                 int row = i / 3;
                 Vector2 cardAnchor = new Vector2(colAnchors[col], rowAnchors[row]);
-                var cardSprite = i == 0 ? spriteRowMe : spriteRowLeaderboard;
-                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 70f), cardSprite, Color.white);
+                var cardSprite = i == 0 ? spriteCardSelected : spriteCardChar;
+                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 74f), cardSprite, Color.white);
                 var cardImg = cardObj.GetComponent<Image>();
-                if (cardImg != null) cardImg.type = Image.Type.Simple;
+                if (cardImg != null) cardImg.type = Image.Type.Sliced;
 
-                // V5: Enlarged fonts >= 2.2% screen height (24pt/21pt) with clear non-overlapping layout
-                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 24, new Color(1f, 0.90f, 0.35f), TextAlignmentOptions.MidlineLeft, new Vector2(0.33f, 0.70f), new Vector2(190f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 22, colorGoldSub, TextAlignmentOptions.MidlineLeft, new Vector2(0.33f, 0.70f), new Vector2(180f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cName.fontStyle = FontStyles.Bold;
-                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 24, new Color(0.25f, 1f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.80f, 0.70f), new Vector2(110f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+
+                // Hearts Container with 3 sprite hearts
+                var heartsContainer = CreatePanel(cardObj.transform, "HeartsContainer", new Vector2(0.80f, 0.70f), new Vector2(0.80f, 0.70f), new Vector2(0.5f, 0.5f), new Vector2(96f, 30f), null, Color.clear);
+                Image[] heartImgs = new Image[3];
+                for (int h = 0; h < 3; h++)
+                {
+                    float hx = (h - 1) * 28f;
+                    var hObj = CreateImage(heartsContainer.transform, "Heart_" + h, spriteHeartFull, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(24f, 24f));
+                    hObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(hx, 0f);
+                    heartImgs[h] = hObj.GetComponent<Image>();
+                }
+
+                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 22, colorGreen, TextAlignmentOptions.MidlineRight, new Vector2(0.80f, 0.70f), new Vector2(110f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cHearts.fontStyle = FontStyles.Bold;
-                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 21, new Color(0.45f, 0.95f, 0.65f), TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(300f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                cHearts.gameObject.SetActive(false);
+
+                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 20, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(300f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
                 {
@@ -350,14 +377,16 @@ namespace HitMe.Editor
                     txtName = cName,
                     txtHearts = cHearts,
                     txtHpNum = cHpNum,
+                    heartIcons = heartImgs,
                     playerId = playerIds[i]
                 });
             }
 
-            // P3: Weapon Indicator placed right below the bottom of the arena ("sát đáy sân/hành động")
-            var weaponPill = CreateImage(hudPanel.transform, "WeaponPill", spriteHudPill, new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.5f), new Vector2(420f, 64f));
-            var weaponTxt = CreateTMP(weaponPill.transform, "Text", fontAsset, "VŨ KHÍ: Dép Tổ Ong", 28, Color.white, TextAlignmentOptions.Center);
-            FillRect(weaponTxt.rectTransform, Vector2.zero, Vector2.zero);
+            // P3: Weapon Indicator placed right below the bottom of the arena
+            var weaponPill = CreateImage(hudPanel.transform, "WeaponPill", spriteBannerWood, new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.062f), new Vector2(0.5f, 0.5f), new Vector2(460f, 72f));
+            var weaponIcon = CreateImage(weaponPill.transform, "WeaponIcon", spriteWeaponDep, new Vector2(0.12f, 0.5f), new Vector2(0.12f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(52f, 52f));
+            var weaponTxt = CreateTMP(weaponPill.transform, "Text", fontAsset, UiStrings.WeaponSandalName, 26, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.58f, 0.5f), new Vector2(300f, 50f));
+            weaponTxt.fontStyle = FontStyles.Bold;
             uiCtrl.weaponPillObj = weaponPill;
             uiCtrl.txtWeaponIndicator = weaponTxt;
 

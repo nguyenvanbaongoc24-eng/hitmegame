@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f86a000e696aa3c4b95f285cca643eaa, type: 3}
+  m_Name: UiTheme
+  m_EditorClassIdentifier: Assembly-CSharp::HitMe.UI.UiTheme
+  primaryYellow: {r: 0.972, g: 0.725, b: 0.125, a: 1}
+  alertRed: {r: 0.804, g: 0.169, b: 0.169, a: 1}
+  actionGreen: {r: 0.04, g: 0.64, b: 0.447, a: 1}
+  actionBlue: {r: 0.157, g: 0.38, b: 0.89, a: 1}
+  woodBannerBrown: {r: 0.424, g: 0.2, b: 0.075, a: 1}
+  goldBorder: {r: 0.875, g: 0.698, b: 0.267, a: 1}
+  darkSlateBg: {r: 0.059, g: 0.09, b: 0.165, a: 0.95}
+  creamText: {r: 1, g: 0.973, b: 0.863, a: 1}
+  subtitleGold: {r: 1, g: 0.91, b: 0.51, a: 1}
+  lockedButtonMuted: {r: 0.35, g: 0.4, b: 0.48, a: 0.85}
+  watermarkYellow: {r: 1, g: 0.902, b: 0, a: 0.95}
+  defaultFont: {fileID: 11400000, guid: 480637c9bd8055048acc4c58e27c2dc7, type: 2}
+  fontHeader: 40
+  fontTitle: 32
+  fontSubtitle: 24
+  fontButton: 28
+  fontBody: 20
+  fontSmall: 16
+  spacingXs: 8
+  spacingSm: 16
+  spacingMd: 24
+  spacingLg: 36
+  bannerWood: {fileID: 21300000, guid: 86b2e0693ff3ff145a394e3f09e07ce1, type: 3}
+  btnCtaYellow: {fileID: 21300000, guid: 4a74db621a004af48aea4d1557ca408f, type: 3}
+  btnCtaBlue: {fileID: 21300000, guid: e532f3cf0e7b9b74893fc12cf5832256, type: 3}
+  btnCtaGreen: {fileID: 21300000, guid: 02a9b4d3afe328842bf037a2cd68026f, type: 3}
+  btnCtaRed: {fileID: 21300000, guid: 204520815a388be49905d8dba561e774, type: 3}
+  btnCircleBack: {fileID: 21300000, guid: 7c0336fa3f325114ca9fceea6d1a3b12, type: 3}
+  panelDarkGold: {fileID: 21300000, guid: f97acee173593d646a58259310a4a119, type: 3}
+  cardCharNormal: {fileID: 21300000, guid: a37800dd72f41374e8f7816f5cc2c5ad, type: 3}
+  cardCharSelected: {fileID: 21300000, guid: 60287b4204c30c14a9e96ca683e5e410, type: 3}
+  inputBoxCyan: {fileID: 21300000, guid: 69a7eed8b7eac56448dfd5d1ebb773f1, type: 3}
+  rowLeaderboard: {fileID: 21300000, guid: 36ec9adb98882a54388e8204113b02dd, type: 3}
+  rowLeaderboardMe: {fileID: 21300000, guid: bf1e1334102f502428526cd7d5d1fc97, type: 3}
+  timerCircleGold: {fileID: 21300000, guid: 588d8ac635a7d4243bfc1ee5fa77c3cd, type: 3}
+  timerPulseRing: {fileID: 21300000, guid: 899db241d9758a9499dcfbeb6bc39d45, type: 3}
+  heartFull: {fileID: 21300000, guid: ce07d4df64d86cb4bbeace121175c53d, type: 3}
+  heartBreak: {fileID: 21300000, guid: a7634cbda2a8c6b4da6b5d96c061c7c2, type: 3}
+  weaponSandal: {fileID: 21300000, guid: ecf64a5a95b5f07faf949880ac557130, type: 3}
+  aimBeamSoft: {fileID: 21300000, guid: ca3f5ac28cb5ac040a4df0adef2fdeaf, type: 3}
+  aimDirectionArrow: {fileID: 21300000, guid: b898fd9d48293684eb88fd6b5fc05f68, type: 3}
+  aimOriginRing: {fileID: 21300000, guid: 47100e44e75b7c6488896ca161a3f076, type: 3}
+  aimTargetReticle: {fileID: 21300000, guid: 504285e5d1e7a2a49a5daf4a6a222522, type: 3}
+  aimTargetLocked: {fileID: 21300000, guid: 69ea9e77a4f53e249bdb668b1865d27f, type: 3}
+  bannerFadeDuration: 0.25
+  buttonPressScale: 0.94
+  pulseLoopDuration: 0.5
+  heartShakeDuration: 0.35

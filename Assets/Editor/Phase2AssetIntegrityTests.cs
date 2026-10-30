@@ -1,4 +1,8 @@
+using System;
+using System.Reflection;
+using HitMe.UI;
 using NUnit.Framework;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -36,6 +40,72 @@ namespace HitMe.Editor
                     }
                 }
             }
+        }
+
+        [Test]
+        public void UiStrings_AllConstantsNonEmpty()
+        {
+            FieldInfo[] fields = typeof(UiStrings).GetFields(BindingFlags.Public | BindingFlags.Static);
+            Assert.That(fields.Length, Is.GreaterThan(10), "UiStrings must define string constants");
+
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(string))
+                {
+                    string val = (string)field.GetValue(null);
+                    Assert.That(string.IsNullOrEmpty(val), Is.False, $"UiStrings.{field.Name} is null or empty");
+                }
+            }
+        }
+
+        [Test]
+        public void UiStrings_AllGlyphsSupported_InVietnameseFont()
+        {
+            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/Fonts/BeVietnamPro-Bold SDF.asset");
+            Assert.That(font, Is.Not.Null, "BeVietnamPro-Bold SDF font asset must exist");
+
+            // Verify the specific test glyph check string: "Ế Ổ Ữ Ặ Đ Ằ Ẳ Ố Ậ Ứ Ớ Ệ Ồ Ẵ"
+            string glyphCheck = UiStrings.GlyphCheckString;
+            foreach (char ch in glyphCheck)
+            {
+                if (char.IsWhiteSpace(ch)) continue;
+                Assert.That(font.HasCharacter(ch, true), Is.True, $"Font missing Vietnamese glyph '{ch}' (U+{(int)ch:X4}) from GlyphCheckString");
+            }
+
+            // Verify all characters across all UiStrings constants
+            FieldInfo[] fields = typeof(UiStrings).GetFields(BindingFlags.Public | BindingFlags.Static);
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(string))
+                {
+                    string str = (string)field.GetValue(null);
+                    foreach (char ch in str)
+                    {
+                        if (char.IsWhiteSpace(ch) || char.IsPunctuation(ch) || char.IsSymbol(ch) || char.IsDigit(ch)) continue;
+                        Assert.That(font.HasCharacter(ch, true), Is.True, $"Font missing glyph '{ch}' (U+{(int)ch:X4}) used in UiStrings.{field.Name}");
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void UiTheme_AssetIntegrity_AllColorsAndSpritesValid()
+        {
+            var theme = AssetDatabase.LoadAssetAtPath<UiTheme>("Assets/Art/UI/UiTheme.asset");
+            if (theme == null)
+            {
+                UiThemeBuilder.BuildTheme();
+                theme = AssetDatabase.LoadAssetAtPath<UiTheme>("Assets/Art/UI/UiTheme.asset");
+            }
+            Assert.That(theme, Is.Not.Null, "UiTheme.asset must exist");
+            Assert.That(theme.defaultFont, Is.Not.Null, "UiTheme default font must not be null");
+            Assert.That(theme.bannerWood, Is.Not.Null, "bannerWood sprite missing");
+            Assert.That(theme.btnCtaYellow, Is.Not.Null, "btnCtaYellow sprite missing");
+            Assert.That(theme.btnCtaBlue, Is.Not.Null, "btnCtaBlue sprite missing");
+            Assert.That(theme.cardCharNormal, Is.Not.Null, "cardCharNormal sprite missing");
+            Assert.That(theme.heartFull, Is.Not.Null, "heartFull sprite missing");
+            Assert.That(theme.heartBreak, Is.Not.Null, "heartBreak sprite missing");
+            Assert.That(theme.weaponSandal, Is.Not.Null, "weaponSandal sprite missing");
         }
     }
 }
