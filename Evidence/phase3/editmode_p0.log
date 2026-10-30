@@ -1,0 +1,496 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 41236)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 1452)
+VBCSCompiler prewarm took 42.76 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-10-30T01:50:33Z
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-10-30T01:50:33.7406501Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              73a207bf2a614847b5d6514cbe213e49
+  Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
+  External correlation Id: 9198730358102589278
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-10-30T01:50:33.8138938Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.00
+[Licensing::Module] Licensing Background thread has ended after 0.08s
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+D:\HITME GAME\unity-client
+-runTests
+-testPlatform
+EditMode
+-testResults
+D:\HITME GAME\unity-client\Evidence\phase3\test-results-p0.xml
+-logFile
+D:\HITME GAME\unity-client\Evidence\phase3\editmode_p0.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [12724]  Target information:
+
+Player connection [12724]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 4051877796 [EditorId] 4051877796 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [12724] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [12724] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-27592" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56592
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.003639 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.938 seconds
+Domain Reload Profiling: 2837ms
+	BeginReloadAssembly (223ms)
+		CreateAndSetChildDomain (13ms)
+	RebuildCommonClasses (12ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (100ms)
+	LoadAllAssembliesAndSetupDomain (532ms)
+		LoadAssemblies (208ms)
+		TypeCache.Refresh (373ms)
+			TypeCache.ScanAssembly (349ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1941ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (5ms)
+			BeforeProcessingInitializeOnLoad (149ms)
+			ProcessInitializeOnLoadAttributes (142ms)
+			ProcessInitializeOnLoadMethodAttributes (1347ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 43 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.accessibility@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 4 Duration: 0s867ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aE-inputdata.json
+[285/329    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (0.80 seconds), 2 items updated, 284 evaluated
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aE.dag.json" "Library/Bee/2000b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 3s347ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 1s414ms
+Finished compiling graph: 332 nodes, 3585 flattened edges (3253 ToBuild, 32 ToUse), maximum node priority 196
+[231/329    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.rsp
+[285/329    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[325/329    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.dll (+2 others)
+[326/329    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Tests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.dll, with 122 defines and 303 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[327/329    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.pdb
+[328/329    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.dll
+*** Tundra build success (1.37 seconds), 6 items updated, 329 evaluated
+AssetDatabase: script compilation time: 6.458881s
+Begin MonoManager ReloadAssembly
+Total cache size 268293840
+Total cache size after purge 268293840, took 00:00:00.3076149
+Importing 'GUID: be48189e6f0a16e49b6a1f25ba66784e - Path: Assets/Tests' with importer (DefaultImporter)
+Imported 'GUID: be48189e6f0a16e49b6a1f25ba66784e' -> (Import Result ID: '160c2e7fe7dcfc3052b593477f4180b4') in 0.051 seconds [static dependencies only]. Details - ImportResultOutputID=7670bc0f811ac6fe51ee1b64711fc1c6 DependenciesID=f15561dfdc7114fe26ab194633ee76af StaticDependenciesID=92521d136860d929961f4663e14445d3 
+Importing 'GUID: c10bb720206ed4c41a47c1ab3fd79e42 - Path: Assets/Tests/Data' with importer (DefaultImporter)
+Imported 'GUID: c10bb720206ed4c41a47c1ab3fd79e42' -> (Import Result ID: '09e38471d0bfe68e491901ccfd9f260c') in 0.019 seconds [static dependencies only]. Details - ImportResultOutputID=68ca292f25c17e6ff4af67f1318abd25 DependenciesID=0ad126cb9d5a6b2886fc12b81388e945 StaticDependenciesID=67d4eafd960a6001186937d32512b9c2 
+Importing 'GUID: c55052b724a632349a0a5b06dc767700 - Path: Assets/Tests/Data/gesture_v2_sync' with importer (DefaultImporter)
+Imported 'GUID: c55052b724a632349a0a5b06dc767700' -> (Import Result ID: 'a5db6d777abd48836527682f48d179f7') in 0.014 seconds [static dependencies only]. Details - ImportResultOutputID=aa1e20c1c148229afcd2b8d9d008d6f3 DependenciesID=e78f9af0f898d103f406bebf9d40528b StaticDependenciesID=23d50be282cea143c741e610b0c0080b 
+Importing 'GUID: a78dede0ede248a49a9cc0b4af7983e0 - Path: Assets/Tests/Data/golden' with importer (DefaultImporter)
+Imported 'GUID: a78dede0ede248a49a9cc0b4af7983e0' -> (Import Result ID: 'e97f465417d7a2e77207d572549ce119') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=4e8f2c851aaa8562df25d398d2b9132b DependenciesID=1de9ed2783d17c6f92a01f4576d0417b StaticDependenciesID=42b9c147447163c276ce4545a8372893 
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.795 seconds
+Domain Reload Profiling: 1675ms
+	BeginReloadAssembly (377ms)
+		DisableScriptedObjects (64ms)
+		CreateAndSetChildDomain (64ms)
+	RebuildCommonClasses (15ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (59ms)
+	LoadAllAssembliesAndSetupDomain (405ms)
+		LoadAssemblies (334ms)
+		TypeCache.Refresh (37ms)
+			TypeCache.ScanAssembly (27ms)
+		AnalyzeDomain (21ms)
+			BuildScriptInfoCaches (16ms)
+	FinalizeReload (797ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (150ms)
+			ProcessInitializeOnLoadAttributes (254ms)
+			ProcessInitializeOnLoadMethodAttributes (66ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (40ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: e274a19a21281e24b92d520ed4709d23 - Path: Assets/Tests/Data/gesture_v2_sync/10_reverse_drag_cancels_default.json' with importer (TextScriptImporter)
+Imported 'GUID: e274a19a21281e24b92d520ed4709d23' -> (Import Result ID: 'c5e88ae7a971c0d5590e6ffde80aa56c') in 0.102 seconds [static dependencies only]. Details - ImportResultOutputID=d0c5146e8dbe604785edb193c56ed8db DependenciesID=fc2625d0752570256668751a066366f2 StaticDependenciesID=c4c5bacb389338ad26b9924f1e48093b 
+Importing 'GUID: e4e0c045e327441498febfa9bba5f0fe - Path: Assets/Tests/Data/gesture_v2_sync/12_lock_while_holding_preserves_aim.json' with importer (TextScriptImporter)
+Imported 'GUID: e4e0c045e327441498febfa9bba5f0fe' -> (Import Result ID: 'f163d2cbd925f8928ad812b9d002f633') in 0.017 seconds [static dependencies only]. Details - ImportResultOutputID=b4b1d0a7272635588953bd471af687ef DependenciesID=d46d6bd65df20a1331a33dbbf703fb6c StaticDependenciesID=66e429481a7af1d5b74d9ce8fb6a4b75 
+Importing 'GUID: 75a8e714500985943928febdb42f7991 - Path: Assets/Tests/Data/gesture_v2_sync/01_place_and_aim.json' with importer (TextScriptImporter)
+Imported 'GUID: 75a8e714500985943928febdb42f7991' -> (Import Result ID: '368d511c2c77530c6e3261ab8b3906a3') in 0.013 seconds [static dependencies only]. Details - ImportResultOutputID=600248ca6045f32877836c4b0580db29 DependenciesID=1f1e3d60acbb2eb662ca484f5a7a2484 StaticDependenciesID=3a986a3d4b4fd568e082903aa89df1db 
+Importing 'GUID: 770847e5c19ecd549ba2d17dd3f618db - Path: Assets/Tests/Data/gesture_v2_sync/08_lock_blocks_input.json' with importer (TextScriptImporter)
+Imported 'GUID: 770847e5c19ecd549ba2d17dd3f618db' -> (Import Result ID: '74244d2fe734e04ac9da1cb0118d8fb7') in 0.013 seconds [static dependencies only]. Details - ImportResultOutputID=262014717eebeaef5512c9a6a41cdbc2 DependenciesID=4a3ed981b7bce46a9c4b354bb39c454f StaticDependenciesID=ac03ab2d5ce3227289ea0252b59af883 
+Importing 'GUID: a788486bc5a1ab94395b425e48899581 - Path: Assets/Tests/Data/gesture_v2_sync/02_retap_resets.json' with importer (TextScriptImporter)
+Imported 'GUID: a788486bc5a1ab94395b425e48899581' -> (Import Result ID: '768bfdf03d942b4c817c5967a35c67b3') in 0.013 seconds [static dependencies only]. Details - ImportResultOutputID=34c8a3c1cee26ed5317c26cded659ae8 DependenciesID=a879b69bdaa7131d247d3b0824bd5ba7 StaticDependenciesID=e0240674c41c598fea1fd04c93a09439 
+Importing 'GUID: 79a92a3a1bd33c24e84f28de6c7c6919 - Path: Assets/Tests/Data/gesture_v2_sync/11_outside_start_ignored.json' with importer (TextScriptImporter)
+Imported 'GUID: 79a92a3a1bd33c24e84f28de6c7c6919' -> (Import Result ID: '5f84ee698bc5fd383ac4ed08f59921d2') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=5b963b7e5be1be1900f723cda96a8b3b DependenciesID=6ccad5336c1ac43c16bea9ffd91909ff StaticDependenciesID=7bfeea6b377d02b1e7514b2a76a48998 
+Importing 'GUID: cb2c799cbaec2f34da1f3a03e0931b37 - Path: Assets/Tests/Data/gesture_v2_sync/09_new_touch_resets_default.json' with importer (TextScriptImporter)
+Imported 'GUID: cb2c799cbaec2f34da1f3a03e0931b37' -> (Import Result ID: 'e24368df05a224ed91b26d06ebd9e234') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=57923cf3088a5df16c778cc545ddd238 DependenciesID=1a7c71867b91e05aa1fc84a8edbfd24d StaticDependenciesID=f99d982c074aae1f6a01311002aba8a4 
+Importing 'GUID: 1c65e8bbad6376a47972ee9d9c7898d7 - Path: Assets/Tests/Data/gesture_v2_sync/03_drag_under_4mm_cancels.json' with importer (TextScriptImporter)
+Imported 'GUID: 1c65e8bbad6376a47972ee9d9c7898d7' -> (Import Result ID: '25b9b220e53dff9390bc0ee3c8eb5c1e') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=78b6d58beb181f8c3638cec3a6e93f1c DependenciesID=34041bd57b5c1cb2abf63a45be2b9b79 StaticDependenciesID=54dbcbc26380cf77fe82af10320603ea 
+Importing 'GUID: 2c42ca0051f626b448936ebec8bd85f1 - Path: Assets/Tests/Data/gesture_v2_sync/04_no_touch.json' with importer (TextScriptImporter)
+Imported 'GUID: 2c42ca0051f626b448936ebec8bd85f1' -> (Import Result ID: '0c38ef393f9a462f461214c47b5000bf') in 0.017 seconds [static dependencies only]. Details - ImportResultOutputID=d20888d35d0671731fbcd3d3ad4bd4a8 DependenciesID=4edb2cac2e25f18a9e77cb88c95ee4c1 StaticDependenciesID=6fbdbb1f3e39e466f939efcb44193ed3 
+Importing 'GUID: aca59ab2a9554e14ca5b9586fd10b4a4 - Path: Assets/Tests/Data/gesture_v2_sync/06_outside_start.json' with importer (TextScriptImporter)
+Imported 'GUID: aca59ab2a9554e14ca5b9586fd10b4a4' -> (Import Result ID: '35c26cc3eaf70f6511135895de87e9c1') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=04af5f23ea7e2e29f72222f57b94c4bd DependenciesID=d993be43e828369c75abab3f6affa8ba StaticDependenciesID=6dd9a0dabfe25589226f98c10afde41b 
+Importing 'GUID: 8d249c87360eac84f88edb6aa529515b - Path: Assets/Tests/Data/gesture_v2_sync/07_second_finger_ignored.json' with importer (TextScriptImporter)
+Imported 'GUID: 8d249c87360eac84f88edb6aa529515b' -> (Import Result ID: '33001a94398701b8b14027167655af41') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=06efd8af1f58eb49fd29d9444cd7898a DependenciesID=d729829e4c75fa105d3e5303299bd0bb StaticDependenciesID=5774cf70a6e5c8e6e4e43614ecf3c962 
+Importing 'GUID: ed8889678d627bd4bb5ac519756da55b - Path: Assets/Tests/Data/gesture_v2_sync/05_no_aim.json' with importer (TextScriptImporter)
+Imported 'GUID: ed8889678d627bd4bb5ac519756da55b' -> (Import Result ID: 'a8da4bba91414b9c192b8627aa8d3a0e') in 0.015 seconds [static dependencies only]. Details - ImportResultOutputID=5a6591c7ae08efe0186c1973b0bb8170 DependenciesID=dd612f8533b23d1152e090161b876a5f StaticDependenciesID=570e4f2721bd49da7ea7e50ebaab0048 
+Importing 'GUID: df580c655282a4441b47034f6cc170df - Path: Assets/Tests/Data/golden/rounds.json' with importer (TextScriptImporter)
+Imported 'GUID: df580c655282a4441b47034f6cc170df' -> (Import Result ID: '2b62f66fc39e1a3b3193d9a1d92c1081') in 0.017 seconds [static dependencies only]. Details - ImportResultOutputID=0411295f567b38240a119435eeace369 DependenciesID=68e3c148eb593ddd11abea6a1cf58913 StaticDependenciesID=1efb0b24bc82f62cb90367f9cb094026 
+
+Asset Pipeline Refresh (id=96bc5106f09c0134bbed84c3e4c4253d): Total: 9.246 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=17 (actual=17, local cache=0, cache server=0)
+		Asset DB Process Time: managed=9 ms, native=1716 ms
+		Asset DB Callback time: managed=93 ms, native=36 ms
+		Scripting: domain reloads=1, domain reload time=915 ms, compile time=6462 ms, other=11 ms
+		Project Asset Count: scripts=337, non-scripts=455
+		Asset File Changes: new=19, changed=20, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 33.063ms
+	ApplyChangesToAssetFolders: 0.811ms
+	Scan: 259.058ms
+	Collect global state as custom dependencies: 20.618ms
+	OnSourceAssetsModified: 1.514ms
+	CategorizeScriptCompilationAssets: 9.820ms
+	ProcessAssetsWithTransientArtifactChanges: 19.626ms
+	CategorizeAssets: 10.023ms
+	CompileScripts: 6462.370ms
+	ImportOutOfDateAssets: 1215.016ms (799.071ms without children)
+		ImportManagerImport: 385.807ms (5.997ms without children)
+			UpdateCategorizedAssets: 0.244ms
+		UnloadImportedAssets: 2.830ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.175ms
+		ImportSchedulerStart: 27.121ms
+	PostProcessAllAssets: 94.530ms
+		VersionControlSettings.HiddenFilePostprocess 0.164ms
+		PostProcessCallbackCreateDeferredMaterials 0.127ms
+		ShaderAssetModifiedCallback 0.070ms
+		MonoPostProcessAllAssets: 91.355ms
+			AssetPostprocessor.OnPostprocessAllAssets 37.596ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.333ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 11.634ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 6.614ms
+			AssetChangedListener.OnPostprocessAllAssets 2.487ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.680ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.438ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.267ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.845ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.825ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.518ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.371ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.357ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.355ms
+			AssetEvents.OnPostprocessAllAssets 0.329ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.296ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.193ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.184ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.160ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.151ms
+			SyncVS.PostprocessSyncProject 0.140ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.124ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.082ms
+	PostAssetChangesProfiler: 2.224ms
+	UnloadStreamsBegin: 3.280ms
+	PersistCurrentRevisions: 0.483ms
+	GenerateScriptTypeHashes: 0.516ms
+	GenerateScriptTypeSerializationHashes: 1.405ms
+	Untracked: 1052.944ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 1.950ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 950 unused Assets / (1.7 MB). Loaded Objects now: 1677.
+Memory consumption went from 232.8 MB to 231.0 MB.
+Total: 13.417500 ms (FindLiveObjects: 0.327400 ms CreateObjectMapping: 0.043100 ms MarkObjects: 8.770600 ms  DeleteObjects: 0.943800 ms)
+
+Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
+[Project] Loading completed in 14.019 seconds
+	Project init time: 				13.476 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.345 seconds
+		Asset Database init time: 		0.365 seconds
+		Global illumination init time: 	0.017 seconds
+		Assemblies load time: 			2.962 seconds
+		Unity extensions init time: 	0.005 seconds
+		Asset Database refresh time: 	9.246 seconds
+	Scene opening time: 			0.165 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793325047700,"processId":27592,"projectLoad":14.0194396,"projectInit":13.4762174,"templateInit":0.0,"packageManagerInit":0.3446178,"assetDatabaseInit":0.3654107,"globalIlluminationInit":0.0172574,"assembliesLoad":2.9616653,"unityExtensionsInit":0.0046862,"assetDatabaseRefresh":9.2463164,"sceneOpening":0.1653782}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793325047700,"processId":27592,"editorVersion":"6000.6.4f1 (12bfff696524)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
+[Licensing::Client] Successfully resolved entitlement details
+Running tests for ExecutionSettings with details:
+targetPlatform = 
+playerHeartbeatTimeout = 600
+filters[0] = 
+   Filter with settings:
+   testMode = EditMode
+   targetPlatform = 
+   testNames = null
+   groupNames = null
+   categoryNames = null
+   assemblyNames = null
+ignoreTests = {}
+featureFlags = null
+
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
+UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
+
+Start Indexing on Editor startup
+[Indexing] Starting Initial Indexing for Assets
+[UnityConnectServicesConfig] config is NOT valid, switching to default
+Created GICache directory at C:/Users/LENOVO/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.013s, timestamps: [14.025 - 14.039]
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1832.
+Memory consumption went from 237.1 MB to 237.1 MB.
+Total: 16.727800 ms (FindLiveObjects: 0.318300 ms CreateObjectMapping: 0.032900 ms MarkObjects: 15.953400 ms  DeleteObjects: 0.011800 ms)
+
+Opening scene 'Assets/Scenes/Graybox.unity'
+Unloading 51 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/Graybox.unity'
+	Deserialize:            134.890 ms
+	Integration:            125.692 ms
+	Integration of assets:  2.142 ms
+	Thread Wait Time:       0.007 ms
+	Total Operation Time:   262.731 ms
+Unloading 1 unused Assets / (0.8 KB). Loaded Objects now: 2542.
+Memory consumption went from 251.4 MB to 251.4 MB.
+Total: 13.179100 ms (FindLiveObjects: 0.352300 ms CreateObjectMapping: 0.029200 ms MarkObjects: 12.638500 ms  DeleteObjects: 0.025600 ms)
+
+Opening scene 'Assets/Scenes/Graybox.unity'
+Unloading 12 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/Graybox.unity'
+	Deserialize:            20.760 ms
+	Integration:            21.205 ms
+	Integration of assets:  0.003 ms
+	Thread Wait Time:       0.028 ms
+	Total Operation Time:   41.997 ms
+Unloading 1 unused Assets / (0.8 KB). Loaded Objects now: 2544.
+Memory consumption went from 250.6 MB to 250.6 MB.
+Total: 25.179300 ms (FindLiveObjects: 0.588900 ms CreateObjectMapping: 0.065300 ms MarkObjects: 23.896900 ms  DeleteObjects: 0.064700 ms)
+
+The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
+UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
+TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
+TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
+TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
+TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
+UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
+UnityEngine.Canvas:SendWillRenderCanvases ()
+
+(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
+
+Saving results to: D:\HITME GAME\unity-client\Evidence\phase3\test-results-p0.xml
+Unloading 26 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 167 unused Assets / (0.5 MB). Loaded Objects now: 1845.
+Memory consumption went from 260.8 MB to 260.3 MB.
+Total: 17.771600 ms (FindLiveObjects: 0.234400 ms CreateObjectMapping: 0.023700 ms MarkObjects: 17.007700 ms  DeleteObjects: 0.374600 ms)
+
+DisplayProgressbar: Undo
+Test run completed. Exiting with code 0 (Ok). Run completed.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
+UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+(Filename: ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
+
+MonoPathRemapper: Attempts to remap: 11683; Successful remaps: 2036
+Serialized file version minimum: 23, current 23
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+VBCSCompilerPreWarmer: requested VBCSCompiler shutdown
+Checking for leaked weakptr:
+  Found no leaked weakptrs.
+[Package Manager] Server process was shutdown
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793325051160,"processId":27592,"allocatedMemory":12242259,"memoryLabels":[{"Default":161708},{"Permanent":15516},{"NewDelete":71175},{"Thread":4197944},{"Manager":33757},{"VertexData":106304},{"Geometry":816},{"Texture":24},{"Shader":846584},{"Material":132},{"GfxDevice":55968},{"Animation":952},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":111548},{"Input":42840},{"JobScheduler":256},{"TextLib":280},{"Mono":48},{"ScriptingNativeRuntime":1243480},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4685},{"File":7385},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":717882},{"StaticString":3808},{"Utility":2674806},{"Curl":2559},{"PoolAlloc":2168},{"AI":80},{"TypeTree":17165},{"ScriptManager":12656},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14456},{"Identifiers":7152},{"Gui":128},{"EditorUtility":115895},{"VersionControl":8},{"Undo":931},{"AssetDatabase":1203859},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":40465},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":262},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3228},{"Windowing":456},{"Licensing":12573},{"AssetReference":32},{"IPCStream":32}]}

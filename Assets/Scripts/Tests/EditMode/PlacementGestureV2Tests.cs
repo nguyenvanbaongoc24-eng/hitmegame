@@ -239,52 +239,40 @@ namespace HitMe.Tests
         }
 
         [Test]
-        public void Test16_01_Replay_PlaceAndAim()
-        {
-            AssertReplayFixture("01_place_and_aim.json");
-        }
+        public void Test16_01_Replay_PlaceAndAim() => GestureReplaySyncTests.AssertFixtureByName("01_place_and_aim.json");
 
         [Test]
-        public void Test16_02_Replay_RetapResets()
-        {
-            AssertReplayFixture("02_retap_resets.json");
-        }
+        public void Test16_02_Replay_RetapResets() => GestureReplaySyncTests.AssertFixtureByName("02_retap_resets.json");
 
         [Test]
-        public void Test16_03_Replay_DragUnder4mmCancels()
-        {
-            AssertReplayFixture("03_drag_under_4mm_cancels.json");
-        }
+        public void Test16_03_Replay_DragUnder4mmCancels() => GestureReplaySyncTests.AssertFixtureByName("03_drag_under_4mm_cancels.json");
 
         [Test]
-        public void Test16_04_Replay_NoTouch()
-        {
-            AssertReplayFixture("04_no_touch.json");
-        }
+        public void Test16_04_Replay_NoTouch() => GestureReplaySyncTests.AssertFixtureByName("04_no_touch.json");
 
         [Test]
-        public void Test16_05_Replay_NoAim()
-        {
-            AssertReplayFixture("05_no_aim.json");
-        }
+        public void Test16_05_Replay_NoAim() => GestureReplaySyncTests.AssertFixtureByName("05_no_aim.json");
 
         [Test]
-        public void Test16_06_Replay_OutsideStart()
-        {
-            AssertReplayFixture("06_outside_start.json");
-        }
+        public void Test16_06_Replay_OutsideStart() => GestureReplaySyncTests.AssertFixtureByName("06_outside_start.json");
 
         [Test]
-        public void Test16_07_Replay_SecondFingerIgnored()
-        {
-            AssertReplayFixture("07_second_finger_ignored.json");
-        }
+        public void Test16_07_Replay_SecondFingerIgnored() => GestureReplaySyncTests.AssertFixtureByName("07_second_finger_ignored.json");
 
         [Test]
-        public void Test16_08_Replay_LockBlocksInput()
-        {
-            AssertReplayFixture("08_lock_blocks_input.json");
-        }
+        public void Test16_08_Replay_LockBlocksInput() => GestureReplaySyncTests.AssertFixtureByName("08_lock_blocks_input.json");
+
+        [Test]
+        public void Test16_09_Replay_NewTouchResetsDefault() => GestureReplaySyncTests.AssertFixtureByName("09_new_touch_resets_default.json");
+
+        [Test]
+        public void Test16_10_Replay_ReverseDragCancelsDefault() => GestureReplaySyncTests.AssertFixtureByName("10_reverse_drag_cancels_default.json");
+
+        [Test]
+        public void Test16_11_Replay_OutsideStartIgnored() => GestureReplaySyncTests.AssertFixtureByName("11_outside_start_ignored.json");
+
+        [Test]
+        public void Test16_12_Replay_LockWhileHoldingPreservesAim() => GestureReplaySyncTests.AssertFixtureByName("12_lock_while_holding_preserves_aim.json");
 
         [Test]
         public void Test17_CancelAimByDraggingBackUnder4mmRestoresDefaultFacing()
@@ -344,69 +332,6 @@ namespace HitMe.Tests
                     }
                 }
             }
-        }
-
-        private sealed class StepReplayEvent
-        {
-            public string Kind { get; set; } = "";
-            public int PointerId { get; set; }
-            public float Sx { get; set; }
-            public float Sy { get; set; }
-            public float Gx { get; set; }
-            public float Gy { get; set; }
-            public bool Inside { get; set; }
-            public HitMe.GestureV2.ReplayExpected Expected { get; set; }
-        }
-
-        private sealed class StepReplayFixture
-        {
-            public System.Collections.Generic.List<StepReplayEvent> Events { get; set; } = new System.Collections.Generic.List<StepReplayEvent>();
-            public HitMe.GestureV2.ReplayExpected Expected { get; set; } = new HitMe.GestureV2.ReplayExpected();
-        }
-
-        private static readonly System.Text.Json.JsonSerializerOptions StepJsonOptions =
-            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-        private static void AssertExpectedState(string context, HitMe.GestureV2.ReplayExpected e, GestureSnapshot s)
-        {
-            Assert.IsNotNull(e, $"{context}: Expected state is null");
-            Assert.AreEqual(e.HasPlaced, s.HasPlaced, $"{context}: HasPlaced mismatch");
-            Assert.AreEqual(e.AimActive, s.AimActive, $"{context}: AimActive mismatch");
-            Assert.AreEqual(e.Locked, s.Locked, $"{context}: Locked mismatch");
-            Assert.AreEqual(e.PositionX, s.Position.X, 0.001f, $"{context}: PositionX mismatch");
-            Assert.AreEqual(e.PositionY, s.Position.Y, 0.001f, $"{context}: PositionY mismatch");
-            Assert.AreEqual(e.FacingX, s.Facing.X, 0.001f, $"{context}: FacingX mismatch");
-            Assert.AreEqual(e.FacingY, s.Facing.Y, 0.001f, $"{context}: FacingY mismatch");
-        }
-
-        private static void AssertReplayFixture(string filename)
-        {
-            string replaysDir = System.IO.Path.GetFullPath("tools/patches/gesture_v2/replays");
-            string path = System.IO.Path.Combine(replaysDir, filename);
-            Assert.IsTrue(System.IO.File.Exists(path), "Replay file exists: " + path);
-
-            string json = System.IO.File.ReadAllText(path);
-            var stepFixture = System.Text.Json.JsonSerializer.Deserialize<StepReplayFixture>(json, StepJsonOptions);
-            Assert.IsNotNull(stepFixture, $"{filename}: stepFixture deserialized");
-
-            var g = new PlacementGestureV2();
-            g.BeginRound(Vec2.Zero, PlacementGestureV2.DefaultFacing);
-            for (int i = 0; i < stepFixture.Events.Count; i++)
-            {
-                var ev = stepFixture.Events[i];
-                var screen = new Vec2(ev.Sx, ev.Sy);
-                var game = new Vec2(ev.Gx, ev.Gy);
-                if (ev.Kind == "down") g.PointerDown(ev.PointerId, screen, game, ev.Inside, 0);
-                else if (ev.Kind == "move") g.PointerMove(ev.PointerId, screen, game, ev.Inside, 0, 10f);
-                else if (ev.Kind == "up") g.PointerUp(ev.PointerId, screen, game, ev.Inside, 0);
-                else if (ev.Kind == "lock") g.Lock();
-
-                AssertExpectedState($"{filename}[step {i}:{ev.Kind}]", ev.Expected, g.Snapshot());
-            }
-
-            var fixture = HitMe.GestureV2.GestureReplay.Load(json);
-            var s = HitMe.GestureV2.GestureReplay.Play(fixture, 10f);
-            AssertExpectedState($"{filename}[final]", fixture.Expected, s);
         }
 
         [Test]
