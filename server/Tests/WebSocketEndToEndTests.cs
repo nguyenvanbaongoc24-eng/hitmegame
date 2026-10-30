@@ -26,7 +26,7 @@ public sealed class WebSocketEndToEndTests
     public WebSocketEndToEndTests(ITestOutputHelper output) => this.output = output;
 
     [Fact]
-    public async Task TwentySixBotMatchesOverRealWebSocketsMatchCoreAndRecoverFromFaults()
+    public async Task TwentyMixedRosterMatchesOverRealWebSocketsMatchCoreAndRecoverFromFaults()
     {
         var port = ReservePort();
         await using var host = await RunningServer.StartAsync(port);
@@ -40,90 +40,98 @@ public sealed class WebSocketEndToEndTests
             Assert.Equal("auth_required_use_join_token", rejected.GetProperty("code").GetString());
         }
 
+        await using (var alone = await LiveBot.ConnectAsync(port, "guest:alone", cancellation.Token))
+        {
+            await alone.JoinAsync(null, null, cancellation.Token);
+            var rejected = await alone.SendAndReceiveAsync(new { v = 1, type = "start" }, "error", cancellation.Token);
+            Assert.Equal("not_enough_players", rejected.GetProperty("code").GetString());
+        }
+
         for (var matchNumber = 1; matchNumber <= 20; matchNumber++)
         {
-            var bots = new List<LiveBot>();
+            var clients = new List<LiveBot>();
             try
             {
-                for (var index = 0; index < 6; index++)
-                    bots.Add(await LiveBot.ConnectAsync(port, $"guest:z1_{matchNumber}_{index}", cancellation.Token));
+                var playerCount = 2 + ((matchNumber - 1) % 5);
+                for (var index = 0; index < playerCount; index++)
+                    clients.Add(await LiveBot.ConnectAsync(port, $"guest:z1_{matchNumber}_{index}", cancellation.Token));
 
-                var hostState = await bots[0].JoinAsync(null, null, cancellation.Token);
+                var hostState = await clients[0].JoinAsync(null, null, cancellation.Token);
                 var roomCode = hostState.GetProperty("roomCode").GetString();
                 Assert.False(string.IsNullOrWhiteSpace(roomCode));
-                for (var index = 1; index < bots.Count; index++)
-                    await bots[index].JoinAsync(roomCode, null, cancellation.Token);
+                for (var index = 1; index < clients.Count; index++)
+                    await clients[index].JoinAsync(roomCode, null, cancellation.Token);
 
                 // The host starts immediately; every client must receive the same first round.
-                await bots[0].SendAsync(new { v = 1, type = "start" }, cancellation.Token);
-                for (var index = 0; index < bots.Count; index++)
-                    Assert.Equal(1, (await bots[index].ReceiveTypeAsync("round_start", cancellation.Token)).GetProperty("roundId").GetInt32());
+                await clients[0].SendAsync(new { v = 1, type = "start" }, cancellation.Token);
+                for (var index = 0; index < clients.Count; index++)
+                    Assert.Equal(1, (await clients[index].ReceiveTypeAsync("round_start", cancellation.Token)).GetProperty("roundId").GetInt32());
 
-                var ids = bots.Select(bot => bot.PlayerId).ToArray();
+                var ids = clients.Select(client => client.PlayerId).ToArray();
                 var direct = new ServerMatch(new GameConfig(), ids);
                 for (var round = 1; round <= 5; round++)
                 {
                     var directRound = direct.BeginRound();
-                    for (var index = 0; index < bots.Count; index++)
+                    for (var index = 0; index < clients.Count; index++)
                     {
                         // Match 1 injects malformed JSON, and every second round leaves
                         // one player uncommitted; both must remain safe and deterministic.
-                        if (matchNumber == 1 && round == 1 && index == 4)
+                        if (matchNumber == 4 && round == 1 && index == 2)
                         {
-                            var invalid = await bots[index].SendAndReceiveAsync("{\"v\":1,\"type\":\"commit\",\"positionX\":\"bad\"}", "error", cancellation.Token);
+                            var invalid = await clients[index].SendAndReceiveAsync("{\"v\":1,\"type\":\"commit\",\"positionX\":\"bad\"}", "error", cancellation.Token);
                             Assert.Equal("invalid_json", invalid.GetProperty("code").GetString());
                         }
-                        if (round % 2 == 0 && index == 5) continue;
+                        if (round % 2 == 0 && index == clients.Count - 1) continue;
 
                         var position = PositionFor(index);
                         var aim = AimOutward(index);
                         var commit = new RoundCommit(directRound.RoundId, position, aim);
                         Assert.True(directRound.TryCommit(ids[index], commit, out var directError), directError);
-                        await bots[index].SendAsync(new { v = 1, type = "commit", roundId = round, positionX = position.X, positionY = position.Y, aimX = aim.X, aimY = aim.Y }, cancellation.Token);
-                        Assert.Equal("room_state", (await bots[index].ReceiveTypeAsync("room_state", cancellation.Token)).GetProperty("type").GetString());
+                        await clients[index].SendAsync(new { v = 1, type = "commit", roundId = round, positionX = position.X, positionY = position.Y, aimX = aim.X, aimY = aim.Y }, cancellation.Token);
+                        Assert.Equal("room_state", (await clients[index].ReceiveTypeAsync("room_state", cancellation.Token)).GetProperty("type").GetString());
                     }
 
                     var lockStart = Stopwatch.GetTimestamp();
-                    for (var index = 0; index < bots.Count - 1; index++)
+                    for (var index = 0; index < clients.Count - 1; index++)
                     {
                         Assert.True(directRound.TryMarkReady(ids[index], out var directReadyError), directReadyError);
-                        await bots[index].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
+                        await clients[index].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
                     }
                     // Begin receiving before the final lock broadcasts.  This is also a
                     // real-client assertion that a normal six-client fan-out is never
                     // classified as a slow socket by the server's write queue.
-                    var resultTasks = bots.Select(async bot =>
+                    var resultTasks = clients.Select(async client =>
                     {
-                        var reveal = await bot.ReceiveTypeAsync("reveal", cancellation.Token, host.Diagnostics);
+                        var reveal = await client.ReceiveTypeAsync("reveal", cancellation.Token, host.Diagnostics);
                         Assert.Equal(round, reveal.GetProperty("roundId").GetInt32());
-                        return await bot.ReceiveTypeAsync("round_result", cancellation.Token, host.Diagnostics);
+                        return await client.ReceiveTypeAsync("round_result", cancellation.Token, host.Diagnostics);
                     }).ToArray();
                     Assert.True(directRound.TryMarkReady(ids[^1], out var finalReadyError), finalReadyError);
-                    await bots[^1].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
+                    await clients[^1].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
                     var expected = direct.ResolveLockedRound();
                     foreach (var result in await Task.WhenAll(resultTasks)) AssertRoundMatchesCore(result, expected, direct);
                     samples.Add(Stopwatch.GetElapsedTime(lockStart).TotalMilliseconds);
 
                     if (direct.State.Phase == Phase.MatchEnd)
                     {
-                        foreach (var bot in bots)
+                        foreach (var client in clients)
                         {
-                            var end = await bot.ReceiveTypeAsync("match_end", cancellation.Token, host.Diagnostics);
+                            var end = await client.ReceiveTypeAsync("match_end", cancellation.Token, host.Diagnostics);
                             Assert.Equal(direct.State.WinnerIds.OrderBy(id => id), end.GetProperty("winners").EnumerateArray().Select(item => item.GetString()).OrderBy(id => id));
                         }
                         break;
                     }
 
-                    foreach (var bot in bots)
+                    foreach (var client in clients)
                     {
-                        var start = await bot.ReceiveTypeAsync("round_start", cancellation.Token, host.Diagnostics);
+                        var start = await client.ReceiveTypeAsync("round_start", cancellation.Token, host.Diagnostics);
                         Assert.Equal(round + 1, start.GetProperty("roundId").GetInt32());
                     }
 
                     // One genuine disconnect/reconnect occurs while a game is live.
-                    if (matchNumber == 1 && round == 1)
+                    if (matchNumber == 3 && round == 1)
                     {
-                        var prior = bots[3];
+                        var prior = clients[3];
                         var reconnectToken = prior.ReconnectToken;
                         await prior.DisposeAsync();
                         var replacement = await LiveBot.ConnectAsync(port, prior.Token, cancellation.Token);
@@ -135,14 +143,14 @@ public sealed class WebSocketEndToEndTests
                             await Task.Delay(25, cancellation.Token);
                         }
                         Assert.Equal("room_state", state.GetProperty("type").GetString());
-                        bots[3] = replacement;
+                        clients[3] = replacement;
                     }
                 }
                 Assert.Equal(Phase.MatchEnd, direct.State.Phase);
             }
             finally
             {
-                foreach (var bot in bots) await bot.DisposeAsync();
+                foreach (var client in clients) await client.DisposeAsync();
             }
         }
 

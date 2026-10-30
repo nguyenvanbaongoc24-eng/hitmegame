@@ -12,7 +12,7 @@ Server dùng đồng hồ riêng cho 5 giây đặt, kẹp vị trí vào sân, 
 
 Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; chúng phân bố N=2..6. Cùng tệp còn có bảy vector trận, gồm người bị loại qua nhiều vòng và hai hòa cuối `maxRounds` (HP rồi số lần trúng, còn hòa thì đồng thắng). Test server và bản vá NUnit Unity cùng đọc định dạng trường công khai để so Core theo từng hit, người chơi và kết quả trận.
 
-Z1 chạy Kestrel và `ClientWebSocket` thật với 6 bot × 20 trận × 5 vòng, có commit lỗi, một lượt không commit, vào lại và join thiếu token; mỗi `round_result` được so với Core trực tiếp. Lần đo cục bộ: khóa/broadcast trung bình 3,49 ms, lớn nhất 42,79 ms (không phải số liệu Internet/Render).
+Z1 chạy Kestrel và `ClientWebSocket` thật với 20 trận luân phiên N=2..6 người, cùng một phòng N=1 bị từ chối `start`; có commit lỗi, một lượt không commit, vào lại và join thiếu token. Mỗi `round_result` được so với Core trực tiếp. Lần đo cục bộ được in trong output test (không phải số liệu Internet/Render).
 
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
