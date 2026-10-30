@@ -62,7 +62,9 @@ public sealed class ProtocolGateway
         {
             "join" => Reply(connectionId, Join(connectionId, request)),
             "leave" => Reply(connectionId, Leave(connectionId)),
-            "ready" => ReadyMessages(connectionId, request),
+            "room_ready" => RoomReadyMessages(connectionId, request),
+            "start" => HostStartMessages(connectionId),
+            "lock_ready" => LockReadyMessages(connectionId, request),
             "commit" => CommitMessages(connectionId, request),
             _ => Reply(connectionId, Error("unknown_type"))
         };
@@ -74,6 +76,11 @@ public sealed class ProtocolGateway
         var output = new List<GatewayMessage>();
         foreach (var room in rooms.Snapshot())
         {
+            if (!room.Started && room.TryStartCountdownIfDue(clock.GetUtcNow()))
+            {
+                output.AddRange(Target(room, room.RoundSession!.BeginRound(clock)));
+                continue;
+            }
             if (room.RoundSession is null) continue;
             output.AddRange(Target(room, room.RoundSession.Tick()));
         }
@@ -114,30 +121,29 @@ public sealed class ProtocolGateway
         return rooms.Leave(session.Room.Code, session.PlayerId, out var room, out var error) ? RoomState(room!) : Error(error);
     }
 
-    private string Ready(string connectionId, ClientEnvelope request)
-    {
-        if (!sessions.TryGetValue(connectionId, out var session)) return Error("not_joined");
-        return session.Room.TrySetReady(session.PlayerId, request.Ready, request.Start, out var error)
-            ? RoomState(session.Room) : Error(error);
-    }
-
-    private IReadOnlyList<GatewayMessage> ReadyMessages(string connectionId, ClientEnvelope request)
+    private IReadOnlyList<GatewayMessage> RoomReadyMessages(string connectionId, ClientEnvelope request)
     {
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
-        if (session.Room.RoundSession is not null)
-        {
-            if (!request.Ready) return Reply(connectionId, Error("ready_required"));
-            var roundMessages = session.Room.RoundSession.TryMarkReady(session.PlayerId, out var roundError);
-            return string.IsNullOrEmpty(roundError)
-                ? Target(session.Room, roundMessages)
-                : Reply(connectionId, Error(roundError));
-        }
+        if (session.Room.RoundSession is not null) return Reply(connectionId, Error("wrong_phase"));
+        if (!session.Room.TrySetRoomReady(session.PlayerId, request.Ready, clock.GetUtcNow(), out var error)) return Reply(connectionId, Error(error));
+        return RoomStateBroadcast(session.Room);
+    }
 
-        var wasStarted = session.Room.Started;
-        var response = Ready(connectionId, request);
-        if (!wasStarted && session.Room.Started && session.Room.RoundSession is not null)
-            return Target(session.Room, session.Room.RoundSession.BeginRound(clock));
-        return Reply(connectionId, response);
+    private IReadOnlyList<GatewayMessage> HostStartMessages(string connectionId)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        if (session.Room.RoundSession is not null) return Reply(connectionId, Error("wrong_phase"));
+        if (!session.Room.TryHostStart(session.PlayerId, out var error)) return Reply(connectionId, Error(error));
+        return Target(session.Room, session.Room.RoundSession!.BeginRound(clock));
+    }
+
+    private IReadOnlyList<GatewayMessage> LockReadyMessages(string connectionId, ClientEnvelope request)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        if (session.Room.RoundSession is null) return Reply(connectionId, Error("wrong_phase"));
+        if (!request.Ready) return Reply(connectionId, Error("ready_required"));
+        var roundMessages = session.Room.RoundSession.TryMarkReady(session.PlayerId, out var roundError);
+        return string.IsNullOrEmpty(roundError) ? Target(session.Room, roundMessages) : Reply(connectionId, Error(roundError));
     }
 
     private IReadOnlyList<GatewayMessage> CommitMessages(string connectionId, ClientEnvelope request)
@@ -203,6 +209,14 @@ public sealed class ProtocolGateway
         reconnectToken,
         config = new { maxPlayers = room.Config.MaxPlayers, startHp = room.Config.StartHp, placeSeconds = room.Config.PlaceSeconds, maxRounds = room.Config.MaxRounds, arenaWidth = room.Config.ArenaWidth, arenaHeight = room.Config.ArenaHeight, playerRadius = room.Config.PlayerRadius }
     }, Json);
+
+    private IReadOnlyList<GatewayMessage> RoomStateBroadcast(RoomAuthority room)
+    {
+        var output = new List<GatewayMessage>();
+        foreach (var session in sessions)
+            if (ReferenceEquals(session.Value.Room, room)) output.Add(new GatewayMessage(session.Key, RoomState(room, session.Value.ReconnectToken)));
+        return output;
+    }
 
     private static string Error(string code) => JsonSerializer.Serialize(new { v = Version, type = "error", code }, Json);
 

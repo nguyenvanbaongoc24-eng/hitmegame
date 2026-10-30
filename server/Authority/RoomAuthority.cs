@@ -13,12 +13,14 @@ public sealed class RoomPlayer
 public sealed class RoomAuthority
 {
     private readonly List<RoomPlayer> players = new();
+    private readonly int startCountdownSeconds;
 
-    public RoomAuthority(string code, string hostId, GameConfig config)
+    public RoomAuthority(string code, string hostId, GameConfig config, int startCountdownSeconds = 3)
     {
         Code = code;
         HostId = hostId;
         Config = config.Clone();
+        this.startCountdownSeconds = startCountdownSeconds < 0 ? 0 : startCountdownSeconds;
     }
 
     public const int MinPlayers = 2;
@@ -27,6 +29,7 @@ public sealed class RoomAuthority
     public string HostId { get; private set; }
     public GameConfig Config { get; }
     public bool Started { get; private set; }
+    public DateTimeOffset? StartDeadline { get; private set; }
     public ServerRoundSession? RoundSession { get; private set; }
     public IReadOnlyList<RoomPlayer> Players => players;
 
@@ -46,25 +49,47 @@ public sealed class RoomAuthority
         var player = players.FirstOrDefault(p => p.Id == playerId);
         if (player is null) { error = "not_in_room"; return false; }
         players.Remove(player);
+        StartDeadline = null;
         if (player.Id == HostId && players.Count > 0) HostId = players[0].Id;
         error = string.Empty;
         return true;
     }
 
-    public bool TrySetReady(string playerId, bool ready, bool start, out string error)
+    public bool TrySetRoomReady(string playerId, bool ready, DateTimeOffset now, out string error)
     {
+        if (Started) { error = "wrong_phase"; return false; }
         var player = players.FirstOrDefault(p => p.Id == playerId);
         if (player is null) { error = "not_in_room"; return false; }
         player.Ready = ready;
-        if (start)
-        {
-            if (playerId != HostId) { error = "host_only"; return false; }
-            if (players.Count < MinPlayers) { error = "not_enough_players"; return false; }
-            Started = true;
-            RoundSession = new ServerRoundSession(Config, players.Select(p => p.Id));
-        }
+        if (!ready) StartDeadline = null;
+        else if (players.Count >= MinPlayers && players.All(candidate => candidate.Ready))
+            StartDeadline = now + TimeSpan.FromSeconds(startCountdownSeconds);
         error = string.Empty;
         return true;
+    }
+
+    public bool TryHostStart(string playerId, out string error)
+    {
+        if (Started) { error = "wrong_phase"; return false; }
+        if (playerId != HostId) { error = "host_only"; return false; }
+        if (players.Count < MinPlayers) { error = "not_enough_players"; return false; }
+        StartNow();
+        error = string.Empty;
+        return true;
+    }
+
+    public bool TryStartCountdownIfDue(DateTimeOffset now)
+    {
+        if (Started || !StartDeadline.HasValue || now < StartDeadline.Value) return false;
+        StartNow();
+        return true;
+    }
+
+    private void StartNow()
+    {
+        Started = true;
+        StartDeadline = null;
+        RoundSession = new ServerRoundSession(Config, players.Select(p => p.Id));
     }
 }
 
@@ -74,10 +99,12 @@ public sealed class RoomDirectory
     private readonly Dictionary<string, RoomAuthority> rooms = new(StringComparer.Ordinal);
     private readonly Func<int, string> codeForAttempt;
     private int attempts;
+    private readonly int startCountdownSeconds;
 
-    public RoomDirectory(Func<int, string>? codeForAttempt = null)
+    public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3)
     {
         this.codeForAttempt = codeForAttempt ?? (n => $"HM{Random.Shared.Next(0, 10000):0000}");
+        this.startCountdownSeconds = startCountdownSeconds;
     }
 
     public RoomAuthority Create(string hostId, string hostName, GameConfig? config, out string error)
@@ -88,7 +115,7 @@ public sealed class RoomDirectory
             {
                 var code = codeForAttempt(++attempts);
                 if (rooms.ContainsKey(code)) continue;
-                var room = new RoomAuthority(code, hostId, config ?? new GameConfig());
+                var room = new RoomAuthority(code, hostId, config ?? new GameConfig(), startCountdownSeconds);
                 if (!room.TryJoin(hostId, hostName, out error)) return null!;
                 rooms.Add(code, room);
                 error = string.Empty;

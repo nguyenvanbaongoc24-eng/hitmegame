@@ -22,9 +22,58 @@ public sealed class ProtocolGatewayTests
         Assert.True(created.GetProperty("config").TryGetProperty("placeSeconds", out _));
         var joined = Json(gateway.Handle("c2", Request("join", "p2", "Two", "HM0001")));
         Assert.Equal(2, joined.GetProperty("players").GetArrayLength());
-        var started = Json(gateway.Handle("c1", Request("ready", start: true, ready: true)));
+        var started = Json(gateway.Handle("c1", Request("start")));
         Assert.Equal("round_start", started.GetProperty("type").GetString());
         Assert.Equal(1, started.GetProperty("roundId").GetInt32());
+    }
+
+    [Fact]
+    public void AllRoomReadyStartsAfterThreeSecondServerCountdown()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        Assert.All(gateway.HandleMessages("c1", Request("room_ready", ready: true)), message => Assert.Contains("room_state", message.Payload));
+        var countdown = gateway.HandleMessages("c2", Request("room_ready", "p2", "Two", ready: true));
+        Assert.All(countdown, message => Assert.Contains("room_state", message.Payload));
+        clock.Advance(TimeSpan.FromSeconds(2.999));
+        Assert.Empty(gateway.Tick());
+        clock.Advance(TimeSpan.FromMilliseconds(1));
+        var started = gateway.Tick();
+        Assert.Equal(2, started.Count);
+        Assert.All(started, message => Assert.Contains("round_start", message.Payload));
+    }
+
+    [Fact]
+    public void UnreadyOrLeaveCancelsLobbyCountdownAndReadinessMessagesArePhaseScoped()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.HandleMessages("c1", Request("room_ready", ready: true));
+        gateway.HandleMessages("c2", Request("room_ready", "p2", "Two", ready: true));
+        gateway.HandleMessages("c2", Request("room_ready", "p2", "Two", ready: false));
+        clock.Advance(TimeSpan.FromSeconds(3));
+        Assert.Empty(gateway.Tick());
+        Assert.Equal("wrong_phase", Json(gateway.Handle("c1", Request("lock_ready", ready: true))).GetProperty("code").GetString());
+        gateway.Handle("c1", Request("start"));
+        Assert.Equal("wrong_phase", Json(gateway.Handle("c1", Request("room_ready", ready: true))).GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void LeavingRoomCancelsLobbyCountdown()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.HandleMessages("c1", Request("room_ready", ready: true));
+        gateway.HandleMessages("c2", Request("room_ready", "p2", "Two", ready: true));
+        gateway.Handle("c2", Request("leave", "p2", "Two"));
+        clock.Advance(TimeSpan.FromSeconds(3));
+        Assert.Empty(gateway.Tick());
     }
 
     [Fact] public void CodeCollisionGeneratesAnotherCode()
@@ -73,7 +122,7 @@ public sealed class ProtocolGatewayTests
         var gateway = Gateway();
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
-        var start = gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        var start = gateway.HandleMessages("c1", Request("start"));
         Assert.Equal(2, start.Count);
         Assert.All(start, message => Assert.Contains("round_start", message.Payload));
 
@@ -95,15 +144,16 @@ public sealed class ProtocolGatewayTests
         var gateway = Gateway();
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
-        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        gateway.HandleMessages("c1", Request("room_ready", ready: true));
+        gateway.HandleMessages("c1", Request("start"));
 
         var commitOne = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = -2f, positionY = 0f, aimX = 1f, aimY = 0f });
         var commitTwo = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f, aimX = -1f, aimY = 0f });
         gateway.HandleMessages("c1", commitOne);
         gateway.HandleMessages("c2", commitTwo);
 
-        Assert.Empty(gateway.HandleMessages("c1", Request("ready", ready: true)));
-        var afterLock = gateway.HandleMessages("c2", Request("ready", "p2", "Two", ready: true));
+        Assert.Empty(gateway.HandleMessages("c1", Request("lock_ready", ready: true)));
+        var afterLock = gateway.HandleMessages("c2", Request("lock_ready", "p2", "Two", ready: true));
         Assert.Equal(4, afterLock.Count);
         Assert.Contains(afterLock, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
         Assert.Contains(afterLock, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
@@ -116,7 +166,7 @@ public sealed class ProtocolGatewayTests
         var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
         gateway.Handle("c1", Request("join"));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
-        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        gateway.HandleMessages("c1", Request("start"));
         gateway.HandleMessages("c1", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = -2f, positionY = 0f }));
 
         clock.Advance(TimeSpan.FromSeconds(5));
@@ -147,7 +197,7 @@ public sealed class ProtocolGatewayTests
         Send("c1", Request("join", "p1", "One"));
         for (var player = 2; player <= 6; player++)
             Send($"c{player}", Request("join", $"p{player}", $"P{player}", "HM3141"));
-        Send("c1", Request("ready", "p1", "One", ready: true, start: true));
+        Send("c1", Request("start", "p1", "One"));
 
         // Deliberately unusual values make accidental serialization detectable.
         Send("c2", JsonSerializer.Serialize(new
@@ -161,7 +211,7 @@ public sealed class ProtocolGatewayTests
             aimY = -0.98765f
         }));
         Send("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 99, positionX = 3.14159f, positionY = -2.71828f }));
-        Send("c2", Request("ready", "p2", "Two", ready: false));
+        Send("c2", Request("lock_ready", "p2", "Two", ready: false));
 
         foreach (var connectionId in new[] { "c1", "c2", "c3", "c4", "c5", "c6" })
         {
@@ -190,7 +240,8 @@ public sealed class ProtocolGatewayTests
         var token = firstJoin.GetProperty("reconnectToken").GetString();
         Assert.False(string.IsNullOrWhiteSpace(token));
         gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
-        gateway.HandleMessages("c1", Request("ready", ready: true, start: true));
+        gateway.HandleMessages("c1", Request("room_ready", ready: true));
+        gateway.HandleMessages("c1", Request("start"));
         gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 3.14159f, positionY = -2.71828f, aimX = 0.12345f, aimY = -0.98765f }));
 
         gateway.Disconnect("c1");
