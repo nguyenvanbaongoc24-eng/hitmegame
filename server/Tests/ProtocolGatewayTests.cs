@@ -76,6 +76,40 @@ public sealed class ProtocolGatewayTests
         Assert.Empty(gateway.Tick());
     }
 
+    [Fact]
+    public void LegacyReadyReturnsExplicitMigrationError()
+    {
+        var gateway = Gateway();
+        gateway.Handle("c1", Request("join"));
+        var reply = Json(gateway.Handle("c1", Request("ready", ready: true)));
+        Assert.Equal("legacy_ready_use_room_ready_or_lock_ready", reply.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void SixReadyPlayersStartTheCountdownWithoutWaitingForAnotherJoin()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock);
+        gateway.Handle("c1", Request("join"));
+        for (var player = 2; player <= 6; player++) gateway.Handle($"c{player}", Request("join", $"p{player}", $"P{player}", "HM0001"));
+        for (var player = 1; player <= 6; player++) gateway.HandleMessages($"c{player}", Request("room_ready", $"p{player}", $"P{player}", ready: true));
+        clock.Advance(TimeSpan.FromSeconds(3));
+        var started = gateway.Tick();
+        Assert.Equal(6, started.Count);
+        Assert.All(started, message => Assert.Contains("round_start", message.Payload));
+    }
+
+    [Fact]
+    public void PlayerJoiningAfterHostStartIsRejected()
+    {
+        var gateway = Gateway();
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        var reply = Json(gateway.Handle("c3", Request("join", "p3", "Three", "HM0001")));
+        Assert.Equal("room_started", reply.GetProperty("code").GetString());
+    }
+
     [Fact] public void CodeCollisionGeneratesAnotherCode()
     {
         var gateway = Gateway();

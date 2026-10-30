@@ -65,6 +65,7 @@ public sealed class ProtocolGateway
             "room_ready" => RoomReadyMessages(connectionId, request),
             "start" => HostStartMessages(connectionId),
             "lock_ready" => LockReadyMessages(connectionId, request),
+            "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
             "commit" => CommitMessages(connectionId, request),
             _ => Reply(connectionId, Error("unknown_type"))
         };
