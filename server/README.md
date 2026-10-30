@@ -14,6 +14,8 @@ Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; chúng ph�
 
 Z1 chạy Kestrel và `ClientWebSocket` thật với 20 trận luân phiên N=2..6 người, cùng một phòng N=1 bị từ chối `start`; có commit lỗi, một lượt không commit, vào lại và join thiếu token. Mỗi `round_result` được so với Core trực tiếp. Lần đo cục bộ được in trong output test (không phải số liệu Internet/Render).
 
+Z3 (cục bộ, trong tiến trình, 2026-10-30) chạy đồng thời 50 phòng x 6 người x 5 vòng: `Passed! 1/1`, 0 ngoại lệ, 0 treo, 0 kết nối rớt; 250 vòng có trung bình 2.294 ms, p95 31.428 ms, lớn nhất 31.553 ms, 4,800 broadcast nội bộ, CPU 343.8 ms và peak working set 67.95 MiB. Đây là đo Core/session, **không** thay cho tải WebSocket/Internet; mục tiêu khởi đầu bảo thủ là 50 phòng mỗi process trước khi có benchmark mạng thực.
+
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
 Đang dở: transport Unity/WebGL (Z2) và thử tải (Z3). Không deploy server WIP này.
