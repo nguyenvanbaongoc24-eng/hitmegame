@@ -155,6 +155,8 @@ namespace HitMe.UI
         private bool _lastTimerLowWarning;
         private Phase _lastDisplayedPhase = (Phase)(-1);
         private Phase _lastSyncedStatePhase = (Phase)(-1);
+        private int _lastConfiguredHpCardCount = -1;
+        private int _currentLobbyHumanCount = 4;
         private readonly List<PlayerState> _uiRankedBuffer = new List<PlayerState>(6);
         private readonly List<string> _uiWinnersBuffer = new List<string>(6);
 
@@ -359,7 +361,7 @@ namespace HitMe.UI
                 btnBotTraining.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    StartGameplayMatch();
+                    StartPracticeWithBots(3);
                 });
             }
 
@@ -547,39 +549,86 @@ namespace HitMe.UI
 
         private void EnterLobbyWithAutoFill(string roomName, string code)
         {
+            UpdateLobbyRoster(4, roomName, code);
+        }
+
+        public void UpdateLobbyRoster(int humanCount, string roomName = "Phòng Chiến Hữu", string code = "HM4826")
+        {
             ShowScreen(ProductionScreen.Lobby);
             _isLocalPlayerReady = false;
+            _currentLobbyHumanCount = Mathf.Clamp(humanCount, 1, 6);
 
-            if (txtLobbyHeader != null) txtLobbyHeader.text = roomName.ToUpperInvariant() + " • SÂN LÀNG";
-            if (txtLobbyRoomCode != null) txtLobbyRoomCode.text = "MÃ PHÒNG: " + code;
-            if (txtLobbyCountdown != null) txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
-            if (txtLobbyReadyLabel != null) txtLobbyReadyLabel.text = "SẴN SÀNG";
+            if (txtLobbyHeader != null)
+            {
+                txtLobbyHeader.text = $"{roomName.ToUpperInvariant()} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT) • SÂN LÀNG";
+            }
+            if (txtLobbyRoomCode != null)
+            {
+                txtLobbyRoomCode.text = "MÃ PHÒNG: " + code;
+            }
 
-            for (int i = 0; i < lobbySlots.Count && i < PlayerView.CharacterNames.Length; i++)
+            if (_currentLobbyHumanCount < 2)
+            {
+                if (txtLobbyCountdown != null)
+                {
+                    txtLobbyCountdown.text = "Cần ít nhất 2 người. Muốn chơi một mình, hãy sang menu Luyện với bot.";
+                }
+            }
+            else
+            {
+                if (txtLobbyCountdown != null)
+                {
+                    txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
+                }
+            }
+
+            if (txtLobbyReadyLabel != null)
+            {
+                txtLobbyReadyLabel.text = "SẴN SÀNG";
+            }
+
+            for (int i = 0; i < lobbySlots.Count && i < 6; i++)
             {
                 var slot = lobbySlots[i];
                 if (slot.root != null) slot.root.SetActive(true);
-                if (slot.txtName != null)
-                {
-                    slot.txtName.text = i == 0 ? "Nam Làng (Bạn)" : PlayerView.CharacterNames[i];
-                }
 
-                if (i == 0)
+                if (i < _currentLobbyHumanCount)
                 {
-                    slot.isReady = false;
-                    if (slot.txtStatus != null)
+                    if (slot.txtName != null)
                     {
-                        slot.txtStatus.text = "CHƯA SẴN SÀNG";
-                        slot.txtStatus.color = new Color(1f, 0.7f, 0.2f);
+                        slot.txtName.text = i == 0 ? "Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
+                    }
+                    if (i == 0)
+                    {
+                        slot.isReady = false;
+                        if (slot.txtStatus != null)
+                        {
+                            slot.txtStatus.text = "CHƯA SẴN SÀNG";
+                            slot.txtStatus.color = new Color(1f, 0.7f, 0.2f);
+                        }
+                    }
+                    else
+                    {
+                        slot.isReady = true;
+                        if (slot.txtStatus != null)
+                        {
+                            slot.txtStatus.text = "ĐÃ SẴN SÀNG";
+                            slot.txtStatus.color = new Color(0.2f, 1f, 0.4f);
+                        }
                     }
                 }
                 else
                 {
-                    slot.isReady = true;
+                    // Empty slot: Mockup "Vào phòng" 6 chỗ, chỗ trống ghi "Đang chờ..."
+                    slot.isReady = false;
+                    if (slot.txtName != null)
+                    {
+                        slot.txtName.text = $"Chỗ trống #{i + 1}";
+                    }
                     if (slot.txtStatus != null)
                     {
-                        slot.txtStatus.text = "ĐÃ SẴN SÀNG";
-                        slot.txtStatus.color = new Color(0.2f, 1f, 0.4f);
+                        slot.txtStatus.text = "Đang chờ...";
+                        slot.txtStatus.color = new Color(0.65f, 0.72f, 0.80f);
                     }
                 }
             }
@@ -587,6 +636,12 @@ namespace HitMe.UI
 
         private void ToggleLobbyReady()
         {
+            if (_currentLobbyHumanCount < 2)
+            {
+                ShowToast("Cần ít nhất 2 người. Muốn chơi một mình, hãy sang menu Luyện với bot.");
+                return;
+            }
+
             _isLocalPlayerReady = !_isLocalPlayerReady;
             AudioManager.Instance?.PlayReady();
 
@@ -602,8 +657,8 @@ namespace HitMe.UI
                 txtLobbyReadyLabel.text = _isLocalPlayerReady ? "HỦY SẴN SÀNG" : "SẴN SÀNG";
             }
 
-            bool allReady = lobbySlots.Count > 0;
-            for (int i = 0; i < lobbySlots.Count; i++)
+            bool allReady = true;
+            for (int i = 0; i < _currentLobbyHumanCount && i < lobbySlots.Count; i++)
             {
                 if (!lobbySlots[i].isReady)
                 {
@@ -643,6 +698,15 @@ namespace HitMe.UI
                 yield return new WaitForSeconds(1.0f);
             }
 
+            StartGameplayMatch();
+        }
+
+        public void StartPracticeWithBots(int botCount = 3)
+        {
+            if (matchController != null && matchController.configAsset != null)
+            {
+                matchController.configAsset.maxPlayers = Mathf.Clamp(botCount + 1, 2, 6);
+            }
             StartGameplayMatch();
         }
 
@@ -828,11 +892,83 @@ namespace HitMe.UI
             }
         }
 
+        public void ConfigureHpCardsLayout(int count)
+        {
+            _lastConfiguredHpCardCount = count;
+            int clamped = Mathf.Clamp(count, 1, hpCards.Count);
+            Vector2[] anchors;
+            Vector2 cardSize;
+
+            switch (clamped)
+            {
+                case 2:
+                    anchors = new[] { new Vector2(0.28f, 0.50f), new Vector2(0.72f, 0.50f) };
+                    cardSize = new Vector2(380f, 62f);
+                    break;
+                case 3:
+                    anchors = new[] { new Vector2(0.17f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.83f, 0.50f) };
+                    cardSize = new Vector2(328f, 60f);
+                    break;
+                case 4:
+                    anchors = new[]
+                    {
+                        new Vector2(0.28f, 0.76f), new Vector2(0.72f, 0.76f),
+                        new Vector2(0.28f, 0.24f), new Vector2(0.72f, 0.24f)
+                    };
+                    cardSize = new Vector2(380f, 60f);
+                    break;
+                case 5:
+                    anchors = new[]
+                    {
+                        new Vector2(0.17f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.83f, 0.76f),
+                        new Vector2(0.33f, 0.24f), new Vector2(0.67f, 0.24f)
+                    };
+                    cardSize = new Vector2(328f, 60f);
+                    break;
+                case 6:
+                default:
+                    anchors = new[]
+                    {
+                        new Vector2(0.17f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.83f, 0.76f),
+                        new Vector2(0.17f, 0.24f), new Vector2(0.50f, 0.24f), new Vector2(0.83f, 0.24f)
+                    };
+                    cardSize = new Vector2(328f, 60f);
+                    break;
+            }
+
+            for (int i = 0; i < hpCards.Count; i++)
+            {
+                var card = hpCards[i];
+                if (card.root == null) continue;
+                if (i < clamped)
+                {
+                    var rt = card.root.GetComponent<RectTransform>();
+                    if (rt != null)
+                    {
+                        rt.anchorMin = anchors[i];
+                        rt.anchorMax = anchors[i];
+                        rt.anchoredPosition = Vector2.zero;
+                        rt.sizeDelta = cardSize;
+                    }
+                    if (!card.root.activeSelf) card.root.SetActive(true);
+                }
+                else
+                {
+                    if (card.root.activeSelf) card.root.SetActive(false);
+                }
+            }
+        }
+
         public void UpdateHpCards()
         {
             if (matchController == null || matchController.State == null) return;
             var state = matchController.State;
             var phase = state.Phase;
+
+            if (_lastConfiguredHpCardCount != state.Players.Count)
+            {
+                ConfigureHpCardsLayout(state.Players.Count);
+            }
 
             for (int i = 0; i < hpCards.Count && i < state.Players.Count; i++)
             {

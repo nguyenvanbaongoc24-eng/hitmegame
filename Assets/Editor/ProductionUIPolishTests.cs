@@ -388,5 +388,99 @@ namespace HitMe.Editor
             Assert.That(ui.hpCards[1].txtHpNum.text, Does.Contain("ĐANG ẨN"));
             Assert.That(ui.hpCards[3].txtHpNum.text, Does.Contain("ĐÃ LOẠI"));
         }
+
+        [Test]
+        public void RuleV13_HpCardsAndResultBoard_ScaleToPlayerCount_N2To6()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+
+            for (int n = 2; n <= 6; n++)
+            {
+                ui.ConfigureHpCardsLayout(n);
+                int activeCards = 0;
+                for (int c = 0; c < ui.hpCards.Count; c++)
+                {
+                    if (ui.hpCards[c].root != null && ui.hpCards[c].root.activeSelf) activeCards++;
+                }
+                Assert.That(activeCards, Is.EqualTo(n), $"N={n}: exactly {n} HP cards must be active");
+
+                // Check result board scaling
+                var ranked = new List<PlayerState>(n);
+                var winners = new List<string> { "player" };
+                for (int p = 0; p < n; p++)
+                {
+                    string id = p == 0 ? "player" : ("bot-" + p);
+                    string name = PlayerView.CharacterNames[p % PlayerView.CharacterNames.Length];
+                    ranked.Add(new PlayerState(id, name, p != 0, 3 - p, new Vec2(0f, p), Vec2.Up));
+                }
+
+                ui.PopulateResultBoard(ranked, winners);
+                int activeRows = 0;
+                for (int r = 0; r < ui.resultRows.Count; r++)
+                {
+                    if (ui.resultRows[r].root != null && ui.resultRows[r].root.activeSelf) activeRows++;
+                }
+                Assert.That(activeRows, Is.EqualTo(n), $"N={n}: exactly {n} result rows must be active");
+            }
+        }
+
+        [Test]
+        public void RuleV13_LobbyRoomOnline_ShowsHumansAndLocksWhenOnePlayer()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+
+            // Test 1 human player
+            ui.UpdateLobbyRoster(1);
+            Assert.That(ui.txtLobbyHeader.text, Does.Contain("1/6 NGƯỜI THẬT"));
+            Assert.That(ui.txtLobbyCountdown.text, Does.Contain("Cần ít nhất 2 người. Muốn chơi một mình, hãy sang menu Luyện với bot."));
+            Assert.That(ui.lobbySlots[0].txtName.text, Does.Contain("Nam Làng"));
+            for (int s = 1; s < 6; s++)
+            {
+                Assert.That(ui.lobbySlots[s].txtName.text, Does.Contain($"Chỗ trống #{s + 1}"));
+                Assert.That(ui.lobbySlots[s].txtStatus.text, Is.EqualTo("Đang chờ..."));
+            }
+
+            // Test 4 human players
+            ui.UpdateLobbyRoster(4);
+            Assert.That(ui.txtLobbyHeader.text, Does.Contain("4/6 NGƯỜI THẬT"));
+            Assert.That(ui.txtLobbyCountdown.text, Does.Contain("Đang chờ tất cả người chơi sẵn sàng"));
+            for (int s = 0; s < 4; s++)
+            {
+                Assert.That(ui.lobbySlots[s].txtName.text, Does.Not.Contain("Chỗ trống"));
+            }
+            Assert.That(ui.lobbySlots[4].txtName.text, Does.Contain("Chỗ trống #5"));
+            Assert.That(ui.lobbySlots[4].txtStatus.text, Is.EqualTo("Đang chờ..."));
+            Assert.That(ui.lobbySlots[5].txtName.text, Does.Contain("Chỗ trống #6"));
+            Assert.That(ui.lobbySlots[5].txtStatus.text, Is.EqualTo("Đang chờ..."));
+        }
+
+        [Test]
+        public void RuleV13_SelectMatchRoster_NoDuplicates_AcrossSeedsAndPlayerCounts()
+        {
+            for (int n = 2; n <= 6; n++)
+            {
+                for (uint s = 1; s <= 25; s++)
+                {
+                    var rng = new SeededRandom(s * 101u + (uint)n * 17u);
+                    int localChoice = (int)(s % 7);
+                    int[] roster = MatchController.SelectMatchRoster(localChoice, n, rng);
+
+                    Assert.That(roster.Length, Is.EqualTo(n), $"N={n} Seed={s}: length must be {n}");
+                    Assert.That(roster[0], Is.EqualTo(localChoice), $"Slot 0 must be local choice");
+
+                    var set = new HashSet<int>(roster);
+                    Assert.That(set.Count, Is.EqualTo(n), $"N={n} Seed={s}: all characters in roster must be unique");
+
+                    for (int i = 0; i < roster.Length; i++)
+                    {
+                        Assert.That(roster[i], Is.InRange(0, 6), $"Character index must be in [0..6]");
+                    }
+                }
+            }
+        }
     }
 }

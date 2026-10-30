@@ -626,5 +626,83 @@ namespace HitMe.Tests
             Assert.That(ranked[2].Id, Is.EqualTo("early"));
             Assert.That(ranked[2].Rank, Is.EqualTo(3));
         }
+
+        [Test]
+        public void S1_Ranking_N2_HeadToHead_SurvivorRanks1_EliminatedRanks2()
+        {
+            var config = Config();
+            var p1 = Player("player", new Vec2(0f, -2f), 3);
+            var p2 = Player("bot-1", new Vec2(0f, 2f), 1);
+            var match = new MatchState(config, new[] { p1, p2 });
+
+            match.StartRound();
+            match.SetInput(Throw("player", Vec2.Up)); // hits bot-1
+            match.SetInput(Throw("bot-1", new Vec2(1f, 0f)));
+            match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
+
+            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
+            Assert.That(match.WinnerIds, Is.EqualTo(new[] { "player" }));
+            var rankings = match.GetRankings();
+            Assert.That(rankings.Length, Is.EqualTo(2));
+            Assert.That(rankings[0].Id, Is.EqualTo("player"));
+            Assert.That(rankings[0].Rank, Is.EqualTo(1));
+            Assert.That(rankings[1].Id, Is.EqualTo("bot-1"));
+            Assert.That(rankings[1].Rank, Is.EqualTo(2));
+            Assert.That(rankings[1].EliminatedAtRound, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void S1_Ranking_N4_TwoSurvivorsTied_SharedRank1_EliminatedOrderedByRoundThenHits()
+        {
+            var config = Config();
+            var p1 = Player("player", new Vec2(-1f, 0f), 2);
+            p1.HitsLanded = 3;
+            var p2 = Player("bot-1", new Vec2(1f, 0f), 2);
+            p2.HitsLanded = 3;
+            var p3 = Player("bot-2", new Vec2(0f, 2f), 0);
+            p3.EliminatedAtRound = 4;
+            p3.HitsLanded = 2;
+            var p4 = Player("bot-3", new Vec2(0f, -2f), 0);
+            p4.EliminatedAtRound = 2;
+            p4.HitsLanded = 5; // higher hits but eliminated earlier!
+
+            var res = MatchRanking.Rank(new[] { p1, p2, p3, p4 }, RoundLimitTiebreakPolicy.HighestHp);
+            Assert.That(res.Length, Is.EqualTo(4));
+            // Survivors tied on HP (2) and hits (3) share Rank 1
+            Assert.That(res[0].Rank, Is.EqualTo(1));
+            Assert.That(res[0].IsSharedRank, Is.True);
+            Assert.That(res[1].Rank, Is.EqualTo(1));
+            Assert.That(res[1].IsSharedRank, Is.True);
+            // p3 eliminated in Round 4 ranks before p4 eliminated in Round 2, even though p4 has more hits
+            Assert.That(res[2].Id, Is.EqualTo("bot-2"));
+            Assert.That(res[2].Rank, Is.EqualTo(3));
+            Assert.That(res[3].Id, Is.EqualTo("bot-3"));
+            Assert.That(res[3].Rank, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void S1_Ranking_N5_FullMatch_RanksAllFivePlayersCleanly()
+        {
+            var config = Config();
+            var p1 = Player("player", new Vec2(0f, 0f), 3);
+            p1.HitsLanded = 5;
+            var p2 = Player("bot-1", new Vec2(0f, 1f), 2);
+            p2.HitsLanded = 3;
+            var p3 = Player("bot-2", new Vec2(0f, 2f), 1);
+            p3.HitsLanded = 2;
+            var p4 = Player("bot-3", new Vec2(0f, 3f), 0);
+            p4.EliminatedAtRound = 3;
+            p4.HitsLanded = 1;
+            var p5 = Player("bot-4", new Vec2(0f, 4f), 0);
+            p5.EliminatedAtRound = 1;
+            p5.HitsLanded = 0;
+
+            var res = MatchRanking.Rank(new[] { p1, p2, p3, p4, p5 }, RoundLimitTiebreakPolicy.HighestHp);
+            Assert.That(res.Length, Is.EqualTo(5));
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.That(res[i].Rank, Is.EqualTo(i + 1), $"Player {res[i].Id} should be rank {i + 1}");
+            }
+        }
     }
 }
