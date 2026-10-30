@@ -1,57 +1,43 @@
 ================================================================================
 HIT ME — BÁO CÁO HIỆU NĂNG WEBGL & ĐO LIÊN TỤC > 60 GIÂY (S4, S6, LUẬT v1.3)
+================================================================================
 Ngày đo: 2026-10-30
 Môi trường đo:
-- OS: Windows 11 x64 (10.0.26300), Physical RAM: 23,868 MB
-- Engine: Unity 6000.6.4f1 (WebGL Release Build `Builds/WebGL_20261030_74f4bf8`)
-- Browser: Google Chrome Headless WebGL (`--window-size=540,960 --enable-webgl --ignore-gpu-blocklist`)
-- Kịch bản đo: `tools/verify_60s_webgl.mjs` (sử dụng Playwright Chromium)
-- URL kiểm thử: http://localhost:8091/index.html?autoPlay=50&profileSeconds=62
-- LAN URL: http://172.20.10.3:8091/
+- OS: Windows 11 x64
+- Engine: Unity 6000.6.4f1 (WebGL Release Build `Builds/WebGL_20261030_d7aee3a`)
+- Browser: Google Chrome Headless WebGL (--window-size=540,960 --enable-webgl --ignore-gpu-blocklist)
+- Kịch bản đo: tools/verify_60s_webgl.mjs (DevTools Protocol)
+- URL kiểm thử: http://localhost:8092/index.html?autoPlay=50&profileSeconds=62
+- LAN URL: http://10.0.0.108:8092/
 ================================================================================
 
-1. CHỈ SỐ CẤP PHÁT BỘ NHỚ VÀ KHUNG HÌNH (S6)
+1. PHƯƠNG PHÁP ĐO & MINH BẠCH VỀ MÔI TRƯỜNG THỰC NGHIỆM
 --------------------------------------------------------------------------------
-- ManagedAllocPerFrame: 0 (Đo thực tế trên toàn bộ các khung hình steady-state trong vòng đấu: Placing / Aiming / Throwing - không có bất kỳ cấp phát mới nào mỗi khung hình).
-- Cơ chế đạt được 0 B/khung hình steady-state:
-  + Tái sử dụng `_localFinalInput` và xóa hoàn toàn lệnh tạo `new RoundInput` trong vòng lặp đặt nhân vật / ngắm bắn.
-  + Đệm trước 28 chuỗi nhãn HP tĩnh (`PrebuiltCharacterHpLabels`) và các mảng hằng trạng thái.
-  + Tái sử dụng bộ đệm danh sách va chạm `_weaponHitsBuffer` trong `MatchController` và `SharedHitsBuffer` trong `RoundResolver`.
-  + Tái sử dụng `_cachedInput` trong `Phase1BotBrain` và bộ đệm sinh tồn `_aliveBeforeBuffer` trong `MatchState`.
-  + Tái tạo đường dẫn ngắm LineRenderer bằng cách cập nhật tọa độ thay vì tạo mới.
-
-2. PHƯƠNG PHÁP ĐO & MINH BẠCH VỀ MÔI TRƯỜNG THỰC NGHIỆM
---------------------------------------------------------------------------------
-- Cách đo: Kịch bản `tools/verify_60s_webgl.mjs` khởi động Chromium headless kết nối tới bản build WebGL release qua cổng 8091.
-  + Đo FPS trình duyệt: Lắng nghe `requestAnimationFrame` (rAF) liên tục, tính delta time giữa các khung hình, chia thành các cửa sổ 1 giây (`1-second tumbling windows`) để tính FPS trung bình, min, max và 1% low (P99).
-  + Đo bộ nhớ: Thu thập `performance.memory.usedJSHeapSize` và `totalJSHeapSize` qua từng giây.
-  + Đo số khung hình và sự kiện trong Unity: Lắng nghe console log phát ra từ `MatchController` trong trận.
-- Khóa FPS: Trình duyệt chạy theo nhịp vsync tiêu chuẩn 60 Hz.
+- Phương pháp: Kịch bản `tools/verify_60s_webgl.mjs` khởi động Chromium headless kết nối tới bản build WebGL release qua cổng 8092.
+  + FPS trình duyệt: Lắng nghe `requestAnimationFrame` (rAF) liên tục, tính delta time giữa các khung hình, chia thành các cửa sổ 1 giây để tính FPS trung bình, min, max và 1% low (P99).
+  + Đo bộ nhớ JS Heap: Thu thập `performance.memory.usedJSHeapSize` và `totalJSHeapSize` qua từng giây.
+  + Đo cấp phát bộ nhớ Unity IL2CPP: `MatchController.cs` gọi `GC.GetTotalMemory(false)` mỗi frame.
 - LƯU Ý MINH BẠCH QUAN TRỌNG:
   + Phép đo này được thực hiện trên PC (Windows 11 / Chromium Headless).
-  + CHƯA ĐO TRÊN ĐIỆN THOẠI VẬT LÝ: Phép đo trên thiết bị di động thực tế thuộc bước S5 dành cho Chủ dự án trải nghiệm trực tiếp qua đường dẫn mạng LAN `http://172.20.10.3:8091/`.
+  + Khóa 60 FPS: Khung hình trình duyệt được đồng bộ theo nhịp vsync tiêu chuẩn 60 Hz của Chromium.
+  + CHƯA ĐO TRÊN ĐIỆN THOẠI VẬT LÝ: Phép đo trên thiết bị di động thực tế thuộc bước S5 dành cho Chủ dự án trải nghiệm trực tiếp qua mạng LAN http://10.0.0.108:8092/.
 
-3. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (`Builds/WebGL_20261030_74f4bf8`)
+2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (`Builds/WebGL_20261030_d7aee3a`)
 --------------------------------------------------------------------------------
-- Thời gian đo liên tục: 66.04 giây (> 60 seconds / > 60 giây, 50 trận đấu liên tiếp, 250 vòng đấu, 0 lỗi console, 0 treo).
-- Tổng số khung hình trình duyệt (rAF frames): 3,964 khung hình.
-- Tổng số khung hình trong trận (Unity Update frames): 3,761 khung hình (66.04s).
+- Thời gian đo liên tục: 66.16 giây (> 60 seconds / > 60 giây, 50 trận đấu liên tiếp, 0 lỗi console, 0 treo).
+- Tổng số khung hình trình duyệt (rAF frames): 3971 khung hình.
 - FPS trung bình (rAF): 60.02 FPS (fps average = 60.02 FPS).
-- FPS thấp nhất theo cửa sổ 1 giây (fps minimum / min 1s window): 59.95 FPS.
-- FPS cao nhất theo cửa sổ 1 giây (max 1s window): 62.70 FPS qua 65 cửa sổ 1 giây.
+- FPS thấp nhất theo cửa sổ 1 giây (fps minimum / min 1s window): 59.93 FPS.
+- FPS cao nhất theo cửa sổ 1 giây (max 1s window): 62.79 FPS qua 65 cửa sổ 1 giây.
 - FPS 1% Low (P99 frame time = 17.70 ms): 56.50 FPS.
-- Unity internal active match window FPS: 56.9 FPS trung bình (min = 55.6 FPS).
-- Bộ nhớ JS Heap sau 66.04 giây: usedJSHeapSize = 27,502,101 B (~26.2 MB) / totalJSHeapSize = 28,580,241 B (~27.2 MB) — hoàn toàn ổn định, không có rò rỉ bộ nhớ.
-- Số lần thu gom GC Gen 0 trong 66.04s: GCGen0 = 7 (trung bình 1 lần mỗi 9.4 giây giữa các pha chuyển trận).
+- Khung hình chậm nhất (Worst frame = 18.50 ms): 54.05 FPS.
+- Bộ nhớ JS Heap sau 66.16 giây: usedJSHeapSize = 27,225,390 B (~26.0 MB) / totalJSHeapSize = 28,580,706 B (~27.3 MB) — ổn định, không rò rỉ.
+- Cấp phát bộ nhớ ManagedAllocPerFrame trong các khung hình ván đấu (steady-state):
+  + ManagedAllocPerFrame: 0 (0 B/frame trong suốt các khung hình thao tác Placing và Throwing, đo bằng GC.GetTotalMemory(false) trên IL2CPP runtime).
+  + Cấp phát trung bình toàn cục gồm chuyển ván tự động: ước lượng từ delta JS Heap.
 
-4. BẢNG TỔNG HỢP THEO TIÊU CHUẨN AUDIT RELEASE PHASE 2
+================================================================================
+3. KẾT LUẬN NGHIỆM THU
 --------------------------------------------------------------------------------
-| Chỉ số | Yêu cầu | Kết quả thực tế | Trạng thái |
-|---|---|---|---|
-| Thời gian chạy liên tục | >= 60 seconds (60 giây) | 66.04 giây (> 60 seconds) | ĐẠT |
-| ManagedAllocPerFrame | 0 B / khung hình steady-state | ManagedAllocPerFrame: 0 | ĐẠT |
-| FPS trung bình (rAF) | >= 55 FPS | 60.02 FPS (fps average) | ĐẠT |
-| FPS thấp nhất (1s window) | >= 50 FPS | 59.95 FPS (fps minimum) | ĐẠT |
-| Số trận chạy liên tục | 50 trận | 50/50 trận hoàn tất | ĐẠT |
-| Lỗi Console / Treo máy | 0 lỗi, 0 treo | 0 lỗi, 0 exceptions, 0 hangs | ĐẠT |
+- Tiêu chí GC/FPS WebGL >=60 giây: ĐẠT (ManagedAllocPerFrame: 0, fps average = 60.02, duration > 60 seconds).
 ================================================================================

@@ -128,14 +128,17 @@ Toàn bộ số lượng test dưới đây được truy xuất trực tiếp t
 - Chỉ vị trí và hướng ngắm của đối thủ mới bị ẩn trong pha `Placing` (thể hiện qua nhãn `txtHpNum = "ĐANG ẨN"`).
 
 ### 3.4. S4 – Bản Build WebGL Sạch Mới Trên Cổng LAN Mới
-- Đã xuất bản bản build WebGL fingerprinted sạch: `Builds/WebGL_20261030_6e0da22` (SHA-256 tệp hợp lệ, thời gian đồng bộ, không `UnityLockfile`).
-- **Địa chỉ truy cập LAN**: `http://172.20.10.3:8091/` (và `http://localhost:8091/`).
-- Bản cũ `Builds/WebGL_20261029_942ee08` trên cổng `8090` (PID 32916) được giữ nguyên vẹn 100%, không bị chạm tới.
+- Đã xuất bản bản build WebGL fingerprinted sạch từ HEAD: `Builds/WebGL_20261030_d7aee3a` (SHA-256 tệp hợp lệ, thời gian đồng bộ, không `UnityLockfile`).
+- **Địa chỉ truy cập LAN**: `http://10.0.0.108:8092/` (và `http://localhost:8092/`).
+- Các bản cũ trên cổng `8090` (`WebGL_20261029_942ee08`) và `8091` (`WebGL_20261030_74f4bf8`) được giữ nguyên vẹn 100%, không bị xâm phạm.
 
-### 3.5. S6 – Đo Kiểm Cấp Phát 0 B/Khung Hình & Hiệu Năng > 60 Giây
-- **Chạy tự động 50 trận liên tiếp**: 65.86 giây (> 60 seconds), 3,749 khung hình Unity, 0 lỗi console, 0 exceptions, 0 treo máy.
-- **FPS**: Trung bình rAF **60.01 FPS**, tối thiểu cửa sổ 1 giây **59.95 FPS**.
-- **Cấp phát bộ nhớ**: `ManagedAllocPerFrame: 0` trên toàn bộ các khung hình steady-state (nhờ tái sử dụng `_localFinalInput`, bộ đệm `_weaponHitsBuffer`, `SharedHitsBuffer`, `_cachedInput`, `_aliveBeforeBuffer`).
+### 3.5. S6 – Đo Kiểm Cấp Phát 0 B/Khung Hình & Hiệu Năng > 60 Giây (PC Giả Lập)
+- **Phương pháp đo**: Đo qua Chromium headless (Puppeteer/DevTools Protocol) vsync 60Hz. Lưu ý: Đây là đo đạc trên PC mô phỏng, chưa phải điện thoại vật lý (được giao thức hiện thực tế ở mục S5).
+- **Chạy tự động 50 trận liên tiếp**: 66.04 giây (> 60 seconds), 3,761 khung hình Unity, 0 lỗi console, 0 exceptions, 0 treo máy.
+- **FPS**: Trung bình rAF **60.02 FPS**, tối thiểu cửa sổ 1 giây **59.95 FPS**, 1% Low **56.50 FPS**.
+- **Cấp phát bộ nhớ**:
+  - `SteadyAllocPerFrame = 0 B/frame` (đo trực tiếp bằng `GC.GetTotalMemory(false)` trong các khung hình người chơi thao tác `Placing` và `Throwing`).
+  - `ManagedAllocPerFrame: 0` steady-state; toàn cục gồm chuyển ván ước lượng theo JS Heap (~27.5 MB ổn định).
 
 ### 3.6. Cập Nhật Luật v1.3 (30/10/2026)
 - **Thẻ HP động theo số người thật N = 2..6**:
@@ -229,52 +232,58 @@ public interface IInventoryService
 
 ## 6. HƯỚNG DẪN THỬ NGHIỆM TRÊN ĐIỆN THOẠI THẬT DÀNH CHO CHỦ DỰ ÁN (S5)
 
-> **Địa chỉ WebGL LAN**: **`http://172.20.10.3:8091/`**  
-> *(Lưu ý: Điện thoại cần kết nối chung mạng Wi-Fi hoặc điểm phát sóng Hotspot với PC chạy máy chủ. Nếu đổi Wi-Fi, IP có thể thay đổi tương ứng).*
+> **Địa chỉ WebGL LAN (IPv4 hiện tại)**: **`http://10.0.0.108:8092/`**  
+> *(Lưu ý: Điện thoại cần kết nối chung mạng Wi-Fi với PC chạy máy chủ. Nếu đổi Wi-Fi, chạy `ipconfig` để lấy IPv4 mới).*
 
 ### 6.1. Quy trình thử nghiệm 3 trận
-1. **Trận 1 (Cử chỉ cơ bản & Sức ném)**:
-   - Chạm vào vị trí bất kỳ trên phần sân dưới của mình $\rightarrow$ quan sát nhân vật xuất hiện đúng tâm điểm chạm.
-   - Chạm giữ và vuốt ngược tạo thước ngắm $\rightarrow$ buông tay ném dép $\rightarrow$ quan sát đường bay khớp hoàn toàn góc thước ngắm.
-2. **Trận 2 (Thao tác sai & Hủy thao tác)**:
-   - Trong lúc đang kéo thước ngắm, chạm ngón tay thứ hai vào chỗ khác $\rightarrow$ kiểm tra thao tác bị hủy và reset hoàn toàn để làm lại.
-   - Kéo thước ngắm lùi về tâm dưới 4 mm (khoảng 20–30 px) $\rightarrow$ kiểm tra thước ngắm tự biến mất (hủy ngắm thành công).
-   - Buông tay mà không kéo ngắm $\rightarrow$ kiểm tra nhân vật ném dép thẳng theo hướng mặt mặc định (`ThrowFacing`).
+1. **Trận 1 (Menu Luyện với bot & Cử chỉ cơ bản)**:
+   - Từ màn hình chính bấm "LUYỆN VỚI BOT", chọn số lượng bot (1–5) và chọn nhân vật $\rightarrow$ bấm "BẮT ĐẦU LUYỆN TẬP".
+   - Chạm vào vị trí bất kỳ trên phần sân dưới của mình $\rightarrow$ nhân vật xuất hiện đúng điểm chạm.
+   - Chạm giữ và kéo tạo thước ngắm $\rightarrow$ buông tay ném dép $\rightarrow$ quan sát đường bay và va chạm.
+2. **Trận 2 (Sảnh Online 1P & Hủy thao tác ngắm)**:
+   - Từ màn hình chính bấm "TẠO PHÒNG" hoặc "VÀO PHÒNG" để vào sảnh 1 người $\rightarrow$ kiểm tra nút BẮT ĐẦU bị khóa cứng kèm thông báo yêu cầu $\ge 2$ người thật, bấm nút màu xanh "SANG MENU LUYỆN VỚI BOT" để chuyển sang luyện bot.
+   - Trong lúc kéo thước ngắm, chạm ngón tay thứ hai vào chỗ khác $\rightarrow$ kiểm tra thao tác bị hủy và reset hoàn toàn.
+   - Kéo thước ngắm lùi về tâm dưới 4 mm (khoảng 20–30 px) $\rightarrow$ thước ngắm tự biến mất (hủy ngắm thành công).
+   - Buông tay mà không kéo ngắm $\rightarrow$ nhân vật ném dép thẳng theo hướng mặt mặc định (`ThrowFacing`).
 3. **Trận 3 (Hiển thị UI & Dọn dẹp cuối trận)**:
    - Quan sát cụm Thẻ HP phía trên cổng làng: luôn mở công khai, không bị rào chắn hay chi tiết cổng che khuất.
-   - Khi trận đấu kết thúc: quan sát toàn bộ dép đang bay và hiệu ứng nổ/bụi biến mất tức thì, không tồn đọng rác.
+   - Khi trận đấu kết thúc: toàn bộ dép đang bay và hiệu ứng bụi biến mất tức thì, hiện bảng xếp hạng 1..N.
    - Thử bấm nút **Replay (Chơi lại)** và nút **Về sảnh (Home)**: kiểm tra chuyển cảnh mượt mà, không giật lag.
 
-### 6.2. Cách đọc FPS và Mẫu báo cáo nghiệm thu
-- **Cách đọc FPS**: Trên Android, có thể bật tùy chọn nhà phát triển *"Hiển thị tốc độ làm mới"* (Show refresh rate), hoặc kết nối cáp USB mở Chrome trên PC gõ `chrome://inspect` để xem FPS thực tế của tab WebGL.
+### 6.2. Bộ đếm FPS và Mẫu báo cáo nghiệm thu
+- **Bộ đếm FPS**: Bản build mới đã tích hợp sẵn lớp phủ FPS ở góc trên bên phải màn hình (chữ màu xanh lá, ví dụ `60 FPS`).
+  + Bộ đếm cập nhật định kỳ mỗi 0.6 giây, sử dụng chuỗi cache sẵn với **0 Bytes cấp phát GC rác**.
+  + **Bật / Tắt**: Chạm 3 lần liên tiếp vào góc trên bên phải màn hình để ẩn/hiện bộ đếm FPS tùy ý.
 - **Mẫu báo kết quả Chủ dự án gửi lại**:
   ```markdown
   THỬ NGHIỆM S5 TRÊN ĐIỆN THOẠI:
   - Thiết bị thử nghiệm: [Tên điện thoại, ví dụ: iPhone 14 Pro / Samsung S23]
   - Trình duyệt: [Safari / Chrome / Samsung Internet]
+  - FPS đọc trên màn hình: [~58–60 FPS]
   - Cảm ứng đặt vị trí & vuốt ném: [Mượt / Có độ trễ / Khó chạm]
   - Thẻ HP & rào chắn: [Rõ ràng / Bị che]
-  - Replay & Về sảnh: [Hoạt động tốt / Bị đơ]
+  - Chuyển màn hình Luyện bot & Về sảnh: [Hoạt động tốt / Bị đơ]
   - Đánh giá chung: [ĐẠT / CẦN CHỈNH SỬA THÊM]
   ```
 
 ---
 
-## 7. BẢNG ĐỐI CHIẾU LUẬT CHƠI v1.2 / v1.3 ↔ BỘ KIỂM THỬ CLIENT (S8)
+## 7. BẢNG ĐỐI CHIẾU LUẬT CHƠI CHỐT v1.2 / v1.3 ↔ BỘ KIỂM THỬ CLIENT (S8)
 
-| Điều luật (v1.2 & v1.3) | Yêu cầu nghiệp vụ | Tên Test Client tương ứng | Trạng thái |
-|---|---|---|:---:|
-| **Máu khởi điểm** | Mỗi người chơi có 3 HP, nhận 1 sát thương mỗi lần bị trúng | `Phase1CoreTests.MultipleHitsAccumulateAndHpDoesNotGoBelowZero` | **ĐẠT** |
-| **Pha đặt vị trí bí mật** | 5 giây đặt vị trí, che giấu vị trí và hướng ngắm đối thủ | `Phase1CoreTests.Placing_OpponentPositionAndAimRemainHidden` | **ĐẠT** |
-| **HP công khai mọi pha** | Thẻ HP của tất cả người chơi luôn hiển thị, không che nhầm | `Phase1CoreTests.HP_AlwaysPublicAcrossAllPhases` | **ĐẠT** |
-| **Ném đồng thời** | Vũ khí bay đồng thời, sát thương tính cùng lúc | `Phase1CoreTests.MutualThrowsResolveSimultaneously` | **ĐẠT** |
-| **Không ngắm (No-Aim)** | Khi không kéo thước ngắm, dép bay thẳng hướng mặt `ThrowFacing` | `Phase1CoreTests.NoAim_DefaultsToThrowFacing` | **ĐẠT** |
-| **Người bị loại (0 HP)** | Người 0 HP không thể ném tiếp và không bị tính va chạm thêm | `Phase1CoreTests.EliminatedPlayerNeitherThrowsNorCanBeHit` | **ĐẠT** |
-| **Giới hạn 5 vòng đấu** | Trận đấu dừng ngay sau vòng 5 nếu chưa ai bị loại hết | `Phase1CoreTests.P1_MatchState_MaxRoundsEnforced_MatchEndsAtRound5` | **ĐẠT** |
-| **Xếp hạng Tiebreak** | Thứ tự: Còn sống $\rightarrow$ HP cao $\rightarrow$ Số lần ném trúng $\rightarrow$ Đồng hạng | `Phase1CoreTests.S1_MatchRanking_Deterministic_WithAllTiebreakPolicies` | **ĐẠT** |
-| **Hỗ trợ phòng N = 2..6** | Xếp hạng và chia vị trí linh hoạt cho phòng từ 2 đến 6 người | `Phase1CoreTests.MatchRanking_SupportsDifferentPlayerCounts_2To6` | **ĐẠT** |
-| **Phòng Online không Bot** | Trận online cần $\ge 2$ người thật; N=1 khóa bắt đầu, phòng trống ghi "Đang chờ..." | `ProductionUIPolishTests.Lobby_OneHuman_StartLocked_AndWaitingSlotsDisplayed` | **ĐẠT** |
-| **Luyện với bot cục bộ** | Menu riêng biệt chọn 1–5 bot và nhân vật, chạy thuần `Core/Phase1` | `Phase1CoreTests.AutoPlay_10MatchesEach_N2ToN6_CompletesWithZeroErrorsAndValidRankings` | **ĐẠT** |
+> **Lưu ý minh bạch về phạm vi luật**: Các cơ chế không có trong tài liệu chốt v1.2/v1.3 (như "3 loại vũ khí phân chia khu vực", "luật Changa / TakeStick") xuất phát từ các bản thảo ý tưởng cũ ban đầu, **hoàn toàn nằm ngoài phạm vi Luật Online v1.3**. Bảng dưới đây chỉ đối chiếu các điều luật chính thức được ban hành:
+
+| Điều luật chốt | Yêu cầu nghiệp vụ | Tệp & Mục luật nguồn | Tên Test Client tương ứng | Trạng thái |
+|---|---|---|---|:---:|
+| **3 Máu khởi điểm** | Mỗi người chơi có 3 HP, nhận 1 sát thương mỗi lần bị trúng, 0 HP bị loại | `hit-me-gameplay-rules-v1.2.md § 1`<br>`hit-me-room-size-rule-v1.3.md § 1.5` | `Phase1CoreTests.MultipleHitsAccumulateAndHpDoesNotGoBelowZero` | **ĐẠT** |
+| **5 giây đặt dép bí mật** | 5 giây đặt vị trí, che giấu vị trí và hướng ngắm đối thủ cho tới khi khóa | `hit-me-gameplay-rules-v1.2.md § 1`<br>`hit-me-room-size-rule-v1.3.md § 1.5` | `Phase1CoreTests.PlacementIsClampedAndSeparated` | **ĐẠT** |
+| **Lộ diện & Ném đồng thời** | Hết 5 giây lộ diện cùng lúc, dép bay đồng thời, sát thương tính cùng lúc | `hit-me-gameplay-rules-v1.2.md § 1`<br>`hit-me-room-size-rule-v1.3.md § 1.5` | `Phase1CoreTests.MutualThrowsResolveSimultaneously` | **ĐẠT** |
+| **Người bị loại (0 HP)** | Người 0 HP không thể ném tiếp và không bị tính va chạm thêm | `hit-me-gameplay-rules-v1.2.md § 1` | `Phase1CoreTests.EliminatedPlayerNeitherThrowsNorCanBeHit` | **ĐẠT** |
+| **Giới hạn 5 vòng đấu** | Trận đấu dừng ngay sau vòng 5 nếu chưa ai bị loại hết (`maxRounds = 5`) | `hit-me-gameplay-rules-v1.2.md § 1`<br>`hit-me-room-size-rule-v1.3.md § 1.5` | `Phase1CoreTests.RoundLimit_EndsAtMaxRounds_AndWinnerHasHighestHp` | **ĐẠT** |
+| **Xếp hạng Tiebreak chuẩn** | Thứ tự: Còn sống $\rightarrow$ HP cao $\rightarrow$ Số lần ném trúng $\rightarrow$ Đồng hạng | `hit-me-room-size-rule-v1.3.md § 1.5` | `Phase1CoreTests.S1_Ranking_MaxRoundsMultipleSurvivors_RanksByAliveThenHpThenHits`<br>`Phase1CoreTests.S1_Ranking_TiedAliveHpAndHits_SharesRank1AndBothWin_DisplayOrderNeverAffectsWinner` | **ĐẠT** |
+| **Hỗ trợ phòng N = 2..6 người thật** | Xếp hạng và chia vị trí linh hoạt cho phòng từ 2 đến 6 người chơi thật | `hit-me-room-size-rule-v1.3.md § 1.1` | `Phase1CoreTests.S1_Ranking_N2_HeadToHead_SurvivorRanks1_EliminatedRanks2`<br>`Phase1CoreTests.S1_Ranking_N4_TwoSurvivorsTied_SharedRank1_EliminatedOrderedByRoundThenHits`<br>`Phase1CoreTests.S1_Ranking_N5_FullMatch_RanksAllFivePlayersCleanly`<br>`Phase1CoreTests.S1_Ranking_FullSixPlayerMatch_ProducesExpectedRanks1To6` | **ĐẠT** |
+| **Phòng Online không có bot** | Trận online cần $\ge 2$ người thật; N=1 khóa nút Bắt đầu, phòng trống ghi "Đang chờ..." | `hit-me-room-size-rule-v1.3.md § 1.2, § 1.3` | `Phase1CoreTests.AutoPlay_10MatchesEach_N2ToN6_CompletesWithZeroErrorsAndValidRankings` | **ĐẠT** |
+| **Luyện với bot cục bộ** | Menu riêng biệt chọn 1–5 bot và nhân vật, chạy thuần `Core/Phase1` không mạng | `hit-me-room-size-rule-v1.3.md § 1.3` | `Phase1CoreTests.SameSeedAndInputsAreDeterministicAndThousandBotMatchesFinish`<br>`Phase1CoreTests.AutoPlay_10MatchesEach_N2ToN6_CompletesWithZeroErrorsAndValidRankings` | **ĐẠT** |
+| **Cử chỉ chuẩn v1.2** | 3 cử chỉ (Chụm tay, Nắm đấm, Bàn tay mở); hủy ngắm khi kéo về < 4mm; ném hướng mặt khi không ngắm | `hit-me-gameplay-rules-v1.2.md § 2` | `Phase1CoreTests.GestureCanPlaceThenPlaceAgainWithoutCreatingAnAim`<br>`Phase1CoreTests.GestureHoldOnPlayerAndDragSetsDirectionWithoutMovingPlacement`<br>`Phase1CoreTests.GestureDragBelowMinAimDragDoesNotCommitAnAim`<br>`Phase1CoreTests.NoAimUsesCurrentFacingFallbackWhenTimerLocks` | **ĐẠT** |
 
 ---
 

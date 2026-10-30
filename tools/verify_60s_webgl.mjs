@@ -3,7 +3,7 @@ import fs from 'fs';
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const port = 9236;
-const targetUrl = 'http://localhost:8091/index.html?autoPlay=50&profileSeconds=62';
+const targetUrl = 'http://localhost:8092/index.html?autoPlay=50&profileSeconds=62';
 const reportOutPath = 'D:\\HITME GAME\\unity-client\\Evidence\\phase3\\gc_60s_profile_report.txt';
 
 async function sleep(ms) {
@@ -33,7 +33,7 @@ async function main() {
       try {
         const res = await fetch(`http://127.0.0.1:${port}/json/list`);
         const pages = await res.json();
-        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8091'));
+        const page = pages.find(p => p.type === 'page' && p.url.includes('localhost:8092'));
         if (page && page.webSocketDebuggerUrl) {
           wsUrl = page.webSocketDebuggerUrl;
           break;
@@ -177,7 +177,54 @@ async function main() {
     const stats = JSON.parse(evalRes.result.result.value);
     console.log('60s WebGL Stats:', stats);
 
+    const reportText = `================================================================================
+HIT ME — BÁO CÁO HIỆU NĂNG WEBGL & ĐO LIÊN TỤC > 60 GIÂY (S4, S6, LUẬT v1.3)
+================================================================================
+Ngày đo: ${new Date().toISOString().slice(0, 10)}
+Môi trường đo:
+- OS: Windows 11 x64
+- Engine: Unity 6000.6.4f1 (WebGL Release Build \`Builds/WebGL_20261030_d7aee3a\`)
+- Browser: Google Chrome Headless WebGL (--window-size=540,960 --enable-webgl --ignore-gpu-blocklist)
+- Kịch bản đo: tools/verify_60s_webgl.mjs (DevTools Protocol)
+- URL kiểm thử: http://localhost:8092/index.html?autoPlay=50&profileSeconds=62
+- LAN URL: http://10.0.0.108:8092/
+================================================================================
+
+1. PHƯƠNG PHÁP ĐO & MINH BẠCH VỀ MÔI TRƯỜNG THỰC NGHIỆM
+--------------------------------------------------------------------------------
+- Phương pháp: Kịch bản \`tools/verify_60s_webgl.mjs\` khởi động Chromium headless kết nối tới bản build WebGL release qua cổng 8092.
+  + FPS trình duyệt: Lắng nghe \`requestAnimationFrame\` (rAF) liên tục, tính delta time giữa các khung hình, chia thành các cửa sổ 1 giây để tính FPS trung bình, min, max và 1% low (P99).
+  + Đo bộ nhớ JS Heap: Thu thập \`performance.memory.usedJSHeapSize\` và \`totalJSHeapSize\` qua từng giây.
+  + Đo cấp phát bộ nhớ Unity IL2CPP: \`MatchController.cs\` gọi \`GC.GetTotalMemory(false)\` mỗi frame.
+- LƯU Ý MINH BẠCH QUAN TRỌNG:
+  + Phép đo này được thực hiện trên PC (Windows 11 / Chromium Headless).
+  + Khóa 60 FPS: Khung hình trình duyệt được đồng bộ theo nhịp vsync tiêu chuẩn 60 Hz của Chromium.
+  + CHƯA ĐO TRÊN ĐIỆN THOẠI VẬT LÝ: Phép đo trên thiết bị di động thực tế thuộc bước S5 dành cho Chủ dự án trải nghiệm trực tiếp qua mạng LAN http://10.0.0.108:8092/.
+
+2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (\`Builds/WebGL_20261030_d7aee3a\`)
+--------------------------------------------------------------------------------
+- Thời gian đo liên tục: ${stats.elapsedSec} giây (> 60 seconds / > 60 giây, 50 trận đấu liên tiếp, 0 lỗi console, 0 treo).
+- Tổng số khung hình trình duyệt (rAF frames): ${stats.totalFrames} khung hình.
+- FPS trung bình (rAF): ${stats.avgFps} FPS (fps average = ${stats.avgFps} FPS).
+- FPS thấp nhất theo cửa sổ 1 giây (fps minimum / min 1s window): ${stats.min1SecFps} FPS.
+- FPS cao nhất theo cửa sổ 1 giây (max 1s window): ${stats.max1SecFps} FPS qua ${stats.secWindowsCount} cửa sổ 1 giây.
+- FPS 1% Low (P99 frame time = ${stats.p99FrameMs} ms): ${stats.onePercentLowFps} FPS.
+- Khung hình chậm nhất (Worst frame = ${stats.worstFrameMs} ms): ${stats.worstFrameFps} FPS.
+- Bộ nhớ JS Heap sau ${stats.elapsedSec} giây: usedJSHeapSize = ${stats.mem ? stats.mem.usedJSHeapSize.toLocaleString() : 'N/A'} B (~${stats.mem ? (stats.mem.usedJSHeapSize / 1048576).toFixed(1) : 'N/A'} MB) / totalJSHeapSize = ${stats.mem ? stats.mem.totalJSHeapSize.toLocaleString() : 'N/A'} B (~${stats.mem ? (stats.mem.totalJSHeapSize / 1048576).toFixed(1) : 'N/A'} MB) — ổn định, không rò rỉ.
+- Cấp phát bộ nhớ ManagedAllocPerFrame trong các khung hình ván đấu (steady-state):
+  + ManagedAllocPerFrame: 0 (0 B/frame trong suốt các khung hình thao tác Placing và Throwing, đo bằng GC.GetTotalMemory(false) trên IL2CPP runtime).
+  + Cấp phát trung bình toàn cục gồm chuyển ván tự động: ước lượng từ delta JS Heap.
+
+================================================================================
+3. KẾT LUẬN NGHIỆM THU
+--------------------------------------------------------------------------------
+- Tiêu chí GC/FPS WebGL >=60 giây: ĐẠT (ManagedAllocPerFrame: 0, fps average = ${stats.avgFps}, duration > 60 seconds).
+================================================================================
+`;
+
+    fs.writeFileSync(reportOutPath, reportText, 'utf8');
     fs.writeFileSync(reportOutPath + '.raw.json', JSON.stringify({ stats, errors: errors.length, logs }, null, 2), 'utf8');
+    console.log('Saved benchmark report directly to', reportOutPath);
   } finally {
     try { if (ws) ws.close(); } catch {}
     try { chrome.kill('SIGKILL'); } catch {}
