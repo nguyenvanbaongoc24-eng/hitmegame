@@ -100,17 +100,20 @@ public sealed class RoomDirectory
     private readonly Func<int, string> codeForAttempt;
     private int attempts;
     private readonly int startCountdownSeconds;
+    private readonly int maxRooms;
 
-    public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3)
+    public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3, int maxRooms = 200)
     {
         this.codeForAttempt = codeForAttempt ?? (n => $"HM{Random.Shared.Next(0, 10000):0000}");
         this.startCountdownSeconds = startCountdownSeconds;
+        this.maxRooms = maxRooms;
     }
 
     public RoomAuthority Create(string hostId, string hostName, GameConfig? config, out string error)
     {
         lock (gate)
         {
+            if (rooms.Count >= maxRooms) { error = "room_limit"; return null!; }
             for (var i = 0; i < 100; i++)
             {
                 var code = codeForAttempt(++attempts);
