@@ -475,6 +475,7 @@ namespace HitMe.Game
                 };
                 State.SetInput(finalInput);
                 State.LockRound();
+                OnPhaseChanged?.Invoke(State.Phase);
 
                 if (hud != null) hud.ResetButtons();
                 _readyRequested = false;
@@ -489,7 +490,7 @@ namespace HitMe.Game
 
                 // Reveal Phase
                 State.BeginReveal();
-                OnPhaseChanged?.Invoke(Phase.Reveal);
+                OnPhaseChanged?.Invoke(State.Phase);
                 if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlayReveal();
@@ -499,35 +500,28 @@ namespace HitMe.Game
 
                 // Throwing Phase
                 State.BeginThrowing();
-                OnPhaseChanged?.Invoke(Phase.Throwing);
+                OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
                 SpawnWeapons();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitThrowCapture : _waitThrowNormal);
 
-                // Resolve Phase
+                // Resolve / RoundEnd / MatchEnd Phase (MatchState.Phase is the single source of truth)
                 State.ResolveRound();
                 ClearWeapons();
-                OnPhaseChanged?.Invoke(Phase.Resolve);
+                if (State.Phase == Phase.MatchEnd)
+                {
+                    break;
+                }
+                OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 ? _waitResolveCapture : _waitResolveNormal);
             }
 
             // Match End Phase
             Present(false);
-            OnPhaseChanged?.Invoke(Phase.MatchEnd);
+            OnPhaseChanged?.Invoke(State.Phase);
 
-            _rankedBuffer.Clear();
-            for (int i = 0; i < State.Players.Count; i++)
-            {
-                _rankedBuffer.Add(State.Players[i]);
-            }
-            _rankedBuffer.Sort(ComparePlayersForRanking);
-
-            _winnerIdsBuffer.Clear();
-            for (int i = 0; i < State.WinnerIds.Count; i++)
-            {
-                _winnerIdsBuffer.Add(State.WinnerIds[i]);
-            }
+            BuildRankingsAndWinners(State, _rankedBuffer, _winnerIdsBuffer);
 
             bool isWinner = _winnerIdsBuffer.Contains("player");
             if (AudioManager.Instance != null)
@@ -563,10 +557,29 @@ namespace HitMe.Game
             }
         }
 
-        private static int ComparePlayersForRanking(PlayerState a, PlayerState b)
+        public static void BuildRankingsAndWinners(MatchState state, List<PlayerState> outRanked, List<string> outWinnerIds)
+        {
+            outRanked.Clear();
+            outWinnerIds.Clear();
+            if (state == null) return;
+
+            for (int i = 0; i < state.Players.Count; i++)
+            {
+                outRanked.Add(state.Players[i]);
+            }
+            outRanked.Sort(ComparePlayersForRanking);
+
+            for (int i = 0; i < state.WinnerIds.Count; i++)
+            {
+                outWinnerIds.Add(state.WinnerIds[i]);
+            }
+        }
+
+        public static int ComparePlayersForRanking(PlayerState a, PlayerState b)
         {
             if (a.IsAlive != b.IsAlive) return b.IsAlive.CompareTo(a.IsAlive);
             if (a.Hp != b.Hp) return b.Hp.CompareTo(a.Hp);
+            if (a.HitsLanded != b.HitsLanded) return b.HitsLanded.CompareTo(a.HitsLanded);
             return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
         }
 

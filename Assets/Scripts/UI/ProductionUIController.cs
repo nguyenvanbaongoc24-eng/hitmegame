@@ -51,9 +51,9 @@ namespace HitMe.UI
         };
 
         private const string HpHiddenText = "HP: ???";
-        private const string StatusHiddenText = "ẨN";
-        private const string StatusAliveText = "CÒN SỐNG";
-        private const string StatusEliminatedText = "ĐÃ LOẠI";
+        private const string StatusHiddenText = "ĐANG ẨN";
+        private const string StatusAliveText = "● CÒN SỐNG";
+        private const string StatusEliminatedText = "✖ ĐÃ LOẠI";
 
         private static string[] BuildTenthsTimerCache(int maxTenths)
         {
@@ -120,6 +120,11 @@ namespace HitMe.UI
         public TextMeshProUGUI txtLobbyCountdown;
 
         [Header("Gameplay HUD Controls")]
+        public GameObject topPlacingBar;
+        public GameObject roundPill;
+        public GameObject timerPill;
+        public GameObject phaseBannerObj;
+        public GameObject weaponPillObj;
         public TextMeshProUGUI txtRound;
         public TextMeshProUGUI txtTimer;
         public TextMeshProUGUI txtPhaseBanner;
@@ -149,6 +154,9 @@ namespace HitMe.UI
         private int _lastDisplayedTimerTenths = -1;
         private bool _lastTimerLowWarning;
         private Phase _lastDisplayedPhase = (Phase)(-1);
+        private Phase _lastSyncedStatePhase = (Phase)(-1);
+        private readonly List<PlayerState> _uiRankedBuffer = new List<PlayerState>(6);
+        private readonly List<string> _uiWinnersBuffer = new List<string>(6);
 
         [Serializable]
         public class LobbySlotUI
@@ -164,6 +172,7 @@ namespace HitMe.UI
         public class PlayerHpCardUI
         {
             public GameObject root;
+            public Image imgBg;
             public TextMeshProUGUI txtName;
             public TextMeshProUGUI txtHearts;
             public TextMeshProUGUI txtHpNum;
@@ -192,7 +201,28 @@ namespace HitMe.UI
                 matchController = FindAnyObjectByType<MatchController>();
             }
 
+            ResolveHudElementContainers();
             BindEvents();
+        }
+
+        public void ResolveHudElementContainers()
+        {
+            if (roundPill == null && txtRound != null && txtRound.transform.parent != null)
+            {
+                roundPill = txtRound.transform.parent.gameObject;
+            }
+            if (timerPill == null && txtTimer != null && txtTimer.transform.parent != null)
+            {
+                timerPill = txtTimer.transform.parent.gameObject;
+            }
+            if (phaseBannerObj == null && txtPhaseBanner != null && txtPhaseBanner.transform.parent != null)
+            {
+                phaseBannerObj = txtPhaseBanner.transform.parent.gameObject;
+            }
+            if (weaponPillObj == null && txtWeaponIndicator != null && txtWeaponIndicator.transform.parent != null)
+            {
+                weaponPillObj = txtWeaponIndicator.transform.parent.gameObject;
+            }
         }
 
         private void Start()
@@ -208,9 +238,7 @@ namespace HitMe.UI
 
             EnsureAndRefreshBuildFingerprint();
 
-            bool isUrlAutoPlay = Application.absoluteURL != null &&
-                                 Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
-            if (isUrlAutoPlay)
+            if (IsUrlAutoPlay())
             {
                 ShowScreen(ProductionScreen.Gameplay);
             }
@@ -218,6 +246,24 @@ namespace HitMe.UI
             {
                 ShowScreen(ProductionScreen.Home);
             }
+        }
+
+        private void Update()
+        {
+            if (matchController == null || matchController.State == null) return;
+
+            Phase statePhase = matchController.State.Phase;
+            if (statePhase != _lastSyncedStatePhase ||
+                (statePhase == Phase.MatchEnd && CurrentScreen == ProductionScreen.Gameplay && !IsUrlAutoPlay()))
+            {
+                ApplyPhaseState(statePhase);
+            }
+        }
+
+        private static bool IsUrlAutoPlay()
+        {
+            return Application.absoluteURL != null &&
+                   Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public void EnsureAndRefreshBuildFingerprint()
@@ -593,7 +639,10 @@ namespace HitMe.UI
         public void StartGameplayMatch()
         {
             if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
+            _lastDisplayedPhase = (Phase)(-1);
+            _lastSyncedStatePhase = (Phase)(-1);
             ShowScreen(ProductionScreen.Gameplay);
+            ApplyPhaseState(Phase.Placing);
 
             if (btnInGameReady != null)
             {
@@ -628,18 +677,48 @@ namespace HitMe.UI
                 btnInGameReady.interactable = true;
                 if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = "SẴN SÀNG";
             }
+
+            Phase authoritativePhase = (matchController != null && matchController.State != null)
+                ? matchController.State.Phase
+                : Phase.Placing;
+            ApplyPhaseState(authoritativePhase);
             UpdateHpCards();
         }
 
         private void HandlePhaseChanged(Phase phase)
         {
-            if (txtPhaseBanner != null && phase != _lastDisplayedPhase)
+            Phase authoritativePhase = (matchController != null && matchController.State != null)
+                ? matchController.State.Phase
+                : phase;
+            ApplyPhaseState(authoritativePhase);
+            UpdateHpCards();
+        }
+
+        public void ApplyPhaseState(Phase phase)
+        {
+            ResolveHudElementContainers();
+            _lastSyncedStatePhase = phase;
+
+            bool isPlacing = phase == Phase.Placing;
+            bool isMatchEnd = phase == Phase.MatchEnd;
+
+            // P1 & P3: Round, Timer, and Sẵn sàng are in the same top safe-area row and ONLY visible during Placing.
+            SetTopPlacingRowVisible(isPlacing && !isMatchEnd);
+
+            // P1: When MatchEnd, always hide instruction HUD / "KẾT QUẢ VÒNG" banner and weapon pill.
+            SetPhaseBannerVisible(!isMatchEnd);
+            SetWeaponPillVisible(!isMatchEnd);
+
+            if (!isMatchEnd && txtPhaseBanner != null && phase != _lastDisplayedPhase)
             {
                 _lastDisplayedPhase = phase;
                 switch (phase)
                 {
                     case Phase.Placing:
                         txtPhaseBanner.text = "CHỌN HƯỚNG NÉM • Chạm để đặt, kéo để ngắm";
+                        break;
+                    case Phase.Locked:
+                        txtPhaseBanner.text = "ĐÃ KHÓA HƯỚNG NÉM";
                         break;
                     case Phase.Reveal:
                         txtPhaseBanner.text = "LỘ DIỆN ĐỐI THỦ!";
@@ -648,15 +727,77 @@ namespace HitMe.UI
                         txtPhaseBanner.text = "NÉM DÉP!";
                         break;
                     case Phase.Resolve:
+                    case Phase.RoundEnd:
                         txtPhaseBanner.text = "KẾT QUẢ VÒNG";
-                        break;
-                    case Phase.MatchEnd:
-                        txtPhaseBanner.text = "KẾT QUẢ TRẬN ĐẤU";
                         break;
                 }
             }
 
-            UpdateHpCards();
+            if (isMatchEnd && !IsUrlAutoPlay())
+            {
+                if (matchController != null && matchController.State != null)
+                {
+                    PopulateResultFromMatchState(matchController.State);
+                }
+                else
+                {
+                    ShowScreen(ProductionScreen.Result);
+                }
+            }
+        }
+
+        private void SetTopPlacingRowVisible(bool visible)
+        {
+            if (topPlacingBar != null && topPlacingBar.activeSelf != visible)
+            {
+                topPlacingBar.SetActive(visible);
+            }
+            if (roundPill != null && roundPill.activeSelf != visible)
+            {
+                roundPill.SetActive(visible);
+            }
+            else if (txtRound != null && txtRound.gameObject.activeSelf != visible)
+            {
+                txtRound.gameObject.SetActive(visible);
+            }
+
+            if (timerPill != null && timerPill.activeSelf != visible)
+            {
+                timerPill.SetActive(visible);
+            }
+            else if (txtTimer != null && txtTimer.gameObject.activeSelf != visible)
+            {
+                txtTimer.gameObject.SetActive(visible);
+            }
+
+            if (btnInGameReady != null && btnInGameReady.gameObject.activeSelf != visible)
+            {
+                btnInGameReady.gameObject.SetActive(visible);
+            }
+        }
+
+        private void SetPhaseBannerVisible(bool visible)
+        {
+            if (phaseBannerObj != null && phaseBannerObj.activeSelf != visible)
+            {
+                phaseBannerObj.SetActive(visible);
+            }
+            else if (txtPhaseBanner != null && txtPhaseBanner.gameObject.activeSelf != visible)
+            {
+                txtPhaseBanner.gameObject.SetActive(visible);
+            }
+        }
+
+        private void SetWeaponPillVisible(bool visible)
+        {
+            if (weaponPillObj != null && weaponPillObj.activeSelf != visible)
+            {
+                weaponPillObj.SetActive(visible);
+            }
+            else if (txtWeaponIndicator != null && txtWeaponIndicator.gameObject.activeSelf != visible)
+            {
+                txtWeaponIndicator.gameObject.SetActive(visible);
+            }
         }
 
         private void HandleTimerTick(float secondsRemaining)
@@ -707,13 +848,17 @@ namespace HitMe.UI
                     {
                         card.lastDisplayedHpCode = -1;
                         card.txtHearts.text = HpHiddenText;
-                        card.txtHearts.color = new Color(0.6f, 0.65f, 0.7f);
+                        card.txtHearts.color = new Color(0.65f, 0.72f, 0.80f);
                     }
                     if (card.txtHpNum != null && card.lastDisplayedStatusCode != -1)
                     {
                         card.lastDisplayedStatusCode = -1;
                         card.txtHpNum.text = StatusHiddenText;
-                        card.txtHpNum.color = new Color(0.6f, 0.65f, 0.7f);
+                        card.txtHpNum.color = new Color(0.65f, 0.72f, 0.80f);
+                    }
+                    if (card.imgBg != null)
+                    {
+                        card.imgBg.color = new Color(0.92f, 0.95f, 1f, 1f);
                     }
                 }
                 else
@@ -724,8 +869,8 @@ namespace HitMe.UI
                         card.lastDisplayedHpCode = clampedHp;
                         card.txtHearts.text = CachedHpCardStrings[clampedHp];
                         card.txtHearts.color = player.IsAlive
-                            ? (clampedHp == 3 ? new Color(0.2f, 1f, 0.4f) : (clampedHp == 2 ? new Color(1f, 0.85f, 0.2f) : new Color(1f, 0.3f, 0.3f)))
-                            : Color.gray;
+                            ? (clampedHp == 3 ? new Color(0.25f, 1f, 0.45f) : (clampedHp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
+                            : new Color(1f, 0.45f, 0.45f);
                     }
 
                     int statusCode = player.IsAlive ? 1 : 0;
@@ -733,71 +878,129 @@ namespace HitMe.UI
                     {
                         card.lastDisplayedStatusCode = statusCode;
                         card.txtHpNum.text = player.IsAlive ? StatusAliveText : StatusEliminatedText;
-                        card.txtHpNum.color = player.IsAlive ? new Color(0.8f, 0.9f, 1f) : Color.gray;
+                        card.txtHpNum.color = player.IsAlive ? new Color(0.45f, 0.95f, 0.65f) : new Color(1f, 0.42f, 0.42f);
+                    }
+
+                    if (card.imgBg != null)
+                    {
+                        card.imgBg.color = player.IsAlive
+                            ? Color.white
+                            : new Color(0.55f, 0.42f, 0.45f, 0.92f);
                     }
                 }
             }
         }
 
+        public void PopulateResultFromMatchState(MatchState state)
+        {
+            if (state == null) return;
+            MatchController.BuildRankingsAndWinners(state, _uiRankedBuffer, _uiWinnersBuffer);
+            PopulateResultBoard(_uiRankedBuffer, _uiWinnersBuffer);
+        }
+
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winnerIds)
         {
-            bool isUrlAutoPlay = Application.absoluteURL != null &&
-                                 Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
-            if (isUrlAutoPlay)
+            if (IsUrlAutoPlay())
             {
                 return;
             }
 
+            PopulateResultBoard(ranked, winnerIds);
+        }
+
+        public void PopulateResultBoard(List<PlayerState> ranked, List<string> winnerIds)
+        {
+            SetTopPlacingRowVisible(false);
+            SetPhaseBannerVisible(false);
+            SetWeaponPillVisible(false);
             ShowScreen(ProductionScreen.Result);
 
-            bool isLocalWinner = winnerIds.Contains("player");
+            bool isTie = winnerIds != null && winnerIds.Count > 1;
+            bool isLocalWinner = winnerIds != null && winnerIds.Contains("player");
+
             if (txtResultTitle != null)
             {
-                txtResultTitle.text = isLocalWinner ? "CHIẾN THẮNG! 🏆" : (winnerIds.Count > 0 ? "THẤT BẠI! 💀" : "HÒA NHAU! ⚖️");
-                txtResultTitle.color = isLocalWinner ? new Color(1f, 0.9f, 0.2f) : new Color(1f, 0.4f, 0.4f);
+                if (isTie)
+                {
+                    txtResultTitle.text = isLocalWinner ? "ĐỒNG CHIẾN THẮNG! 🏆" : "HÒA TOP 1! ⚖️";
+                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(0.45f, 0.88f, 1f);
+                }
+                else if (winnerIds != null && winnerIds.Count == 1)
+                {
+                    txtResultTitle.text = isLocalWinner ? "CHIẾN THẮNG! 🏆" : "KẾT THÚC TRẬN ĐẤU";
+                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(1f, 0.55f, 0.40f);
+                }
+                else
+                {
+                    txtResultTitle.text = "HÒA NHAU! ⚖️";
+                    txtResultTitle.color = new Color(0.45f, 0.88f, 1f);
+                }
             }
 
-            if (txtResultSubtitle != null)
+            if (txtResultSubtitle != null && ranked != null && winnerIds != null)
             {
-                var sb = new StringBuilder("Người thắng: ");
+                var sb = new StringBuilder(isTie ? "Đồng thắng: " : "Người thắng: ");
                 bool first = true;
                 for (int i = 0; i < ranked.Count; i++)
                 {
                     if (!winnerIds.Contains(ranked[i].Id)) continue;
                     if (!first) sb.Append(", ");
                     sb.Append(ranked[i].Name);
+                    sb.Append(" (").Append(Mathf.Max(0, ranked[i].Hp)).Append("/3 HP • ").Append(ranked[i].HitsLanded).Append(" Hit)");
                     first = false;
                 }
+                if (first) sb.Append("Không có");
                 txtResultSubtitle.text = sb.ToString();
             }
 
-            for (int i = 0; i < resultRows.Count && i < ranked.Count; i++)
+            if (ranked == null) return;
+
+            for (int i = 0; i < resultRows.Count; i++)
             {
                 var row = resultRows[i];
+                if (i >= ranked.Count)
+                {
+                    if (row.root != null) row.root.SetActive(false);
+                    continue;
+                }
+
                 var p = ranked[i];
+                bool isMe = p.Id == "player";
+                bool won = winnerIds != null && winnerIds.Contains(p.Id);
+
                 if (row.root != null) row.root.SetActive(true);
                 if (row.txtRank != null)
                 {
                     row.txtRank.text = i < CachedRankStrings.Length ? CachedRankStrings[i] : ("#" + (i + 1));
                 }
-                if (row.txtName != null) row.txtName.text = p.Name;
+                if (row.txtName != null)
+                {
+                    row.txtName.text = isMe ? (p.Name + " (Bạn)") : p.Name;
+                }
                 if (row.txtHp != null)
                 {
-                    int hpIdx = Mathf.Clamp(p.Hp, 0, CachedResultHpStrings.Length - 1);
-                    row.txtHp.text = CachedResultHpStrings[hpIdx];
+                    int hpClamped = Mathf.Clamp(p.Hp, 0, 3);
+                    row.txtHp.text = "HP: " + hpClamped + "/3 • HIT: " + p.HitsLanded;
+                    row.txtHp.color = p.IsAlive ? new Color(0.85f, 0.95f, 1f) : new Color(0.75f, 0.55f, 0.55f);
                 }
 
-                bool won = winnerIds.Contains(p.Id);
                 if (row.txtStatus != null)
                 {
-                    row.txtStatus.text = won ? "★ THẮNG" : (p.IsAlive ? "Còn sống" : "Đã loại");
-                    row.txtStatus.color = won ? new Color(1f, 0.9f, 0.2f) : (p.IsAlive ? Color.white : Color.gray);
+                    if (won)
+                    {
+                        row.txtStatus.text = isTie ? "★ ĐỒNG HẠNG 1" : "★ THẮNG";
+                        row.txtStatus.color = new Color(1f, 0.92f, 0.25f);
+                    }
+                    else
+                    {
+                        row.txtStatus.text = p.IsAlive ? "Còn sống" : "✖ Đã loại";
+                        row.txtStatus.color = p.IsAlive ? Color.white : new Color(1f, 0.45f, 0.45f);
+                    }
                 }
 
                 if (row.imgBg != null)
                 {
-                    bool isMe = p.Id == "player";
-                    row.imgBg.color = isMe ? new Color(0.2f, 0.7f, 1f, 0.35f) : new Color(0.1f, 0.15f, 0.2f, 0.6f);
+                    row.imgBg.color = isMe ? new Color(1f, 1f, 1f, 1f) : new Color(0.92f, 0.95f, 1f, 0.92f);
                 }
             }
         }
