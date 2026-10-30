@@ -17,12 +17,15 @@ $rows = [System.Collections.Generic.List[object]]::new()
 function Add-Result([string]$Check, [bool]$Pass, [string]$Detail) {
     $rows.Add([pscustomobject]@{ Check = $Check; Status = if ($Pass) { 'ĐẠT' } else { 'KHÔNG ĐẠT' }; Detail = $Detail })
 }
+function Add-Review([string]$Check, [string]$Detail) {
+    $rows.Add([pscustomobject]@{ Check = $Check; Status = 'CẦN NGƯỜI XEM'; Detail = $Detail })
+}
 function Get-Relative([string]$Path) { return $Path.Substring($RepoRoot.Length).TrimStart('\','/') -replace '\\','/' }
 function Has-File([string]$Relative) { Test-Path -LiteralPath (Join-Path $RepoRoot $Relative) }
 
 try {
     $buildSettings = Join-Path $RepoRoot 'ProjectSettings/EditorBuildSettings.asset'
-    $scenes = if (Test-Path $buildSettings) { Select-String -Path $buildSettings -Pattern 'path:.*\.unity' | ForEach-Object { $_.Line.Trim() } } else { @() }
+    $scenes = @(if (Test-Path $buildSettings) { Select-String -Path $buildSettings -Pattern 'path:.*\.unity' | ForEach-Object { $_.Line.Trim() } })
     $onlyGraybox = $scenes.Count -eq 1 -and $scenes[0] -match 'Graybox\.unity'
     Add-Result 'Build Settings chỉ Graybox' $onlyGraybox ($scenes -join '; ')
 
@@ -39,10 +42,12 @@ try {
     $scriptDirs = @('Assets/Scripts/Game','Assets/Scripts/UI') | ForEach-Object { Join-Path $RepoRoot $_ } | Where-Object { Test-Path $_ }
     $forbidden = 'Tint|magenta|OnGUI|Instantiate\(|Destroy\(|Shader\.Find|new\s+Material|\bpet\b|thú cưng'
     $forbiddenHits = @($scriptDirs | ForEach-Object { Get-ChildItem $_ -Recurse -Filter *.cs | Select-String -Pattern $forbidden })
-    Add-Result 'Chuỗi cấm Game/UI' ($forbiddenHits.Count -eq 0) (($forbiddenHits | Select-Object -First 10 | ForEach-Object { "$(Get-Relative $_.Path):$($_.LineNumber)" }) -join '; ')
+    if ($forbiddenHits.Count) { Add-Review 'Chuỗi cần người xem trong Game/UI' (($forbiddenHits | Select-Object -First 10 | ForEach-Object { "$(Get-Relative $_.Path):$($_.LineNumber)" }) -join '; ') }
+    else { Add-Result 'Chuỗi cần người xem trong Game/UI' $true 'Không có chuỗi cần rà soát.' }
 
     $hard = @($scriptDirs | ForEach-Object { Get-ChildItem $_ -Recurse -Filter *.cs | Select-String -Pattern '0\.45|0\.55|\b5f\b|9\.0|11\.4' })
-    Add-Result 'Số cần rà soát ngoài GameConfig (cảnh báo)' $true (($hard | Select-Object -First 15 | ForEach-Object { "$(Get-Relative $_.Path):$($_.LineNumber)" }) -join '; ')
+    if ($hard.Count) { Add-Review 'Số cần rà soát ngoài GameConfig' (($hard | Select-Object -First 15 | ForEach-Object { "$(Get-Relative $_.Path):$($_.LineNumber)" }) -join '; ') }
+    else { Add-Result 'Số cần rà soát ngoài GameConfig' $true 'Không có số trong danh sách rà soát.' }
 
     $evidence = Join-Path $RepoRoot 'Evidence'
     $xmls = @(Get-ChildItem $evidence -Recurse -Filter 'test-results*.xml' -ErrorAction SilentlyContinue)
@@ -71,7 +76,8 @@ try {
     $buildFiles = @(Get-ChildItem $BuildDir -Recurse -File)
     $ageSpread = if ($buildFiles.Count) { (($buildFiles | Measure-Object LastWriteTime -Minimum -Maximum).Maximum - ($buildFiles | Measure-Object LastWriteTime -Minimum -Maximum).Minimum).TotalMinutes } else { 999 }
     $fingerprint = (Get-Content -Raw (Join-Path $BuildDir 'index.html') -ErrorAction SilentlyContinue) -match '(build|fingerprint|commit)'
-    Add-Result 'Build đủ tệp, cùng giờ, có dấu vân tay' (($buildMissing.Count -eq 0) -and ($ageSpread -le 10) -and $fingerprint) "missing=$($buildMissing -join ','); spreadMin=$([math]::Round($ageSpread,2)); fingerprint=$fingerprint"
+    $lockfiles = @(Get-ChildItem $RepoRoot -Recurse -File -Filter 'UnityLockfile' -ErrorAction SilentlyContinue)
+    Add-Result 'Build đủ tệp, cùng giờ, có dấu vân tay, không UnityLockfile' (($buildMissing.Count -eq 0) -and ($ageSpread -le 10) -and $fingerprint -and ($lockfiles.Count -eq 0)) "missing=$($buildMissing -join ','); spreadMin=$([math]::Round($ageSpread,2)); fingerprint=$fingerprint; lockfiles=$($lockfiles.Count)"
 
     $uiNames = @('res_1080x1920','res_1179x2556','res_1080x2400','res_1080x2520','res_1620x2160')
     $uiMissing = @($uiNames | Where-Object { @(Get-ChildItem $evidence -Recurse -File -Filter "$_*" -ErrorAction SilentlyContinue).Count -eq 0 })
@@ -83,7 +89,8 @@ try {
     $has60 = $perf -match '(?i)(60\s*(seconds|giây)|>\s*60)'
     Add-Result 'GC/FPS WebGL >=60 giây' (($alloc -eq '0') -and $hasFps -and $has60) "ManagedAllocPerFrame=$alloc; fps=$hasFps; duration60=$has60"
 
-    $deletions = @(git -C $RepoRoot diff --name-only --diff-filter=D v0.1-graybox..HEAD -- ASSET SFX Evidence 2>$null)
+    # Compare the release baseline to both committed history and the current worktree.
+    $deletions = @(git -C $RepoRoot diff --name-only --diff-filter=D v0.1-graybox -- ASSET SFX Evidence 2>$null)
     Add-Result 'Không xóa ASSET/SFX/Evidence kể từ v0.1-graybox' ($deletions.Count -eq 0) ($deletions -join '; ')
     $docs = @('docs/PHASE2_REPORT.md','docs/01_GAMEPLAY_RULES.md')
     Add-Result 'Tài liệu Phase 2 và luật tồn tại trong repo' (@($docs | Where-Object { -not (Has-File $_) }).Count -eq 0) ($docs -join '; ')
@@ -96,4 +103,4 @@ $commit = (git -C $RepoRoot rev-parse --short HEAD).Trim()
 $outDir = Join-Path $RepoRoot 'Evidence/audit'; New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $output = Join-Path $outDir "phase2_audit_$commit.txt"
 $rows | Format-Table -AutoSize | Out-String -Width 300 | Tee-Object -FilePath $output
-if ($rows.Status -contains 'KHÔNG ĐẠT') { exit 1 }
+if ($rows.Status | Where-Object { $_ -ne 'ĐẠT' }) { exit 1 }
