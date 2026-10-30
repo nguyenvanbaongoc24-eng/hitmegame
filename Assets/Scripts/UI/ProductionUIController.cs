@@ -165,6 +165,24 @@ namespace HitMe.UI
         private int _selectedBotCount = 3;
         private int _selectedPracticeCharIndex = 0;
 
+        private GameObject _fpsOverlayObj;
+        private TextMeshProUGUI _txtFps;
+        private float _fpsUpdateTimer;
+        private int _fpsAccumulatedFrames;
+        private int _fpsCornerTaps;
+        private float _fpsLastTapTime;
+        private static readonly string[] CachedFpsStrings = InitFpsStrings();
+
+        private static string[] InitFpsStrings()
+        {
+            var arr = new string[151];
+            for (int i = 0; i <= 150; i++)
+            {
+                arr[i] = i + " FPS";
+            }
+            return arr;
+        }
+
         private int _lastDisplayedRound = -1;
         private int _lastDisplayedMaxRounds = -1;
         private int _lastDisplayedTimerTenths = -1;
@@ -255,6 +273,7 @@ namespace HitMe.UI
             }
 
             EnsureAndRefreshBuildFingerprint();
+            EnsureAndRefreshFpsOverlay();
 
             if (IsUrlAutoPlay())
             {
@@ -268,6 +287,8 @@ namespace HitMe.UI
 
         private void Update()
         {
+            UpdateFpsOverlay();
+
             if (matchController == null || matchController.State == null) return;
 
             Phase statePhase = matchController.State.Phase;
@@ -340,6 +361,99 @@ namespace HitMe.UI
             if (string.IsNullOrEmpty(sceneName)) sceneName = "Graybox";
             string ver = string.IsNullOrEmpty(Application.version) ? "dev" : Application.version;
             return "build " + ver + " · " + sceneName;
+        }
+
+        public void EnsureAndRefreshFpsOverlay()
+        {
+            if (_fpsOverlayObj == null)
+            {
+                Transform parent = transform.Find("SafeAreaRoot") ?? transform;
+                var existing = parent.Find("FpsOverlay");
+                if (existing != null)
+                {
+                    _fpsOverlayObj = existing.gameObject;
+                    _txtFps = existing.GetComponentInChildren<TextMeshProUGUI>();
+                }
+            }
+
+            if (_fpsOverlayObj == null)
+            {
+                Transform parent = transform.Find("SafeAreaRoot") ?? transform;
+                var go = new GameObject("FpsOverlay", typeof(RectTransform));
+                go.transform.SetParent(parent, false);
+                var rt = go.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.70f, 0.94f);
+                rt.anchorMax = new Vector2(0.98f, 0.98f);
+                rt.pivot = new Vector2(1f, 1f);
+                rt.sizeDelta = Vector2.zero;
+
+                var txtObj = new GameObject("Text", typeof(RectTransform));
+                txtObj.transform.SetParent(go.transform, false);
+                var trt = txtObj.GetComponent<RectTransform>();
+                trt.anchorMin = Vector2.zero;
+                trt.anchorMax = Vector2.one;
+                trt.sizeDelta = Vector2.zero;
+
+                _txtFps = txtObj.AddComponent<TextMeshProUGUI>();
+                if (txtRound != null && txtRound.font != null) _txtFps.font = txtRound.font;
+                _txtFps.fontSize = 14f;
+                _txtFps.color = new Color(0.20f, 0.90f, 0.40f, 0.85f);
+                _txtFps.alignment = TextAlignmentOptions.TopRight;
+                _txtFps.raycastTarget = false;
+                _txtFps.text = "60 FPS";
+
+                var btnObj = new GameObject("TapDetector", typeof(RectTransform));
+                btnObj.transform.SetParent(go.transform, false);
+                var brt = btnObj.GetComponent<RectTransform>();
+                brt.anchorMin = Vector2.zero;
+                brt.anchorMax = Vector2.one;
+                brt.sizeDelta = Vector2.zero;
+                var hitImg = btnObj.AddComponent<Image>();
+                hitImg.color = new Color(0f, 0f, 0f, 0.001f);
+                hitImg.raycastTarget = true;
+                var btn = btnObj.AddComponent<Button>();
+                btn.onClick.AddListener(OnFpsCornerTapped);
+
+                _fpsOverlayObj = go;
+            }
+
+            _fpsOverlayObj.SetActive(true);
+            _fpsOverlayObj.transform.SetAsLastSibling();
+        }
+
+        public void OnFpsCornerTapped()
+        {
+            float now = Time.unscaledTime;
+            if (now - _fpsLastTapTime > 1.2f)
+            {
+                _fpsCornerTaps = 0;
+            }
+            _fpsLastTapTime = now;
+            _fpsCornerTaps++;
+            if (_fpsCornerTaps >= 3)
+            {
+                _fpsCornerTaps = 0;
+                if (_fpsOverlayObj != null)
+                {
+                    _fpsOverlayObj.SetActive(!_fpsOverlayObj.activeSelf);
+                }
+            }
+        }
+
+        private void UpdateFpsOverlay()
+        {
+            if (_txtFps == null || _fpsOverlayObj == null || !_fpsOverlayObj.activeSelf) return;
+            _fpsAccumulatedFrames++;
+            _fpsUpdateTimer += Time.unscaledDeltaTime;
+            if (_fpsUpdateTimer >= 0.6f)
+            {
+                int fps = Mathf.RoundToInt(_fpsAccumulatedFrames / _fpsUpdateTimer);
+                if (fps < 0) fps = 0;
+                else if (fps > 150) fps = 150;
+                _txtFps.text = CachedFpsStrings[fps];
+                _fpsAccumulatedFrames = 0;
+                _fpsUpdateTimer = 0f;
+            }
         }
 
         private void BindEvents()
