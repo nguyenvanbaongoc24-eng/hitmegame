@@ -1,4 +1,4 @@
-<#
+﻿<#
 Generate: pwsh -File tools/audit/manifest_gen.ps1 -RepoRoot D:\HITME GAME\unity-client -BuildDir D:\HITME GAME\unity-client\Builds\WebGL_new
 Check:    pwsh -File tools/audit/manifest_gen.ps1 -RepoRoot D:\HITME GAME\unity-client -BuildDir D:\HITME GAME\unity-client\Builds\WebGL_new -Check
 Overwrite the handoff manifest only after reviewing MANIFEST.generated.csv: add -Overwrite.
@@ -8,7 +8,7 @@ param([Parameter(Mandatory=$true)][string]$RepoRoot, [string]$BuildDir, [switch]
 $ErrorActionPreference='Stop'; $RepoRoot=(Resolve-Path $RepoRoot).Path
 $evidence=Join-Path $RepoRoot 'Evidence'; $target=Join-Path $evidence 'MANIFEST.csv'; $generated=Join-Path $evidence 'MANIFEST.generated.csv'
 function Rel([string]$p){ if($p.StartsWith($RepoRoot,[StringComparison]::OrdinalIgnoreCase)){return $p.Substring($RepoRoot.Length).TrimStart('\','/') -replace '\\','/'}; return "Builds/$(Split-Path $p -Leaf)" }
-function LastCommit([string]$relative){ $v=(git -C $RepoRoot log -1 --format=%h -- $relative 2>$null).Trim(); if($v){$v}else{'UNCOMMITTED'} }
+function LastCommit([string]$relative){ $v=git -C $RepoRoot log -1 --format=%h -- $relative 2>$null; if($v){"$v".Trim()}else{'UNCOMMITTED'} }
 $files=@(Get-ChildItem $evidence -Recurse -File | Where-Object {$_.Name -notin @('MANIFEST.csv','MANIFEST.generated.csv')})
 if($BuildDir){ $b=(Resolve-Path $BuildDir).Path; $files+=@(Get-ChildItem $b -Recurse -File) }
 $rows=foreach($file in $files){

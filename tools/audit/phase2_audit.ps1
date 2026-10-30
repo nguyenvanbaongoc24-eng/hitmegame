@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Read-only Phase 2 release audit. The sole write is Evidence/audit/phase2_audit_<commit>.txt.
 .EXAMPLE
@@ -51,7 +51,7 @@ try {
 
     $evidence = Join-Path $RepoRoot 'Evidence'
     $xmls = @(Get-ChildItem $evidence -Recurse -Filter 'test-results*.xml' -ErrorAction SilentlyContinue)
-    $xmlDetail = foreach ($xml in $xmls) { try { [xml]$x = Get-Content $xml; $r = $x.'test-run'; "$(Get-Relative $xml.FullName): total=$($r.total), pass=$($r.passed), fail=$($r.failed), skip=$($r.skipped)" } catch { "$(Get-Relative $xml.FullName): invalid XML" } }
+    $xmlDetail = foreach ($xml in $xmls) { try { [xml]$x = Get-Content -LiteralPath $xml.FullName; $r = $x.'test-run'; "$(Get-Relative $xml.FullName): total=$($r.total), pass=$($r.passed), fail=$($r.failed), skip=$($r.skipped)" } catch { "$(Get-Relative $xml.FullName): invalid XML" } }
     $badXml = @($xmlDetail | Where-Object { $_ -match 'fail=[1-9]|invalid XML' })
     Add-Result 'Kết quả XML không có fail' ($xmls.Count -gt 0 -and $badXml.Count -eq 0) ($xmlDetail -join '; ')
 
@@ -67,7 +67,7 @@ try {
         if (-not $manifestMap.ContainsKey($relative)) { continue }
         $row = $manifestMap[$relative]
         if ($row.sha256 -and (Get-FileHash -Algorithm SHA256 -LiteralPath $file.FullName).Hash.ToLowerInvariant() -ne $row.sha256.ToLowerInvariant()) { $badHash.Add($relative) }
-        if ($row.commit) { git -C $RepoRoot cat-file -e "$($row.commit)^{commit}" 2>$null; if ($LASTEXITCODE -ne 0) { $badCommit.Add("$relative=$($row.commit)") } }
+        if ($row.commit -and $row.commit -ne 'UNCOMMITTED') { git -C $RepoRoot cat-file -e "$($row.commit)^{commit}" 2>$null; if ($LASTEXITCODE -ne 0) { $badCommit.Add("$relative=$($row.commit)") } }
     }
     Add-Result 'Manifest bao phủ Evidence, SHA và commit hợp lệ' (($missing.Count -eq 0) -and ($badHash.Count -eq 0) -and ($badCommit.Count -eq 0)) "missing=$($missing.Count); badHash=$($badHash.Count); badCommit=$($badCommit.Count)"
 
