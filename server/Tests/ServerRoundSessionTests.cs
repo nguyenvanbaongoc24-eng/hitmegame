@@ -37,9 +37,10 @@ public sealed class ServerRoundSessionTests
         Assert.Empty(beforeLock);
         var afterLock = session.TryMarkReady("b", out _);
 
-        Assert.Equal(4, afterLock.Count);
+        Assert.Equal(6, afterLock.Count);
         Assert.Equal(2, afterLock.Count(message => message.Payload.Contains("\"type\":\"reveal\"", StringComparison.Ordinal)));
         Assert.Equal(2, afterLock.Count(message => message.Payload.Contains("\"type\":\"round_result\"", StringComparison.Ordinal)));
+        Assert.Equal(2, afterLock.Count(message => message.Payload.Contains("\"type\":\"round_start\"", StringComparison.Ordinal)));
         Assert.All(afterLock.Where(message => message.Payload.Contains("\"type\":\"reveal\"", StringComparison.Ordinal)),
             message => Assert.Contains("\"position\"", message.Payload, StringComparison.Ordinal));
     }

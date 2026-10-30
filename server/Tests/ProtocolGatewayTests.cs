@@ -213,9 +213,10 @@ public sealed class ProtocolGatewayTests
 
         Assert.Empty(gateway.HandleMessages("c1", Request("lock_ready", ready: true)));
         var afterLock = gateway.HandleMessages("c2", Request("lock_ready", "p2", "Two", ready: true));
-        Assert.Equal(4, afterLock.Count);
+        Assert.Equal(6, afterLock.Count);
         Assert.Contains(afterLock, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
         Assert.Contains(afterLock, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
+        Assert.Contains(afterLock, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"round_start\""));
     }
 
     [Fact]
@@ -231,9 +232,10 @@ public sealed class ProtocolGatewayTests
         clock.Advance(TimeSpan.FromSeconds(5));
         var messages = gateway.Tick();
 
-        Assert.Equal(4, messages.Count);
+        Assert.Equal(6, messages.Count);
         Assert.Contains(messages, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"reveal\""));
         Assert.Contains(messages, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
+        Assert.Contains(messages, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"round_start\""));
         var lateCommit = Json(gateway.Handle("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f })));
         Assert.Equal("round_locked", lateCommit.GetProperty("code").GetString());
     }

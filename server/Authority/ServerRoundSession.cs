@@ -107,6 +107,12 @@ public sealed class ServerRoundSession
                 winners = match.State.WinnerIds
             }));
         }
+        else
+        {
+            // The next placement window is server-owned too.  Starting it here
+            // guarantees that a full multiplayer match progresses beyond round 1.
+            messages.AddRange(BeginRound());
+        }
 
         return messages;
     }
