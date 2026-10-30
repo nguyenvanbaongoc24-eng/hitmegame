@@ -1,0 +1,17 @@
+
+Check                                                      Status    Detail
+-----                                                      ------    ------
+Build Settings chỉ Graybox                                 KHÔNG ĐẠT path: Assets/Scenes/MainMatch.unity; path: Assets/Scenes/Graybox.unity; path: Assets/Scenes/Graybox.unity
+Graybox có MatchController, không MatchStateMachine        ĐẠT       scene=D:\HITME GAME\worktrees\codex-prep\Assets\Scenes\Graybox.unity
+Core/Phase1 không UnityEngine và asmdef noEngineReferences KHÔNG ĐẠT engineRefs=0; asmdefs=0
+Chuỗi cấm Game/UI                                          KHÔNG ĐẠT Assets/Scripts/Game/HitFx.cs:40; Assets/Scripts/Game/HudView.cs:13; Assets/Scripts/Game/MatchController.cs:50; Assets/Scripts/Game/MatchController.cs:120; Assets/Scripts/Game/Phase1ScreenshotCapture.cs:81; Assets/Scripts/Game/Phas…
+Số cần rà soát ngoài GameConfig (cảnh báo)                 ĐẠT       Assets/Scripts/Game/ArenaView.cs:18; Assets/Scripts/Game/GameConfigAsset.cs:11; Assets/Scripts/Game/GameConfigAsset.cs:15; Assets/Scripts/Game/GameConfigAsset.cs:16; Assets/Scripts/Game/GameConfigAsset.cs:17; Assets/Scripts/Game/G…
+Kết quả XML không có fail                                  KHÔNG ĐẠT 
+Manifest bao phủ Evidence, SHA và commit hợp lệ            KHÔNG ĐẠT missing=469; badHash=0; badCommit=0
+Build đủ tệp, cùng giờ, có dấu vân tay                     ĐẠT       missing=; spreadMin=0; fingerprint=True
+Ảnh UI đủ năm độ phân giải                                 KHÔNG ĐẠT missing=res_1080x1920,res_1179x2556,res_1080x2400,res_1080x2520,res_1620x2160
+GC/FPS WebGL >=60 giây                                     KHÔNG ĐẠT ManagedAllocPerFrame=; fps=True; duration60=False
+Không xóa ASSET/SFX/Evidence kể từ v0.1-graybox            ĐẠT       
+Tài liệu Phase 2 và luật tồn tại trong repo                KHÔNG ĐẠT docs/PHASE2_REPORT.md; docs/01_GAMEPLAY_RULES.md
+
+
