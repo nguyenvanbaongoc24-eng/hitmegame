@@ -10,7 +10,7 @@ Ví dụ khi host cố bắt đầu phòng một người: `{ "v": 1, "type": "e
 
 Server dùng đồng hồ riêng cho 5 giây đặt, kẹp vị trí vào sân, coi aim 0/NaN/vô cực là không ngắm để Core áp `ThrowFacing`; người mất kết nối được giữ 30 giây bằng reconnect token ngẫu nhiên 256-bit. Vào lại phải đồng thời có token xác thực của đúng người chơi; token vào lại được xoay sau khi dùng và không được ghi log. Socket chậm có tối đa bốn lượt gửi chờ và bị ngắt khi timeout. WebSocket keep-alive là 30 giây; `IDLE_TIMEOUT_SECONDS` (mặc định 90) đóng socket im lặng và vẫn giữ chỗ 30 giây. `ALLOWED_ORIGINS` là danh sách Origin ngăn cách bằng dấu phẩy; mặc định chỉ localhost. Khi SIGTERM, server đóng các socket với lý do `server_shutdown`. Nhật ký chỉ ghi ID kết nối rút gọn, loại tin và lỗi — không ghi payload, vị trí, hướng hay token. `Dockerfile` và `render.yaml` chỉ là bản nháp, không tự triển khai.
 
-Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; test server và bản vá NUnit Unity cùng đọc định dạng trường công khai để so Core theo từng hit và trạng thái người chơi.
+Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; chúng phân bố N=2..6. Cùng tệp còn có bảy vector trận, gồm người bị loại qua nhiều vòng và hai hòa cuối `maxRounds` (HP rồi số lần trúng, còn hòa thì đồng thắng). Test server và bản vá NUnit Unity cùng đọc định dạng trường công khai để so Core theo từng hit, người chơi và kết quả trận.
 
 Z1 chạy Kestrel và `ClientWebSocket` thật với 6 bot × 20 trận × 5 vòng, có commit lỗi, một lượt không commit, vào lại và join thiếu token; mỗi `round_result` được so với Core trực tiếp. Lần đo cục bộ: khóa/broadcast trung bình 3,49 ms, lớn nhất 42,79 ms (không phải số liệu Internet/Render).
 

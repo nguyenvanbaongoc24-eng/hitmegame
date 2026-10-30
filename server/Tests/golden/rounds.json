@@ -22240,5 +22240,1427 @@
         ]
       }
     }
+  ],
+  "Matches": [
+    {
+      "Id": 1,
+      "Seed": 9002,
+      "Scenario": "roster_2_eliminations_and_tiebreak",
+      "Players": [
+        {
+          "Id": "m2p0",
+          "Hp": 1,
+          "X": 0,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m2p1",
+          "Hp": 1,
+          "X": 2,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m2p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m2p1",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m2p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m2p1",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m2p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m2p1",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m2p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m2p1",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m2p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m2p1",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 1,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "m2p0",
+          "m2p1"
+        ],
+        "Players": [
+          {
+            "Id": "m2p0",
+            "Hp": 0,
+            "X": 0,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m2p1",
+            "Hp": 0,
+            "X": 2,
+            "Y": 0,
+            "FacingX": -1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          }
+        ]
+      }
+    },
+    {
+      "Id": 2,
+      "Seed": 9003,
+      "Scenario": "roster_3_eliminations_and_tiebreak",
+      "Players": [
+        {
+          "Id": "m3p0",
+          "Hp": 1,
+          "X": 0,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m3p1",
+          "Hp": 1,
+          "X": 2,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m3p2",
+          "Hp": 1,
+          "X": 4,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m3p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p2",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m3p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p2",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m3p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p2",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m3p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p2",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m3p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m3p2",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 2,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "m3p2"
+        ],
+        "Players": [
+          {
+            "Id": "m3p0",
+            "Hp": 0,
+            "X": 0,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m3p1",
+            "Hp": 0,
+            "X": 2,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m3p2",
+            "Hp": 1,
+            "X": 4,
+            "Y": 0,
+            "FacingX": -1,
+            "FacingY": 0,
+            "HitsLanded": 2
+          }
+        ]
+      }
+    },
+    {
+      "Id": 3,
+      "Seed": 9004,
+      "Scenario": "roster_4_eliminations_and_tiebreak",
+      "Players": [
+        {
+          "Id": "m4p0",
+          "Hp": 1,
+          "X": 0,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m4p1",
+          "Hp": 1,
+          "X": 2,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m4p2",
+          "Hp": 1,
+          "X": 4,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m4p3",
+          "Hp": 1,
+          "X": 6,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m4p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p3",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m4p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p3",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m4p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p3",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m4p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p3",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m4p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m4p3",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 2,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "m4p3"
+        ],
+        "Players": [
+          {
+            "Id": "m4p0",
+            "Hp": 0,
+            "X": 0,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m4p1",
+            "Hp": 0,
+            "X": 2,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m4p2",
+            "Hp": 0,
+            "X": 4,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m4p3",
+            "Hp": 1,
+            "X": 6,
+            "Y": 0,
+            "FacingX": -1,
+            "FacingY": 0,
+            "HitsLanded": 2
+          }
+        ]
+      }
+    },
+    {
+      "Id": 4,
+      "Seed": 9005,
+      "Scenario": "roster_5_eliminations_and_tiebreak",
+      "Players": [
+        {
+          "Id": "m5p0",
+          "Hp": 1,
+          "X": 0,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m5p1",
+          "Hp": 1,
+          "X": 2,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m5p2",
+          "Hp": 1,
+          "X": 4,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m5p3",
+          "Hp": 1,
+          "X": 6,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m5p4",
+          "Hp": 1,
+          "X": 8,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m5p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p4",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m5p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p4",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m5p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p4",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m5p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p4",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m5p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m5p4",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 2,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "m5p4"
+        ],
+        "Players": [
+          {
+            "Id": "m5p0",
+            "Hp": 0,
+            "X": 0,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m5p1",
+            "Hp": 0,
+            "X": 2,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m5p2",
+            "Hp": 0,
+            "X": 4,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m5p3",
+            "Hp": 0,
+            "X": 6,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m5p4",
+            "Hp": 1,
+            "X": 8,
+            "Y": 0,
+            "FacingX": -1,
+            "FacingY": 0,
+            "HitsLanded": 2
+          }
+        ]
+      }
+    },
+    {
+      "Id": 5,
+      "Seed": 9006,
+      "Scenario": "roster_6_eliminations_and_tiebreak",
+      "Players": [
+        {
+          "Id": "m6p0",
+          "Hp": 1,
+          "X": 0,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m6p1",
+          "Hp": 1,
+          "X": 2,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m6p2",
+          "Hp": 1,
+          "X": 4,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m6p3",
+          "Hp": 1,
+          "X": 6,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m6p4",
+          "Hp": 1,
+          "X": 8,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "m6p5",
+          "Hp": 1,
+          "X": 10,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 0,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m6p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p4",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p5",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m6p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p4",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p5",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m6p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p4",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p5",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m6p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p4",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p5",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "m6p0",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p1",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p2",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p3",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p4",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 0
+            },
+            {
+              "PlayerId": "m6p5",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 0
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 2,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "m6p5"
+        ],
+        "Players": [
+          {
+            "Id": "m6p0",
+            "Hp": 0,
+            "X": 0,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m6p1",
+            "Hp": 0,
+            "X": 2,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m6p2",
+            "Hp": 0,
+            "X": 4,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "m6p3",
+            "Hp": 0,
+            "X": 6,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m6p4",
+            "Hp": 0,
+            "X": 8,
+            "Y": 0,
+            "FacingX": 1,
+            "FacingY": 0,
+            "HitsLanded": 1
+          },
+          {
+            "Id": "m6p5",
+            "Hp": 1,
+            "X": 10,
+            "Y": 0,
+            "FacingX": -1,
+            "FacingY": 0,
+            "HitsLanded": 2
+          }
+        ]
+      }
+    },
+    {
+      "Id": 5,
+      "Seed": 9010,
+      "Scenario": "max_rounds_hp_tie_then_hits",
+      "Players": [
+        {
+          "Id": "a",
+          "Hp": 3,
+          "X": 0,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 1,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "b",
+          "Hp": 3,
+          "X": 4,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 1,
+          "HitsLanded": 1
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 5,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "b"
+        ],
+        "Players": [
+          {
+            "Id": "a",
+            "Hp": 3,
+            "X": 0,
+            "Y": 0,
+            "FacingX": -0.70710677,
+            "FacingY": 0.70710677,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "b",
+            "Hp": 3,
+            "X": 4,
+            "Y": 0,
+            "FacingX": 0.70710677,
+            "FacingY": 0.70710677,
+            "HitsLanded": 1
+          }
+        ]
+      }
+    },
+    {
+      "Id": 6,
+      "Seed": 9011,
+      "Scenario": "max_rounds_shared_tie",
+      "Players": [
+        {
+          "Id": "a",
+          "Hp": 3,
+          "X": 0,
+          "Y": 0,
+          "FacingX": -1,
+          "FacingY": 1,
+          "HitsLanded": 0
+        },
+        {
+          "Id": "b",
+          "Hp": 3,
+          "X": 4,
+          "Y": 0,
+          "FacingX": 1,
+          "FacingY": 1,
+          "HitsLanded": 0
+        }
+      ],
+      "Rounds": [
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        },
+        {
+          "Inputs": [
+            {
+              "PlayerId": "a",
+              "HasAim": true,
+              "AimX": -1,
+              "AimY": 1
+            },
+            {
+              "PlayerId": "b",
+              "HasAim": true,
+              "AimX": 1,
+              "AimY": 1
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "RoundNumber": 5,
+        "Phase": "MatchEnd",
+        "WinnerIds": [
+          "a",
+          "b"
+        ],
+        "Players": [
+          {
+            "Id": "a",
+            "Hp": 3,
+            "X": 0,
+            "Y": 0,
+            "FacingX": -0.70710677,
+            "FacingY": 0.70710677,
+            "HitsLanded": 0
+          },
+          {
+            "Id": "b",
+            "Hp": 3,
+            "X": 4,
+            "Y": 0,
+            "FacingX": 0.70710677,
+            "FacingY": 0.70710677,
+            "HitsLanded": 0
+          }
+        ]
+      }
+    }
   ]
 }

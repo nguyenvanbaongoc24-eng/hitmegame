@@ -10,6 +10,7 @@ public sealed class GoldenRoundsFile
     public string GameConfigVersion = "phase1-v1.2";
     public GoldenGameConfig Config = new();
     public GoldenRound[] Rounds = Array.Empty<GoldenRound>();
+    public GoldenMatch[] Matches = Array.Empty<GoldenMatch>();
 }
 
 public sealed class GoldenGameConfig
@@ -48,6 +49,31 @@ public sealed class GoldenRound
     public GoldenPlayer[] Players = Array.Empty<GoldenPlayer>();
     public GoldenInput[] Inputs = Array.Empty<GoldenInput>();
     public GoldenExpected Expected = new();
+}
+
+// A whole-match vector complements single-round vectors: it captures eliminations
+// across rounds and the Core's final winner/tie decision at MaxRounds.
+public sealed class GoldenMatch
+{
+    public int Id;
+    public uint Seed;
+    public string Scenario = "match";
+    public GoldenPlayer[] Players = Array.Empty<GoldenPlayer>();
+    public GoldenMatchRound[] Rounds = Array.Empty<GoldenMatchRound>();
+    public GoldenMatchExpected Expected = new();
+}
+
+public sealed class GoldenMatchRound
+{
+    public GoldenInput[] Inputs = Array.Empty<GoldenInput>();
+}
+
+public sealed class GoldenMatchExpected
+{
+    public int RoundNumber;
+    public string Phase = "MatchEnd";
+    public string[] WinnerIds = Array.Empty<string>();
+    public GoldenPlayer[] Players = Array.Empty<GoldenPlayer>();
 }
 
 public sealed class GoldenPlayer
@@ -115,7 +141,61 @@ public static class GoldenRoundsFactory
                 Players(("a", 1, 0f, -2f), ("b", 1, 0f, 2f)), Inputs(("a", true, 0f, 1f), ("b", true, 0f, -1f)))
         };
         for (var id = 5; id <= 200; id++) rounds.Add(RandomRound(id, (uint)(7000 + id), config));
-        return new GoldenRoundsFile { Config = GoldenGameConfig.From(config), Rounds = rounds.ToArray() };
+        return new GoldenRoundsFile { Config = GoldenGameConfig.From(config), Rounds = rounds.ToArray(), Matches = CreateMatches(config) };
+    }
+
+    static GoldenMatch[] CreateMatches(GameConfig config)
+    {
+        var matches = new List<GoldenMatch>();
+        for (var count = 2; count <= 6; count++)
+        {
+            var players = Enumerable.Range(0, count)
+                .Select(index => new GoldenPlayer { Id = $"m{count}p{index}", Hp = 1, X = index * 2f, Y = 0f, FacingX = index == count - 1 ? -1f : 1f, FacingY = 0f })
+                .ToArray();
+            var turns = Enumerable.Range(0, config.MaxRounds)
+                .Select(_ => new GoldenMatchRound { Inputs = players.Select(player => new GoldenInput { PlayerId = player.Id, HasAim = true, AimX = player.FacingX, AimY = 0f }).ToArray() })
+                .ToArray();
+            matches.Add(CompleteMatch(count - 1, (uint)(9000 + count), $"roster_{count}_eliminations_and_tiebreak", config, players, turns));
+        }
+        var hpTieWithHitLead = Players(("a", 3, 0f, 0f), ("b", 3, 4f, 0f));
+        hpTieWithHitLead[0].FacingX = -1f;
+        hpTieWithHitLead[1].FacingX = 1f;
+        hpTieWithHitLead[1].HitsLanded = 1;
+        matches.Add(CompleteMatch(5, 9010, "max_rounds_hp_tie_then_hits", config, hpTieWithHitLead, NoHitTurns(config.MaxRounds, hpTieWithHitLead)));
+
+        var completeTie = Players(("a", 3, 0f, 0f), ("b", 3, 4f, 0f));
+        completeTie[0].FacingX = -1f;
+        completeTie[1].FacingX = 1f;
+        matches.Add(CompleteMatch(6, 9011, "max_rounds_shared_tie", config, completeTie, NoHitTurns(config.MaxRounds, completeTie)));
+        return matches.ToArray();
+    }
+
+    static GoldenMatchRound[] NoHitTurns(int count, GoldenPlayer[] players) => Enumerable.Range(0, count)
+        .Select(_ => new GoldenMatchRound { Inputs = players.Select(player => new GoldenInput { PlayerId = player.Id, HasAim = true, AimX = player.FacingX, AimY = player.FacingY }).ToArray() })
+        .ToArray();
+
+    static GoldenMatch CompleteMatch(int id, uint seed, string scenario, GameConfig config, GoldenPlayer[] players, GoldenMatchRound[] rounds)
+    {
+        var match = new MatchState(config, players.Select(player => player.ToCore()));
+        foreach (var turn in rounds)
+        {
+            if (match.Phase == Phase.MatchEnd) break;
+            match.StartRound();
+            foreach (var input in turn.Inputs) match.SetInput(input.ToCore());
+            match.LockRound();
+            match.BeginReveal();
+            match.BeginThrowing();
+            match.ResolveRound();
+        }
+        return new GoldenMatch
+        {
+            Id = id, Seed = seed, Scenario = scenario, Players = players, Rounds = rounds,
+            Expected = new GoldenMatchExpected
+            {
+                RoundNumber = match.RoundNumber, Phase = match.Phase.ToString(), WinnerIds = match.WinnerIds.ToArray(),
+                Players = match.Players.Select(GoldenPlayer.From).ToArray()
+            }
+        };
     }
 
     static GoldenRound RandomRound(int id, uint seed, GameConfig config)
