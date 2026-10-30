@@ -12,7 +12,7 @@ function New-Fixture([string]$Name) {
     Put "$r\ProjectSettings\EditorBuildSettings.asset" "path: Assets/Scenes/Graybox.unity"
     Put "$r\Assets\Scenes\Graybox.unity" 'MatchController'
     Put "$r\Assets\Scripts\Core\Phase1\Core.cs" 'namespace HitMe.Core {}'
-    Put "$r\Assets\Phase1.asmdef" '{"name":"Phase1","noEngineReferences":true}'
+    Put "$r\Assets\Scripts\Core\Phase1\HitMe.Core.asmdef" '{"name":"HitMe.Core","noEngineReferences":true}'
     Put "$r\Assets\Scripts\Game\Safe.cs" 'class Safe {}'
     Put "$r\ASSET\keep.txt" 'keep'; Put "$r\SFX\keep.txt" 'keep'
     Put "$r\docs\PHASE2_REPORT.md" '# report'; Put "$r\docs\01_GAMEPLAY_RULES.md" '# rules'

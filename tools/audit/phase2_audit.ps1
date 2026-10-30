@@ -35,7 +35,7 @@ try {
 
     $core = Join-Path $RepoRoot 'Assets/Scripts/Core/Phase1'
     $engineRefs = if (Test-Path $core) { @(Get-ChildItem $core -Recurse -Filter *.cs | Select-String -Pattern '^\s*using\s+UnityEngine') } else { @('core missing') }
-    $asmdefs = @(Get-ChildItem (Join-Path $RepoRoot 'Assets') -Recurse -Filter *.asmdef -ErrorAction SilentlyContinue | Where-Object { (Get-Content -Raw $_.FullName) -match 'Phase1' })
+    $asmdefs = @(Get-ChildItem $core -Recurse -Filter *.asmdef -ErrorAction SilentlyContinue)
     $noEngine = $asmdefs.Count -gt 0 -and (($asmdefs | ForEach-Object { Get-Content -Raw $_.FullName }) -join "`n") -match '"noEngineReferences"\s*:\s*true'
     Add-Result 'Core/Phase1 không UnityEngine và asmdef noEngineReferences' (($engineRefs.Count -eq 0) -and $noEngine) "engineRefs=$($engineRefs.Count); asmdefs=$($asmdefs.Count)"
 
