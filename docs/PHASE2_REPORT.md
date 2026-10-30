@@ -226,4 +226,68 @@ public interface IInventoryService
 3. **Mỹ thuật vũ khí W1**: Chủ dự án có muốn đội ngũ họa sĩ vẽ lại sprite đạn bay của Dép Tổ Ong theo phong cách vẽ nét viền 2D đồng nhất với nhân vật không?
 
 ---
-*Báo cáo được khởi tạo tự động, lưu trữ tại `docs/PHASE2_REPORT.md` phục vụ bàn giao chính thức Phase 2 Release Candidate.*
+
+## 6. HƯỚNG DẪN THỬ NGHIỆM TRÊN ĐIỆN THOẠI THẬT DÀNH CHO CHỦ DỰ ÁN (S5)
+
+> **Địa chỉ WebGL LAN**: **`http://172.20.10.3:8091/`**  
+> *(Lưu ý: Điện thoại cần kết nối chung mạng Wi-Fi hoặc điểm phát sóng Hotspot với PC chạy máy chủ. Nếu đổi Wi-Fi, IP có thể thay đổi tương ứng).*
+
+### 6.1. Quy trình thử nghiệm 3 trận
+1. **Trận 1 (Cử chỉ cơ bản & Sức ném)**:
+   - Chạm vào vị trí bất kỳ trên phần sân dưới của mình $\rightarrow$ quan sát nhân vật xuất hiện đúng tâm điểm chạm.
+   - Chạm giữ và vuốt ngược tạo thước ngắm $\rightarrow$ buông tay ném dép $\rightarrow$ quan sát đường bay khớp hoàn toàn góc thước ngắm.
+2. **Trận 2 (Thao tác sai & Hủy thao tác)**:
+   - Trong lúc đang kéo thước ngắm, chạm ngón tay thứ hai vào chỗ khác $\rightarrow$ kiểm tra thao tác bị hủy và reset hoàn toàn để làm lại.
+   - Kéo thước ngắm lùi về tâm dưới 4 mm (khoảng 20–30 px) $\rightarrow$ kiểm tra thước ngắm tự biến mất (hủy ngắm thành công).
+   - Buông tay mà không kéo ngắm $\rightarrow$ kiểm tra nhân vật ném dép thẳng theo hướng mặt mặc định (`ThrowFacing`).
+3. **Trận 3 (Hiển thị UI & Dọn dẹp cuối trận)**:
+   - Quan sát cụm Thẻ HP phía trên cổng làng: luôn mở công khai, không bị rào chắn hay chi tiết cổng che khuất.
+   - Khi trận đấu kết thúc: quan sát toàn bộ dép đang bay và hiệu ứng nổ/bụi biến mất tức thì, không tồn đọng rác.
+   - Thử bấm nút **Replay (Chơi lại)** và nút **Về sảnh (Home)**: kiểm tra chuyển cảnh mượt mà, không giật lag.
+
+### 6.2. Cách đọc FPS và Mẫu báo cáo nghiệm thu
+- **Cách đọc FPS**: Trên Android, có thể bật tùy chọn nhà phát triển *"Hiển thị tốc độ làm mới"* (Show refresh rate), hoặc kết nối cáp USB mở Chrome trên PC gõ `chrome://inspect` để xem FPS thực tế của tab WebGL.
+- **Mẫu báo kết quả Chủ dự án gửi lại**:
+  ```markdown
+  THỬ NGHIỆM S5 TRÊN ĐIỆN THOẠI:
+  - Thiết bị thử nghiệm: [Tên điện thoại, ví dụ: iPhone 14 Pro / Samsung S23]
+  - Trình duyệt: [Safari / Chrome / Samsung Internet]
+  - Cảm ứng đặt vị trí & vuốt ném: [Mượt / Có độ trễ / Khó chạm]
+  - Thẻ HP & rào chắn: [Rõ ràng / Bị che]
+  - Replay & Về sảnh: [Hoạt động tốt / Bị đơ]
+  - Đánh giá chung: [ĐẠT / CẦN CHỈNH SỬA THÊM]
+  ```
+
+---
+
+## 7. BẢNG ĐỐI CHIẾU LUẬT CHƠI v1.2 / v1.3 ↔ BỘ KIỂM THỬ CLIENT (S8)
+
+| Điều luật (v1.2 & v1.3) | Yêu cầu nghiệp vụ | Tên Test Client tương ứng | Trạng thái |
+|---|---|---|:---:|
+| **Máu khởi điểm** | Mỗi người chơi có 3 HP, nhận 1 sát thương mỗi lần bị trúng | `Phase1CoreTests.MultipleHitsAccumulateAndHpDoesNotGoBelowZero` | **ĐẠT** |
+| **Pha đặt vị trí bí mật** | 5 giây đặt vị trí, che giấu vị trí và hướng ngắm đối thủ | `Phase1CoreTests.Placing_OpponentPositionAndAimRemainHidden` | **ĐẠT** |
+| **HP công khai mọi pha** | Thẻ HP của tất cả người chơi luôn hiển thị, không che nhầm | `Phase1CoreTests.HP_AlwaysPublicAcrossAllPhases` | **ĐẠT** |
+| **Ném đồng thời** | Vũ khí bay đồng thời, sát thương tính cùng lúc | `Phase1CoreTests.MutualThrowsResolveSimultaneously` | **ĐẠT** |
+| **Không ngắm (No-Aim)** | Khi không kéo thước ngắm, dép bay thẳng hướng mặt `ThrowFacing` | `Phase1CoreTests.NoAim_DefaultsToThrowFacing` | **ĐẠT** |
+| **Người bị loại (0 HP)** | Người 0 HP không thể ném tiếp và không bị tính va chạm thêm | `Phase1CoreTests.EliminatedPlayerNeitherThrowsNorCanBeHit` | **ĐẠT** |
+| **Giới hạn 5 vòng đấu** | Trận đấu dừng ngay sau vòng 5 nếu chưa ai bị loại hết | `Phase1CoreTests.P1_MatchState_MaxRoundsEnforced_MatchEndsAtRound5` | **ĐẠT** |
+| **Xếp hạng Tiebreak** | Thứ tự: Còn sống $\rightarrow$ HP cao $\rightarrow$ Số lần ném trúng $\rightarrow$ Đồng hạng | `Phase1CoreTests.S1_MatchRanking_Deterministic_WithAllTiebreakPolicies` | **ĐẠT** |
+| **Hỗ trợ phòng N = 2..6** | Xếp hạng và chia vị trí linh hoạt cho phòng từ 2 đến 6 người | `Phase1CoreTests.MatchRanking_SupportsDifferentPlayerCounts_2To6` | **ĐẠT** |
+| **Phòng Online không Bot** | Trận online cần $\ge 2$ người thật; N=1 khóa bắt đầu, phòng trống ghi "Đang chờ..." | `ProductionUIPolishTests.Lobby_OneHuman_StartLocked_AndWaitingSlotsDisplayed` | **ĐẠT** |
+| **Luyện với bot cục bộ** | Menu riêng biệt chọn 1–5 bot và nhân vật, chạy thuần `Core/Phase1` | `Phase1CoreTests.AutoPlay_10MatchesEach_N2ToN6_CompletesWithZeroErrorsAndValidRankings` | **ĐẠT** |
+
+---
+
+## 8. DANH SÁCH TỒN ĐỌNG KỸ THUẬT BÀN GIAO (S9 DEFERRED BACKLOG)
+
+Dưới đây là danh sách chi tiết các hạng mục được bảo lưu chuyển sang Phase 3 hoặc chờ phản hồi từ Chủ dự án:
+
+| # | Hạng mục tồn đọng | Lý do hoãn / chuyển tiếp | Mức ảnh hưởng | Kế hoạch giải quyết |
+|---|---|---|:---:|---|
+| **W1–W3** | **Sprite dép bị mất đầu mũi / quai** (`w1_sandal_sprite_diagnosis.png`) | File sprite gốc trong `ASSET HITME FINAL` bị cắt sát viền 1-2 px từ khâu thiết kế 2D; Chủ dự án đã cho phép hoãn | Trung bình (Thị giác) | Chờ họa sĩ gửi lại file PNG nguồn có lề đệm 4 px, client sẽ re-import trong Phase 3 |
+| **S5** | **Đo kiểm FPS và cảm ứng trên điện thoại vật lý thực tế** | Phép đo tự động PC đạt 60 FPS 0 B/frame; trải nghiệm cảm ứng thực tế cần màn hình cảm ứng điện thoại của Chủ dự án | Quan trọng (Trải nghiệm) | Thực hiện ở bước S5 (Chủ dự án chơi thử 3 trận theo mục 6) trước khi gắn tag `v0.2-rc1` |
+| **NET** | **Kết nối mạng thời gian thực WebSocket** | Phía server Codex đang hoàn thiện giao vận `net_client_v1` (Z1, Z2); chưa bàn giao SERVER READY | Quan trọng (Tính năng) | Kết nối mạng sẽ được tích hợp ngay khi Codex công bố SERVER READY ở đầu Phase 3 |
+| **AUDIO** | **Hiệu ứng âm thanh mở rộng (BGM đa dạng, SFX theo vũ khí)** | Đã tích hợp đầy đủ âm thanh cơ bản (Click, Ready, Countdown, Ném, Trúng dép, Thắng, Thua); cần bổ sung nhạc nền theo mùa | Thấp (Thị giác/Thính giác) | Bổ sung khi có bộ asset audio hoàn chỉnh từ nhà sản xuất âm nhạc |
+
+---
+*Báo cáo được cập nhật và nghiệm thu tại `docs/PHASE2_REPORT.md` phục vụ bàn giao chính thức Phase 2.*
