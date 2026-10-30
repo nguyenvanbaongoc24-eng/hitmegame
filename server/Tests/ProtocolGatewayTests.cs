@@ -28,6 +28,7 @@ public sealed class ProtocolGatewayTests
         Assert.Equal("room_state", created.GetProperty("type").GetString());
         Assert.Equal("HM0001", created.GetProperty("roomCode").GetString());
         Assert.True(created.GetProperty("config").TryGetProperty("placeSeconds", out _));
+        Assert.Equal(2, created.GetProperty("config").GetProperty("minPlayersToStart").GetInt32());
         var joined = Json(gateway.Handle("c2", Request("join", "p2", "Two", "HM0001")));
         Assert.Equal(2, joined.GetProperty("players").GetArrayLength());
         var started = Json(gateway.Handle("c1", Request("start")));
@@ -133,6 +134,66 @@ public sealed class ProtocolGatewayTests
         gateway.Handle("c1", Request("start"));
         var reply = Json(gateway.Handle("c3", Request("join", "p3", "Three", "HM0001")));
         Assert.Equal("room_started", reply.GetProperty("code").GetString());
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void EveryOnlineRosterSizeFromTwoToSixCanStart(int players)
+    {
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), auth: new TestAuthVerifier());
+        var created = Json(gateway.Handle("c1", Request("join")));
+        var roomCode = created.GetProperty("roomCode").GetString();
+        for (var player = 2; player <= players; player++)
+            gateway.Handle($"c{player}", Request("join", $"p{player}", $"P{player}", roomCode));
+
+        var started = gateway.HandleMessages("c1", Request("start"));
+        Assert.Equal(players, started.Count);
+        Assert.All(started, message => Assert.Contains("\"type\":\"round_start\"", message.Payload));
+    }
+
+    [Fact]
+    public void OneOnlinePlayerCannotStartByHostOrByReadiness()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
+        gateway.Handle("c1", Request("join"));
+
+        var hostStart = Json(gateway.Handle("c1", Request("start")));
+        Assert.Equal("not_enough_players", hostStart.GetProperty("code").GetString());
+        gateway.HandleMessages("c1", Request("room_ready", ready: true));
+        clock.Advance(TimeSpan.FromSeconds(4));
+        Assert.Empty(gateway.Tick());
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void PreLockCommitRemainsPrivateForEveryOnlineRosterSize(int players)
+    {
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), auth: new TestAuthVerifier());
+        gateway.Handle("c1", Request("join"));
+        for (var player = 2; player <= players; player++)
+            gateway.Handle($"c{player}", Request("join", $"p{player}", $"P{player}", "HM0001"));
+        gateway.HandleMessages("c1", Request("start"));
+
+        const float traceX = 3.14159f;
+        const float traceY = -2.71828f;
+        var replies = gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = traceX, positionY = traceY, aimX = 0.12345f, aimY = -0.98765f }));
+        Assert.DoesNotContain(replies, message => message.ConnectionId != "c2");
+        Assert.All(replies, message =>
+        {
+            Assert.DoesNotContain("3.14159", message.Payload);
+            Assert.DoesNotContain("-2.71828", message.Payload);
+            Assert.DoesNotContain("\"position\"", message.Payload);
+            Assert.DoesNotContain("\"aim\"", message.Payload);
+        });
     }
 
     [Fact] public void CodeCollisionGeneratesAnotherCode()
