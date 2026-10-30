@@ -9,7 +9,7 @@ $ErrorActionPreference='Stop'; $RepoRoot=(Resolve-Path $RepoRoot).Path
 $evidence=Join-Path $RepoRoot 'Evidence'; $target=Join-Path $evidence 'MANIFEST.csv'; $generated=Join-Path $evidence 'MANIFEST.generated.csv'
 function Rel([string]$p){ if($p.StartsWith($RepoRoot,[StringComparison]::OrdinalIgnoreCase)){return $p.Substring($RepoRoot.Length).TrimStart('\','/') -replace '\\','/'}; return "Builds/$(Split-Path $p -Leaf)" }
 function LastCommit([string]$relative){ $v=git -C $RepoRoot log -1 --format=%h -- $relative 2>$null; if($v){"$v".Trim()}else{'UNCOMMITTED'} }
-$files=@(Get-ChildItem $evidence -Recurse -File | Where-Object {$_.Name -notin @('MANIFEST.csv','MANIFEST.generated.csv')})
+$files=@(Get-ChildItem $evidence -Recurse -File | Where-Object {$_.Name -notin @('MANIFEST.csv','MANIFEST.generated.csv') -and $_.FullName -notmatch '[\\/]audit[\\/]'})
 if($BuildDir){ $b=(Resolve-Path $BuildDir).Path; $files+=@(Get-ChildItem $b -Recurse -File) }
 $rows=foreach($file in $files){
   $relative=Rel $file.FullName; $json="$($file.FullName).json"; $p=$null; if(Test-Path $json){try{$p=Get-Content -Raw $json|ConvertFrom-Json}catch{}}
