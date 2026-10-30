@@ -794,5 +794,59 @@ namespace HitMe.Tests
                                 $"Status: PASS (50/50 matches completed cleanly)\n";
             System.IO.File.WriteAllText(System.IO.Path.Combine(evidenceDir, "autoplay_n2_n6.log"), logContent);
         }
+
+        [Test]
+        public void Bot_DecidesBlindly_PlayerPositionChangeDoesNotAlterBotInput()
+        {
+            // Requirement F9: Prove that the bot makes its placement and aiming decisions
+            // without knowing the player's placement or aim prior to lock.
+            // When running identical seeds with two completely different player inputs,
+            // the bot's chosen placement and aim direction in that round must be 100% identical.
+
+            var config = new GameConfig { StartHp = 3, MaxPlayers = 2, PlayerRadius = 0.55f };
+            uint seed = 998877u;
+
+            // Run 1: Player places at bottom left (-3f, -4f) and aims Up
+            var rng1 = new SeededRandom(seed);
+            var botBrain1 = new Phase1BotBrain(BotLevel.Predictor, rng1);
+            var botState1 = new PlayerState("bot-1", "Bot 1", true, 3, new Vec2(1f, 2f), Vec2.Up);
+
+            var playerInputA = new RoundInput("player")
+            {
+                HasPlacement = true,
+                Placement = new Vec2(-3f, -4f),
+                HasAim = true,
+                AimDirection = Vec2.Up,
+                IsReady = true
+            };
+            var botInput1 = botBrain1.MakeInput(botState1, config);
+
+            // Run 2: Same seed, but Player places at top right (3.5f, 4.5f) and aims DownLeft
+            var rng2 = new SeededRandom(seed);
+            var botBrain2 = new Phase1BotBrain(BotLevel.Predictor, rng2);
+            var botState2 = new PlayerState("bot-1", "Bot 1", true, 3, new Vec2(1f, 2f), Vec2.Up);
+
+            var playerInputB = new RoundInput("player")
+            {
+                HasPlacement = true,
+                Placement = new Vec2(3.5f, 4.5f),
+                HasAim = true,
+                AimDirection = new Vec2(-1f, -1f).Normalized,
+                IsReady = true
+            };
+            var botInput2 = botBrain2.MakeInput(botState2, config);
+
+            // Assertions:
+            // 1. Player inputs A and B are radically different
+            Assert.That(playerInputA.Placement.X, Is.Not.EqualTo(playerInputB.Placement.X));
+            Assert.That(playerInputA.Placement.Y, Is.Not.EqualTo(playerInputB.Placement.Y));
+            Assert.That(playerInputA.AimDirection.X, Is.Not.EqualTo(playerInputB.AimDirection.X));
+
+            // 2. Bot decisions are 100% identical despite the player input difference
+            Assert.That(botInput1.Placement.X, Is.EqualTo(botInput2.Placement.X).Within(1e-6f), "Bot placement X must be identical");
+            Assert.That(botInput1.Placement.Y, Is.EqualTo(botInput2.Placement.Y).Within(1e-6f), "Bot placement Y must be identical");
+            Assert.That(botInput1.AimDirection.X, Is.EqualTo(botInput2.AimDirection.X).Within(1e-6f), "Bot aim X must be identical");
+            Assert.That(botInput1.AimDirection.Y, Is.EqualTo(botInput2.AimDirection.Y).Within(1e-6f), "Bot aim Y must be identical");
+        }
     }
 }

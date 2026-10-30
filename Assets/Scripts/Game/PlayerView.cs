@@ -34,6 +34,10 @@ namespace HitMe.Game
         public string playerId;
         public int characterIndex;
 
+        // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant (0.55f)
+        public static float VisualCharacterScale = 1.8f;
+        public static float VisualHitRingScale = 1.0f;
+
         [Header("Visual Components")]
         [SerializeField] private SpriteRenderer _body;
         [SerializeField] private Animator _animator;
@@ -86,6 +90,8 @@ namespace HitMe.Game
         public static void ConfigureSharedResources(GameConfigAsset configAsset)
         {
             if (configAsset == null) return;
+            if (configAsset.characterScale > 0.01f) VisualCharacterScale = configAsset.characterScale;
+            if (configAsset.hitRingScale > 0.01f) VisualHitRingScale = configAsset.hitRingScale;
             if (configAsset.shadowSprite != null) _defaultShadow = configAsset.shadowSprite;
             if (configAsset.footRingSprite != null) _defaultRing = configAsset.footRingSprite;
             if (configAsset.vietnameseFont != null) _defaultFont = configAsset.vietnameseFont;
@@ -190,17 +196,20 @@ namespace HitMe.Game
                 _shadow.sprite = _defaultShadow;
                 _shadow.sortingOrder = 0;
                 _shadow.color = new Color(0f, 0f, 0f, 0.44f);
-                sGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
+                float shadowScale = 0.66f * VisualCharacterScale * 0.70f;
+                sGo.transform.localScale = new Vector3(shadowScale, shadowScale, 1f);
             }
             else
             {
                 _shadow.sprite = _defaultShadow;
                 _shadow.color = new Color(0f, 0f, 0f, 0.44f);
-                _shadow.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
+                float shadowScale = 0.66f * VisualCharacterScale * 0.70f;
+                _shadow.transform.localScale = new Vector3(shadowScale, shadowScale, 1f);
                 _shadow.transform.localPosition = new Vector3(0f, -0.05f, 0f);
             }
 
             // 2. Foot Ring: Standardized procedural ring for GameConfig.PlayerRadius (width = 1.125u, height = 0.675u, h/w = 0.6)
+            float ringScale = 0.66f * VisualHitRingScale;
             if (_footRing == null)
             {
                 var rGo = new GameObject("FootRing");
@@ -210,13 +219,13 @@ namespace HitMe.Game
                 _footRing.sprite = _defaultRing;
                 _footRing.sortingOrder = 1;
                 _footRing.color = color;
-                rGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
+                rGo.transform.localScale = new Vector3(ringScale, ringScale, 1f);
             }
             else
             {
                 _footRing.sprite = _defaultRing;
                 _footRing.color = color;
-                _footRing.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
+                _footRing.transform.localScale = new Vector3(ringScale, ringScale, 1f);
                 _footRing.transform.localPosition = new Vector3(0f, 0.02f, 0f);
             }
 
@@ -291,7 +300,8 @@ namespace HitMe.Game
                 _body.sprite = _defaultSprites[assetIdx];
             }
 
-            float scale = CharacterBodyScales[assetIdx];
+            float baseScale = CharacterBodyScales[assetIdx];
+            float scale = baseScale * VisualCharacterScale;
             _body.transform.localScale = new Vector3(scale, scale, 1f);
             _body.color = Color.white;
         }
@@ -334,6 +344,24 @@ namespace HitMe.Game
         {
             if (_body == null) return;
             int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            if (idx == 0 && _namLangPoses != null && _namLangPoses.Length >= 5)
+            {
+                if (stateName == "Aim") _body.sprite = _namLangPoses[1];
+                else if (stateName == "Throw") _body.sprite = _namLangPoses[2];
+                else if (stateName == "Hit") _body.sprite = _namLangPoses[3];
+                else if (stateName == "Defeat") _body.sprite = _namLangPoses[4];
+                else _body.sprite = _namLangPoses[0];
+                return;
+            }
+            if (idx == 4 && _anhNonLaPoses != null && _anhNonLaPoses.Length >= 5)
+            {
+                if (stateName == "Aim") _body.sprite = _anhNonLaPoses[1];
+                else if (stateName == "Throw") _body.sprite = _anhNonLaPoses[2];
+                else if (stateName == "Hit") _body.sprite = _anhNonLaPoses[3];
+                else if (stateName == "Defeat") _body.sprite = _anhNonLaPoses[4];
+                else _body.sprite = _anhNonLaPoses[0];
+                return;
+            }
             if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
             {
                 _body.sprite = _defaultSprites[idx];
@@ -358,8 +386,8 @@ namespace HitMe.Game
                 }
                 if (visible)
                 {
-                    _label.transform.localPosition = new Vector3(0f, 1.25f, 0f);
-                    _label.fontSize = 0.85f;
+                    _label.transform.localPosition = new Vector3(0f, 1.15f * VisualCharacterScale, 0f);
+                    _label.fontSize = 0.85f * Mathf.Clamp(VisualCharacterScale * 0.70f, 0.9f, 1.35f);
                     UpdateLabelCached(player.Name, player.Hp);
                 }
             }

@@ -46,6 +46,11 @@ namespace HitMe.Core
         public NoAimPolicy NoAimRule = NoAimPolicy.ThrowFacing;
         public uint Seed = 12345;
 
+        // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant (0.55f)
+        public float CharacterScale = 1.8f;
+        public float WeaponScale = 1.8f;
+        public float HitRingScale = 1.0f;
+
         public float MinX { get { return -ArenaWidth * 0.5f + PlayerRadius; } }
         public float MaxX { get { return ArenaWidth * 0.5f - PlayerRadius; } }
         public float MinY { get { return -ArenaHeight * 0.5f + PlayerRadius; } }

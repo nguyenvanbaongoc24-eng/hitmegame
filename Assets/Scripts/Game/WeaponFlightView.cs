@@ -12,6 +12,8 @@ namespace HitMe.Game
         public HitFx PooledHitFx;
         public bool SpawnHitEffect;
 
+        public static float VisualWeaponScale = 1.8f;
+
         private float _elapsed;
         private SpriteRenderer _renderer;
         private static Sprite _sandalSprite;
@@ -20,6 +22,7 @@ namespace HitMe.Game
         public static void ConfigureSharedResources(GameConfigAsset configAsset)
         {
             if (configAsset == null) return;
+            if (configAsset.weaponScale > 0.01f) VisualWeaponScale = configAsset.weaponScale;
             if (configAsset.sandalProjectileSprite != null)
             {
                 _sandalSprite = configAsset.sandalProjectileSprite;
@@ -59,7 +62,7 @@ namespace HitMe.Game
             {
                 _renderer.sprite = _sandalSprite;
                 _renderer.color = Color.white;
-                transform.localScale = Vector3.one;
+                transform.localScale = new Vector3(VisualWeaponScale, VisualWeaponScale, 1f);
             }
             else
             {

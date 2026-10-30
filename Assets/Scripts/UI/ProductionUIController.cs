@@ -263,6 +263,8 @@ namespace HitMe.UI
 
         private void Start()
         {
+            ParseAndApplyUrlScales();
+
             if (matchController != null)
             {
                 matchController.OnRoundStarted += HandleRoundStarted;
@@ -312,6 +314,26 @@ namespace HitMe.UI
         {
             return Application.absoluteURL != null &&
                    Application.absoluteURL.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static void ParseAndApplyUrlScales()
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return;
+            int idx = url.IndexOf("charScale=", StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+            {
+                idx += "charScale=".Length;
+                int end = url.IndexOf('&', idx);
+                string valStr = end > idx ? url.Substring(idx, end - idx) : url.Substring(idx);
+                float parsed;
+                if (float.TryParse(valStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out parsed) && parsed > 0.1f)
+                {
+                    PlayerView.VisualCharacterScale = parsed;
+                    WeaponFlightView.VisualWeaponScale = parsed;
+                    Debug.Log($"[ProductionUI] Applied charScale={parsed} from URL");
+                }
+            }
         }
 
         public void EnsureAndRefreshBuildFingerprint()

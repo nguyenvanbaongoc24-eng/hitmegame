@@ -34,6 +34,11 @@ namespace HitMe.Game
         public NoAimPolicy noAimRule = Defaults.NoAimRule;
         public uint seed = Defaults.Seed;
 
+        [Header("V4 Visual Scaling (Core Hitbox remains strictly 0.55f)")]
+        public float characterScale = Defaults.CharacterScale;
+        public float weaponScale = Defaults.WeaponScale;
+        public float hitRingScale = Defaults.HitRingScale;
+
         [Header("Shared Runtime Visual Assets (WebGL + Editor)")]
         public Sprite shadowSprite;
         public Sprite footRingSprite;
@@ -46,7 +51,32 @@ namespace HitMe.Game
 
         public GameConfig ToCore()
         {
-            return new GameConfig { MaxPlayers = maxPlayers, StartHp = startHp, PlaceSeconds = placeSeconds, RevealSeconds = revealSeconds, ThrowSeconds = throwSeconds, ResolveSeconds = resolveSeconds, MaxRounds = maxRounds, RoundLimitTiebreak = roundLimitTiebreak, ArenaWidth = arenaWidth, ArenaHeight = arenaHeight, PlayerRadius = playerRadius, WeaponSpeed = weaponSpeed, DamagePerHit = damagePerHit, MaxHitsPerThrow = maxHitsPerThrow, MinSpawnDistance = minSpawnDistance, MinAimDrag = minAimDrag, AimTouchRadiusMultiplier = aimTouchRadiusMultiplier, AimLineExtraLength = aimLineExtraLength, NoAimRule = noAimRule, Seed = seed };
+            return new GameConfig
+            {
+                MaxPlayers = maxPlayers,
+                StartHp = startHp,
+                PlaceSeconds = placeSeconds,
+                RevealSeconds = revealSeconds,
+                ThrowSeconds = throwSeconds,
+                ResolveSeconds = resolveSeconds,
+                MaxRounds = maxRounds,
+                RoundLimitTiebreak = roundLimitTiebreak,
+                ArenaWidth = arenaWidth,
+                ArenaHeight = arenaHeight,
+                PlayerRadius = playerRadius,
+                WeaponSpeed = weaponSpeed,
+                DamagePerHit = damagePerHit,
+                MaxHitsPerThrow = maxHitsPerThrow,
+                MinSpawnDistance = minSpawnDistance,
+                MinAimDrag = minAimDrag,
+                AimTouchRadiusMultiplier = aimTouchRadiusMultiplier,
+                AimLineExtraLength = aimLineExtraLength,
+                NoAimRule = noAimRule,
+                Seed = seed,
+                CharacterScale = characterScale,
+                WeaponScale = weaponScale,
+                HitRingScale = hitRingScale
+            };
         }
     }
 }
