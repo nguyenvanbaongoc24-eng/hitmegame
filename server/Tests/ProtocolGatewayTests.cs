@@ -169,6 +169,41 @@ public sealed class ProtocolGatewayTests
         Assert.Empty(gateway.Tick());
     }
 
+    [Fact]
+    public void QuickMatchQueuesOnlyHumansThenPairsTwoReadyPlayersWithoutBots()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
+        var waiting = Json(gateway.Handle("c1", Request("quick_match")));
+        Assert.Equal("quick_match_waiting", waiting.GetProperty("type").GetString());
+
+        var paired = gateway.HandleMessages("c2", Request("quick_match", "p2", "Two"));
+        Assert.Equal(2, paired.Count);
+        Assert.All(paired, message =>
+        {
+            Assert.Contains("\"type\":\"room_state\"", message.Payload);
+            Assert.DoesNotContain("\"bots\"", message.Payload);
+            Assert.Equal(2, Json(message.Payload).GetProperty("players").GetArrayLength());
+        });
+        clock.Advance(TimeSpan.FromSeconds(3));
+        var started = gateway.Tick();
+        Assert.Equal(2, started.Count);
+        Assert.All(started, message => Assert.Contains("\"type\":\"round_start\"", message.Payload));
+    }
+
+    [Fact]
+    public void QuickMatchHintAppearsAfterThirtySecondsWithoutAddingABot()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), clock, new TestAuthVerifier());
+        gateway.Handle("c1", Request("quick_match"));
+        clock.Advance(TimeSpan.FromSeconds(30));
+        var hint = Assert.Single(gateway.Tick());
+        Assert.Equal("quick_match_hint", Json(hint.Payload).GetProperty("type").GetString());
+        Assert.DoesNotContain("bot", hint.Payload, StringComparison.OrdinalIgnoreCase);
+        Assert.Empty(gateway.Tick());
+    }
+
     [Theory]
     [InlineData(2)]
     [InlineData(3)]

@@ -37,6 +37,7 @@ public sealed class ProtocolGateway
     private readonly IAuthVerifier auth;
     private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, PendingQuickMatch> quickMatch = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DisconnectedSession> disconnected = new(StringComparer.Ordinal);
     private readonly Dictionary<string, RateWindow> rateWindows = new(StringComparer.Ordinal);
 
@@ -68,6 +69,7 @@ public sealed class ProtocolGateway
             return request.Type switch
             {
                 "join" => Reply(connectionId, Join(connectionId, request)),
+                "quick_match" => QuickMatchMessages(connectionId, request),
                 "leave" => Reply(connectionId, Leave(connectionId)),
                 "room_ready" => RoomReadyMessages(connectionId, request),
                 "start" => HostStartMessages(connectionId),
@@ -85,6 +87,11 @@ public sealed class ProtocolGateway
         {
             PruneDisconnected();
             var output = new List<GatewayMessage>();
+            foreach (var entry in quickMatch.Where(pair => !pair.Value.Hinted && clock.GetUtcNow() - pair.Value.QueuedAt >= TimeSpan.FromSeconds(30)).ToArray())
+            {
+                entry.Value.Hinted = true;
+                output.Add(new GatewayMessage(entry.Key, JsonSerializer.Serialize(new { v = Version, type = "quick_match_hint", code = "no_opponent_yet", quickMatchHintSeconds = 30 }, Json)));
+            }
             foreach (var room in rooms.Snapshot())
             {
                 if (!room.Started && room.TryStartCountdownIfDue(clock.GetUtcNow()))
@@ -121,10 +128,38 @@ public sealed class ProtocolGateway
         return RoomState(room!, session.ReconnectToken);
     }
 
+    private IReadOnlyList<GatewayMessage> QuickMatchMessages(string connectionId, ClientEnvelope request)
+    {
+        if (sessions.ContainsKey(connectionId) || quickMatch.ContainsKey(connectionId)) return Reply(connectionId, Error("already_joined"));
+        if (string.IsNullOrWhiteSpace(request.Token)) return Reply(connectionId, Error("auth_required_use_join_token"));
+        if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Reply(connectionId, Error(authError));
+        if (quickMatch.Values.Any(waiting => waiting.Identity.PlayerId == identity.PlayerId)) return Reply(connectionId, Error("already_joined"));
+
+        var opponent = quickMatch.FirstOrDefault();
+        if (string.IsNullOrEmpty(opponent.Key))
+        {
+            quickMatch[connectionId] = new PendingQuickMatch(identity, clock.GetUtcNow());
+            return Reply(connectionId, JsonSerializer.Serialize(new { v = Version, type = "quick_match_waiting", quickMatchHintSeconds = 30 }, Json));
+        }
+
+        quickMatch.Remove(opponent.Key);
+        var room = rooms.Create(opponent.Value.Identity.PlayerId, opponent.Value.Identity.DisplayName, new GameConfig(), out var error);
+        if (room is null) return Reply(connectionId, Error(error));
+        if (!rooms.Join(room.Code, identity.PlayerId, identity.DisplayName, out _, out error)) return Reply(connectionId, Error(error));
+        var first = new Session(room, opponent.Value.Identity.PlayerId, NewReconnectToken());
+        var second = new Session(room, identity.PlayerId, NewReconnectToken());
+        sessions[opponent.Key] = first;
+        sessions[connectionId] = second;
+        room.TrySetRoomReady(first.PlayerId, true, clock.GetUtcNow(), out _);
+        room.TrySetRoomReady(second.PlayerId, true, clock.GetUtcNow(), out _);
+        return new[] { new GatewayMessage(opponent.Key, RoomState(room, first.ReconnectToken)), new GatewayMessage(connectionId, RoomState(room, second.ReconnectToken)) };
+    }
+
     public void Disconnect(string connectionId)
     {
         lock (gate)
         {
+            quickMatch.Remove(connectionId);
             if (!sessions.Remove(connectionId, out var session)) return;
             disconnected[session.ReconnectToken] = new DisconnectedSession(session, clock.GetUtcNow() + TimeSpan.FromSeconds(30));
         }
@@ -269,6 +304,13 @@ public sealed class ProtocolGateway
     }
 
     private sealed record DisconnectedSession(Session Session, DateTimeOffset ExpiresAt);
+    private sealed class PendingQuickMatch
+    {
+        public PendingQuickMatch(PlayerIdentity identity, DateTimeOffset queuedAt) { Identity = identity; QueuedAt = queuedAt; }
+        public PlayerIdentity Identity { get; }
+        public DateTimeOffset QueuedAt { get; }
+        public bool Hinted { get; set; }
+    }
 
     private sealed class RateWindow
     {
