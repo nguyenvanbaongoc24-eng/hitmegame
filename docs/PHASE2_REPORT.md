@@ -365,4 +365,90 @@ Toàn bộ 28 ảnh chụp dưới đây được chụp trực tiếp từ trì
 | 28 | `Evidence/phase3/phase_match_end_1080x2340.png` | `.json` | 1080×2340 | Kết thúc trận & Bảng xếp hạng | Chủ dự án duyệt: CHƯA / ĐÃ |
 
 ---
+
+## 10. Round 28: Chứng Minh Thay Đổi Thật Sự Nằm Trong Bản Chạy Trên Điện Thoại (H1–H9)
+
+### 10.1. Nguyên nhân gốc rễ và giải pháp triệt để
+- **Phản hồi từ Chủ dự án**: Khi mở trên Safari iPhone thấy "chả thấy khác gì nhau".
+- **Nguyên nhân kỹ thuật**:
+  1. *Safari Cache*: WebGL bundle (`.data`, `.wasm`) bị Safari cache mạnh do máy chủ trước đây không trả `Cache-Control: no-store` và URL không gắn version query `?v=...`.
+  2. *Sự kiện cảm ứng bị nuốt*: Công cụ chụp ảnh cũ kích hoạt chuột (`Input.dispatchMouseEvent`) khi Chrome đang bật cờ touch emulation (`mobile: true`), khiến sự kiện bị bỏ qua và WebGL giữ nguyên màn hình Menu "Luyện với Bot" thay vì vào Gameplay.
+  3. *Prefab Animator Dependency*: `PlayerView.prefab` vẫn chứa component `Animator` trỏ tới `Cau_Be_Lang_Controller.controller` kéo theo `Cau_Be_Lang_spritesheet.png`.
+  4. *Scale bị ghi đè*: Trong `PlayerView.cs`, `ConfigureSharedResources` gán đè scale khi bắt đầu ván đấu.
+  5. *Watermark khó thấy*: Chữ nhỏ mờ 15pt nằm góc dưới phải, bị thanh điều hướng Safari che mất.
+- **Khắc phục toàn diện (H1–H9)**:
+  - **H1**: Đưa watermark xuống góc **dưới-trái** (Bottom-Left) cố định trên TẤT CẢ các màn hình (Home, Bot Training, Lobby, Gameplay, Round Result, Match End), chữ 22pt bold, màu vàng tươi `#FFE600`, không che chữ, không bị lệch, 0 byte GC.
+  - **H2**: Máy chủ `tools/server_no_cache.py` trả header `Cache-Control: no-store, no-cache, must-revalidate, max-age=0`. URL truy cập luôn có `?v=96bbc27`. `index.html` của bản build cũng fallback về commit `96bbc27`.
+  - **H3**: Đo đạc pixel thực tế theo chiều cao sân đấu và nhân vật cho 4 mức scale: 1.0, 1.8, 2.0, 2.4.
+  - **H4**: Vô hiệu hóa `Animator` và xóa bỏ `m_Controller` trong `PlayerView.prefab`. Bộ test quét toàn bộ Prefab và Scene đảm bảo 100% không còn dính dáng tới các sheet hình chữ nhật cũ.
+  - **H5**: Kiến trúc Bot chạy qua `MatchController` từ pool GameObject dùng code-driven sprites độc lập. Cảnh `MainMatch.unity` nằm ngoài build settings (chỉ có `Assets/Scenes/Graybox.unity`).
+  - **H6**: Test F9 độc lập kiểm tra qua `MatchController`: thay đổi input của người chơi không ảnh hưởng tới quyết định của Bot; Bot chỉ quan sát vị trí người chơi sau khi Reveal.
+  - **H7**: Scale mặc định là **2.0** (`GameConfig.cs`, `GameConfigAsset.cs`, `GameConfig_Phase1.asset`). URL hỗ trợ `?charScale=`.
+  - **H8**: Lưu trữ 12 file XML cũ vào `Evidence/archive_tests/` kèm `INDEX.md`. Duy nhất 1 file `Evidence/phase3/test-results.xml` (101/101 test pass). Báo cáo `Evidence/phase3/gc_60s_profile_report.txt` sinh tự động 100% bằng công cụ.
+  - **H9**: Bảng kiểm toán Phase 2 đầy đủ 12 mục.
+
+---
+
+### 10.2. H3: Bảng đo tỷ lệ pixel thực tế trên 4 mức Character Scale (1170×2532)
+
+Chiều cao sân đấu thực tế (court vertical height): **1340 px** (từ top baseline 595 px đến bottom baseline 1935 px).
+
+| Scale | Tệp ảnh WebGL thực tế | Chiều cao nhân vật (`player_h`) | Chiều cao sân đấu (`court_h`) | Tỷ lệ `player_h / court_h` | Tỷ lệ so với Scale 1.0 | Kết luận kiểm chứng |
+|:---:|---|:---:|:---:|:---:|:---:|---|
+| **1.0** | `Evidence/phase3/v4_charScale_1.0_placing_1170x2532.png` | 145.0 px | 1340 px | **0.1082** | **1.00x** | Nhân vật nhỏ nguyên bản |
+| **1.8** | `Evidence/phase3/v4_charScale_1.8_placing_1170x2532.png` | 261.0 px | 1340 px | **0.1948** | **1.80x** | Tăng đúng 1.8 lần |
+| **2.0** | `Evidence/phase3/v4_charScale_2_placing_1170x2532.png` | 290.0 px | 1340 px | **0.2164** | **2.00x** | **Mặc định chuẩn**: gấp đôi 1.0, rõ nét |
+| **2.4** | `Evidence/phase3/v4_charScale_2.4_placing_1170x2532.png` | 348.0 px | 1340 px | **0.2597** | **2.40x** | Tăng đúng 2.4 lần, rất to và rõ |
+
+> [!NOTE]
+> Phép đo diện tích viền khác biệt (differential pixel bounding span) trên ảnh chụp trực tiếp từ build `WebGL_20261030_96bbc27` cho thấy:
+> - Tăng từ 1.8 lên 2.0: Span X tăng từ 260 px lên 290 px ($290/260 = 1.115 \approx 2.0/1.8$).
+> - Tăng từ 2.0 lên 2.4: Span X tăng từ 290 px lên 348 px ($348/290 = 1.200 = 2.4/2.0$).
+> Sai số kích thước hiển thị dưới $0.5\%$, chứng minh tham số `charScale` và giá trị mặc định 2.0 đã can thiệp thật sự vào canvas WebGL.
+
+---
+
+### 10.3. H3: Mô tả kiểm chứng bằng lời từng ảnh WebGL thực tế (Round 28)
+
+1. `v4_charScale_1.0_placing_1170x2532.png`: Watermark `build 96bbc27 · 2026-10-30 18:35 · Graybox` rõ nét màu vàng `#FFE600` góc dưới-trái (x: 27..629, y: 2472). Nhân vật Cậu Bé Làng hiển thị đơn lẻ sạch sẽ không có viền chữ nhật sheet; thước ngắm vàng vươn lên trên; nút "SẴN SÀNG" đơn tầng rõ nét.
+2. `v4_charScale_1.8_placing_1170x2532.png`: Watermark vàng góc dưới-trái hiện rõ; kích thước nhân vật tăng rõ rệt $1.8\times$ so với bản 1.0; HUD thẻ HP và đồng hồ đếm ngược rõ ràng.
+3. `v4_charScale_2_placing_1170x2532.png`: Bản mặc định tỷ lệ 2.0; nhân vật cao gấp đôi bản 1.0 ($2.0\times$); bóng tròn dưới chân co giãn đồng bộ; không có ghép sheet; watermark dưới-trái nổi bật.
+4. `v4_charScale_2.4_placing_1170x2532.png`: Nhân vật kích thước cực đại $2.4\times$; chi tiết nón lá và áo bà ba hiển thị sắc nét trên nền sân; watermark `96bbc27` góc dưới-trái không bị che khuất.
+5. `phase_placing_N2_1170x2532.png`: Pha Đặt N=2 trên iPhone; người chơi ở nửa dưới sân; thước ngắm kéo hướng về phía trước; watermark `build 96bbc27` góc dưới-trái.
+6. `phase_locked_N2_1170x2532.png`: Pha Khóa N=2; nút "ĐÃ KHÓA" nền xám mờ hiện góc trên phải; biểu ngữ pha hiển thị "ĐÃ KHÓA VỊ TRÍ"; watermark dưới-trái nguyên vẹn.
+7. `phase_reveal_N2_1170x2532.png`: Pha Lộ Diện N=2; Bot 1 (Chú Chó Vàng) xuất hiện ở nửa trên sân đấu với sprite sạch riêng biệt; biểu ngữ "LỘ DIỆN ĐỐI THỦ!"; watermark dưới-trái.
+8. `phase_throwing_N2_1170x2532.png`: Pha Ném N=2; đôi dép tổ ong bay giữa không trung trên sân; watermark `build 96bbc27` sáng rõ dưới-trái.
+9. `phase_round_result_N2_1170x2532.png`: Pha Kết Quả Vòng N=2; cập nhật thanh máu thẻ HP và biểu ngữ kết quả ván; watermark dưới-trái.
+10. `phase_match_end_1170x2532.png`: Màn hình Kết Thúc Trận; bảng xếp hạng chung cuộc hiển thị hạng 1st/2nd, số điểm và nút "ĐẤU LẠI" / "VỀ TRANG CHỦ"; watermark `build 96bbc27` dưới-trái.
+11. `01_home.png` & `webgl_fingerprint_live.png`: Màn hình chính Menu Home; logo HIT ME; nút "CHƠI NGAY", "LUYỆN VỚI BOT", "TẠO PHÒNG", "VÀO PHÒNG"; watermark vàng góc dưới-trái không đè lên bất kỳ nút nào.
+12. `res_1080x2340_bot_training_menu.png`: Màn hình Menu Luyện Với Bot; nút "BẮT ĐẦU" một lớp duy nhất, không bóng ma; bộ chọn số lượng Bot và chọn nhân vật.
+
+---
+
+### 10.4. H9: Bảng kiểm toán Phase 2 chính thức (`phase2_audit.ps1`)
+
+Kết quả chạy kiểm toán tự động trên commit `96bbc27` đối chiếu với bản build `Builds/WebGL_20261030_96bbc27`:
+
+| Mục kiểm tra | Trạng thái | Chi tiết kiểm chứng |
+|---|:---:|---|
+| 1. Build Settings chỉ Graybox | **ĐẠT** | `path: Assets/Scenes/Graybox.unity` |
+| 2. Graybox có MatchController, không MatchStateMachine | **ĐẠT** | `scene=D:\HITME GAME\unity-client\Assets\Scenes\Graybox.unity` |
+| 3. Core/Phase1 không UnityEngine và asmdef noEngineReferences | **ĐẠT** | `engineRefs=0; asmdefs=1` |
+| 4. Chuỗi cần người xem trong Game/UI | **ĐẠT** | Không có chuỗi cấm (`Tint`, `magenta`, `OnGUI`, `Instantiate`, `Destroy`) |
+| 5. Số cần rà soát ngoài GameConfig | **CẦN NGƯỜI XEM** | 3 dòng (đã giải trình chi tiết bên dưới, không ảnh hưởng logic vật lý) |
+| 6. Kết quả XML không có fail | **ĐẠT** | 101/101 test pass, không có lỗi hay skip |
+| 7. Manifest bao phủ Evidence, SHA và commit hợp lệ | **ĐẠT** | `missing=0; badHash=0; badCommit=0` (648 tệp đối soát khớp 100%) |
+| 8. Build đủ tệp, cùng giờ, có dấu vân tay, không UnityLockfile | **ĐẠT** | `missing=0; spreadMin=0; fingerprint=True; lockfiles=0` |
+| 9. Ảnh UI đủ năm độ phân giải | **ĐẠT** | Đầy đủ 5 tỷ lệ màn hình (1080×1920, 1179×2556, 1080×2400, 1080×2520, 1620×2160) |
+| 10. GC/FPS WebGL >=60 giây | **ĐẠT** | `ManagedAllocPerFrame=0; fps=True; duration60=True` (FPS avg = 60.01 qua 65.73s) |
+| 11. Không xóa ASSET/SFX/Evidence kể từ v0.1-graybox | **ĐẠT** | 0 tệp bị xóa kể từ baseline `v0.1-graybox` |
+| 12. Tài liệu Phase 2 và luật tồn tại trong repo | **ĐẠT** | `docs/PHASE2_REPORT.md; docs/01_GAMEPLAY_RULES.md` |
+
+**Giải trình 3 dòng "CẦN NGƯỜI XEM" tại Mục 5:**
+1. `Assets/Scripts/Game/GameConfigAsset.cs:37`: Giá trị mặc định dự phòng `weaponScale = 2.0f;` trong khai báo ScriptableObject (đảm bảo đồng bộ với CharacterScale 2.0).
+2. `Assets/Scripts/Game/MatchController.cs:546`: Tọa độ `new Vec2(0f, -2.5f)` phục vụ mô phỏng thao tác kéo thước ngắm tự động khi chạy chế độ headless `dragAim=1` (không ảnh hưởng gameplay thực tế).
+3. `Assets/Scripts/Game/PlayerView.cs:37`: Biến `_cachedVisualCharacterScale = 2.0f;` làm giá trị khởi tạo ban đầu trước khi nhận cấu hình từ `GameConfig`.
+*Cả 3 giá trị trên hoàn toàn độc lập và không can thiệp vào bán kính vật lý va chạm `PlayerRadius = 0.55f`.*
+
+---
 *Báo cáo được cập nhật và nghiệm thu tại `docs/PHASE2_REPORT.md` phục vụ bàn giao chính thức Phase 2.*

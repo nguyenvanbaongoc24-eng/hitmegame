@@ -3,7 +3,7 @@ import fs from 'fs';
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const port = 9236;
-const targetUrl = 'http://localhost:8093/index.html?autoPlay=50&profileSeconds=62';
+const targetUrl = 'http://localhost:8093/index.html?autoPlay=50&profileSeconds=62&v=96bbc27';
 const reportOutPath = 'D:\\HITME GAME\\unity-client\\Evidence\\phase3\\gc_60s_profile_report.txt';
 
 async function sleep(ms) {
@@ -183,25 +183,25 @@ HIT ME — BÁO CÁO HIỆU NĂNG WEBGL & ĐO LIÊN TỤC > 60 GIÂY (S4, S6, LU
 Ngày đo: ${new Date().toISOString().slice(0, 10)}
 Môi trường đo:
 - OS: Windows 11 x64
-- Engine: Unity 6000.6.4f1 (WebGL Release Build \`Builds/WebGL_20261030_d7aee3a\`)
+- Engine: Unity 6000.6.4f1 (WebGL Release Build \`Builds/WebGL_20261030_96bbc27\`)
 - Browser: Google Chrome Headless WebGL (--window-size=540,960 --enable-webgl --ignore-gpu-blocklist)
 - Kịch bản đo: tools/verify_60s_webgl.mjs (DevTools Protocol)
-- URL kiểm thử: http://localhost:8092/index.html?autoPlay=50&profileSeconds=62
-- LAN URL: http://10.0.0.108:8092/
+- URL kiểm thử: http://localhost:8093/index.html?autoPlay=50&profileSeconds=62&v=96bbc27
+- LAN URL: http://10.0.0.108:8093/?v=96bbc27
 ================================================================================
 
 1. PHƯƠNG PHÁP ĐO & MINH BẠCH VỀ MÔI TRƯỜNG THỰC NGHIỆM
 --------------------------------------------------------------------------------
-- Phương pháp: Kịch bản \`tools/verify_60s_webgl.mjs\` khởi động Chromium headless kết nối tới bản build WebGL release qua cổng 8092.
+- Phương pháp: Kịch bản \`tools/verify_60s_webgl.mjs\` khởi động Chromium headless kết nối tới bản build WebGL release qua cổng 8093.
   + FPS trình duyệt: Lắng nghe \`requestAnimationFrame\` (rAF) liên tục, tính delta time giữa các khung hình, chia thành các cửa sổ 1 giây để tính FPS trung bình, min, max và 1% low (P99).
   + Đo bộ nhớ JS Heap: Thu thập \`performance.memory.usedJSHeapSize\` và \`totalJSHeapSize\` qua từng giây.
   + Đo cấp phát bộ nhớ Unity IL2CPP: \`MatchController.cs\` gọi \`GC.GetTotalMemory(false)\` mỗi frame.
 - LƯU Ý MINH BẠCH QUAN TRỌNG:
   + Phép đo này được thực hiện trên PC (Windows 11 / Chromium Headless).
   + Khóa 60 FPS: Khung hình trình duyệt được đồng bộ theo nhịp vsync tiêu chuẩn 60 Hz của Chromium.
-  + CHƯA ĐO TRÊN ĐIỆN THOẠI VẬT LÝ: Phép đo trên thiết bị di động thực tế thuộc bước S5 dành cho Chủ dự án trải nghiệm trực tiếp qua mạng LAN http://10.0.0.108:8092/.
+  + CHƯA ĐO TRÊN ĐIỆN THOẠI VẬT LÝ: Phép đo trên thiết bị di động thực tế thuộc bước S5 dành cho Chủ dự án trải nghiệm trực tiếp qua mạng LAN http://10.0.0.108:8093/?v=96bbc27.
 
-2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (\`Builds/WebGL_20261030_d7aee3a\`)
+2. KẾT QUẢ ĐO LIÊN TỤC > 60 GIÂY TRÊN BẢN WEBGL (\`Builds/WebGL_20261030_96bbc27\`)
 --------------------------------------------------------------------------------
 - Thời gian đo liên tục: ${stats.elapsedSec} giây (> 60 seconds / > 60 giây, 50 trận đấu liên tiếp, 0 lỗi console, 0 treo).
 - Tổng số khung hình trình duyệt (rAF frames): ${stats.totalFrames} khung hình.

@@ -116,8 +116,9 @@ namespace HitMe.Editor
                     if (!html.Contains("build-fingerprint"))
                     {
                         html = html.Replace("<head>", "<head>\n    " + metaTag);
-                        File.WriteAllText(indexPath, html);
                     }
+                    html = html.Replace("\"phase1-closed-20261028\"", $"\"{commitShort}\"");
+                    File.WriteAllText(indexPath, html);
                 }
                 DateTime buildCompleteUtc = DateTime.UtcNow;
                 foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
