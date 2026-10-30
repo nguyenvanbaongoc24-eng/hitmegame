@@ -22,6 +22,7 @@ public sealed class ClientEnvelope
     public float? PositionY { get; set; }
     public float? AimX { get; set; }
     public float? AimY { get; set; }
+    public string? EmoteId { get; set; }
 }
 
 public sealed record GatewayMessage(string ConnectionId, string Payload);
@@ -75,6 +76,7 @@ public sealed class ProtocolGateway
                 "room_ready" => RoomReadyMessages(connectionId, request),
                 "start" => HostStartMessages(connectionId),
                 "lock_ready" => LockReadyMessages(connectionId, request),
+                "emote" => EmoteMessages(connectionId, request),
                 "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
                 "commit" => CommitMessages(connectionId, request),
                 _ => Reply(connectionId, Error("unknown_type"))
@@ -112,6 +114,7 @@ public sealed class ProtocolGateway
         if (sessions.ContainsKey(connectionId)) return Error("already_joined");
         if (string.IsNullOrWhiteSpace(request.Token)) return Error("auth_required_use_join_token");
         if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Error(authError);
+        if (rooms.BanStore.TryGetRemaining(identity.PlayerId, clock.GetUtcNow(), out var remainingSeconds)) return BannedError(remainingSeconds);
         if (!string.IsNullOrWhiteSpace(request.ReconnectToken)) return Reconnect(connectionId, request.ReconnectToken, identity.PlayerId);
         RoomAuthority? room;
         string error;
@@ -134,6 +137,7 @@ public sealed class ProtocolGateway
         if (sessions.ContainsKey(connectionId) || quickMatch.ContainsKey(connectionId)) return Reply(connectionId, Error("already_joined"));
         if (string.IsNullOrWhiteSpace(request.Token)) return Reply(connectionId, Error("auth_required_use_join_token"));
         if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Reply(connectionId, Error(authError));
+        if (rooms.BanStore.TryGetRemaining(identity.PlayerId, clock.GetUtcNow(), out var remainingSeconds)) return Reply(connectionId, BannedError(remainingSeconds));
         if (quickMatch.Values.Any(waiting => waiting.Identity.PlayerId == identity.PlayerId)) return Reply(connectionId, Error("already_joined"));
 
         var opponent = quickMatch.FirstOrDefault();
@@ -162,6 +166,7 @@ public sealed class ProtocolGateway
         {
             quickMatch.Remove(connectionId);
             if (!sessions.Remove(connectionId, out var session)) return;
+            session.Room.RoundSession?.SetConnected(session.PlayerId, false);
             disconnected[session.ReconnectToken] = new DisconnectedSession(session, clock.GetUtcNow() + TimeSpan.FromSeconds(30));
         }
     }
@@ -173,6 +178,7 @@ public sealed class ProtocolGateway
 
         if (!sessions.Remove(connectionId, out var session)) return Error("not_joined");
         disconnected.Remove(session.ReconnectToken);
+        session.Room.RoundSession?.EliminateDisconnected(session.PlayerId);
         return rooms.Leave(session.Room.Code, session.PlayerId, out var room, out var error) ? RoomState(room!) : Error(error);
     }
 
@@ -219,6 +225,17 @@ public sealed class ProtocolGateway
         return Reply(connectionId, RoomState(session.Room));
     }
 
+    private IReadOnlyList<GatewayMessage> EmoteMessages(string connectionId, ClientEnvelope request)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        var roundSession = session.Room.RoundSession;
+        if (roundSession is null) return Reply(connectionId, Error("wrong_phase"));
+        if (!roundSession.TrySendEmote(session.PlayerId, request.EmoteId, clock.GetUtcNow(), out var error)) return Reply(connectionId, Error(error));
+        var payload = JsonSerializer.Serialize(new { v = Version, type = "emote", playerId = session.PlayerId, emoteId = request.EmoteId, phase = "placing" }, Json);
+        return sessions.Where(pair => ReferenceEquals(pair.Value.Room, session.Room))
+            .Select(pair => new GatewayMessage(pair.Key, payload)).ToArray();
+    }
+
     private string Reconnect(string connectionId, string reconnectToken, string authenticatedPlayerId)
     {
         PruneDisconnected();
@@ -231,6 +248,7 @@ public sealed class ProtocolGateway
 
         var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken());
         sessions[connectionId] = session;
+        session.Room.RoundSession?.SetConnected(session.PlayerId, true);
         return RoomState(session.Room, session.ReconnectToken);
     }
 
@@ -241,7 +259,10 @@ public sealed class ProtocolGateway
         {
             disconnected.Remove(entry.Key);
             if (!sessions.Values.Any(session => ReferenceEquals(session.Room, entry.Value.Session.Room) && session.PlayerId == entry.Value.Session.PlayerId))
+            {
+                entry.Value.Session.Room.RoundSession?.EliminateDisconnected(entry.Value.Session.PlayerId);
                 rooms.Leave(entry.Value.Session.Room.Code, entry.Value.Session.PlayerId, out _, out _);
+            }
         }
     }
 
@@ -275,6 +296,7 @@ public sealed class ProtocolGateway
     }
 
     private static string Error(string code) => JsonSerializer.Serialize(new { v = Version, type = "error", code }, Json);
+    private static string BannedError(int remainingSeconds) => JsonSerializer.Serialize(new { v = Version, type = "error", code = "banned", remainingSeconds }, Json);
 
     private static string NewReconnectToken()
     {

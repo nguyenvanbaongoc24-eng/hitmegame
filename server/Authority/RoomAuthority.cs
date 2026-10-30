@@ -14,13 +14,17 @@ public sealed class RoomAuthority
 {
     private readonly List<RoomPlayer> players = new();
     private readonly int startCountdownSeconds;
+    private readonly AfkPolicy afkPolicy;
+    private readonly IBanStore banStore;
 
-    public RoomAuthority(string code, string hostId, GameConfig config, int startCountdownSeconds = 3)
+    public RoomAuthority(string code, string hostId, GameConfig config, int startCountdownSeconds = 3, AfkPolicy? afkPolicy = null, IBanStore? banStore = null)
     {
         Code = code;
         HostId = hostId;
         Config = config.Clone();
         this.startCountdownSeconds = startCountdownSeconds < 0 ? 0 : startCountdownSeconds;
+        this.afkPolicy = afkPolicy ?? new AfkPolicy();
+        this.banStore = banStore ?? new InMemoryBanStore();
     }
 
     public const int MinPlayers = 2;
@@ -89,7 +93,7 @@ public sealed class RoomAuthority
     {
         Started = true;
         StartDeadline = null;
-        RoundSession = new ServerRoundSession(Config, players.Select(p => p.Id));
+        RoundSession = new ServerRoundSession(Config, players.Select(p => p.Id), afkPolicy, banStore);
     }
 }
 
@@ -101,12 +105,16 @@ public sealed class RoomDirectory
     private int attempts;
     private readonly int startCountdownSeconds;
     private readonly int maxRooms;
+    private readonly AfkPolicy afkPolicy;
+    public IBanStore BanStore { get; }
 
-    public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3, int maxRooms = 200)
+    public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3, int maxRooms = 200, AfkPolicy? afkPolicy = null, IBanStore? banStore = null)
     {
         this.codeForAttempt = codeForAttempt ?? (n => $"HM{Random.Shared.Next(0, 10000):0000}");
         this.startCountdownSeconds = startCountdownSeconds;
         this.maxRooms = maxRooms;
+        this.afkPolicy = afkPolicy ?? new AfkPolicy();
+        BanStore = banStore ?? new InMemoryBanStore();
     }
 
     public RoomAuthority Create(string hostId, string hostName, GameConfig? config, out string error)
@@ -118,7 +126,7 @@ public sealed class RoomDirectory
             {
                 var code = codeForAttempt(++attempts);
                 if (rooms.ContainsKey(code)) continue;
-                var room = new RoomAuthority(code, hostId, config ?? new GameConfig(), startCountdownSeconds);
+                var room = new RoomAuthority(code, hostId, config ?? new GameConfig(), startCountdownSeconds, afkPolicy, BanStore);
                 if (!room.TryJoin(hostId, hostName, out error)) return null!;
                 rooms.Add(code, room);
                 error = string.Empty;

@@ -43,6 +43,7 @@ public sealed class Round
     public DateTimeOffset Deadline { get; }
     public bool IsLocked { get; private set; }
     public RoundLockReason LockReason { get; private set; }
+    public DateTimeOffset? LockedAt { get; private set; }
     public IReadOnlyDictionary<string, RoundCommit> Commits => commits;
 
     public bool TryCommit(string playerId, RoundCommit commit, out string error)
@@ -87,6 +88,7 @@ public sealed class Round
     {
         IsLocked = true;
         LockReason = reason;
+        LockedAt = clock.GetUtcNow();
     }
 
     private bool TryNormalize(RoundCommit commit, out RoundCommit normalized)
