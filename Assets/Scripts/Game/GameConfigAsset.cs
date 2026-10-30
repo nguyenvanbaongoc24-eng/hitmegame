@@ -6,31 +6,33 @@ namespace HitMe.Game
     [CreateAssetMenu(menuName = "HIT ME/Phase 1 Game Config", fileName = "GameConfig_Phase1")]
     public sealed class GameConfigAsset : ScriptableObject
     {
-        public int maxPlayers = 6;
-        public int startHp = 3;
-        public float placeSeconds = 5f;
-        public float revealSeconds = 0.8f;
-        public float throwSeconds = 1.35f;
-        public float resolveSeconds = 1.2f;
-        public int maxRounds = 5;
+        private static readonly GameConfig Defaults = new GameConfig();
+
+        public int maxPlayers = Defaults.MaxPlayers;
+        public int startHp = Defaults.StartHp;
+        public float placeSeconds = Defaults.PlaceSeconds;
+        public float revealSeconds = Defaults.RevealSeconds;
+        public float throwSeconds = Defaults.ThrowSeconds;
+        public float resolveSeconds = Defaults.ResolveSeconds;
+        public int maxRounds = Defaults.MaxRounds;
         [Tooltip("Prepared for a future approved round cap. Phase 1 currently continues until elimination.")]
-        public RoundLimitTiebreakPolicy roundLimitTiebreak = RoundLimitTiebreakPolicy.ContinueUntilElimination;
-        public float arenaWidth = 9.0f;
-        public float arenaHeight = 11.4f;
-        public float playerRadius = 0.55f;
-        public float weaponSpeed = 14f;
-        public int damagePerHit = 1;
-        public int maxHitsPerThrow = 1;
-        public float minSpawnDistance = 0.9f;
+        public RoundLimitTiebreakPolicy roundLimitTiebreak = Defaults.RoundLimitTiebreak;
+        public float arenaWidth = Defaults.ArenaWidth;
+        public float arenaHeight = Defaults.ArenaHeight;
+        public float playerRadius = Defaults.PlayerRadius;
+        public float weaponSpeed = Defaults.WeaponSpeed;
+        public int damagePerHit = Defaults.DamagePerHit;
+        public int maxHitsPerThrow = Defaults.MaxHitsPerThrow;
+        public float minSpawnDistance = Defaults.MinSpawnDistance;
         [Tooltip("Minimum world-space drag from the player before an aim direction is committed.")]
-        public float minAimDrag = 0.55f;
+        public float minAimDrag = Defaults.MinAimDrag;
         [Tooltip("Multiplier for the visible and functional aim touch ring around the player.")]
-        public float aimTouchRadiusMultiplier = 1.75f;
+        public float aimTouchRadiusMultiplier = Defaults.AimTouchRadiusMultiplier;
         [Tooltip("World-space distance that extends the aim ruler beyond the pointer.")]
-        public float aimLineExtraLength = 0.35f;
+        public float aimLineExtraLength = Defaults.AimLineExtraLength;
         [Tooltip("Fallback used when the placement timer ends without an aim.")]
-        public NoAimPolicy noAimRule = NoAimPolicy.ThrowFacing;
-        public uint seed = 12345;
+        public NoAimPolicy noAimRule = Defaults.NoAimRule;
+        public uint seed = Defaults.Seed;
 
         [Header("Shared Runtime Visual Assets (WebGL + Editor)")]
         public Sprite shadowSprite;

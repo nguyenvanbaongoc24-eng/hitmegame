@@ -24,7 +24,7 @@ namespace HitMe.Game
             }
 
             // Fallback graybox floor/walls when no ArenaBackground sprite is present.
-            _white = _white ?? Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), new Vector2(.5f, .5f), 1f);
+            _white = _white ?? Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), new Vector2(0.50f, 0.50f), 1f);
             var config = Config;
             _floor = Make("Floor", new Color(.23f, .25f, .27f), Vector2.zero, new Vector2(config.ArenaWidth, config.ArenaHeight), -1);
             float t = .12f;

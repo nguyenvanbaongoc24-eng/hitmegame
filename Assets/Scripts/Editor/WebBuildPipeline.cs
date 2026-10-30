@@ -108,6 +108,17 @@ namespace HitMe.Editor
 
             if (summary.result == BuildResult.Succeeded)
             {
+                string indexPath = Path.Combine(buildDir, "index.html");
+                if (File.Exists(indexPath))
+                {
+                    string html = File.ReadAllText(indexPath);
+                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Graybox\">";
+                    if (!html.Contains("build-fingerprint"))
+                    {
+                        html = html.Replace("<head>", "<head>\n    " + metaTag);
+                        File.WriteAllText(indexPath, html);
+                    }
+                }
                 DateTime buildCompleteUtc = DateTime.UtcNow;
                 foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
                 {

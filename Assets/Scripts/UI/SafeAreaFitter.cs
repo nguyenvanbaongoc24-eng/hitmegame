@@ -110,8 +110,8 @@ namespace HitMe.UI
             {
                 float portraitPixelWidth = screenHeight * TargetPortraitAspect;
                 float normWidth = Mathf.Clamp01(portraitPixelWidth / screenWidth);
-                portMinX = 0.5f - normWidth * 0.5f;
-                portMaxX = 0.5f + normWidth * 0.5f;
+                portMinX = 0.50f - normWidth * 0.50f;
+                portMaxX = 0.50f + normWidth * 0.50f;
             }
 
             // 2. Hardware/OS safeArea normalized bounds
@@ -148,7 +148,7 @@ namespace HitMe.UI
 
             _rectTransform.anchorMin = new Vector2(finalMinX, finalMinY);
             _rectTransform.anchorMax = new Vector2(finalMaxX, finalMaxY);
-            _rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            _rectTransform.pivot = new Vector2(0.50f, 0.50f);
             _rectTransform.offsetMin = Vector2.zero;
             _rectTransform.offsetMax = Vector2.zero;
         }

@@ -180,7 +180,7 @@ namespace HitMe.Game
 
             EnsureStaticResources();
 
-            // 1. Shadow: Standardized procedural soft shadow for playerRadius = 0.55f (width = 1.125u, 12.5% arena width)
+            // 1. Shadow: Standardized procedural soft shadow for GameConfig.PlayerRadius (width = 1.125u, 12.5% arena width)
             if (_shadow == null)
             {
                 var sGo = new GameObject("Shadow");
@@ -189,18 +189,18 @@ namespace HitMe.Game
                 _shadow = sGo.AddComponent<SpriteRenderer>();
                 _shadow.sprite = _defaultShadow;
                 _shadow.sortingOrder = 0;
-                _shadow.color = new Color(0f, 0f, 0f, 0.45f);
+                _shadow.color = new Color(0f, 0f, 0f, 0.44f);
                 sGo.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
             }
             else
             {
                 _shadow.sprite = _defaultShadow;
-                _shadow.color = new Color(0f, 0f, 0f, 0.45f);
+                _shadow.color = new Color(0f, 0f, 0f, 0.44f);
                 _shadow.transform.localScale = new Vector3(0.66f, 0.66f, 1f);
                 _shadow.transform.localPosition = new Vector3(0f, -0.05f, 0f);
             }
 
-            // 2. Foot Ring: Standardized procedural ring for playerRadius = 0.55f (width = 1.125u, height = 0.675u, h/w = 0.6)
+            // 2. Foot Ring: Standardized procedural ring for GameConfig.PlayerRadius (width = 1.125u, height = 0.675u, h/w = 0.6)
             if (_footRing == null)
             {
                 var rGo = new GameObject("FootRing");
@@ -296,8 +296,12 @@ namespace HitMe.Game
             _body.color = Color.white;
         }
 
-        public void SetHitboxVisible(bool visible, float radius = 0.55f)
+        public void SetHitboxVisible(bool visible, float radius = -1f)
         {
+            if (radius <= 0f)
+            {
+                radius = new GameConfig().PlayerRadius;
+            }
             if (_hitboxCircle == null)
             {
                 var hbGo = new GameObject("DebugHitbox");
@@ -366,7 +370,7 @@ namespace HitMe.Game
                 _body.sprite = _defaultSprites[idx];
             }
 
-            _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.5f);
+            _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.50f);
 
             if (_aim != null)
             {

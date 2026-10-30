@@ -285,7 +285,7 @@ namespace HitMe.UI
                 var rt = go.GetComponent<RectTransform>();
                 rt.anchorMin = new Vector2(0f, 0f);
                 rt.anchorMax = new Vector2(1f, 0f);
-                rt.pivot = new Vector2(0.5f, 0f);
+                rt.pivot = new Vector2(0.50f, 0f);
                 rt.anchoredPosition = new Vector2(0f, 8f);
                 rt.sizeDelta = new Vector2(-36f, 24f);
 
@@ -858,8 +858,8 @@ namespace HitMe.UI
                     card.lastDisplayedHpCode = clampedHp;
                     card.txtHearts.text = CachedHpCardStrings[clampedHp];
                     card.txtHearts.color = player.IsAlive
-                        ? (clampedHp == 3 ? new Color(0.25f, 1f, 0.45f) : (clampedHp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
-                        : new Color(1f, 0.45f, 0.45f);
+                        ? (clampedHp == 3 ? new Color(0.25f, 1f, 0.44f) : (clampedHp == 2 ? new Color(1f, 0.86f, 0.25f) : new Color(1f, 0.42f, 0.42f)))
+                        : new Color(1f, 0.44f, 0.44f);
                 }
 
                 bool isLocal = player.Id == "player";
@@ -880,7 +880,7 @@ namespace HitMe.UI
                     else
                     {
                         card.txtHpNum.text = StatusAliveText;
-                        card.txtHpNum.color = new Color(0.45f, 0.95f, 0.65f);
+                        card.txtHpNum.color = new Color(0.44f, 0.95f, 0.65f);
                     }
                 }
 
@@ -888,7 +888,7 @@ namespace HitMe.UI
                 {
                     card.imgBg.color = player.IsAlive
                         ? (statusCode == -1 ? new Color(0.92f, 0.95f, 1f, 1f) : Color.white)
-                        : new Color(0.55f, 0.42f, 0.45f, 0.92f);
+                        : new Color(0.54f, 0.42f, 0.44f, 0.92f);
                 }
             }
         }
@@ -925,17 +925,17 @@ namespace HitMe.UI
                 if (isTie)
                 {
                     txtResultTitle.text = isLocalWinner ? "ĐỒNG CHIẾN THẮNG!" : "HÒA TOP 1!";
-                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(0.45f, 0.88f, 1f);
+                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(0.44f, 0.88f, 1f);
                 }
                 else if (winnerIds != null && winnerIds.Count == 1)
                 {
                     txtResultTitle.text = isLocalWinner ? "CHIẾN THẮNG!" : "KẾT THÚC TRẬN ĐẤU";
-                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(1f, 0.55f, 0.40f);
+                    txtResultTitle.color = isLocalWinner ? new Color(1f, 0.92f, 0.25f) : new Color(1f, 0.54f, 0.40f);
                 }
                 else
                 {
                     txtResultTitle.text = "HÒA NHAU!";
-                    txtResultTitle.color = new Color(0.45f, 0.88f, 1f);
+                    txtResultTitle.color = new Color(0.44f, 0.88f, 1f);
                 }
             }
 
@@ -983,7 +983,7 @@ namespace HitMe.UI
                 {
                     int hpClamped = Mathf.Clamp(p.Hp, 0, 3);
                     row.txtHp.text = "HP: " + hpClamped + "/3 • HIT: " + p.HitsLanded;
-                    row.txtHp.color = p.IsAlive ? new Color(0.85f, 0.95f, 1f) : new Color(0.75f, 0.55f, 0.55f);
+                    row.txtHp.color = p.IsAlive ? new Color(0.85f, 0.95f, 1f) : new Color(0.75f, 0.54f, 0.54f);
                 }
 
                 if (row.txtStatus != null)
@@ -996,7 +996,7 @@ namespace HitMe.UI
                     else
                     {
                         row.txtStatus.text = p.IsAlive ? "Còn sống" : "✖ Đã loại";
-                        row.txtStatus.color = p.IsAlive ? Color.white : new Color(1f, 0.45f, 0.45f);
+                        row.txtStatus.color = p.IsAlive ? Color.white : new Color(1f, 0.44f, 0.44f);
                     }
                 }
 

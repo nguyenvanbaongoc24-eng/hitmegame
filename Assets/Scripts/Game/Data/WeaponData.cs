@@ -19,7 +19,7 @@ namespace HitMe.Core
         public Sprite projectileSprite;
         public int damage = 1;
         public float speed = 14.0f;
-        public float hitRadius = 0.5f;
+        public float hitRadius = 0.50f;
         public WeaponTrajectoryType trajectoryType = WeaponTrajectoryType.Straight;
         public AudioClip sfxThrow;
         public AudioClip sfxImpact;

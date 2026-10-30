@@ -7,6 +7,7 @@ namespace HitMe.Core
     {
         private readonly Dictionary<string, RoundInput> _inputs = new Dictionary<string, RoundInput>();
         private readonly List<string> _winnerIds = new List<string>();
+        private readonly HashSet<string> _aliveBeforeBuffer = new HashSet<string>(StringComparer.Ordinal);
         public GameConfig Config { get; private set; }
         public List<PlayerState> Players { get; private set; }
         public int RoundNumber { get; private set; }
@@ -128,10 +129,10 @@ namespace HitMe.Core
         {
             if (Phase != Phase.Throwing) return LastResolution;
             Phase = Phase.Resolve;
-            var aliveBefore = new HashSet<string>(StringComparer.Ordinal);
+            _aliveBeforeBuffer.Clear();
             for (int i = 0; i < Players.Count; i++)
             {
-                if (Players[i].IsAlive) aliveBefore.Add(Players[i].Id);
+                if (Players[i].IsAlive) _aliveBeforeBuffer.Add(Players[i].Id);
             }
 
             LastResolution = RoundResolver.Resolve(Players, _inputs, Config);
@@ -139,7 +140,7 @@ namespace HitMe.Core
             for (int i = 0; i < Players.Count; i++)
             {
                 var p = Players[i];
-                if (!p.IsAlive && aliveBefore.Contains(p.Id) && p.EliminatedAtRound <= 0)
+                if (!p.IsAlive && _aliveBeforeBuffer.Contains(p.Id) && p.EliminatedAtRound <= 0)
                 {
                     p.EliminatedAtRound = RoundNumber;
                 }

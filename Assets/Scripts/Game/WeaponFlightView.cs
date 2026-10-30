@@ -64,7 +64,7 @@ namespace HitMe.Game
             else
             {
                 _renderer.color = Color.yellow;
-                transform.localScale = new Vector3(.5f, .16f, 1f);
+                transform.localScale = new Vector3(0.50f, 0.16f, 1f);
             }
 
             _renderer.sortingOrder = 4;

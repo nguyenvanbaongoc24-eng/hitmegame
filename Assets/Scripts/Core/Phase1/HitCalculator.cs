@@ -13,14 +13,24 @@ namespace HitMe.Core
             return origin + dir * distance;
         }
 
+        private static readonly System.Comparison<HitEvent> CompareHitDistance = (a, b) => a.Distance.CompareTo(b.Distance);
+
         public static List<HitEvent> CalculateHits(PlayerState shooter, IList<PlayerState> snapshot, Vec2 direction, GameConfig config)
         {
-            var allHits = new List<HitEvent>();
-            if (shooter == null || !shooter.IsAlive) return allHits;
+            var allHits = new List<HitEvent>(4);
+            CalculateHits(shooter, snapshot, direction, config, allHits);
+            return allHits;
+        }
+
+        public static void CalculateHits(PlayerState shooter, IList<PlayerState> snapshot, Vec2 direction, GameConfig config, List<HitEvent> allHits)
+        {
+            allHits.Clear();
+            if (shooter == null || !shooter.IsAlive) return;
             var origin = shooter.Position;
             var end = GetWallPoint(origin, direction, config);
             var segment = end - origin;
             var length = segment.Length;
+            if (length <= 0.00001f) return;
             var unit = segment / length;
 
             for (int i = 0; i < snapshot.Count; i++)
@@ -33,10 +43,10 @@ namespace HitMe.Core
                 if (Vec2.Distance(target.Position, closest) <= config.PlayerRadius)
                     allHits.Add(new HitEvent { ShooterId = shooter.Id, TargetId = target.Id, Point = closest, Distance = projected });
             }
-            allHits.Sort((a, b) => a.Distance.CompareTo(b.Distance));
+            if (allHits.Count > 1)
+                allHits.Sort(CompareHitDistance);
             if (allHits.Count > config.MaxHitsPerThrow)
                 allHits.RemoveRange(config.MaxHitsPerThrow, allHits.Count - config.MaxHitsPerThrow);
-            return allHits;
         }
     }
 }

@@ -63,6 +63,8 @@ namespace HitMe.Game
         private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>(MaxPoolSize);
         private readonly List<PlayerState> _rankedBuffer = new List<PlayerState>(MaxPoolSize);
         private readonly List<string> _winnerIdsBuffer = new List<string>(MaxPoolSize);
+        private readonly List<HitEvent> _weaponHitsBuffer = new List<HitEvent>(8);
+        private readonly RoundInput _localFinalInput = new RoundInput("player");
 
         private SeededRandom _random;
         private Phase1BotBrain _autoBrain;
@@ -85,6 +87,7 @@ namespace HitMe.Game
 
         private int _webAutoPlayRemainingMatches;
         private int _webAutoPlayTotalMatches;
+        private int _profileTargetSeconds;
         private bool _fastAutoPlayTimings;
         private int _profileFrames;
         private int _profileSteadyFrames;
@@ -154,14 +157,16 @@ namespace HitMe.Game
             }
 
             int urlAutoMatches = ParseAutoPlayQueryCount();
-            if (urlAutoMatches > 0)
+            _profileTargetSeconds = ParseQueryInt("profileSeconds=");
+            if (urlAutoMatches > 0 || _profileTargetSeconds > 0)
             {
                 autoPlay = true;
                 _fastAutoPlayTimings = true;
-                _webAutoPlayTotalMatches = urlAutoMatches;
-                _webAutoPlayRemainingMatches = urlAutoMatches;
+                int initialMatches = urlAutoMatches > 0 ? urlAutoMatches : 10;
+                _webAutoPlayTotalMatches = initialMatches;
+                _webAutoPlayRemainingMatches = initialMatches;
                 StartProfilingWindow();
-                Debug.Log($"[WebGLAutoPlay] Starting automated verification of {_webAutoPlayTotalMatches} matches on build...");
+                Debug.Log($"[WebGLAutoPlay] Starting automated verification of {_webAutoPlayTotalMatches} matches on build (targetSeconds={_profileTargetSeconds})...");
                 StartMatch();
                 return;
             }
@@ -176,11 +181,16 @@ namespace HitMe.Game
 
         private static int ParseAutoPlayQueryCount()
         {
+            return ParseQueryInt("autoPlay=");
+        }
+
+        private static int ParseQueryInt(string key)
+        {
             string url = Application.absoluteURL;
             if (string.IsNullOrEmpty(url)) return 0;
-            int idx = url.IndexOf("autoPlay=", StringComparison.OrdinalIgnoreCase);
+            int idx = url.IndexOf(key, StringComparison.OrdinalIgnoreCase);
             if (idx < 0) return 0;
-            idx += "autoPlay=".Length;
+            idx += key.Length;
             int val = 0;
             while (idx < url.Length && char.IsDigit(url[idx]))
             {
@@ -188,6 +198,11 @@ namespace HitMe.Game
                 idx++;
             }
             return val > 0 ? val : 1;
+        }
+
+        private void SyncProfileMemoryBaseline()
+        {
+            _profilePrevBytes = GC.GetTotalMemory(false);
         }
 
         private void StartProfilingWindow()
@@ -460,6 +475,7 @@ namespace HitMe.Game
             {
                 AudioManager.Instance.PlayMatchBgm();
             }
+            SyncProfileMemoryBaseline();
         }
 
         private void BeginNextRound()
@@ -484,6 +500,7 @@ namespace HitMe.Game
             }
 
             Present(true);
+            SyncProfileMemoryBaseline();
         }
 
         private IEnumerator NewMatch()
@@ -556,15 +573,12 @@ namespace HitMe.Game
                 var lockSnap = _gestureV2.Snapshot();
                 _gestureV2.Lock();
 
-                RoundInput finalInput = new RoundInput("player")
-                {
-                    HasPlacement = true,
-                    Placement = lockSnap.Position,
-                    HasAim = lockSnap.AimActive,
-                    AimDirection = lockSnap.Facing,
-                    IsReady = true
-                };
-                State.SetInput(finalInput);
+                _localFinalInput.HasPlacement = true;
+                _localFinalInput.Placement = lockSnap.Position;
+                _localFinalInput.HasAim = lockSnap.AimActive;
+                _localFinalInput.AimDirection = lockSnap.Facing;
+                _localFinalInput.IsReady = true;
+                State.SetInput(_localFinalInput);
                 State.LockRound();
                 OnPhaseChanged?.Invoke(State.Phase);
 
@@ -577,6 +591,7 @@ namespace HitMe.Game
                 }
 
                 Present(false);
+                SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitLockCapture : _waitLockNormal);
 
                 // Reveal Phase
@@ -587,6 +602,7 @@ namespace HitMe.Game
                     AudioManager.Instance.PlayReveal();
                 }
                 Present(false, true);
+                SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : _waitReveal;
 
                 // Throwing Phase
@@ -594,6 +610,7 @@ namespace HitMe.Game
                 OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
                 SpawnWeapons();
+                SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitThrowCapture : _waitThrowNormal);
 
                 // Resolve / RoundEnd / MatchEnd Phase (MatchState.Phase is the single source of truth)
@@ -601,10 +618,12 @@ namespace HitMe.Game
                 ClearWeapons();
                 if (State.Phase == Phase.MatchEnd)
                 {
+                    SyncProfileMemoryBaseline();
                     break;
                 }
                 OnPhaseChanged?.Invoke(State.Phase);
                 Present(false);
+                SyncProfileMemoryBaseline();
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 ? _waitResolveCapture : _waitResolveNormal);
             }
 
@@ -622,12 +641,21 @@ namespace HitMe.Game
             }
 
             OnMatchEnded?.Invoke(_rankedBuffer, _winnerIdsBuffer);
+            SyncProfileMemoryBaseline();
 
             if (_webAutoPlayRemainingMatches > 0)
             {
                 int doneIndex = _webAutoPlayTotalMatches - _webAutoPlayRemainingMatches + 1;
                 _webAutoPlayRemainingMatches--;
                 Debug.Log($"[WebGLAutoPlay] Match {doneIndex}/{_webAutoPlayTotalMatches} completed: rounds={State.RoundNumber}, winners=[{string.Join(", ", _winnerIdsBuffer)}]");
+                SyncProfileMemoryBaseline();
+
+                float currentElapsed = Time.realtimeSinceStartup - _profileStartTime;
+                if (_webAutoPlayRemainingMatches == 0 && _profileTargetSeconds > 0 && currentElapsed < _profileTargetSeconds)
+                {
+                    _webAutoPlayRemainingMatches = 1;
+                    _webAutoPlayTotalMatches++;
+                }
 
                 if (_webAutoPlayRemainingMatches > 0)
                 {
@@ -695,7 +723,7 @@ namespace HitMe.Game
                 if (_views.TryGetValue(p.Id, out var view) && view != null)
                 {
                     view.Present(p, visible, showAim, showTouchRing, State.Config.AimTouchRadius,
-                        State.Config.AimLineExtraLength, isLocal && snap.AimActive ? 1.5f : 0f);
+                        State.Config.AimLineExtraLength, isLocal && snap.AimActive ? 1.50f : 0f);
                 }
             }
         }
@@ -713,12 +741,12 @@ namespace HitMe.Game
                 Vec2 throwDir = input.HasAim ? input.AimDirection : p.Facing;
                 if (throwDir.Length <= 0.0001f) throwDir = Vec2.Up;
 
-                var hits = HitCalculator.CalculateHits(p, State.Players, throwDir, State.Config);
+                HitCalculator.CalculateHits(p, State.Players, throwDir, State.Config, _weaponHitsBuffer);
                 Vec2 endPoint;
-                bool didHit = hits.Count > 0;
+                bool didHit = _weaponHitsBuffer.Count > 0;
                 if (didHit)
                 {
-                    endPoint = hits[0].Point;
+                    endPoint = _weaponHitsBuffer[0].Point;
                 }
                 else
                 {

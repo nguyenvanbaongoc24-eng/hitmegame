@@ -7,6 +7,7 @@ namespace HitMe.Core
         private readonly BotLevel _level;
         private readonly SeededRandom _random;
         private readonly List<Vec2> _observedPositions = new List<Vec2>();
+        private RoundInput _cachedInput;
 
         public Phase1BotBrain(BotLevel level, SeededRandom random)
         {
@@ -38,7 +39,16 @@ namespace HitMe.Core
                 }
             }
             var direction = (target - placement).Normalized;
-            return new RoundInput(bot.Id) { HasPlacement = true, Placement = placement, HasAim = true, AimDirection = direction, IsReady = true };
+            if (_cachedInput == null || _cachedInput.PlayerId != bot.Id)
+            {
+                _cachedInput = new RoundInput(bot.Id);
+            }
+            _cachedInput.HasPlacement = true;
+            _cachedInput.Placement = placement;
+            _cachedInput.HasAim = true;
+            _cachedInput.AimDirection = direction;
+            _cachedInput.IsReady = true;
+            return _cachedInput;
         }
     }
 }

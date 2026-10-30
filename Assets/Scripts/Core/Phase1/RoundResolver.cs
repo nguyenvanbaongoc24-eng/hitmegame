@@ -4,36 +4,28 @@ namespace HitMe.Core
 {
     public static class RoundResolver
     {
+        private static readonly List<HitEvent> SharedHitsBuffer = new List<HitEvent>(8);
+
         public static RoundResolution Resolve(IList<PlayerState> players, IDictionary<string, RoundInput> inputs, GameConfig config)
         {
-            var snapshot = new List<PlayerState>();
+            var result = new RoundResolution();
             for (int i = 0; i < players.Count; i++)
             {
-                var p = players[i];
-                snapshot.Add(new PlayerState(p.Id, p.Name, p.IsBot, p.Hp, p.Position, p.Facing));
-            }
-
-            var result = new RoundResolution();
-            for (int i = 0; i < snapshot.Count; i++)
-            {
-                var shooter = snapshot[i];
+                var shooter = players[i];
                 RoundInput input;
                 if (!shooter.IsAlive || !inputs.TryGetValue(shooter.Id, out input) || !input.HasAim) continue;
-                var hits = HitCalculator.CalculateHits(shooter, snapshot, input.AimDirection, config);
-                for (int h = 0; h < hits.Count; h++)
+                HitCalculator.CalculateHits(shooter, players, input.AimDirection, config, SharedHitsBuffer);
+                for (int h = 0; h < SharedHitsBuffer.Count; h++)
                 {
-                    var hit = hits[h];
+                    var hit = SharedHitsBuffer[h];
                     result.Hits.Add(hit);
                     int damage;
                     result.Damage.TryGetValue(hit.TargetId, out damage);
                     result.Damage[hit.TargetId] = damage + config.DamagePerHit;
                 }
-                if (hits.Count > 0)
+                if (SharedHitsBuffer.Count > 0)
                 {
-                    for (int p = 0; p < players.Count; p++)
-                    {
-                        if (players[p].Id == shooter.Id) players[p].HitsLanded += hits.Count;
-                    }
+                    shooter.HitsLanded += SharedHitsBuffer.Count;
                 }
             }
 
