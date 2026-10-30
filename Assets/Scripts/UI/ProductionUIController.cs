@@ -748,7 +748,7 @@ namespace HitMe.UI
             rt.anchorMax = new Vector2(0.88f, 0.19f);
             rt.sizeDelta = Vector2.zero;
             var img = go.AddComponent<Image>();
-            img.color = new Color(0.15f, 0.45f, 0.85f, 0.95f);
+            img.color = new Color(0.15f, 0.46f, 0.85f, 0.95f);
             btnLobbyToBotTraining = go.AddComponent<Button>();
             btnLobbyToBotTraining.onClick.AddListener(() =>
             {
@@ -834,7 +834,7 @@ namespace HitMe.UI
             var botHeaderObj = new GameObject("Label", typeof(RectTransform));
             botHeaderObj.transform.SetParent(botCard.transform, false);
             var botHeaderRt = botHeaderObj.GetComponent<RectTransform>();
-            botHeaderRt.anchorMin = new Vector2(0.05f, 0.55f);
+            botHeaderRt.anchorMin = new Vector2(0.05f, 0.54f);
             botHeaderRt.anchorMax = new Vector2(0.95f, 0.92f);
             botHeaderRt.sizeDelta = Vector2.zero;
             var txtBotHeader = botHeaderObj.AddComponent<TextMeshProUGUI>();
@@ -908,7 +908,7 @@ namespace HitMe.UI
             var charHeaderObj = new GameObject("Label", typeof(RectTransform));
             charHeaderObj.transform.SetParent(charCard.transform, false);
             var charHeaderRt = charHeaderObj.GetComponent<RectTransform>();
-            charHeaderRt.anchorMin = new Vector2(0.05f, 0.55f);
+            charHeaderRt.anchorMin = new Vector2(0.05f, 0.54f);
             charHeaderRt.anchorMax = new Vector2(0.95f, 0.92f);
             charHeaderRt.sizeDelta = Vector2.zero;
             var txtCharHeader = charHeaderObj.AddComponent<TextMeshProUGUI>();
