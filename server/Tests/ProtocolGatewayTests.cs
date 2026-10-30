@@ -197,6 +197,8 @@ public sealed class ProtocolGatewayTests
         Send("c1", Request("join", "p1", "One"));
         for (var player = 2; player <= 6; player++)
             Send($"c{player}", Request("join", $"p{player}", $"P{player}", "HM3141"));
+        for (var player = 1; player <= 6; player++)
+            Send($"c{player}", Request("room_ready", $"p{player}", $"P{player}", ready: true));
         Send("c1", Request("start", "p1", "One"));
 
         // Deliberately unusual values make accidental serialization detectable.
