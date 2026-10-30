@@ -8,6 +8,8 @@ Server dùng đồng hồ riêng cho 5 giây đặt, kẹp vị trí vào sân, 
 
 Vector vàng 200 vòng nằm tại `server/Tests/golden/rounds.json`; test server và bản vá NUnit Unity cùng đọc định dạng trường công khai để so Core theo từng hit và trạng thái người chơi.
 
+Z1 chạy Kestrel và `ClientWebSocket` thật với 6 bot × 20 trận × 5 vòng, có commit lỗi, một lượt không commit, vào lại và join thiếu token; mỗi `round_result` được so với Core trực tiếp. Lần đo cục bộ: khóa/broadcast trung bình 3,49 ms, lớn nhất 42,79 ms (không phải số liệu Internet/Render).
+
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
 Đang dở: kiểm thử WebSocket đầu-cuối 20 trận (Z1), transport Unity/WebGL (Z2), hook AFK và thử tải. Không deploy server WIP này.

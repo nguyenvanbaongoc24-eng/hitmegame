@@ -35,6 +35,7 @@ public sealed class ProtocolGateway
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
     private readonly IAuthVerifier auth;
+    private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DisconnectedSession> disconnected = new(StringComparer.Ordinal);
     private readonly Dictionary<string, RateWindow> rateWindows = new(StringComparer.Ordinal);
@@ -54,42 +55,48 @@ public sealed class ProtocolGateway
 
     public IReadOnlyList<GatewayMessage> HandleMessages(string connectionId, string raw)
     {
-        if (Encoding.UTF8.GetByteCount(raw) > MaxMessageBytes) return Reply(connectionId, Error("message_too_large"));
-        if (!Allow(connectionId)) return Reply(connectionId, Error("rate_limited"));
-
-        ClientEnvelope? request;
-        try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
-        catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
-        if (request is null || request.V != Version || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
-
-        return request.Type switch
+        lock (gate)
         {
-            "join" => Reply(connectionId, Join(connectionId, request)),
-            "leave" => Reply(connectionId, Leave(connectionId)),
-            "room_ready" => RoomReadyMessages(connectionId, request),
-            "start" => HostStartMessages(connectionId),
-            "lock_ready" => LockReadyMessages(connectionId, request),
-            "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
-            "commit" => CommitMessages(connectionId, request),
-            _ => Reply(connectionId, Error("unknown_type"))
-        };
+            if (Encoding.UTF8.GetByteCount(raw) > MaxMessageBytes) return Reply(connectionId, Error("message_too_large"));
+            if (!Allow(connectionId)) return Reply(connectionId, Error("rate_limited"));
+
+            ClientEnvelope? request;
+            try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
+            catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
+            if (request is null || request.V != Version || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
+
+            return request.Type switch
+            {
+                "join" => Reply(connectionId, Join(connectionId, request)),
+                "leave" => Reply(connectionId, Leave(connectionId)),
+                "room_ready" => RoomReadyMessages(connectionId, request),
+                "start" => HostStartMessages(connectionId),
+                "lock_ready" => LockReadyMessages(connectionId, request),
+                "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
+                "commit" => CommitMessages(connectionId, request),
+                _ => Reply(connectionId, Error("unknown_type"))
+            };
+        }
     }
 
     public IReadOnlyList<GatewayMessage> Tick()
     {
-        PruneDisconnected();
-        var output = new List<GatewayMessage>();
-        foreach (var room in rooms.Snapshot())
+        lock (gate)
         {
-            if (!room.Started && room.TryStartCountdownIfDue(clock.GetUtcNow()))
+            PruneDisconnected();
+            var output = new List<GatewayMessage>();
+            foreach (var room in rooms.Snapshot())
             {
-                output.AddRange(Target(room, room.RoundSession!.BeginRound(clock)));
-                continue;
+                if (!room.Started && room.TryStartCountdownIfDue(clock.GetUtcNow()))
+                {
+                    output.AddRange(Target(room, room.RoundSession!.BeginRound(clock)));
+                    continue;
+                }
+                if (room.RoundSession is null) continue;
+                output.AddRange(Target(room, room.RoundSession.Tick()));
             }
-            if (room.RoundSession is null) continue;
-            output.AddRange(Target(room, room.RoundSession.Tick()));
+            return output;
         }
-        return output;
     }
 
     private string Join(string connectionId, ClientEnvelope request)
@@ -116,8 +123,11 @@ public sealed class ProtocolGateway
 
     public void Disconnect(string connectionId)
     {
-        if (!sessions.Remove(connectionId, out var session)) return;
-        disconnected[session.ReconnectToken] = new DisconnectedSession(session, clock.GetUtcNow() + TimeSpan.FromSeconds(30));
+        lock (gate)
+        {
+            if (!sessions.Remove(connectionId, out var session)) return;
+            disconnected[session.ReconnectToken] = new DisconnectedSession(session, clock.GetUtcNow() + TimeSpan.FromSeconds(30));
+        }
     }
 
     private string Leave(string connectionId)

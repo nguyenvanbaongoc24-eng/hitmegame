@@ -42,8 +42,18 @@ app.Map("/ws", async context => {
             connections.Touch(connectionId);
             var type = SafeProtocolLog.TypeOf(raw);
             logger.LogInformation("{@ProtocolMessage}", SafeProtocolLog.Record(connectionId, type));
-            var replies = gateway.HandleMessages(connectionId, raw);
-            await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
+            try
+            {
+                var replies = gateway.HandleMessages(connectionId, raw);
+                await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
+            }
+            catch (Exception exception)
+            {
+                // Keep raw packets and tokens out of diagnostics while making a
+                // production transport failure observable to the operator.
+                logger.LogError(exception, "Protocol processing failed for {Connection}", connectionId[..8]);
+                break;
+            }
         }
     }
     finally

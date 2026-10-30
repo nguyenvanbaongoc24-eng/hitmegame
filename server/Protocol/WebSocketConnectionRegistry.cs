@@ -85,6 +85,12 @@ public sealed class WebSocketConnectionRegistry
                 {
                     await CloseSlowConnectionAsync(message.ConnectionId, connection);
                 }
+                catch (WebSocketException)
+                {
+                    // A peer may vanish between the state check and SendAsync.
+                    // It must not abort the room handler or other players' fan-out.
+                    await CloseSlowConnectionAsync(message.ConnectionId, connection);
+                }
             }
         }
         finally
