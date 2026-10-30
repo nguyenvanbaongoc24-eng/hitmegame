@@ -237,7 +237,9 @@ public sealed class ProtocolGatewayTests
         Assert.Contains(messages, message => message.ConnectionId == "c2" && message.Payload.Contains("\"type\":\"round_result\""));
         Assert.Contains(messages, message => message.ConnectionId == "c1" && message.Payload.Contains("\"type\":\"round_start\""));
         var lateCommit = Json(gateway.Handle("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f })));
-        Assert.Equal("round_locked", lateCommit.GetProperty("code").GetString());
+        // Locking publishes and immediately opens the next placement phase;
+        // the old round id must still be rejected rather than altering round 2.
+        Assert.Equal("wrong_round", lateCommit.GetProperty("code").GetString());
     }
 
     [Fact]
