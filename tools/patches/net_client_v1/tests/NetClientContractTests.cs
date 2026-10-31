@@ -72,6 +72,7 @@ public sealed class NetClientContractTests
         transport.Connect();
         transport.Send(new JoinMessage { v = 1, type = "join", token = "guest:test" });
         Assert.Contains("join", sent, StringComparison.Ordinal);
+        Assert.Contains("guest:test", sent, StringComparison.Ordinal);
         Assert.Equal("test", Assert.IsType<ErrorMessage>(received).code);
     }
 
@@ -82,7 +83,7 @@ public sealed class NetClientContractTests
     private sealed class SystemTextJsonCodec : IProtocolJson
     {
         internal static readonly JsonSerializerOptions Options = new() { IncludeFields = true, PropertyNamingPolicy = null };
-        public string ToJson<T>(T value) => JsonSerializer.Serialize(value, Options);
+        public string ToJson(object value) => JsonSerializer.Serialize(value, value.GetType(), Options);
         public T FromJson<T>(string json) => JsonSerializer.Deserialize<T>(json, Options)!;
     }
 }

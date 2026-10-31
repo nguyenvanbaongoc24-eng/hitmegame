@@ -92,7 +92,9 @@ public sealed class EmoteBroadcastMessage : ServerMessage { public string player
 
 public interface IProtocolJson
 {
-    string ToJson<T>(T value);
+    // Use the concrete message type; Send accepts ClientMessage and must not
+    // accidentally serialize only Envelope fields.
+    string ToJson(object value);
     T FromJson<T>(string json);
 }
 
