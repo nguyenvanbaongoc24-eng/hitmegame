@@ -27,6 +27,9 @@ public sealed class JoinMessage : ClientMessage
 }
 
 [Serializable]
+public sealed class QuickMatchMessage : ClientMessage { public string token = string.Empty; }
+
+[Serializable]
 public sealed class RoomReadyMessage : ClientMessage { public bool ready; }
 [Serializable]
 public sealed class StartMessage : ClientMessage { }
@@ -69,6 +72,44 @@ public sealed class RoomPlayerDto
 }
 
 [Serializable]
+public sealed class RoomConfigDto
+{
+    public int maxPlayers;
+    public int minPlayersToStart;
+    public int startHp;
+    public float placeSeconds;
+    public int maxRounds;
+    public float arenaWidth;
+    public float arenaHeight;
+    public float playerRadius;
+}
+
+[Serializable]
+public sealed class PointDto { public float x; public float y; }
+[Serializable]
+public sealed class RevealedPlayerDto
+{
+    public string id = string.Empty;
+    public PointDto position = new PointDto();
+    public PointDto aim = new PointDto();
+}
+[Serializable]
+public sealed class HitDto
+{
+    public string shooterId = string.Empty;
+    public string targetId = string.Empty;
+    public PointDto point = new PointDto();
+    public float distance;
+}
+[Serializable]
+public sealed class ResultPlayerDto
+{
+    public string id = string.Empty;
+    public int hp;
+    public bool eliminated;
+}
+
+[Serializable]
 public sealed class RoomStateMessage : ServerMessage
 {
     public int protocolVersion;
@@ -77,18 +118,25 @@ public sealed class RoomStateMessage : ServerMessage
     public bool started;
     public RoomPlayerDto[] players = Array.Empty<RoomPlayerDto>();
     public string reconnectToken = string.Empty;
+    public RoomConfigDto config = new RoomConfigDto();
 }
 
 [Serializable]
 public sealed class RoundStartMessage : ServerMessage { public int roundId; public long deadline; }
 [Serializable]
-public sealed class RevealMessage : ServerMessage { public int roundId; }
+public sealed class RevealMessage : ServerMessage { public int roundId; public RevealedPlayerDto[] players = Array.Empty<RevealedPlayerDto>(); }
 [Serializable]
-public sealed class RoundResultMessage : ServerMessage { public int roundId; }
+public sealed class RoundResultMessage : ServerMessage { public int roundId; public HitDto[] hits = Array.Empty<HitDto>(); public ResultPlayerDto[] players = Array.Empty<ResultPlayerDto>(); }
 [Serializable]
 public sealed class MatchEndMessage : ServerMessage { public string[] winners = Array.Empty<string>(); }
 [Serializable]
 public sealed class EmoteBroadcastMessage : ServerMessage { public string playerId = string.Empty; public string emoteId = string.Empty; public string phase = string.Empty; }
+[Serializable]
+public sealed class QuickMatchWaitingMessage : ServerMessage { public int quickMatchHintSeconds; }
+[Serializable]
+public sealed class QuickMatchHintMessage : ServerMessage { public string code = string.Empty; public int quickMatchHintSeconds; }
+[Serializable]
+public sealed class QuickMatchLeftMessage : ServerMessage { }
 
 public interface IProtocolJson
 {
@@ -114,6 +162,9 @@ public static class ProtocolReader
             "round_result" => codec.FromJson<RoundResultMessage>(json),
             "match_end" => codec.FromJson<MatchEndMessage>(json),
             "emote" => codec.FromJson<EmoteBroadcastMessage>(json),
+            "quick_match_waiting" => codec.FromJson<QuickMatchWaitingMessage>(json),
+            "quick_match_hint" => codec.FromJson<QuickMatchHintMessage>(json),
+            "quick_match_left" => codec.FromJson<QuickMatchLeftMessage>(json),
             "error" => codec.FromJson<ErrorMessage>(json),
             _ => throw new InvalidOperationException("unknown_server_message")
         };

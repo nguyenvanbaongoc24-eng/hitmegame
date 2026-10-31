@@ -13,7 +13,7 @@ public sealed class NetClientContractTests
     {
         var dtoTypes = typeof(Envelope).Assembly.GetTypes().Where(type =>
             type.IsClass && !type.IsAbstract &&
-            (typeof(Envelope).IsAssignableFrom(type) || type == typeof(RoomPlayerDto)));
+            type.IsDefined(typeof(SerializableAttribute), false));
         foreach (var type in dtoTypes)
         {
             Assert.Empty(type.GetProperties(BindingFlags.Public | BindingFlags.Instance));
@@ -39,7 +39,7 @@ public sealed class NetClientContractTests
         var options = SystemTextJsonCodec.Options;
         var dtoTypes = typeof(Envelope).Assembly.GetTypes().Where(type =>
             type.IsClass && !type.IsAbstract &&
-            (typeof(Envelope).IsAssignableFrom(type) || type == typeof(RoomPlayerDto)));
+            type.IsDefined(typeof(SerializableAttribute), false));
         foreach (var type in dtoTypes)
         {
             var value = Activator.CreateInstance(type)!;
@@ -74,6 +74,39 @@ public sealed class NetClientContractTests
         Assert.Contains("join", sent, StringComparison.Ordinal);
         Assert.Contains("guest:test", sent, StringComparison.Ordinal);
         Assert.Equal("test", Assert.IsType<ErrorMessage>(received).code);
+    }
+
+    [Fact]
+    public void ProtocolReaderHandlesEveryServerMessageType()
+    {
+        var codec = new SystemTextJsonCodec();
+        foreach (var type in new[] { "room_state", "round_start", "reveal", "round_result", "match_end", "emote", "quick_match_waiting", "quick_match_hint", "quick_match_left", "error" })
+            Assert.Equal(type, ProtocolReader.ReadServerMessage($"{{\"v\":1,\"type\":\"{type}\"}}", codec).type);
+    }
+
+    [Fact]
+    public void ClientMatchSessionFollowsServerEventOrderWithoutRegressingOnCommitAck()
+    {
+        var codec = new SystemTextJsonCodec();
+        var outgoing = new Queue<string>(new[]
+        {
+            "{\"v\":1,\"type\":\"room_state\",\"protocolVersion\":1,\"roomCode\":\"HM4826\",\"started\":false}",
+            "{\"v\":1,\"type\":\"round_start\",\"roundId\":1,\"deadline\":1800000000000}",
+            "{\"v\":1,\"type\":\"room_state\",\"protocolVersion\":1,\"roomCode\":\"HM4826\",\"started\":true}",
+            "{\"v\":1,\"type\":\"reveal\",\"roundId\":1,\"players\":[]}",
+            "{\"v\":1,\"type\":\"round_result\",\"roundId\":1,\"hits\":[],\"players\":[]}",
+            "{\"v\":1,\"type\":\"match_end\",\"winners\":[\"p1\"]}"
+        });
+        using var transport = new LoopbackTransport(codec, _ => new[] { outgoing.Dequeue() });
+        using var session = new ClientMatchSession(transport);
+        var phases = new List<ClientMatchPhase>();
+        session.PhaseChanged += phases.Add;
+        session.Connect();
+        for (var i = 0; i < 6; i++) session.Send(new StartMessage { type = "start" });
+        Assert.Equal(new[] { ClientMatchPhase.Lobby, ClientMatchPhase.Placing, ClientMatchPhase.Revealed, ClientMatchPhase.RoundResult, ClientMatchPhase.MatchEnd }, phases);
+        Assert.Equal("HM4826", session.RoomCode);
+        Assert.Equal(1, session.RoundId);
+        Assert.Equal(1800000000000, session.DeadlineUnixMilliseconds);
     }
 
     private static bool IsForbidden(Type type) =>
