@@ -18,7 +18,7 @@ Z3 (cục bộ, trong tiến trình, 2026-10-30) chạy đồng thời 50 phòng
 
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
-Z2 có sẵn tại `tools/patches/net_client_v1`: DTO thuần tương thích `JsonUtility`, loopback adapter và WebSocket Desktop; AG còn phải chép patch vào Unity và làm bridge `.jslib` cho WebGL. Z3 đã hoàn thành; chưa deploy server WIP này.
+Z2 có sẵn tại `tools/patches/net_client_v1`: DTO thuần tương thích cấu trúc `JsonUtility`, loopback adapter và WebSocket Desktop cho .NET 8. Bản biên dịch `netstandard2.1` chứa WebSocket stub, vì vậy **chưa có WebGL transport**. Z3 đã hoàn thành; chưa deploy server WIP này.
 
 ## Giao thức v1 đã đóng băng
 
@@ -51,3 +51,21 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 **Mã lỗi và gợi ý UI:** `not_enough_players` → Cần ít nhất 2 người; `protocol_mismatch` → Cập nhật game; `auth_required_use_join_token`, `auth_invalid`, `token_invalid` (nếu bộ xác thực trả), `reconnect_invalid` → Đăng nhập/vào lại; `room_full`, `room_limit`, `room_code_exhausted` → Thử phòng khác; `room_not_found`, `room_started` → Kiểm mã/chờ trận khác; `banned` (`remainingSeconds`) → Đợi hết cấm; `rate_limited`, `message_too_large` → Gửi chậm hơn; `legacy_ready_use_room_ready_or_lock_ready` → Cập nhật game. Các mã kỹ thuật còn lại (`invalid_json`, `invalid_envelope`, `unknown_type`, `already_joined`, `not_joined`, `not_in_room`, `not_in_round`, `wrong_phase`, `wrong_round`, `round_locked`, `ready_required`, `match_not_started`, `invalid_commit`, `invalid_emote`, `emote_rate_limited`, `emote_phase_limit`, `host_only`, `duplicate_player`, `invalid_player`, `no_response`) → Hiển thị thông báo thao tác không hợp lệ và ghi mã lỗi khi báo lỗi. HTTP handshake còn có `origin_not_allowed`/giới hạn kết nối.
 
 **Nhật ký thay đổi giao thức:** v1 (2026-10-31): đóng băng tên tin hiện có, thêm `protocolVersion` vào `room_state`, trả `protocol_mismatch` cho phiên bản sai. Thay đổi cấu trúc/tên tin từ đây phải tăng `ProtocolGateway.Version` và cập nhật cả DTO, test, bảng này.
+
+## Tích hợp Unity — gói cho AG
+
+Lấy `prep/codex` tối thiểu tại `16b6c86` (sau đó lấy HEAD mới nhất của nhánh). Chép **ba** tệp `tools/patches/net_client_v1/{NetClientDtos,MatchTransports,ClientMatchSession}.cs` vào `Assets/Scripts/Net/`. Tạo `HitMe.NetClient.asmdef` tham chiếu được từ assembly giao diện; tệp vá thuần C# không cần `UnityEngine`, còn adapter `IProtocolJson` của AG dùng `UnityEngine.JsonUtility` nên để trong assembly Unity riêng hoặc bỏ `noEngineReferences` cho assembly đó. AG tạo `NetConfig.Enabled` mặc định `false` để nhánh online chỉ mở khi có server/transport hoạt động; không đưa token thật vào repo.
+
+Thứ tự: (1) thêm DTO và codec JsonUtility, đọc phong bì `{v,type}` trước; (2) dùng `LoopbackTransport(codec, callback)` để thử chuỗi tin trong EditMode, callback trả đúng các payload của **client đó**; nó không tự tạo phòng hoặc thay thế server; (3) dùng `ClientMatchSession` để cập nhật màn; (4) thêm transport WebGL bằng `.jslib` và chuyển callback về Unity main thread; (5) mới bật `NetConfig.Enabled`. `WebSocketTransport` trong patch chỉ hoạt động ở .NET 8 Desktop; Unity `netstandard2.1` sẽ ném `PlatformNotSupportedException`. Chưa có tự vào lại khi rớt mạng, xếp hạng trên wire hay codec Unity đã chạy trong Editor.
+
+| `ClientMatchSession` nhận | Pha/sự kiện UI cần xử lý |
+|---|---|
+| `quick_match_waiting`, `quick_match_hint`, `quick_match_left` | Chờ ghép / hiện gợi ý Luyện bot / trở về sảnh. |
+| `room_state` | Phòng chờ: mã, danh sách, ready, host, config; khi nhận sau `commit` trong trận thì chỉ xác nhận, không quay về sảnh. Kiểm `protocolVersion`. |
+| `round_start` | `Placing`, lấy `roundId` và `deadline` Unix ms từ server. |
+| `reveal` | `Revealed`, lúc này mới vẽ vị trí/hướng đối thủ. |
+| `round_result` | `RoundResult`, cập nhật HP/hit; server có thể gửi `round_start` kế tiếp ngay sau đó. |
+| `match_end` | `MatchEnd`, hiện người thắng; bảng xếp hạng phải tính từ Core hoặc bổ sung giao thức v2 sau khi thống nhất. |
+| `emote`, `error` | Cập nhật thẻ biểu cảm; hiển thị mã lỗi phù hợp. |
+
+Kiểm tra ngoài Unity: `dotnet build tools/patches/net_client_v1/HitMe.NetClientV1.csproj -f netstandard2.1` và `dotnet test tools/patches/net_client_v1/tests/HitMe.NetClientV1.Tests.csproj --nologo`. Các test dùng codec tương đương qua phản xạ, **chưa phải test `UnityEngine.JsonUtility` thực tế**. AG cần chạy EditMode/PlayMode và WebGL có đồ họa trước khi báo online đạt.
