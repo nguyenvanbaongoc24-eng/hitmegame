@@ -178,6 +178,34 @@ public sealed class OnlineFlowTests
     }
 
     [Fact]
+    public void InvalidReconnectTokenIsShown()
+    {
+        var hub = new Hub();
+        using var client = hub.Add("p1");
+        client.Transport.Send(new JoinMessage { type = "join", token = "test:p1", reconnectToken = "invalid" });
+        Assert.Contains(client.Ui.Calls, call => call.StartsWith("error:reconnect_invalid:"));
+    }
+
+    [Fact]
+    public void TwoConnectedRoundsWithoutCommitSurfaceAfkBan()
+    {
+        var hub = new Hub();
+        using var host = hub.Add("p1");
+        using var guest = hub.Add("p2");
+        host.Flow.Join("test:p1");
+        guest.Flow.Join("test:p2", host.Session.RoomCode);
+        host.Flow.HostStart();
+        for (var round = 1; round <= 2; round++)
+        {
+            guest.Flow.Commit(round, 1, 1, true, -1, 0);
+            hub.AdvanceSeconds(6);
+        }
+        using var retry = hub.Add("p1-retry");
+        retry.Flow.Join("test:p1");
+        Assert.Contains(retry.Ui.Calls, call => call.StartsWith("error:banned:"));
+    }
+
+    [Fact]
     public void EmoteIsCardOnlyUntilReveal()
     {
         var hub = new Hub();
