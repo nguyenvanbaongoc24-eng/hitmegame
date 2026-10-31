@@ -34,6 +34,11 @@ public sealed class OnlineFlowTests
         {
             Assert.Equal(round, host.Session.RoundId);
             foreach (var client in others) client.Flow.Commit(round, 3.14159f, -2.71828f, true, .12345f, -.98765f);
+            var preLockUi = string.Join("|", host.Ui.Calls);
+            Assert.DoesNotContain("3.14159", preLockUi, StringComparison.Ordinal);
+            Assert.DoesNotContain("-2.71828", preLockUi, StringComparison.Ordinal);
+            Assert.DoesNotContain("0.12345", preLockUi, StringComparison.Ordinal);
+            Assert.DoesNotContain("-0.98765", preLockUi, StringComparison.Ordinal);
             host.Flow.Commit(round, 0, 0, false, 0, 0);
             hub.AdvanceSeconds(6);
         }
