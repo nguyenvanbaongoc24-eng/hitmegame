@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "HitMe.OnlineGlue/1.0.0": {
+        "dependencies": {
+          "HitMe.NetClientV1": "1.0.0"
+        },
+        "runtime": {
+          "HitMe.OnlineGlue.dll": {}
+        }
+      },
+      "HitMe.NetClientV1/1.0.0": {
+        "runtime": {
+          "HitMe.NetClientV1.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HitMe.OnlineGlue/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HitMe.NetClientV1/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -72,7 +72,7 @@ public sealed class ProtocolGateway
 
             return request.Type switch
             {
-                "join" => Reply(connectionId, Join(connectionId, request)),
+                "join" => JoinMessages(connectionId, request),
                 "quick_match" => QuickMatchMessages(connectionId, request),
                 "leave" => Reply(connectionId, Leave(connectionId)),
                 "room_ready" => RoomReadyMessages(connectionId, request),
@@ -132,6 +132,15 @@ public sealed class ProtocolGateway
         var session = new Session(room!, identity.PlayerId, NewReconnectToken());
         sessions[connectionId] = session;
         return RoomState(room!, session.ReconnectToken);
+    }
+
+    private IReadOnlyList<GatewayMessage> JoinMessages(string connectionId, ClientEnvelope request)
+    {
+        var response = Join(connectionId, request);
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, response);
+        // Every connected member must learn the new roster. RoomState contains
+        // no private placement coordinates or aims, including during reconnect.
+        return RoomStateBroadcast(session.Room);
     }
 
     private IReadOnlyList<GatewayMessage> QuickMatchMessages(string connectionId, ClientEnvelope request)
