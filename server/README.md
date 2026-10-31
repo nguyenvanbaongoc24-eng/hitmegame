@@ -20,6 +20,8 @@ Z3 bổ sung (2026-10-31): 50 phòng hỗn hợp N=2..6 (10 phòng mỗi N), 200
 
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
+Sau khi chủ dự án tự triển khai, thử `node tools/deploy/smoke_test.mjs wss://TEN-MAY-CHU/ws` (Node 22+): công cụ tạo hai tài khoản khách tạm, chơi hết trận và in `Passed! 1/1` hoặc lỗi. Kiểm cục bộ bằng `node tools/deploy/smoke_test.mjs --local` (đã chạy 5 vòng). Chưa thử URL công khai, TLS, Render hoặc Vercel; không coi smoke test cục bộ là bằng chứng triển khai.
+
 Z2 có sẵn tại `tools/patches/net_client_v1`: DTO thuần tương thích cấu trúc `JsonUtility`, loopback adapter và WebSocket Desktop cho .NET 8. Bản biên dịch `netstandard2.1` chứa WebSocket stub, vì vậy **chưa có WebGL transport**. Z3 đã hoàn thành; chưa deploy server WIP này.
 
 ## Giao thức v1 đã đóng băng
