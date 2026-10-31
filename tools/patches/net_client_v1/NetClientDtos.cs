@@ -71,6 +71,7 @@ public sealed class RoomPlayerDto
 [Serializable]
 public sealed class RoomStateMessage : ServerMessage
 {
+    public int protocolVersion;
     public string roomCode = string.Empty;
     public string hostId = string.Empty;
     public bool started;

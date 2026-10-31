@@ -26,14 +26,29 @@ public sealed class ProtocolGatewayTests
         var gateway = Gateway();
         var created = Json(gateway.Handle("c1", Request("join")));
         Assert.Equal("room_state", created.GetProperty("type").GetString());
+        Assert.Equal(ProtocolGateway.Version, created.GetProperty("protocolVersion").GetInt32());
         Assert.Equal("HM0001", created.GetProperty("roomCode").GetString());
         Assert.True(created.GetProperty("config").TryGetProperty("placeSeconds", out _));
         Assert.Equal(2, created.GetProperty("config").GetProperty("minPlayersToStart").GetInt32());
         var joined = Json(gateway.Handle("c2", Request("join", "p2", "Two", "HM0001")));
         Assert.Equal(2, joined.GetProperty("players").GetArrayLength());
+        Assert.Equal(ProtocolGateway.Version, joined.GetProperty("protocolVersion").GetInt32());
         var started = Json(gateway.Handle("c1", Request("start")));
         Assert.Equal("round_start", started.GetProperty("type").GetString());
         Assert.Equal(1, started.GetProperty("roundId").GetInt32());
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    public void JoinRejectsOlderOrNewerProtocolWithExplicitMismatch(int clientVersion)
+    {
+        var gateway = Gateway();
+        var request = JsonSerializer.Serialize(new { v = clientVersion, type = "join", token = "test:p1" });
+        var reply = Json(gateway.Handle("c1", request));
+        Assert.Equal("error", reply.GetProperty("type").GetString());
+        Assert.Equal("protocol_mismatch", reply.GetProperty("code").GetString());
+        Assert.Equal(ProtocolGateway.Version, reply.GetProperty("v").GetInt32());
     }
 
     [Fact]

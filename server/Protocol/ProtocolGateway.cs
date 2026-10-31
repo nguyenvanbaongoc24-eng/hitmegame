@@ -66,7 +66,8 @@ public sealed class ProtocolGateway
             ClientEnvelope? request;
             try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
             catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
-            if (request is null || request.V != Version || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
+            if (request is null || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
+            if (request.V != Version) return Reply(connectionId, Error("protocol_mismatch"));
 
             return request.Type switch
             {
@@ -279,6 +280,7 @@ public sealed class ProtocolGateway
     {
         v = Version,
         type = "room_state",
+        protocolVersion = Version,
         roomCode = room.Code,
         hostId = room.HostId,
         started = room.Started,
