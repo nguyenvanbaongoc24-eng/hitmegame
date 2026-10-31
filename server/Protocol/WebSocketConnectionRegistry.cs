@@ -8,6 +8,7 @@ public sealed class WebSocketConnectionRegistry
 {
     public const int MaxPendingWritesPerConnection = 4;
     private readonly ConcurrentDictionary<string, Connection> connections = new(StringComparer.Ordinal);
+    public int Count => connections.Count;
     private readonly TimeSpan writeTimeout;
 
     public WebSocketConnectionRegistry(TimeSpan? writeTimeout = null)

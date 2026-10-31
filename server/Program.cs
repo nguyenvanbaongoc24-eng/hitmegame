@@ -18,6 +18,9 @@ var app = builder.Build();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
+app.MapGet("/status", (RoomDirectory rooms, WebSocketConnectionRegistry connections) =>
+    Results.Ok(new { status = "ok", protocol = ProtocolGateway.Version,
+        rooms = rooms.Snapshot().Count, connections = connections.Count }));
 app.Map("/ws", async context => {
     if (!context.WebSockets.IsWebSocketRequest) { context.Response.StatusCode = 400; return; }
     var admission = context.RequestServices.GetRequiredService<ConnectionAdmission>();
