@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using HitMe.Server.Authority;
@@ -49,6 +50,19 @@ public sealed class ProtocolGatewayTests
         Assert.Equal("error", reply.GetProperty("type").GetString());
         Assert.Equal("protocol_mismatch", reply.GetProperty("code").GetString());
         Assert.Equal(ProtocolGateway.Version, reply.GetProperty("v").GetInt32());
+    }
+
+    [Fact]
+    public void ReadmeWireExamplesAreProducedByTheGateway()
+    {
+        var gateway = Gateway();
+        var waiting = gateway.Handle("c1", Request("quick_match"));
+        var onePlayer = Gateway();
+        onePlayer.Handle("c1", Request("join"));
+        var rejectedStart = onePlayer.Handle("c1", Request("start"));
+        var readme = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../README.md")));
+        Assert.Contains($"`{waiting}`", readme);
+        Assert.Contains($"`{rejectedStart}`", readme);
     }
 
     [Fact]
