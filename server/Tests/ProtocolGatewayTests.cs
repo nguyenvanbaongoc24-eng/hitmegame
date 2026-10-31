@@ -400,6 +400,24 @@ public sealed class ProtocolGatewayTests
     }
 
     [Fact]
+    public void HasAimFalseOverridesStaleAimCoordinates()
+    {
+        var gateway = Gateway();
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        var commit = JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 0f, positionY = 0f, hasAim = false, aimX = 1f, aimY = 0f });
+        Assert.Equal("room_state", Json(gateway.Handle("c1", commit)).GetProperty("type").GetString());
+        gateway.Handle("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 2f, positionY = 0f }));
+        gateway.HandleMessages("c1", Request("lock_ready", ready: true));
+        var messages = gateway.HandleMessages("c2", Request("lock_ready", "p2", "Two", ready: true));
+        var reveal = Json(messages.First(message => message.ConnectionId == "c1" && Json(message.Payload).GetProperty("type").GetString() == "reveal").Payload);
+        var player = reveal.GetProperty("players").EnumerateArray().Single(item => item.GetProperty("id").GetString() == "p1");
+        Assert.Equal(0f, player.GetProperty("aim").GetProperty("x").GetSingle());
+        Assert.Equal(1f, player.GetProperty("aim").GetProperty("y").GetSingle());
+    }
+
+    [Fact]
     public void GatewayTickLocksAndBroadcastsAfterTheServerDeadline()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));

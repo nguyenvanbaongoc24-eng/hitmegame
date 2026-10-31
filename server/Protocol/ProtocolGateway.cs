@@ -22,6 +22,7 @@ public sealed class ClientEnvelope
     public float? PositionY { get; set; }
     public float? AimX { get; set; }
     public float? AimY { get; set; }
+    public bool? HasAim { get; set; }
     public string? EmoteId { get; set; }
 }
 
@@ -216,7 +217,7 @@ public sealed class ProtocolGateway
         if (!request.PositionX.HasValue || !request.PositionY.HasValue)
             return Reply(connectionId, Error("invalid_commit"));
 
-        Vec2? aim = request.AimX.HasValue && request.AimY.HasValue
+        Vec2? aim = request.HasAim != false && request.AimX.HasValue && request.AimY.HasValue
             ? new Vec2(request.AimX.Value, request.AimY.Value)
             : null;
         var commit = new RoundCommit(request.RoundId, new Vec2(request.PositionX.Value, request.PositionY.Value), aim);
