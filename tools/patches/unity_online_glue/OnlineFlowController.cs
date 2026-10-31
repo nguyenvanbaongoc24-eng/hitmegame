@@ -79,7 +79,16 @@ public sealed class OnlineFlowController : IDisposable
     public void HostStart() => session.Send(new StartMessage { type = "start" });
     public void Commit(int roundId, float x, float y, bool hasAim, float aimX, float aimY) =>
         session.Send(new CommitMessage { type = "commit", roundId = roundId, positionX = x, positionY = y, hasAim = hasAim, aimX = aimX, aimY = aimY });
-    public void LockReady() { session.Send(new LockReadyMessage { type = "lock_ready" }); ui.ShowLocked(); }
+    public void LockReady()
+    {
+        if (session.Phase != ClientMatchPhase.Placing)
+        {
+            ui.ShowError("wrong_phase", "Chưa tới lúc khóa hướng ném.");
+            return;
+        }
+        session.Send(new LockReadyMessage { type = "lock_ready" });
+        ui.ShowLocked();
+    }
     public void Leave() => session.Send(new LeaveMessage { type = "leave" });
     public void Emote(string emoteId) => session.Send(new EmoteMessage { type = "emote", emoteId = emoteId });
 

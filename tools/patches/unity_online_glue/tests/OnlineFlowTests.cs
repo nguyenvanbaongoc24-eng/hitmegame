@@ -57,6 +57,17 @@ public sealed class OnlineFlowTests
     }
 
     [Fact]
+    public void LockReadyOutsidePlacementDoesNotShowLocked()
+    {
+        var hub = new Hub();
+        using var host = hub.Add("p1");
+        host.Flow.Join("test:p1");
+        host.Flow.LockReady();
+        Assert.DoesNotContain("locked", host.Ui.Calls);
+        Assert.Contains(host.Ui.Calls, call => call.StartsWith("error:wrong_phase:"));
+    }
+
+    [Fact]
     public void QuickMatchHintAfterThirtySecondsDoesNotAddBot()
     {
         var hub = new Hub();

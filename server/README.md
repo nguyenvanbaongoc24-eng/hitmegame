@@ -75,3 +75,7 @@ Thứ tự: (1) thêm DTO và codec JsonUtility, đọc phong bì `{v,type}` tr�
 | `emote`, `error` | Cập nhật thẻ biểu cảm; hiển thị mã lỗi phù hợp. |
 
 Kiểm tra ngoài Unity: `dotnet build tools/patches/net_client_v1/HitMe.NetClientV1.csproj -f netstandard2.1` và `dotnet test tools/patches/net_client_v1/tests/HitMe.NetClientV1.Tests.csproj --nologo`. Các test dùng codec tương đương qua phản xạ, **chưa phải test `UnityEngine.JsonUtility` thực tế**. AG cần chạy EditMode/PlayMode và WebGL có đồ họa trước khi báo online đạt.
+
+Gói nối UI `tools/patches/unity_online_glue/OnlineFlowController.cs` dùng cùng `ClientMatchSession`, có `IOnlineUi` để AG gắn giao diện. `dotnet test tools/patches/unity_online_glue/tests/HitMe.OnlineGlue.Tests.csproj` kiểm gateway thật và luồng N=2..6. Vào lại qua `Reconnect()` dùng token riêng sau khi socket kết nối lại; **chưa có vòng thử kết nối tự động**. Server nay phát lại `room_state` khi vào/rời phòng và `round_start` kèm deadline khi vào lại giữa pha đặt.
+
+Triển khai nháp: Dockerfile chạy UID không phải root và kiểm `/healthz`; `render.yaml` chưa triển khai. Đặt `PORT` và `ALLOWED_ORIGINS` đúng domain WebGL, kiểm bằng `node tools/deploy/smoke_test.mjs wss://<server>/ws`. Với Vercel, sao chép `tools/deploy/vercel.json` vào **gốc thư mục build WebGL chưa nén** trước khi tự triển khai static site; URL `wss://` phải là endpoint server riêng. Chưa chạy `docker build` vì máy này không có Docker, chưa triển khai Render/Vercel, chưa kiểm iPhone trên bản ghép online.

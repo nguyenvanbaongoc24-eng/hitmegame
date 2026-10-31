@@ -32,3 +32,4 @@ begin
 end $$;
 revoke all on function public.rename_player(text), public.award_match_gold(uuid), public.buy_item(text,text) from public;
 grant execute on function public.rename_player(text), public.buy_item(text,text) to authenticated;
+grant execute on function public.award_match_gold(uuid) to service_role;
