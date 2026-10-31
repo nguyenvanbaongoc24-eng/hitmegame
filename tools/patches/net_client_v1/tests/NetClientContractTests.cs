@@ -109,6 +109,28 @@ public sealed class NetClientContractTests
         Assert.Equal(1800000000000, session.DeadlineUnixMilliseconds);
     }
 
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(4, false)]
+    [InlineData(5, false)]
+    [InlineData(6, false)]
+    public void ClientMatchSessionReadsRealHumanRosterSize(int count, bool waiting)
+    {
+        var codec = new SystemTextJsonCodec();
+        var players = Enumerable.Range(1, count).Select(number => new { id = $"p{number}", name = $"P{number}", ready = false }).ToArray();
+        var payload = JsonSerializer.Serialize(new { v = 1, type = "room_state", protocolVersion = 1, roomCode = "HM4826", players, config = new { maxPlayers = 6, minPlayersToStart = 2 } });
+        using var transport = new LoopbackTransport(codec, _ => new[] { payload });
+        using var session = new ClientMatchSession(transport);
+        session.Connect();
+        session.Send(new JoinMessage { type = "join", token = "guest:roster" });
+        Assert.Equal(count, session.RoomPlayers.Length);
+        Assert.Equal(6, session.MaxPlayers);
+        Assert.Equal(2, session.MinPlayersToStart);
+        Assert.Equal(waiting, session.WaitingForPlayers);
+    }
+
     private static bool IsForbidden(Type type) =>
         type.IsGenericType || Nullable.GetUnderlyingType(type) != null ||
         type.GetInterfaces().Any(contract => contract.IsGenericType && contract.GetGenericTypeDefinition() == typeof(IDictionary<,>));

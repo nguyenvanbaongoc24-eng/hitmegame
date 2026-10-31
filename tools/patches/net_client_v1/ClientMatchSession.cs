@@ -21,6 +21,10 @@ public sealed class ClientMatchSession : IDisposable
     public int RoundId { get; private set; }
     public long DeadlineUnixMilliseconds { get; private set; }
     public string RoomCode { get; private set; } = string.Empty;
+    public RoomPlayerDto[] RoomPlayers { get; private set; } = Array.Empty<RoomPlayerDto>();
+    public int MaxPlayers { get; private set; }
+    public int MinPlayersToStart { get; private set; }
+    public bool WaitingForPlayers => RoomPlayers.Length < MinPlayersToStart;
     public event Action<ServerMessage>? MessageReceived;
     public event Action<ClientMatchPhase>? PhaseChanged;
 
@@ -40,6 +44,9 @@ public sealed class ClientMatchSession : IDisposable
             case RoomStateMessage room:
                 if (room.protocolVersion != 1) throw new InvalidOperationException("protocol_mismatch");
                 RoomCode = room.roomCode;
+                RoomPlayers = room.players ?? Array.Empty<RoomPlayerDto>();
+                MaxPlayers = room.config?.maxPlayers ?? 0;
+                MinPlayersToStart = room.config?.minPlayersToStart ?? 0;
                 if (!room.started || Phase is ClientMatchPhase.Disconnected or ClientMatchPhase.Queueing)
                     SetPhase(ClientMatchPhase.Lobby);
                 break;
