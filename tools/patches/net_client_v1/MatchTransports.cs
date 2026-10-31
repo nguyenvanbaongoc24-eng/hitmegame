@@ -16,6 +16,7 @@ namespace HitMe.NetClientV1;
 public interface IMatchTransport : IDisposable
 {
     event Action<ServerMessage> Received;
+    event Action<string> Closed;
     bool IsConnected { get; }
     void Connect();
     void Send(ClientMessage message);
@@ -26,6 +27,7 @@ public sealed class LoopbackTransport : IMatchTransport
     private readonly IProtocolJson codec;
     private readonly Func<string, IReadOnlyList<string>> gateway;
     public event Action<ServerMessage>? Received;
+    public event Action<string>? Closed;
     public bool IsConnected { get; private set; }
 
     // The gateway callback is the direct in-process adapter to ProtocolGateway;
@@ -41,9 +43,11 @@ public sealed class LoopbackTransport : IMatchTransport
     {
         if (!IsConnected) throw new InvalidOperationException("transport_not_connected");
         foreach (var payload in gateway(codec.ToJson(message)))
-            Received?.Invoke(ProtocolReader.ReadServerMessage(payload, codec));
+            Deliver(payload);
     }
-    public void Dispose() => IsConnected = false;
+    public void Deliver(string payload) => Received?.Invoke(ProtocolReader.ReadServerMessage(payload, codec));
+    public void SimulateClose(string reason) { IsConnected = false; Closed?.Invoke(reason); }
+    public void Dispose() { IsConnected = false; Closed = null; Received = null; }
 }
 
 #if NET8_0_OR_GREATER
@@ -56,6 +60,7 @@ public sealed class WebSocketTransport : IMatchTransport
     private readonly CancellationTokenSource lifetime = new();
     private ClientWebSocket? socket;
     public event Action<ServerMessage>? Received;
+    public event Action<string>? Closed;
     public bool IsConnected { get; private set; }
 
     public WebSocketTransport(IProtocolJson codec, Uri endpoint)
@@ -95,7 +100,7 @@ public sealed class WebSocketTransport : IMatchTransport
             }
         }
         catch (OperationCanceledException) { }
-        finally { IsConnected = false; }
+        finally { IsConnected = false; Closed?.Invoke(activeSocket.CloseStatusDescription ?? "disconnected"); }
     }
 
     public void Dispose()
@@ -104,15 +109,17 @@ public sealed class WebSocketTransport : IMatchTransport
         socket?.Dispose();
         IsConnected = false;
         Received = null;
+        Closed = null;
     }
 }
 #else
 public sealed class WebSocketTransport : IMatchTransport
 {
     public event Action<ServerMessage>? Received;
+    public event Action<string>? Closed;
     public bool IsConnected => false;
     public void Connect() => throw new PlatformNotSupportedException("WebGL needs a .jslib transport.");
     public void Send(ClientMessage message) => throw new PlatformNotSupportedException("WebGL needs a .jslib transport.");
-    public void Dispose() { Received = null; }
+    public void Dispose() { Received = null; Closed = null; }
 }
 #endif

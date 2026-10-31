@@ -15,18 +15,21 @@ public sealed class ClientMatchSession : IDisposable
     {
         this.transport = transport ?? throw new ArgumentNullException(nameof(transport));
         transport.Received += OnReceived;
+        transport.Closed += OnClosed;
     }
 
     public ClientMatchPhase Phase { get; private set; } = ClientMatchPhase.Disconnected;
     public int RoundId { get; private set; }
     public long DeadlineUnixMilliseconds { get; private set; }
     public string RoomCode { get; private set; } = string.Empty;
+    public string ReconnectToken { get; private set; } = string.Empty;
     public RoomPlayerDto[] RoomPlayers { get; private set; } = Array.Empty<RoomPlayerDto>();
     public int MaxPlayers { get; private set; }
     public int MinPlayersToStart { get; private set; }
     public bool WaitingForPlayers => RoomPlayers.Length < MinPlayersToStart;
     public event Action<ServerMessage>? MessageReceived;
     public event Action<ClientMatchPhase>? PhaseChanged;
+    public event Action<string>? Closed;
 
     public void Connect() => transport.Connect();
     public void Send(ClientMessage message) => transport.Send(message);
@@ -44,6 +47,7 @@ public sealed class ClientMatchSession : IDisposable
             case RoomStateMessage room:
                 if (room.protocolVersion != 1) throw new InvalidOperationException("protocol_mismatch");
                 RoomCode = room.roomCode;
+                if (!string.IsNullOrEmpty(room.reconnectToken)) ReconnectToken = room.reconnectToken;
                 RoomPlayers = room.players ?? Array.Empty<RoomPlayerDto>();
                 MaxPlayers = room.config?.maxPlayers ?? 0;
                 MinPlayersToStart = room.config?.minPlayersToStart ?? 0;
@@ -68,6 +72,12 @@ public sealed class ClientMatchSession : IDisposable
         MessageReceived?.Invoke(message);
     }
 
+    private void OnClosed(string reason)
+    {
+        SetPhase(ClientMatchPhase.Disconnected);
+        Closed?.Invoke(reason);
+    }
+
     private void SetPhase(ClientMatchPhase value)
     {
         if (Phase == value) return;
@@ -78,6 +88,7 @@ public sealed class ClientMatchSession : IDisposable
     public void Dispose()
     {
         transport.Received -= OnReceived;
+        transport.Closed -= OnClosed;
         transport.Dispose();
     }
 }
