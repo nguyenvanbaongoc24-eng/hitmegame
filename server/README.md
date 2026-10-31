@@ -16,6 +16,8 @@ Z1 chạy Kestrel và `ClientWebSocket` thật với 20 trận luân phiên N=2.
 
 Z3 (cục bộ, trong tiến trình, 2026-10-30) chạy đồng thời 50 phòng x 6 người x 5 vòng: `Passed! 1/1`, 0 ngoại lệ, 0 treo, 0 kết nối rớt; 250 vòng có trung bình 2.294 ms, p95 31.428 ms, lớn nhất 31.553 ms, 4,800 broadcast nội bộ, CPU 343.8 ms và peak working set 67.95 MiB. Đây là đo Core/session, **không** thay cho tải WebSocket/Internet; mục tiêu khởi đầu bảo thủ là 50 phòng mỗi process trước khi có benchmark mạng thực.
 
+Z3 bổ sung (2026-10-31): 50 phòng hỗn hợp N=2..6 (10 phòng mỗi N), 200 người, 250 vòng, `Passed! 1/1` (`FiftyMixedSizeRoomsFromTwoToSixCompleteWithoutDropsOrExceptions`), 0 ngoại lệ/rớt/treo; 90.6 ms tổng, mỗi vòng trung bình 2.433 ms, p95 31.087 ms, tối đa 31.146 ms. Đây vẫn chỉ là trong tiến trình; Z1 đã chạy WebSocket thật với 20 trận hỗn hợp.
+
 Render miễn phí có thể ngủ sau khoảng 15 phút không có truy cập, làm WebSocket bị ngắt. Chủ dự án cần chọn: gói trả phí, ping giữ ấm, hoặc chấp nhận hành vi này; chưa triển khai lựa chọn nào.
 
 Z2 có sẵn tại `tools/patches/net_client_v1`: DTO thuần tương thích cấu trúc `JsonUtility`, loopback adapter và WebSocket Desktop cho .NET 8. Bản biên dịch `netstandard2.1` chứa WebSocket stub, vì vậy **chưa có WebGL transport**. Z3 đã hoàn thành; chưa deploy server WIP này.

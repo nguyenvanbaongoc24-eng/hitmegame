@@ -29,7 +29,7 @@ public sealed class LoadTests
 
         await Task.WhenAll(Enumerable.Range(0, RoomCount).Select(roomId => Task.Run(() =>
         {
-            var measurement = RunRoom(roomId);
+            var measurement = RunRoom(roomId, PlayersPerRoom);
             rooms.Add(measurement);
         }))).WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -59,9 +59,33 @@ public sealed class LoadTests
             measurements.Sum(room => room.BroadcastMessages));
     }
 
-    private static RoomMeasurement RunRoom(int roomId)
+    [Fact]
+    public async Task FiftyMixedSizeRoomsFromTwoToSixCompleteWithoutDropsOrExceptions()
     {
-        var players = Enumerable.Range(0, PlayersPerRoom).Select(index => $"load_{roomId}_{index}").ToArray();
+        var rooms = new ConcurrentBag<RoomMeasurement>();
+        var elapsed = Stopwatch.StartNew();
+        await Task.WhenAll(Enumerable.Range(0, RoomCount).Select(roomId => Task.Run(() =>
+            rooms.Add(RunRoom(roomId, 2 + roomId % 5))))).WaitAsync(TimeSpan.FromSeconds(30));
+        elapsed.Stop();
+        var measurements = rooms.ToArray();
+        Assert.Equal(RoomCount, measurements.Length);
+        for (var size = 2; size <= 6; size++) Assert.Equal(10, measurements.Count(room => room.Players == size));
+        Assert.All(measurements, room =>
+        {
+            Assert.Equal(RoundsPerRoom, room.Rounds);
+            Assert.Equal(0, room.DroppedConnections);
+            Assert.True(room.BroadcastMessages > 0);
+        });
+        var durations = measurements.SelectMany(room => room.RoundDurations).OrderBy(value => value).ToArray();
+        output.WriteLine("Z3 mixed in-process: rooms={0}; players={1}; rounds={2}; elapsedMs={3:F1}; roundAvgMs={4:F3}; roundP95Ms={5:F3}; roundMaxMs={6:F3}; droppedConnections=0",
+            RoomCount, measurements.Sum(room => room.Players), durations.Length, elapsed.Elapsed.TotalMilliseconds,
+            durations.Average(value => value.TotalMilliseconds), durations[(int)Math.Ceiling(durations.Length * .95) - 1].TotalMilliseconds,
+            durations[^1].TotalMilliseconds);
+    }
+
+    private static RoomMeasurement RunRoom(int roomId, int playersPerRoom)
+    {
+        var players = Enumerable.Range(0, playersPerRoom).Select(index => $"load_{roomId}_{index}").ToArray();
         var session = new ServerRoundSession(new GameConfig
         {
             MaxPlayers = PlayersPerRoom,
@@ -71,7 +95,7 @@ public sealed class LoadTests
         }, players);
         session.BeginRound();
         var durations = new List<TimeSpan>();
-        var broadcastMessages = PlayersPerRoom; // Initial round_start.
+        var broadcastMessages = playersPerRoom; // Initial round_start.
 
         for (var round = 0; round < RoundsPerRoom; round++)
         {
@@ -90,7 +114,7 @@ public sealed class LoadTests
         }
 
         Assert.Equal(Phase.MatchEnd, session.Match.State.Phase);
-        return new RoomMeasurement(RoundsPerRoom, 0, broadcastMessages, durations);
+        return new RoomMeasurement(playersPerRoom, RoundsPerRoom, 0, broadcastMessages, durations);
     }
 
     private static Vec2 Placement(int index) => index switch
@@ -99,5 +123,5 @@ public sealed class LoadTests
         3 => new Vec2(-3f, 4f), 4 => new Vec2(0f, 4f), _ => new Vec2(3f, 4f)
     };
 
-    private sealed record RoomMeasurement(int Rounds, int DroppedConnections, int BroadcastMessages, IReadOnlyList<TimeSpan> RoundDurations);
+    private sealed record RoomMeasurement(int Players, int Rounds, int DroppedConnections, int BroadcastMessages, IReadOnlyList<TimeSpan> RoundDurations);
 }
