@@ -74,7 +74,7 @@ public sealed class ProtocolGateway
             {
                 "join" => JoinMessages(connectionId, request),
                 "quick_match" => QuickMatchMessages(connectionId, request),
-                "leave" => Reply(connectionId, Leave(connectionId)),
+                "leave" => LeaveMessages(connectionId),
                 "room_ready" => RoomReadyMessages(connectionId, request),
                 "start" => HostStartMessages(connectionId),
                 "lock_ready" => LockReadyMessages(connectionId, request),
@@ -140,7 +140,26 @@ public sealed class ProtocolGateway
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, response);
         // Every connected member must learn the new roster. RoomState contains
         // no private placement coordinates or aims, including during reconnect.
-        return RoomStateBroadcast(session.Room);
+        var messages = RoomStateBroadcast(session.Room).ToList();
+        if (session.Room.RoundSession is { } roundSession && roundSession.Match.State.Phase == Phase.Placing)
+        {
+            var active = roundSession.ActiveRound;
+            messages.Add(new GatewayMessage(connectionId, JsonSerializer.Serialize(new
+            {
+                v = Version, type = "round_start", roundId = active.RoundId,
+                deadline = active.Deadline.ToUnixTimeMilliseconds()
+            }, Json)));
+        }
+        return messages;
+    }
+
+    private IReadOnlyList<GatewayMessage> LeaveMessages(string connectionId)
+    {
+        var room = sessions.TryGetValue(connectionId, out var session) ? session.Room : null;
+        var response = Leave(connectionId);
+        var messages = Reply(connectionId, response).ToList();
+        if (room is not null && rooms.Snapshot().Contains(room)) messages.AddRange(RoomStateBroadcast(room));
+        return messages;
     }
 
     private IReadOnlyList<GatewayMessage> QuickMatchMessages(string connectionId, ClientEnvelope request)

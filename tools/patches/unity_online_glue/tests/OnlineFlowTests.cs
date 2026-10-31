@@ -86,6 +86,19 @@ public sealed class OnlineFlowTests
     }
 
     [Fact]
+    public void LeavingPlayerBroadcastsUpdatedRosterToRemainingPlayer()
+    {
+        var hub = new Hub();
+        using var host = hub.Add("p1");
+        using var guest = hub.Add("p2");
+        host.Flow.Join("test:p1");
+        guest.Flow.Join("test:p2", host.Session.RoomCode);
+        guest.Flow.Leave();
+        Assert.Single(host.Session.RoomPlayers);
+        Assert.Equal("waiting:1:6", host.Ui.Calls.Last(call => call.StartsWith("waiting:")));
+    }
+
+    [Fact]
     public void CloseReasonChoosesShutdownOrReconnect()
     {
         var hub = new Hub();
@@ -113,6 +126,24 @@ public sealed class OnlineFlowTests
         Assert.Equal(code, old.Session.RoomCode);
         Assert.NotEqual(reconnectToken, old.Session.ReconnectToken);
         Assert.Equal(ClientMatchPhase.Lobby, old.Session.Phase);
+    }
+
+    [Fact]
+    public void ReconnectDuringPlacementRestoresServerRoundAndDeadline()
+    {
+        var hub = new Hub();
+        using var host = hub.Add("p1");
+        using var guest = hub.Add("p2");
+        host.Flow.Join("test:p1");
+        guest.Flow.Join("test:p2", host.Session.RoomCode);
+        host.Flow.HostStart();
+        var deadline = guest.Session.DeadlineUnixMilliseconds;
+        hub.Gateway.Disconnect("p2");
+        guest.Transport.SimulateClose("network_lost");
+        guest.Flow.Reconnect();
+        Assert.Equal(ClientMatchPhase.Placing, guest.Session.Phase);
+        Assert.Equal(1, guest.Session.RoundId);
+        Assert.Equal(deadline, guest.Session.DeadlineUnixMilliseconds);
     }
 
     [Theory]
