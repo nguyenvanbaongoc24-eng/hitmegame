@@ -65,7 +65,9 @@ namespace HitMe.UI
             }
 
             // Always register exception handler (friendly error in Vietnamese)
+#if !UNITY_WEBGL || UNITY_EDITOR
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+#endif
         }
 
         private void OnDestroy()
@@ -141,7 +143,7 @@ namespace HitMe.UI
             _infoText.enableWordWrapping = true;
             _infoText.overflowMode = TextOverflowModes.Truncate;
             var infoRect = _infoText.GetComponent<RectTransform>();
-            infoRect.anchorMin = new Vector2(0.02f, 0.55f);
+            infoRect.anchorMin = new Vector2(0.02f, 0.56f);
             infoRect.anchorMax = new Vector2(0.98f, 0.98f);
             infoRect.offsetMin = Vector2.zero;
             infoRect.offsetMax = Vector2.zero;
