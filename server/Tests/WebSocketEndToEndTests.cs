@@ -26,6 +26,41 @@ public sealed class WebSocketEndToEndTests
     public WebSocketEndToEndTests(ITestOutputHelper output) => this.output = output;
 
     [Fact]
+    public async Task DuplicateGuestConnectionNotifiesAndClosesOldSocketOverRealWebSockets()
+    {
+        var port = ReservePort();
+        await using var host = await RunningServer.StartAsync(port);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        using var old = new ClientWebSocket();
+        using var replacement = new ClientWebSocket();
+        var endpoint = new Uri($"ws://127.0.0.1:{port}/ws");
+        await old.ConnectAsync(endpoint, timeout.Token);
+        await Send(old);
+        Assert.Equal("room_state", (await Read(old)).GetProperty("type").GetString());
+        await replacement.ConnectAsync(endpoint, timeout.Token);
+        await Send(replacement);
+        var newState = await Read(replacement);
+        var notice = await Read(old);
+        Assert.Equal("room_state", newState.GetProperty("type").GetString());
+        Assert.Single(newState.GetProperty("players").EnumerateArray());
+        Assert.Equal("session_replaced", notice.GetProperty("code").GetString());
+        var buffer = new byte[4096];
+        var closed = await old.ReceiveAsync(buffer, timeout.Token);
+        Assert.Equal(WebSocketMessageType.Close, closed.MessageType);
+
+        async Task Send(ClientWebSocket socket) => await socket.SendAsync(
+            Encoding.UTF8.GetBytes("{\"v\":1,\"type\":\"join\",\"token\":\"guest:duplicate_live\"}"),
+            WebSocketMessageType.Text, true, timeout.Token);
+        async Task<JsonElement> Read(ClientWebSocket socket)
+        {
+            var bytes = new byte[4096];
+            var message = await socket.ReceiveAsync(bytes, timeout.Token);
+            Assert.Equal(WebSocketMessageType.Text, message.MessageType);
+            return JsonDocument.Parse(Encoding.UTF8.GetString(bytes, 0, message.Count)).RootElement.Clone();
+        }
+    }
+
+    [Fact]
     public async Task TwentyMixedRosterMatchesOverRealWebSocketsMatchCoreAndRecoverFromFaults()
     {
         var port = ReservePort();
