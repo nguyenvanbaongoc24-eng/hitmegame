@@ -173,3 +173,35 @@ __________________________________________________________________________
 3. `lo6_01_tutorial_step1_1170x2532.png` (1.35 MB): Màn hình hướng dẫn Bước 1/3 (Thẻ hướng dẫn `y=[882, 1645]`, tiêu đề "HƯỚNG DẪN CỬ CHỈ (v1.2)", tiêu đề bước "BƯỚC 1/3: ĐẶT NHÂN VẬT", nội dung "Chạm vào vùng sân để đặt vị trí nhân vật của bạn.", chấm tròn 1 sáng vàng, nút đỏ "BỎ QUA" bên trái và nút vàng "TIẾP THEO" bên phải).
 4. `lo6_02_tutorial_step2_1170x2532.png` (1.35 MB): Màn hình hướng dẫn Bước 2/3 (Tiêu đề bước "BƯỚC 2/3: KÉO ĐỂ NGẮM", nội dung "Giữ rồi trượt để ngắm. Thước ngắm bám theo đầu ngón tay.", chấm tròn 2 sáng vàng).
 5. `lo6_03_tutorial_step3_1170x2532.png` (1.36 MB): Màn hình hướng dẫn Bước 3/3 (Tiêu đề bước "BƯỚC 3/3: ĐỔI VỊ TRÍ & HỦY", nội dung "Chạm chỗ khác để làm lại. Kéo về dưới 4mm để hủy. Không ngắm = ném thẳng.", chấm tròn 3 sáng vàng, nút xác nhận "ĐÃ HIỂU").
+
+---
+
+## 6. Lô 7 & Lô 8: Hồ Sơ, Túi Đồ, Cửa Hàng Vũ Khí VN, Bảng Xếp Hạng & Đăng Nhập Khách
+- **Cổng:** `8099`
+- **Commit:** `09f48d2`
+- **Thư mục build:** `Builds/WebGL_20261101_09f48d2`
+- **Kích thước .data:** 20,380,003 bytes (~20.38 MB)
+- **Kiểm thử EditMode:** `Passed! 127/127` (0 failed)
+  - `RuleL7_FakeAccountService_RenameAndBalance` (Passed)
+  - `RuleL7_FakeInventoryService_WeaponsCatalogAndEquip` (Passed)
+  - `RuleL7_ProfileShopInventoryLeaderboard_Dialogs` (Passed)
+  - `RuleL8_GuestLoginDialog_MockAndDisabledSocial` (Passed)
+- **Audit Phase 2:** `12/12 ĐẠT` (Mã thoát 0, lưu tại `Evidence/audit/phase2_audit_09f48d2.txt`).
+
+### Bảng ánh xạ vũ khí trang trí Việt Nam (Cosmetic Asset Map - Lô 7)
+> Quy tắc: Trang trí thuần túy, không thay đổi bán kính, sát thương, tốc độ; trong trận chơi chỉ kích hoạt khi `CosmeticsEnabled=true` (mặc định tắt).
+- **Dép Tổ Ong (0 Vàng):** `Assets/Art/Weapons/dep_to_ong_icon.png` (Held: `dep_to_ong_held.png`, Projectile: `dep_to_ong_projectile.png`) • Đầy đủ.
+- **Chảo Chống Dính (100 Vàng):** `Assets/Art/Weapons/chao_chong_dinh_icon.png` (Held: `chao_chong_dinh_held.png`, Projectile: `chao_chong_dinh_projectile.png`) • Đầy đủ.
+- **Cốc Bia Hơi (150 Vàng = 100 × 1.5):** `Assets/Art/Weapons/coc_bia_icon.png` (Held: `coc_bia_held.png`, Projectile: `coc_bia_projectile.png`) • Đầy đủ.
+- **Điếu Cày (225 Vàng = 150 × 1.5):** `Assets/Art/Weapons/dieu_cay_icon.png` (Held: `dieu_cay_held.png`, Projectile: `dieu_cay_projectile.png`) • Đầy đủ.
+- **Búa Đóng Đinh (335 Vàng = 225 × 1.5):** `Assets/Art/Weapons/bua_dong_dinh_icon.png` (Held: `bua_dong_dinh_held.png`, Projectile: `bua_dong_dinh_projectile.png`) • Đầy đủ.
+- **Vợt Pickleball (500 Vàng = 335 × 1.5):** `Assets/Art/Weapons/vot_pickleball_icon.png` (Held: `vot_pickleball_held.png`, Projectile: `vot_pickleball_projectile.png`) • Đầy đủ.
+- **Xe Đạp Phượng Hoàng (750 Vàng = 500 × 1.5):** `Thiếu` sprite hiệu ứng bay và cầm tay.
+- **Honda Cũ (1125 Vàng = 750 × 1.5):** `Thiếu` sprite hiệu ứng bay và cầm tay.
+
+### Bằng chứng hình ảnh WebGL thực tế (1170×2532) - Kiểm tra trực quan bằng PIL:
+1. `lo7_01_profile_dialog_1170x2532.png` (856 KB): Hộp thoại Hồ sơ người chơi (`y=[730, 1796]`, `x=[85, 1085]`), khung ảnh đại diện, Tên hiển thị "Khách_4826", ID người chơi "ID: HM-9582", Số dư "500 VÀNG • 20 NGỌC", dòng nhãn "LẦN ĐẦU MIỄN PHÍ", nút vàng "ĐỔI TÊN", nút xanh "ĐÓNG".
+2. `lo7_02_shop_weapons_1170x2532.png` (815 KB): Hộp thoại Cửa hàng vũ khí (`y=[557, 1969]`, `x=[74, 1095]`), Tiêu đề "CỬA HÀNG VŨ KHÍ", phụ đề "Trang trí thuần túy • Không đổi chỉ số chiến đấu", Số dư "500 VÀNG", 6 hàng vũ khí VN tăng giá theo tỉ lệ 1.5x (Dép Tổ Ong 0G - ĐANG DÙNG; Chảo Rán 100G - MUA; Cốc Bia 150G - MUA; Điếu Cày 225G - MUA; Búa Sắt 335G - MUA; Pickleball 500G - MUA), nút xanh "ĐÓNG".
+3. `lo7_03_inventory_weapons_1170x2532.png` (844 KB): Hộp thoại Túi đồ vũ khí (`y=[730, 1796]`, `x=[85, 1085]`), Tiêu đề "TÚI ĐỒ VŨ KHÍ", nhãn "ĐANG DÙNG: DÉP TỔ ONG", ô trang bị mặc định Dép Tổ Ong cùng nút "ĐANG DÙNG", nút xanh "ĐÓNG".
+4. `lo7_04_leaderboard_1170x2532.png` (827 KB): Bảng xếp hạng Sân làng (`y=[676, 1850]`, `x=[85, 1085]`), Tiêu đề "BẢNG XẾP HẠNG SÂN LÀNG", Danh sách Top 5 điểm đấu (1. Tuấn_HàNội 1250đ; 2. Nam_Làng 1120đ; 3. Hoa_Bé 980đ; 4. Bạn (Khách_4826) 850đ hiển thị màu vàng nổi bật; 5. Bình_TổOng 790đ), nút xanh "ĐÓNG".
+5. `lo8_01_guest_login_1170x2532.png` (883 KB): Màn hình Đăng nhập (`y=[757, 1769]`, `x=[85, 1085]`), Tiêu đề "ĐĂNG NHẬP", nút vàng "CHƠI VỚI TƯ CÁCH KHÁCH", 3 nút đăng nhập mạng xã hội (Google, Facebook, Apple) bị vô hiệu hóa kèm nhãn "(SẮP CÓ)", nút xanh "ĐÓNG".
