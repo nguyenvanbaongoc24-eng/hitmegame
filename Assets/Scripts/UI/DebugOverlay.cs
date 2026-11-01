@@ -50,7 +50,7 @@ namespace HitMe.UI
         {
             if (_instance != null && _instance != this)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
                 return;
             }
             _instance = this;
@@ -70,7 +70,7 @@ namespace HitMe.UI
 #endif
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             Application.logMessageReceived -= OnLogMessage;
             Application.logMessageReceivedThreaded -= OnLogMessageThreaded;
