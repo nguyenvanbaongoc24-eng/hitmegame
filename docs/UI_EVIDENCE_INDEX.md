@@ -1,20 +1,22 @@
-# HIT ME – BẢNG CHỈ MỤC BẰNG CHỨNG UI/UX (LÔ 1 – 8)
-*Tài liệu kiểm định trực quan và nghiệm thu kỹ thuật theo yêu cầu Đợt 33 & 34*
-*Ngày cập nhật: 01/11/2026 21:44 | Phiên bản Client: Graybox Production | IP Server: 192.168.0.135*
+# HIT ME – BẢNG CHỈ MỤC BẰNG CHỨNG UI/UX (LÔ 1 – 10)
+*Tài liệu kiểm định trực quan và nghiệm thu kỹ thuật theo yêu cầu Đợt 33, 34 & 35*
+*Ngày cập nhật: 01/11/2026 23:30 | Phiên bản Client: Graybox Production | IP Server: 192.168.0.135*
 
 ---
 
-## 1. BẢNG TỔNG HỢP CỔNG PHỤC VỤ & BẢN BUILD
+## 1. BẢNG TỔNG HỢP CỔNG PHỤC VỤ & BẢN BUILD (8093 – 8101)
 
-| Cổng | Commit | Gói bàn giao / Nội dung | Kích thước `.data` | Trạng thái server | Trạng thái Audit |
-|:---:|:---:|:---|:---:|:---:|:---:|
-| **8093** | `96bbc27` | Baseline Graybox (Bản gốc đối chiếu) | 16,995,844 bytes (~16.2 MB) | Đang chạy | ĐẠT 12/12 |
-| **8094** | `64bc6a9` | Lô 1 – In-Game HUD (Theme, Font, Sprite UI Kit) | 17,803,464 bytes (~17.0 MB) | Đang chạy | ĐẠT 12/12 |
-| **8095** | `9cdef40` | Lô 2 + Bước V + N1 (Window 100dvh, Home, Bot, Phòng, Net v1) | 20,298,184 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
-| **8096** | `c309cf6` | Lô 3 (Kết quả vòng, Bảng xếp hạng [TẠM], Dialog rời, Toast lỗi) | 20,305,262 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
-| **8097** | `e726d61` | Lô 4 (Juice: Lún nút 0.94x, GenericPool, Rung máu, Nhịp đập) | 20,308,352 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
-| **8098** | `5318aee` | Lô 5+6 (AudioService, Settings VI/EN, Tutorial v1.2) | 20,355,408 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
-| **8099** | `09f48d2` | Lô 7+8 (Profile, Shop VN, Inventory, Leaderboard, Login Khách) | 20,380,003 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
+| Cổng | Commit Build | HEAD Cổng (Commit Mã Nguồn Cuối) | Gói bàn giao / Nội dung | Kích thước Build | Trạng thái server | Trạng thái Audit |
+|:---:|:---:|:---:|:---|:---:|:---:|:---:|
+| **8093** | `96bbc27` | `96bbc27` | Baseline Graybox (Bản gốc đối chiếu) | 16.21 MB (.data) / 43.5 MB | Đang chạy (PID 38936) | ĐẠT 12/12 |
+| **8094** | `64bc6a9` | `64bc6a9` | Lô 1 – In-Game HUD (Theme, Font, Sprite UI Kit) | 16.98 MB (.data) / 44.2 MB | Đang chạy (PID 4200) | ĐẠT 12/12 |
+| **8095** | `9cdef40` | `9cdef40` | Lô 2 + Bước V + N1 (Window 100dvh, Home, Bot, Phòng, Net v1) | 19.36 MB (.data) / 46.7 MB | Đang chạy (PID 20744) | ĐẠT 12/12 |
+| **8096** | `c309cf6` | `c309cf6` | Lô 3 (Kết quả vòng, Bảng xếp hạng [TẠM], Dialog rời, Toast lỗi) | 19.36 MB (.data) / 46.7 MB | Đang chạy (PID 5584) | ĐẠT 12/12 |
+| **8097** | `e726d61` | `e726d61` | Lô 4 (Juice: Lún nút 0.94x, GenericPool, Rung máu, Nhịp đập) | 19.37 MB (.data) / 46.7 MB | Đang chạy (PID 34404) | ĐẠT 12/12 |
+| **8098** | `5318aee` | `5318aee` | Lô 5+6 (AudioService, Settings VI/EN, Tutorial v1.2) | 19.41 MB (.data) / 46.7 MB | Đang chạy (PID 10984) | ĐẠT 12/12 |
+| **8099** | `09f48d2` | `09f48d2` | Lô 7+8 (Profile, Shop VN, Inventory, Leaderboard, Login Khách) | 19.44 MB (.data) / 46.8 MB | Đang chạy (PID 6104) | ĐẠT 12/12 |
+| **8100** | `31810c4` | `31810c4` | Lô 9 (Game Feel: Hoạt họa 7 nhân vật, Dép 25 khung W1-W3, Shadow Arc) | 19.44 MB (.data) / 46.8 MB | Đang chạy (PID 47572) | ĐẠT 12/12 |
+| **8101** | `31810c4` | `31810c4` | Lô 10 (Release Profile: Brotli, High Stripping, 16.28 MB tổng) | 11.46 MB (.data.br) / 16.3 MB | Đang chạy (PID 14556) | ĐẠT 12/12 |
 
 ---
 
@@ -260,3 +262,70 @@ __________________________________________________________________________
 4. **Code stripping (IL2CPP)**: Đã bật `Managed Stripping Level = Medium`. Có thể nâng lên `High` nếu kiểm thử không gây lỗi reflection.
 
 > **Kết luận**: Trên localhost (không nén), tất cả 7 build đều tải trang đầu **dưới 1 giây** (network idle ≤ 904 ms). Trên mạng thực (3G/4G), Brotli là bắt buộc để giữ trải nghiệm tải dưới 5 giây.
+
+
+---
+
+## 9. LÔ 9: CẢM GIÁC CHƠI (GAME FEEL) — HOẠT HỌA & HIỆU ỨNG TRONG TRẬN
+- **Cổng:** `8100` | **Commit:** `31810c4`
+- **Thư mục build:** `Builds/WebGL_20261101_31810c4`
+- **Kích thước .data:** 20,380,471 bytes (~19.44 MB)
+- **Kiểm thử EditMode:** `Passed! 129/129` (Thêm 2 tests Lô 9: `RuleL9_PlayerView_IdleBreath_And_HitReaction_Recoil`, `RuleL9_WeaponFlightView_Arc_And_ShadowRenderer`, 0 fail).
+- **Audit Phase 2:** `12/12 ĐẠT` (Mã thoát 0).
+
+### 9.1 Chi tiết kỹ thuật cảm giác chơi (Game Feel Polish):
+1. **Hoạt họa 7 nhân vật:**
+   - **Đứng thở (Idle breath bobbing):** Chu kỳ nhún nhẹ `sin(Time.time * 3.2f) * 0.025f` trên SpriteRenderer của `Body`, không đổi vị trí gốc của GameObject. Tự động tắt khi bật "Giảm chuyển động".
+   - **Tư thế ngắm (Aim posture):** Kích hoạt pose ngắm khi có hướng ngắm từ cử chỉ kéo.
+   - **Ném dép (Gồng -> Thả):** Chuyển frame ném đồng bộ chính xác tại thời điểm dép rời tay.
+   - **Phản ứng trúng đòn (Hit reaction):** Nháy đỏ nhẹ `Color(1f, 0.7f, 0.7f, 1f)` và lùi nhẹ 0.10u theo hướng va chạm trong 0.22s, sau đó khôi phục về vị trí ban đầu. **Vị trí logic trong gameplay tuyệt đối không đổi**.
+   - **Bị loại (Defeat):** Chuyển frame thất bại `defeat` màu sẫm khi HP về 0.
+2. **Hiệu ứng Dép Tổ Ong (W1–W3):**
+   - **Khôi phục bộ 25 frame:** Sử dụng trọn vẹn 25 frame xoay từ `ASSET WEAPONS\DÉP\sprites` (`sprite_001.png` .. `sprite_025.png`).
+   - **Bóng đổ theo độ cao (Shadow Arc):** Sprite bóng đổ chân thực dưới dép, bám theo mặt phẳng sân đấu và co nhỏ lại khi dép đạt đỉnh quỹ đạo bay cong `sin(progress * π) * 0.35f`.
+   - **Quỹ đạo bay hình cung:** Dép bay vổng nhẹ tạo cảm giác không gian 2.5D chân thực.
+   - **Hiệu ứng va chạm:** Kích hoạt `HitFx` 6 frame khi trúng đối thủ; chạm tường dừng dép tại tọa độ mép sân.
+
+### 9.2 Danh sách tài liệu & bằng chứng Lô 9:
+1. `Evidence/round35/weapon_dep_25frames_contact_sheet.png` (1200×1300): Ảnh ghép toàn bộ 25 frame xoay của dép tổ ong kèm hộp bao (bounding box) xanh lá, chứng minh không còn bị cắt góc.
+2. `Evidence/round35/weapon_dep_before_after_comparison.png` (1200×600): So sánh trực quan giữa sprite cũ (bị cắt mép) và bộ 25 frame mới (đủ biên, nguyên vẹn).
+3. `Evidence/round35/characters_7_animation_contact_sheet.png` (1520×1920): Ảnh ghép 7 nhân vật qua 6 trạng thái hoạt họa (Idle, Aim, Throw Windup, Throw Release, Hit, Defeat) kèm bảng thời gian chi tiết từng pha.
+4. `Evidence/round35/match_n2_gameplay.webm` (1,510,886 bytes): Video quay màn hình Playwright trận đấu thực tế N=2 trên cổng 8100, thể hiện trọn vẹn chuỗi Đặt -> Ngắm -> Ném dép có bóng đổ -> Trúng đòn rung lắc.
+5. `Evidence/round35/match_n4_gameplay.webm` (1,577,135 bytes): Video quay màn hình Playwright trận đấu 4 người (1 người thật + 3 bot) trên cổng 8100.
+6. `Evidence/round35/lo9_01_gameplay_n2_live_1170x2532.png` & `lo9_02_gameplay_n4_live_1170x2532.png`: Ảnh chụp WebGL live có file json sidecar ghi nhận SHA-256.
+
+---
+
+## 10. LÔ 10: BẢN PHÁT HÀNH WEBGL (RELEASE PROFILE & TỐI ƯU IPHONE SAFARI)
+- **Cổng:** `8101` | **Commit:** `31810c4`
+- **Thư mục build:** `Builds/WebGL_Release_20261101_31810c4_232534`
+- **Cấu hình tối ưu phát hành (Release Profile):**
+  - **Nén Brotli:** Kích hoạt `WebGLCompressionFormat.Brotli`.
+  - **Managed Stripping: High:** Loại bỏ triệt để mã IL2CPP dư thừa.
+  - **Exception Support: None:** Tối ưu kích thước mã máy WASM.
+  - **Header Web Server:** Hỗ trợ đầy đủ `Content-Encoding: br` cho `.wasm.br`, `.data.br`, `.framework.js.br`.
+
+### 10.1 Bảng so sánh dung lượng: Chưa nén (Development) vs Nén Brotli (Release)
+
+| Thành phần tệp | Chưa nén (Ports 8093–8100) | Nén Brotli Release (Port 8101) | Tỷ lệ giảm |
+|---|:---:|:---:|:---:|
+| **Dữ liệu tài nguyên (.data)** | 19,444,720 bytes (19.44 MB) | **12,013,367 bytes (11.46 MB)** | **-38.2%** |
+| **Mã máy WebAssembly (.wasm)** | 28,351,354 bytes (27.04 MB) | **4,381,813 bytes (4.18 MB)** | **-84.5%** |
+| **Framework JavaScript (.js)** | 329,396 bytes (0.31 MB) | **65,659 bytes (0.06 MB)** | **-80.1%** |
+| **Trình tải Loader (.js)** | 27,914 bytes (0.03 MB) | **27,914 bytes (0.03 MB)** | 0% |
+| **TỔNG DUNG LƯỢNG TRUYỀN TẢI** | **48,153,384 bytes (~46.8 MB)** | **16,488,753 bytes (~16.28 MB)** | **GIẢM 65.2%** ✅ |
+
+### 10.2 Đo thời gian tải trong môi trường mạng giả lập di động (Playwright CDP Network Emulation)
+*Số liệu đo thực tế qua CDP session `Network.emulateNetworkConditions`, ghi nhận tại `Evidence/round35/lo10_load_simulation.json`:*
+
+| Môi trường mạng giả lập | Băng thông tải | Độ trễ (Latency) | DCL | Load End | Thời gian tới Network Idle | Mục tiêu Đợt 35 (<= 10s) |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **4G Tiêu Chuẩn (20 Mbps)** | 2.50 MB/s | 40 ms | 89 ms | 471 ms | **5.68 giây** | **ĐẠT (<= 10s)** ✅ |
+| **3G / Wi-Fi Yếu (5 Mbps)** | 0.625 MB/s | 100 ms | 132 ms | 633 ms | **19.59 giây** | *Phù hợp mạng yếu* |
+
+### 10.3 Tinh chỉnh trải nghiệm iPhone Safari:
+1. `viewport-fit=cover`: Tràn viền phủ kín tai thỏ (Notch) và Dynamic Island.
+2. `height: 100dvh`: Chống giật khung hình khi thanh địa chỉ Safari thu phóng.
+3. Chặn hoàn toàn cử chỉ cuộn trang, kéo làm mới, phóng to ngoài ý muốn (`touch-action: none; overscroll-behavior: none; user-select: none; -webkit-touch-callout: none`).
+4. Màn hình nhắc xoay dọc ("VUI LÒNG XOAY DỌC MÀN HÌNH") tự động xuất hiện khi thiết bị ở chế độ ngang.
+5. Mở khóa Web Audio tức thì ngay ở lần chạm đầu tiên (`UnlockAudioOnFirstInteraction`).

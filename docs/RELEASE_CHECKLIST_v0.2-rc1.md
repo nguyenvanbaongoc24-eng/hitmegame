@@ -10,9 +10,9 @@
 |:---:|---|:---:|---|
 | **1** | **Audit 12/12 mã thoát 0** trên HEAD sạch | **ĐÃ ĐẠT** | `Evidence/audit/phase2_audit_a41b0c6.txt` (12/12 ĐẠT, exit code 0). `git diff --stat 09f48d2..HEAD -- Assets ProjectSettings` rỗng (không đổi mã nguồn từ build cuối). |
 | **2** | **Manifest bao phủ Evidence** (`missing=badHash=stale=0`) | **ĐÃ ĐẠT** | `Evidence/MANIFEST.csv` ghi nhận 722 tệp, mã kiểm tra SHA-256 và commit hợp lệ. |
-| **3** | **Build WebGL khớp mã nguồn** | **ĐÃ ĐẠT** | 7 build độc lập trên 7 cổng chuyên dụng (8093→8099). Build cuối `09f48d2` giữ nguyên mã nguồn tới HEAD `a713ee8`. |
-| **4** | **Một file XML kiểm thử hợp nhất chuẩn** | **ĐÃ ĐẠT** | `Evidence/phase2/test-results.xml` (Tổng 127/127 tests EditMode passed, 0 fail, 0 skip). |
-| **5** | **Ảnh chụp WebGL từng pha có sidecar** | **ĐÃ ĐẠT** | 25 ảnh chụp WebGL 1170×2532 trong `Evidence/` kèm file json sidecar ghi nhận tham số view & canvas. |
+| **3** | **Build WebGL khớp mã nguồn** | **ĐÃ ĐẠT** | 9 build độc lập trên 9 cổng chuyên dụng (8093→8101). Build Lô 9 & Lô 10 khớp HEAD `31810c4`. |
+| **4** | **Một file XML kiểm thử hợp nhất chuẩn** | **ĐÃ ĐẠT** | `Evidence/phase2/test-results.xml` (Tổng 129/129 tests EditMode passed, 0 fail, 0 skip). |
+| **5** | **Ảnh chụp WebGL + Video từng pha có sidecar** | **ĐÃ ĐẠT** | 27 ảnh chụp WebGL 1170×2532 trong `Evidence/` kèm sidecar JSON + 2 video gameplay WebM (N=2 và N=4) trên cổng 8100. |
 | **6** | **Chủ dự án thử trên iPhone (Lô 1–8)** | **CHỜ CHỦ DỰ ÁN** | Đã phát hành phiếu test nhanh `hit-me-owner-test-sheet-lo1-4.md` (mở rộng Lô 5–8 trên cổng 8098/8099). Đang chờ phản hồi thực tế từ iPhone Safari. |
 | **7** | **Kiểm định chéo Codex X6** | **CHỜ CODEX** | Chờ Codex chạy đợt kiểm tra chéo X6 và cung cấp module kết nối mạng N2 (`unity_online_glue`). |
 | **8** | **Đo chỉ số FPS thực tế trên điện thoại** | **CHỜ CHỦ DỰ ÁN** | Cơ chế đếm FPS đã tích hợp sẵn (chạm 3 lần góc trên-phải). Chờ số liệu FPS và nhiệt độ máy từ thiết bị di động thật. |

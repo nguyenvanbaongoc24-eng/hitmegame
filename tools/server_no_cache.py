@@ -4,6 +4,15 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 class NoCacheHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
+        # Set Content-Encoding: br for Brotli pre-compressed WebGL release builds
+        if self.path.endswith('.br'):
+            self.send_header('Content-Encoding', 'br')
+            if '.wasm' in self.path:
+                self.send_header('Content-Type', 'application/wasm')
+            elif '.data' in self.path:
+                self.send_header('Content-Type', 'application/octet-stream')
+            elif '.js' in self.path:
+                self.send_header('Content-Type', 'application/javascript')
         # Set anti-cache headers for all responses to prevent mobile browser caching
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
         self.send_header('Pragma', 'no-cache')
