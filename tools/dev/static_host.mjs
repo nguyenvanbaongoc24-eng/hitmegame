@@ -2,7 +2,7 @@
 import { createServer } from 'node:http';
 import { connect as tcpConnect } from 'node:net';
 import { readFile, stat } from 'node:fs/promises';
-import { resolve, sep, extname } from 'node:path';
+import { resolve, sep, extname, basename } from 'node:path';
 
 const port = Number(process.env.HITME_HUB_PORT || 8100);
 const serverPort = Number(process.env.HITME_SERVER_PORT || 8080);
@@ -19,7 +19,7 @@ const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, 'http://localhost');
-    if (url.pathname === '/config.json') return json(response, { buildCommit, serverCommit, protocol: 1, serverPort });
+    if (url.pathname === '/config.json') return json(response, { buildCommit, buildName: basename(buildRoot), serverCommit, protocol: 1, serverPort });
     if (url.pathname === '/api/status' || url.pathname === '/api/healthz') {
       const target = url.pathname.endsWith('status') ? 'status' : 'healthz';
       const upstream = await fetch(`http://127.0.0.1:${serverPort}/${target}`, { signal: AbortSignal.timeout(2500) });

@@ -1,0 +1,30 @@
+{
+  "at": "2026-11-01T17:33:03.397Z",
+  "hub": "http://127.0.0.1:8110",
+  "buildCommit": "31810c4",
+  "serverCommit": "b63c3de",
+  "protocol": 1,
+  "browser": "Playwright Chromium",
+  "checks": [
+    "Hub and AG WebGL assets: fingerprint, data, wasm MIME, server status",
+    "N=1 remains in lobby with start disabled",
+    "Prelock opponent coordinates hidden; emote visible on card",
+    "N=2 full real-WebSocket match, 3 rounds, 2 ranking rows",
+    "N=3 full real-WebSocket match, 5 rounds, 3 ranking rows",
+    "N=6 full real-WebSocket match, 5 rounds, 6 ranking rows",
+    "Two real clients quick-match into the same room",
+    "Reconnect token rejoins the same room within 30 seconds"
+  ],
+  "roundLatencyMs": {
+    "average": 98,
+    "maximum": 144,
+    "samples": 13
+  },
+  "screenshots": [
+    "01_entry.png",
+    "02_lobby.png",
+    "03_placing.png",
+    "03b_aiming.png",
+    "04_result.png"
+  ]
+}

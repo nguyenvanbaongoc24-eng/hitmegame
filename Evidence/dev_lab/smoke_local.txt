@@ -1,0 +1,10 @@
+PASS Hub and AG WebGL assets: fingerprint, data, wasm MIME, server status
+PASS N=1 remains in lobby with start disabled
+PASS Prelock opponent coordinates hidden; emote visible on card
+PASS N=2 full real-WebSocket match, 3 rounds, 2 ranking rows
+PASS N=3 full real-WebSocket match, 5 rounds, 3 ranking rows
+PASS N=6 full real-WebSocket match, 5 rounds, 6 ranking rows
+PASS Two real clients quick-match into the same room
+PASS Reconnect token rejoins the same room within 30 seconds
+Passed! 8/8
+Round broadcast latency measured from last lock request: avg 98 ms, max 144 ms
