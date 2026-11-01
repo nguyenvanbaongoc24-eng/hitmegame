@@ -78,7 +78,7 @@ namespace HitMe.UI
 
         public const string RoundFormat = "VÒNG {0}/{1}";
         public const string RoomCodeFormat = "MÃ PHÒNG: {0} • SÂN LÀNG";
-        public const string WaitingPlayerSlot = "Đang chờ…";
+        public const string WaitingPlayerSlot = "Đang chờ...";
         public const string MinPlayersWarning = "Cần ít nhất 2 người để bắt đầu";
         public const string HpFormat = "{0} HP";
         public const string TotalPlayersFormat = "{0} người ({1} Bot)";

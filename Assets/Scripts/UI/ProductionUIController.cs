@@ -900,7 +900,9 @@ namespace HitMe.UI
 
             if (txtLobbyHeader != null)
             {
-                txtLobbyHeader.text = string.IsNullOrEmpty(roomName) ? UiStrings.LobbyTitle : $"{roomName.ToUpperInvariant()} • SÂN LÀNG";
+                txtLobbyHeader.text = string.IsNullOrEmpty(roomName)
+                    ? $"{UiStrings.LobbyTitle} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT)"
+                    : $"{roomName.ToUpperInvariant()} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT) • SÂN LÀNG";
             }
             if (txtLobbyRoomCode != null)
             {
