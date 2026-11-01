@@ -360,6 +360,7 @@ public sealed class ProtocolGatewayTests
                 Assert.DoesNotContain("-0.98765", payload, StringComparison.Ordinal);
                 Assert.DoesNotContain("\"position\"", payload, StringComparison.Ordinal);
                 Assert.DoesNotContain("\"aim\"", payload, StringComparison.Ordinal);
+                Assert.DoesNotContain("\"seed\"", payload, StringComparison.OrdinalIgnoreCase);
             }
         }
     }
