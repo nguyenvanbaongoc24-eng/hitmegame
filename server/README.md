@@ -60,11 +60,38 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 | `quick_match_waiting` / `quick_match_hint` / `quick_match_left` | `quickMatchHintSeconds?:int`, `code?:string` | Chờ, gợi ý sau 30 giây, hủy chờ. |
 | `error` | `code:string`, `remainingSeconds?:int` | Xem mã dưới đây. |
 
-`server_shutdown` và `idle_timeout` hiện là **lý do đóng WebSocket**, không phải tin JSON. `ready` cũ nhận `legacy_ready_use_room_ready_or_lock_ready`; không dùng nữa.
+`server_shutdown` và `idle_timeout` hiện là **lý do đóng WebSocket**, không phải tin JSON. `ready` cũ nhận `legacy_ready_use_room_ready_or_lock_ready`; không dùng nữa. Trường JSON thừa, thiếu, sai kiểu, không hữu hạn hoặc chuỗi quá dài nhận `bad_message`; cú pháp JSON hỏng nhận `invalid_json`. Mã phòng mới gồm sáu ký tự ngẫu nhiên mạnh từ `A–Z/2–9`, bỏ `I/L/O/0/1`.
 
 **Mã lỗi và gợi ý UI:** `not_enough_players` → Cần ít nhất 2 người; `protocol_mismatch` → Cập nhật game; `auth_required_use_join_token`, `auth_invalid`, `token_invalid` (nếu bộ xác thực trả), `reconnect_invalid` → Đăng nhập/vào lại; `room_full`, `room_limit`, `room_code_exhausted` → Thử phòng khác; `room_not_found`, `room_started` → Kiểm mã/chờ trận khác; `banned` (`remainingSeconds`) → Đợi hết cấm; `rate_limited`, `message_too_large` → Gửi chậm hơn; `legacy_ready_use_room_ready_or_lock_ready` → Cập nhật game. Các mã kỹ thuật còn lại (`invalid_json`, `invalid_envelope`, `unknown_type`, `already_joined`, `not_joined`, `not_in_room`, `not_in_round`, `wrong_phase`, `wrong_round`, `round_locked`, `ready_required`, `match_not_started`, `invalid_commit`, `invalid_emote`, `emote_rate_limited`, `emote_phase_limit`, `host_only`, `duplicate_player`, `invalid_player`, `no_response`) → Hiển thị thông báo thao tác không hợp lệ và ghi mã lỗi khi báo lỗi. HTTP handshake còn có `origin_not_allowed`/giới hạn kết nối.
 
 **Nhật ký thay đổi giao thức:** v1 (2026-10-31): đóng băng tên tin hiện có, thêm `protocolVersion` vào `room_state`, trả `protocol_mismatch` cho phiên bản sai. Thay đổi cấu trúc/tên tin từ đây phải tăng `ProtocolGateway.Version` và cập nhật cả DTO, test, bảng này.
+
+**Cấu hình tiến trình** (số không hợp lệ dùng mặc định):
+
+| Biến | Mặc định | Công dụng |
+|---|---:|---|
+| `PORT` | 8080 | Cổng Kestrel, nghe trên mọi interface. |
+| `ALLOWED_ORIGINS` | `http://localhost,http://127.0.0.1` | Origin WebSocket được phép, phân tách bằng dấu phẩy. |
+| `IDLE_TIMEOUT_SECONDS` | 90 | Đóng socket không hoạt động. |
+| `MAX_ROOMS` | 200 | Tối đa phòng cùng lúc. |
+| `MAX_CONNECTIONS` | 500 | Tối đa socket cùng lúc. |
+| `MAX_CONNECTIONS_PER_IP` | 12 | Tối đa socket từ một địa chỉ IP; cần xem lại khi nhiều người dùng chung NAT. |
+| `JOIN_TIMEOUT_SECONDS` | 10 | Đóng socket chưa vào phòng. |
+
+`GET /metrics` chỉ trả số kết nối, phòng, trận hoạt động, p95 thời gian gửi WebSocket gần đây và lỗi theo mã; không chứa người chơi, token hay tọa độ. Bản nháp Render nên bắt đầu với giới hạn trên rồi đo tải trên gói thực tế; số đo 50 phòng trong tiến trình không bảo đảm 50 phòng WebSocket trên Render. `IMatchResultStore` mặc định là bộ nhớ, ghi một lần theo `matchId` và không bền qua khởi động lại; `NoReward` là chính sách mặc định, chưa cộng vàng. Chưa có adapter Supabase, danh sách phòng mở, hạn sống 10 phút cho phòng trống, giới hạn toàn cục riêng cho socket chưa join, hay xử lý shutdown đợi hết vòng. Bộ chaos hiện gồm 5 hạt giống × 200 phòng trong tiến trình; chưa thay cho kiểm tải mạng thật. Không tuyên bố SERVER READY v1 khi các mục này chưa hoàn tất.
+
+**AG tích hợp online (đề xuất tuần tự):**
+
+1. Lấy commit mới nhất `prep/codex`; giữ Unity/Core của AG, không chép lại luật.
+2. Chép DTO, transport, session từ `tools/patches/net_client_v1` và `tools/patches/unity_online_glue` vào assembly riêng.
+3. Gắn `IOnlineUi` vào màn sảnh, trận, kết quả; báo rõ `protocol_mismatch`.
+4. Thêm adapter `JsonUtility`, kiểm mọi DTO round-trip trong EditMode.
+5. Chép `HitMeWebSocket.jslib`, gắn callback Unity trên main thread.
+6. Tạo `NetConfig.Enabled=false`; thử `LoopbackTransport` trước.
+7. Mở Online Lab song song với Unity, đối chiếu `join` → `room_ready`/`start` → `round_start` → `commit` → `reveal` → `round_result` → `match_end`.
+8. Xác nhận trước `reveal` Unity chỉ thấy nhân vật mình và emote trên thẻ.
+9. Chạy EditMode, PlayMode, WebGL có đồ họa; sau đó thử iPhone thật và vào lại sau mất mạng.
+10. Chỉ bật cờ online khi có bằng chứng build, bảo mật và trận 2–6 người.
 
 ## Tích hợp Unity — gói cho AG
 
