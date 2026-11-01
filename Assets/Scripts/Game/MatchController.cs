@@ -64,6 +64,7 @@ namespace HitMe.Game
         private readonly List<PlayerState> _rankedBuffer = new List<PlayerState>(MaxPoolSize);
         private readonly List<string> _winnerIdsBuffer = new List<string>(MaxPoolSize);
         private readonly List<HitEvent> _weaponHitsBuffer = new List<HitEvent>(8);
+        private readonly Dictionary<string, int> _hpBeforeResolve = new Dictionary<string, int>(8);
         private readonly RoundInput _localFinalInput = new RoundInput("player");
 
         private SeededRandom _random;
@@ -663,8 +664,35 @@ namespace HitMe.Game
                 yield return _fastAutoPlayTimings ? _waitFastAuto : (CapturePhase1 && State.RoundNumber == 1 ? _waitThrowCapture : _waitThrowNormal);
 
                 // Resolve / RoundEnd / MatchEnd Phase (MatchState.Phase is the single source of truth)
+                for (int i = 0; i < State.Players.Count; i++)
+                {
+                    var p = State.Players[i];
+                    _hpBeforeResolve[p.Id] = p.Hp;
+                }
+
                 State.ResolveRound();
                 ClearWeapons();
+
+                // Trigger Hit / Defeat animations for feedback
+                for (int i = 0; i < State.Players.Count; i++)
+                {
+                    var p = State.Players[i];
+                    if (_views.TryGetValue(p.Id, out var view) && view != null)
+                    {
+                        if (!p.IsAlive || p.Hp <= 0)
+                        {
+                            view.PlayAnimation("Defeat");
+                        }
+                        else if (_hpBeforeResolve.TryGetValue(p.Id, out int oldHp) && p.Hp < oldHp)
+                        {
+                            view.PlayAnimation("Hit");
+                        }
+                        else
+                        {
+                            view.PlayAnimation("Idle");
+                        }
+                    }
+                }
                 if (State.Phase == Phase.MatchEnd)
                 {
                     SyncProfileMemoryBaseline();
@@ -781,6 +809,15 @@ namespace HitMe.Game
                 {
                     view.Present(p, visible, showAim, showTouchRing, State.Config.AimTouchRadius,
                         State.Config.AimLineExtraLength, isLocal && snap.AimActive ? 1.50f : 0f);
+
+                    if (!p.IsAlive || p.Hp <= 0)
+                    {
+                        view.PlayAnimation("Defeat");
+                    }
+                    else if (placing && isLocal && snap.AimActive)
+                    {
+                        view.PlayAnimation("Aim");
+                    }
                 }
             }
         }
@@ -794,6 +831,11 @@ namespace HitMe.Game
                 var p = State.Players[i];
                 RoundInput input;
                 if (!p.IsAlive || !State.LockedInputs.TryGetValue(p.Id, out input)) continue;
+
+                if (_views.TryGetValue(p.Id, out var pView) && pView != null)
+                {
+                    pView.PlayAnimation("Throw");
+                }
 
                 Vec2 throwDir = input.HasAim ? input.AimDirection : p.Facing;
                 if (throwDir.Length <= 0.0001f) throwDir = Vec2.Up;

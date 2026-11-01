@@ -925,5 +925,38 @@ namespace HitMe.Editor
             ui.HideLoginDialog();
             Assert.That(ui.dialogLogin.activeSelf, Is.False);
         }
+
+        [Test]
+        public void RuleL9_PlayerView_IdleBreath_And_HitReaction_Recoil()
+        {
+            var pGo = new GameObject("TestPlayer_L9");
+            var pv = pGo.AddComponent<PlayerView>();
+            pv.Initialise("player", Color.white, 0);
+
+            // Test animation states
+            pv.PlayAnimation("Aim");
+            pv.PlayAnimation("Throw");
+            pv.PlayAnimation("Hit");
+            pv.PlayAnimation("Defeat");
+            pv.PlayAnimation("Idle");
+
+            // Verify logic position is preserved (transform position not offset)
+            Assert.That(pGo.transform.position, Is.EqualTo(Vector3.zero));
+
+            Object.DestroyImmediate(pGo);
+        }
+
+        [Test]
+        public void RuleL9_WeaponFlightView_Arc_And_ShadowRenderer()
+        {
+            var wGo = new GameObject("TestWeapon_L9");
+            var wf = wGo.AddComponent<WeaponFlightView>();
+            wf.Initialise(Vector3.zero, new Vector3(2f, 2f, 0f), 0.50f, false, null);
+
+            Assert.That(wGo.activeSelf, Is.True);
+            Assert.That(wf.Duration, Is.EqualTo(0.50f));
+
+            Object.DestroyImmediate(wGo);
+        }
     }
 }

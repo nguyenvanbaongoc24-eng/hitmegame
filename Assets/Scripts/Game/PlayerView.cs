@@ -94,6 +94,38 @@ namespace HitMe.Game
         private readonly string[] _cachedHpLabels = new string[4];
         private float _lastTouchRadius = -1f;
 
+        private string _currentState = "Idle";
+        private Vector3 _baseBodyScale = Vector3.one;
+        private float _hitReactionTimer;
+        private Vector3 _hitRecoilOffset;
+
+        private void Update()
+        {
+            if (_body == null) return;
+
+            bool reducedMotion = string.Equals(PlayerPrefs.GetString("HitMe_ReducedMotion", "0"), "1", StringComparison.Ordinal);
+
+            if (_hitReactionTimer > 0f)
+            {
+                _hitReactionTimer -= Time.deltaTime;
+                if (!reducedMotion)
+                {
+                    float t = Mathf.Clamp01(_hitReactionTimer / 0.22f);
+                    _body.transform.localPosition = Vector3.Lerp(Vector3.zero, _hitRecoilOffset, t);
+                }
+                if (_hitReactionTimer <= 0f)
+                {
+                    _body.transform.localPosition = Vector3.zero;
+                    _body.color = Color.white;
+                }
+            }
+            else if (_currentState == "Idle" && !reducedMotion)
+            {
+                float breath = Mathf.Sin(Time.time * 3.2f) * 0.025f;
+                _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * 0.5f), _baseBodyScale.y * (1f + breath), 1f);
+            }
+        }
+
         public static void ConfigureSharedResources(GameConfigAsset configAsset)
         {
             if (configAsset == null) return;
@@ -309,7 +341,9 @@ namespace HitMe.Game
 
             float baseScale = CharacterBodyScales[assetIdx];
             float scale = baseScale * VisualCharacterScale;
-            _body.transform.localScale = new Vector3(scale, scale, 1f);
+            _baseBodyScale = new Vector3(scale, scale, 1f);
+            _body.transform.localScale = _baseBodyScale;
+            _body.transform.localPosition = Vector3.zero;
             _body.color = Color.white;
         }
 
@@ -350,7 +384,27 @@ namespace HitMe.Game
         public void PlayAnimation(string stateName)
         {
             if (_body == null) return;
+            _currentState = stateName;
             int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+
+            if (stateName == "Hit")
+            {
+                _hitReactionTimer = 0.22f;
+                _hitRecoilOffset = new Vector3(0f, -0.10f, 0f);
+                _body.color = new Color(1f, 0.70f, 0.70f, 1f);
+            }
+            else if (stateName == "Defeat")
+            {
+                _body.color = new Color(0.60f, 0.60f, 0.65f, 0.90f);
+                _body.transform.localPosition = new Vector3(0f, -0.08f, 0f);
+            }
+            else
+            {
+                _body.color = Color.white;
+                _body.transform.localPosition = Vector3.zero;
+                _body.transform.localScale = _baseBodyScale;
+            }
+
             if (idx == 0 && _namLangPoses != null && _namLangPoses.Length >= 5)
             {
                 if (stateName == "Aim") _body.sprite = _namLangPoses[1];

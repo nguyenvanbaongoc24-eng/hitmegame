@@ -23,7 +23,9 @@ namespace HitMe.Game
 
         private float _elapsed;
         private SpriteRenderer _renderer;
+        private SpriteRenderer _shadow;
         private static Sprite _sandalSprite;
+        private static Sprite _shadowSprite;
         private static Sprite[] _hitFxFrames;
 
         public static void ConfigureSharedResources(GameConfigAsset configAsset)
@@ -33,6 +35,10 @@ namespace HitMe.Game
             if (configAsset.sandalProjectileSprite != null)
             {
                 _sandalSprite = configAsset.sandalProjectileSprite;
+            }
+            if (configAsset.shadowSprite != null)
+            {
+                _shadowSprite = configAsset.shadowSprite;
             }
             if (configAsset.hitFxFrames != null && configAsset.hitFxFrames.Length > 0)
             {
@@ -53,6 +59,27 @@ namespace HitMe.Game
 
             if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
             if (_renderer == null) _renderer = gameObject.AddComponent<SpriteRenderer>();
+
+            if (_shadow == null)
+            {
+                var sGo = new GameObject("Shadow");
+                sGo.transform.SetParent(transform.parent, false);
+                _shadow = sGo.AddComponent<SpriteRenderer>();
+                _shadow.sortingOrder = 3;
+                _shadow.color = new Color(0f, 0f, 0f, 0.40f);
+            }
+
+            if (_shadowSprite == null)
+            {
+#if UNITY_EDITOR
+                _shadowSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/shadow.png");
+#endif
+            }
+            if (_shadow != null && _shadowSprite != null)
+            {
+                _shadow.sprite = _shadowSprite;
+                _shadow.gameObject.SetActive(true);
+            }
 
             if (_sandalSprite == null)
             {
@@ -77,7 +104,7 @@ namespace HitMe.Game
                 transform.localScale = new Vector3(0.50f, 0.16f, 1f);
             }
 
-            _renderer.sortingOrder = 4;
+            _renderer.sortingOrder = 5;
             if (!gameObject.activeSelf)
             {
                 gameObject.SetActive(true);
@@ -87,14 +114,29 @@ namespace HitMe.Game
         private void Update()
         {
             _elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(_elapsed / Duration);
+            float arcHeight = Mathf.Sin(progress * Mathf.PI) * 0.35f;
+
+            Vector3 groundPos = Vector3.Lerp(StartPoint, EndPoint, progress);
+            transform.position = new Vector3(groundPos.x, groundPos.y + arcHeight, groundPos.z);
             transform.Rotate(0, 0, SpinSpeed * Time.deltaTime);
-            transform.position = Vector3.Lerp(StartPoint, EndPoint, Mathf.Clamp01(_elapsed / Duration));
+
+            if (_shadow != null)
+            {
+                _shadow.transform.position = new Vector3(groundPos.x, groundPos.y - 0.18f, groundPos.z);
+                float shadowScale = (0.50f - arcHeight * 0.25f) * VisualWeaponScale;
+                _shadow.transform.localScale = new Vector3(shadowScale, shadowScale * 0.55f, 1f);
+            }
 
             if (_elapsed >= Duration)
             {
                 if (SpawnHitEffect && PooledHitFx != null)
                 {
                     PooledHitFx.PlayAt(EndPoint, _hitFxFrames);
+                }
+                if (_shadow != null)
+                {
+                    _shadow.gameObject.SetActive(false);
                 }
                 gameObject.SetActive(false);
             }

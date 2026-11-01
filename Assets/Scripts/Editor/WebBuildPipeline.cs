@@ -134,5 +134,84 @@ namespace HitMe.Editor
                 throw new Exception($"WebGL Build failed with {summary.totalErrors} errors!");
             }
         }
+
+        [MenuItem("Tools/HIT ME/Build WebGL (Release Profile - Brotli - Lo 10)")]
+        public static void BuildWebRelease()
+        {
+            string commitShort = WriteBuildFingerprintResource("Graybox");
+            string dateTag = DateTime.Now.ToString("yyyyMMdd");
+
+            Debug.Log($"Starting HIT ME Release Profile WebGL Build (commit={commitShort}, date={dateTag}, compression=Brotli)...");
+
+            var configAsset = AssetDatabase.LoadAssetAtPath<HitMe.Game.GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset == null || configAsset.characterIdleSprites == null || configAsset.characterIdleSprites.Length < 7)
+            {
+                ProductionUISetup.BuildProductionUI();
+            }
+
+            EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
+
+            PlayerSettings.productName = "HIT ME";
+            PlayerSettings.companyName = "HitMeStudio";
+            PlayerSettings.bundleVersion = "1.0.0";
+            PlayerSettings.defaultWebScreenWidth = 540;
+            PlayerSettings.defaultWebScreenHeight = 960;
+
+            // Release optimizations per Round 35 Lo 10
+            PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
+            PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
+            PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.None;
+            PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.High);
+
+            string folderName = $"WebGL_Release_{dateTag}_{commitShort}";
+            string buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));
+            if (Directory.Exists(buildDir))
+            {
+                string timeSuffix = DateTime.Now.ToString("HHmmss");
+                folderName = $"WebGL_Release_{dateTag}_{commitShort}_{timeSuffix}";
+                buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));
+            }
+            Directory.CreateDirectory(buildDir);
+
+            string[] scenes = BuildScenes.Production;
+
+            BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = buildDir,
+                target = BuildTarget.WebGL,
+                options = BuildOptions.None
+            };
+
+            BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+            BuildSummary summary = report.summary;
+
+            if (summary.result == BuildResult.Succeeded)
+            {
+                string indexPath = Path.Combine(buildDir, "index.html");
+                if (File.Exists(indexPath))
+                {
+                    string html = File.ReadAllText(indexPath);
+                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Graybox\">";
+                    if (!html.Contains("build-fingerprint"))
+                    {
+                        html = html.Replace("<head>", "<head>\n    " + metaTag);
+                    }
+                    html = html.Replace("\"phase1-closed-20261028\"", $"\"{commitShort}\"");
+                    File.WriteAllText(indexPath, html);
+                }
+                DateTime buildCompleteUtc = DateTime.UtcNow;
+                foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
+                {
+                    File.SetLastWriteTimeUtc(file, buildCompleteUtc);
+                }
+                Debug.Log($"Release WebGL Build succeeded: {summary.totalSize} bytes at {buildDir} (commit={commitShort})");
+            }
+            else
+            {
+                Debug.LogError($"Release WebGL Build failed! Result: {summary.result}, Errors: {summary.totalErrors}");
+                throw new Exception($"Release WebGL Build failed with {summary.totalErrors} errors!");
+            }
+        }
     }
 }

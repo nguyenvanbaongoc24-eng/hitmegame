@@ -69,6 +69,14 @@ namespace HitMe.UI
         public float pulseLoopDuration = 0.50f;
         public float heartShakeDuration = 0.35f;
 
+        [Header("Hoạt Họa & Cảm Giác Chơi (Game Feel - Lô 9)")]
+        public float idleBreathSpeed = 3.2f;
+        public float idleBreathScale = 0.025f;
+        public float hitReactionDuration = 0.22f;
+        public float hitReactionRecoil = 0.12f;
+        public float weaponSpinSpeed = -720f;
+        public float weaponShadowOffset = 0.22f;
+
         private static UiTheme _instance;
         public static UiTheme Instance
         {
