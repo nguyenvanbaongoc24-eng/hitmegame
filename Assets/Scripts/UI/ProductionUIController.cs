@@ -90,6 +90,9 @@ namespace HitMe.UI
         [Header("Home Screen Controls")]
         public TextMeshProUGUI txtHomeLogo;
         public TextMeshProUGUI txtSelectedLoadout;
+        public Image imgHomeCharPortrait;
+        public TextMeshProUGUI txtHomeCharName;
+        public TextMeshProUGUI txtHomeCharDesc;
         public Button btnQuickMatch;
         public Button btnCreateRoom;
         public Button btnJoinRoom;
@@ -114,6 +117,7 @@ namespace HitMe.UI
         [Header("Lobby Controls")]
         public TextMeshProUGUI txtLobbyHeader;
         public TextMeshProUGUI txtLobbyRoomCode;
+        public Button btnCopyRoomCode;
         public Transform lobbySlotsContainer;
         public List<LobbySlotUI> lobbySlots = new List<LobbySlotUI>();
         public Button btnLobbyReady;
@@ -126,12 +130,21 @@ namespace HitMe.UI
         public TextMeshProUGUI txtBotTrainingHeader;
         public TextMeshProUGUI txtSelectedBotCount;
         public TextMeshProUGUI txtSelectedCharacter;
+        public TextMeshProUGUI txtSelectedCharDetail;
         public Button btnDecreaseBots;
         public Button btnIncreaseBots;
         public Button btnPrevChar;
         public Button btnNextChar;
         public Button btnStartBotTraining;
         public Button btnBackFromBotTraining;
+        public List<Image> botCharCardFrames = new List<Image>();
+        public List<Button> botCharCardButtons = new List<Button>();
+
+        [Header("Quick Match Controls")]
+        public GameObject quickMatchOverlay;
+        public TextMeshProUGUI txtQuickMatchStatus;
+        public Button btnQuickMatchToBots;
+        public Button btnCancelQuickMatch;
 
         [Header("UI Theme Reference")]
         public UiTheme theme;
@@ -164,6 +177,7 @@ namespace HitMe.UI
 
         private Coroutine _toastCoroutine;
         private Coroutine _lobbyCountdownCoroutine;
+        private Coroutine _quickMatchCoroutine;
         private bool _isLocalPlayerReady;
         private string _activeRoomCode = "HM4826";
         private int _selectedBotCount = 3;
@@ -294,7 +308,7 @@ namespace HitMe.UI
             {
                 ShowScreen(ProductionScreen.Gameplay);
             }
-            else if (practiceBots >= 1)
+            else if (practiceBots >= 1 && (Application.absoluteURL == null || Application.absoluteURL.IndexOf("screen=botTraining", StringComparison.OrdinalIgnoreCase) < 0))
             {
                 int charIdx = GetUrlInt("practiceChar", 0);
                 EnsureBotTrainingPanel();
@@ -307,15 +321,35 @@ namespace HitMe.UI
             else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=botTraining", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 EnsureBotTrainingPanel();
+                if (practiceBots >= 1)
+                {
+                    _selectedBotCount = Mathf.Clamp(practiceBots, 1, 5);
+                }
+                int charIdx = GetUrlInt("practiceChar", 0);
+                _selectedPracticeCharIndex = Mathf.Clamp(charIdx, 0, 6);
+                RefreshBotTrainingDisplay();
                 ShowScreen(ProductionScreen.BotTraining);
             }
             else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=lobby1p", StringComparison.OrdinalIgnoreCase) >= 0)
             {
+                ShowScreen(ProductionScreen.Lobby);
                 UpdateLobbyRoster(1, "Phòng Chiến Hữu", "HM4826");
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=lobby3p", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Lobby);
+                UpdateLobbyRoster(3, "Phòng Chiến Hữu", "HM4826");
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=quickmatch", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                bool isTimeout = Application.absoluteURL.IndexOf("timeout=1", StringComparison.OrdinalIgnoreCase) >= 0;
+                ShowQuickMatchDialog(isTimeout);
             }
             else
             {
                 ShowScreen(ProductionScreen.Home);
+                RefreshBotTrainingDisplay();
             }
         }
 
@@ -553,8 +587,27 @@ namespace HitMe.UI
                 btnQuickMatch.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
-                    EnterLobbyWithAutoFill("Phòng Chơi Nhanh", _activeRoomCode);
+                    StartQuickMatchSearch();
+                });
+            }
+
+            if (btnCancelQuickMatch != null)
+            {
+                btnCancelQuickMatch.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    StopQuickMatchSearch();
+                });
+            }
+
+            if (btnQuickMatchToBots != null)
+            {
+                btnQuickMatchToBots.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    StopQuickMatchSearch();
+                    EnsureBotTrainingPanel();
+                    ShowScreen(ProductionScreen.BotTraining);
                 });
             }
 
@@ -584,6 +637,63 @@ namespace HitMe.UI
                     EnsureBotTrainingPanel();
                     ShowScreen(ProductionScreen.BotTraining);
                 });
+            }
+
+            if (btnCopyRoomCode != null)
+            {
+                btnCopyRoomCode.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    GUIUtility.systemCopyBuffer = _activeRoomCode;
+                    ShowToast("ĐÃ SAO CHÉP MÃ PHÒNG: " + _activeRoomCode);
+                });
+            }
+
+            if (btnLobbyToBotTraining != null)
+            {
+                btnLobbyToBotTraining.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    EnsureBotTrainingPanel();
+                    ShowScreen(ProductionScreen.BotTraining);
+                });
+            }
+
+            if (btnDecreaseBots != null)
+            {
+                btnDecreaseBots.onClick.AddListener(() => ChangeBotCount(-1));
+            }
+
+            if (btnIncreaseBots != null)
+            {
+                btnIncreaseBots.onClick.AddListener(() => ChangeBotCount(1));
+            }
+
+            if (btnStartBotTraining != null)
+            {
+                btnStartBotTraining.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    StartPracticeWithBots(_selectedBotCount, _selectedPracticeCharIndex);
+                });
+            }
+
+            if (btnBackFromBotTraining != null)
+            {
+                btnBackFromBotTraining.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    ShowScreen(ProductionScreen.Home);
+                });
+            }
+
+            for (int i = 0; i < botCharCardButtons.Count; i++)
+            {
+                int capturedIdx = i;
+                if (botCharCardButtons[i] != null)
+                {
+                    botCharCardButtons[i].onClick.AddListener(() => SetSelectedPracticeCharacter(capturedIdx));
+                }
             }
 
             if (btnSubmitCreateRoom != null)
@@ -790,31 +900,53 @@ namespace HitMe.UI
 
             if (txtLobbyHeader != null)
             {
-                txtLobbyHeader.text = $"{roomName.ToUpperInvariant()} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT) • SÂN LÀNG";
+                txtLobbyHeader.text = string.IsNullOrEmpty(roomName) ? UiStrings.LobbyTitle : $"{roomName.ToUpperInvariant()} • SÂN LÀNG";
             }
             if (txtLobbyRoomCode != null)
             {
-                txtLobbyRoomCode.text = "MÃ PHÒNG: " + code;
+                txtLobbyRoomCode.text = $"MÃ PHÒNG: {code} • SÂN LÀNG";
             }
 
             if (_currentLobbyHumanCount < 2)
             {
                 if (txtLobbyCountdown != null)
                 {
-                    txtLobbyCountdown.text = "Cần ít nhất 2 người. Muốn chơi một mình, hãy sang menu Luyện với bot.";
+                    txtLobbyCountdown.text = UiStrings.LobbyOnePlayerWarning;
+                    txtLobbyCountdown.color = theme != null ? theme.alertRed : new Color(0.95f, 0.35f, 0.35f);
+                }
+                if (btnLobbyReady != null)
+                {
+                    btnLobbyReady.interactable = false;
+                    var btnImg = btnLobbyReady.GetComponent<Image>();
+                    if (btnImg != null && theme != null) btnImg.color = theme.lockedButtonMuted;
+                }
+                if (btnLobbyToBotTraining != null)
+                {
+                    btnLobbyToBotTraining.gameObject.SetActive(true);
                 }
             }
             else
             {
                 if (txtLobbyCountdown != null)
                 {
-                    txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
+                    txtLobbyCountdown.text = UiStrings.LobbyWaitingAllReady;
+                    txtLobbyCountdown.color = theme != null ? theme.subtitleGold : new Color(1f, 0.9f, 0.3f);
+                }
+                if (btnLobbyReady != null)
+                {
+                    btnLobbyReady.interactable = true;
+                    var btnImg = btnLobbyReady.GetComponent<Image>();
+                    if (btnImg != null) btnImg.color = Color.white;
+                }
+                if (btnLobbyToBotTraining != null)
+                {
+                    btnLobbyToBotTraining.gameObject.SetActive(false);
                 }
             }
 
             if (txtLobbyReadyLabel != null)
             {
-                txtLobbyReadyLabel.text = "SẴN SÀNG";
+                txtLobbyReadyLabel.text = UiStrings.BtnReady;
             }
 
             for (int i = 0; i < lobbySlots.Count && i < 6; i++)
@@ -834,7 +966,7 @@ namespace HitMe.UI
                         if (slot.txtStatus != null)
                         {
                             slot.txtStatus.text = "CHƯA SẴN SÀNG";
-                            slot.txtStatus.color = new Color(1f, 0.7f, 0.2f);
+                            slot.txtStatus.color = theme != null ? theme.subtitleGold : new Color(1f, 0.7f, 0.2f);
                         }
                     }
                     else
@@ -843,13 +975,13 @@ namespace HitMe.UI
                         if (slot.txtStatus != null)
                         {
                             slot.txtStatus.text = "ĐÃ SẴN SÀNG";
-                            slot.txtStatus.color = new Color(0.2f, 1f, 0.4f);
+                            slot.txtStatus.color = theme != null ? theme.actionGreen : new Color(0.2f, 1f, 0.4f);
                         }
                     }
                 }
                 else
                 {
-                    // Empty slot: Mockup "Vào phòng" 6 chỗ, chỗ trống ghi "Đang chờ..."
+                    // Empty slot: Mockup "Vào phòng" 6 chỗ, chỗ trống ghi "Đang chờ…"
                     slot.isReady = false;
                     if (slot.txtName != null)
                     {
@@ -857,7 +989,7 @@ namespace HitMe.UI
                     }
                     if (slot.txtStatus != null)
                     {
-                        slot.txtStatus.text = "Đang chờ...";
+                        slot.txtStatus.text = UiStrings.WaitingPlayerSlot;
                         slot.txtStatus.color = new Color(0.65f, 0.72f, 0.80f);
                     }
                 }
@@ -871,6 +1003,67 @@ namespace HitMe.UI
             if (btnLobbyReady != null)
             {
                 btnLobbyReady.interactable = _currentLobbyHumanCount >= 2;
+            }
+        }
+
+        public void StartQuickMatchSearch()
+        {
+            if (quickMatchOverlay != null)
+            {
+                quickMatchOverlay.SetActive(true);
+                if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingSearching;
+                if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(false);
+                if (_quickMatchCoroutine != null) StopCoroutine(_quickMatchCoroutine);
+                _quickMatchCoroutine = StartCoroutine(QuickMatchTimeoutCoroutine(30f));
+            }
+            else
+            {
+                _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
+                EnterLobbyWithAutoFill("Phòng Chơi Nhanh", _activeRoomCode);
+            }
+        }
+
+        public void StopQuickMatchSearch()
+        {
+            if (_quickMatchCoroutine != null)
+            {
+                StopCoroutine(_quickMatchCoroutine);
+                _quickMatchCoroutine = null;
+            }
+            if (quickMatchOverlay != null)
+            {
+                quickMatchOverlay.SetActive(false);
+            }
+        }
+
+        public void ShowQuickMatchDialog(bool isTimedOut)
+        {
+            if (quickMatchOverlay != null)
+            {
+                quickMatchOverlay.SetActive(true);
+                if (isTimedOut)
+                {
+                    if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingTimeoutSuggest;
+                    if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(true);
+                }
+                else
+                {
+                    if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingSearching;
+                    if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        private IEnumerator QuickMatchTimeoutCoroutine(float timeoutSeconds)
+        {
+            yield return new WaitForSeconds(timeoutSeconds);
+            if (txtQuickMatchStatus != null)
+            {
+                txtQuickMatchStatus.text = UiStrings.MatchmakingTimeoutSuggest;
+            }
+            if (btnQuickMatchToBots != null)
+            {
+                btnQuickMatchToBots.gameObject.SetActive(true);
             }
         }
 
@@ -984,13 +1177,18 @@ namespace HitMe.UI
 
         public void EnsureBotTrainingPanel()
         {
-            if (botTrainingPanel != null) return;
+            if (botTrainingPanel != null)
+            {
+                RefreshBotTrainingDisplay();
+                return;
+            }
 
             Transform safeArea = transform.Find("SafeAreaRoot") ?? transform;
             var existing = safeArea.Find("BotTrainingPanel");
             if (existing != null)
             {
                 botTrainingPanel = existing.gameObject;
+                RefreshBotTrainingDisplay();
                 return;
             }
 
@@ -1253,19 +1451,61 @@ namespace HitMe.UI
             RefreshBotTrainingDisplay();
         }
 
+        public void SetSelectedPracticeCharacter(int index)
+        {
+            AudioManager.Instance?.PlayClick();
+            _selectedPracticeCharIndex = Mathf.Clamp(index, 0, 6);
+            RefreshBotTrainingDisplay();
+        }
+
         public void RefreshBotTrainingDisplay()
         {
             if (txtSelectedBotCount != null)
             {
                 int totalPlayers = _selectedBotCount + 1;
-                txtSelectedBotCount.text = $"{_selectedBotCount} BOT (1v{_selectedBotCount} • Tổng {totalPlayers} người)";
+                txtSelectedBotCount.text = $"{totalPlayers} người (1 Bạn + {_selectedBotCount} Bot)";
             }
-            if (txtSelectedCharacter != null)
+            if (_selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < 7)
             {
-                string charName = (_selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < PlayerView.CharacterNames.Length)
-                    ? PlayerView.CharacterNames[_selectedPracticeCharIndex]
-                    : "Nam Làng";
-                txtSelectedCharacter.text = charName;
+                string charName = UiStrings.CharacterNames[_selectedPracticeCharIndex];
+                string charDesc = UiStrings.CharacterDescriptions[_selectedPracticeCharIndex];
+
+                if (txtSelectedCharacter != null)
+                {
+                    txtSelectedCharacter.text = charName;
+                }
+                if (txtSelectedCharDetail != null)
+                {
+                    txtSelectedCharDetail.text = charDesc + " • Vũ khí: Dép Tổ Ong (Bán kính 0.52m)";
+                }
+
+                if (botCharCardFrames != null && theme != null)
+                {
+                    for (int i = 0; i < botCharCardFrames.Count; i++)
+                    {
+                        if (botCharCardFrames[i] != null)
+                        {
+                            botCharCardFrames[i].sprite = (i == _selectedPracticeCharIndex) ? theme.cardCharSelected : theme.cardCharNormal;
+                        }
+                    }
+                }
+
+                if (txtHomeCharName != null)
+                {
+                    txtHomeCharName.text = charName;
+                }
+                if (txtHomeCharDesc != null)
+                {
+                    txtHomeCharDesc.text = charDesc;
+                }
+                if (imgHomeCharPortrait != null && matchController != null && matchController.configAsset != null)
+                {
+                    var idleSprites = matchController.configAsset.characterIdleSprites;
+                    if (idleSprites != null && _selectedPracticeCharIndex < idleSprites.Length)
+                    {
+                        imgHomeCharPortrait.sprite = idleSprites[_selectedPracticeCharIndex];
+                    }
+                }
             }
         }
 

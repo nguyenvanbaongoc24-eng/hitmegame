@@ -51,6 +51,7 @@ namespace HitMe.UI
         public Sprite rowLeaderboardMe;
         public Sprite timerCircleGold;
         public Sprite timerPulseRing;
+        public Sprite bgHomeVillage;
 
         [Header("Tài Nguyên Gameplay & Aim Kit")]
         public Sprite heartFull;
