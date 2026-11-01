@@ -87,6 +87,15 @@ public sealed class RoundTests
         Assert.Null(round.Commits["a"].AimDirection);
     }
 
+    [Fact]
+    public void FiniteAimIsNormalizedBeforeTheServerStoresIt()
+    {
+        var round = Create(new FakeTimeProvider(Start));
+        Assert.True(round.TryCommit("a", new RoundCommit(1, new Vec2(1, 1), new Vec2(3, 4)), out _));
+        Assert.Equal(0.6f, round.Commits["a"].AimDirection!.Value.X, 4);
+        Assert.Equal(0.8f, round.Commits["a"].AimDirection!.Value.Y, 4);
+    }
+
     private static Round Create(FakeTimeProvider clock)
     {
         return new Round(1, new GameConfig { PlaceSeconds = 5f }, new[] { "a", "b" }, clock);

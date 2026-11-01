@@ -22,6 +22,23 @@ public sealed class ProtocolGatewayTests
         => JsonSerializer.Serialize(new { v = 1, type, playerId, name, token = "test:" + playerId, roomCode, ready, start });
     private static JsonElement Json(string text) => JsonDocument.Parse(text).RootElement.Clone();
 
+    [Theory]
+    [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":\"bad\"}")]
+    [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":1e100,\"positionY\":0}")]
+    [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":0,\"positionY\":0,\"rogue\":42}")]
+    [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":0,\"positionY\":0,\"aimX\":1e100}")]
+    public void InvalidWireFieldsReturnBadMessageWithoutChangingRound(string raw)
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        var reply = Json(gateway.Handle("c1", raw));
+        Assert.Equal("bad_message", reply.GetProperty("code").GetString());
+        Assert.Empty(rooms.Snapshot()[0].RoundSession!.ActiveRound.Commits);
+    }
+
     [Fact] public void CreateJoinAndHostStartRoom()
     {
         var gateway = Gateway();

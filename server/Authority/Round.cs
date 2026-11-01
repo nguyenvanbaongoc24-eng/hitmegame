@@ -98,7 +98,8 @@ public sealed class Round
             Math.Clamp(commit.Position.X, Config.MinX, Config.MaxX),
             Math.Clamp(commit.Position.Y, Config.MinY, Config.MaxY));
         var aim = commit.AimDirection;
-        if (aim.HasValue && (!Finite(aim.Value) || aim.Value.LengthSquared <= 0.00001f)) aim = null;
+        if (aim.HasValue)
+            aim = !Finite(aim.Value) || aim.Value.LengthSquared <= 0.00001f ? null : aim.Value.Normalized;
         normalized = new RoundCommit(commit.RoundId, position, aim);
         return true;
     }

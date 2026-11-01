@@ -74,12 +74,12 @@ public sealed class WebSocketEndToEndTests
                     var directRound = direct.BeginRound();
                     for (var index = 0; index < clients.Count; index++)
                     {
-                        // Match 1 injects malformed JSON, and every second round leaves
+                        // Injects a schema-invalid JSON value, and every second round leaves
                         // one player uncommitted; both must remain safe and deterministic.
                         if (matchNumber == 4 && round == 1 && index == 2)
                         {
                             var invalid = await clients[index].SendAndReceiveAsync("{\"v\":1,\"type\":\"commit\",\"positionX\":\"bad\"}", "error", cancellation.Token);
-                            Assert.Equal("invalid_json", invalid.GetProperty("code").GetString());
+                            Assert.Equal("bad_message", invalid.GetProperty("code").GetString());
                         }
                         if (round % 2 == 0 && index == clients.Count - 1) continue;
 

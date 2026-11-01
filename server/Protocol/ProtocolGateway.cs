@@ -35,6 +35,8 @@ public sealed class ProtocolGateway
     public const int MaxMessagesPerSecond = 20;
     public const int QuickMatchHintSeconds = 30;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
+    private static readonly HashSet<string> WireFields = new(StringComparer.Ordinal)
+    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId" };
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
     private readonly IAuthVerifier auth;
@@ -64,9 +66,17 @@ public sealed class ProtocolGateway
             if (Encoding.UTF8.GetByteCount(raw) > MaxMessageBytes) return Reply(connectionId, Error("message_too_large"));
             if (!Allow(connectionId)) return Reply(connectionId, Error("rate_limited"));
 
+            JsonDocument document;
+            try { document = JsonDocument.Parse(raw); }
+            catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
+            using (document)
+            {
+                if (!ValidEnvelope(document.RootElement)) return Reply(connectionId, Error("bad_message"));
+            }
             ClientEnvelope? request;
             try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
-            catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
+            catch (Exception exception) when (exception is JsonException or FormatException or OverflowException)
+            { return Reply(connectionId, Error("bad_message")); }
             if (request is null || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
             if (request.V != Version) return Reply(connectionId, Error("protocol_mismatch"));
 
@@ -303,6 +313,29 @@ public sealed class ProtocolGateway
         if (now - window.Start >= TimeSpan.FromSeconds(1)) { window.Start = now; window.Count = 0; }
         window.Count++;
         return window.Count <= MaxMessagesPerSecond;
+    }
+
+    private static bool ValidEnvelope(JsonElement root)
+    {
+        if (root.ValueKind != JsonValueKind.Object) return false;
+        foreach (var field in root.EnumerateObject())
+        {
+            if (!WireFields.Contains(field.Name)) return false;
+            var value = field.Value;
+            if (value.ValueKind == JsonValueKind.Null && field.Name is not ("v" or "type")) continue;
+            if (field.Name is "v" or "roundId")
+            { if (value.ValueKind != JsonValueKind.Number || !value.TryGetInt32(out _)) return false; }
+            else if (field.Name is "positionX" or "positionY" or "aimX" or "aimY")
+            { if (value.ValueKind != JsonValueKind.Number || !value.TryGetSingle(out var number) || !float.IsFinite(number)) return false; }
+            else if (field.Name is "ready" or "start" or "hasAim")
+            { if (value.ValueKind is not (JsonValueKind.True or JsonValueKind.False)) return false; }
+            else
+            {
+                var maxLength = field.Name switch { "type" => 32, "roomCode" => 6, "emoteId" => 32, "token" or "reconnectToken" => 256, _ => 64 };
+                if (value.ValueKind != JsonValueKind.String || value.GetString()!.Length > maxLength) return false;
+            }
+        }
+        return true;
     }
 
     private static string RoomState(RoomAuthority room, string? reconnectToken = null) => JsonSerializer.Serialize(new
