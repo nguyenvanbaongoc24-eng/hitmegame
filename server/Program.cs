@@ -8,12 +8,14 @@ var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVar
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
-builder.Services.AddSingleton<RoomDirectory>();
+builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.MaxRooms,
+    resultStore: provider.GetRequiredService<IMatchResultStore>()));
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);
-builder.Services.AddSingleton(new ConnectionAdmission(allowedOrigins: runtime.AllowedOrigins));
+builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerIp,
+    runtime.AllowedOrigins, runtime.MaxConnections));
 builder.Services.AddHostedService<RoundDeadlineService>();
 builder.Services.AddHostedService<ShutdownNotifier>();
 var app = builder.Build();
