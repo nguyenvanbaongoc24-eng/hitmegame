@@ -215,6 +215,58 @@ namespace HitMe.UI
         public GameObject[] tutorialStepIndicators;
         private int _currentTutorialStep = 0;
 
+        [Header("Home Header & Resources (Lô 7 & 8)")]
+        public TextMeshProUGUI txtHomePlayerName;
+        public TextMeshProUGUI txtHomeGold;
+        public TextMeshProUGUI txtHomeGems;
+        public Button btnHomeProfile;
+        public Button btnHomeShop;
+        public Button btnHomeInventory;
+        public Button btnHomeLeaderboard;
+        public Button btnHomeLogin;
+
+        [Header("Profile Dialog (Lô 7)")]
+        public GameObject dialogProfile;
+        public TextMeshProUGUI txtProfileTitle;
+        public TextMeshProUGUI txtProfilePlayerName;
+        public TextMeshProUGUI txtProfilePlayerId;
+        public TextMeshProUGUI txtProfileGold;
+        public TMP_InputField inputProfileNewName;
+        public Button btnProfileRename;
+        public TextMeshProUGUI txtProfileRenameCost;
+        public Button btnCloseProfile;
+
+        [Header("Shop Dialog (Lô 7)")]
+        public GameObject dialogShop;
+        public TextMeshProUGUI txtShopTitle;
+        public TextMeshProUGUI txtShopSubtitle;
+        public TextMeshProUGUI txtShopGold;
+        public Transform shopItemsContainer;
+        public Button btnCloseShop;
+
+        [Header("Inventory Dialog (Lô 7)")]
+        public GameObject dialogInventory;
+        public TextMeshProUGUI txtInventoryTitle;
+        public TextMeshProUGUI txtInventoryEquippedWeapon;
+        public Transform inventoryItemsContainer;
+        public Button btnCloseInventory;
+
+        [Header("Leaderboard Dialog (Lô 7)")]
+        public GameObject dialogLeaderboard;
+        public TextMeshProUGUI txtLeaderboardTitle;
+        public Transform leaderboardRowsContainer;
+        public Button btnCloseLeaderboard;
+
+        [Header("Login Dialog (Lô 8)")]
+        public GameObject dialogLogin;
+        public TextMeshProUGUI txtLoginTitle;
+        public TMP_InputField inputLoginGuestName;
+        public Button btnSubmitGuestLogin;
+        public Button btnLoginGoogle;
+        public Button btnLoginFacebook;
+        public Button btnLoginApple;
+        public Button btnCloseLogin;
+
         public ProductionScreen CurrentScreen { get; private set; } = ProductionScreen.Home;
 
         private Coroutine _toastCoroutine;
@@ -409,10 +461,36 @@ namespace HitMe.UI
                 }
                 ShowTutorial(tutStep);
             }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=profile", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                ShowProfileDialog();
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=shop", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                ShowShopDialog();
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=inventory", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                ShowInventoryDialog();
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=leaderboard", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                ShowLeaderboardDialog();
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=login", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                ShowLoginDialog();
+            }
             else
             {
                 ShowScreen(ProductionScreen.Home);
                 RefreshBotTrainingDisplay();
+                RefreshAccountDisplay();
             }
         }
 
@@ -992,6 +1070,24 @@ namespace HitMe.UI
                 });
             }
 
+            // Lô 7 & 8: Home navigation and dialog buttons
+            if (btnHomeProfile != null) btnHomeProfile.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowProfileDialog(); });
+            if (btnCloseProfile != null) btnCloseProfile.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideProfileDialog(); });
+            if (btnProfileRename != null) btnProfileRename.onClick.AddListener(() => { OnRenameAccount(inputProfileNewName != null ? inputProfileNewName.text : ""); });
+
+            if (btnHomeShop != null) btnHomeShop.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowShopDialog(); });
+            if (btnCloseShop != null) btnCloseShop.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideShopDialog(); });
+
+            if (btnHomeInventory != null) btnHomeInventory.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowInventoryDialog(); });
+            if (btnCloseInventory != null) btnCloseInventory.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideInventoryDialog(); });
+
+            if (btnHomeLeaderboard != null) btnHomeLeaderboard.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowLeaderboardDialog(); });
+            if (btnCloseLeaderboard != null) btnCloseLeaderboard.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideLeaderboardDialog(); });
+
+            if (btnHomeLogin != null) btnHomeLogin.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowLoginDialog(); });
+            if (btnCloseLogin != null) btnCloseLogin.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideLoginDialog(); });
+            if (btnSubmitGuestLogin != null) btnSubmitGuestLogin.onClick.AddListener(() => { OnSubmitGuestLogin(inputLoginGuestName != null ? inputLoginGuestName.text : ""); });
+
             // Lô 4: Wire juice feedback — register all buttons for press-scale
             if (juiceFeedback != null)
             {
@@ -1228,6 +1324,212 @@ namespace HitMe.UI
                                 : new Color(1f, 1f, 1f, 0.35f);
                         }
                     }
+                }
+            }
+        }
+
+        // ──────────────────────────────────────────────────
+        // Lô 7: Profile, Shop, Inventory, Leaderboard
+        // Lô 8: Guest Login
+        // ──────────────────────────────────────────────────
+        public void RefreshAccountDisplay()
+        {
+            var acc = Game.FakeAccountService.Instance;
+            if (acc == null) return;
+
+            if (txtHomePlayerName != null) txtHomePlayerName.text = acc.DisplayName;
+            if (txtHomeGold != null) txtHomeGold.text = acc.Gold.ToString() + " G";
+            if (txtHomeGems != null) txtHomeGems.text = acc.Gems.ToString();
+        }
+
+        public void ShowProfileDialog()
+        {
+            if (dialogProfile != null)
+            {
+                dialogProfile.transform.SetAsLastSibling();
+                dialogProfile.SetActive(true);
+            }
+            RefreshProfileUI();
+        }
+
+        public void HideProfileDialog()
+        {
+            if (dialogProfile != null) dialogProfile.SetActive(false);
+        }
+
+        public void RefreshProfileUI()
+        {
+            var acc = Game.FakeAccountService.Instance;
+            if (acc == null) return;
+
+            if (txtProfileTitle != null) txtProfileTitle.text = UiStrings.Get(UiStrings.ProfileTitle);
+            if (txtProfilePlayerName != null) txtProfilePlayerName.text = acc.DisplayName;
+            if (txtProfilePlayerId != null) txtProfilePlayerId.text = "ID: " + acc.PlayerId;
+            if (txtProfileGold != null) txtProfileGold.text = acc.Gold.ToString() + " VÀNG";
+            if (txtProfileRenameCost != null)
+            {
+                txtProfileRenameCost.text = acc.NameChangeCount == 0
+                    ? UiStrings.Get(UiStrings.FreeRenameLabel)
+                    : UiStrings.Get(UiStrings.CostRenameLabel);
+            }
+        }
+
+        public void ShowShopDialog()
+        {
+            if (dialogShop != null)
+            {
+                dialogShop.transform.SetAsLastSibling();
+                dialogShop.SetActive(true);
+            }
+            RefreshShopUI();
+        }
+
+        public void HideShopDialog()
+        {
+            if (dialogShop != null) dialogShop.SetActive(false);
+        }
+
+        public void RefreshShopUI()
+        {
+            var acc = Game.FakeAccountService.Instance;
+            var inv = Game.FakeInventoryService.Instance;
+            if (txtShopTitle != null) txtShopTitle.text = UiStrings.Get(UiStrings.ShopTitle);
+            if (txtShopSubtitle != null) txtShopSubtitle.text = UiStrings.Get(UiStrings.ShopSubtitle);
+            if (txtShopGold != null && acc != null) txtShopGold.text = acc.Gold.ToString() + " VÀNG";
+        }
+
+        public void ShowInventoryDialog()
+        {
+            if (dialogInventory != null)
+            {
+                dialogInventory.transform.SetAsLastSibling();
+                dialogInventory.SetActive(true);
+            }
+            RefreshInventoryUI();
+        }
+
+        public void HideInventoryDialog()
+        {
+            if (dialogInventory != null) dialogInventory.SetActive(false);
+        }
+
+        public void RefreshInventoryUI()
+        {
+            var inv = Game.FakeInventoryService.Instance;
+            if (txtInventoryTitle != null) txtInventoryTitle.text = UiStrings.Get(UiStrings.InventoryTitle);
+            if (txtInventoryEquippedWeapon != null && inv != null)
+            {
+                var eq = inv.GetEquippedWeapon();
+                txtInventoryEquippedWeapon.text = UiStrings.Get(UiStrings.BtnEquipped) + ": " + (eq != null ? eq.nameVi : UiStrings.WeaponSandalName);
+            }
+        }
+
+        public void ShowLeaderboardDialog()
+        {
+            if (dialogLeaderboard != null)
+            {
+                dialogLeaderboard.transform.SetAsLastSibling();
+                dialogLeaderboard.SetActive(true);
+            }
+            RefreshLeaderboardUI();
+        }
+
+        public void HideLeaderboardDialog()
+        {
+            if (dialogLeaderboard != null) dialogLeaderboard.SetActive(false);
+        }
+
+        public void RefreshLeaderboardUI()
+        {
+            if (txtLeaderboardTitle != null) txtLeaderboardTitle.text = UiStrings.Get(UiStrings.LeaderboardTitle);
+        }
+
+        public void ShowLoginDialog()
+        {
+            if (dialogLogin != null)
+            {
+                dialogLogin.transform.SetAsLastSibling();
+                dialogLogin.SetActive(true);
+            }
+            RefreshLoginUI();
+        }
+
+        public void HideLoginDialog()
+        {
+            if (dialogLogin != null) dialogLogin.SetActive(false);
+        }
+
+        public void RefreshLoginUI()
+        {
+            if (txtLoginTitle != null) txtLoginTitle.text = UiStrings.Get(UiStrings.LoginTitle);
+            var acc = Game.FakeAccountService.Instance;
+            if (inputLoginGuestName != null && acc != null)
+            {
+                inputLoginGuestName.text = acc.DisplayName;
+            }
+        }
+
+        public void OnSubmitGuestLogin(string name)
+        {
+            var acc = Game.FakeAccountService.Instance;
+            if (acc != null && !string.IsNullOrWhiteSpace(name))
+            {
+                acc.Rename(name);
+                RefreshAccountDisplay();
+                ShowToast("Đăng nhập Khách thành công: " + acc.DisplayName);
+                HideLoginDialog();
+            }
+        }
+
+        public void OnBuyWeapon(string weaponId)
+        {
+            var acc = Game.FakeAccountService.Instance;
+            var inv = Game.FakeInventoryService.Instance;
+            if (acc != null && inv != null)
+            {
+                if (inv.BuyWeapon(weaponId, acc))
+                {
+                    AudioManager.Instance?.PlayClick();
+                    RefreshShopUI();
+                    RefreshInventoryUI();
+                    RefreshAccountDisplay();
+                    ShowToast("Đã mua vũ khí thành công!");
+                }
+                else
+                {
+                    ShowToast("Không đủ vàng hoặc đã sở hữu!");
+                }
+            }
+        }
+
+        public void OnEquipWeapon(string weaponId)
+        {
+            var inv = Game.FakeInventoryService.Instance;
+            if (inv != null && inv.EquipWeapon(weaponId))
+            {
+                AudioManager.Instance?.PlayClick();
+                RefreshInventoryUI();
+                RefreshShopUI();
+                var eq = inv.GetEquippedWeapon();
+                ShowToast("Đã trang bị: " + (eq != null ? eq.nameVi : weaponId));
+            }
+        }
+
+        public void OnRenameAccount(string newName)
+        {
+            var acc = Game.FakeAccountService.Instance;
+            if (acc != null)
+            {
+                if (acc.Rename(newName))
+                {
+                    AudioManager.Instance?.PlayClick();
+                    RefreshProfileUI();
+                    RefreshAccountDisplay();
+                    ShowToast("Đổi tên thành công: " + acc.DisplayName);
+                }
+                else
+                {
+                    ShowToast("Không đủ 100 vàng để đổi tên!");
                 }
             }
         }

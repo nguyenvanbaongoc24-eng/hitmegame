@@ -177,6 +177,23 @@ namespace HitMe.UI
         public const string BtnTutorialNext = "TIẾP THEO";
         public const string BtnTutorialDone = "ĐÃ HIỂU";
 
+        // Profile, Shop, Inventory, Leaderboard, Login (Lô 7 & 8)
+        public const string ProfileTitle = "HỒ SƠ NGƯỜI CHƠI";
+        public const string ShopTitle = "CỬA HÀNG VŨ KHÍ";
+        public const string ShopSubtitle = "Trang trí thuần túy • Không đổi chỉ số chiến đấu";
+        public const string InventoryTitle = "TÚI ĐỒ VŨ KHÍ";
+        public const string LeaderboardTitle = "BẢNG XẾP HẠNG SÂN LÀNG";
+        public const string LoginTitle = "ĐĂNG NHẬP";
+        public const string LoginGuest = "CHƠI VỚI TƯ CÁCH KHÁCH";
+        public const string LoginComingSoon = "SẮP CÓ";
+        public const string BtnBuy = "MUA";
+        public const string BtnEquip = "TRANG BỊ";
+        public const string BtnEquipped = "ĐANG DÙNG";
+        public const string BtnRename = "ĐỔI TÊN";
+        public const string GoldFormat = "{0} VÀNG";
+        public const string FreeRenameLabel = "LẦN ĐẦU MIỄN PHÍ";
+        public const string CostRenameLabel = "100 VÀNG";
+
         // Error Toast
         public const string ErrorRoomNotFound = "Không tìm thấy mã phòng";
 
@@ -269,7 +286,22 @@ namespace HitMe.UI
             { TutorialStep3Body, "Tap elsewhere to re-place. Drag < 4mm to cancel. No aim = straight throw." },
             { BtnTutorialSkip, "SKIP" },
             { BtnTutorialNext, "NEXT" },
-            { BtnTutorialDone, "GOT IT" }
+            { BtnTutorialDone, "GOT IT" },
+
+            { ProfileTitle, "PLAYER PROFILE" },
+            { ShopTitle, "WEAPON SHOP" },
+            { ShopSubtitle, "Pure Cosmetics • No gameplay stat changes" },
+            { InventoryTitle, "WEAPON INVENTORY" },
+            { LeaderboardTitle, "VILLAGE LEADERBOARD" },
+            { LoginTitle, "LOGIN" },
+            { LoginGuest, "PLAY AS GUEST" },
+            { LoginComingSoon, "COMING SOON" },
+            { BtnBuy, "BUY" },
+            { BtnEquip, "EQUIP" },
+            { BtnEquipped, "EQUIPPED" },
+            { BtnRename, "RENAME" },
+            { FreeRenameLabel, "FIRST TIME FREE" },
+            { CostRenameLabel, "100 GOLD" }
         };
 
         /// <summary>

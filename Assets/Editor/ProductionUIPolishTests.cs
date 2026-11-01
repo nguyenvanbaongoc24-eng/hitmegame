@@ -816,5 +816,114 @@ namespace HitMe.Editor
             // Restore VI
             UiStrings.SetLanguage(AppLanguage.Vietnamese);
         }
+
+        [Test]
+        public void RuleL7_FakeAccountService_RenameAndBalance()
+        {
+            var acc = new Game.FakeAccountService();
+            acc.ResetForTest("Khách_4826", 500);
+
+            Assert.That(acc.DisplayName, Is.EqualTo("Khách_4826"));
+            Assert.That(acc.Gold, Is.EqualTo(500));
+            Assert.That(acc.CosmeticsEnabled, Is.False, "Cosmetics must be disabled by default");
+
+            // First rename is free
+            bool r1 = acc.Rename("Tuấn_HàNội");
+            Assert.That(r1, Is.True);
+            Assert.That(acc.DisplayName, Is.EqualTo("Tuấn_HàNội"));
+            Assert.That(acc.Gold, Is.EqualTo(500), "First rename must be free");
+            Assert.That(acc.NameChangeCount, Is.EqualTo(1));
+
+            // Second rename costs 100 gold
+            bool r2 = acc.Rename("Nam_Làng");
+            Assert.That(r2, Is.True);
+            Assert.That(acc.DisplayName, Is.EqualTo("Nam_Làng"));
+            Assert.That(acc.Gold, Is.EqualTo(400), "Second rename must deduct 100 gold");
+            Assert.That(acc.NameChangeCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RuleL7_FakeInventoryService_WeaponsCatalogAndEquip()
+        {
+            var acc = new Game.FakeAccountService();
+            acc.ResetForTest("Khách_4826", 500);
+            var inv = new Game.FakeInventoryService();
+            inv.ResetForTest();
+
+            var weapons = inv.GetAllWeapons();
+            Assert.That(weapons.Count, Is.GreaterThanOrEqualTo(8));
+
+            // Default weapon is Dép Tổ Ong
+            var def = inv.GetEquippedWeapon();
+            Assert.That(def.id, Is.EqualTo("dep_to_ong"));
+            Assert.That(def.isOwned, Is.True);
+            Assert.That(def.isEquipped, Is.True);
+
+            // Buy Chảo Chống Dính (100 gold)
+            bool b1 = inv.BuyWeapon("chao_chong_dinh", acc);
+            Assert.That(b1, Is.True);
+            Assert.That(acc.Gold, Is.EqualTo(400));
+            Assert.That(inv.IsWeaponOwned("chao_chong_dinh"), Is.True);
+
+            // Equip Chảo Chống Dính
+            bool eq = inv.EquipWeapon("chao_chong_dinh");
+            Assert.That(eq, Is.True);
+            Assert.That(inv.GetEquippedWeapon().id, Is.EqualTo("chao_chong_dinh"));
+            Assert.That(inv.GetEquippedWeapon().isEquipped, Is.True);
+        }
+
+        [Test]
+        public void RuleL7_ProfileShopInventoryLeaderboard_Dialogs()
+        {
+            var go = new GameObject("TestUI_L7");
+            var ui = go.AddComponent<ProductionUIController>();
+
+            var pObj = new GameObject("Prof"); ui.dialogProfile = pObj; pObj.SetActive(false);
+            var sObj = new GameObject("Shop"); ui.dialogShop = sObj; sObj.SetActive(false);
+            var iObj = new GameObject("Inv"); ui.dialogInventory = iObj; iObj.SetActive(false);
+            var lObj = new GameObject("Lb"); ui.dialogLeaderboard = lObj; lObj.SetActive(false);
+
+            ui.ShowProfileDialog();
+            Assert.That(ui.dialogProfile.activeSelf, Is.True);
+            ui.HideProfileDialog();
+            Assert.That(ui.dialogProfile.activeSelf, Is.False);
+
+            ui.ShowShopDialog();
+            Assert.That(ui.dialogShop.activeSelf, Is.True);
+            ui.HideShopDialog();
+            Assert.That(ui.dialogShop.activeSelf, Is.False);
+
+            ui.ShowInventoryDialog();
+            Assert.That(ui.dialogInventory.activeSelf, Is.True);
+            ui.HideInventoryDialog();
+            Assert.That(ui.dialogInventory.activeSelf, Is.False);
+
+            ui.ShowLeaderboardDialog();
+            Assert.That(ui.dialogLeaderboard.activeSelf, Is.True);
+            ui.HideLeaderboardDialog();
+            Assert.That(ui.dialogLeaderboard.activeSelf, Is.False);
+        }
+
+        [Test]
+        public void RuleL8_GuestLoginDialog_MockAndDisabledSocial()
+        {
+            var go = new GameObject("TestUI_L8");
+            var ui = go.AddComponent<ProductionUIController>();
+
+            var lObj = new GameObject("Login"); ui.dialogLogin = lObj; lObj.SetActive(false);
+            var btnGuest = new GameObject("Guest").AddComponent<Button>(); ui.btnSubmitGuestLogin = btnGuest;
+            var btnG = new GameObject("Google").AddComponent<Button>(); ui.btnLoginGoogle = btnG; btnG.interactable = false;
+            var btnF = new GameObject("FB").AddComponent<Button>(); ui.btnLoginFacebook = btnF; btnF.interactable = false;
+            var btnA = new GameObject("Apple").AddComponent<Button>(); ui.btnLoginApple = btnA; btnA.interactable = false;
+
+            ui.ShowLoginDialog();
+            Assert.That(ui.dialogLogin.activeSelf, Is.True);
+            Assert.That(btnG.interactable, Is.False, "Social login button must be disabled mock");
+            Assert.That(btnF.interactable, Is.False, "Social login button must be disabled mock");
+            Assert.That(btnA.interactable, Is.False, "Social login button must be disabled mock");
+
+            ui.HideLoginDialog();
+            Assert.That(ui.dialogLogin.activeSelf, Is.False);
+        }
     }
 }

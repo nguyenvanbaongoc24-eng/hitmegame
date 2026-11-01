@@ -173,9 +173,23 @@ namespace HitMe.Editor
             subtitleTxt.fontStyle = FontStyles.Bold;
 
             // Settings button on Home Screen (Lô 5)
-            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.90f, 0.93f), new Vector2(0.90f, 0.93f), new Vector2(0.5f, 0.5f), new Vector2(96f, 96f));
+            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.90f, 0.93f), new Vector2(0.90f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(96f, 96f));
             CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 36, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
+
+            // Top resource indicators & profile button (Lô 7 & 8)
+            var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.18f, 0.93f), new Vector2(0.18f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(240f, 80f));
+            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Khách_4826", 24, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeProfile = btnProfHeader.GetComponent<Button>();
+            uiCtrl.txtHomePlayerName = txtProfHeader;
+
+            var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.48f, 0.93f), new Vector2(0.48f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(170f, 65f));
+            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "500 G", 22, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtHomeGold = txtGold;
+
+            var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.68f, 0.93f), new Vector2(0.68f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(130f, 65f));
+            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "20 💎", 22, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtHomeGems = txtGem;
 
             // Selected Character & Loadout Display Box (middle 0.50f - 0.78f)
             var loadoutCard = CreatePanel(homePanel.transform, "LoadoutCard", new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.5f), new Vector2(940f, 320f), spritePanelDarkGold, Color.white);
@@ -221,10 +235,27 @@ namespace HitMe.Editor
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
             // 4. VÀO PHÒNG (CTA Xanh dương / kit)
-            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnBlue, new Vector2(0.5f, 0.065f), new Vector2(0.5f, 0.065f), new Vector2(0.5f, 0.5f), new Vector2(880f, 105f));
+            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnBlue, new Vector2(0.50f, 0.075f), new Vector2(0.50f, 0.075f), new Vector2(0.50f, 0.50f), new Vector2(880f, 100f));
             var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, UiStrings.BtnJoinRoom, 36, Color.white, TextAlignmentOptions.Center, wrap: false);
             btnJoinTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
+
+            // Bottom Nav bar buttons (Lô 7 & 8)
+            var btnShopBottom = CreateButton(homePanel.transform, "BtnBottomShop", spriteBtnYellow, new Vector2(0.20f, 0.020f), new Vector2(0.20f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
+            CreateTMP(btnShopBottom.transform, "Label", fontAsset, "CỬA HÀNG", 20, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeShop = btnShopBottom.GetComponent<Button>();
+
+            var btnInvBottom = CreateButton(homePanel.transform, "BtnBottomInv", spriteBtnBlue, new Vector2(0.40f, 0.020f), new Vector2(0.40f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
+            CreateTMP(btnInvBottom.transform, "Label", fontAsset, "TÚI ĐỒ", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeInventory = btnInvBottom.GetComponent<Button>();
+
+            var btnLbBottom = CreateButton(homePanel.transform, "BtnBottomLb", spriteBtnGreen, new Vector2(0.60f, 0.020f), new Vector2(0.60f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
+            CreateTMP(btnLbBottom.transform, "Label", fontAsset, "XẾP HẠNG", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeLeaderboard = btnLbBottom.GetComponent<Button>();
+
+            var btnLoginBottom = CreateButton(homePanel.transform, "BtnBottomLogin", spriteCircleBack, new Vector2(0.80f, 0.020f), new Vector2(0.80f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
+            CreateTMP(btnLoginBottom.transform, "Label", fontAsset, "KHÁCH", 20, colorCream, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeLogin = btnLoginBottom.GetComponent<Button>();
 
             // ==================== C. CREATE ROOM PANEL ====================
             var createRoomPanel = CreatePanel(rootTr, "CreateRoomPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.05f, 0.07f, 0.95f));
@@ -789,6 +820,154 @@ namespace HitMe.Editor
             uiCtrl.btnTutorialNext = btnTutNext.GetComponent<Button>();
             uiCtrl.txtTutorialNextLabel = tutNextTxt;
 
+            if (dialogTutObj != null) dialogTutObj.transform.SetAsLastSibling();
+
+            // ==================== M. PROFILE DIALOG (Lô 7) ====================
+            var dialogProfileObj = CreatePanel(rootTr, "ProfileDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogProfileObj.SetActive(false);
+            uiCtrl.dialogProfile = dialogProfileObj;
+
+            var profileCard = CreatePanel(dialogProfileObj.transform, "ProfileCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(940f, 1000f), spritePanelDarkGold, Color.white);
+            var profileBanner = CreateImage(profileCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var profTitle = CreateTMP(profileBanner.transform, "Title", fontAsset, UiStrings.ProfileTitle, 38, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            profTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtProfileTitle = profTitle;
+
+            var profAvatar = CreateImage(profileCard.transform, "Avatar", spriteCardSelected, new Vector2(0.50f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.50f, 0.50f), new Vector2(160f, 160f));
+            var profName = CreateTMP(profileCard.transform, "PlayerName", fontAsset, "Khách_4826", 36, colorCream, TextAlignmentOptions.Center, new Vector2(0.50f, 0.63f), new Vector2(600f, 45f));
+            profName.fontStyle = FontStyles.Bold;
+            uiCtrl.txtProfilePlayerName = profName;
+
+            var profId = CreateTMP(profileCard.transform, "PlayerId", fontAsset, "ID: HM-9582", 24, new Color(0.70f, 0.75f, 0.85f, 0.90f), TextAlignmentOptions.Center, new Vector2(0.50f, 0.57f), new Vector2(600f, 35f));
+            uiCtrl.txtProfilePlayerId = profId;
+
+            var profGold = CreateTMP(profileCard.transform, "Gold", fontAsset, "500 VÀNG • 20 NGỌC", 30, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.50f, 0.49f), new Vector2(600f, 40f));
+            uiCtrl.txtProfileGold = profGold;
+
+            // Rename section
+            var profRenameCost = CreateTMP(profileCard.transform, "RenameCost", fontAsset, UiStrings.FreeRenameLabel, 22, colorCream, TextAlignmentOptions.Center, new Vector2(0.50f, 0.38f), new Vector2(600f, 30f));
+            uiCtrl.txtProfileRenameCost = profRenameCost;
+
+            var btnRename = CreateButton(profileCard.transform, "BtnRename", spriteBtnYellow, new Vector2(0.50f, 0.28f), new Vector2(0.50f, 0.28f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnRename.transform, "Label", fontAsset, UiStrings.BtnRename, 32, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnProfileRename = btnRename.GetComponent<Button>();
+
+            var btnCloseProf = CreateButton(profileCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnCloseProf.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseProfile = btnCloseProf.GetComponent<Button>();
+
+            // ==================== N. SHOP DIALOG (Lô 7) ====================
+            var dialogShopObj = CreatePanel(rootTr, "ShopDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogShopObj.SetActive(false);
+            uiCtrl.dialogShop = dialogShopObj;
+
+            var shopCard = CreatePanel(dialogShopObj.transform, "ShopCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(960f, 1320f), spritePanelDarkGold, Color.white);
+            var shopBanner = CreateImage(shopCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.93f), new Vector2(0.50f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var shopTitle = CreateTMP(shopBanner.transform, "Title", fontAsset, UiStrings.ShopTitle, 38, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            shopTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtShopTitle = shopTitle;
+
+            var shopSub = CreateTMP(shopCard.transform, "Subtitle", fontAsset, UiStrings.ShopSubtitle, 22, colorCream, TextAlignmentOptions.Center, new Vector2(0.50f, 0.85f), new Vector2(860f, 40f));
+            uiCtrl.txtShopSubtitle = shopSub;
+
+            var shopGold = CreateTMP(shopCard.transform, "ShopGold", fontAsset, "500 VÀNG", 28, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.50f, 0.80f), new Vector2(400f, 35f));
+            uiCtrl.txtShopGold = shopGold;
+
+            string[] shopWeapons = { "Dép Tổ Ong (0G)", "Chảo Rán (100G)", "Cốc Bia (150G)", "Điếu Cày (225G)", "Búa Sắt (335G)", "Pickleball (500G)" };
+            for (int i = 0; i < 6; i++)
+            {
+                float rowY = 0.72f - (i * 0.095f);
+                var rowObj = CreatePanel(shopCard.transform, "ShopRow" + i, new Vector2(0.50f, rowY), new Vector2(0.50f, rowY), new Vector2(0.50f, 0.50f), new Vector2(860f, 80f), spriteRowLeaderboard, Color.white);
+                CreateTMP(rowObj.transform, "ItemName", fontAsset, shopWeapons[i], 24, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.35f, 0.50f), new Vector2(400f, 40f));
+                var btnBuyRow = CreateButton(rowObj.transform, "BtnAction", i == 0 ? spriteBtnBlue : spriteBtnYellow, new Vector2(0.82f, 0.50f), new Vector2(0.82f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(200f, 60f));
+                CreateTMP(btnBuyRow.transform, "Label", fontAsset, i == 0 ? UiStrings.BtnEquipped : UiStrings.BtnBuy, 24, i == 0 ? Color.white : new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
+            }
+
+            var btnCloseShop = CreateButton(shopCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.08f), new Vector2(0.50f, 0.08f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnCloseShop.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseShop = btnCloseShop.GetComponent<Button>();
+
+            // ==================== O. INVENTORY DIALOG (Lô 7) ====================
+            var dialogInvObj = CreatePanel(rootTr, "InventoryDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogInvObj.SetActive(false);
+            uiCtrl.dialogInventory = dialogInvObj;
+
+            var invCard = CreatePanel(dialogInvObj.transform, "InvCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(940f, 1000f), spritePanelDarkGold, Color.white);
+            var invBanner = CreateImage(invCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var invTitle = CreateTMP(invBanner.transform, "Title", fontAsset, UiStrings.InventoryTitle, 38, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            invTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtInventoryTitle = invTitle;
+
+            var invEq = CreateTMP(invCard.transform, "EquippedStatus", fontAsset, UiStrings.BtnEquipped + ": " + UiStrings.WeaponSandalName, 28, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.50f, 0.80f), new Vector2(700f, 40f));
+            uiCtrl.txtInventoryEquippedWeapon = invEq;
+
+            var defaultInvSlot = CreatePanel(invCard.transform, "Slot0", new Vector2(0.50f, 0.62f), new Vector2(0.50f, 0.62f), new Vector2(0.50f, 0.50f), new Vector2(800f, 120f), spriteCardSelected, Color.white);
+            CreateTMP(defaultInvSlot.transform, "Name", fontAsset, "DÉP TỔ ONG (Mặc định)", 30, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.38f, 0.50f), new Vector2(400f, 40f));
+            var btnEqNow = CreateButton(defaultInvSlot.transform, "BtnEquipped", spriteBtnBlue, new Vector2(0.80f, 0.50f), new Vector2(0.80f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(220f, 70f));
+            CreateTMP(btnEqNow.transform, "Label", fontAsset, UiStrings.BtnEquipped, 26, Color.white, TextAlignmentOptions.Center, wrap: false);
+
+            var btnCloseInv = CreateButton(invCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnCloseInv.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseInventory = btnCloseInv.GetComponent<Button>();
+
+            // ==================== P. LEADERBOARD DIALOG (Lô 7) ====================
+            var dialogLbObj = CreatePanel(rootTr, "LeaderboardDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogLbObj.SetActive(false);
+            uiCtrl.dialogLeaderboard = dialogLbObj;
+
+            var lbCard = CreatePanel(dialogLbObj.transform, "LeaderboardCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(940f, 1100f), spritePanelDarkGold, Color.white);
+            var lbBanner = CreateImage(lbCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var lbTitle = CreateTMP(lbBanner.transform, "Title", fontAsset, UiStrings.LeaderboardTitle, 36, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            lbTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtLeaderboardTitle = lbTitle;
+
+            string[] topNames = { "1. Tuấn_HàNội • 1250đ", "2. Nam_Làng • 1120đ", "3. Hoa_Bé • 980đ", "4. Bạn (Khách_4826) • 850đ", "5. Bình_TổOng • 790đ" };
+            for (int i = 0; i < 5; i++)
+            {
+                float rowY = 0.76f - (i * 0.11f);
+                var row = CreatePanel(lbCard.transform, "Row" + i, new Vector2(0.50f, rowY), new Vector2(0.50f, rowY), new Vector2(0.50f, 0.50f), new Vector2(820f, 80f), i == 3 ? spriteRowMe : spriteRowLeaderboard, Color.white);
+                CreateTMP(row.transform, "Name", fontAsset, topNames[i], 26, i == 3 ? colorGoldSub : colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.40f, 0.50f), new Vector2(500f, 40f));
+            }
+
+            var btnCloseLb = CreateButton(lbCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnCloseLb.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseLeaderboard = btnCloseLb.GetComponent<Button>();
+
+            // ==================== Q. LOGIN DIALOG (Lô 8) ====================
+            var dialogLoginObj = CreatePanel(rootTr, "LoginDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogLoginObj.SetActive(false);
+            uiCtrl.dialogLogin = dialogLoginObj;
+
+            var loginCard = CreatePanel(dialogLoginObj.transform, "LoginCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(940f, 950f), spritePanelDarkGold, Color.white);
+            var loginBanner = CreateImage(loginCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.92f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var loginTitle = CreateTMP(loginBanner.transform, "Title", fontAsset, UiStrings.LoginTitle, 38, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            loginTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtLoginTitle = loginTitle;
+
+            var btnGuest = CreateButton(loginCard.transform, "BtnGuestLogin", spriteBtnYellow, new Vector2(0.50f, 0.72f), new Vector2(0.50f, 0.72f), new Vector2(0.50f, 0.50f), new Vector2(650f, 90f));
+            CreateTMP(btnGuest.transform, "Label", fontAsset, UiStrings.LoginGuest, 30, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnSubmitGuestLogin = btnGuest.GetComponent<Button>();
+
+            string[] socialLabels = { "Google", "Facebook", "Apple" };
+            for (int i = 0; i < 3; i++)
+            {
+                float btnY = 0.56f - (i * 0.12f);
+                var btnSoc = CreateButton(loginCard.transform, "Btn" + socialLabels[i], spriteBtnBlue, new Vector2(0.50f, btnY), new Vector2(0.50f, btnY), new Vector2(0.50f, 0.50f), new Vector2(650f, 85f));
+                var socBtnComp = btnSoc.GetComponent<Button>();
+                socBtnComp.interactable = false;
+                CreateTMP(btnSoc.transform, "Label", fontAsset, socialLabels[i] + " (" + UiStrings.LoginComingSoon + ")", 26, new Color(0.85f, 0.85f, 0.90f, 0.65f), TextAlignmentOptions.Center, wrap: false);
+            }
+
+            var btnCloseLogin = CreateButton(loginCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
+            CreateTMP(btnCloseLogin.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseLogin = btnCloseLogin.GetComponent<Button>();
+
+            // Ensure Dialogs are on top
+            if (dialogProfileObj != null) dialogProfileObj.transform.SetAsLastSibling();
+            if (dialogShopObj != null) dialogShopObj.transform.SetAsLastSibling();
+            if (dialogInvObj != null) dialogInvObj.transform.SetAsLastSibling();
+            if (dialogLbObj != null) dialogLbObj.transform.SetAsLastSibling();
+            if (dialogLoginObj != null) dialogLoginObj.transform.SetAsLastSibling();
             if (dialogTutObj != null) dialogTutObj.transform.SetAsLastSibling();
 
             // ==================== I. BUILD FINGERPRINT WATERMARK ====================
