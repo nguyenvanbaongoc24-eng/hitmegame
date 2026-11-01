@@ -66,6 +66,11 @@ public sealed class WebSocketConnectionRegistry
             if (connections.TryRemove(item.Key, out var connection)) await CloseAsync(connection, reason);
     }
 
+    public async Task CloseConnectionAsync(string connectionId, string reason)
+    {
+        if (connections.TryRemove(connectionId, out var connection)) await CloseAsync(connection, reason);
+    }
+
     public async Task SendAsync(GatewayMessage message, CancellationToken cancellationToken)
     {
         var watch = Stopwatch.StartNew();

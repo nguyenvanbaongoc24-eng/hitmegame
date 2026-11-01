@@ -66,6 +66,8 @@ app.Map("/ws", async context => {
                         metrics.RecordError(parsed.RootElement.GetProperty("code").GetString() ?? "unknown");
                     }
                 await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
+                foreach (var reply in replies.Where(reply => reply.CloseReason is not null))
+                    await connections.CloseConnectionAsync(reply.ConnectionId, reply.CloseReason!);
             }
             catch (Exception exception)
             {

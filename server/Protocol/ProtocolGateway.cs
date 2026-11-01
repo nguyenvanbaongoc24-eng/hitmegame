@@ -26,7 +26,7 @@ public sealed class ClientEnvelope
     public string? EmoteId { get; set; }
 }
 
-public sealed record GatewayMessage(string ConnectionId, string Payload);
+public sealed record GatewayMessage(string ConnectionId, string Payload, string? CloseReason = null);
 
 public sealed class ProtocolGateway
 {
@@ -121,13 +121,24 @@ public sealed class ProtocolGateway
         }
     }
 
-    private string Join(string connectionId, ClientEnvelope request)
+    private string Join(string connectionId, ClientEnvelope request, out string? replacedConnection)
     {
+        replacedConnection = null;
         if (sessions.ContainsKey(connectionId)) return Error("already_joined");
         if (string.IsNullOrWhiteSpace(request.Token)) return Error("auth_required_use_join_token");
         if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Error(authError);
         if (rooms.BanStore.TryGetRemaining(identity.PlayerId, clock.GetUtcNow(), out var remainingSeconds)) return BannedError(remainingSeconds);
         if (!string.IsNullOrWhiteSpace(request.ReconnectToken)) return Reconnect(connectionId, request.ReconnectToken, identity.PlayerId);
+        var active = sessions.FirstOrDefault(pair => pair.Value.PlayerId == identity.PlayerId);
+        if (active.Key is not null)
+        {
+            sessions.Remove(active.Key);
+            disconnected.Remove(active.Value.ReconnectToken);
+            replacedConnection = active.Key;
+            var resumed = new Session(active.Value.Room, active.Value.PlayerId, NewReconnectToken());
+            sessions[connectionId] = resumed;
+            return RoomState(resumed.Room, resumed.ReconnectToken);
+        }
         RoomAuthority? room;
         string error;
         if (string.IsNullOrWhiteSpace(request.RoomCode))
@@ -146,11 +157,13 @@ public sealed class ProtocolGateway
 
     private IReadOnlyList<GatewayMessage> JoinMessages(string connectionId, ClientEnvelope request)
     {
-        var response = Join(connectionId, request);
+        var response = Join(connectionId, request, out var replacedConnection);
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, response);
         // Every connected member must learn the new roster. RoomState contains
         // no private placement coordinates or aims, including during reconnect.
         var messages = RoomStateBroadcast(session.Room).ToList();
+        if (replacedConnection is not null)
+            messages.Add(new GatewayMessage(replacedConnection, Error("session_replaced"), "session_replaced"));
         if (session.Room.RoundSession is { } roundSession && roundSession.Match.State.Phase == Phase.Placing)
         {
             var active = roundSession.ActiveRound;
@@ -178,6 +191,7 @@ public sealed class ProtocolGateway
         if (string.IsNullOrWhiteSpace(request.Token)) return Reply(connectionId, Error("auth_required_use_join_token"));
         if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Reply(connectionId, Error(authError));
         if (rooms.BanStore.TryGetRemaining(identity.PlayerId, clock.GetUtcNow(), out var remainingSeconds)) return Reply(connectionId, BannedError(remainingSeconds));
+        if (sessions.Values.Any(active => active.PlayerId == identity.PlayerId)) return Reply(connectionId, Error("already_joined"));
         if (quickMatch.Values.Any(waiting => waiting.Identity.PlayerId == identity.PlayerId)) return Reply(connectionId, Error("already_joined"));
 
         var opponent = quickMatch.FirstOrDefault();

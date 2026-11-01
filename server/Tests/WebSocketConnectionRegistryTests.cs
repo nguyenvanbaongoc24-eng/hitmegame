@@ -77,6 +77,22 @@ public sealed class WebSocketConnectionRegistryTests
         Assert.NotEqual(WebSocketState.Open, second.State);
     }
 
+    [Fact]
+    public async Task ReplacingOneSessionClosesOnlyItsOldSocket()
+    {
+        var registry = new WebSocketConnectionRegistry();
+        var old = new ImmediateWebSocket();
+        var current = new ImmediateWebSocket();
+        registry.Register("old", old);
+        registry.Register("current", current);
+        await registry.SendAsync(new GatewayMessage("old", "session_replaced"), CancellationToken.None);
+        await registry.CloseConnectionAsync("old", "session_replaced");
+        Assert.Equal(1, old.SendCount);
+        Assert.NotEqual(WebSocketState.Open, old.State);
+        Assert.Equal(WebSocketState.Open, current.State);
+        Assert.Equal(1, registry.Count);
+    }
+
     private class ImmediateWebSocket : WebSocket
     {
         private WebSocketState state = WebSocketState.Open;

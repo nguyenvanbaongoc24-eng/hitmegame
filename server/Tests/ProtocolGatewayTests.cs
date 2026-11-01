@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
 using Xunit;
@@ -597,6 +598,43 @@ public sealed class ProtocolGatewayTests
         gateway.Disconnect("c1r");
         var replayed = Json(gateway.Handle("replay", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:p1", reconnectToken = firstToken })));
         Assert.Equal("reconnect_invalid", replayed.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void ASecondConnectionWithTheSameIdentityReplacesTheOldOneWithoutDuplicatingPlayer()
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        var first = Json(gateway.Handle("old", Request("join")));
+        var oldToken = first.GetProperty("reconnectToken").GetString();
+        var messages = gateway.HandleMessages("new", Request("join"));
+        var replaced = messages.Single(message => message.ConnectionId == "old");
+        Assert.Equal("session_replaced", Json(replaced.Payload).GetProperty("code").GetString());
+        Assert.Equal("session_replaced", replaced.CloseReason);
+        var current = Json(messages.Single(message => message.ConnectionId == "new").Payload);
+        Assert.Equal("room_state", current.GetProperty("type").GetString());
+        Assert.NotEqual(oldToken, current.GetProperty("reconnectToken").GetString());
+        Assert.Single(rooms.Snapshot());
+        Assert.Single(rooms.Snapshot()[0].Players);
+        Assert.Equal("not_joined", Json(gateway.Handle("old", Request("room_ready", ready: true))).GetProperty("code").GetString());
+        gateway.Disconnect("old");
+        Assert.True(gateway.HasJoinedOrQueued("new"));
+    }
+
+    [Fact]
+    public async Task RacingReconnectTokenAllowsExactlyOneWinner()
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        var token = Json(gateway.Handle("original", Request("join"))).GetProperty("reconnectToken").GetString();
+        gateway.Disconnect("original");
+        var request = JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:p1", reconnectToken = token });
+        var attempts = await Task.WhenAll(
+            Task.Run(() => Json(gateway.Handle("r1", request)).GetProperty("type").GetString()),
+            Task.Run(() => Json(gateway.Handle("r2", request)).GetProperty("type").GetString()));
+        Assert.Single(attempts, type => type == "room_state");
+        Assert.Single(attempts, type => type == "error");
+        Assert.Single(rooms.Snapshot()[0].Players);
     }
 
     private sealed class FakeTimeProvider : TimeProvider
