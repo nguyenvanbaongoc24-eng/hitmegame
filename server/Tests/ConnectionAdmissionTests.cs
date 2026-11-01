@@ -15,6 +15,19 @@ public sealed class ConnectionAdmissionTests
         Assert.True(admission.TryAdmit("10.0.0.1", out _));
     }
 
+    [Fact]
+    public void TotalConnectionLimitCoversDifferentIpsAndReleasesCapacity()
+    {
+        var admission = new ConnectionAdmission(maxConnectionsPerIp: 4, maxTotalConnections: 2);
+        Assert.True(admission.TryAdmit("10.0.0.1", out _));
+        Assert.True(admission.TryAdmit("10.0.0.2", out _));
+        Assert.False(admission.TryAdmit("10.0.0.3", out var error));
+        Assert.Equal("connection_limit", error);
+        Assert.Equal(2, admission.TotalConnections);
+        admission.Release("10.0.0.1");
+        Assert.True(admission.TryAdmit("10.0.0.3", out _));
+    }
+
     [Theory]
     [InlineData(0, 1024, false)]
     [InlineData(1023, 1, false)]

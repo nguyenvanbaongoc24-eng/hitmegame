@@ -41,6 +41,22 @@ public sealed class WebSocketConnectionRegistry
         return closed;
     }
 
+    public async Task<IReadOnlyList<string>> CloseUnjoinedAsync(TimeSpan timeout, Func<string, bool> isJoined, DateTimeOffset? now = null)
+    {
+        var timestamp = now ?? DateTimeOffset.UtcNow;
+        var closed = new List<string>();
+        foreach (var item in connections)
+        {
+            if (timestamp - item.Value.RegisteredAt < timeout || isJoined(item.Key)) continue;
+            if (connections.TryRemove(item.Key, out var connection))
+            {
+                closed.Add(item.Key);
+                await CloseAsync(connection, "join_timeout");
+            }
+        }
+        return closed;
+    }
+
     public async Task CloseAllAsync(string reason)
     {
         foreach (var item in connections.ToArray())
@@ -112,12 +128,14 @@ public sealed class WebSocketConnectionRegistry
     {
         try { await connection.Socket.CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, reason, CancellationToken.None); }
         catch (WebSocketException) { connection.Socket.Abort(); }
+        finally { connection.Socket.Abort(); }
     }
 
     private sealed class Connection
     {
-        public Connection(WebSocket socket, DateTimeOffset lastActivity) { Socket = socket; LastActivity = lastActivity; }
+        public Connection(WebSocket socket, DateTimeOffset lastActivity) { Socket = socket; LastActivity = lastActivity; RegisteredAt = lastActivity; }
         public WebSocket Socket { get; }
+        public DateTimeOffset RegisteredAt { get; }
         public SemaphoreSlim WriteGate { get; } = new(1, 1);
         public int PendingWrites;
         public DateTimeOffset LastActivity;

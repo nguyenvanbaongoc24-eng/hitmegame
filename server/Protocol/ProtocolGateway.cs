@@ -204,11 +204,17 @@ public sealed class ProtocolGateway
     {
         lock (gate)
         {
+            rateWindows.Remove(connectionId);
             quickMatch.Remove(connectionId);
             if (!sessions.Remove(connectionId, out var session)) return;
             session.Room.RoundSession?.SetConnected(session.PlayerId, false);
             disconnected[session.ReconnectToken] = new DisconnectedSession(session, clock.GetUtcNow() + TimeSpan.FromSeconds(30));
         }
+    }
+
+    public bool HasJoinedOrQueued(string connectionId)
+    {
+        lock (gate) return sessions.ContainsKey(connectionId) || quickMatch.ContainsKey(connectionId);
     }
 
     private string Leave(string connectionId)

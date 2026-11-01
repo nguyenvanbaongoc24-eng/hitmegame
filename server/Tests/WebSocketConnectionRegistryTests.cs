@@ -49,6 +49,22 @@ public sealed class WebSocketConnectionRegistryTests
     }
 
     [Fact]
+    public async Task UnjoinedSocketClosesAfterTenSecondsEvenWhenItSentTraffic()
+    {
+        var registry = new WebSocketConnectionRegistry();
+        var abandoned = new ImmediateWebSocket();
+        var joined = new ImmediateWebSocket();
+        registry.Register("abandoned", abandoned);
+        registry.Register("joined", joined);
+        var now = DateTimeOffset.UtcNow.AddSeconds(11);
+        registry.Touch("abandoned", now);
+        var closed = await registry.CloseUnjoinedAsync(TimeSpan.FromSeconds(10), id => id == "joined", now);
+        Assert.Equal(new[] { "abandoned" }, closed);
+        Assert.NotEqual(WebSocketState.Open, abandoned.State);
+        Assert.Equal(WebSocketState.Open, joined.State);
+    }
+
+    [Fact]
     public async Task ShutdownClosesEverySocket()
     {
         var registry = new WebSocketConnectionRegistry();
