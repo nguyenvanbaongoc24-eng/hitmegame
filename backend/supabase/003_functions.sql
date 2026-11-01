@@ -11,7 +11,8 @@ end $$;
 create or replace function public.award_match_gold(p_match uuid) returns void language plpgsql security definer set search_path=public as $$
 declare r record; amount integer;
 begin
- for r in select * from match_players where match_id=p_match for update loop
+ -- Guest rows added by 004 have no account wallet and must never be rewarded.
+ for r in select * from match_players where match_id=p_match and player_id is not null for update loop
    amount := case r.placement when 1 then 100 when 2 then 60 when 3 then 30 else 0 end;
    if amount>0 and not exists(select 1 from wallet_transactions where idempotency_key=p_match::text||':'||r.player_id::text||':reward') then
      update wallets set gold=gold+amount,updated_at=now() where player_id=r.player_id;
