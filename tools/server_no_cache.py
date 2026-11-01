@@ -1,6 +1,6 @@
 import sys
 import os
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import ThreadingHTTPServer as HTTPServer, SimpleHTTPRequestHandler
 
 class NoCacheHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
