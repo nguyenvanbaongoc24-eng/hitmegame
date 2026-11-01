@@ -7,7 +7,8 @@ public sealed record ServerRuntimeOptions(
     int MaxRooms,
     int MaxConnections,
     int MaxConnectionsPerIp,
-    TimeSpan JoinTimeout)
+    TimeSpan JoinTimeout,
+    TimeSpan ShutdownRoundWait)
 {
     public static ServerRuntimeOptions FromEnvironment(Func<string, string?> read)
     {
@@ -20,6 +21,7 @@ public sealed record ServerRuntimeOptions(
         return new ServerRuntimeOptions(idle, TimeSpan.FromSeconds(30), origins,
             Positive(read, "MAX_ROOMS", 200), Positive(read, "MAX_CONNECTIONS", 500),
             Positive(read, "MAX_CONNECTIONS_PER_IP", 12),
-            TimeSpan.FromSeconds(Positive(read, "JOIN_TIMEOUT_SECONDS", 10)));
+            TimeSpan.FromSeconds(Positive(read, "JOIN_TIMEOUT_SECONDS", 10)),
+            TimeSpan.FromSeconds(Positive(read, "SHUTDOWN_ROUND_WAIT_SECONDS", 6)));
     }
 }
