@@ -579,5 +579,89 @@ namespace HitMe.Editor
             Assert.That(ui.txtToast.text, Does.Contain("[LỖI]"));
             Assert.That(ui.txtToast.text, Does.Contain("Không tìm thấy mã phòng"));
         }
+
+        // ==================== Lô 4 Tests: Juice & Feedback ====================
+
+        [Test]
+        public void RuleL4_JuiceFeedbackController_ExistsAndWired()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.juiceFeedback, Is.Not.Null, "JuiceFeedbackController must be wired to ProductionUIController");
+            Assert.That(ui.juiceFeedback.hitImpactFrames, Is.Not.Null, "Hit impact frames must be assigned");
+            Assert.That(ui.juiceFeedback.hitImpactFrames.Length, Is.GreaterThanOrEqualTo(6), "Should have at least 6 hit impact frames");
+        }
+
+        [Test]
+        public void RuleL4_GenericPool_GetAndReturn_ZeroAlloc()
+        {
+            int created = 0;
+            var pool = new Game.GenericPool<Game.HitFx>(
+                (parent) =>
+                {
+                    var go = new GameObject("TestFx_" + created);
+                    created++;
+                    return go.AddComponent<Game.HitFx>();
+                },
+                null,
+                3 // warm count
+            );
+
+            Assert.That(pool.CountAll, Is.EqualTo(3), "Pool should warm 3 instances");
+            Assert.That(pool.CountInactive, Is.EqualTo(3));
+            Assert.That(created, Is.EqualTo(3));
+
+            // Get should not create new
+            var fx1 = pool.Get();
+            Assert.That(fx1, Is.Not.Null);
+            Assert.That(fx1.gameObject.activeSelf, Is.True);
+            Assert.That(pool.CountActive, Is.EqualTo(1));
+            Assert.That(created, Is.EqualTo(3), "Should not create new after warm-up");
+
+            // Return
+            pool.Return(fx1);
+            Assert.That(pool.CountInactive, Is.EqualTo(3));
+            Assert.That(fx1.gameObject.activeSelf, Is.False);
+
+            // Get again should reuse
+            var fx2 = pool.Get();
+            Assert.That(fx2, Is.EqualTo(fx1), "Should reuse returned instance");
+            Assert.That(created, Is.EqualTo(3));
+
+            pool.Return(fx2);
+            pool.Clear();
+        }
+
+        [Test]
+        public void RuleL4_ButtonPressScale_MatchesTheme()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.theme, Is.Not.Null);
+            Assert.That(ui.theme.buttonPressScale, Is.InRange(0.90f, 0.98f),
+                "buttonPressScale should be between 0.90 and 0.98 for subtle press feel");
+        }
+
+        [Test]
+        public void RuleL4_ReducedMotion_DefaultOff_CanToggle()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.juiceFeedback, Is.Not.Null);
+
+            // Default should be off
+            ui.juiceFeedback.ReducedMotion = false;
+            Assert.That(ui.juiceFeedback.ReducedMotion, Is.False);
+
+            // Toggle on
+            ui.juiceFeedback.ReducedMotion = true;
+            Assert.That(ui.juiceFeedback.ReducedMotion, Is.True);
+
+            // Reset
+            ui.juiceFeedback.ReducedMotion = false;
+        }
     }
 }

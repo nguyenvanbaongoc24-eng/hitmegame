@@ -659,6 +659,27 @@ namespace HitMe.Editor
             if (toastObj != null) toastObj.transform.SetAsLastSibling();
             if (leaveDialogObj != null) leaveDialogObj.transform.SetAsLastSibling();
 
+            // ==================== J. JUICE & FEEDBACK CONTROLLER (Lô 4) ====================
+            var themeAsset = AssetDatabase.LoadAssetAtPath<UiTheme>("Assets/Resources/UiTheme.asset");
+            uiCtrl.theme = themeAsset;
+
+            // Load Hit Impact VFX sprites
+            var hitImpactFrames = new List<Sprite>();
+            for (int fi = 1; fi <= 6; fi++)
+            {
+                var sp = LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F0" + fi + ".png");
+                if (sp != null) hitImpactFrames.Add(sp);
+            }
+
+            var juiceCtrl = uiCtrl.gameObject.GetComponent<JuiceFeedbackController>();
+            if (juiceCtrl == null) juiceCtrl = uiCtrl.gameObject.AddComponent<JuiceFeedbackController>();
+            juiceCtrl.theme = themeAsset;
+            juiceCtrl.timerPulseRing = uiCtrl.timerPulseRing;
+            juiceCtrl.hitImpactFrames = hitImpactFrames.ToArray();
+            juiceCtrl.poolWarmCount = 4;
+            uiCtrl.juiceFeedback = juiceCtrl;
+            EditorUtility.SetDirty(juiceCtrl);
+
             // ==================== I. BUILD FINGERPRINT WATERMARK ====================
             var fpTxt = CreateTMP(rootTr, "BuildFingerprintWatermark", fontAsset,
                 ProductionUIController.ResolveBuildFingerprint(),

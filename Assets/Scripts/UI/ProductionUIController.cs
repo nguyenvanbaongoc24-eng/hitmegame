@@ -149,6 +149,9 @@ namespace HitMe.UI
         [Header("UI Theme Reference")]
         public UiTheme theme;
 
+        [Header("Juice & Feedback (Lô 4)")]
+        public JuiceFeedbackController juiceFeedback;
+
         [Header("Gameplay HUD Controls")]
         public GameObject topPlacingBar;
         public GameObject roundPill;
@@ -838,6 +841,16 @@ namespace HitMe.UI
             if (btnBackToHome != null)
             {
                 btnBackToHome.onClick.AddListener(OnBackToHomeClicked);
+            }
+
+            // Lô 4: Wire juice feedback — register all buttons for press-scale
+            if (juiceFeedback != null)
+            {
+                var canvas = GetComponentInParent<Canvas>();
+                if (canvas != null)
+                {
+                    juiceFeedback.RegisterAllButtons(canvas.transform);
+                }
             }
         }
 
@@ -1833,18 +1846,32 @@ namespace HitMe.UI
                 txtTimer.color = lowWarning ? new Color(1f, 0.3f, 0.3f) : (theme != null ? theme.creamText : Color.white);
             }
 
-            // Pulse ring in final 2 seconds
+            // Pulse ring in final 2 seconds (delegates to JuiceFeedbackController if available)
             if (timerPulseRing != null)
             {
                 bool pulseActive = secondsRemaining > 0f && secondsRemaining <= 2.0f;
-                if (timerPulseRing.gameObject.activeSelf != pulseActive)
+                if (juiceFeedback != null)
                 {
-                    timerPulseRing.gameObject.SetActive(pulseActive);
+                    if (pulseActive && !timerPulseRing.gameObject.activeSelf)
+                    {
+                        juiceFeedback.StartCountdownPulse();
+                    }
+                    else if (!pulseActive && timerPulseRing.gameObject.activeSelf)
+                    {
+                        juiceFeedback.StopCountdownPulse();
+                    }
                 }
-                if (pulseActive)
+                else
                 {
-                    float pulse = 1f + 0.15f * Mathf.Sin(Time.time * 12f);
-                    timerPulseRing.transform.localScale = new Vector3(pulse, pulse, 1f);
+                    if (timerPulseRing.gameObject.activeSelf != pulseActive)
+                    {
+                        timerPulseRing.gameObject.SetActive(pulseActive);
+                    }
+                    if (pulseActive)
+                    {
+                        float pulse = 1f + 0.15f * Mathf.Sin(Time.time * 12f);
+                        timerPulseRing.transform.localScale = new Vector3(pulse, pulse, 1f);
+                    }
                 }
             }
         }
@@ -1916,6 +1943,28 @@ namespace HitMe.UI
             }
         }
 
+        /// <summary>
+        /// Lô 4: Quick shake animation on HP card when player takes damage.
+        /// Duration from UiTheme.heartShakeDuration. Zero-alloc after warm-up.
+        /// </summary>
+        private IEnumerator ShakeHpCard(Transform cardTr)
+        {
+            float duration = (theme != null) ? theme.heartShakeDuration : 0.35f;
+            float magnitude = 8f;
+            Vector3 originalPos = cardTr.localPosition;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / duration;
+                float dampedMag = magnitude * (1f - t);
+                float offsetX = Mathf.Sin(t * 30f) * dampedMag;
+                cardTr.localPosition = originalPos + new Vector3(offsetX, 0f, 0f);
+                yield return null;
+            }
+            cardTr.localPosition = originalPos;
+        }
+
         public void UpdateHpCards()
         {
             if (matchController == null || matchController.State == null) return;
@@ -1948,7 +1997,13 @@ namespace HitMe.UI
                 int clampedHp = Mathf.Clamp(player.Hp, 0, 3);
                 if (card.lastDisplayedHpCode != clampedHp)
                 {
+                    // Lô 4: Shake HP card on damage (HP decreased)
+                    bool tookDamage = card.lastDisplayedHpCode > clampedHp && card.lastDisplayedHpCode >= 0;
                     card.lastDisplayedHpCode = clampedHp;
+                    if (tookDamage && card.root != null && juiceFeedback != null && !juiceFeedback.ReducedMotion)
+                    {
+                        StartCoroutine(ShakeHpCard(card.root.transform));
+                    }
                     if (card.txtHearts != null)
                     {
                         card.txtHearts.text = CachedHpCardStrings[clampedHp];
