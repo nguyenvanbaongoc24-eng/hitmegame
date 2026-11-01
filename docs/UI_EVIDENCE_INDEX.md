@@ -151,3 +151,25 @@ LỰA CHỌN THIẾT KẾ:
 Ghi chú phản hồi thực tế (FPS, giật lag, độ ấm máy, cỡ chữ):
 __________________________________________________________________________
 ```
+
+---
+
+## 5. Lô 5 & Lô 6: Âm Thanh + Cài Đặt (VI/EN) + Hướng Dẫn Cử Chỉ 3 Bước (v1.2)
+- **Cổng:** `8098`
+- **Commit:** `5318aee`
+- **Thư mục build:** `Builds/WebGL_20261101_5318aee`
+- **Kích thước .data:** 20,355,408 bytes (20.35 MB)
+- **Kiểm thử EditMode:** `Passed! 123/123` (23 test UI polish, 0 fail)
+  - `RuleL5_AudioService_PoolAndClips_Configured` (Passed)
+  - `RuleL5_SettingsDialog_UIAndWiring` (Passed)
+  - `RuleL5_Localization_DualLanguage_VI_EN_NoMissingKeys` (Passed)
+  - `RuleL6_TutorialDialog_UIAndWiring` (Passed)
+  - `RuleL6_Tutorial_SkipAndPersistence` (Passed)
+- **Audit Phase 2:** `12/12 ĐẠT` (Mã thoát 0, lưu tại `Evidence/audit/phase2_audit_5318aee.txt`).
+
+### Bằng chứng hình ảnh WebGL thực tế (1170×2532) - Kiểm tra trực quan bằng PIL:
+1. `lo5_01_settings_dialog_1170x2532.png` (621 KB): Mở hộp thoại Cài đặt (nền tối mờ che sân chơi, khung gỗ tối viền vàng `y=[568, 1958]`, thanh trượt Âm lượng Nhạc nền, thanh trượt Hiệu ứng, nút chuyển Giảm chuyển động, 2 nút chọn ngôn ngữ TIẾNG VIỆT và ENGLISH, nút ĐÓNG màu xanh và nút THOÁT TRẬN màu đỏ).
+2. `lo5_02_settings_en_1170x2532.png` (621 KB): Màn hình Cài đặt khi chuyển sang tiếng Anh trên WebGL live (Tiêu đề "SETTINGS", tiêu đề mục "AUDIO", "MUSIC", "SOUND EFFECTS", "REDUCED MOTION", "LANGUAGE", nút "CLOSE" và "LEAVE MATCH"; chữ vừa vặn không tràn khung).
+3. `lo6_01_tutorial_step1_1170x2532.png` (1.35 MB): Màn hình hướng dẫn Bước 1/3 (Thẻ hướng dẫn `y=[882, 1645]`, tiêu đề "HƯỚNG DẪN CỬ CHỈ (v1.2)", tiêu đề bước "BƯỚC 1/3: ĐẶT NHÂN VẬT", nội dung "Chạm vào vùng sân để đặt vị trí nhân vật của bạn.", chấm tròn 1 sáng vàng, nút đỏ "BỎ QUA" bên trái và nút vàng "TIẾP THEO" bên phải).
+4. `lo6_02_tutorial_step2_1170x2532.png` (1.35 MB): Màn hình hướng dẫn Bước 2/3 (Tiêu đề bước "BƯỚC 2/3: KÉO ĐỂ NGẮM", nội dung "Giữ rồi trượt để ngắm. Thước ngắm bám theo đầu ngón tay.", chấm tròn 2 sáng vàng).
+5. `lo6_03_tutorial_step3_1170x2532.png` (1.36 MB): Màn hình hướng dẫn Bước 3/3 (Tiêu đề bước "BƯỚC 3/3: ĐỔI VỊ TRÍ & HỦY", nội dung "Chạm chỗ khác để làm lại. Kéo về dưới 4mm để hủy. Không ngắm = ném thẳng.", chấm tròn 3 sáng vàng, nút xác nhận "ĐÃ HIỂU").
