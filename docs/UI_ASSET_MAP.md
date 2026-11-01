@@ -86,3 +86,17 @@
 | **Kem Gạo Chữ Đọc (Cream Text)** | `#FFF8DC` | `1.000, 0.973, 0.863` | Màu chữ chính trên nền gỗ và nền tối (dịu mắt) |
 | **Chữ Phụ Vàng Nắng (Subtitle Gold)** | `#FFE882` | `1.000, 0.910, 0.510` | Tên nhân vật, tiêu đề phụ |
 | **Watermark Góc Dưới-Trái (Watermark Yellow)** | `#FFE600` | `1.000, 0.902, 0.000` | Dòng `build <commit>` góc dưới màn hình |
+
+---
+
+## 6. Tổng hợp các tài nguyên THIẾU và TẠM (Gom cho Chủ dự án duyệt)
+*Theo yêu cầu rà soát của Đợt 33 & 34, toàn bộ thành phần chưa có asset hoàn chỉnh hoặc đang dùng giải pháp tạm được gom tại đây:*
+
+| # | Tên tài nguyên | Màn hình sử dụng | Trạng thái hiện tại | Giải pháp đang dùng tạm | Yêu cầu cung cấp bổ sung |
+|:---:|---|:---:|:---:|---|---|
+| **1** | **Xe Đạp Phượng Hoàng** | Cửa hàng, Túi đồ | `Thiếu` | Ghi nhãn "(Thiếu hiệu ứng)", chưa kích hoạt trong trận | Cung cấp file sprite icon, sprite cầm tay (held), sprite bay (projectile) |
+| **2** | **Honda Cũ** | Cửa hàng, Túi đồ | `Thiếu` | Ghi nhãn "(Thiếu hiệu ứng)", chưa kích hoạt trong trận | Cung cấp file sprite icon, sprite cầm tay (held), sprite bay (projectile) |
+| **3** | **Huy hiệu Hạng 1, 2, 3** | Bảng xếp hạng cuối trận | `TẠM` | Nhãn số TextMeshPro viền Vàng/Bạc/Đồng | Bộ 3 sprite huy chương/cúp (Gold, Silver, Bronze) phong cách làng quê |
+| **4** | **Ảnh đại diện người chơi** | Trang chủ, Hồ sơ | `TẠM` | Khung thẻ nhân vật `ui_card_char_selected` | Bộ sprite avatar người chơi (chân dung nhân vật, khung viền cấp độ) |
+| **5** | **Icon Đăng nhập MXH** | Hộp thoại Đăng nhập | `TẠM` | Nút CTA xanh có chữ "Google (SẮP CÓ)", "Facebook", "Apple" | Icon SVG/PNG chính thức của Google, Facebook, Apple |
+| **6** | **SFX Dép bay trong gió** | Trong trận (pha ném) | `Thiếu` | Để trống (null an toàn), không tự chế âm thanh | Tệp âm thanh tiếng dép xé gió ngắn (0.3s - 0.5s) |

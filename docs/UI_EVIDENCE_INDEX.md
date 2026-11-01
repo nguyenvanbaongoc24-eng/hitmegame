@@ -1,6 +1,6 @@
-# HIT ME – BẢNG CHỈ MỤC BẰNG CHỨNG UI/UX (LÔ 1 – 4)
+# HIT ME – BẢNG CHỈ MỤC BẰNG CHỨNG UI/UX (LÔ 1 – 8)
 *Tài liệu kiểm định trực quan và nghiệm thu kỹ thuật theo yêu cầu Đợt 33 & 34*
-*Ngày cập nhật: 01/11/2026 | Phiên bản Client: Graybox Production | IP Server: 192.168.0.135*
+*Ngày cập nhật: 01/11/2026 21:44 | Phiên bản Client: Graybox Production | IP Server: 192.168.0.135*
 
 ---
 
@@ -8,11 +8,13 @@
 
 | Cổng | Commit | Gói bàn giao / Nội dung | Kích thước `.data` | Trạng thái server | Trạng thái Audit |
 |:---:|:---:|:---|:---:|:---:|:---:|
-| **8093** | `96bbc27` | Baseline Graybox (Bản gốc đối chiếu) | 16,995,844 bytes (~16.2 MB) | Đang chạy (PID 39276) | ĐẠT 12/12 |
-| **8094** | `64bc6a9` | Lô 1 – In-Game HUD (Theme, Font, Sprite UI Kit) | 17,803,464 bytes (~17.0 MB) | Đang chạy (PID 4200) | ĐẠT 12/12 |
-| **8095** | `9cdef40` | Lô 2 + Bước V + N1 (Window 100dvh, Home, Bot, Phòng, Net v1) | 20,298,184 bytes (~19.4 MB) | Đang chạy (PID 20744) | ĐẠT 12/12 |
-| **8096** | `c309cf6` | Lô 3 (Kết quả vòng, Bảng xếp hạng [TẠM], Dialog rời, Toast lỗi) | 20,305,262 bytes (~19.4 MB) | Đang chạy (PID 5584) | ĐẠT 12/12 |
-| **8097** | `e726d61` | Lô 4 (Juice: Lún nút 0.94x, GenericPool, Rung máu, Nhịp đập) | 20,308,352 bytes (~19.4 MB) | Đang chạy (PID 34404) | ĐẠT 12/12 (Mã 0) |
+| **8093** | `96bbc27` | Baseline Graybox (Bản gốc đối chiếu) | 16,995,844 bytes (~16.2 MB) | Đang chạy | ĐẠT 12/12 |
+| **8094** | `64bc6a9` | Lô 1 – In-Game HUD (Theme, Font, Sprite UI Kit) | 17,803,464 bytes (~17.0 MB) | Đang chạy | ĐẠT 12/12 |
+| **8095** | `9cdef40` | Lô 2 + Bước V + N1 (Window 100dvh, Home, Bot, Phòng, Net v1) | 20,298,184 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
+| **8096** | `c309cf6` | Lô 3 (Kết quả vòng, Bảng xếp hạng [TẠM], Dialog rời, Toast lỗi) | 20,305,262 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
+| **8097** | `e726d61` | Lô 4 (Juice: Lún nút 0.94x, GenericPool, Rung máu, Nhịp đập) | 20,308,352 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
+| **8098** | `5318aee` | Lô 5+6 (AudioService, Settings VI/EN, Tutorial v1.2) | 20,355,408 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
+| **8099** | `09f48d2` | Lô 7+8 (Profile, Shop VN, Inventory, Leaderboard, Login Khách) | 20,380,003 bytes (~19.4 MB) | Đang chạy | ĐẠT 12/12 |
 
 ---
 
@@ -205,3 +207,56 @@ __________________________________________________________________________
 3. `lo7_03_inventory_weapons_1170x2532.png` (844 KB): Hộp thoại Túi đồ vũ khí (`y=[730, 1796]`, `x=[85, 1085]`), Tiêu đề "TÚI ĐỒ VŨ KHÍ", nhãn "ĐANG DÙNG: DÉP TỔ ONG", ô trang bị mặc định Dép Tổ Ong cùng nút "ĐANG DÙNG", nút xanh "ĐÓNG".
 4. `lo7_04_leaderboard_1170x2532.png` (827 KB): Bảng xếp hạng Sân làng (`y=[676, 1850]`, `x=[85, 1085]`), Tiêu đề "BẢNG XẾP HẠNG SÂN LÀNG", Danh sách Top 5 điểm đấu (1. Tuấn_HàNội 1250đ; 2. Nam_Làng 1120đ; 3. Hoa_Bé 980đ; 4. Bạn (Khách_4826) 850đ hiển thị màu vàng nổi bật; 5. Bình_TổOng 790đ), nút xanh "ĐÓNG".
 5. `lo8_01_guest_login_1170x2532.png` (883 KB): Màn hình Đăng nhập (`y=[757, 1769]`, `x=[85, 1085]`), Tiêu đề "ĐĂNG NHẬP", nút vàng "CHƠI VỚI TƯ CÁCH KHÁCH", 3 nút đăng nhập mạng xã hội (Google, Facebook, Apple) bị vô hiệu hóa kèm nhãn "(SẮP CÓ)", nút xanh "ĐÓNG".
+
+
+---
+
+## 8. ĐO THỜI GIAN TẢI TRANG ĐẦU & KÍCH THƯỚC BUILD (Step 8c per Round 33/34)
+
+*Đo lường bằng Playwright (msedge headless, viewport 414×896, networkidle) trên localhost ngày 01/11/2026.*
+*File dữ liệu gốc: `Evidence/load_time_measurements.json`*
+
+### 8.1 Bảng kích thước file Build theo từng cổng
+
+| Cổng | Commit | `.data` (MB) | `.wasm` (MB) | `.framework.js` (KB) | `.loader.js` (KB) | **Tổng** (MB) |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **8093** | `96bbc27` | 16.21 | 26.95 | 321.7 | 27.3 | **43.47** |
+| **8094** | `64bc6a9` | 16.98 | 26.95 | 321.7 | 27.3 | **44.24** |
+| **8095** | `9cdef40` | 19.36 | 26.99 | 321.7 | 27.3 | **46.66** |
+| **8096** | `c309cf6` | 19.36 | 26.99 | 321.7 | 27.3 | **46.67** |
+| **8097** | `e726d61` | 19.37 | 27.00 | 321.7 | 27.3 | **46.68** |
+| **8098** | `5318aee` | 19.41 | 27.02 | 321.7 | 27.3 | **46.74** |
+| **8099** | `09f48d2` | 19.44 | 27.04 | 321.7 | 27.3 | **46.79** |
+
+### 8.2 Bảng thời gian tải trang đầu (localhost, không nén)
+
+| Cổng | Commit | DCL (ms) | Load (ms) | Network Idle (ms) |
+|:---:|:---:|:---:|:---:|:---:|
+| **8093** | `96bbc27` | 81.0 | 216.2 | 904.3 |
+| **8094** | `64bc6a9` | 103.8 | 175.8 | 848.2 |
+| **8095** | `9cdef40` | 34.9 | 102.9 | 775.4 |
+| **8096** | `c309cf6` | 32.3 | 97.9 | 785.0 |
+| **8097** | `e726d61` | 25.0 | 90.3 | 743.8 |
+| **8098** | `5318aee` | 26.8 | 88.6 | 803.2 |
+| **8099** | `09f48d2` | 22.6 | 89.1 | 748.8 |
+
+### 8.3 Phân tích tăng trưởng `.data`
+
+| Giai đoạn | `.data` Δ (bytes) | Nguyên nhân |
+|---|---:|---|
+| Baseline → Lô 1 | +807,620 | Font BeVietnamPro SDF 4096×4096 + Texture UI Kit |
+| Lô 1 → Lô 2+N1 | +2,494,720 | Background làng quê, 7 thẻ nhân vật, Net Client assembly |
+| Lô 2 → Lô 3 | +7,078 | Leave dialog, Round result, Badge TẠM text |
+| Lô 3 → Lô 4 | +3,090 | GenericPool, JuiceFeedbackController |
+| Lô 4 → Lô 5+6 | +47,056 | AudioService (SFX pool), SettingsDialog, TutorialDialog, UiStrings EN |
+| Lô 5+6 → Lô 7+8 | +24,595 | FakeAccountService, FakeInventoryService, Shop/Profile/Login dialogs |
+| **Tổng Baseline→Lô 8** | **+3,384,159 (+3.23 MB)** | **Dưới ngưỡng ≤ 4 MB cho phép** ✅ |
+
+### 8.4 Đề xuất nén (Không thay đổi hình ảnh)
+
+1. **Brotli pre-compress**: `.data` và `.wasm` nén Brotli offline có thể giảm ~70-75% dung lượng truyền tải (46.8 MB → ~12-14 MB). Unity 6 hỗ trợ xuất sẵn `.br` qua Publishing Settings > Compression Format = Brotli.
+2. **Gzip fallback**: Cho trình duyệt không hỗ trợ Brotli (Safari cũ), cấu hình server trả `Content-Encoding: gzip` cho `.data`/`.wasm`, giảm ~55-60%.
+3. **WebGL Texture Compression (ASTC/ETC2)**: Bật trong Player Settings > WebGL > Texture Compression. Giảm VRAM tiêu thụ trên di động ~4x mà không cần thay đổi file ảnh gốc.
+4. **Code stripping (IL2CPP)**: Đã bật `Managed Stripping Level = Medium`. Có thể nâng lên `High` nếu kiểm thử không gây lỗi reflection.
+
+> **Kết luận**: Trên localhost (không nén), tất cả 7 build đều tải trang đầu **dưới 1 giây** (network idle ≤ 904 ms). Trên mạng thực (3G/4G), Brotli là bắt buộc để giữ trải nghiệm tải dưới 5 giây.
