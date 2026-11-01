@@ -17,9 +17,9 @@ update public.match_players
   where server_player_id is null;
 
 alter table public.match_players
+  drop constraint match_players_pkey,
   alter column server_player_id set not null,
   alter column player_id drop not null,
-  drop constraint match_players_pkey,
   add constraint match_players_pkey primary key (match_id, server_player_id),
   add constraint match_players_rank_check check (placement >= 1),
   add constraint match_players_account_unique unique (match_id, player_id);
