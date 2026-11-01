@@ -390,6 +390,25 @@ namespace HitMe.UI
                 bool isTimeout = Application.absoluteURL.IndexOf("timeout=1", StringComparison.OrdinalIgnoreCase) >= 0;
                 ShowQuickMatchDialog(isTimeout);
             }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=settings", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Home);
+                if (Application.absoluteURL.IndexOf("lang=en", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    SetLanguageFromSettings(AppLanguage.English);
+                }
+                ShowSettingsDialog();
+            }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=tutorial", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Gameplay);
+                int tutStep = GetUrlInt("step", 0);
+                if (Application.absoluteURL.IndexOf("lang=en", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    SetLanguageFromSettings(AppLanguage.English);
+                }
+                ShowTutorial(tutStep);
+            }
             else
             {
                 ShowScreen(ProductionScreen.Home);
