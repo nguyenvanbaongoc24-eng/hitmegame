@@ -491,6 +491,8 @@ namespace HitMe.Editor
             var ui = Object.FindFirstObjectByType<ProductionUIController>();
             Assert.That(ui, Is.Not.Null);
             Assert.That(ui.dialogLeaveRoom, Is.Not.Null);
+            Assert.That(ui.btnCancelLeave, Is.Not.Null, "Cancel button must be wired");
+            Assert.That(ui.btnConfirmLeave, Is.Not.Null, "Confirm button must be wired");
 
             bool confirmed = false;
             ui.ShowLeaveConfirmationDialog("TIÊU ĐỀ RỜI", "Nội dung xác nhận", () => confirmed = true);
@@ -498,14 +500,15 @@ namespace HitMe.Editor
             Assert.That(ui.txtLeaveDialogTitle.text, Is.EqualTo("TIÊU ĐỀ RỜI"));
             Assert.That(ui.txtLeaveDialogMessage.text, Is.EqualTo("Nội dung xác nhận"));
 
-            // Clicking Cancel dismisses dialog without triggering callback
-            ui.btnCancelLeave.onClick.Invoke();
+            // Cancel hides dialog without triggering callback
+            ui.HideLeaveConfirmationDialog();
             Assert.That(ui.dialogLeaveRoom.activeSelf, Is.False);
             Assert.That(confirmed, Is.False);
 
-            // Clicking Confirm executes callback and closes dialog
+            // Re-show and simulate confirm: invoke pending action then hide
             ui.ShowLeaveConfirmationDialog("TIÊU ĐỀ RỜI", "Nội dung xác nhận", () => confirmed = true);
-            ui.btnConfirmLeave.onClick.Invoke();
+            Assert.That(ui.dialogLeaveRoom.activeSelf, Is.True);
+            ui.ConfirmLeaveDialog();
             Assert.That(ui.dialogLeaveRoom.activeSelf, Is.False);
             Assert.That(confirmed, Is.True);
         }

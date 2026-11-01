@@ -796,9 +796,7 @@ namespace HitMe.UI
                 btnConfirmLeave.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    var action = _pendingLeaveAction;
-                    HideLeaveConfirmationDialog();
-                    action?.Invoke();
+                    ConfirmLeaveDialog();
                 });
             }
 
@@ -913,6 +911,13 @@ namespace HitMe.UI
             {
                 dialogLeaveRoom.SetActive(false);
             }
+        }
+
+        public void ConfirmLeaveDialog()
+        {
+            var action = _pendingLeaveAction;
+            HideLeaveConfirmationDialog();
+            action?.Invoke();
         }
 
         public void ShowToast(string message)
