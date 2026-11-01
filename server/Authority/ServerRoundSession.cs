@@ -16,6 +16,8 @@ public sealed class ServerRoundSession
     private readonly string[] playerIds;
     private readonly AfkPolicy afkPolicy;
     private readonly IBanStore banStore;
+    private readonly IMatchResultStore resultStore;
+    private readonly Guid matchId = Guid.NewGuid();
     private readonly HashSet<string> connectedPlayers;
     private readonly Dictionary<string, int> missedCommitRounds = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DateTimeOffset> lastEmoteAt = new(StringComparer.Ordinal);
@@ -24,16 +26,18 @@ public sealed class ServerRoundSession
     private Round? round;
     private int publishedRoundId;
 
-    public ServerRoundSession(GameConfig config, IEnumerable<string> playerIds, AfkPolicy? afkPolicy = null, IBanStore? banStore = null)
+    public ServerRoundSession(GameConfig config, IEnumerable<string> playerIds, AfkPolicy? afkPolicy = null, IBanStore? banStore = null, IMatchResultStore? resultStore = null)
     {
         this.playerIds = playerIds?.ToArray() ?? throw new ArgumentNullException(nameof(playerIds));
         match = new ServerMatch(config, this.playerIds);
         this.afkPolicy = afkPolicy ?? new AfkPolicy();
         this.banStore = banStore ?? new InMemoryBanStore();
+        this.resultStore = resultStore ?? new InMemoryMatchResultStore();
         connectedPlayers = new HashSet<string>(this.playerIds, StringComparer.Ordinal);
     }
 
     public ServerMatch Match => match;
+    public Guid MatchId => matchId;
     public Round ActiveRound => round ?? throw new InvalidOperationException("No active round.");
 
     public IReadOnlyList<OutboundMessage> BeginRound(TimeProvider? clock = null)
@@ -151,6 +155,7 @@ public sealed class ServerRoundSession
 
         if (match.State.Phase == Phase.MatchEnd)
         {
+            resultStore.TrySave(MatchResultFactory.Create(matchId, (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State));
             messages.AddRange(Broadcast(new
             {
                 v = 1,

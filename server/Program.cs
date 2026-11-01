@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
+builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
 builder.Services.AddSingleton<RoomDirectory>();
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
