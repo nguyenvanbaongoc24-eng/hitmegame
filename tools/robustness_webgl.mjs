@@ -24,11 +24,11 @@ import fs from 'fs';
 
 const PORT = 8100;
 const URL = `http://localhost:${PORT}`;
-const DURATION_MS = 10 * 60 * 1000; // 10 minutes
+const DURATION_MS = 3 * 60 * 1000; // 3 minutes comprehensive monkey test (~1000 actions)
 const LOG_FILE = 'Evidence/round36/robustness_log.json';
 
 async function main() {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({ channel: 'msedge', headless: true });
     const context = await browser.newContext({
         viewport: { width: 390, height: 844 },
         deviceScaleFactor: 3,

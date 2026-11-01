@@ -1,0 +1,139 @@
+[
+  {
+    "label": "20Mbps_4G_no_cache",
+    "port": 8101,
+    "bandwidth_kbps": 20000,
+    "latency_ms": 40,
+    "load_time_seconds": 5.68,
+    "theoretical_min_seconds": 4.73,
+    "total_transferred_bytes": 12108600,
+    "total_transferred_MB": 11.55,
+    "resource_count": 4,
+    "navigation_timing": {
+      "domContentLoaded": 91,
+      "loadEvent": 310,
+      "transferSize": 5433,
+      "responseEnd": 68
+    },
+    "resources": [
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.data.br?v=31810c4",
+        "transferSize": 12013667,
+        "encodedBodySize": 12013367,
+        "decodedBodySize": 12013367,
+        "duration": 4898,
+        "startTime": 190,
+        "responseEnd": 5088,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.framework.js.br?v=31810c4",
+        "transferSize": 65959,
+        "encodedBodySize": 65659,
+        "decodedBodySize": 65659,
+        "duration": 120,
+        "startTime": 179,
+        "responseEnd": 299,
+        "initiatorType": "script"
+      },
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.loader.js?v=31810c4",
+        "transferSize": 28214,
+        "encodedBodySize": 27914,
+        "decodedBodySize": 27914,
+        "duration": 71,
+        "startTime": 88,
+        "responseEnd": 159,
+        "initiatorType": "script"
+      },
+      {
+        "name": "favicon.ico",
+        "transferSize": 760,
+        "encodedBodySize": 460,
+        "decodedBodySize": 460,
+        "duration": 4494,
+        "startTime": 312,
+        "responseEnd": 4806,
+        "initiatorType": "other"
+      }
+    ],
+    "cache_disabled": true,
+    "indexeddb_cleared": true,
+    "cdp_emulation_applied": true,
+    "plausible": true,
+    "target_10s_pass": true
+  },
+  {
+    "label": "5Mbps_3G_no_cache",
+    "port": 8101,
+    "bandwidth_kbps": 5000,
+    "latency_ms": 100,
+    "load_time_seconds": 20.12,
+    "theoretical_min_seconds": 18.92,
+    "total_transferred_bytes": 12108600,
+    "total_transferred_MB": 11.55,
+    "resource_count": 4,
+    "navigation_timing": {
+      "domContentLoaded": 145,
+      "loadEvent": 691,
+      "transferSize": 5433,
+      "responseEnd": 128
+    },
+    "resources": [
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.data.br?v=31810c4",
+        "transferSize": 12013667,
+        "encodedBodySize": 12013367,
+        "decodedBodySize": 12013367,
+        "duration": 19162,
+        "startTime": 381,
+        "responseEnd": 19543,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.framework.js.br?v=31810c4",
+        "transferSize": 65959,
+        "encodedBodySize": 65659,
+        "decodedBodySize": 65659,
+        "duration": 308,
+        "startTime": 371,
+        "responseEnd": 679,
+        "initiatorType": "script"
+      },
+      {
+        "name": "WebGL_Release_20261101_31810c4_232534.loader.js?v=31810c4",
+        "transferSize": 28214,
+        "encodedBodySize": 27914,
+        "decodedBodySize": 27914,
+        "duration": 154,
+        "startTime": 144,
+        "responseEnd": 298,
+        "initiatorType": "script"
+      },
+      {
+        "name": "favicon.ico",
+        "transferSize": 760,
+        "encodedBodySize": 460,
+        "decodedBodySize": 460,
+        "duration": 17773,
+        "startTime": 695,
+        "responseEnd": 18468,
+        "initiatorType": "other"
+      }
+    ],
+    "cache_disabled": true,
+    "indexeddb_cleared": true,
+    "cdp_emulation_applied": true,
+    "plausible": true,
+    "target_10s_pass": null
+  },
+  {
+    "label": "20Mbps_4G_cached_reload",
+    "port": 8101,
+    "bandwidth_kbps": 20000,
+    "load_time_seconds": 0.78,
+    "total_transferred_bytes": 94473,
+    "total_transferred_MB": 0.09,
+    "cache_used": true
+  }
+]

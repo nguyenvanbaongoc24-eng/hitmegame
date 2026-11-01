@@ -1,0 +1,57 @@
+{
+  "commit": "31810c4",
+  "timestamp": "2026-11-01T17:06:43Z",
+  "resolutions_tested": 5,
+  "screens_tested": [
+    "Home",
+    "BotTraining",
+    "Room_Lobby",
+    "Place",
+    "Lock",
+    "Reveal",
+    "Throw",
+    "RoundResult",
+    "MatchEnd",
+    "Settings",
+    "Profile",
+    "Shop",
+    "Inventory",
+    "Leaderboard",
+    "GuestLogin",
+    "LeaveDialog",
+    "ToastNotification"
+  ],
+  "checks": {
+    "a_text_height_min_2_2pct": {
+      "status": "PASS",
+      "tested": 20,
+      "violations": []
+    },
+    "b_touch_target_min_135px": {
+      "status": "WARN",
+      "tested": 20,
+      "violations": [
+        "1620x2160_iPadTablet: BtnQuickMatch dimension=157.5px < min 202.5px",
+        "1620x2160_iPadTablet: BtnBotTraining dimension=157.5px < min 202.5px",
+        "1620x2160_iPadTablet: BtnReadyLock dimension=153.0px < min 202.5px",
+        "1620x2160_iPadTablet: BtnClose dimension=157.5px < min 202.5px"
+      ]
+    },
+    "c_no_overlap_safe_area": {
+      "status": "PASS",
+      "tested": 20,
+      "violations": []
+    },
+    "d_no_text_overflow": {
+      "status": "PASS",
+      "tested": 20,
+      "violations": []
+    },
+    "e_primary_button_lower_third": {
+      "status": "PASS",
+      "tested": 10,
+      "violations": []
+    }
+  },
+  "summary": "Passed! 4/5"
+}

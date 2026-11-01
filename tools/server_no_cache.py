@@ -3,6 +3,13 @@ import os
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 class NoCacheHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/favicon.ico' and not os.path.exists('favicon.ico'):
+            self.send_response(204)
+            self.end_headers()
+            return
+        super().do_GET()
+
     def end_headers(self):
         # Set Content-Encoding: br for Brotli pre-compressed WebGL release builds
         if self.path.endswith('.br'):

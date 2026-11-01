@@ -23,7 +23,7 @@ except ImportError:
 def measure_load(port, label, download_kbps, upload_kbps, latency_ms):
     """Measure page load with real CDP network throttling."""
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(channel="msedge", headless=True)
         context = browser.new_context(
             viewport={"width": 390, "height": 844},
             # Disable cache entirely
@@ -138,7 +138,7 @@ def main():
 
     # Test 3: 20 Mbps second load (with cache - do NOT clear)
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(channel="msedge", headless=True)
         context = browser.new_context(viewport={"width": 390, "height": 844})
         page = context.new_page()
 
