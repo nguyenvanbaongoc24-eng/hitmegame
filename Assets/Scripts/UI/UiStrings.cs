@@ -1,16 +1,90 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace HitMe.UI
 {
+    public enum AppLanguage
+    {
+        Vietnamese,
+        English
+    }
+
+    /// <summary>
+    /// Localized strings (VI / EN) for HIT ME.
+    /// Preserves all public const string fields for contract tests & backward compatibility.
+    /// Supports dynamic English translation via UiStrings.Get() and UiStrings.CurrentLanguage.
+    /// </summary>
     public static class UiStrings
     {
+        public const string PrefKeyLanguage = "HitMe_Language";
+
+        private static AppLanguage _currentLanguage = AppLanguage.Vietnamese;
+
+        public static AppLanguage CurrentLanguage
+        {
+            get => _currentLanguage;
+            set
+            {
+                _currentLanguage = value;
+                try
+                {
+                    PlayerPrefs.SetString(PrefKeyLanguage, value == AppLanguage.English ? "EN" : "VI");
+                    PlayerPrefs.Save();
+                }
+                catch { /* WebGL sandbox */ }
+                OnLanguageChanged?.Invoke();
+            }
+        }
+
+        public static event Action OnLanguageChanged;
+
+        public static bool IsVietnamese => CurrentLanguage == AppLanguage.Vietnamese;
+
+        public static void SetLanguage(AppLanguage lang)
+        {
+            CurrentLanguage = lang;
+        }
+
+        static UiStrings()
+        {
+            try
+            {
+                string saved = PlayerPrefs.GetString(PrefKeyLanguage, "VI");
+                _currentLanguage = string.Equals(saved, "EN", StringComparison.OrdinalIgnoreCase)
+                    ? AppLanguage.English
+                    : AppLanguage.Vietnamese;
+            }
+            catch
+            {
+                _currentLanguage = AppLanguage.Vietnamese;
+            }
+        }
+
+        // ──────────────────────────────────────────────────
+        // Public Const Strings (Vietnamese Default & Canonical)
+        // ──────────────────────────────────────────────────
+
         // Headers & Screen Titles
         public const string GameTitle = "HIT ME";
         public const string HomeSubtitle = "NÉM DÉP LÀNG QUÊ";
         public const string BotTrainingTitle = "LUYỆN VỚI BOT (CỤC BỘ)";
-        public const string BotTrainingSubtitle = "Chế độ một mình trên máy • Không cần mạng\nĐúng luật v1.2 (3 HP, 5s đặt, ném đồng thời)";
+        public const string BotTrainingSubtitle = "Chơi một mình trên máy • Không cần mạng\nĐúng luật v1.2 (3 HP, 5s đặt, ném đồng thời)";
         public const string LobbyTitle = "PHÒNG CHIẾN HỮU • SÂN LÀNG";
         public const string MatchResultTitle = "KẾT THÚC TRẬN ĐẤU";
         public const string VictorySubtitle = "CHIẾN THẮNG TUYỆT ĐỐI!";
         public const string DefeatSubtitle = "CHÚC MAY MẮN LẦN SAU!";
+
+        // Settings Menu (Lô 5)
+        public const string SettingsTitle = "CÀI ĐẶT";
+        public const string SettingsAudioHeader = "ÂM THANH";
+        public const string SettingsMusic = "NHẠC NỀN";
+        public const string SettingsSfx = "HIỆU ỨNG";
+        public const string SettingsReducedMotion = "GIẢM CHUYỂN ĐỘNG";
+        public const string SettingsShowFps = "HIỂN THỊ FPS";
+        public const string SettingsLanguage = "NGÔN NGỮ";
+        public const string SettingsBtnClose = "ĐÓNG";
+        public const string SettingsBtnLeaveMatch = "THOÁT TRẬN";
 
         // Gameplay Phases
         public const string PhasePlacing = "ĐẶT VỊ TRÍ & HƯỚNG NÉM";
@@ -33,9 +107,10 @@ namespace HitMe.UI
         public const string BtnLeaveRoom = "RỜI PHÒNG";
         public const string BtnCopyRoomCode = "SAO CHÉP MÃ";
         public const string BtnCodeCopied = "ĐÃ SAO CHÉP!";
+        public const string BtnSettings = "CÀI ĐẶT";
 
         // Matchmaking & Lobby Notifications
-        public const string MatchmakingSearching = "Đang tìm đối thủ…";
+        public const string MatchmakingSearching = "Đang tìm đối thủ...";
         public const string MatchmakingTimeoutSuggest = "Chưa tìm thấy đối thủ. Chơi với bot?";
         public const string LobbyOnePlayerWarning = "Cần ít nhất 2 người. Muốn chơi một mình, hãy sang menu Luyện với bot.";
         public const string LobbyWaitingAllReady = "Đang chờ tất cả người chơi sẵn sàng...";
@@ -46,11 +121,11 @@ namespace HitMe.UI
         public const string Char1Desc = "Nhanh nhẹn, tinh quái, quen thuộc sân đình";
         public const string Char2Name = "CÔ NÀNG THỂ THAO";
         public const string Char2Desc = "Năng động hoạt bát, phản xạ cực nhanh";
-        public const string Char3Name = "ANH NÚI";
-        public const string Char3Desc = "Lực lưỡng bền bỉ, sức ném mạnh mẽ";
-        public const string Char4Name = "MAI HỒNG";
+        public const string Char3Name = "ANH NÓN LÁ";
+        public const string Char3Desc = "Vạm vỡ bền bỉ, sức ném mạnh mẽ";
+        public const string Char4Name = "BÉ HOA";
         public const string Char4Desc = "Duyên dáng khéo léo, ném dép chuẩn xác";
-        public const string Char5Name = "ANH NÓN LÁ";
+        public const string Char5Name = "BÁC NÔNG DÂN";
         public const string Char5Desc = "Phong trần giản dị, dày dạn kinh nghiệm";
         public const string Char6Name = "CHÚ CHÓ VÀNG";
         public const string Char6Desc = "Trung thành hiếu động, chạy nhảy cực nhanh";
@@ -83,7 +158,142 @@ namespace HitMe.UI
         public const string HpFormat = "{0} HP";
         public const string TotalPlayersFormat = "{0} người ({1} Bot)";
 
+        // Leave Confirmation Dialog
+        public const string LeaveDialogTitle = "XÁC NHẬN RỜI PHÒNG";
+        public const string LeaveDialogMessage = "Bạn có chắc chắn muốn rời phòng không?\nMọi kết quả của trận đấu sẽ không được lưu.";
+        public const string BtnConfirmLeave = "XÁC NHẬN";
+        public const string BtnCancelLeave = "QUAY LẠI";
+
+        // Tutorial 3-Step Gesture (Lô 6)
+        public const string PrefKeyTutorialCompleted = "HitMe_TutorialCompleted";
+        public const string TutorialTitle = "HƯỚNG DẪN CỬ CHỈ (v1.2)";
+        public const string TutorialStep1Title = "BƯỚC 1/3: ĐẶT NHÂN VẬT";
+        public const string TutorialStep1Body = "Chạm vào vùng sân để đặt vị trí nhân vật của bạn.";
+        public const string TutorialStep2Title = "BƯỚC 2/3: KÉO ĐỂ NGẮM";
+        public const string TutorialStep2Body = "Giữ rồi trượt để ngắm. Thước ngắm bám theo đầu ngón tay.";
+        public const string TutorialStep3Title = "BƯỚC 3/3: ĐỔI VỊ TRÍ & HỦY";
+        public const string TutorialStep3Body = "Chạm chỗ khác để làm lại. Kéo về dưới 4mm để hủy. Không ngắm = ném thẳng.";
+        public const string BtnTutorialSkip = "BỎ QUA";
+        public const string BtnTutorialNext = "TIẾP THEO";
+        public const string BtnTutorialDone = "ĐÃ HIỂU";
+
+        // Error Toast
+        public const string ErrorRoomNotFound = "Không tìm thấy mã phòng";
+
         // Vietnamese Glyph Verification String
-        public const string GlyphCheckString = "Ế Ổ Ữ Ặ Đ Ằ Ẳ Ố Ậ Ứ Ớ Ệ Ồ Ẵ";
+        public const string GlyphCheckString = "ă â đ ê ô ơ ư á à ả ã ạ ắ ằ ẳ ẵ ặ ấ ầ ổ ỗ ộ ớ ờ ở ỡ ợ ứ ừ ử ữ ự";
+
+        // ──────────────────────────────────────────────────
+        // English Translation Mapping Table (Lô 5)
+        // ──────────────────────────────────────────────────
+        private static readonly Dictionary<string, string> EnglishMap = new Dictionary<string, string>
+        {
+            { HomeSubtitle, "VILLAGE SLIPPER TOSS" },
+            { BotTrainingTitle, "BOT PRACTICE (OFFLINE)" },
+            { BotTrainingSubtitle, "Solo on device • No internet needed\nRule v1.2 compliant (3 HP, 5s placing, simultaneous throw)" },
+            { LobbyTitle, "FRIENDS LOBBY • VILLAGE ARENA" },
+            { MatchResultTitle, "MATCH FINISHED" },
+            { VictorySubtitle, "GLORIOUS VICTORY!" },
+            { DefeatSubtitle, "BETTER LUCK NEXT TIME!" },
+
+            { SettingsTitle, "SETTINGS" },
+            { SettingsAudioHeader, "AUDIO" },
+            { SettingsMusic, "MUSIC" },
+            { SettingsSfx, "SOUND EFFECTS" },
+            { SettingsReducedMotion, "REDUCED MOTION" },
+            { SettingsShowFps, "SHOW FPS" },
+            { SettingsLanguage, "LANGUAGE" },
+            { SettingsBtnClose, "CLOSE" },
+            { SettingsBtnLeaveMatch, "LEAVE MATCH" },
+
+            { PhasePlacing, "SET POSITION & AIM" },
+            { PhaseLocked, "POSITION LOCKED" },
+            { PhaseReveal, "REVEAL OPPONENTS!" },
+            { PhaseThrowing, "TOSS HONEYCOMB SLIPPERS!" },
+            { PhaseRoundResult, "ROUND RESULT" },
+
+            { BtnReady, "READY" },
+            { BtnLocked, "LOCKED" },
+            { BtnStart, "START" },
+            { BtnPlayNow, "PLAY NOW / QUICK MATCH" },
+            { BtnPracticeBots, "BOT PRACTICE" },
+            { BtnCreateRoom, "CREATE ROOM" },
+            { BtnJoinRoom, "JOIN ROOM" },
+            { BtnGoToBotTraining, "GO TO BOT PRACTICE" },
+            { BtnReplay, "REPLAY" },
+            { BtnBackToHome, "BACK TO HOME" },
+            { BtnLeaveRoom, "LEAVE ROOM" },
+            { BtnCopyRoomCode, "COPY CODE" },
+            { BtnCodeCopied, "COPIED!" },
+
+            { MatchmakingSearching, "Searching for opponents..." },
+            { MatchmakingTimeoutSuggest, "No opponent found. Play with bots?" },
+            { LobbyOnePlayerWarning, "Needs at least 2 players. For solo, switch to Bot Practice menu." },
+            { LobbyWaitingAllReady, "Waiting for all players to ready..." },
+
+            { Char1Name, "VILLAGE BOY" },
+            { Char1Desc, "Agile, witty, knows every village corner" },
+            { Char2Name, "SPORTY GIRL" },
+            { Char2Desc, "Energetic, dynamic, lightning reflexes" },
+            { Char3Name, "CONICAL HAT GUY" },
+            { Char3Desc, "Sturdy and resilient, powerful throws" },
+            { Char4Name, "LITTLE HOA" },
+            { Char4Desc, "Graceful and nimble, pinpoint slipper accuracy" },
+            { Char5Name, "UNCLE FARMER" },
+            { Char5Desc, "Weathered and wise, veteran experience" },
+            { Char6Name, "GOLDEN DOG" },
+            { Char6Desc, "Loyal and spirited, blazing sprint speed" },
+            { Char7Name, "BLACK CAT" },
+            { Char7Desc, "Mysterious and sly, elusive dodger" },
+
+            { WeaponSandalName, "HONEYCOMB SLIPPER" },
+
+            { Rank1, "RANK 1" },
+            { Rank2, "RANK 2" },
+            { Rank3, "RANK 3" },
+            { WaitingPlayerSlot, "Waiting..." },
+            { MinPlayersWarning, "Requires at least 2 players to start" },
+
+            { LeaveDialogTitle, "LEAVE ROOM CONFIRMATION" },
+            { LeaveDialogMessage, "Are you sure you want to leave the room?\nMatch progress will not be saved." },
+            { BtnConfirmLeave, "CONFIRM" },
+            { BtnCancelLeave, "CANCEL" },
+            { ErrorRoomNotFound, "Room code not found" },
+
+            { TutorialTitle, "GESTURE TUTORIAL (v1.2)" },
+            { TutorialStep1Title, "STEP 1/3: PLACE CHARACTER" },
+            { TutorialStep1Body, "Tap anywhere on the field to place your character." },
+            { TutorialStep2Title, "STEP 2/3: DRAG TO AIM" },
+            { TutorialStep2Body, "Hold and drag to aim. The aim line follows your finger." },
+            { TutorialStep3Title, "STEP 3/3: RE-PLACE & CANCEL" },
+            { TutorialStep3Body, "Tap elsewhere to re-place. Drag < 4mm to cancel. No aim = straight throw." },
+            { BtnTutorialSkip, "SKIP" },
+            { BtnTutorialNext, "NEXT" },
+            { BtnTutorialDone, "GOT IT" }
+        };
+
+        /// <summary>
+        /// Returns localized text according to UiStrings.CurrentLanguage.
+        /// When English, translates using EnglishMap; otherwise returns the original Vietnamese text.
+        /// </summary>
+        public static string Get(string viText)
+        {
+            if (string.IsNullOrEmpty(viText)) return string.Empty;
+            if (_currentLanguage == AppLanguage.English && EnglishMap.TryGetValue(viText, out var enText))
+            {
+                return enText;
+            }
+            return viText;
+        }
+
+        public static string[] GetLocalizedCharacterNames()
+        {
+            var arr = new string[CharacterNames.Length];
+            for (int i = 0; i < CharacterNames.Length; i++)
+            {
+                arr[i] = Get(CharacterNames[i]);
+            }
+            return arr;
+        }
     }
 }

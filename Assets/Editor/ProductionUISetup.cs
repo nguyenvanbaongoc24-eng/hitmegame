@@ -48,6 +48,10 @@ namespace HitMe.Editor
             var spriteCardSelected = LoadSprite(KitPath + "ui_card_char_selected.png");
             var spriteWeaponDep = LoadSprite("Assets/Art/Weapons/dep_to_ong_icon.png") ?? LoadSprite("Assets/Sprites/weapon_dep_full.png");
             var spriteBgHome = LoadSprite("Assets/Art/UI/ui_bg_home_village.png");
+            var spriteSliderTrack = LoadSprite(KitPath + "ui_slider_track.png");
+            var spriteSliderKnob = LoadSprite(KitPath + "ui_slider_knob.png");
+            var spriteToggleOn = LoadSprite(KitPath + "ui_toggle_on.png");
+            var spriteToggleOff = LoadSprite(KitPath + "ui_toggle_off.png");
 
             var colorCream = new Color(1.0f, 0.973f, 0.863f, 1f);
             var colorGoldSub = new Color(1.0f, 0.910f, 0.510f, 1f);
@@ -95,6 +99,10 @@ namespace HitMe.Editor
             var audioMgr = audioGo.GetComponent<AudioManager>();
             if (audioMgr == null) audioMgr = audioGo.AddComponent<AudioManager>();
             AssignAudioClips(audioMgr);
+
+            var audioSvc = audioGo.GetComponent<AudioService>();
+            if (audioSvc == null) audioSvc = audioGo.AddComponent<AudioService>();
+            AssignAudioServiceClips(audioSvc);
 
             // 4. Setup EventSystem
             var esGo = GameObject.Find("EventSystem") ?? new GameObject("EventSystem");
@@ -163,6 +171,11 @@ namespace HitMe.Editor
 
             var subtitleTxt = CreateTMP(homePanel.transform, "HomeSubtitle", fontAsset, UiStrings.HomeSubtitle, 28, colorCream, TextAlignmentOptions.Center, new Vector2(0.5f, 0.865f), new Vector2(800f, 40f));
             subtitleTxt.fontStyle = FontStyles.Bold;
+
+            // Settings button on Home Screen (Lô 5)
+            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.90f, 0.93f), new Vector2(0.90f, 0.93f), new Vector2(0.5f, 0.5f), new Vector2(96f, 96f));
+            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 36, Color.white, TextAlignmentOptions.Center);
+            uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
 
             // Selected Character & Loadout Display Box (middle 0.50f - 0.78f)
             var loadoutCard = CreatePanel(homePanel.transform, "LoadoutCard", new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.5f), new Vector2(940f, 320f), spritePanelDarkGold, Color.white);
@@ -500,6 +513,11 @@ namespace HitMe.Editor
             uiCtrl.btnInGameReady = btnReadyInGame.GetComponent<Button>();
             uiCtrl.txtInGameReadyLabel = readyLabelInGame;
 
+            // In-Game Settings Button (Lô 5: Overlay access during gameplay)
+            var btnInGameSettings = CreateButton(hudPanel.transform, "BtnInGameSettings", spriteCircleBack, new Vector2(0.95f, 0.968f), new Vector2(0.95f, 0.968f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
+            CreateTMP(btnInGameSettings.transform, "Label", fontAsset, "⚙", 28, Color.white, TextAlignmentOptions.Center);
+            uiCtrl.btnInGameSettings = btnInGameSettings.GetComponent<Button>();
+
             // Phase Banner (below TopPlacingBar)
             var phaseBanner = CreateImage(hudPanel.transform, "PhaseBanner", spriteBannerWood, new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.925f), new Vector2(0.5f, 0.5f), new Vector2(1000f, 56f));
             var phaseTxt = CreateTMP(phaseBanner.transform, "Text", fontAsset, UiStrings.PhasePlacing + " • Chạm để đặt, kéo để ngắm", 26, colorCream, TextAlignmentOptions.Center);
@@ -680,6 +698,99 @@ namespace HitMe.Editor
             uiCtrl.juiceFeedback = juiceCtrl;
             EditorUtility.SetDirty(juiceCtrl);
 
+            // ==================== K. SETTINGS DIALOG (Lô 5) ====================
+            var dialogSettingsObj = CreatePanel(rootTr, "SettingsDialog", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.92f));
+            dialogSettingsObj.SetActive(false);
+            uiCtrl.dialogSettings = dialogSettingsObj;
+
+            var settingsCard = CreatePanel(dialogSettingsObj.transform, "SettingsCard", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(940f, 1300f), spritePanelDarkGold, Color.white);
+
+            var settingsBanner = CreateImage(settingsCard.transform, "SettingsBanner", spriteBannerWood, new Vector2(0.5f, 0.92f), new Vector2(0.5f, 0.92f), new Vector2(0.5f, 0.5f), new Vector2(700f, 130f));
+            var settingsTitleTxt = CreateTMP(settingsBanner.transform, "Title", fontAsset, UiStrings.SettingsTitle, 44, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            settingsTitleTxt.fontStyle = FontStyles.Bold;
+            uiCtrl.txtSettingsTitle = settingsTitleTxt;
+
+            // Audio Section Header
+            CreateTMP(settingsCard.transform, "AudioHeader", fontAsset, "--- " + UiStrings.SettingsAudioHeader + " ---", 30, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.5f, 0.81f), new Vector2(800f, 40f));
+
+            // Music Row
+            CreateTMP(settingsCard.transform, "MusicLabel", fontAsset, UiStrings.SettingsMusic, 28, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.24f, 0.73f), new Vector2(260f, 40f));
+            var musicSlider = CreateSlider(settingsCard.transform, "MusicSlider", spriteSliderTrack, spriteSliderKnob, new Vector2(0.66f, 0.73f), new Vector2(400f, 40f), 0.50f);
+            uiCtrl.sliderMusicVolume = musicSlider;
+
+            // SFX Row
+            CreateTMP(settingsCard.transform, "SfxLabel", fontAsset, UiStrings.SettingsSfx, 28, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.24f, 0.64f), new Vector2(260f, 40f));
+            var sfxSlider = CreateSlider(settingsCard.transform, "SfxSlider", spriteSliderTrack, spriteSliderKnob, new Vector2(0.66f, 0.64f), new Vector2(400f, 40f), 0.80f);
+            uiCtrl.sliderSfxVolume = sfxSlider;
+
+            // Controls & Feedback Section Header
+            CreateTMP(settingsCard.transform, "FeedbackHeader", fontAsset, "--- ĐIỀU KHIỂN & HIỂN THỊ ---", 30, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.5f, 0.54f), new Vector2(800f, 40f));
+
+            // Reduced Motion Row
+            CreateTMP(settingsCard.transform, "ReducedMotionLabel", fontAsset, UiStrings.SettingsReducedMotion, 26, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.32f, 0.46f), new Vector2(420f, 40f));
+            var toggleMotion = CreateToggle(settingsCard.transform, "ToggleReducedMotion", spriteToggleOn, spriteToggleOff, new Vector2(0.78f, 0.46f), new Vector2(90f, 50f), false);
+            uiCtrl.toggleReducedMotion = toggleMotion;
+
+            // Language Section
+            CreateTMP(settingsCard.transform, "LangHeader", fontAsset, "--- " + UiStrings.SettingsLanguage + " ---", 30, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.5f, 0.36f), new Vector2(800f, 40f));
+
+            var btnVi = CreateButton(settingsCard.transform, "BtnLangVi", spriteBtnYellow, new Vector2(0.28f, 0.27f), new Vector2(0.28f, 0.27f), new Vector2(0.5f, 0.5f), new Vector2(360f, 85f));
+            CreateTMP(btnVi.transform, "Label", fontAsset, "TIẾNG VIỆT", 32, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnLanguageVi = btnVi.GetComponent<Button>();
+
+            var btnEn = CreateButton(settingsCard.transform, "BtnLangEn", spriteBtnBlue, new Vector2(0.72f, 0.27f), new Vector2(0.72f, 0.27f), new Vector2(0.5f, 0.5f), new Vector2(360f, 85f));
+            CreateTMP(btnEn.transform, "Label", fontAsset, "ENGLISH", 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnLanguageEn = btnEn.GetComponent<Button>();
+
+            // Action Buttons
+            var btnCloseSettings = CreateButton(settingsCard.transform, "BtnCloseSettings", spriteBtnGreen, new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.5f), new Vector2(440f, 95f));
+            CreateTMP(btnCloseSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 36, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCloseSettings = btnCloseSettings.GetComponent<Button>();
+
+            var btnLeaveMatchSettings = CreateButton(settingsCard.transform, "BtnLeaveMatchSettings", spriteBtnRed, new Vector2(0.5f, 0.055f), new Vector2(0.5f, 0.055f), new Vector2(0.5f, 0.5f), new Vector2(440f, 80f));
+            CreateTMP(btnLeaveMatchSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnLeaveMatch, 30, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnLeaveMatchFromSettings = btnLeaveMatchSettings.GetComponent<Button>();
+
+            if (dialogSettingsObj != null) dialogSettingsObj.transform.SetAsLastSibling();
+
+            // ==================== L. TUTORIAL DIALOG (Lô 6) ====================
+            var dialogTutObj = CreatePanel(rootTr, "TutorialDialog", Vector2.zero, Vector2.one, new Vector2(0.50f, 0.50f), Vector2.zero, null, new Color(0.02f, 0.03f, 0.05f, 0.88f));
+            dialogTutObj.SetActive(false);
+            uiCtrl.dialogTutorial = dialogTutObj;
+
+            var tutCard = CreatePanel(dialogTutObj.transform, "TutorialCard", new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(940f, 720f), spritePanelDarkGold, Color.white);
+
+            var tutBanner = CreateImage(tutCard.transform, "Banner", spriteBannerWood, new Vector2(0.50f, 0.90f), new Vector2(0.50f, 0.90f), new Vector2(0.50f, 0.50f), new Vector2(760f, 120f));
+            var tutTitle = CreateTMP(tutBanner.transform, "Title", fontAsset, UiStrings.TutorialTitle, 36, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            tutTitle.fontStyle = FontStyles.Bold;
+            uiCtrl.txtTutorialTitle = tutTitle;
+
+            var tutStepHeader = CreateTMP(tutCard.transform, "StepHeader", fontAsset, UiStrings.TutorialStep1Title, 34, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.50f, 0.72f), new Vector2(860f, 50f));
+            tutStepHeader.fontStyle = FontStyles.Bold;
+            uiCtrl.txtTutorialStepHeader = tutStepHeader;
+
+            var tutStepBody = CreateTMP(tutCard.transform, "StepBody", fontAsset, UiStrings.TutorialStep1Body, 28, colorCream, TextAlignmentOptions.Center, new Vector2(0.50f, 0.50f), new Vector2(820f, 180f), wrap: true);
+            uiCtrl.txtTutorialStepBody = tutStepBody;
+
+            // Step Indicator Dots
+            var dot1 = CreatePanel(tutCard.transform, "Dot1", new Vector2(0.44f, 0.32f), new Vector2(0.44f, 0.32f), new Vector2(0.50f, 0.50f), new Vector2(26f, 26f), null, new Color(1f, 0.85f, 0.20f, 1f));
+            var dot2 = CreatePanel(tutCard.transform, "Dot2", new Vector2(0.50f, 0.32f), new Vector2(0.50f, 0.32f), new Vector2(0.50f, 0.50f), new Vector2(26f, 26f), null, new Color(1f, 1f, 1f, 0.35f));
+            var dot3 = CreatePanel(tutCard.transform, "Dot3", new Vector2(0.56f, 0.32f), new Vector2(0.56f, 0.32f), new Vector2(0.50f, 0.50f), new Vector2(26f, 26f), null, new Color(1f, 1f, 1f, 0.35f));
+            uiCtrl.tutorialStepIndicators = new GameObject[] { dot1, dot2, dot3 };
+
+            // Buttons: Skip & Next
+            var btnTutSkip = CreateButton(tutCard.transform, "BtnSkip", spriteBtnRed, new Vector2(0.28f, 0.14f), new Vector2(0.28f, 0.14f), new Vector2(0.50f, 0.50f), new Vector2(340f, 85f));
+            CreateTMP(btnTutSkip.transform, "Label", fontAsset, UiStrings.BtnTutorialSkip, 30, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnTutorialSkip = btnTutSkip.GetComponent<Button>();
+
+            var btnTutNext = CreateButton(tutCard.transform, "BtnNext", spriteBtnYellow, new Vector2(0.72f, 0.14f), new Vector2(0.72f, 0.14f), new Vector2(0.50f, 0.50f), new Vector2(340f, 85f));
+            var tutNextTxt = CreateTMP(btnTutNext.transform, "Label", fontAsset, UiStrings.BtnTutorialNext, 30, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
+            tutNextTxt.fontStyle = FontStyles.Bold;
+            uiCtrl.btnTutorialNext = btnTutNext.GetComponent<Button>();
+            uiCtrl.txtTutorialNextLabel = tutNextTxt;
+
+            if (dialogTutObj != null) dialogTutObj.transform.SetAsLastSibling();
+
             // ==================== I. BUILD FINGERPRINT WATERMARK ====================
             var fpTxt = CreateTMP(rootTr, "BuildFingerprintWatermark", fontAsset,
                 ProductionUIController.ResolveBuildFingerprint(),
@@ -758,6 +869,69 @@ namespace HitMe.Editor
             return go;
         }
 
+        private static Slider CreateSlider(Transform parent, string name, Sprite trackSprite, Sprite knobSprite, Vector2 anchor, Vector2 size, float defaultValue)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Slider));
+            go.transform.SetParent(parent, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = anchor;
+            rt.anchorMax = anchor;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = size;
+            rt.anchoredPosition = Vector2.zero;
+
+            var slider = go.GetComponent<Slider>();
+            slider.minValue = 0f;
+            slider.maxValue = 1f;
+            slider.value = defaultValue;
+
+            // Background track
+            var bgGo = CreatePanel(go.transform, "Background", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, trackSprite, new Color(0.2f, 0.25f, 0.35f, 0.9f));
+
+            // Fill Area
+            var fillArea = new GameObject("Fill Area", typeof(RectTransform));
+            fillArea.transform.SetParent(go.transform, false);
+            var fillAreaRt = fillArea.GetComponent<RectTransform>();
+            FillRect(fillAreaRt, new Vector2(10f, 0f), new Vector2(-10f, 0f));
+
+            var fill = CreatePanel(fillArea.transform, "Fill", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, trackSprite, new Color(0.97f, 0.73f, 0.13f, 1f));
+            slider.fillRect = fill.GetComponent<RectTransform>();
+
+            // Handle Slide Area
+            var handleArea = new GameObject("Handle Slide Area", typeof(RectTransform));
+            handleArea.transform.SetParent(go.transform, false);
+            var handleAreaRt = handleArea.GetComponent<RectTransform>();
+            FillRect(handleAreaRt, new Vector2(15f, 0f), new Vector2(-15f, 0f));
+
+            var handle = CreatePanel(handleArea.transform, "Handle", new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(40f, 40f), knobSprite, Color.white);
+            slider.handleRect = handle.GetComponent<RectTransform>();
+            slider.targetGraphic = handle.GetComponent<Image>();
+
+            return slider;
+        }
+
+        private static Toggle CreateToggle(Transform parent, string name, Sprite onSprite, Sprite offSprite, Vector2 anchor, Vector2 size, bool defaultValue)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Toggle));
+            go.transform.SetParent(parent, false);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchorMin = anchor;
+            rt.anchorMax = anchor;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = size;
+            rt.anchoredPosition = Vector2.zero;
+
+            var toggle = go.GetComponent<Toggle>();
+            toggle.isOn = defaultValue;
+
+            var bg = CreatePanel(go.transform, "Background", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, offSprite ?? onSprite, Color.white);
+            var checkmark = CreatePanel(bg.transform, "Checkmark", new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f), new Vector2(0.5f, 0.5f), Vector2.zero, onSprite, new Color(0.1f, 0.9f, 0.3f, 1f));
+            toggle.graphic = checkmark.GetComponent<Image>();
+            toggle.targetGraphic = bg.GetComponent<Image>();
+
+            return toggle;
+        }
+
         private static TextMeshProUGUI CreateTMP(Transform parent, string name, TMP_FontAsset font, string text, int fontSize, Color color, TextAlignmentOptions align, Vector2? anchor = null, Vector2? size = null, bool wrap = false, Vector2? pivot = null)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -812,6 +986,24 @@ namespace HitMe.Editor
             audio.sfxLose = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_lose.wav");
             audio.bgmMenu = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_menu_loop.wav");
             audio.bgmMatch = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_match_loop.wav");
+        }
+
+        private static void AssignAudioServiceClips(AudioService audio)
+        {
+            audio.sfxClick = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_ui_click.wav");
+            audio.sfxPlace = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_tap_place.wav");
+            audio.sfxReady = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_ready.wav");
+            audio.sfxReveal = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_reveal.wav");
+            audio.sfxThrow = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_throw.wav");
+            audio.sfxHit = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_hit_bop.wav");
+            audio.sfxDamage = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_heart_break.wav");
+            audio.sfxCountdownTick = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_countdown_tick.wav");
+            audio.sfxCountdownLast = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_countdown_last.wav");
+            audio.sfxWin = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_win.wav");
+            audio.sfxLose = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/sfx_lose.wav");
+            audio.bgmMenu = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_menu_loop.wav");
+            audio.bgmMatch = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/bgm_match_loop.wav");
+            audio.sfxFlightMissing = null;
         }
 
         private static void PopulateConfigVisualAssets(GameConfigAsset configAsset, TMP_FontAsset fontAsset)

@@ -188,6 +188,33 @@ namespace HitMe.UI
         public TextMeshProUGUI txtRoundResultTitle;
         public TextMeshProUGUI txtRoundResultDetail;
 
+        [Header("Settings Dialog (Lô 5)")]
+        public GameObject dialogSettings;
+        public TextMeshProUGUI txtSettingsTitle;
+        public Slider sliderMusicVolume;
+        public Slider sliderSfxVolume;
+        public Toggle toggleMusic;
+        public Toggle toggleSfx;
+        public Toggle toggleReducedMotion;
+        public Toggle toggleShowFps;
+        public Button btnLanguageVi;
+        public Button btnLanguageEn;
+        public Button btnCloseSettings;
+        public Button btnLeaveMatchFromSettings;
+        public Button btnHomeSettings;
+        public Button btnInGameSettings;
+
+        [Header("Tutorial Dialog (Lô 6)")]
+        public GameObject dialogTutorial;
+        public TextMeshProUGUI txtTutorialTitle;
+        public TextMeshProUGUI txtTutorialStepHeader;
+        public TextMeshProUGUI txtTutorialStepBody;
+        public Button btnTutorialSkip;
+        public Button btnTutorialNext;
+        public TextMeshProUGUI txtTutorialNextLabel;
+        public GameObject[] tutorialStepIndicators;
+        private int _currentTutorialStep = 0;
+
         public ProductionScreen CurrentScreen { get; private set; } = ProductionScreen.Home;
 
         private Coroutine _toastCoroutine;
@@ -843,6 +870,109 @@ namespace HitMe.UI
                 btnBackToHome.onClick.AddListener(OnBackToHomeClicked);
             }
 
+            // Lô 5: Wire Settings dialog listeners
+            if (btnHomeSettings != null)
+            {
+                btnHomeSettings.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    ShowSettingsDialog();
+                });
+            }
+
+            if (btnInGameSettings != null)
+            {
+                btnInGameSettings.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    ShowSettingsDialog();
+                });
+            }
+
+            if (btnCloseSettings != null)
+            {
+                btnCloseSettings.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    HideSettingsDialog();
+                });
+            }
+
+            if (btnLanguageVi != null)
+            {
+                btnLanguageVi.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    SetLanguageFromSettings(AppLanguage.Vietnamese);
+                });
+            }
+
+            if (btnLanguageEn != null)
+            {
+                btnLanguageEn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    SetLanguageFromSettings(AppLanguage.English);
+                });
+            }
+
+            if (sliderMusicVolume != null)
+            {
+                sliderMusicVolume.onValueChanged.AddListener(v =>
+                {
+                    if (Audio.AudioService.Instance != null) Audio.AudioService.Instance.MusicVolume = v;
+                    if (AudioManager.Instance != null) AudioManager.Instance.MusicVolume = v;
+                });
+            }
+
+            if (sliderSfxVolume != null)
+            {
+                sliderSfxVolume.onValueChanged.AddListener(v =>
+                {
+                    if (Audio.AudioService.Instance != null) Audio.AudioService.Instance.SfxVolume = v;
+                    if (AudioManager.Instance != null) AudioManager.Instance.SfxVolume = v;
+                });
+            }
+
+            if (toggleReducedMotion != null)
+            {
+                toggleReducedMotion.onValueChanged.AddListener(isOn =>
+                {
+                    if (juiceFeedback != null) juiceFeedback.ReducedMotion = isOn;
+                });
+            }
+
+            if (btnLeaveMatchFromSettings != null)
+            {
+                btnLeaveMatchFromSettings.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    HideSettingsDialog();
+                    ShowLeaveConfirmationDialog("XÁC NHẬN RỜI TRẬN", "Bạn có chắc chắn muốn rời trận không?", () =>
+                    {
+                        OnBackToHomeClicked();
+                    });
+                });
+            }
+
+            if (btnTutorialSkip != null)
+            {
+                btnTutorialSkip.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    SkipTutorial();
+                });
+            }
+
+            if (btnTutorialNext != null)
+            {
+                btnTutorialNext.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    NextTutorialStep();
+                });
+            }
+
             // Lô 4: Wire juice feedback — register all buttons for press-scale
             if (juiceFeedback != null)
             {
@@ -931,6 +1061,156 @@ namespace HitMe.UI
             var action = _pendingLeaveAction;
             HideLeaveConfirmationDialog();
             action?.Invoke();
+        }
+
+        // ──────────────────────────────────────────────────
+        // Lô 5: Settings Dialog (Overlay - Does not pause match)
+        // ──────────────────────────────────────────────────
+
+        public void ShowSettingsDialog()
+        {
+            if (dialogSettings != null)
+            {
+                dialogSettings.transform.SetAsLastSibling();
+                dialogSettings.SetActive(true);
+            }
+            RefreshSettingsUI();
+        }
+
+        public void HideSettingsDialog()
+        {
+            if (dialogSettings != null)
+            {
+                dialogSettings.SetActive(false);
+            }
+        }
+
+        public void RefreshSettingsUI()
+        {
+            if (txtSettingsTitle != null) txtSettingsTitle.text = UiStrings.SettingsTitle;
+
+            var audioSvc = Audio.AudioService.Instance;
+            if (audioSvc != null)
+            {
+                if (sliderMusicVolume != null) sliderMusicVolume.value = audioSvc.MusicVolume;
+                if (sliderSfxVolume != null) sliderSfxVolume.value = audioSvc.SfxVolume;
+                if (toggleMusic != null) toggleMusic.isOn = !audioSvc.MusicMuted;
+                if (toggleSfx != null) toggleSfx.isOn = !audioSvc.SfxMuted;
+            }
+
+            if (toggleReducedMotion != null && juiceFeedback != null)
+            {
+                toggleReducedMotion.isOn = juiceFeedback.ReducedMotion;
+            }
+        }
+
+        public void SetLanguageFromSettings(AppLanguage lang)
+        {
+            UiStrings.SetLanguage(lang);
+            RefreshSettingsUI();
+            RefreshAllScreenTexts();
+        }
+
+        public void RefreshAllScreenTexts()
+        {
+            // Update button labels and headers across screens
+            if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = _isLocalPlayerReady ? UiStrings.BtnLocked : UiStrings.BtnReady;
+            if (txtPhaseBanner != null && matchController != null && matchController.State != null)
+            {
+                ApplyPhaseState(matchController.State.Phase);
+            }
+            if (dialogTutorial != null && dialogTutorial.activeSelf)
+            {
+                RefreshTutorialUI();
+            }
+        }
+
+        // ──────────────────────────────────────────────────
+        // Tutorial 3-Step Gesture System (Lô 6)
+        // ──────────────────────────────────────────────────
+        public int CurrentTutorialStep => _currentTutorialStep;
+
+        public void ShowTutorial(int step = 0)
+        {
+            _currentTutorialStep = Mathf.Clamp(step, 0, 2);
+            if (dialogTutorial != null)
+            {
+                dialogTutorial.transform.SetAsLastSibling();
+                dialogTutorial.SetActive(true);
+            }
+            RefreshTutorialUI();
+        }
+
+        public void NextTutorialStep()
+        {
+            if (_currentTutorialStep < 2)
+            {
+                _currentTutorialStep++;
+                RefreshTutorialUI();
+            }
+            else
+            {
+                CompleteTutorial();
+            }
+        }
+
+        public void SkipTutorial()
+        {
+            CompleteTutorial();
+        }
+
+        public void CompleteTutorial()
+        {
+            try
+            {
+                PlayerPrefs.SetString(UiStrings.PrefKeyTutorialCompleted, "1");
+                PlayerPrefs.Save();
+            }
+            catch { /* WebGL sandbox */ }
+
+            if (dialogTutorial != null)
+            {
+                dialogTutorial.SetActive(false);
+            }
+        }
+
+        public void RefreshTutorialUI()
+        {
+            if (txtTutorialTitle != null) txtTutorialTitle.text = UiStrings.Get(UiStrings.TutorialTitle);
+            if (txtTutorialStepHeader != null)
+            {
+                string headerKey = _currentTutorialStep == 0 ? UiStrings.TutorialStep1Title
+                    : (_currentTutorialStep == 1 ? UiStrings.TutorialStep2Title : UiStrings.TutorialStep3Title);
+                txtTutorialStepHeader.text = UiStrings.Get(headerKey);
+            }
+            if (txtTutorialStepBody != null)
+            {
+                string bodyKey = _currentTutorialStep == 0 ? UiStrings.TutorialStep1Body
+                    : (_currentTutorialStep == 1 ? UiStrings.TutorialStep2Body : UiStrings.TutorialStep3Body);
+                txtTutorialStepBody.text = UiStrings.Get(bodyKey);
+            }
+            if (txtTutorialNextLabel != null)
+            {
+                txtTutorialNextLabel.text = _currentTutorialStep == 2
+                    ? UiStrings.Get(UiStrings.BtnTutorialDone)
+                    : UiStrings.Get(UiStrings.BtnTutorialNext);
+            }
+            if (tutorialStepIndicators != null)
+            {
+                for (int i = 0; i < tutorialStepIndicators.Length; i++)
+                {
+                    if (tutorialStepIndicators[i] != null)
+                    {
+                        var img = tutorialStepIndicators[i].GetComponent<Image>();
+                        if (img != null)
+                        {
+                            img.color = i == _currentTutorialStep
+                                ? new Color(1f, 0.85f, 0.20f, 1f)
+                                : new Color(1f, 1f, 1f, 0.35f);
+                        }
+                    }
+                }
+            }
         }
 
         public void ShowToast(string message)
@@ -1650,6 +1930,15 @@ namespace HitMe.UI
             {
                 matchController.StartMatch();
             }
+
+            try
+            {
+                if (PlayerPrefs.GetString(UiStrings.PrefKeyTutorialCompleted, "0") != "1")
+                {
+                    ShowTutorial(0);
+                }
+            }
+            catch { /* WebGL sandbox */ }
         }
 
         private void HandleRoundStarted(int round, int maxRounds)

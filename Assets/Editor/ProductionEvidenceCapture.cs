@@ -693,5 +693,191 @@ namespace HitMe.Editor
             }
             slippers.Clear();
         }
+
+        [MenuItem("Tools/HIT ME/Capture Round 34 Evidence (Lots 3 & 4 - 1170x2532)")]
+        public static void CaptureRound34Lots3And4Evidence()
+        {
+            const string r34Dir = "Evidence/round34";
+            Directory.CreateDirectory(r34Dir);
+
+            string commitShort = WebBuildPipeline.GetGitShortCommit();
+            string dateTag = DateTime.Now.ToString("yyyyMMdd");
+            string buildId = $"WebGL_{dateTag}_{commitShort}";
+
+            const int shotW = 1170;
+            const int shotH = 2532;
+
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var canvasObj = GameObject.Find("ProductionCanvas");
+            if (canvasObj == null)
+            {
+                ProductionUISetup.BuildProductionUI();
+                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+                canvasObj = GameObject.Find("ProductionCanvas");
+            }
+
+            var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset != null)
+            {
+                PlayerView.ConfigureSharedResources(configAsset);
+                WeaponFlightView.ConfigureSharedResources(configAsset);
+            }
+
+            var cam = Camera.main;
+            if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 7.8f;
+            cam.transform.position = new Vector3(0f, 0.80f, -10f);
+
+            var canvas = canvasObj.GetComponent<Canvas>();
+            var ui = canvasObj.GetComponent<ProductionUIController>();
+            var scaler = canvasObj.GetComponent<CanvasScaler>();
+            var fitter = canvasObj.GetComponentInChildren<SafeAreaFitter>(true);
+
+            ui.ResolveHudElementContainers();
+            ui.EnsureAndRefreshBuildFingerprint();
+
+            var originalRenderMode = canvas.renderMode;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = cam;
+            canvas.planeDistance = 1.0f;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(shotW, shotH);
+            scaler.matchWidthOrHeight = 1.0f;
+
+            if (fitter != null)
+            {
+                fitter.ApplyForScreen(shotW, shotH, new Rect(0f, 0f, shotW, shotH), false);
+            }
+
+            int[] matchRosterIndices = { 0, 4, 3, 5, 1, 6 };
+            var players = CreateMockPlayers(matchRosterIndices);
+            var views = CreatePlayerViews(players, matchRosterIndices);
+
+            try
+            {
+                // ==================== LÔ 3.1: ROUND RESULT OVERLAY (N=2) ====================
+                ui.ShowScreen(ProductionScreen.Gameplay);
+                ui.ConfigureHpCardsLayout(2);
+                var p2 = players.GetRange(0, 2);
+                UpdateHudHp(ui, p2, isPlacing: false);
+                SetPlayersVisible(views, false);
+                foreach (var kvp in views)
+                {
+                    if (p2.Exists(x => x.Id == kvp.Key))
+                    {
+                        kvp.Value.gameObject.SetActive(true);
+                        var p = p2.Find(x => x.Id == kvp.Key);
+                        kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                    }
+                }
+                ui.ApplyPhaseState(Phase.RoundEnd);
+                if (ui.roundResultOverlay != null)
+                {
+                    ui.roundResultOverlay.SetActive(true);
+                    if (ui.txtRoundResultTitle != null) ui.txtRoundResultTitle.text = "KẾT QUẢ VÒNG 1/5";
+                    if (ui.txtRoundResultDetail != null) ui.txtRoundResultDetail.text = "Số đòn trúng: 2 • Còn sống: 2/2";
+                }
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo3_01_round_result_N2_1170x2532.png"), commitShort, buildId, shotW, shotH);
+
+                // ==================== LÔ 3.2: ROUND RESULT OVERLAY (N=4) ====================
+                ui.ConfigureHpCardsLayout(4);
+                UpdateHudHp(ui, players, isPlacing: false);
+                foreach (var kvp in views)
+                {
+                    kvp.Value.gameObject.SetActive(true);
+                    var p = players.Find(x => x.Id == kvp.Key);
+                    kvp.Value.Present(p, true, false, false, 1.2f, 1.5f, 0f);
+                }
+                if (ui.roundResultOverlay != null)
+                {
+                    ui.roundResultOverlay.SetActive(true);
+                    if (ui.txtRoundResultTitle != null) ui.txtRoundResultTitle.text = "KẾT QUẢ VÒNG 3/5";
+                    if (ui.txtRoundResultDetail != null) ui.txtRoundResultDetail.text = "Số đòn trúng: 4 • Còn sống: 3/4";
+                }
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo3_02_round_result_N4_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                if (ui.roundResultOverlay != null) ui.roundResultOverlay.SetActive(false);
+
+                // ==================== LÔ 3.3: MATCH END LEADERBOARD (4 PLAYERS) ====================
+                SetPlayersVisible(views, false);
+                var ranked = new List<PlayerState>(players);
+                ranked.Sort(MatchRanking.DisplayOrderComparison);
+                var winners = new List<string>(MatchRanking.Winners(players));
+                ui.ApplyPhaseState(Phase.MatchEnd);
+                ui.PopulateResultBoard(ranked, winners);
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo3_03_matchend_rankings_1170x2532.png"), commitShort, buildId, shotW, shotH);
+
+                // ==================== LÔ 3.4: LEAVE CONFIRMATION DIALOG ====================
+                ui.ShowScreen(ProductionScreen.Lobby);
+                ui.UpdateLobbyRoster(3, "Phòng Chiến Hữu", "HM6868");
+                ui.ShowLeaveConfirmationDialog("XÁC NHẬN RỜI PHÒNG", "Bạn có chắc chắn muốn rời phòng không?\nMọi kết quả của trận đấu sẽ không được lưu.", null);
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo3_04_leave_dialog_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                ui.HideLeaveConfirmationDialog();
+
+                // ==================== LÔ 3.5: ERROR TOAST ====================
+                ui.ShowScreen(ProductionScreen.JoinRoom);
+                ui.ShowErrorToast("Không tìm thấy mã phòng");
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo3_05_error_toast_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                if (ui.toastObject != null) ui.toastObject.SetActive(false);
+
+                // ==================== LÔ 4.1: BUTTON PRESSED STATE (0.94x) ====================
+                ui.ShowScreen(ProductionScreen.Gameplay);
+                ui.ApplyPhaseState(Phase.Placing);
+                if (ui.btnInGameReady != null)
+                {
+                    ui.btnInGameReady.transform.localScale = new Vector3(0.94f, 0.94f, 1f);
+                }
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo4_01_button_pressed_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                if (ui.btnInGameReady != null) ui.btnInGameReady.transform.localScale = Vector3.one;
+
+                // ==================== LÔ 4.2: TIMER COUNTDOWN PULSE (2s CUỐI) ====================
+                if (ui.txtTimer != null)
+                {
+                    ui.txtTimer.text = "1.8s";
+                    ui.txtTimer.color = new Color(1f, 0.3f, 0.3f);
+                }
+                if (ui.timerPulseRing != null)
+                {
+                    ui.timerPulseRing.gameObject.SetActive(true);
+                    ui.timerPulseRing.transform.localScale = new Vector3(1.18f, 1.18f, 1f);
+                }
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo4_02_timer_pulse_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                if (ui.timerPulseRing != null)
+                {
+                    ui.timerPulseRing.transform.localScale = Vector3.one;
+                    ui.timerPulseRing.gameObject.SetActive(false);
+                }
+
+                // ==================== LÔ 4.3: HP CARD SHAKE (MẤT MÁU) ====================
+                if (ui.hpCards != null && ui.hpCards.Count > 0 && ui.hpCards[0].root != null)
+                {
+                    ui.hpCards[0].root.transform.localPosition += new Vector3(10f, 0f, 0f);
+                }
+                ui.EnsureAndRefreshBuildFingerprint();
+                RenderAndSave(cam, Path.Combine(r34Dir, "lo4_03_damage_shake_1170x2532.png"), commitShort, buildId, shotW, shotH);
+                if (ui.hpCards != null && ui.hpCards.Count > 0 && ui.hpCards[0].root != null)
+                {
+                    ui.hpCards[0].root.transform.localPosition -= new Vector3(10f, 0f, 0f);
+                }
+
+                Debug.Log("[EvidenceCapture] Successfully captured Round 34 Lots 3 & 4 evidence to " + r34Dir);
+            }
+            finally
+            {
+                foreach (var kvp in views)
+                {
+                    if (kvp.Value != null) UnityEngine.Object.DestroyImmediate(kvp.Value.gameObject);
+                }
+                canvas.renderMode = originalRenderMode;
+                EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            }
+        }
     }
 }

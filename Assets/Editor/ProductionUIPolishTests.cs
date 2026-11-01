@@ -663,5 +663,158 @@ namespace HitMe.Editor
             // Reset
             ui.juiceFeedback.ReducedMotion = false;
         }
+
+        // ==================== Lô 5 Tests: Audio & Settings ====================
+
+        [Test]
+        public void RuleL5_AudioService_PoolAndClips_Configured()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var audioSvc = Object.FindFirstObjectByType<HitMe.Audio.AudioService>();
+            Assert.That(audioSvc, Is.Not.Null, "AudioService must exist in scene");
+            Assert.That(audioSvc.sfxPoolSize, Is.GreaterThanOrEqualTo(10), "SFX pool size should be >= 10");
+            Assert.That(audioSvc.sfxClick, Is.Not.Null, "Click SFX must be assigned");
+            Assert.That(audioSvc.sfxReady, Is.Not.Null, "Ready SFX must be assigned");
+            Assert.That(audioSvc.sfxThrow, Is.Not.Null, "Throw SFX must be assigned");
+            Assert.That(audioSvc.sfxHit, Is.Not.Null, "Hit SFX must be assigned");
+            Assert.That(audioSvc.sfxFlightMissing, Is.Null, "Missing flight SFX must remain null placeholder per spec");
+        }
+
+        [Test]
+        public void RuleL5_SettingsDialog_UIAndWiring()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.dialogSettings, Is.Not.Null, "Settings dialog must be assigned");
+            Assert.That(ui.sliderMusicVolume, Is.Not.Null, "Music volume slider must be assigned");
+            Assert.That(ui.sliderSfxVolume, Is.Not.Null, "SFX volume slider must be assigned");
+            Assert.That(ui.btnCloseSettings, Is.Not.Null, "Close button must be assigned");
+            Assert.That(ui.btnLanguageVi, Is.Not.Null, "VI button must be assigned");
+            Assert.That(ui.btnLanguageEn, Is.Not.Null, "EN button must be assigned");
+
+            // Test Open and Close
+            ui.ShowSettingsDialog();
+            Assert.That(ui.dialogSettings.activeSelf, Is.True);
+            ui.HideSettingsDialog();
+            Assert.That(ui.dialogSettings.activeSelf, Is.False);
+        }
+
+        [Test]
+        public void RuleL5_Localization_DualLanguage_VI_EN_NoMissingKeys()
+        {
+            // Test Vietnamese strings
+            UiStrings.SetLanguage(AppLanguage.Vietnamese);
+            Assert.That(UiStrings.IsVietnamese, Is.True);
+            Assert.That(UiStrings.Get(UiStrings.BtnReady), Is.EqualTo("SẴN SÀNG"));
+            Assert.That(UiStrings.Get(UiStrings.SettingsTitle), Is.EqualTo("CÀI ĐẶT"));
+            var viNames = UiStrings.GetLocalizedCharacterNames();
+            Assert.That(viNames.Length, Is.EqualTo(7));
+            for (int i = 0; i < viNames.Length; i++)
+            {
+                Assert.That(string.IsNullOrEmpty(viNames[i]), Is.False, $"VI character name {i} must not be empty");
+            }
+
+            // Test English strings
+            UiStrings.SetLanguage(AppLanguage.English);
+            Assert.That(UiStrings.IsVietnamese, Is.False);
+            Assert.That(UiStrings.Get(UiStrings.BtnReady), Is.EqualTo("READY"));
+            Assert.That(UiStrings.Get(UiStrings.SettingsTitle), Is.EqualTo("SETTINGS"));
+            var enNames = UiStrings.GetLocalizedCharacterNames();
+            Assert.That(enNames.Length, Is.EqualTo(7));
+            for (int i = 0; i < enNames.Length; i++)
+            {
+                Assert.That(string.IsNullOrEmpty(enNames[i]), Is.False, $"EN character name {i} must not be empty");
+            }
+
+            // Reset to default Vietnamese
+            UiStrings.SetLanguage(AppLanguage.Vietnamese);
+        }
+
+        [Test]
+        public void RuleL6_TutorialDialog_UIAndWiring()
+        {
+            var go = new GameObject("TestUI_L6");
+            var ui = go.AddComponent<ProductionUIController>();
+
+            var tutObj = new GameObject("TutObj");
+            ui.dialogTutorial = tutObj;
+            tutObj.SetActive(false);
+
+            var titleObj = new GameObject("Title");
+            ui.txtTutorialTitle = titleObj.AddComponent<TextMeshProUGUI>();
+
+            var stepHeaderObj = new GameObject("StepHeader");
+            ui.txtTutorialStepHeader = stepHeaderObj.AddComponent<TextMeshProUGUI>();
+
+            var stepBodyObj = new GameObject("StepBody");
+            ui.txtTutorialStepBody = stepBodyObj.AddComponent<TextMeshProUGUI>();
+
+            var btnSkipObj = new GameObject("BtnSkip");
+            ui.btnTutorialSkip = btnSkipObj.AddComponent<Button>();
+
+            var btnNextObj = new GameObject("BtnNext");
+            ui.btnTutorialNext = btnNextObj.AddComponent<Button>();
+
+            var nextLabelObj = new GameObject("NextLabel");
+            ui.txtTutorialNextLabel = nextLabelObj.AddComponent<TextMeshProUGUI>();
+
+            var d1 = new GameObject("D1"); d1.AddComponent<Image>();
+            var d2 = new GameObject("D2"); d2.AddComponent<Image>();
+            var d3 = new GameObject("D3"); d3.AddComponent<Image>();
+            ui.tutorialStepIndicators = new GameObject[] { d1, d2, d3 };
+
+            // Step 0: Placing
+            ui.ShowTutorial(0);
+            Assert.That(ui.dialogTutorial.activeSelf, Is.True);
+            Assert.That(ui.CurrentTutorialStep, Is.EqualTo(0));
+            Assert.That(ui.txtTutorialStepHeader.text, Does.Contain("BƯỚC 1/3"));
+
+            // Step 1: Aiming
+            ui.NextTutorialStep();
+            Assert.That(ui.CurrentTutorialStep, Is.EqualTo(1));
+            Assert.That(ui.txtTutorialStepHeader.text, Does.Contain("BƯỚC 2/3"));
+
+            // Step 2: Cancel / Straight throw
+            ui.NextTutorialStep();
+            Assert.That(ui.CurrentTutorialStep, Is.EqualTo(2));
+            Assert.That(ui.txtTutorialStepHeader.text, Does.Contain("BƯỚC 3/3"));
+            Assert.That(ui.txtTutorialNextLabel.text, Is.EqualTo("ĐÃ HIỂU"));
+
+            // Final step next -> completes and closes
+            ui.NextTutorialStep();
+            Assert.That(ui.dialogTutorial.activeSelf, Is.False);
+            Assert.That(PlayerPrefs.GetString(UiStrings.PrefKeyTutorialCompleted, "0"), Is.EqualTo("1"));
+        }
+
+        [Test]
+        public void RuleL6_Tutorial_SkipAndPersistence()
+        {
+            var go = new GameObject("TestUI_L6_Skip");
+            var ui = go.AddComponent<ProductionUIController>();
+
+            var tutObj = new GameObject("TutObj");
+            ui.dialogTutorial = tutObj;
+
+            // Reset pref
+            PlayerPrefs.SetString(UiStrings.PrefKeyTutorialCompleted, "0");
+            ui.ShowTutorial(0);
+            Assert.That(ui.dialogTutorial.activeSelf, Is.True);
+
+            // Skip directly
+            ui.SkipTutorial();
+            Assert.That(ui.dialogTutorial.activeSelf, Is.False);
+            Assert.That(PlayerPrefs.GetString(UiStrings.PrefKeyTutorialCompleted, "0"), Is.EqualTo("1"));
+
+            // Dual language check on tutorial strings
+            UiStrings.SetLanguage(AppLanguage.English);
+            Assert.That(UiStrings.Get(UiStrings.TutorialTitle), Is.EqualTo("GESTURE TUTORIAL (v1.2)"));
+            Assert.That(UiStrings.Get(UiStrings.BtnTutorialSkip), Is.EqualTo("SKIP"));
+            Assert.That(UiStrings.Get(UiStrings.BtnTutorialNext), Is.EqualTo("NEXT"));
+            Assert.That(UiStrings.Get(UiStrings.BtnTutorialDone), Is.EqualTo("GOT IT"));
+
+            // Restore VI
+            UiStrings.SetLanguage(AppLanguage.Vietnamese);
+        }
     }
 }
