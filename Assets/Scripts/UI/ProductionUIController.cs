@@ -920,7 +920,7 @@ namespace HitMe.UI
             ShowToast(message, 2.0f);
         }
 
-        public void ShowErrorToast(string message, float duration = 2.5f)
+        public void ShowErrorToast(string message, float duration = 3.0f)
         {
             ShowToast("⚠️ [LỖI] " + message, duration);
         }

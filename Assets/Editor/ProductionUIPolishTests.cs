@@ -3,6 +3,7 @@ using HitMe.Core;
 using HitMe.Game;
 using HitMe.UI;
 using NUnit.Framework;
+using TMPro;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
