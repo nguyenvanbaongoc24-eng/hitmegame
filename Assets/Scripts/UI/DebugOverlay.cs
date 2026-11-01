@@ -216,24 +216,17 @@ namespace HitMe.UI
             _panelRoot.SetActive(false);
             _visible = false;
 
-            // Read build commit from index.html or Application.version
-            _buildCommit = Application.version;
-#if UNITY_WEBGL && !UNITY_EDITOR
-            try
+            // Read build commit from BuildFingerprint resource or fallback
+            var fpAsset = Resources.Load<TextAsset>("BuildFingerprint");
+            if (fpAsset != null && !string.IsNullOrWhiteSpace(fpAsset.text))
             {
-                // Try to read from a global JS var if set
-                _buildCommit = GetBuildCommitFromJS();
+                _buildCommit = fpAsset.text.Trim();
             }
-            catch { }
-#endif
+            else
+            {
+                _buildCommit = Application.version;
+            }
         }
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        [System.Runtime.InteropServices.DllImport("__Internal")]
-        private static extern string GetBuildCommitFromJS();
-#else
-        private static string GetBuildCommitFromJS() => Application.version;
-#endif
 
         /// <summary>
         /// Build error overlay for unhandled exceptions (friendly Vietnamese)
