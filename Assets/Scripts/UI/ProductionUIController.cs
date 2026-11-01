@@ -400,7 +400,12 @@ namespace HitMe.UI
             int practiceBots = GetUrlInt("practiceBots", -1);
             if (practiceBots < 0) practiceBots = GetUrlInt("bots", -1);
 
-            if (IsUrlAutoPlay())
+            if (Application.absoluteURL != null && (Application.absoluteURL.IndexOf("lab=1", StringComparison.OrdinalIgnoreCase) >= 0 || Application.absoluteURL.IndexOf("screen=lab", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                int labN = GetUrlInt("n", 2);
+                StartLabSimulation(labN);
+            }
+            else if (IsUrlAutoPlay())
             {
                 ShowScreen(ProductionScreen.Gameplay);
             }
@@ -492,6 +497,9 @@ namespace HitMe.UI
                 RefreshBotTrainingDisplay();
                 RefreshAccountDisplay();
             }
+
+            HitMeWebBridge.MarkHomeShown();
+            Debug.Log("[HITME] HOME_SHOWN");
         }
 
         private void Update()
@@ -1123,7 +1131,11 @@ namespace HitMe.UI
 
             if (homePanel != null) homePanel.SetActive(screen == ProductionScreen.Home);
             if (createRoomPanel != null) createRoomPanel.SetActive(screen == ProductionScreen.CreateRoom);
-            if (joinRoomPanel != null) joinRoomPanel.SetActive(screen == ProductionScreen.JoinRoom);
+            if (joinRoomPanel != null)
+            {
+                joinRoomPanel.SetActive(screen == ProductionScreen.JoinRoom);
+                if (screen == ProductionScreen.JoinRoom) EnsureRoomCodeKeypad();
+            }
             if (lobbyPanel != null) lobbyPanel.SetActive(screen == ProductionScreen.Lobby);
             if (botTrainingPanel != null) botTrainingPanel.SetActive(screen == ProductionScreen.BotTraining);
             if (gameplayHudPanel != null) gameplayHudPanel.SetActive(screen == ProductionScreen.Gameplay);
@@ -1489,7 +1501,8 @@ namespace HitMe.UI
             {
                 if (inv.BuyWeapon(weaponId, acc))
                 {
-                    AudioManager.Instance?.PlayClick();
+                    AudioManager.Instance?.PlayPurchase();
+                    AudioManager.Instance?.PlayCoin();
                     RefreshShopUI();
                     RefreshInventoryUI();
                     RefreshAccountDisplay();
@@ -1497,6 +1510,7 @@ namespace HitMe.UI
                 }
                 else
                 {
+                    AudioManager.Instance?.PlayError();
                     ShowToast("Không đủ vàng hoặc đã sở hữu!");
                 }
             }
@@ -1529,6 +1543,7 @@ namespace HitMe.UI
                 }
                 else
                 {
+                    AudioManager.Instance?.PlayError();
                     ShowToast("Không đủ 100 vàng để đổi tên!");
                 }
             }
@@ -1541,6 +1556,7 @@ namespace HitMe.UI
 
         public void ShowErrorToast(string message, float duration = 3.0f)
         {
+            AudioManager.Instance?.PlayError();
             ShowToast("⚠️ [LỖI] " + message, duration);
         }
 
@@ -1664,7 +1680,7 @@ namespace HitMe.UI
                 {
                     if (slot.txtName != null)
                     {
-                        slot.txtName.text = i == 0 ? "Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
+                        slot.txtName.text = i == 0 ? "👑 [CHỦ PHÒNG] Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
                     }
                     if (i == 0)
                     {
@@ -1816,6 +1832,14 @@ namespace HitMe.UI
                 if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
                 if (txtLobbyCountdown != null) txtLobbyCountdown.text = "Đang chờ tất cả người chơi sẵn sàng...";
             }
+        }
+
+        public void StartLabSimulation(int n)
+        {
+            int total = Mathf.Clamp(n, 2, 6);
+            ShowScreen(ProductionScreen.Lobby);
+            UpdateLobbyRoster(total, "Phòng Online Lab", "LAB001");
+            ShowToast($"[Online Lab] 1 người chơi thật + {total - 1} người chơi Loopback", 3.0f);
         }
 
         private IEnumerator LobbyCountdownRoutine()
@@ -2141,6 +2165,340 @@ namespace HitMe.UI
             botTrainingPanel = panelObj;
             RefreshBotTrainingDisplay();
         }
+
+        #region N3: In-Game Room Code Keypad & Reconnect Overlay
+
+        private GameObject _keypadContainer;
+        private string _keypadEnteredCode = "HM4826";
+        private readonly List<TextMeshProUGUI> _keypadCodeSlots = new List<TextMeshProUGUI>();
+
+        private static readonly char[] InGameKeypadChars = new char[]
+        {
+            '2', '3', '4', '5', '6', '7', '8',
+            '9', 'A', 'B', 'C', 'D', 'E', 'F',
+            'G', 'H', 'J', 'K', 'M', 'N', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+            'X', 'Y', 'Z'
+        };
+
+        public void EnsureRoomCodeKeypad()
+        {
+            if (joinRoomPanel == null) return;
+            if (_keypadContainer != null) return;
+
+            var existing = joinRoomPanel.transform.Find("KeypadContainer");
+            if (existing != null)
+            {
+                _keypadContainer = existing.gameObject;
+                return;
+            }
+
+            var containerObj = new GameObject("KeypadContainer", typeof(RectTransform));
+            containerObj.transform.SetParent(joinRoomPanel.transform, false);
+            var rt = containerObj.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.04f, 0.04f);
+            rt.anchorMax = new Vector2(0.96f, 0.45f);
+            rt.sizeDelta = Vector2.zero;
+
+            var bgImg = containerObj.AddComponent<Image>();
+            bgImg.color = new Color(0.08f, 0.12f, 0.18f, 0.90f);
+
+            TMP_FontAsset font = txtLobbyHeader != null ? txtLobbyHeader.font : null;
+
+            var slotsRow = new GameObject("CodeSlotsRow", typeof(RectTransform));
+            slotsRow.transform.SetParent(containerObj.transform, false);
+            var slotsRt = slotsRow.GetComponent<RectTransform>();
+            slotsRt.anchorMin = new Vector2(0.05f, 0.82f);
+            slotsRt.anchorMax = new Vector2(0.95f, 0.98f);
+            slotsRt.sizeDelta = Vector2.zero;
+
+            _keypadCodeSlots.Clear();
+            for (int i = 0; i < 6; i++)
+            {
+                var slotObj = new GameObject($"Slot_{i}", typeof(RectTransform));
+                slotObj.transform.SetParent(slotsRow.transform, false);
+                var slotRt = slotObj.GetComponent<RectTransform>();
+                float slotWidth = 1f / 6f;
+                slotRt.anchorMin = new Vector2(i * slotWidth + 0.02f, 0.05f);
+                slotRt.anchorMax = new Vector2((i + 1) * slotWidth - 0.02f, 0.95f);
+                slotRt.sizeDelta = Vector2.zero;
+
+                var slotBg = slotObj.AddComponent<Image>();
+                slotBg.color = new Color(0.12f, 0.18f, 0.28f, 0.95f);
+
+                var txtObj = new GameObject("Text", typeof(RectTransform));
+                txtObj.transform.SetParent(slotObj.transform, false);
+                var txtRt = txtObj.GetComponent<RectTransform>();
+                txtRt.anchorMin = Vector2.zero;
+                txtRt.anchorMax = Vector2.one;
+                txtRt.sizeDelta = Vector2.zero;
+
+                var txtSlot = txtObj.AddComponent<TextMeshProUGUI>();
+                if (font != null) txtSlot.font = font;
+                txtSlot.fontSize = 22f;
+                txtSlot.fontStyle = FontStyles.Bold;
+                txtSlot.alignment = TextAlignmentOptions.Center;
+                txtSlot.color = new Color(1f, 0.85f, 0.2f);
+                txtSlot.text = i < _keypadEnteredCode.Length ? _keypadEnteredCode[i].ToString() : "_";
+                _keypadCodeSlots.Add(txtSlot);
+            }
+
+            var gridObj = new GameObject("KeypadGrid", typeof(RectTransform));
+            gridObj.transform.SetParent(containerObj.transform, false);
+            var gridRt = gridObj.GetComponent<RectTransform>();
+            gridRt.anchorMin = new Vector2(0.02f, 0.02f);
+            gridRt.anchorMax = new Vector2(0.98f, 0.80f);
+            gridRt.sizeDelta = Vector2.zero;
+
+            int charIdx = 0;
+            for (int r = 0; r < 5; r++)
+            {
+                float rowMinY = (4 - r) * 0.20f + 0.01f;
+                float rowMaxY = (5 - r) * 0.20f - 0.01f;
+
+                int cols = (r < 4) ? 7 : 5;
+                for (int c = 0; c < cols; c++)
+                {
+                    var btnObj = new GameObject($"Key_r{r}_c{c}", typeof(RectTransform));
+                    btnObj.transform.SetParent(gridObj.transform, false);
+                    var btnRt = btnObj.GetComponent<RectTransform>();
+
+                    float colMinX, colMaxX;
+                    string keyLabel;
+                    Action keyAction;
+
+                    if (r < 4)
+                    {
+                        colMinX = c * (1f / 7f) + 0.005f;
+                        colMaxX = (c + 1) * (1f / 7f) - 0.005f;
+                        char ch = charIdx < InGameKeypadChars.Length ? InGameKeypadChars[charIdx++] : '?';
+                        keyLabel = ch.ToString();
+                        keyAction = () => OnKeypadKeyPressed(ch);
+                    }
+                    else if (c < 3)
+                    {
+                        colMinX = c * 0.14f + 0.005f;
+                        colMaxX = (c + 1) * 0.14f - 0.005f;
+                        char ch = charIdx < InGameKeypadChars.Length ? InGameKeypadChars[charIdx++] : '?';
+                        keyLabel = ch.ToString();
+                        keyAction = () => OnKeypadKeyPressed(ch);
+                    }
+                    else if (c == 3)
+                    {
+                        colMinX = 3 * 0.14f + 0.005f;
+                        colMaxX = 3 * 0.14f + 0.28f - 0.005f;
+                        keyLabel = "⌫ XÓA";
+                        keyAction = OnKeypadBackspacePressed;
+                    }
+                    else
+                    {
+                        colMinX = 3 * 0.14f + 0.28f + 0.005f;
+                        colMaxX = 0.995f;
+                        keyLabel = "XÓA HẾT";
+                        keyAction = OnKeypadClearPressed;
+                    }
+
+                    btnRt.anchorMin = new Vector2(colMinX, rowMinY);
+                    btnRt.anchorMax = new Vector2(colMaxX, rowMaxY);
+                    btnRt.sizeDelta = Vector2.zero;
+
+                    var btnImg = btnObj.AddComponent<Image>();
+                    btnImg.color = (r == 4 && c >= 3)
+                        ? new Color(0.40f, 0.15f, 0.15f, 0.95f)
+                        : new Color(0.20f, 0.28f, 0.40f, 0.95f);
+
+                    var btnComp = btnObj.AddComponent<Button>();
+                    btnComp.onClick.AddListener(() => keyAction());
+
+                    var txtObj = new GameObject("Text", typeof(RectTransform));
+                    txtObj.transform.SetParent(btnObj.transform, false);
+                    var txtRt = txtObj.GetComponent<RectTransform>();
+                    txtRt.anchorMin = Vector2.zero;
+                    txtRt.anchorMax = Vector2.one;
+                    txtRt.sizeDelta = Vector2.zero;
+
+                    var txt = txtObj.AddComponent<TextMeshProUGUI>();
+                    if (font != null) txt.font = font;
+                    txt.fontSize = (r == 4 && c >= 3) ? 14f : 18f;
+                    txt.fontStyle = FontStyles.Bold;
+                    txt.alignment = TextAlignmentOptions.Center;
+                    txt.color = Color.white;
+                    txt.text = keyLabel;
+                }
+            }
+            _keypadContainer = containerObj;
+        }
+
+        private void OnKeypadKeyPressed(char ch)
+        {
+            AudioManager.Instance?.PlayClick();
+            if (_keypadEnteredCode.Length < 6)
+            {
+                _keypadEnteredCode += ch;
+                RefreshKeypadDisplay();
+            }
+        }
+
+        private void OnKeypadBackspacePressed()
+        {
+            AudioManager.Instance?.PlayClick();
+            if (_keypadEnteredCode.Length > 0)
+            {
+                _keypadEnteredCode = _keypadEnteredCode.Substring(0, _keypadEnteredCode.Length - 1);
+                RefreshKeypadDisplay();
+            }
+        }
+
+        private void OnKeypadClearPressed()
+        {
+            AudioManager.Instance?.PlayClick();
+            _keypadEnteredCode = "";
+            RefreshKeypadDisplay();
+        }
+
+        private void RefreshKeypadDisplay()
+        {
+            if (inputRoomCode != null)
+            {
+                inputRoomCode.text = _keypadEnteredCode;
+            }
+            for (int i = 0; i < _keypadCodeSlots.Count; i++)
+            {
+                if (_keypadCodeSlots[i] != null)
+                {
+                    _keypadCodeSlots[i].text = i < _keypadEnteredCode.Length ? _keypadEnteredCode[i].ToString() : "_";
+                }
+            }
+            UpdateJoinRoomSearchStatus(_keypadEnteredCode);
+        }
+
+        private GameObject _reconnectOverlay;
+        private TextMeshProUGUI _txtReconnectCountdown;
+        private Coroutine _reconnectCoroutine;
+
+        public void ShowReconnectOverlay(float timeoutSeconds = 30f)
+        {
+            if (_reconnectOverlay == null)
+            {
+                Transform safeArea = transform.Find("SafeAreaRoot") ?? transform;
+                var obj = new GameObject("ReconnectOverlay", typeof(RectTransform));
+                obj.transform.SetParent(safeArea, false);
+                var rt = obj.GetComponent<RectTransform>();
+                rt.anchorMin = Vector2.zero;
+                rt.anchorMax = Vector2.one;
+                rt.sizeDelta = Vector2.zero;
+
+                var bg = obj.AddComponent<Image>();
+                bg.color = new Color(0.04f, 0.06f, 0.10f, 0.94f);
+
+                TMP_FontAsset font = txtLobbyHeader != null ? txtLobbyHeader.font : null;
+
+                var cardObj = new GameObject("Card", typeof(RectTransform));
+                cardObj.transform.SetParent(obj.transform, false);
+                var cardRt = cardObj.GetComponent<RectTransform>();
+                cardRt.anchorMin = new Vector2(0.10f, 0.35f);
+                cardRt.anchorMax = new Vector2(0.90f, 0.65f);
+                cardRt.sizeDelta = Vector2.zero;
+                var cardBg = cardObj.AddComponent<Image>();
+                cardBg.color = new Color(0.12f, 0.16f, 0.24f, 0.98f);
+
+                var titleObj = new GameObject("Title", typeof(RectTransform));
+                titleObj.transform.SetParent(cardObj.transform, false);
+                var titleRt = titleObj.GetComponent<RectTransform>();
+                titleRt.anchorMin = new Vector2(0.05f, 0.65f);
+                titleRt.anchorMax = new Vector2(0.95f, 0.95f);
+                titleRt.sizeDelta = Vector2.zero;
+                var titleTxt = titleObj.AddComponent<TextMeshProUGUI>();
+                if (font != null) titleTxt.font = font;
+                titleTxt.fontSize = 24f;
+                titleTxt.fontStyle = FontStyles.Bold;
+                titleTxt.alignment = TextAlignmentOptions.Center;
+                titleTxt.color = new Color(1f, 0.85f, 0.2f);
+                titleTxt.text = "ĐANG KẾT NỐI LẠI MÁY CHỦ...";
+
+                var countObj = new GameObject("Countdown", typeof(RectTransform));
+                countObj.transform.SetParent(cardObj.transform, false);
+                var countRt = countObj.GetComponent<RectTransform>();
+                countRt.anchorMin = new Vector2(0.05f, 0.35f);
+                countRt.anchorMax = new Vector2(0.95f, 0.65f);
+                countRt.sizeDelta = Vector2.zero;
+                _txtReconnectCountdown = countObj.AddComponent<TextMeshProUGUI>();
+                if (font != null) _txtReconnectCountdown.font = font;
+                _txtReconnectCountdown.fontSize = 20f;
+                _txtReconnectCountdown.alignment = TextAlignmentOptions.Center;
+                _txtReconnectCountdown.color = Color.white;
+                _txtReconnectCountdown.text = "Thời gian còn lại: 30s";
+
+                var btnObj = new GameObject("BtnCancelReconnect", typeof(RectTransform));
+                btnObj.transform.SetParent(cardObj.transform, false);
+                var btnRt = btnObj.GetComponent<RectTransform>();
+                btnRt.anchorMin = new Vector2(0.25f, 0.08f);
+                btnRt.anchorMax = new Vector2(0.75f, 0.30f);
+                btnRt.sizeDelta = Vector2.zero;
+                var btnBg = btnObj.AddComponent<Image>();
+                btnBg.color = new Color(0.50f, 0.20f, 0.20f, 0.95f);
+                var btn = btnObj.AddComponent<Button>();
+                btn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    HideReconnectOverlay();
+                    ShowScreen(ProductionScreen.Home);
+                    ShowToast("Đã hủy kết nối lại và về trang chủ.");
+                });
+
+                var btnTxtObj = new GameObject("Text", typeof(RectTransform));
+                btnTxtObj.transform.SetParent(btnObj.transform, false);
+                var btnTxtRt = btnTxtObj.GetComponent<RectTransform>();
+                btnTxtRt.anchorMin = Vector2.zero;
+                btnTxtRt.anchorMax = Vector2.one;
+                btnTxtRt.sizeDelta = Vector2.zero;
+                var btnTxt = btnTxtObj.AddComponent<TextMeshProUGUI>();
+                if (font != null) btnTxt.font = font;
+                btnTxt.fontSize = 18f;
+                btnTxt.fontStyle = FontStyles.Bold;
+                btnTxt.alignment = TextAlignmentOptions.Center;
+                btnTxt.color = Color.white;
+                btnTxt.text = "VỀ TRANG CHỦ";
+
+                _reconnectOverlay = obj;
+            }
+
+            _reconnectOverlay.SetActive(true);
+            if (_reconnectCoroutine != null) StopCoroutine(_reconnectCoroutine);
+            _reconnectCoroutine = StartCoroutine(ReconnectCountdownRoutine(timeoutSeconds));
+        }
+
+        public void HideReconnectOverlay()
+        {
+            if (_reconnectCoroutine != null)
+            {
+                StopCoroutine(_reconnectCoroutine);
+                _reconnectCoroutine = null;
+            }
+            if (_reconnectOverlay != null)
+            {
+                _reconnectOverlay.SetActive(false);
+            }
+        }
+
+        private IEnumerator ReconnectCountdownRoutine(float totalSeconds)
+        {
+            float remaining = totalSeconds;
+            while (remaining > 0f)
+            {
+                if (_txtReconnectCountdown != null)
+                {
+                    _txtReconnectCountdown.text = $"Thời gian còn lại: {Mathf.CeilToInt(remaining)}s";
+                }
+                yield return new WaitForSeconds(1f);
+                remaining -= 1f;
+            }
+            HideReconnectOverlay();
+            ShowScreen(ProductionScreen.Home);
+            ShowErrorToast("Phiên vào lại đã hết hạn (30s). Đã trở về trang chủ.");
+        }
+
+        #endregion
 
         public void ChangeBotCount(int delta)
         {
@@ -2684,7 +3042,12 @@ namespace HitMe.UI
 
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winnerIds)
         {
-            if (IsUrlAutoPlay())
+            if (Application.absoluteURL != null && (Application.absoluteURL.IndexOf("lab=1", StringComparison.OrdinalIgnoreCase) >= 0 || Application.absoluteURL.IndexOf("screen=lab", StringComparison.OrdinalIgnoreCase) >= 0))
+            {
+                int labN = GetUrlInt("n", 2);
+                StartLabSimulation(labN);
+            }
+            else if (IsUrlAutoPlay())
             {
                 return;
             }

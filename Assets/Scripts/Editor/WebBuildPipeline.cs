@@ -120,11 +120,6 @@ namespace HitMe.Editor
                     html = html.Replace("\"phase1-closed-20261028\"", $"\"{commitShort}\"");
                     File.WriteAllText(indexPath, html);
                 }
-                DateTime buildCompleteUtc = DateTime.UtcNow;
-                foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
-                {
-                    File.SetLastWriteTimeUtc(file, buildCompleteUtc);
-                }
                 Debug.Log($"Build completed with a result of 'Succeeded' in {summary.totalTime.TotalSeconds:F2} seconds ({summary.totalSize} bytes)");
                 Debug.Log($"WebGL Build succeeded: {summary.totalSize} bytes at {buildDir} (commit={commitShort})");
             }
@@ -199,11 +194,6 @@ namespace HitMe.Editor
                     }
                     html = html.Replace("\"phase1-closed-20261028\"", $"\"{commitShort}\"");
                     File.WriteAllText(indexPath, html);
-                }
-                DateTime buildCompleteUtc = DateTime.UtcNow;
-                foreach (string file in Directory.GetFiles(buildDir, "*", SearchOption.AllDirectories))
-                {
-                    File.SetLastWriteTimeUtc(file, buildCompleteUtc);
                 }
                 Debug.Log($"Release WebGL Build succeeded: {summary.totalSize} bytes at {buildDir} (commit={commitShort})");
             }

@@ -125,7 +125,9 @@ namespace HitMe.Game
             {
                 _shadow.transform.position = new Vector3(groundPos.x, groundPos.y - 0.18f, groundPos.z);
                 float shadowScale = (0.50f - arcHeight * 0.25f) * VisualWeaponScale;
-                float shadowYFactor = Ui.UiTheme.Instance != null ? Ui.UiTheme.Instance.weaponShadowVerticalScaleFactor : Ui.UiTheme.DefaultWeaponShadowVerticalScaleFactor;
+                // UiTheme is in Assembly-CSharp; HitMe.Game cannot reference it.
+                // Default constants inlined: weaponShadowVerticalScaleFactor = 0.54f
+                float shadowYFactor = 0.54f;
                 _shadow.transform.localScale = new Vector3(shadowScale, shadowScale * shadowYFactor, 1f);
             }
 
@@ -134,6 +136,10 @@ namespace HitMe.Game
                 if (SpawnHitEffect && PooledHitFx != null)
                 {
                     PooledHitFx.PlayAt(EndPoint, _hitFxFrames);
+                }
+                else
+                {
+                    Audio.AudioService.Instance?.PlayWallThud();
                 }
                 if (_shadow != null)
                 {

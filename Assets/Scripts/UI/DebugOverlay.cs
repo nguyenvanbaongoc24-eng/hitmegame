@@ -140,7 +140,7 @@ namespace HitMe.UI
             _infoText.fontSize = 18;
             _infoText.color = new Color(0.85f, 1f, 0.85f, 1f);
             _infoText.alignment = TextAlignmentOptions.TopLeft;
-            _infoText.enableWordWrapping = true;
+            _infoText.textWrappingMode = TextWrappingModes.Normal;
             _infoText.overflowMode = TextOverflowModes.Truncate;
             var infoRect = _infoText.GetComponent<RectTransform>();
             infoRect.anchorMin = new Vector2(0.02f, 0.56f);
@@ -155,7 +155,7 @@ namespace HitMe.UI
             _logText.fontSize = 14;
             _logText.color = new Color(0.80f, 0.80f, 0.80f, 1f);
             _logText.alignment = TextAlignmentOptions.BottomLeft;
-            _logText.enableWordWrapping = true;
+            _logText.textWrappingMode = TextWrappingModes.Normal;
             _logText.overflowMode = TextOverflowModes.Truncate;
             var logRect = _logText.GetComponent<RectTransform>();
             logRect.anchorMin = new Vector2(0.02f, 0.08f);
@@ -271,7 +271,7 @@ namespace HitMe.UI
             _errorText.fontSize = 22;
             _errorText.color = Color.white;
             _errorText.alignment = TextAlignmentOptions.Center;
-            _errorText.enableWordWrapping = true;
+            _errorText.textWrappingMode = TextWrappingModes.Normal;
             var textRect = _errorText.GetComponent<RectTransform>();
             textRect.anchorMin = new Vector2(0.05f, 0.1f);
             textRect.anchorMax = new Vector2(0.95f, 0.9f);

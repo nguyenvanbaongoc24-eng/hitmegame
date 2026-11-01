@@ -23,6 +23,11 @@ namespace HitMe.Audio
         public AudioClip sfxCountdownLast;
         public AudioClip sfxWin;
         public AudioClip sfxLose;
+        public AudioClip sfxWallThud;
+        public AudioClip sfxError;
+        public AudioClip sfxCoin;
+        public AudioClip sfxPurchase;
+        public AudioClip sfxChatPop;
         public AudioClip bgmMenu;
         public AudioClip bgmMatch;
 
@@ -115,6 +120,11 @@ namespace HitMe.Audio
         public void PlayCountdownLast() => PlaySfx(sfxCountdownLast != null ? sfxCountdownLast : sfxCountdownTick);
         public void PlayWin() => PlaySfx(sfxWin);
         public void PlayLose() => PlaySfx(sfxLose);
+        public void PlayWallThud() => PlaySfx(sfxWallThud);
+        public void PlayError() => PlaySfx(sfxError);
+        public void PlayCoin() => PlaySfx(sfxCoin);
+        public void PlayPurchase() => PlaySfx(sfxPurchase);
+        public void PlayChatPop() => PlaySfx(sfxChatPop);
 
         /// <summary>
         /// Slipper flight SFX. Asset QA confirmed missing "dép bay": uses silent placeholder.

@@ -327,5 +327,60 @@ namespace HitMe.UI
             }
             return arr;
         }
+
+        private static readonly Dictionary<string, (string vi, string en)> NetErrorMap = new Dictionary<string, (string, string)>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "not_enough_players", ("Cần ít nhất 2 người chơi để bắt đầu trận!", "At least 2 players required to start match!") },
+            { "protocol_mismatch", ("Phiên bản trò chơi đã cũ, vui lòng tải lại trang!", "Game version outdated, please reload the page!") },
+            { "auth_required_use_join_token", ("Cần đăng nhập để tham gia phòng!", "Authentication required to join room!") },
+            { "auth_invalid", ("Mã đăng nhập không hợp lệ!", "Invalid authentication token!") },
+            { "token_invalid", ("Mã đăng nhập không hợp lệ!", "Invalid token!") },
+            { "reconnect_invalid", ("Không thể kết nối lại trận đấu!", "Cannot reconnect to match!") },
+            { "room_full", ("Phòng đã đầy người chơi!", "Room is full!") },
+            { "room_limit", ("Máy chủ đã đạt giới hạn phòng!", "Server room limit reached!") },
+            { "room_code_exhausted", ("Hết mã phòng khả dụng, vui lòng thử lại sau!", "Room codes exhausted, please try again later!") },
+            { "room_not_found", ("Không tìm thấy phòng chơi!", "Room not found!") },
+            { "room_started", ("Trận đấu trong phòng đã bắt đầu!", "Match already started!") },
+            { "banned", ("Tài khoản bị cấm do AFK. Vui lòng chờ hết thời gian phạt!", "Account suspended for AFK. Please wait out the penalty!") },
+            { "rate_limited", ("Thao tác quá nhanh, vui lòng gửi chậm lại!", "Rate limit reached, please slow down!") },
+            { "message_too_large", ("Dữ liệu gửi vượt quá kích thước cho phép!", "Message payload too large!") },
+            { "legacy_ready_use_room_ready_or_lock_ready", ("Giao thức cũ, vui lòng cập nhật game!", "Legacy protocol, please update game!") },
+            { "invalid_json", ("Dữ liệu không hợp lệ!", "Invalid payload format!") },
+            { "invalid_envelope", ("Gói tin không hợp lệ!", "Invalid envelope format!") },
+            { "unknown_type", ("Thao tác không xác định!", "Unknown action type!") },
+            { "already_joined", ("Bạn đã ở trong phòng chơi rồi!", "Already joined in a room!") },
+            { "not_joined", ("Bạn chưa tham gia phòng!", "Not joined in any room!") },
+            { "not_in_room", ("Không tìm thấy phòng!", "Not in room!") },
+            { "not_in_round", ("Trận đấu chưa bắt đầu vòng!", "Not in active round!") },
+            { "wrong_phase", ("Thao tác không đúng thời điểm!", "Action invalid in current phase!") },
+            { "wrong_round", ("Vòng đấu không khớp!", "Round mismatch!") },
+            { "round_locked", ("Lượt đặt dép đã bị khóa!", "Round already locked!") },
+            { "ready_required", ("Bạn cần sẵn sàng trước khi tiếp tục!", "Ready required before proceeding!") },
+            { "match_not_started", ("Trận đấu chưa bắt đầu!", "Match has not started!") },
+            { "invalid_commit", ("Tọa độ hoặc hướng ném không hợp lệ!", "Invalid placement or aim coordinates!") },
+            { "invalid_emote", ("Biểu cảm không hợp lệ!", "Invalid emote identifier!") },
+            { "emote_rate_limited", ("Bạn gửi biểu cảm quá nhanh!", "Emote rate limit reached!") },
+            { "emote_phase_limit", ("Đã đạt tối đa 3 biểu cảm mỗi vòng!", "Maximum 3 emotes per round reached!") },
+            { "host_only", ("Chỉ chủ phòng mới có quyền thực hiện!", "Only host can perform this action!") },
+            { "duplicate_player", ("Người chơi đã tồn tại trong phòng!", "Duplicate player in room!") },
+            { "invalid_player", ("Thông tin người chơi không hợp lệ!", "Invalid player data!") },
+            { "no_response", ("Máy chủ không phản hồi, vui lòng thử lại!", "Server did not respond, please retry!") },
+            { "server_shutdown", ("Máy chủ đang bảo trì hoặc đã đóng kết nối!", "Server shutting down or maintenance!") }
+        };
+
+        public static string GetNetErrorMessage(string code, int remainingSeconds = 0)
+        {
+            if (string.IsNullOrEmpty(code)) return string.Empty;
+            if (NetErrorMap.TryGetValue(code, out var tuple))
+            {
+                string msg = _currentLanguage == AppLanguage.English ? tuple.en : tuple.vi;
+                if (code.Equals("banned", StringComparison.OrdinalIgnoreCase) && remainingSeconds > 0)
+                {
+                    msg += _currentLanguage == AppLanguage.English ? $" ({remainingSeconds}s remaining)" : $" (còn {remainingSeconds}s)";
+                }
+                return msg;
+            }
+            return _currentLanguage == AppLanguage.English ? $"Network Error: {code}" : $"Lỗi mạng: {code}";
+        }
     }
 }

@@ -4,7 +4,7 @@
 // is implemented here.
 using System;
 using System.Collections.Generic;
-#if !UNITY_WEBGL
+#if NET8_0_OR_GREATER
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -50,7 +50,7 @@ public sealed class LoopbackTransport : IMatchTransport
     public void Dispose() { IsConnected = false; Closed = null; Received = null; }
 }
 
-#if !UNITY_WEBGL
+#if NET8_0_OR_GREATER
 // Desktop skeleton backed by System.Net.WebSockets. It is intentionally absent
 // from WebGL: AG must add a browser/.jslib WebSocket adapter there.
 public sealed class WebSocketTransport : IMatchTransport
