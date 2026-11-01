@@ -311,7 +311,8 @@ public sealed class ProtocolGatewayTests
     [InlineData(6)]
     public void PreLockCommitRemainsPrivateForEveryOnlineRosterSize(int players)
     {
-        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001"), auth: new TestAuthVerifier());
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
         var transcript = new Dictionary<string, List<string>>();
         void Send(string connectionId, string raw)
         {
@@ -331,10 +332,26 @@ public sealed class ProtocolGatewayTests
         const float traceX = 3.14159f;
         const float traceY = -2.71828f;
         Send("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = traceX, positionY = traceY, aimX = 0.12345f, aimY = -0.98765f }));
-        for (var player = 1; player <= players; player++)
+        Send("c2", JsonSerializer.Serialize(new { v = 1, type = "emote", emoteId = "happy" }));
+        Send("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 99, positionX = traceX, positionY = traceY }));
+        if (players >= 3)
         {
-            Assert.True(transcript.TryGetValue($"c{player}", out var payloads), $"No transcript for c{player}.");
-            foreach (var payload in payloads!)
+            Assert.True(rooms.TryGet("HM0001", out var room));
+            room.RoundSession!.EliminateDisconnected("p3");
+            Send("c3", JsonSerializer.Serialize(new { v = 1, type = "emote", emoteId = "happy" }));
+        }
+        Send("spectator", Request("join", "outsider", "Outsider", "HM0001"));
+        Send("spectator", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = traceX, positionY = traceY }));
+        var reconnectToken = transcript["c1"].Select(Json)
+            .Where(payload => payload.GetProperty("type").GetString() == "room_state")
+            .Select(payload => payload.GetProperty("reconnectToken").GetString())
+            .First(token => !string.IsNullOrWhiteSpace(token));
+        gateway.Disconnect("c1");
+        Send("reconnected", JsonSerializer.Serialize(new { v = 1, type = "join", token = "test:p1", reconnectToken }));
+
+        foreach (var entry in transcript)
+        {
+            foreach (var payload in entry.Value)
             {
                 Assert.DoesNotContain("3.14159", payload, StringComparison.Ordinal);
                 Assert.DoesNotContain("-2.71828", payload, StringComparison.Ordinal);
