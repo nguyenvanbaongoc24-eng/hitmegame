@@ -10,6 +10,7 @@ if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
 builder.Services.AddSingleton<RoomDirectory>();
 builder.Services.AddSingleton<ProtocolGateway>();
+builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);
 builder.Services.AddSingleton(new ConnectionAdmission(allowedOrigins: runtime.AllowedOrigins));
@@ -22,6 +23,12 @@ app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.MapGet("/status", (RoomDirectory rooms, WebSocketConnectionRegistry connections) =>
     Results.Ok(new { status = "ok", protocol = ProtocolGateway.Version,
         rooms = rooms.Snapshot().Count, connections = connections.Count }));
+app.MapGet("/metrics", (RoomDirectory rooms, WebSocketConnectionRegistry connections, ServerMetrics metrics) =>
+{
+    var snapshot = rooms.Snapshot();
+    return Results.Ok(metrics.Snapshot(connections.Count, snapshot.Count,
+        snapshot.Count(room => room.RoundSession is { } active && active.Match.State.Phase != HitMe.Core.Phase.MatchEnd)));
+});
 app.Map("/ws", async context => {
     if (!context.WebSockets.IsWebSocketRequest) { context.Response.StatusCode = 400; return; }
     var admission = context.RequestServices.GetRequiredService<ConnectionAdmission>();
@@ -34,6 +41,7 @@ app.Map("/ws", async context => {
     var connections = context.RequestServices.GetRequiredService<WebSocketConnectionRegistry>();
     var connectionId = Guid.NewGuid().ToString("N");
     var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.WebSocket");
+    var metrics = context.RequestServices.GetRequiredService<ServerMetrics>();
     connections.Register(connectionId, socket);
     try
     {
@@ -49,6 +57,12 @@ app.Map("/ws", async context => {
             try
             {
                 var replies = gateway.HandleMessages(connectionId, raw);
+                foreach (var reply in replies)
+                    if (reply.Payload.Contains("\"type\":\"error\"", StringComparison.Ordinal))
+                    {
+                        using var parsed = System.Text.Json.JsonDocument.Parse(reply.Payload);
+                        metrics.RecordError(parsed.RootElement.GetProperty("code").GetString() ?? "unknown");
+                    }
                 await Task.WhenAll(replies.Select(reply => connections.SendAsync(reply, context.RequestAborted)));
             }
             catch (Exception exception)

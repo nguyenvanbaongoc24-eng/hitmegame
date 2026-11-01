@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
+using System.Diagnostics;
 
 namespace HitMe.Server.Protocol;
 
@@ -10,10 +11,12 @@ public sealed class WebSocketConnectionRegistry
     private readonly ConcurrentDictionary<string, Connection> connections = new(StringComparer.Ordinal);
     public int Count => connections.Count;
     private readonly TimeSpan writeTimeout;
+    private readonly ServerMetrics? metrics;
 
-    public WebSocketConnectionRegistry(TimeSpan? writeTimeout = null)
+    public WebSocketConnectionRegistry(TimeSpan? writeTimeout = null, ServerMetrics? metrics = null)
     {
         this.writeTimeout = writeTimeout ?? TimeSpan.FromSeconds(1);
+        this.metrics = metrics;
     }
 
     public void Register(string connectionId, WebSocket socket) => connections[connectionId] = new Connection(socket, DateTimeOffset.UtcNow);
@@ -65,6 +68,7 @@ public sealed class WebSocketConnectionRegistry
 
     public async Task SendAsync(GatewayMessage message, CancellationToken cancellationToken)
     {
+        var watch = Stopwatch.StartNew();
         if (!connections.TryGetValue(message.ConnectionId, out var connection)) return;
         if (connection.Socket.State != WebSocketState.Open) return;
 
@@ -97,6 +101,7 @@ public sealed class WebSocketConnectionRegistry
                 try
                 {
                     await connection.Socket.SendAsync(bytes, WebSocketMessageType.Text, true, timeout.Token);
+                    metrics?.RecordBroadcast(watch.Elapsed.TotalMilliseconds);
                 }
                 catch (OperationCanceledException)
                 {
