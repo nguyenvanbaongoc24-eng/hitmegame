@@ -40,7 +40,7 @@ if (!address || !/^wss?:\/\//.test(address)) {
     bots[0].send({ type: 'join', token: `guest:smoke_host_${unique}` });
     const room = await bots[0].take('room_state');
     assert.equal(room.protocolVersion, 1);
-    assert.match(room.roomCode, /^HM\d{4}$/);
+    assert.match(room.roomCode, /^[A-HJ-KM-NP-Z2-9]{6}$/);
     bots[1].send({ type: 'join', token: `guest:smoke_guest_${unique}`, roomCode: room.roomCode });
     const joined = await bots[1].take('room_state');
     assert.equal(joined.players.length, 2);

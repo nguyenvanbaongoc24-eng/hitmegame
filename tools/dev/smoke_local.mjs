@@ -72,9 +72,9 @@ async function room(size) {
     for (let i = 0; i < size; i++) clients.push(await open(`lab${size}_${uid}_${i}`));
     if (size === 2) await shot(clients[0].page, '01_entry');
     await clients[0].page.locator('#create').click();
-    await clients[0].page.waitForFunction(() => /^HM\d{4}$/.test(document.querySelector('#lobbyCode')?.textContent || ''));
+    await clients[0].page.waitForFunction(() => /^[A-HJ-KM-NP-Z2-9]{6}$/.test(document.querySelector('#lobbyCode')?.textContent || ''));
     const code = await clients[0].page.locator('#lobbyCode').innerText();
-    assert.match(code, /^HM\d{4}$/);
+    assert.match(code, /^[A-HJ-KM-NP-Z2-9]{6}$/);
     for (let i = 1; i < size; i++) {
       await clients[i].page.locator('#roomCode').fill(code);
       await clients[i].page.locator('#join').click();
@@ -167,7 +167,7 @@ async function reconnect() {
   const client = await open(`reconnect_${uid}`);
   try {
     await client.page.locator('#create').click();
-    await client.page.waitForFunction(() => /^HM\d{4}$/.test(document.querySelector('#lobbyCode')?.textContent || ''));
+    await client.page.waitForFunction(() => /^[A-HJ-KM-NP-Z2-9]{6}$/.test(document.querySelector('#lobbyCode')?.textContent || ''));
     const room = await client.page.locator('#lobbyCode').innerText();
     await client.page.locator('#disconnect').click();
     await client.page.waitForFunction(() => (document.querySelector('#log')?.textContent.match(/"type":"room_state"/g) || []).length >= 2, null, { timeout: 10000 });

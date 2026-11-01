@@ -22,6 +22,20 @@ public sealed class ProtocolGatewayTests
         => JsonSerializer.Serialize(new { v = 1, type, playerId, name, token = "test:" + playerId, roomCode, ready, start });
     private static JsonElement Json(string text) => JsonDocument.Parse(text).RootElement.Clone();
 
+    [Fact]
+    public void DefaultRoomCodesUseSixUnambiguousCryptographicCharacters()
+    {
+        var rooms = new RoomDirectory();
+        var codes = new HashSet<string>(StringComparer.Ordinal);
+        for (var i = 0; i < 100; i++)
+        {
+            var room = rooms.Create($"p{i}", $"P{i}", null, out var error);
+            Assert.Equal(string.Empty, error);
+            Assert.Matches("^[A-HJ-KM-NP-Z2-9]{6}$", room.Code);
+            Assert.True(codes.Add(room.Code));
+        }
+    }
+
     [Theory]
     [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":\"bad\"}")]
     [InlineData("{\"v\":1,\"type\":\"commit\",\"positionX\":1e100,\"positionY\":0}")]

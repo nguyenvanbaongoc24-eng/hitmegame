@@ -1,4 +1,5 @@
 using HitMe.Core;
+using System.Security.Cryptography;
 
 namespace HitMe.Server.Authority;
 
@@ -101,6 +102,7 @@ public sealed class RoomAuthority
 
 public sealed class RoomDirectory
 {
+    public const string CodeAlphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
     private readonly object gate = new();
     private readonly Dictionary<string, RoomAuthority> rooms = new(StringComparer.Ordinal);
     private readonly Func<int, string> codeForAttempt;
@@ -113,7 +115,7 @@ public sealed class RoomDirectory
 
     public RoomDirectory(Func<int, string>? codeForAttempt = null, int startCountdownSeconds = 3, int maxRooms = 200, AfkPolicy? afkPolicy = null, IBanStore? banStore = null, IMatchResultStore? resultStore = null)
     {
-        this.codeForAttempt = codeForAttempt ?? (n => $"HM{Random.Shared.Next(0, 10000):0000}");
+        this.codeForAttempt = codeForAttempt ?? (_ => NewCode());
         this.startCountdownSeconds = startCountdownSeconds;
         this.maxRooms = maxRooms;
         this.afkPolicy = afkPolicy ?? new AfkPolicy();
@@ -171,5 +173,12 @@ public sealed class RoomDirectory
             room = found;
             return true;
         }
+    }
+
+    private static string NewCode()
+    {
+        Span<char> value = stackalloc char[6];
+        for (var i = 0; i < value.Length; i++) value[i] = CodeAlphabet[RandomNumberGenerator.GetInt32(CodeAlphabet.Length)];
+        return new string(value);
     }
 }

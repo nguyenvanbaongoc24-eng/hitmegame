@@ -44,7 +44,7 @@ function identity() {
 function startEntry(kind) {
   identity();
   const code = $('roomCode').value.trim().toUpperCase();
-  if (kind === 'join' && !/^HM\d{4}$/.test(code)) return notice('Mã phòng dạng HM4826.');
+  if (kind === 'join' && !/^[A-HJ-KM-NP-Z2-9]{6}$/.test(code)) return notice('Mã phòng gồm 6 ký tự A–Z/2–9, không có I, L, O.');
   connect(() => send(kind === 'quick' ? {type:'quick_match',token:state.token} :
     {type:'join',token:state.token,roomCode:kind==='join'?code:''}));
 }
