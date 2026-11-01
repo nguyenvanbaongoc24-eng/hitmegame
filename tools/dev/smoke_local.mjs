@@ -125,6 +125,19 @@ async function room(size) {
     const maxHp = Math.max(...finalHp.values());
     assert.ok(end.winners.every(id => finalHp.get(id) === maxHp));
     assert.ok(await clients[0].page.locator('#hpCards .card').count() === size);
+    const totalHits = new Map();
+    for (const result of rounds) for (const hit of result.hits) totalHits.set(hit.shooterId, (totalHits.get(hit.shooterId) || 0) + 1);
+    const roster = received.findLast(message => message.type === 'room_state' && message.players.length === size).players;
+    const ranked = roster
+      .map(player => ({ ...player, hp: finalHp.get(player.id), hits: totalHits.get(player.id) || 0 }))
+      .sort((a,b) => b.hp-a.hp || b.hits-a.hits || a.name.localeCompare(b.name));
+    const cells = await clients[0].page.locator('#ranking tr').evaluateAll(rows => rows.map(row => [...row.cells].map(cell => cell.textContent)));
+    for (let i = 0; i < size; i++) {
+      assert.deepEqual(cells[i].slice(1), [ranked[i].name, String(ranked[i].hp), String(ranked[i].hits)]);
+      const expectedRank = i && ranked[i].hp === ranked[i-1].hp && ranked[i].hits === ranked[i-1].hits
+        ? cells[i-1][0] : String(i+1);
+      assert.equal(cells[i][0], expectedRank);
+    }
     if (size === 2) await shot(clients[0].page, '04_result');
     pass(`N=${size} full real-WebSocket match, ${rounds.length} rounds, ${size} ranking rows`);
   } finally { await closeAll(clients); counter++; }
@@ -139,6 +152,16 @@ async function quickMatch() {
     assert.equal(await clients[0].page.locator('#rosterCount').innerText(), '2/6 người thật');
     pass('Two real clients quick-match into the same room');
   } finally { await closeAll(clients); }
+}
+async function quickHint() {
+  const client = await open(`hint_${uid}`);
+  try {
+    await client.page.locator('#quick').click();
+    await client.page.waitForFunction(() => document.querySelector('#notice')?.textContent.includes('Đang ghép'));
+    await client.page.waitForFunction(() => document.querySelector('#notice')?.textContent.includes('Chưa tìm thấy đối thủ'), null, { timeout: 35000 });
+    assert.equal(client.transcript.some(e => e.direction === 'in' && e.message.type === 'quick_match_hint'), true);
+    pass('Unmatched quick-match receives hint after server deadline without a bot');
+  } finally { await client.context.close(); }
 }
 async function reconnect() {
   const client = await open(`reconnect_${uid}`);
@@ -161,6 +184,7 @@ try {
   await room(3);
   await room(6);
   await quickMatch();
+  await quickHint();
   await reconnect();
   const avg = Math.round(latencies.reduce((a,b)=>a+b,0)/latencies.length);
   const max = Math.max(...latencies);

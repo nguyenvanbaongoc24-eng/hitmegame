@@ -1,5 +1,15 @@
 # HIT ME authoritative server
 
+## Test cục bộ (Hub + Online Lab)
+
+1. Từ `D:\HITME GAME\worktrees\codex-prep`, chạy `powershell -ExecutionPolicy Bypass -File tools\dev\run_local.ps1 -Open` (cần .NET 8 và Node 22+). Nếu 8100/8080 đang dùng, thêm `-HubPort 8110 -ServerPort 8081`.
+2. Máy tính mở `http://localhost:8100/` (hoặc cổng đã chọn). Lệnh in địa chỉ LAN; điện thoại phải cùng Wi-Fi. Hub A là build Unity của AG **Luyện với bot**; Hub B là **Online Lab**, trang thử server thật 2–6 người, **Unity chưa nối mạng**.
+3. Mở B trên hai tab hoặc hai thiết bị, dùng tên khách khác nhau. Một người tạo phòng, người kia nhập mã, rồi Sẵn sàng cả hai hoặc host bấm Bắt đầu. Một người không mở được trận; ghép nhanh chỉ ghép người thật.
+4. Quan sát: (1) mã phòng và số người; (2) phòng 1 người bị chặn; (3) 3 giây đếm đầu; (4) 5 giây đặt/ngắm; (5) trước lộ diện không thấy vị trí/hướng đối thủ; (6) emote chỉ nằm trên thẻ khi đặt; (7) HP và bảng hạng đủ người; (8) ngắt rồi vào lại trong 30 giây.
+5. Mẫu báo lỗi: `thiết bị / trình duyệt / N người / mã phòng / bước / lỗi / cảm nhận`; không gửi `token` hoặc `reconnectToken`.
+6. Dừng bằng Ctrl+C ở cửa sổ lệnh. Nếu cổng chiếm, đổi cổng; nếu điện thoại không vào được, kiểm IP mới, cùng Wi-Fi và tường lửa. Lệnh cho tường lửa và lệnh xóa quy tắc được in bởi launcher, không tự thực thi.
+7. Kiểm tự động khi launcher đang chạy: `node tools/dev/smoke_local.mjs http://127.0.0.1:8100`. Bằng chứng cục bộ: `Evidence/dev_lab/smoke_local.txt` và ảnh cùng thư mục. Chưa xác nhận trên điện thoại thật.
+
 Nguồn luật duy nhất là các tệp được liên kết từ `Assets/Scripts/Core/Phase1` (nhánh Core hiện tại của checkout). Chạy: `dotnet run --project server/HitMe.Server.csproj`; dùng `PORT=8080` để chọn cổng. Kiểm tra: `GET /healthz`. Test: `dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo`.
 
 WebSocket dùng JSON `{ "v": 1, "type": "..." }`. Client gửi `join`, `room_ready`, `start`, `lock_ready`, `commit`, `emote`, `leave`; server gửi `room_state`, `round_start`, `reveal`, `round_result`, `match_end`, `emote`, `error`. Phòng online có 1–6 người thật; `room_state.config` trả `maxPlayers: 6` và `minPlayersToStart: 2`. Một người không thể `start` (`not_enough_players`) và tự ready cũng không mở đếm ngược; UI cần dẫn người đó tới **Luyện với bot** cục bộ, không qua server. `join` bắt buộc có `token`; bản tạm chỉ nhận `guest:<tên>` (server cấp ID khách), còn `playerId`/`name` do client gửi luôn bị bỏ qua. Thiếu token trả `auth_required_use_join_token`, token sai trả `auth_invalid`. `room_ready` dùng riêng ở phòng chờ: khi ít nhất hai người đều ready, server đếm 3 giây rồi phát `round_start`; bỏ ready/rời phòng hủy đếm. Host có thể gửi `start` để bắt đầu ngay. `lock_ready` chỉ dùng trong pha đặt để khóa sớm. Ví dụ commit: `{"v":1,"type":"commit","roundId":1,"positionX":1,"positionY":2,"aimX":0,"aimY":1}`. Commit chỉ trả xác nhận riêng trong lúc đặt; sau khóa mới broadcast `reveal` và kết quả. Tin tối đa 1 KiB, tối đa 20 tin/giây/kết nối.
