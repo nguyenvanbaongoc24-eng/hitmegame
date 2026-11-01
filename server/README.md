@@ -66,6 +66,8 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 
 **Nhật ký thay đổi giao thức:** v1 (2026-10-31): đóng băng tên tin hiện có, thêm `protocolVersion` vào `room_state`, trả `protocol_mismatch` cho phiên bản sai. Thay đổi cấu trúc/tên tin từ đây phải tăng `ProtocolGateway.Version` và cập nhật cả DTO, test, bảng này.
 
+Đợt 30 (2026-11-02): giữ v1; thêm lỗi `bad_message`, mã phòng khó nhầm và giới hạn tài nguyên cấu hình được. Mẫu SQL `backend/supabase/004_match_result_store.sql` đã qua PGlite `Passed! 4/4` với bảng mô phỏng, ghi một lần và ID khách; **chưa** thử trên PostgreSQL/Supabase thật và chưa nối adapter vào server.
+
 **Cấu hình tiến trình** (số không hợp lệ dùng mặc định):
 
 | Biến | Mặc định | Công dụng |
@@ -79,6 +81,8 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 | `JOIN_TIMEOUT_SECONDS` | 10 | Đóng socket chưa vào phòng. |
 
 `GET /metrics` chỉ trả số kết nối, phòng, trận hoạt động, p95 thời gian gửi WebSocket gần đây và lỗi theo mã; không chứa người chơi, token hay tọa độ. Bản nháp Render nên bắt đầu với giới hạn trên rồi đo tải trên gói thực tế; số đo 50 phòng trong tiến trình không bảo đảm 50 phòng WebSocket trên Render. `IMatchResultStore` mặc định là bộ nhớ, ghi một lần theo `matchId` và không bền qua khởi động lại; `NoReward` là chính sách mặc định, chưa cộng vàng. Chưa có adapter Supabase, danh sách phòng mở, hạn sống 10 phút cho phòng trống, giới hạn toàn cục riêng cho socket chưa join, hay xử lý shutdown đợi hết vòng. Bộ chaos hiện gồm 5 hạt giống × 200 phòng trong tiến trình; chưa thay cho kiểm tải mạng thật. Không tuyên bố SERVER READY v1 khi các mục này chưa hoàn tất.
+
+Đang dở: H3 quét dấu vết mọi N và vai trò; H4 xử lý kết nối trùng/đua; H5 đợi vòng khi tắt; H6 chaos qua WebSocket; R3 adapter bền vững và xác nhận SQL trên Supabase; T3 bộ smoke triển khai bao phủ đủ Online Lab. Giới hạn hiện tại không áp quy tắc "một commit mỗi vòng" vì người chơi được đặt/ngắm lại trong 5 giây; tọa độ ngoài sân vẫn được Core kẹp theo luật hiện hành. Cần quyết định luật riêng trước khi đổi hai hành vi này.
 
 **AG tích hợp online (đề xuất tuần tự):**
 
