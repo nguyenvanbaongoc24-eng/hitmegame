@@ -482,5 +482,98 @@ namespace HitMe.Editor
                 }
             }
         }
+
+        [Test]
+        public void RuleL3_LeaveConfirmationDialog_ShowsAndTriggersCallback()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.dialogLeaveRoom, Is.Not.Null);
+
+            bool confirmed = false;
+            ui.ShowLeaveConfirmationDialog("TIÊU ĐỀ RỜI", "Nội dung xác nhận", () => confirmed = true);
+            Assert.That(ui.dialogLeaveRoom.activeSelf, Is.True);
+            Assert.That(ui.txtLeaveDialogTitle.text, Is.EqualTo("TIÊU ĐỀ RỜI"));
+            Assert.That(ui.txtLeaveDialogMessage.text, Is.EqualTo("Nội dung xác nhận"));
+
+            // Clicking Cancel dismisses dialog without triggering callback
+            ui.btnCancelLeave.onClick.Invoke();
+            Assert.That(ui.dialogLeaveRoom.activeSelf, Is.False);
+            Assert.That(confirmed, Is.False);
+
+            // Clicking Confirm executes callback and closes dialog
+            ui.ShowLeaveConfirmationDialog("TIÊU ĐỀ RỜI", "Nội dung xác nhận", () => confirmed = true);
+            ui.btnConfirmLeave.onClick.Invoke();
+            Assert.That(ui.dialogLeaveRoom.activeSelf, Is.False);
+            Assert.That(confirmed, Is.True);
+        }
+
+        [Test]
+        public void RuleL3_RoundResultOverlay_Lifecycle_ShowsDuringResolveAndRoundEnd()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            var match = Object.FindFirstObjectByType<MatchController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(match, Is.Not.Null);
+            Assert.That(ui.roundResultOverlay, Is.Not.Null);
+
+            ui.matchController = match;
+            ui.StartGameplayMatch();
+
+            // Placing phase -> overlay is inactive
+            ui.ApplyPhaseState(Phase.Placing);
+            Assert.That(ui.roundResultOverlay.activeSelf, Is.False);
+
+            // Resolve phase -> overlay is active with round title
+            ui.ApplyPhaseState(Phase.Resolve);
+            Assert.That(ui.roundResultOverlay.activeSelf, Is.True);
+            Assert.That(ui.txtRoundResultTitle.text, Does.Contain("KẾT QUẢ VÒNG"));
+
+            // RoundEnd phase -> overlay remains active
+            ui.ApplyPhaseState(Phase.RoundEnd);
+            Assert.That(ui.roundResultOverlay.activeSelf, Is.True);
+
+            // MatchEnd -> overlay is hidden as Result screen takes over
+            ui.ApplyPhaseState(Phase.MatchEnd);
+            Assert.That(ui.roundResultOverlay.activeSelf, Is.False);
+        }
+
+        [Test]
+        public void RuleL3_ResultBoard_RankBadges_And_ReplayButtonLabel()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+
+            var ranked = new List<PlayerState>
+            {
+                new PlayerState("player", "Nam Làng", false, 3, Vec2.Zero, Vec2.Up),
+                new PlayerState("bot-1", "Nữ Năng Động", true, 2, Vec2.Zero, Vec2.Up)
+            };
+            var winners = new List<string> { "player" };
+            ui.PopulateResultBoard(ranked, winners);
+
+            Assert.That(ui.resultRows[0].txtRank.text, Is.EqualTo("#1"));
+            Assert.That(ui.resultRows[0].txtRankBadge.text, Is.EqualTo("HẠNG 1 [TẠM]"));
+            Assert.That(ui.resultRows[1].txtRank.text, Is.EqualTo("#2"));
+            Assert.That(ui.resultRows[1].txtRankBadge.text, Is.EqualTo("HẠNG 2 [TẠM]"));
+            Assert.That(ui.btnReplay.GetComponentInChildren<TextMeshProUGUI>().text, Is.EqualTo(UiStrings.BtnReplay));
+        }
+
+        [Test]
+        public void RuleL3_ErrorToast_ShowsWarningPrefixAndColor()
+        {
+            EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
+            var ui = Object.FindFirstObjectByType<ProductionUIController>();
+            Assert.That(ui, Is.Not.Null);
+            Assert.That(ui.toastObject, Is.Not.Null);
+
+            ui.ShowErrorToast("Không tìm thấy mã phòng");
+            Assert.That(ui.toastObject.activeSelf, Is.True);
+            Assert.That(ui.txtToast.text, Does.Contain("[LỖI]"));
+            Assert.That(ui.txtToast.text, Does.Contain("Không tìm thấy mã phòng"));
+        }
     }
 }

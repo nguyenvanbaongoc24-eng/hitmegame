@@ -524,7 +524,7 @@ namespace HitMe.Editor
                 int row = i / 3;
                 Vector2 cardAnchor = new Vector2(colAnchors[col], rowAnchors[row]);
                 var cardSprite = i == 0 ? spriteCardSelected : spriteCardChar;
-                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 74f), cardSprite, Color.white);
+                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 72f), cardSprite, Color.white);
                 var cardImg = cardObj.GetComponent<Image>();
                 if (cardImg != null) cardImg.type = Image.Type.Sliced;
 
@@ -547,6 +547,7 @@ namespace HitMe.Editor
                 cHearts.gameObject.SetActive(false);
 
                 var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 20, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(300f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                cHpNum.fontStyle = FontStyles.Bold;
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
                 {
@@ -567,6 +568,18 @@ namespace HitMe.Editor
             weaponTxt.fontStyle = FontStyles.Bold;
             uiCtrl.weaponPillObj = weaponPill;
             uiCtrl.txtWeaponIndicator = weaponTxt;
+
+            // Round Result Overlay (in Gameplay HUD during Resolve / RoundEnd)
+            var roundResultObj = CreatePanel(hudPanel.transform, "RoundResultOverlay", new Vector2(0.5f, 0.60f), new Vector2(0.5f, 0.60f), new Vector2(0.5f, 0.5f), new Vector2(880f, 220f), spritePanelDarkGold, new Color(0.08f, 0.10f, 0.14f, 0.94f));
+            roundResultObj.SetActive(false);
+            uiCtrl.roundResultOverlay = roundResultObj;
+
+            var rrBanner = CreateImage(roundResultObj.transform, "Header", spriteBannerWood, new Vector2(0.5f, 0.82f), new Vector2(0.5f, 0.82f), new Vector2(0.5f, 0.5f), new Vector2(760f, 80f));
+            var rrTitle = CreateTMP(rrBanner.transform, "Title", fontAsset, "KẾT QUẢ VÒNG", 32, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtRoundResultTitle = rrTitle;
+
+            var rrDetail = CreateTMP(roundResultObj.transform, "Detail", fontAsset, "Tất cả người chơi đã ném dép!", 24, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.38f), new Vector2(800f, 90f), wrap: true);
+            uiCtrl.txtRoundResultDetail = rrDetail;
 
             // ==================== G. RESULT PANEL (P1) ====================
             var resultPanel = CreatePanel(rootTr, "ResultPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.05f, 0.07f, 0.95f));
@@ -592,15 +605,17 @@ namespace HitMe.Editor
             {
                 float yNorm = 0.88f - i * 0.155f;
                 var rowObj = CreatePanel(boardCard.transform, "RankRow_" + i, new Vector2(0.5f, yNorm), new Vector2(0.5f, yNorm), new Vector2(0.5f, 0.5f), new Vector2(860f, 95f), i == 0 ? spriteRowMe : spriteRowLeaderboard, Color.white);
-                var rRank = CreateTMP(rowObj.transform, "Rank", fontAsset, "#" + (i + 1), 30, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.06f, 0.5f), new Vector2(70f, 50f), wrap: false);
-                var rName = CreateTMP(rowObj.transform, "Name", fontAsset, defaultLobbyNames[i], 26, Color.white, TextAlignmentOptions.MidlineLeft, new Vector2(0.12f, 0.5f), new Vector2(280f, 50f), wrap: false, pivot: new Vector2(0f, 0.5f));
-                var rHp = CreateTMP(rowObj.transform, "Hp", fontAsset, "HP: " + Mathf.Max(0, 3 - i / 2) + "/3 • HIT: " + (3 - i / 2), 25, new Color(0.85f, 0.95f, 1f), TextAlignmentOptions.Center, new Vector2(0.58f, 0.5f), new Vector2(230f, 50f), wrap: false);
-                var rStatus = CreateTMP(rowObj.transform, "Status", fontAsset, i == 0 ? "★ THẮNG" : "✖ Đã loại", 24, i == 0 ? new Color(1f, 0.9f, 0.2f) : new Color(1f, 0.45f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.96f, 0.5f), new Vector2(200f, 50f), wrap: false, pivot: new Vector2(1f, 0.5f));
+                var rRank = CreateTMP(rowObj.transform, "Rank", fontAsset, "#" + (i + 1), 28, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.05f, 0.5f), new Vector2(60f, 50f), wrap: false);
+                var rBadge = CreateTMP(rowObj.transform, "RankBadge", fontAsset, "HẠNG " + (i + 1) + " [TẠM]", 16, new Color(1f, 0.9f, 0.4f), TextAlignmentOptions.Center, new Vector2(0.14f, 0.5f), new Vector2(110f, 32f), wrap: false);
+                var rName = CreateTMP(rowObj.transform, "Name", fontAsset, defaultLobbyNames[i], 24, Color.white, TextAlignmentOptions.MidlineLeft, new Vector2(0.24f, 0.5f), new Vector2(240f, 50f), wrap: false, pivot: new Vector2(0f, 0.5f));
+                var rHp = CreateTMP(rowObj.transform, "Hp", fontAsset, "HP: " + Mathf.Max(0, 3 - i / 2) + "/3 • HIT: " + (3 - i / 2), 22, new Color(0.85f, 0.95f, 1f), TextAlignmentOptions.Center, new Vector2(0.64f, 0.5f), new Vector2(230f, 50f), wrap: false);
+                var rStatus = CreateTMP(rowObj.transform, "Status", fontAsset, i == 0 ? "★ THẮNG" : "✖ Đã loại", 22, i == 0 ? new Color(1f, 0.9f, 0.2f) : new Color(1f, 0.45f, 0.45f), TextAlignmentOptions.MidlineRight, new Vector2(0.96f, 0.5f), new Vector2(180f, 50f), wrap: false, pivot: new Vector2(1f, 0.5f));
 
                 uiCtrl.resultRows.Add(new ProductionUIController.ResultRowUI
                 {
                     root = rowObj,
                     txtRank = rRank,
+                    txtRankBadge = rBadge,
                     txtName = rName,
                     txtHp = rHp,
                     txtStatus = rStatus,
@@ -609,19 +624,49 @@ namespace HitMe.Editor
             }
 
             var btnReplay = CreateButton(resultPanel.transform, "BtnReplay", spriteBtnYellow, new Vector2(0.5f, 0.22f), new Vector2(0.5f, 0.22f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
-            CreateTMP(btnReplay.transform, "Label", fontAsset, "CHƠI LẠI", 42, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
+            CreateTMP(btnReplay.transform, "Label", fontAsset, UiStrings.BtnReplay, 42, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnReplay = btnReplay.GetComponent<Button>();
 
             var btnHome = CreateButton(resultPanel.transform, "BtnHome", spriteBtnBlue, new Vector2(0.5f, 0.11f), new Vector2(0.5f, 0.11f), new Vector2(0.5f, 0.5f), new Vector2(880f, 110f));
             CreateTMP(btnHome.transform, "Label", fontAsset, "VỀ TRANG CHỦ", 38, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnBackToHome = btnHome.GetComponent<Button>();
 
-            // ==================== H. BUILD FINGERPRINT WATERMARK ====================
+            // ==================== H. LEAVE ROOM CONFIRMATION DIALOG ====================
+            var leaveDialogObj = CreatePanel(rootTr, "DialogLeaveRoom", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.03f, 0.04f, 0.06f, 0.88f));
+            leaveDialogObj.SetActive(false);
+            uiCtrl.dialogLeaveRoom = leaveDialogObj;
+
+            var leaveCard = CreatePanel(leaveDialogObj.transform, "LeaveCard", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 440f), spritePanelDarkGold, Color.white);
+
+            var leaveBanner = CreateImage(leaveCard.transform, "LeaveBanner", spriteBannerWood, new Vector2(0.5f, 0.88f), new Vector2(0.5f, 0.88f), new Vector2(0.5f, 0.5f), new Vector2(640f, 100f));
+            var leaveTitle = CreateTMP(leaveBanner.transform, "Title", fontAsset, "XÁC NHẬN RỜI PHÒNG", 32, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtLeaveDialogTitle = leaveTitle;
+
+            var leaveMsg = CreateTMP(leaveCard.transform, "Message", fontAsset, "Bạn có chắc chắn muốn rời phòng không?\nMọi kết quả của trận đấu sẽ không được lưu.", 24, Color.white, TextAlignmentOptions.Center, new Vector2(0.5f, 0.55f), new Vector2(680f, 140f), wrap: true);
+            uiCtrl.txtLeaveDialogMessage = leaveMsg;
+
+            // Confirm Button (Red CTA)
+            var btnConfirmLeave = CreateButton(leaveCard.transform, "BtnConfirmLeave", spriteBtnRed, new Vector2(0.28f, 0.22f), new Vector2(0.28f, 0.22f), new Vector2(0.5f, 0.5f), new Vector2(300f, 90f));
+            CreateTMP(btnConfirmLeave.transform, "Label", fontAsset, "XÁC NHẬN", 30, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnConfirmLeave = btnConfirmLeave.GetComponent<Button>();
+
+            // Cancel Button
+            var btnCancelLeave = CreateButton(leaveCard.transform, "BtnCancelLeave", spriteBtnYellow, new Vector2(0.72f, 0.22f), new Vector2(0.72f, 0.22f), new Vector2(0.5f, 0.5f), new Vector2(300f, 90f));
+            CreateTMP(btnCancelLeave.transform, "Label", fontAsset, "QUAY LẠI", 30, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnCancelLeave = btnCancelLeave.GetComponent<Button>();
+
+            // Ensure Toast, Leave Dialog and Fingerprint are at the very top of canvas rendering hierarchy
+            if (toastObj != null) toastObj.transform.SetAsLastSibling();
+            if (leaveDialogObj != null) leaveDialogObj.transform.SetAsLastSibling();
+
+            // ==================== I. BUILD FINGERPRINT WATERMARK ====================
             var fpTxt = CreateTMP(rootTr, "BuildFingerprintWatermark", fontAsset,
                 ProductionUIController.ResolveBuildFingerprint(),
                 18, new Color(0.85f, 0.90f, 0.95f, 0.65f),
                 TextAlignmentOptions.BottomRight,
                 new Vector2(0.985f, 0.004f), new Vector2(960f, 32f), wrap: false, pivot: new Vector2(1f, 0f));
+            fpTxt.transform.SetAsLastSibling();
+            uiCtrl.txtBuildFingerprint = fpTxt;
             fpTxt.transform.SetAsLastSibling();
             uiCtrl.txtBuildFingerprint = fpTxt;
 

@@ -1,24 +1,24 @@
-VBCSCompilerPreWarmer: watching VBCSCompiler (PID 45236)
-VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 49328)
-VBCSCompiler prewarm took 41.77 ms
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 45304)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 48132)
+VBCSCompiler prewarm took 32.64 ms
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-01T11:53:49.0060294Z"
 OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-11-01T11:09:58Z
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-01T11:09:58.1169174Z"
+Date: 2026-11-01T11:53:49Z
 [Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 12124, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.3+d7ffd15
-  Session Id:              5ccdd9872af542e582957ac4320c3069
+  Session Id:              6940c1fe7e9d4714a3d8250081d1a182
   Correlation Id:          385e98d4a6f277dd7850a64f94b9318c
-  External correlation Id: 5326761690659799962
+  External correlation Id: 5318006537754458858
   Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.07s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-01T11:09:58.186848Z"
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.00s, validation: 0.00s, handshake: 0.06s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-01T11:53:49.0712766Z"
 [Licensing::Module] Error: Access token is unavailable; failed to update
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
@@ -82,16 +82,16 @@ D:/HITME GAME/unity-client
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
 Logging is directed to a specific file, skipping project log.
-Player connection [44132]  Target information:
+Player connection [26164]  Target information:
 
-Player connection [44132]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 925819797 [EditorId] 925819797 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [26164]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 2475957784 [EditorId] 2475957784 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [44132] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [44132] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [26164] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [26164] Host joined alternative multi-casting on [225.0.0.222:34997]...
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Package Manager] Connected to IPC stream "Upm-18932" after 0.4 seconds.
+[Package Manager] Connected to IPC stream "Upm-42524" after 0.3 seconds.
 [Licensing::Client] Successfully resolved entitlement details
 Library Redirect Path: Library/
 Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
@@ -117,7 +117,7 @@ Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
 Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
 Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56932
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56524
 CodeReloadManager initialized
 ImportWorker Server TCP listen port: 0
 AcceleratorClientConnectionCallback - disconnected - :0
@@ -125,30 +125,31 @@ Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.002775 seconds.
+Registered in 0.001795 seconds.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  1.015 seconds
-Domain Reload Profiling: 1839ms
-	BeginReloadAssembly (227ms)
-		CreateAndSetChildDomain (16ms)
-	RebuildCommonClasses (8ms)
-	RebuildNativeTypeToScriptingClass (23ms)
+- Finished resetting the current domain, in  0.900 seconds
+Domain Reload Profiling: 1637ms
+	BeginReloadAssembly (176ms)
+		CreateAndSetChildDomain (27ms)
+	RebuildCommonClasses (7ms)
+	RebuildNativeTypeToScriptingClass (21ms)
 	initialDomainReloadingComplete (76ms)
-	LoadAllAssembliesAndSetupDomain (489ms)
-		LoadAssemblies (210ms)
-		TypeCache.Refresh (339ms)
-			TypeCache.ScanAssembly (319ms)
+	LoadAllAssembliesAndSetupDomain (456ms)
+		LoadAssemblies (148ms)
+		TypeCache.Refresh (294ms)
+			TypeCache.ScanAssembly (274ms)
 		AnalyzeDomain (1ms)
-	FinalizeReload (1016ms)
+	FinalizeReload (901ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (184ms)
-			ProcessInitializeOnLoadAttributes (197ms)
-			ProcessInitializeOnLoadMethodAttributes (323ms)
+			LogAssemblyErrors (5ms)
+			InitializePlatformSupportModulesInManaged (5ms)
+			BeforeProcessingInitializeOnLoad (148ms)
+			ProcessInitializeOnLoadAttributes (155ms)
+			ProcessInitializeOnLoadMethodAttributes (294ms)
 [Licensing::Client] Successfully resolved entitlement details
 Application.AssetDatabase Initial Refresh Start
 [Package Manager] Restoring resolved packages state from cache
@@ -200,50 +201,561 @@ Application.AssetDatabase Initial Refresh Start
     com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
     com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
 [Subsystems] No new subsystems found in resolved package list.
-[Package Manager] Done registering packages in 0.03 seconds
-[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+[Package Manager] Done registering packages in 0.02 seconds
 Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
 WorkingDir: D:/HITME GAME/unity-client
 DisplayProgressbar: Compiling Scripts
-ExitCode: 0 Duration: 4s558ms
-[291/339    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
-[331/339    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll (+2 others)
-[332/339    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
-Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll, with 124 defines and 295 references
+## Script Compilation Error for: Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+## CmdLine: "D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe" exec "D:/App/UNITY/6000.6.4f1/Editor/Data/DotNetSdk/sdk/8.0.318/Roslyn/bincore/csc.dll" /nostdlib /noconfig /shared "@Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp" "@Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp2"
+## Output:
+Assets\Editor\ProductionUIPolishTests.cs(20,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(21,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(119,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(146,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\ProductionUIPolishTests.cs(182,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(225,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(285,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(286,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(361,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(362,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(396,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(433,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(490,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(516,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(517,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(547,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(562,61): error CS0246: The type or namespace name 'TextMeshProUGUI' could not be found (are you missing a using directive or an assembly reference?)
+Assets\Editor\ProductionUIPolishTests.cs(569,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
-processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+ExitCode: 3 Duration: 0s874ms
+[292/339    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[335/339    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+##### CommandLine
+"D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe" exec "D:/App/UNITY/6000.6.4f1/Editor/Data/DotNetSdk/sdk/8.0.318/Roslyn/bincore/csc.dll" /nostdlib /noconfig /shared "@Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp" "@Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp2"
+##### Contents of Library\Bee\artifacts\2000b0aE.dag\Assembly-CSharp-Editor.rsp
+-target:library
+-out:"Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll"
+-refout:"Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.ref.dll"
+-define:UNITY_6000_6_4
+-define:UNITY_6000_6
+-define:UNITY_6000
+-define:UNITY_5_3_OR_NEWER
+-define:UNITY_5_4_OR_NEWER
+-define:UNITY_5_5_OR_NEWER
+-define:UNITY_5_6_OR_NEWER
+-define:UNITY_2017_1_OR_NEWER
+-define:UNITY_2017_2_OR_NEWER
+-define:UNITY_2017_3_OR_NEWER
+-define:UNITY_2017_4_OR_NEWER
+-define:UNITY_2018_1_OR_NEWER
+-define:UNITY_2018_2_OR_NEWER
+-define:UNITY_2018_3_OR_NEWER
+-define:UNITY_2018_4_OR_NEWER
+-define:UNITY_2019_1_OR_NEWER
+-define:UNITY_2019_2_OR_NEWER
+-define:UNITY_2019_3_OR_NEWER
+-define:UNITY_2019_4_OR_NEWER
+-define:UNITY_2020_1_OR_NEWER
+-define:UNITY_2020_2_OR_NEWER
+-define:UNITY_2020_3_OR_NEWER
+-define:UNITY_2021_1_OR_NEWER
+-define:UNITY_2021_2_OR_NEWER
+-define:UNITY_2021_3_OR_NEWER
+-define:UNITY_2022_1_OR_NEWER
+-define:UNITY_2022_2_OR_NEWER
+-define:UNITY_2022_3_OR_NEWER
+-define:UNITY_2023_1_OR_NEWER
+-define:UNITY_2023_2_OR_NEWER
+-define:UNITY_2023_3_OR_NEWER
+-define:UNITY_6000_0_OR_NEWER
+-define:UNITY_6000_1_OR_NEWER
+-define:UNITY_6000_2_OR_NEWER
+-define:UNITY_6000_3_OR_NEWER
+-define:UNITY_6000_4_OR_NEWER
+-define:UNITY_6000_5_OR_NEWER
+-define:UNITY_6000_6_OR_NEWER
+-define:UNITY_INCLUDE_TESTS
+-define:ENABLE_AUDIO
+-define:ENABLE_BURST
+-define:ENABLE_CLOTH
+-define:ENABLE_MICROPHONE
+-define:ENABLE_MULTIPLE_DISPLAYS
+-define:ENABLE_PHYSICS
+-define:ENABLE_TEXTURE_STREAMING
+-define:ENABLE_UNITYEVENTS
+-define:ENABLE_VR
+-define:ENABLE_WEBCAM
+-define:ENABLE_UNITYWEBREQUEST
+-define:ENABLE_WWW
+-define:ENABLE_CLOUD_SERVICES
+-define:ENABLE_CLOUD_SERVICES_ADS
+-define:ENABLE_CLOUD_SERVICES_USE_WEBREQUEST
+-define:ENABLE_UNITY_CONSENT
+-define:ENABLE_UNITY_CLOUD_IDENTIFIERS
+-define:ENABLE_CLOUD_SERVICES_CRASH_REPORTING
+-define:ENABLE_CLOUD_SERVICES_PURCHASING
+-define:ENABLE_CLOUD_SERVICES_ANALYTICS
+-define:ENABLE_CLOUD_SERVICES_BUILD
+-define:ENABLE_EDITOR_GAME_SERVICES
+-define:ENABLE_UNITY_GAME_SERVICES_ANALYTICS_SUPPORT
+-define:ENABLE_CLOUD_LICENSE
+-define:ENABLE_EDITOR_HUB_LICENSE
+-define:ENABLE_WEBSOCKET_CLIENT
+-define:ENABLE_GENERATE_NATIVE_PLUGINS_FOR_ASSEMBLIES_API
+-define:ENABLE_DIRECTOR_AUDIO
+-define:ENABLE_DIRECTOR_TEXTURE
+-define:ENABLE_MANAGED_JOBS
+-define:ENABLE_MANAGED_TRANSFORM_JOBS
+-define:ENABLE_MANAGED_ANIMATION_JOBS
+-define:ENABLE_MANAGED_AUDIO_JOBS
+-define:ENABLE_ENGINE_CODE_STRIPPING
+-define:ENABLE_ONSCREEN_KEYBOARD
+-define:ENABLE_MANAGED_UNITYTLS
+-define:RENDER_SOFTWARE_CURSOR
+-define:ENABLE_MARSHALLING_TESTS
+-define:ENABLE_VIDEO
+-define:ENABLE_NAVIGATION_OFFMESHLINK_TO_NAVMESHLINK
+-define:ENABLE_ACCELERATOR_CLIENT_DEBUGGING
+-define:TEXTCORE_1_0_OR_NEWER
+-define:EDITOR_ONLY_NAVMESH_BUILDER_DEPRECATED
+-define:INCLUDE_UNIFIED_RAYTRACING_COMPUTE_BACKEND
+-define:INCLUDE_UNIFIED_RAYTRACING_HARDWARE_BACKEND
+-define:PLATFORM_WEBGL
+-define:PLATFORM_SUPPORTS_PROGRESSIVE_ASSET_LOADING
+-define:UNITY_WEBGL
+-define:UNITY_WEBGL_API
+-define:UNITY_DISABLE_WEB_VERIFICATION
+-define:UNITY_GFX_USE_PLATFORM_VSYNC
+-define:ENABLE_CRUNCH_TEXTURE_COMPRESSION
+-define:ENABLE_SPATIALTRACKING
+-define:ENABLE_MONO
+-define:NET_4_6
+-define:NET_UNITY_4_8
+-define:ENABLE_PROFILER
+-define:UNITY_INCLUDE_INSTRUMENTATION
+-define:DEBUG
+-define:TRACE
+-define:UNITY_ASSERTIONS
+-define:UNITY_ENABLE_CHECKS
+-define:UNITY_EDITOR
+-define:UNITY_EDITOR_64
+-define:UNITY_EDITOR_WIN
+-define:ENABLE_UNITY_COLLECTIONS_CHECKS
+-define:ENABLE_BURST_AOT
+-define:UNITY_TEAM_LICENSE
+-define:ENABLE_CUSTOM_RENDER_TEXTURE
+-define:ENABLE_DIRECTOR
+-define:ENABLE_LOCALIZATION
+-define:ENABLE_SPRITES
+-define:ENABLE_TERRAIN
+-define:ENABLE_TILEMAP
+-define:ENABLE_TIMELINE
+-define:ENABLE_LEGACY_INPUT_MANAGER
+-define:TEXTCORE_FONT_ENGINE_1_5_OR_NEWER
+-define:TEXTCORE_TEXT_ENGINE_1_5_OR_NEWER
+-define:TEXTCORE_FONT_ENGINE_1_6_OR_NEWER
+-define:CSHARP_7_OR_LATER
+-define:CSHARP_7_3_OR_NEWER
+-define:UNITY_EDITOR_ONLY_COMPILATION
+-define:UNITY_WEBGL_RENDERER_ONLY
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/Microsoft.Bcl.AsyncInterfaces.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/Microsoft.Extensions.Logging.Abstractions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Collections.Immutable.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Diagnostics.DiagnosticSource.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.IO.Hashing.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Reflection.Metadata.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Runtime.CompilerServices.Unsafe.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Text.Encodings.Web.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/ref/System.Text.Json.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/Bootstrap/Unity.Scripting.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEditor.Graphs.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.AIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.AccessibilityModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.AdaptivePerformanceModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.AnimationWindowModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.AssetComplianceModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.BuildAnalysisModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.BuildProfileModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.BurstModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ClothModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ContentLoadModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreBusinessMetricsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.DeviceSimulatorModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.DiagnosticsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.EditorToolbarModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.EmbreeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GenericRemoteModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GraphToolkitModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GraphViewModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GraphicsStateCollectionSerializerModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GridAndSnapModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.GridModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.HierarchyModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.LightingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.MathematicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.MediaModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.MultiplayerModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.Physics2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.PhysicsCore2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.PhysicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.PlayModeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.PresetsUIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ProjectAuditorModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.PropertiesModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.QuickInstallModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.QuickSearchModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SafeModeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SceneTemplateModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SceneViewModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ShaderBuildSettingsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ShaderCompilationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ShaderFoundryModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.ShaderPreprocessorModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SketchUpModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SpriteMaskModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SpriteShapeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SubstanceModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.SyntaxTreeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TerrainModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TextCoreFontEngineModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TextCoreTextEngineModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TextRenderingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TilemapModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TimelineFoundationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.TreeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.U2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIAutomationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIBuilderModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIElementsSamplesModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UIToolkitAuthoringModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UmbraModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.VFXModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.VectorGraphicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.VideoModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.XRModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEditor.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AMDModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ARModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AdaptivePerformanceModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AndroidJNIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AnimationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AssetBundleModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.AudioModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.BurstModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClothModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterInputModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ContentLoadModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.CrashReportingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.DSPGraphModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.DirectorModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.GIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.GameCenterModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.GraphicsStateCollectionSerializerModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.GridModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.HierarchyCoreModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.HierarchyModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.HotReloadModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.IMGUIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.IdentifiersModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ImageConversionModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.InputForUIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.InputLegacyModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.InputModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.InsightsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.JSONSerializeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.LocalizationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ManagedKernelModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.MarshallingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.MathematicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.MultiplayerModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.NVIDIAModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ParticleSystemModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.PerformanceReportingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.Physics2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsBackendPhysXModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsCore2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.PhysicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.PropertiesModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.RenderAs2DModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ScreenCaptureModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ScriptingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.ShaderVariantAnalyticsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteMaskModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.SpriteShapeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.StreamingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.SubstanceModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.SubsystemsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TLSModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TerrainPhysicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TetgenModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TextCoreFontEngineModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TextCoreTextEngineModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TextRenderingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TilemapModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.TimelineFoundationModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.U2DRuntimeModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UIElementsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UIModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UmbraModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsCommonModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityAnalyticsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityConnectModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityConsentModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityCurlModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAssetBundleModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestAudioModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestTextureModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestWWWModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.VFXModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.VectorGraphicsModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.VehiclesModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.VirtualTexturingModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/Variations/il2cpp/Managed/UnityEngine.WebGLModule.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/Microsoft.Win32.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.AppContext.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Buffers.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Collections.Concurrent.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Collections.NonGeneric.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Collections.Specialized.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Collections.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ComponentModel.Annotations.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ComponentModel.EventBasedAsync.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ComponentModel.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ComponentModel.TypeConverter.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ComponentModel.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Console.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Data.Common.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.Contracts.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.Debug.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.FileVersionInfo.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.Process.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.StackTrace.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.TextWriterTraceListener.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.Tools.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Diagnostics.TraceSource.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Drawing.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Dynamic.Runtime.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Globalization.Calendars.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Globalization.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Globalization.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.Compression.ZipFile.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.FileSystem.DriveInfo.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.FileSystem.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.FileSystem.Watcher.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.FileSystem.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.IsolatedStorage.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.MemoryMappedFiles.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.Pipes.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.UnmanagedMemoryStream.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.IO.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Linq.Expressions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Linq.Parallel.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Linq.Queryable.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Linq.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Memory.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Http.Rtc.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.NameResolution.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.NetworkInformation.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Ping.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Requests.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Security.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.Sockets.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.WebHeaderCollection.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.WebSockets.Client.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Net.WebSockets.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ObjectModel.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.DispatchProxy.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.Emit.ILGeneration.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.Emit.Lightweight.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.Emit.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Reflection.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Resources.Reader.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Resources.ResourceManager.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Resources.Writer.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.CompilerServices.VisualC.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Handles.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.RuntimeInformation.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.InteropServices.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Numerics.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Serialization.Formatters.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Serialization.Json.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Serialization.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.Serialization.Xml.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Runtime.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Claims.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Cryptography.Algorithms.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Cryptography.Csp.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Cryptography.Encoding.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Cryptography.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Cryptography.X509Certificates.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.Principal.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Security.SecureString.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ServiceModel.Duplex.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ServiceModel.Http.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ServiceModel.NetTcp.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ServiceModel.Primitives.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ServiceModel.Security.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Text.Encoding.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Text.Encoding.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Text.RegularExpressions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Overlapped.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Tasks.Extensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Tasks.Parallel.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Tasks.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Thread.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.ThreadPool.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.Timer.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Threading.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.ValueTuple.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.ReaderWriter.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.XDocument.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.XPath.XDocument.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.XPath.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.XmlDocument.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/System.Xml.XmlSerializer.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Facades/netstandard.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/Microsoft.CSharp.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.ComponentModel.Composition.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Core.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Data.DataSetExtensions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Data.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Drawing.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.IO.Compression.FileSystem.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.IO.Compression.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Net.Http.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Numerics.Vectors.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Numerics.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Runtime.Serialization.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Transactions.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Xml.Linq.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.Xml.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/System.dll"
+-r:"D:/App/UNITY/6000.6.4f1/Editor/Data/UnityReferenceAssemblies/unity-4.8-api/mscorlib.dll"
+-r:"Library/PackageCache/com.unity.ext.nunit@0198eae3b53e/net472/unity-custom/nunit.framework.dll"
+-r:"Library/PackageCache/com.unity.ext.nunit@0198eae3b53e/net472/unity-custom/nunit.framework.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/HitMe.Core.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Unity.Rider.Editor.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.Editor.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/Unity.VisualStudio.Editor.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/UnityEditor.TestRunner.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/UnityEditor.UI.Analytics.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/UnityEditor.UI.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.ref.dll"
+-r:"Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.ref.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/TargetingPacks/netstandard2.1/analyzers/dotnet/roslyn4.0/cs/System.Text.Json.SourceGeneration.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline/Unity.Analyzers.Common/Unity.Analyzers.Common.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline/Unity.Analyzers.LongLiving/Unity.Analyzers.LongLiving.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.SourceGenerators.dll"
+-analyzer:"D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
+"Assets/Editor/BuildScenes.cs"
+"Assets/Editor/EntrySceneContractTests.cs"
+"Assets/Editor/Phase1GrayboxSceneBuilder.cs"
+"Assets/Editor/Phase2AssetIntegrityTests.cs"
+"Assets/Editor/Phase2FontBuilder.cs"
+"Assets/Editor/Phase2PrefabBuilder.cs"
+"Assets/Editor/Phase2SpriteAtlasBuilder.cs"
+"Assets/Editor/Phase2Step1Pipeline.cs"
+"Assets/Editor/Phase3VerificationTool.cs"
+"Assets/Editor/ProceduralFootElements.cs"
+"Assets/Editor/ProductionEvidenceCapture.cs"
+"Assets/Editor/ProductionUIPolishTests.cs"
+"Assets/Editor/ProductionUISetup.cs"
+"Assets/Editor/SceneVisualInspector.cs"
+"Assets/Editor/SpriteSheetAutoSlicer.cs"
+"Assets/Editor/UIAndArenaMasterSetup.cs"
+"Assets/Editor/UiThemeBuilder.cs"
+"Assets/Editor/WeaponAutomationEditor.cs"
+"Assets/HITME_AimKit/Editor/AimVisualStagingBuilder.cs"
+"Assets/HITME_AimKit/Editor/HitMeAimPrefabBuilder.cs"
+"Assets/Scripts/Editor/AssetAutomationEditor.cs"
+"Assets/Scripts/Editor/SceneSetupEditor.cs"
+"Assets/Scripts/Editor/SpriteImportSetup.cs"
+"Assets/Scripts/Editor/WebBuildPipeline.cs"
+-langversion:9.0
+/deterministic
+/optimize+
+/debug:portable
+/nologo
+/RuntimeMetadataVersion:v4.0.30319
+/nowarn:0169
+/nowarn:0649
+/nowarn:0282
+/nowarn:1701
+/nowarn:1702
+/utf8output
+/preferreduilang:en-US
+/additionalfile:"Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.UnityAdditionalFile.txt"
+##### Custom Environment Variables
+DOTNET_HOST_PATH=D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe
+DOTNET_MULTILEVEL_LOOKUP=0
+DOTNET_SYSTEM_GLOBALIZATION_USENLS=1
+##### ExitCode
+1
+##### Output
+Assets\Editor\ProductionUIPolishTests.cs(20,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
-1 processor(s) skipped this assembly
-[333/339    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
-[334/339    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
-[335/339    1s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\ProductionUIPolishTests.cs(21,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(119,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(146,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+
+Assets\Editor\ProductionUIPolishTests.cs(182,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
 Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
 Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
 Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
-Assets\Editor\ProductionUIPolishTests.cs(20,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Editor\ProductionUIPolishTests.cs(21,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
-
-Assets\Editor\ProductionUIPolishTests.cs(119,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Editor\ProductionUIPolishTests.cs(146,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Editor\ProductionUIPolishTests.cs(182,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
 Assets\Editor\ProductionUIPolishTests.cs(225,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-
-Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
-
-Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
 
 Assets\Editor\ProductionUIPolishTests.cs(285,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
 Assets\Editor\ProductionUIPolishTests.cs(286,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
 
 Assets\Editor\ProductionUIPolishTests.cs(361,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
@@ -252,449 +764,43 @@ Assets\Editor\ProductionUIPolishTests.cs(362,25): warning CS0618: 'Object.FindFi
 Assets\Editor\ProductionUIPolishTests.cs(396,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
 Assets\Editor\ProductionUIPolishTests.cs(433,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-[336/339    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
-Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 313 references
 
-processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+Assets\Editor\ProductionUIPolishTests.cs(490,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 
-1 processor(s) skipped this assembly
-[337/339    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
-[338/339    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
-*** Tundra build success (4.48 seconds), 9 items updated, 339 evaluated
+Assets\Editor\ProductionUIPolishTests.cs(516,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(517,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(547,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(562,61): error CS0246: The type or namespace name 'TextMeshProUGUI' could not be found (are you missing a using directive or an assembly reference?)
+
+Assets\Editor\ProductionUIPolishTests.cs(569,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+*** Tundra build failed (0.80 seconds), 2 items updated, 339 evaluated
+Assets\Editor\ProductionUIPolishTests.cs(20,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(21,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(119,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(146,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\ProductionUIPolishTests.cs(182,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\ProductionUIPolishTests.cs(20,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\ProductionUIPolishTests.cs(21,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
-Assets\Editor\ProductionUIPolishTests.cs(119,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\ProductionUIPolishTests.cs(146,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\ProductionUIPolishTests.cs(182,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\ProductionUIPolishTests.cs(225,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
-Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
 Assets\Editor\ProductionUIPolishTests.cs(285,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\ProductionUIPolishTests.cs(286,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
 Assets\Editor\ProductionUIPolishTests.cs(361,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\ProductionUIPolishTests.cs(362,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\ProductionUIPolishTests.cs(396,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
 Assets\Editor\ProductionUIPolishTests.cs(433,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
-Total cache size 268293840
-Total cache size after purge 268293840, took 00:00:00.8508594
-AssetDatabase: script compilation time: 6.703272s
-Begin MonoManager ReloadAssembly
-Native extension for WindowsStandalone target not found
-Native extension for WebGL target not found
-ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
-Scripting: successfully reloaded assembly
-- Finished resetting the current domain, in  0.881 seconds
-Domain Reload Profiling: 1758ms
-	BeginReloadAssembly (391ms)
-		DisableScriptedObjects (42ms)
-		CreateAndSetChildDomain (87ms)
-	RebuildCommonClasses (15ms)
-	RebuildNativeTypeToScriptingClass (26ms)
-	initialDomainReloadingComplete (65ms)
-	LoadAllAssembliesAndSetupDomain (379ms)
-		LoadAssemblies (338ms)
-		TypeCache.Refresh (41ms)
-			TypeCache.ScanAssembly (32ms)
-		AnalyzeDomain (17ms)
-			BuildScriptInfoCaches (12ms)
-			ResolveRequiredComponents (3ms)
-	FinalizeReload (883ms)
-		SetupLoadedEditorAssemblies (0ms)
-			LogAssemblyErrors (3ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (160ms)
-			ProcessInitializeOnLoadAttributes (303ms)
-			ProcessInitializeOnLoadMethodAttributes (64ms)
-			AfterProcessingInitializeOnLoad (3ms)
-		AwakeInstancesAfterBackupRestoration (46ms)
-Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
-
-Asset Pipeline Refresh (id=ebc36e2e123ecbe488ac7cd2c9032d68): Total: 9.103 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
-	(Values over 0.05ms)
-	Summary:
-		Imports: total=0 (actual=0, local cache=0, cache server=0)
-		Asset DB Process Time: managed=0 ms, native=1279 ms
-		Asset DB Callback time: managed=136 ms, native=52 ms
-		Scripting: domain reloads=1, domain reload time=912 ms, compile time=6709 ms, other=12 ms
-		Project Asset Count: scripts=340, non-scripts=467
-		Asset File Changes: new=0, changed=2, moved=0, deleted=0
-		Scan Filter Count: 0
-	InvokePackagesCallback: 33.095ms
-	ApplyChangesToAssetFolders: 1.209ms
-	Scan: 165.793ms
-	Collect global state as custom dependencies: 10.991ms
-	OnSourceAssetsModified: 8.545ms
-	CategorizeScriptCompilationAssets: 7.446ms
-	ProcessAssetsWithTransientArtifactChanges: 19.175ms
-	CategorizeAssets: 10.656ms
-	CompileScripts: 6708.737ms
-	ImportOutOfDateAssets: 913.546ms (884.221ms without children)
-		UnloadImportedAssets: 2.145ms
-		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.285ms
-		ImportSchedulerStart: 26.890ms
-	PostProcessAllAssets: 148.871ms
-		VCAutoAddAssetPostprocess 2.768ms
-		PostProcessCallbackCreateDeferredMaterials 0.098ms
-		MonoPostProcessAllAssets: 135.404ms
-			AssetPostprocessor.OnPostprocessAllAssets 48.586ms
-			StyleCatalogPostProcessor.OnPostprocessAllAssets 16.534ms
-			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 16.315ms
-			BuilderAssetPostprocessor.OnPostprocessAllAssets 16.136ms
-			AssetChangedListener.OnPostprocessAllAssets 2.718ms
-			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.408ms
-			EditModeScopePostprocessor.OnPostprocessAllAssets 1.782ms
-			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 1.478ms
-			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.121ms
-			TextAssetPostProcessor.OnPostprocessAllAssets 0.921ms
-			AudioMixerPostprocessor.OnPostprocessAllAssets 0.827ms
-			ConfigAssetsTracker.OnPostprocessAllAssets 0.542ms
-			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.530ms
-			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.504ms
-			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.477ms
-			AssetEvents.OnPostprocessAllAssets 0.435ms
-			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.343ms
-			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.305ms
-			ThemePostprocessor.OnPostprocessAllAssets 0.295ms
-			AudioContainerPostProcessor.OnPostprocessAllAssets 0.244ms
-			SyncVS.PostprocessSyncProject 0.197ms
-			SpeedTreePostProcessor.OnPostprocessAllAssets 0.194ms
-			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.147ms
-	PostAssetChangesProfiler: 1.342ms
-	UnloadStreamsBegin: 2.026ms
-	GenerateScriptTypeHashes: 0.819ms
-	GenerateScriptTypeSerializationHashes: 2.278ms
-	Untracked: 1028.006ms
-
-Application.AssetDatabase Initial Refresh End
-Scanning for USB devices : 0.985ms
-Initializing Unity extensions:
-[MODES] ModeService[none].Initialize
-[MODES] ModeService[none].LoadModes
-[MODES] Loading mode Default (0) for mode-current-id-HIT ME
-Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 963 unused Assets / (2.0 MB). Loaded Objects now: 1688.
-Memory consumption went from 232.9 MB to 230.9 MB.
-Total: 13.527500 ms (FindLiveObjects: 0.272400 ms CreateObjectMapping: 0.048200 ms MarkObjects: 11.251400 ms  DeleteObjects: 1.442100 ms)
-
-Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
-[Project] Loading completed in 12.714 seconds
-	Project init time: 				12.098 seconds
-		Template init time: 		0.000 seconds
-		Package Manager init time: 		0.406 seconds
-		Asset Database init time: 		0.358 seconds
-		Global illumination init time: 	0.009 seconds
-		Assemblies load time: 			1.895 seconds
-		Unity extensions init time: 	0.005 seconds
-		Asset Database refresh time: 	9.104 seconds
-	Scene opening time: 			0.163 seconds
-##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1793531410777,"processId":18932,"projectLoad":12.7136938,"projectInit":12.0984948,"templateInit":0.0,"packageManagerInit":0.4058808,"assetDatabaseInit":0.3582397,"globalIlluminationInit":0.0093752,"assembliesLoad":1.8954669,"unityExtensionsInit":0.0047391,"assetDatabaseRefresh":9.1036819,"sceneOpening":0.1625378}
-##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1793531410777,"processId":18932,"editorVersion":"6000.6.4f1 (12bfff696524)","branch":"6000.6/staging","buildType":"Release","platform":"Windows"}
-[Licensing::Client] Successfully resolved entitlement details
-Running tests for ExecutionSettings with details:
-targetPlatform = 
-playerHeartbeatTimeout = 600
-filters[0] = 
-   Filter with settings:
-   testMode = EditMode
-   targetPlatform = 
-   testNames = null
-   groupNames = null
-   categoryNames = null
-   assemblyNames = null
-ignoreTests = {}
-featureFlags = null
-
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:Log (object)
-UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:InitializeAndExecuteRun (string[]) (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:53)
-UnityEditor.TestTools.TestRunner.CommandLineTest.TestStarter:InitializeAndExecuteRun () (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/TestStarter.cs:64)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 53)
-
-Start Indexing on Editor startup
-[Indexing] Starting Initial Indexing for Assets
-[UnityConnectServicesConfig] config is NOT valid, switching to default
-Created GICache directory at C:/Users/LENOVO/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.022s, timestamps: [12.717 - 12.739]
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1845.
-Memory consumption went from 236.9 MB to 236.9 MB.
-Total: 9.428700 ms (FindLiveObjects: 0.372400 ms CreateObjectMapping: 0.031700 ms MarkObjects: 8.859700 ms  DeleteObjects: 0.006100 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 57 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            102.124 ms
-	Integration:            97.483 ms
-	Integration of assets:  1.844 ms
-	Thread Wait Time:       -0.002 ms
-	Total Operation Time:   201.450 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2960.
-Memory consumption went from 255.0 MB to 255.0 MB.
-Total: 9.784800 ms (FindLiveObjects: 0.392400 ms CreateObjectMapping: 0.039000 ms MarkObjects: 9.200800 ms  DeleteObjects: 0.026600 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 16 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            26.035 ms
-	Integration:            17.512 ms
-	Integration of assets:  0.007 ms
-	Thread Wait Time:       0.023 ms
-	Total Operation Time:   43.578 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2962.
-Memory consumption went from 253.6 MB to 253.6 MB.
-Total: 14.941800 ms (FindLiveObjects: 0.475800 ms CreateObjectMapping: 0.028300 ms MarkObjects: 14.265000 ms  DeleteObjects: 0.033600 ms)
-
-The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 32 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            25.950 ms
-	Integration:            15.805 ms
-	Integration of assets:  0.005 ms
-	Thread Wait Time:       0.041 ms
-	Total Operation Time:   41.802 ms
-Unloading 113 unused Assets / (0.7 MB). Loaded Objects now: 2968.
-Memory consumption went from 260.7 MB to 259.9 MB.
-Total: 12.232700 ms (FindLiveObjects: 0.481600 ms CreateObjectMapping: 0.034900 ms MarkObjects: 11.302400 ms  DeleteObjects: 0.270600 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            24.755 ms
-	Integration:            14.773 ms
-	Integration of assets:  0.005 ms
-	Thread Wait Time:       0.035 ms
-	Total Operation Time:   39.568 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 14.913800 ms (FindLiveObjects: 0.407900 ms CreateObjectMapping: 0.019200 ms MarkObjects: 14.156200 ms  DeleteObjects: 0.045800 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            28.230 ms
-	Integration:            16.129 ms
-	Integration of assets:  0.013 ms
-	Thread Wait Time:       0.040 ms
-	Total Operation Time:   44.413 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 13.431700 ms (FindLiveObjects: 0.649100 ms CreateObjectMapping: 0.022800 ms MarkObjects: 12.586700 ms  DeleteObjects: 0.031500 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            27.581 ms
-	Integration:            16.444 ms
-	Integration of assets:  0.008 ms
-	Thread Wait Time:       0.033 ms
-	Total Operation Time:   44.066 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 11.687400 ms (FindLiveObjects: 0.399400 ms CreateObjectMapping: 0.020400 ms MarkObjects: 11.108100 ms  DeleteObjects: 0.030300 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            29.870 ms
-	Integration:            13.234 ms
-	Integration of assets:  0.005 ms
-	Thread Wait Time:       0.030 ms
-	Total Operation Time:   43.139 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 9.845000 ms (FindLiveObjects: 0.452400 ms CreateObjectMapping: 0.025800 ms MarkObjects: 9.164100 ms  DeleteObjects: 0.028600 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            32.544 ms
-	Integration:            11.425 ms
-	Integration of assets:  0.007 ms
-	Thread Wait Time:       0.039 ms
-	Total Operation Time:   44.015 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 13.989200 ms (FindLiveObjects: 0.371800 ms CreateObjectMapping: 0.020900 ms MarkObjects: 13.077200 ms  DeleteObjects: 0.071600 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            26.330 ms
-	Integration:            14.544 ms
-	Integration of assets:  0.005 ms
-	Thread Wait Time:       0.034 ms
-	Total Operation Time:   40.913 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2973.
-Memory consumption went from 260.1 MB to 260.1 MB.
-Total: 13.949800 ms (FindLiveObjects: 0.428600 ms CreateObjectMapping: 0.022500 ms MarkObjects: 13.301600 ms  DeleteObjects: 0.061100 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            24.425 ms
-	Integration:            17.367 ms
-	Integration of assets:  0.007 ms
-	Thread Wait Time:       0.024 ms
-	Total Operation Time:   41.823 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2975.
-Memory consumption went from 260.4 MB to 260.4 MB.
-Total: 9.546400 ms (FindLiveObjects: 0.491400 ms CreateObjectMapping: 0.034700 ms MarkObjects: 8.853000 ms  DeleteObjects: 0.029100 ms)
-
-Opening scene 'Assets/Scenes/Graybox.unity'
-Unloading 15 Unused Serialized files (Serialized files now loaded: 0)
-Loaded scene 'Assets/Scenes/Graybox.unity'
-	Deserialize:            36.349 ms
-	Integration:            16.733 ms
-	Integration of assets:  0.008 ms
-	Thread Wait Time:       0.026 ms
-	Total Operation Time:   53.117 ms
-Unloading 1 unused Assets / (2.6 KB). Loaded Objects now: 2989.
-Memory consumption went from 264.6 MB to 264.6 MB.
-Total: 11.324200 ms (FindLiveObjects: 0.439400 ms CreateObjectMapping: 0.031600 ms MarkObjects: 10.508400 ms  DeleteObjects: 0.036600 ms)
-
-The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-The character with Unicode value \u00B7 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [BuildFingerprintWatermark].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-The character with Unicode value \u25CF was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-The character with Unicode value \u2716 was not found in the [BeVietnamPro-Bold SDF] font asset or any potential fallbacks. It was replaced by Unicode character \u0020 in text object [HpNum].
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object,UnityEngine.Object)
-UnityEngine.Debug:LogWarning (object,UnityEngine.Object)
-TMPro.TextMeshProUGUI:SetArraySizes (TMPro.TMP_Text/TextProcessingElement[]) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:1980)
-TMPro.TMP_Text:ParseInputText () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TMP_Text.cs:2157)
-TMPro.TextMeshProUGUI:OnPreRenderCanvas () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:2465)
-TMPro.TextMeshProUGUI:Rebuild (UnityEngine.UI.CanvasUpdate) (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs:226)
-UnityEngine.UI.CanvasUpdateRegistry:PerformUpdate () (at ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/UGUI/UI/Core/CanvasUpdateRegistry.cs:226)
-UnityEngine.Canvas:SendWillRenderCanvases ()
-
-(Filename: ./Library/PackageCache/com.unity.ugui@0727b404f3a0/Runtime/TMP/TextMeshProUGUI.cs Line: 1980)
-
-Worker ready: AssetImportWorkerHW0 0
-Saving results to: D:\HITME GAME\unity-client\Evidence\phase2\test-results.xml
-Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 49 unused Assets / (4.6 MB). Loaded Objects now: 1901.
-Memory consumption went from 267.6 MB to 263.0 MB.
-Total: 10.924100 ms (FindLiveObjects: 0.201100 ms CreateObjectMapping: 0.021900 ms MarkObjects: 10.382500 ms  DeleteObjects: 0.194600 ms)
-
-DisplayProgressbar: Undo
-Test run completed. Exiting with code 0 (Ok). Run completed.
-UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
-UnityEngine.StackTraceUtility:ExtractStackTrace ()
-UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
-UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
-UnityEngine.Logger:Log (UnityEngine.LogType,object)
-UnityEngine.Debug:Log (object)
-UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitApplication (UnityEditor.TestTools.TestRunner.CommandLineTest.Executer/ReturnCodes,string) (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:81)
-UnityEditor.TestTools.TestRunner.CommandLineTest.Executer:ExitIfRunIsCompleted () (at ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs:74)
-UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
-
-(Filename: ./Library/PackageCache/com.unity.test-framework@80f691d4262b/UnityEditor.TestRunner/CommandLineTest/Executer.cs Line: 81)
-
-MonoPathRemapper: Attempts to remap: 11689; Successful remaps: 2036
-Serialized file version minimum: 23, current 23
-[Physics::Module] Cleanup current backend.
-[Physics::Module] Id: 0xf2b8ea05
-Input System module state changed to: ShutdownInProgress.
-Input Polling Thread exited.
-Input System module state changed to: Shutdown.
-[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
-[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
-Lingering sessions upon destruction of worker manager
-Unity Data Store service was successfully shut down
-UDS shutting down local client system
-AcceleratorClientConnectionCallback - disconnected - :0
-Cleanup mono
-CodeReloadManager destroyed
-VBCSCompilerPreWarmer: requested VBCSCompiler shutdown
-Checking for leaked weakptr:
-  Found no leaked weakptrs.
-[Package Manager] Server process was shutdown
-##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1793531417101,"processId":18932,"allocatedMemory":12031366,"memoryLabels":[{"Default":161752},{"Permanent":15516},{"NewDelete":72461},{"Thread":4197944},{"Manager":33757},{"VertexData":121792},{"Geometry":816},{"Texture":24},{"Shader":846584},{"Material":132},{"GfxDevice":55968},{"Animation":952},{"Audio":696},{"FreeType":8},{"FontEngine":736},{"Physics":1970},{"Physics2D":16},{"Serialization":121082},{"Input":42840},{"JobScheduler":256},{"TextLib":280},{"Mono":48},{"ScriptingNativeRuntime":1243480},{"BaseObject":49360},{"Resource":1444},{"Renderer":2504},{"Transform":4685},{"File":7385},{"WebCam":616},{"Culling":32},{"Terrain":11442},{"Wind":24},{"STL":40},{"String":482581},{"StaticString":3808},{"Utility":2674806},{"Curl":4238},{"PoolAlloc":2168},{"AI":80},{"TypeTree":17165},{"ScriptManager":12656},{"CodeReload":448},{"RuntimeInitializeOnLoadManager":64},{"Sprites":102},{"SpriteAtlas":120},{"GI":7816},{"Director":8296},{"CloudService":288},{"WebRequest":552},{"VR":49650},{"SceneManager":608},{"Video":64},{"LazyScriptCache":32},{"Camera":729},{"Secure":2377},{"SerializationCache":9256},{"APIUpdating":10320},{"Subsystems":336},{"VirtualTexturing":57888},{"StaticSafetyDebugInfo":278528},{"Analytics":464},{"Hierarchy":1188},{"UIElements":40},{"CoreStats":14456},{"Identifiers":7152},{"Gui":128},{"EditorUtility":115895},{"VersionControl":8},{"Undo":931},{"AssetDatabase":1203659},{"AssetImporter":40},{"EditorGi":328},{"UnityConnect":37042},{"Upm":1912},{"UpmDiagnostics":8},{"AssetCompliance":96},{"DrivenProperties":72},{"LocalIPC":262},{"ProfilerEditor":9746},{"CoreBusinessMetrics":3228},{"Windowing":456},{"Licensing":12573},{"AssetReference":32},{"IPCStream":32}]}
+Assets\Editor\ProductionUIPolishTests.cs(490,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(516,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(517,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(547,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(562,61): error CS0246: The type or namespace name 'TextMeshProUGUI' could not be found (are you missing a using directive or an assembly reference?)
+Assets\Editor\ProductionUIPolishTests.cs(569,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+AssetDatabase: script compilation time: 1.395048s
+Scripts have compiler errors.
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 1

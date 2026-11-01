@@ -173,11 +173,24 @@ namespace HitMe.UI
         public Button btnReplay;
         public Button btnBackToHome;
 
+        [Header("Leave Confirmation Dialog")]
+        public GameObject dialogLeaveRoom;
+        public TextMeshProUGUI txtLeaveDialogTitle;
+        public TextMeshProUGUI txtLeaveDialogMessage;
+        public Button btnConfirmLeave;
+        public Button btnCancelLeave;
+
+        [Header("Round Result Overlay")]
+        public GameObject roundResultOverlay;
+        public TextMeshProUGUI txtRoundResultTitle;
+        public TextMeshProUGUI txtRoundResultDetail;
+
         public ProductionScreen CurrentScreen { get; private set; } = ProductionScreen.Home;
 
         private Coroutine _toastCoroutine;
         private Coroutine _lobbyCountdownCoroutine;
         private Coroutine _quickMatchCoroutine;
+        private System.Action _pendingLeaveAction;
         private bool _isLocalPlayerReady;
         private string _activeRoomCode = "HM4826";
         private int _selectedBotCount = 3;
@@ -243,6 +256,7 @@ namespace HitMe.UI
         {
             public GameObject root;
             public TextMeshProUGUI txtRank;
+            public TextMeshProUGUI txtRankBadge;
             public TextMeshProUGUI txtName;
             public TextMeshProUGUI txtHp;
             public TextMeshProUGUI txtStatus;
@@ -769,8 +783,31 @@ namespace HitMe.UI
                 btnLeaveRoom.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
-                    ShowScreen(ProductionScreen.Home);
+                    ShowLeaveConfirmationDialog("XÁC NHẬN RỜI PHÒNG", "Bạn có chắc chắn muốn rời phòng không?\nMọi kết quả của trận đấu sẽ không được lưu.", () =>
+                    {
+                        if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
+                        ShowScreen(ProductionScreen.Home);
+                    });
+                });
+            }
+
+            if (btnConfirmLeave != null)
+            {
+                btnConfirmLeave.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    var action = _pendingLeaveAction;
+                    HideLeaveConfirmationDialog();
+                    action?.Invoke();
+                });
+            }
+
+            if (btnCancelLeave != null)
+            {
+                btnCancelLeave.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    HideLeaveConfirmationDialog();
                 });
             }
 
@@ -836,6 +873,16 @@ namespace HitMe.UI
             if (gameplayHudPanel != null) gameplayHudPanel.SetActive(screen == ProductionScreen.Gameplay);
             if (resultPanel != null) resultPanel.SetActive(screen == ProductionScreen.Result);
 
+            if (screen != ProductionScreen.Gameplay && roundResultOverlay != null)
+            {
+                roundResultOverlay.SetActive(false);
+            }
+
+            if (dialogLeaveRoom != null && dialogLeaveRoom.activeSelf)
+            {
+                HideLeaveConfirmationDialog();
+            }
+
             if (txtBuildFingerprint != null)
             {
                 txtBuildFingerprint.transform.SetAsLastSibling();
@@ -847,9 +894,35 @@ namespace HitMe.UI
             }
         }
 
+        public void ShowLeaveConfirmationDialog(string title, string message, System.Action onConfirm)
+        {
+            _pendingLeaveAction = onConfirm;
+            if (txtLeaveDialogTitle != null) txtLeaveDialogTitle.text = title;
+            if (txtLeaveDialogMessage != null) txtLeaveDialogMessage.text = message;
+            if (dialogLeaveRoom != null)
+            {
+                dialogLeaveRoom.transform.SetAsLastSibling();
+                dialogLeaveRoom.SetActive(true);
+            }
+        }
+
+        public void HideLeaveConfirmationDialog()
+        {
+            _pendingLeaveAction = null;
+            if (dialogLeaveRoom != null)
+            {
+                dialogLeaveRoom.SetActive(false);
+            }
+        }
+
         public void ShowToast(string message)
         {
             ShowToast(message, 2.0f);
+        }
+
+        public void ShowErrorToast(string message, float duration = 2.5f)
+        {
+            ShowToast("⚠️ [LỖI] " + message, duration);
         }
 
         public void ShowToast(string message, float duration)
@@ -862,7 +935,19 @@ namespace HitMe.UI
         {
             if (toastObject != null)
             {
-                if (txtToast != null) txtToast.text = message;
+                toastObject.transform.SetAsLastSibling();
+                if (txtToast != null)
+                {
+                    txtToast.text = message;
+                    if (message.Contains("[LỖI]") || message.Contains("⚠️"))
+                    {
+                        txtToast.color = new Color(1f, 0.4f, 0.4f);
+                    }
+                    else
+                    {
+                        txtToast.color = new Color(1f, 0.9f, 0.3f);
+                    }
+                }
                 toastObject.SetActive(true);
             }
 
@@ -1631,6 +1716,34 @@ namespace HitMe.UI
                 }
             }
 
+            bool isRoundEnd = phase == Phase.RoundEnd || phase == Phase.Resolve;
+            if (roundResultOverlay != null)
+            {
+                if (isRoundEnd && !isMatchEnd)
+                {
+                    roundResultOverlay.SetActive(true);
+                    if (txtRoundResultTitle != null && matchController != null && matchController.State != null)
+                    {
+                        txtRoundResultTitle.text = $"KẾT QUẢ VÒNG {matchController.State.RoundNumber}";
+                    }
+                    if (txtRoundResultDetail != null && matchController != null && matchController.State != null)
+                    {
+                        int hitsCount = 0;
+                        for (int pIdx = 0; pIdx < matchController.State.Players.Count; pIdx++)
+                        {
+                            hitsCount += matchController.State.Players[pIdx].HitsLanded;
+                        }
+                        txtRoundResultDetail.text = hitsCount > 0
+                            ? $"Có {hitsCount} đòn ném trúng đích trong vòng này!"
+                            : "Tất cả người chơi đều né thành công!";
+                    }
+                }
+                else
+                {
+                    roundResultOverlay.SetActive(false);
+                }
+            }
+
             if (isMatchEnd && !IsUrlAutoPlay())
             {
                 if (matchController != null && matchController.State != null)
@@ -1973,6 +2086,10 @@ namespace HitMe.UI
                 if (row.txtRank != null)
                 {
                     row.txtRank.text = i < CachedRankStrings.Length ? CachedRankStrings[i] : ("#" + (i + 1));
+                }
+                if (row.txtRankBadge != null)
+                {
+                    row.txtRankBadge.text = $"HẠNG {i + 1} [TẠM]";
                 }
                 if (row.txtName != null)
                 {
