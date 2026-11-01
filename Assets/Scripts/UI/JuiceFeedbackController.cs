@@ -69,14 +69,14 @@ namespace HitMe.UI
             set
             {
                 _reducedMotion = value;
-                try { PlayerPrefs.SetInt(PrefKeyReducedMotion, value ? 1 : 0); PlayerPrefs.Save(); }
+                try { PlayerPrefs.SetString(PrefKeyReducedMotion, value ? "1" : "0"); PlayerPrefs.Save(); }
                 catch { /* WebGL sandbox may fail */ }
             }
         }
 
         private void LoadReducedMotionPref()
         {
-            try { _reducedMotion = PlayerPrefs.GetInt(PrefKeyReducedMotion, 0) == 1; }
+            try { _reducedMotion = PlayerPrefs.GetString(PrefKeyReducedMotion, "0") == "1"; }
             catch { _reducedMotion = false; }
         }
 
@@ -221,11 +221,6 @@ namespace HitMe.UI
                     yield return null;
                 }
             }
-        }
-
-        private void OnDestroy()
-        {
-            _hitFxPool?.Clear();
         }
     }
 

@@ -65,24 +65,14 @@ namespace HitMe.Game
         }
 
         /// <summary>
-        /// Destroy all pooled objects.
+        /// Deactivates and clears pool tracking.
         /// </summary>
         public void Clear()
         {
             while (_available.Count > 0)
             {
                 T item = _available.Pop();
-                if (item != null)
-                {
-#if UNITY_EDITOR
-                    if (!Application.isPlaying)
-                        UnityEngine.Object.DestroyImmediate(item.gameObject);
-                    else
-                        UnityEngine.Object.Destroy(item.gameObject);
-#else
-                    UnityEngine.Object.Destroy(item.gameObject);
-#endif
-                }
+                if (item != null) item.gameObject.SetActive(false);
             }
             CountAll = 0;
         }
