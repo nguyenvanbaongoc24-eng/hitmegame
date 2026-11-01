@@ -122,7 +122,8 @@ namespace HitMe.Game
             else if (_currentState == "Idle" && !reducedMotion)
             {
                 float breath = Mathf.Sin(Time.time * 3.2f) * 0.025f;
-                _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * 0.50f), _baseBodyScale.y * (1f + breath), 1f);
+                float breathFactor = Ui.UiTheme.Instance != null ? Ui.UiTheme.Instance.idleBreathHorizontalFactor : Ui.UiTheme.DefaultIdleBreathHorizontalFactor;
+                _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * breathFactor), _baseBodyScale.y * (1f + breath), 1f);
             }
         }
 

@@ -125,7 +125,8 @@ namespace HitMe.Game
             {
                 _shadow.transform.position = new Vector3(groundPos.x, groundPos.y - 0.18f, groundPos.z);
                 float shadowScale = (0.50f - arcHeight * 0.25f) * VisualWeaponScale;
-                _shadow.transform.localScale = new Vector3(shadowScale, shadowScale * 0.54f, 1f);
+                float shadowYFactor = Ui.UiTheme.Instance != null ? Ui.UiTheme.Instance.weaponShadowVerticalScaleFactor : Ui.UiTheme.DefaultWeaponShadowVerticalScaleFactor;
+                _shadow.transform.localScale = new Vector3(shadowScale, shadowScale * shadowYFactor, 1f);
             }
 
             if (_elapsed >= Duration)
