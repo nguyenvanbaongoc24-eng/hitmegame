@@ -1,13 +1,25 @@
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading.RateLimiting;
 using HitMe.Server.Authority;
 using HitMe.Server.Protocol;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRateLimiter(options => options.AddPolicy("guest-token", context =>
+    RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ =>
+        new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
+builder.Services.AddSingleton<IAuthVerifier>(_ =>
+{
+    var encoded = Environment.GetEnvironmentVariable("GUEST_TOKEN_SIGNING_KEY");
+    return string.IsNullOrWhiteSpace(encoded)
+        ? new FakeAuthVerifier()
+        : new SignedGuestAuthVerifier(Convert.FromBase64String(encoded));
+});
 builder.Services.AddSingleton<IBanStore>(_ =>
     string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BAN_STORE_PATH"))
         ? new InMemoryBanStore()
@@ -24,9 +36,16 @@ builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerI
 builder.Services.AddHostedService<RoundDeadlineService>();
 builder.Services.AddHostedService<ShutdownNotifier>();
 var app = builder.Build();
+app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
+app.MapPost("/guest-token", (GuestTokenRequest request, IAuthVerifier verifier) =>
+{
+    if (verifier is not SignedGuestAuthVerifier signed) return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+    try { return Results.Ok(new { token = signed.Issue(request.Name) }); }
+    catch (ArgumentException) { return Results.BadRequest(new { code = "invalid_guest_name" }); }
+}).RequireRateLimiting("guest-token");
 app.MapGet("/status", (RoomDirectory rooms, WebSocketConnectionRegistry connections) =>
     Results.Ok(new { status = "ok", protocol = ProtocolGateway.Version,
         rooms = rooms.Snapshot().Count, connections = connections.Count }));
@@ -91,3 +110,5 @@ app.Map("/ws", async context => {
     }
 });
 app.Run();
+
+public sealed record GuestTokenRequest(string Name);

@@ -1,0 +1,7 @@
+# HIT ME identity plan (2026-11-02)
+
+Current local server supports two modes. Without `GUEST_TOKEN_SIGNING_KEY`, the old `guest:<name>` verifier remains available for development tests only. With a server-only base64 key of at least 32 bytes, `POST /guest-token` with JSON `{"name":"Nam"}` issues a 30-day HMAC-SHA256 signed `guest1` token with random stable guest ID; `join.token` and `quick_match.token` must carry it. The endpoint is limited to 30 requests/minute per source IP. The client must store the token privately and reuse it across launches; the same signing key must persist across server restarts. A changed key invalidates existing guests. Tokens are not Supabase Auth sessions and grant no access to a Supabase wallet.
+
+Production steps still required: (1) enable Supabase Auth for Google/Apple/Facebook using provider settings and redirect URLs; (2) verify provider JWT signature, issuer, audience and expiry in a new `IAuthVerifier`; (3) map `auth.users.id` to authoritative player ID and migrate guest identity only after proof of guest token ownership; (4) keep service-role/secret credentials on server only; (5) use HTTPS/WSS and rate limits. Do not treat display name as identity. Do not enable live rewards until account mapping, atomic DB award and restart tests pass.
+
+No OAuth provider is configured by this patch. The signed guest mode is an interim identity for room continuity, not a substitute for Supabase Auth or account recovery.

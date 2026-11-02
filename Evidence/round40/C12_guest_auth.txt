@@ -1,0 +1,9 @@
+2026-11-02: signed guest verifier and token issuance endpoint added.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo --filter FullyQualifiedName~SignedGuestAuthVerifierTests --verbosity quiet
+Result: Passed! 3/3 (same key survives verifier restart, forged/expired/malformed tokens rejected, gateway accepts signed join and rejects legacy guest token).
+Command: dotnet build server/HitMe.Server.csproj --no-restore --nologo --verbosity quiet
+Result: 0 errors, 9 pre-existing Core nullable warnings.
+Command: GUEST_TOKEN_SIGNING_KEY=<ephemeral random base64 value> node server/Tools/FakeClient.mjs --local
+Result: Passed! 3/3 real WebSocket matches (N=2,4,6); all tokens acquired through POST /guest-token.
+The key was generated for this process only, not printed, stored, or committed.
+Live Supabase Auth, wallet ownership, and durable key management remain incomplete.

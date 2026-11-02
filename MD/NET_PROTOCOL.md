@@ -1,6 +1,6 @@
 # HIT ME network protocol v1
 
-The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Every JSON message has `v:1` and `type`. Payloads are limited to 1024 UTF-8 bytes and 20 messages per second per connection. The current server accepts `guest:<name>` tokens for local testing only. It does not yet verify Supabase accounts. Keep `token` and `reconnectToken` out of logs.
+The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Every JSON message has `v:1` and `type`. Payloads are limited to 1024 UTF-8 bytes and 20 messages per second per connection. Without `GUEST_TOKEN_SIGNING_KEY`, the server accepts `guest:<name>` for local testing. With that key, obtain a signed guest token from `POST /guest-token` (`{"name":"Nam"}`), then send it in `join.token`; the unsigned form is rejected. This is not yet Supabase Auth. Keep `token` and `reconnectToken` out of logs.
 
 ## Client messages
 

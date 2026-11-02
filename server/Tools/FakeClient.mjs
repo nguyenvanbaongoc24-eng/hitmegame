@@ -35,12 +35,12 @@ try {
     try {
       for (let i = 0; i < count; i++) clients.push(await connect(endpoint));
       const nonce = `${Date.now()}_${count}`;
-      clients[0].send({ type: 'join', token: `guest:fake_${nonce}_0` });
+      clients[0].send({ type: 'join', token: await tokenFor(`fake_${nonce}_0`) });
       const room = await clients[0].take('room_state');
       assert.equal(room.protocolVersion, 1);
       assert.equal(room.players.length, 1);
       for (let i = 1; i < count; i++) {
-        clients[i].send({ type: 'join', token: `guest:fake_${nonce}_${i}`, roomCode: room.roomCode });
+        clients[i].send({ type: 'join', token: await tokenFor(`fake_${nonce}_${i}`), roomCode: room.roomCode });
         const joined = await clients[i].take('room_state');
         assert.equal(joined.players.length, i + 1);
       }
@@ -80,6 +80,17 @@ try {
   }
   console.log(`Passed! ${passed}/3 real WebSocket matches`);
 } finally { server?.kill(); }
+
+async function tokenFor(name) {
+  if (!process.env.GUEST_TOKEN_SIGNING_KEY) return `guest:${name}`;
+  const url = new URL(endpoint);
+  url.protocol = url.protocol === 'wss:' ? 'https:' : 'http:';
+  url.pathname = '/guest-token';
+  const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ name }) });
+  assert.equal(response.status, 200, `Guest token endpoint returned ${response.status}`);
+  return (await response.json()).token;
+}
 
 async function connect(url) {
   const socket = new WebSocket(url);
