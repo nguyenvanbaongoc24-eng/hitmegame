@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#060709">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="HIT ME — Trò chơi Dân Gian Ném Dép Làng Quê 2.5D nhiều người chơi">
+    <title>HIT ME — Ném Dép Làng Quê</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body {
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #060709;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        overscroll-behavior: none;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+      #unity-container {
+        width: 100%;
+        height: 100%;
+        max-height: 100dvh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: env(safe-area-inset-top);
+        padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+      }
+      #unity-fullscreen-container {
+        height: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        aspect-ratio: 9 / 19.5;
+        width: auto;
+        max-width: 100vw;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 50px rgba(0,0,0,0.85);
+      }
+      #unity-canvas {
+        width: 100% !important;
+        height: 100% !important;
+        outline: none;
+        display: block;
+        touch-action: none;
+      }
+      #unity-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at center, #141b2d 0%, #060709 100%);
+        color: #ffe882;
+        z-index: 100;
+        padding: 24px;
+        text-align: center;
+      }
+      .loading-brand {
+        font-size: 32px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: #f5c518;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 10px rgba(245,197,24,0.3);
+      }
+      .loading-tagline {
+        font-size: 14px;
+        color: #b0c4de;
+        margin-bottom: 28px;
+        letter-spacing: 1px;
+      }
+      .progress-container {
+        width: 240px;
+        max-width: 80vw;
+        height: 10px;
+        background: #1a2234;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+        position: relative;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #e67e22, #f5c518);
+        border-radius: 6px;
+        transition: width 0.15s ease-out;
+      }
+      .loading-status {
+        margin-top: 14px;
+        font-size: 13px;
+        color: #e0e6ed;
+        min-height: 20px;
+      }
+      #unity-warning {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 200;
+        font-size: 13px;
+      }
+      #rotate-notice {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: #060709;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 24px;
+      }
+      @media screen and (orientation: landscape) and (max-height: 600px) {
+        #rotate-notice { display: flex; }
+      }
+      #webgl-error-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        background: rgba(0,0,0,0.92);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 24px;
+      }
+      .error-card {
+        background: #151a28;
+        border: 1px solid #e74c3c;
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 380px;
+        color: #ecf0f1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <div id="unity-fullscreen-container">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+      </div>
+    </div>
+
+    <div id="unity-loading">
+      <div class="loading-brand">HIT ME</div>
+      <div class="loading-tagline">NÉM DÉP LÀNG QUÊ</div>
+      <div class="progress-container">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="loading-status" id="loading-status">Đang tải dữ liệu trò chơi… 0% (0.0 / 10.1 MB)</div>
+      <div id="slow-network-notice" style="display: none; margin-top: 14px; padding: 8px 16px; background: rgba(230, 126, 34, 0.2); border: 1px solid #e67e22; border-radius: 8px; font-size: 12px; color: #f39c12; max-width: 280px; line-height: 1.4;"></div>
+    </div>
+
+    <div id="unity-warning"></div>
+
+    <div id="rotate-notice">
+      <div style="font-size: 56px; margin-bottom: 16px;">🔄</div>
+      <div style="font-size: 22px; font-weight: bold; color: #f8b920; margin-bottom: 8px;">VUI LÒNG XOAY DỌC MÀN HÌNH</div>
+      <div style="font-size: 15px; color: #fff8dc; line-height: 1.4;">Trò chơi được thiết kế tối ưu cho trải nghiệm màn hình dọc điện thoại</div>
+    </div>
+
+    <div id="webgl-error-modal">
+      <div class="error-card">
+        <div style="font-size: 48px; margin-bottom: 12px;">⚠️</div>
+        <div style="font-size: 18px; font-weight: bold; color: #ff6b6b; margin-bottom: 10px;">KHÔNG THỂ KHỞI CHẠY WEBGL</div>
+        <div style="font-size: 14px; color: #bdc3c7; line-height: 1.5; margin-bottom: 16px;">
+          Trình duyệt hoặc thiết bị của bạn chưa bật tăng tốc phần cứng WebGL. Vui lòng mở bằng Google Chrome, Safari, hoặc Microsoft Edge phiên bản mới nhất.
+        </div>
+        <button onclick="window.location.reload()" style="background:#e67e22; color:#fff; border:none; padding:10px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">
+          TẢI LẠI TRANG
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // 1. WebGL Support Verification
+      function checkWebGLSupport() {
+        try {
+          const testCanvas = document.createElement("canvas");
+          const gl = testCanvas.getContext("webgl2") || testCanvas.getContext("webgl") || testCanvas.getContext("experimental-webgl");
+          return !!(gl && gl instanceof WebGLRenderingContext);
+        } catch (e) {
+          return false;
+        }
+      }
+
+      if (!checkWebGLSupport()) {
+        const errorModal = document.getElementById("webgl-error-modal");
+        if (errorModal) errorModal.style.display = "flex";
+        const loading = document.getElementById("unity-loading");
+        if (loading) loading.style.display = "none";
+      }
+
+      // 2. Runtime Server Configuration
+      window.HITME_CONFIG = {
+        serverUrl: "wss://hitmegame.onrender.com/ws",
+        version: "1.0.0",
+        environment: "production"
+      };
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryServer = urlParams.get("server");
+      if (queryServer) {
+        window.HITME_CONFIG.serverUrl = queryServer;
+      } else {
+        fetch("config.json?t=" + Date.now())
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.serverUrl && !urlParams.get("server")) {
+              window.HITME_CONFIG = Object.assign({}, window.HITME_CONFIG, data);
+            }
+          })
+          .catch(() => {});
+      }
+
+      // 3. E2E Test Bridge for Automation (?e2e=1)
+      if (urlParams.has("e2e")) {
+        const OrigWebSocket = window.WebSocket;
+        window.__OrigWebSocket = OrigWebSocket;
+        window.__hitmeTestState = {
+          screen: "Home",
+          roomCode: "",
+          playerCount: 1,
+          players: [],
+          phase: "None",
+          round: 0,
+          maxRounds: 5,
+          secondsRemaining: 0,
+          isReady: false,
+          rank: 0,
+          gold: 0,
+          isLocalWinner: false,
+          lastToast: "",
+          lastError: "",
+          connected: false,
+          sentMessages: [],
+          receivedMessages: []
+        };
+
+        window.WebSocket = function(url, protocols) {
+          const ws = protocols ? new OrigWebSocket(url, protocols) : new OrigWebSocket(url);
+          window.__hitmeActiveSocket = ws;
+          window.__hitmeTestState.connected = true;
+
+          const origSend = ws.send.bind(ws);
+          ws.send = function(data) {
+            try {
+              const msg = JSON.parse(data);
+              window.__hitmeTestState.sentMessages.push(msg);
+              if (msg.type === "room_ready") window.__hitmeTestState.isReady = msg.ready;
+            } catch(e) {}
+            return origSend(data);
+          };
+
+          ws.addEventListener("message", function(event) {
+            if (ws !== window.__hitmeActiveSocket) return;
+            if (typeof event.data === "string") {
+              try {
+                const msg = JSON.parse(event.data);
+                window.__hitmeTestState.receivedMessages.push(msg);
+                if (msg.type === "room_state") {
+                  window.__hitmeTestState.roomCode = msg.roomCode || "";
+                  window.__hitmeTestState.playerCount = msg.players ? msg.players.length : 1;
+                  window.__hitmeTestState.players = msg.players || [];
+                  window.__hitmeTestState.screen = msg.started ? "Gameplay" : "Lobby";
+                } else if (msg.type === "round_start") {
+                  window.__hitmeTestState.phase = "Placing";
+                  window.__hitmeTestState.round = msg.roundId || 1;
+                  window.__hitmeTestState.screen = "Gameplay";
+                } else if (msg.type === "reveal") {
+                  window.__hitmeTestState.phase = "Revealed";
+                } else if (msg.type === "round_result") {
+                  window.__hitmeTestState.phase = "RoundResult";
+                } else if (msg.type === "match_end") {
+                  window.__hitmeTestState.screen = "Result";
+                  window.__hitmeTestState.phase = "MatchEnd";
+                  window.__hitmeTestState.winners = msg.winners || [];
+                } else if (msg.type === "error") {
+                  window.__hitmeTestState.lastError = msg.code || "";
+                } else if (msg.type === "emote") {
+                  window.__hitmeTestState.lastEmote = msg.emoteId || "";
+                }
+              } catch(e) {}
+            }
+          });
+
+          ws.addEventListener("close", function(event) {
+            if (ws !== window.__hitmeActiveSocket) return;
+            window.__hitmeTestState.connected = false;
+            window.__hitmeTestState.lastCloseReason = event.reason || "";
+          });
+
+          return ws;
+        };
+
+        window.__hitmeTest = {
+          getState: function() { return window.__hitmeTestState; },
+          getSocket: function() { return window.__hitmeActiveSocket; },
+          connect: function(url) {
+            const targetUrl = url || window.HITME_CONFIG.serverUrl || "ws://127.0.0.1:8085/ws";
+            return new WebSocket(targetUrl);
+          },
+          sendAction: function(msg) {
+            if (window.__hitmeActiveSocket && window.__hitmeActiveSocket.readyState === OrigWebSocket.OPEN) {
+              window.__hitmeActiveSocket.send(JSON.stringify(msg));
+              return true;
+            }
+            if (window.__hitmeActiveSocket && window.__hitmeActiveSocket.readyState === OrigWebSocket.CONNECTING) {
+              window.__hitmeActiveSocket.addEventListener("open", function() {
+                window.__hitmeActiveSocket.send(JSON.stringify(msg));
+              }, { once: true });
+              return true;
+            }
+            const ws = this.connect();
+            ws.addEventListener("open", function() {
+              ws.send(JSON.stringify(msg));
+            }, { once: true });
+            return true;
+          }
+        };
+      }
+
+      // 4. Touch & Viewport Protections
+      const canvas = document.querySelector("#unity-canvas");
+      const loading = document.querySelector("#unity-loading");
+      const progressFill = document.querySelector("#progress-fill");
+      const loadingStatus = document.querySelector("#loading-status");
+
+      function unityShowBanner(message, type) {
+        const banner = document.querySelector("#unity-warning");
+        const item = document.createElement("div");
+        item.textContent = message;
+        item.style.cssText = `padding:8px;background:${type === "error" ? "#d33" : "#fc3"}`;
+        banner.appendChild(item);
+        if (type !== "error") setTimeout(() => item.remove(), 5000);
+      }
+
+      ["touchstart", "touchmove", "touchend", "touchcancel"].forEach(type => {
+        canvas.addEventListener(type, event => event.preventDefault(), { passive: false });
+      });
+      document.addEventListener("gesturestart", event => event.preventDefault(), { passive: false });
+
+      // 5. Unity WebGL Instantiation with Progress Callback
+      const buildUrl = "Build";
+      const buildVersion = urlParams.get("v") || "db4e8f1";
+      const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
+
+      const config = {
+        arguments: [],
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.wasm.br"),
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "HitMeStudio",
+        productName: "HIT ME",
+        productVersion: "1.0.0",
+        showBanner: unityShowBanner,
+        matchWebGLToCanvasSize: true
+      };
+
+      const script = document.createElement("script");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.loader.js");
+      const totalMB = 10.1;
+      const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
+      const slowTimer = setTimeout(() => {
+        const slowNotice = document.getElementById("slow-network-notice");
+        if (slowNotice) {
+          slowNotice.style.display = "block";
+          slowNotice.textContent = isVi
+            ? "⚠️ Mạng đang chậm, vui lòng đợi thêm giây lát…"
+            : "⚠️ Slow network detected, please hold on…";
+        }
+      }, 15000);
+
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          const pct = Math.round(progress * 100);
+          const downloadedMB = (progress * totalMB).toFixed(1);
+          if (progressFill) progressFill.style.width = pct + "%";
+          if (loadingStatus) {
+            loadingStatus.textContent = isVi
+              ? (progress < 0.9 ? `Đang tải dữ liệu trò chơi… ${pct}% (${downloadedMB} / ${totalMB} MB)` : `Đang khởi tạo sân làng… ${pct}% (${downloadedMB} / ${totalMB} MB)`)
+              : (progress < 0.9 ? `Downloading assets… ${pct}% (${downloadedMB} / ${totalMB} MB)` : `Initializing village arena… ${pct}% (${downloadedMB} / ${totalMB} MB)`);
+          }
+        }).then(instance => {
+          clearTimeout(slowTimer);
+          window.unityInstance = instance;
+          loading.remove();
+          canvas.focus();
+        }).catch(error => {
+          clearTimeout(slowTimer);
+          unityShowBanner(error, "error");
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
