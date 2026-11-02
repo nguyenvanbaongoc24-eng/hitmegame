@@ -4,4 +4,5 @@ Added focused server tests: first collinear target stops a throw even while that
 Existing golden vectors: 200 rounds, including collinear first target and simultaneous mutual hits, plus 7 full matches and 2-6-player rosters.
 Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~ServerMatchTests|FullyQualifiedName~GoldenRoundVectorTests|FullyQualifiedName~GameplayRuleContractTests|FullyQualifiedName~SimulationTests|FullyQualifiedName~ServerRoundSessionTests|FullyQualifiedName~RoundTests'
 Result: Passed! Failed: 0, Passed: 21, Skipped: 0, Total: 21.
+Full suite after C1-C3: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore -> Passed! Failed: 0, Passed: 120, Skipped: 0, Total: 120.
 Rule conflict in hit-me-next-tasks.md: its penetration wording conflicts with the earlier approved first-target stop (MaxHitsPerThrow=1), so combat was not changed. Its maxRounds=20 is a proposal, not an approved change; current GameConfig.MaxRounds=5.
