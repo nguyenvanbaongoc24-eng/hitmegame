@@ -72,6 +72,48 @@ public sealed class ServerMatchTests
         Assert.Equal(Vec2.Up, server.State.LockedInputs["b"].AimDirection);
     }
 
+    [Fact]
+    public void ServerThrowStopsAtFirstCollinearPlayerAndResolvesBothThrowsSimultaneously()
+    {
+        var config = Config();
+        config.MaxPlayers = 3;
+        var server = new ServerMatch(config, new[] { "a", "b", "c" });
+        var round = server.BeginRound(new FakeTimeProvider(Start));
+        CommitAndReady(round, "a", new Vec2(-3, 0), new Vec2(1, 0));
+        CommitAndReady(round, "b", new Vec2(0, 0), new Vec2(-1, 0));
+        CommitAndReady(round, "c", new Vec2(3, 0), Vec2.Up);
+
+        var result = server.ResolveLockedRound();
+
+        Assert.Equal(2, result.Hits.Count);
+        Assert.Contains(result.Hits, hit => hit.ShooterId == "a" && hit.TargetId == "b");
+        Assert.Contains(result.Hits, hit => hit.ShooterId == "b" && hit.TargetId == "a");
+        Assert.DoesNotContain(result.Hits, hit => hit.TargetId == "c");
+        Assert.Equal(2, server.State.FindPlayer("a")!.Hp);
+        Assert.Equal(2, server.State.FindPlayer("b")!.Hp);
+        Assert.Equal(3, server.State.FindPlayer("c")!.Hp);
+    }
+
+    [Fact]
+    public void ThreeServerHitsEliminateTheTarget()
+    {
+        var config = Config();
+        config.MaxPlayers = 3;
+        var server = new ServerMatch(config, new[] { "a", "b", "c" });
+        for (var turn = 1; turn <= 3; turn++)
+        {
+            var round = server.BeginRound(new FakeTimeProvider(Start.AddSeconds(turn * 10)));
+            CommitAndReady(round, "a", new Vec2(-3, 0), new Vec2(1, 0));
+            CommitAndReady(round, "b", new Vec2(0, 0), Vec2.Up);
+            CommitAndReady(round, "c", new Vec2(3, 0), Vec2.Up);
+            server.ResolveLockedRound();
+            Assert.Equal(3 - turn, server.State.FindPlayer("b")!.Hp);
+        }
+        Assert.False(server.State.FindPlayer("b")!.IsAlive);
+        Assert.True(server.State.FindPlayer("a")!.IsAlive);
+        Assert.True(server.State.FindPlayer("c")!.IsAlive);
+    }
+
     private static GameConfig Config() => new()
     {
         Seed = 77,

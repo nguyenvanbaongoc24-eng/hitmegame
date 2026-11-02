@@ -1,0 +1,7 @@
+Branch: prep/codex
+ServerRoundSession accepts private commits during the 5-second server-clock placing window; RoundTests verify lock at 5.000 s and rejection of late commits. ServerMatch adapts locked inputs into the linked Core/Phase1 MatchState, which alone resolves simultaneous hits, HP and match ending. Reveal and result are published only after lock.
+Added focused server tests: first collinear target stops a throw even while that target's simultaneous throw still lands; three hits eliminate a 3-HP player.
+Existing golden vectors: 200 rounds, including collinear first target and simultaneous mutual hits, plus 7 full matches and 2-6-player rosters.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~ServerMatchTests|FullyQualifiedName~GoldenRoundVectorTests|FullyQualifiedName~GameplayRuleContractTests|FullyQualifiedName~SimulationTests|FullyQualifiedName~ServerRoundSessionTests|FullyQualifiedName~RoundTests'
+Result: Passed! Failed: 0, Passed: 21, Skipped: 0, Total: 21.
+Rule conflict in hit-me-next-tasks.md: its penetration wording conflicts with the earlier approved first-target stop (MaxHitsPerThrow=1), so combat was not changed. Its maxRounds=20 is a proposal, not an approved change; current GameConfig.MaxRounds=5.
