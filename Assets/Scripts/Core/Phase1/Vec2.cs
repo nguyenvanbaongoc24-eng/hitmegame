@@ -14,6 +14,13 @@ namespace HitMe.Core
         public float LengthSquared { get { return X * X + Y * Y; } }
         public float Length { get { return (float)Math.Sqrt(LengthSquared); } }
         public Vec2 Normalized { get { var length = Length; return length > 0.00001f ? this / length : Up; } }
+        public static Vec2 Rotate(Vec2 v, float degrees)
+        {
+            float rad = degrees * 0.0174532925f;
+            float cos = (float)Math.Cos(rad);
+            float sin = (float)Math.Sin(rad);
+            return new Vec2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
+        }
         public static float Dot(Vec2 a, Vec2 b) { return a.X * b.X + a.Y * b.Y; }
         public static float Distance(Vec2 a, Vec2 b) { return (a - b).Length; }
         public static Vec2 operator +(Vec2 a, Vec2 b) { return new Vec2(a.X + b.X, a.Y + b.Y); }
