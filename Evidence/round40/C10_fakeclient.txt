@@ -1,0 +1,12 @@
+Command: dotnet build server/HitMe.Server.csproj --no-restore --nologo --verbosity quiet
+Result: 0 errors, 9 existing Core nullable warnings.
+Command: node server/Tools/FakeClient.mjs --local
+match N=2 room=9W9RJ5 rounds=5 winners=2 approvedRank1Gold=100 walletCredit=NOT_CONNECTED
+match N=4 room=QCBSW9 rounds=5 winners=4 approvedRank1Gold=150 walletCredit=NOT_CONNECTED
+match N=6 room=T564BP rounds=5 winners=6 approvedRank1Gold=200 walletCredit=NOT_CONNECTED
+Passed! 3/3 real WebSocket matches
+
+The three matches verified protocol sequence, room roster, reveal, round result,
+match end, and shared final HP. Gold shown is the approved policy preview only.
+No Supabase wallet credit or ranking-on-wire assertion was possible; these are
+separate incomplete requirements.
