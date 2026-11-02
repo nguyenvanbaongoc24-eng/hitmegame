@@ -101,6 +101,7 @@ async function verifyLiveCredits(tokens, rankings, size) {
   const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_KEY;
   const project = process.env.SUPABASE_URL;
   if (!key || !project) return 'NOT_CONNECTED';
+  assert.ok(key.startsWith('sb_secret_') || key.startsWith('eyJ'), 'Live credits require a server-only Supabase key');
   assert.ok(tokens.every(token => token.startsWith('guest1.')), 'Live credits require signed guest tokens');
   const ids = tokens.map(token => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8')).id);
   for (const id of ids) {

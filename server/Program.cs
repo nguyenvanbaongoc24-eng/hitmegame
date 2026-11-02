@@ -21,6 +21,7 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supaba
     if (string.IsNullOrWhiteSpace(supabaseUrl) || string.IsNullOrWhiteSpace(supabaseKey)
         || string.IsNullOrWhiteSpace(guestSigningKey))
         throw new InvalidOperationException("Supabase persistence requires URL, server-only key, and durable guest signing key.");
+    SupabaseServerKeyGuard.Validate(supabaseKey);
 }
 builder.Services.AddSingleton<IMatchResultStore>(_ =>
     string.IsNullOrWhiteSpace(supabaseUrl)

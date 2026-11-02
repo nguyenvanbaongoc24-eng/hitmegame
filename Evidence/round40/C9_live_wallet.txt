@@ -1,0 +1,17 @@
+2026-11-02, project lpylrbtpruyzdehkcaiu, branch prep/codex.
+Owner placed a server-only sb_secret_ key in the ignored worktree .env.
+GUEST_TOKEN_SIGNING_KEY was generated locally and stored in the same ignored file.
+No key, DB password, or signed guest token was written to this evidence file.
+
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo --verbosity quiet
+Result: Passed! 140/140. Includes rejection of publishable/anon keys at startup.
+Command: node --env-file=.env server/Tools/FakeClient.mjs --local
+Result: Passed! 3/3 real WebSocket matches, N=2, 4, 6.
+Each match reached round 5 and match_end with rankings for every player.
+For all 12 newly issued signed guest identities, FakeClient queried Supabase
+REST with the server key and checked gold, matches_played=1, and best_rank
+against the authoritative match_end ranking. All returned walletCredit=VERIFIED.
+These three test matches and guest wallet rows remain in the live project.
+
+Limits: Unity has not been connected to this server flow; the game client has
+no balance-reading endpoint yet. Tests used a local server with live Supabase.

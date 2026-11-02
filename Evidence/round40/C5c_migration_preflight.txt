@@ -39,5 +39,5 @@ anon leaderboard SELECT denied, authenticated SELECT preserved,
 anon reward RPC EXECUTE denied;
 3-player reward 150/80/40, duplicate match write no-op. The verification
 transaction rolled back and no test rows were retained.
-Server REST adapter is still untested against the live project because the
-owner supplied a publishable key, not a server-only secret key.
+The owner later configured a server-only secret key in ignored .env. Live REST
+adapter test is recorded in Evidence/round40/C9_live_wallet.txt.
