@@ -464,7 +464,10 @@ namespace HitMe.Game
 
             float baseScale = CharacterBodyScales[idx];
             float scale = baseScale * VisualCharacterScale;
-            _body.transform.localScale = new Vector3(scale, scale, 1f);
+            _baseBodyScale = new Vector3(scale, scale, 1f);
+            _body.transform.localScale = _baseBodyScale;
+            if (player.Facing.X < -0.05f) _body.flipX = true;
+            else if (player.Facing.X > 0.05f) _body.flipX = false;
             if (_shadow != null)
             {
                 float shadowScale = 0.66f * VisualCharacterScale * 0.70f;

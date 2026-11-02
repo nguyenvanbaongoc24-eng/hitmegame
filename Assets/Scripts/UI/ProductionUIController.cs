@@ -473,6 +473,11 @@ namespace HitMe.UI
                 ShowScreen(ProductionScreen.Lobby);
                 UpdateLobbyRoster(3, "Phòng Chiến Hữu", "HM4826");
             }
+            else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=lobby6p", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                ShowScreen(ProductionScreen.Lobby);
+                UpdateLobbyRoster(6, "Phòng Chiến Hữu", "HM4826");
+            }
             else if (Application.absoluteURL != null && Application.absoluteURL.IndexOf("screen=quickmatch", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 ShowScreen(ProductionScreen.Home);
@@ -1138,6 +1143,7 @@ namespace HitMe.UI
                     AudioManager.Instance?.PlayClick();
                     CycleHomeCharacter();
                 });
+                EnsureHomeCharArrows();
             }
             if (txtHomeCharName != null)
             {
@@ -1442,6 +1448,9 @@ namespace HitMe.UI
 
                 var img = toggleObj.AddComponent<Image>();
                 img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
+                var outline = toggleObj.AddComponent<Outline>();
+                outline.effectColor = new Color(0.85f, 0.65f, 0.15f, 0.90f);
+                outline.effectDistance = new Vector2(2f, -2f);
                 _btnHomeLangToggle = toggleObj.AddComponent<Button>();
                 _btnHomeLangToggle.targetGraphic = img;
                 _btnHomeLangToggle.onClick.AddListener(() =>
@@ -1488,6 +1497,79 @@ namespace HitMe.UI
             if (_selectedPracticeCharIndex < names.Length)
             {
                 ShowToast(names[_selectedPracticeCharIndex]);
+            }
+        }
+
+        public void EnsureHomeCharArrows()
+        {
+            try
+            {
+                if (imgHomeCharPortrait == null || imgHomeCharPortrait.transform.parent == null) return;
+                var parent = imgHomeCharPortrait.transform.parent;
+                if (parent.Find("BtnCharPrev") != null) return;
+
+                // Left Arrow (<)
+                var leftGo = new GameObject("BtnCharPrev", typeof(RectTransform));
+                leftGo.transform.SetParent(parent, false);
+                var leftRt = leftGo.GetComponent<RectTransform>();
+                leftRt.anchorMin = new Vector2(0.02f, 0.40f);
+                leftRt.anchorMax = new Vector2(0.18f, 0.60f);
+                leftRt.sizeDelta = Vector2.zero;
+                var leftBtn = leftGo.AddComponent<Button>();
+                var leftTxtGo = new GameObject("Text", typeof(RectTransform));
+                leftTxtGo.transform.SetParent(leftGo.transform, false);
+                var leftTxtRt = leftTxtGo.GetComponent<RectTransform>();
+                leftTxtRt.anchorMin = Vector2.zero;
+                leftTxtRt.anchorMax = Vector2.one;
+                leftTxtRt.sizeDelta = Vector2.zero;
+                var leftTxt = leftTxtGo.AddComponent<TextMeshProUGUI>();
+                leftTxt.font = GetDefaultFont();
+                leftTxt.text = "❮";
+                leftTxt.fontSize = 28f;
+                leftTxt.fontStyle = FontStyles.Bold;
+                leftTxt.alignment = TextAlignmentOptions.Center;
+                leftTxt.color = new Color(1f, 0.88f, 0.25f, 0.85f);
+                leftBtn.targetGraphic = leftTxt;
+                leftBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    _selectedPracticeCharIndex = (_selectedPracticeCharIndex + 6) % 7;
+                    RefreshBotTrainingDisplay();
+                    var names = UiStrings.GetLocalizedCharacterNames();
+                    if (_selectedPracticeCharIndex < names.Length) ShowToast(names[_selectedPracticeCharIndex]);
+                });
+
+                // Right Arrow (>)
+                var rightGo = new GameObject("BtnCharNext", typeof(RectTransform));
+                rightGo.transform.SetParent(parent, false);
+                var rightRt = rightGo.GetComponent<RectTransform>();
+                rightRt.anchorMin = new Vector2(0.82f, 0.40f);
+                rightRt.anchorMax = new Vector2(0.98f, 0.60f);
+                rightRt.sizeDelta = Vector2.zero;
+                var rightBtn = rightGo.AddComponent<Button>();
+                var rightTxtGo = new GameObject("Text", typeof(RectTransform));
+                rightTxtGo.transform.SetParent(rightGo.transform, false);
+                var rightTxtRt = rightTxtGo.GetComponent<RectTransform>();
+                rightTxtRt.anchorMin = Vector2.zero;
+                rightTxtRt.anchorMax = Vector2.one;
+                rightTxtRt.sizeDelta = Vector2.zero;
+                var rightTxt = rightTxtGo.AddComponent<TextMeshProUGUI>();
+                rightTxt.font = GetDefaultFont();
+                rightTxt.text = "❯";
+                rightTxt.fontSize = 28f;
+                rightTxt.fontStyle = FontStyles.Bold;
+                rightTxt.alignment = TextAlignmentOptions.Center;
+                rightTxt.color = new Color(1f, 0.88f, 0.25f, 0.85f);
+                rightBtn.targetGraphic = rightTxt;
+                rightBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    CycleHomeCharacter();
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ProductionUIController] EnsureHomeCharArrows caught: {ex.Message}");
             }
         }
 
@@ -3736,6 +3818,9 @@ namespace HitMe.UI
 
                     var trayBg = trayObj.AddComponent<Image>();
                     trayBg.color = new Color(0.08f, 0.12f, 0.18f, 0.95f);
+                    var trayOutline = trayObj.AddComponent<Outline>();
+                    trayOutline.effectColor = new Color(0.78f, 0.58f, 0.20f, 0.85f);
+                    trayOutline.effectDistance = new Vector2(2f, -2f);
 
                     // Row 1: Emote Icons
                     string[] emotes = { "😎", "🔥", "🎯", "😅", "💀" };
