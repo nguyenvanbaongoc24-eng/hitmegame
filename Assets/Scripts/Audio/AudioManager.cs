@@ -104,8 +104,71 @@ namespace HitMe.Audio
             }
         }
 
-        public void PlayMenuBgm() => PlayBgm(bgmMenu);
-        public void PlayMatchBgm() => PlayBgm(bgmMatch);
+        public void PlayMenuBgm() => TransitionBgm(bgmMenu);
+        public void PlayMatchBgm() => TransitionBgm(bgmMatch);
+
+        private Coroutine _fadeRoutine;
+
+        public void TransitionBgm(AudioClip newClip, float fadeDuration = 0.4f)
+        {
+            if (newClip == null || bgmSource == null) return;
+            if (bgmSource.clip == newClip && bgmSource.isPlaying) return;
+
+            if (!isActiveAndEnabled)
+            {
+                PlayBgm(newClip);
+                return;
+            }
+
+            if (_fadeRoutine != null) StopCoroutine(_fadeRoutine);
+            _fadeRoutine = StartCoroutine(CrossfadeRoutine(newClip, fadeDuration));
+        }
+
+        private System.Collections.IEnumerator CrossfadeRoutine(AudioClip newClip, float duration)
+        {
+            float startVol = bgmSource.isPlaying ? bgmSource.volume : 0f;
+            float halfDuration = duration * 0.5f;
+
+            if (bgmSource.isPlaying && halfDuration > 0.01f)
+            {
+                for (float t = 0; t < halfDuration; t += Time.unscaledDeltaTime)
+                {
+                    bgmSource.volume = Mathf.Lerp(startVol, 0f, t / halfDuration);
+                    yield return null;
+                }
+            }
+
+            bgmSource.clip = newClip;
+            bgmSource.volume = 0f;
+            bgmSource.Play();
+
+            if (halfDuration > 0.01f)
+            {
+                for (float t = 0; t < halfDuration; t += Time.unscaledDeltaTime)
+                {
+                    bgmSource.volume = Mathf.Lerp(0f, _musicVolume, t / halfDuration);
+                    yield return null;
+                }
+            }
+            bgmSource.volume = _musicVolume;
+            _fadeRoutine = null;
+        }
+
+        public void DuckMusic(float factor = 0.3f)
+        {
+            if (bgmSource != null && bgmSource.isPlaying)
+            {
+                bgmSource.volume = _musicVolume * Mathf.Clamp01(factor);
+            }
+        }
+
+        public void UnduckMusic()
+        {
+            if (bgmSource != null && bgmSource.isPlaying)
+            {
+                bgmSource.volume = _musicVolume;
+            }
+        }
 
         public void PlaySfx(AudioClip clip)
         {

@@ -5,6 +5,7 @@ using System.Text;
 using HitMe.Core;
 using HitMe.Audio;
 using HitMe.Game;
+using HitMe.Economy;
 using HitMe.NetClientV1;
 using TMPro;
 using UnityEngine;
@@ -1720,15 +1721,25 @@ namespace HitMe.UI
             var acc = Game.FakeAccountService.Instance;
             if (acc == null) return;
 
+            RankService.EnsureInitialized();
+            var tier = RankService.GetTierForPoints(acc.RankPoints);
+            string tierName = tier != null ? tier.GetLocalizedName(!UiStrings.IsVietnamese) : "Đồng";
+            string tierBadge = tier != null ? tier.badge : "🥉";
+
             if (txtProfileTitle != null) txtProfileTitle.text = UiStrings.Get(UiStrings.ProfileTitle);
             if (txtProfilePlayerName != null) txtProfilePlayerName.text = acc.DisplayName;
             if (txtProfilePlayerId != null) txtProfilePlayerId.text = "ID: " + acc.PlayerId;
-            if (txtProfileGold != null) txtProfileGold.text = acc.Gold.ToString() + " VÀNG";
+
+            if (txtProfileGold != null)
+            {
+                txtProfileGold.text = $"{acc.Gold} VÀNG • {tierBadge} {tierName} ({acc.RankPoints} Đ) • {acc.MatchesPlayed} Trận";
+            }
+
             if (txtProfileRenameCost != null)
             {
                 txtProfileRenameCost.text = acc.NameChangeCount == 0
                     ? UiStrings.Get(UiStrings.FreeRenameLabel)
-                    : UiStrings.Get(UiStrings.CostRenameLabel);
+                    : "Đổi tên lần 2+: 99 VÀNG";
             }
         }
 
@@ -1750,10 +1761,63 @@ namespace HitMe.UI
         public void RefreshShopUI()
         {
             var acc = Game.FakeAccountService.Instance;
-            var inv = Game.FakeInventoryService.Instance;
+            ItemCatalog.EnsureInitialized();
+            var items = ItemCatalog.GetItems();
+
             if (txtShopTitle != null) txtShopTitle.text = UiStrings.Get(UiStrings.ShopTitle);
             if (txtShopSubtitle != null) txtShopSubtitle.text = UiStrings.Get(UiStrings.ShopSubtitle);
             if (txtShopGold != null && acc != null) txtShopGold.text = acc.Gold.ToString() + " VÀNG";
+
+            var shopCard = dialogShop != null && dialogShop.transform.childCount > 0 ? dialogShop.transform.GetChild(0) : null;
+            if (shopCard != null)
+            {
+                for (int i = 0; i < items.Count && i < 7; i++)
+                {
+                    var item = items[i];
+                    var rowTr = shopCard.Find("ShopRow" + i);
+                    if (rowTr != null)
+                    {
+                        bool isOwned = ItemCatalog.IsOwned(item.id);
+                        bool isEquipped = ItemCatalog.EquippedWeaponId == item.id;
+                        bool isMissingSprite = item.id == "coc_bia_hoi" || item.id == "xe_dap_phuong_hoang" || item.id == "xe_may_honda_cub" || item.id == "chu_cho_vang";
+
+                        var txtName = rowTr.Find("ItemName")?.GetComponent<TextMeshProUGUI>();
+                        if (txtName != null)
+                        {
+                            string rarityTag = $"[{item.rarity}]";
+                            string missingTag = isMissingSprite ? " [THIẾU ẢNH]" : "";
+                            string displayName = item.GetLocalizedName(!UiStrings.IsVietnamese);
+                            txtName.text = $"{displayName} ({item.price}G) {rarityTag}{missingTag}";
+                        }
+
+                        var btnAction = rowTr.Find("BtnAction")?.GetComponent<Button>();
+                        var txtBtn = btnAction != null ? btnAction.transform.Find("Label")?.GetComponent<TextMeshProUGUI>() : null;
+                        if (btnAction != null && txtBtn != null)
+                        {
+                            btnAction.onClick.RemoveAllListeners();
+                            if (isEquipped)
+                            {
+                                txtBtn.text = UiStrings.Get(UiStrings.BtnEquipped);
+                                btnAction.interactable = false;
+                            }
+                            else if (isOwned)
+                            {
+                                txtBtn.text = "TRANG BỊ";
+                                btnAction.interactable = true;
+                                string idCopy = item.id;
+                                btnAction.onClick.AddListener(() => OnEquipWeapon(idCopy));
+                            }
+                            else
+                            {
+                                txtBtn.text = $"{item.price}G {UiStrings.Get(UiStrings.BtnBuy)}";
+                                btnAction.interactable = acc != null && acc.Gold >= item.price;
+                                string idCopy = item.id;
+                                btnAction.onClick.AddListener(() => OnBuyWeapon(idCopy));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void ShowInventoryDialog()
@@ -1773,12 +1837,31 @@ namespace HitMe.UI
 
         public void RefreshInventoryUI()
         {
-            var inv = Game.FakeInventoryService.Instance;
+            ItemCatalog.EnsureInitialized();
+            string eqId = ItemCatalog.EquippedWeaponId;
+            var eqItem = ItemCatalog.GetItem(eqId);
+
             if (txtInventoryTitle != null) txtInventoryTitle.text = UiStrings.Get(UiStrings.InventoryTitle);
-            if (txtInventoryEquippedWeapon != null && inv != null)
+            if (txtInventoryEquippedWeapon != null)
             {
-                var eq = inv.GetEquippedWeapon();
-                txtInventoryEquippedWeapon.text = UiStrings.Get(UiStrings.BtnEquipped) + ": " + (eq != null ? eq.nameVi : UiStrings.WeaponSandalName);
+                string eqName = eqItem != null ? eqItem.GetLocalizedName(!UiStrings.IsVietnamese) : UiStrings.WeaponSandalName;
+                txtInventoryEquippedWeapon.text = UiStrings.Get(UiStrings.BtnEquipped) + ": " + eqName;
+            }
+
+            var invCard = dialogInventory != null && dialogInventory.transform.childCount > 0 ? dialogInventory.transform.GetChild(0) : null;
+            if (invCard != null)
+            {
+                var slot0 = invCard.Find("Slot0");
+                if (slot0 != null)
+                {
+                    var nameTxt = slot0.Find("Name")?.GetComponent<TextMeshProUGUI>();
+                    if (nameTxt != null)
+                    {
+                        string eqName = eqItem != null ? eqItem.GetLocalizedName(!UiStrings.IsVietnamese) : "DÉP TỔ ONG";
+                        string rarity = eqItem != null ? $"[{eqItem.rarity}]" : "[Common]";
+                        nameTxt.text = $"{eqName} {rarity} (Đang dùng)";
+                    }
+                }
             }
         }
 
@@ -1876,41 +1959,95 @@ namespace HitMe.UI
 
             if (_leaderboardPlaceholderObj == null)
             {
-                // Placeholder Container for empty tab / Quests tab ("Sắp ra mắt")
-                _leaderboardPlaceholderObj = new GameObject("PlaceholderComingSoon", typeof(RectTransform));
+                // Placeholder / Quests container
+                _leaderboardPlaceholderObj = new GameObject("QuestsContainer", typeof(RectTransform));
                 _leaderboardPlaceholderObj.transform.SetParent(modalBox, false);
                 var phRt = _leaderboardPlaceholderObj.GetComponent<RectTransform>();
-                phRt.anchorMin = new Vector2(0.10f, 0.18f);
-                phRt.anchorMax = new Vector2(0.90f, 0.72f);
+                phRt.anchorMin = new Vector2(0.08f, 0.15f);
+                phRt.anchorMax = new Vector2(0.92f, 0.74f);
                 phRt.sizeDelta = Vector2.zero;
 
                 var phImg = _leaderboardPlaceholderObj.AddComponent<Image>();
-                phImg.color = new Color(0.10f, 0.15f, 0.25f, 0.95f);
+                phImg.color = new Color(0.08f, 0.12f, 0.20f, 0.95f);
 
+                // Quests Title
                 var phTitleObj = new GameObject("Title", typeof(RectTransform));
                 phTitleObj.transform.SetParent(_leaderboardPlaceholderObj.transform, false);
                 var phTitleRt = phTitleObj.GetComponent<RectTransform>();
-                phTitleRt.anchorMin = new Vector2(0.05f, 0.55f);
-                phTitleRt.anchorMax = new Vector2(0.95f, 0.75f);
+                phTitleRt.anchorMin = new Vector2(0.05f, 0.86f);
+                phTitleRt.anchorMax = new Vector2(0.95f, 0.98f);
                 phTitleRt.sizeDelta = Vector2.zero;
                 _txtLeaderboardPlaceholderTitle = phTitleObj.AddComponent<TextMeshProUGUI>();
                 _txtLeaderboardPlaceholderTitle.font = GetDefaultFont();
-                _txtLeaderboardPlaceholderTitle.fontSize = 26f;
+                _txtLeaderboardPlaceholderTitle.fontSize = 22f;
                 _txtLeaderboardPlaceholderTitle.fontStyle = FontStyles.Bold;
                 _txtLeaderboardPlaceholderTitle.alignment = TextAlignmentOptions.Center;
                 _txtLeaderboardPlaceholderTitle.color = new Color(1f, 0.85f, 0.25f);
+                _txtLeaderboardPlaceholderTitle.text = "NHIỆM VỤ HÀNG NGÀY";
 
-                var phBodyObj = new GameObject("Body", typeof(RectTransform));
+                // 3 Quest Rows
+                for (int qi = 0; qi < 3; qi++)
+                {
+                    float yTop = 0.82f - (qi * 0.23f);
+                    float yBot = yTop - 0.20f;
+                    var qRow = new GameObject("QuestRow" + qi, typeof(RectTransform));
+                    qRow.transform.SetParent(_leaderboardPlaceholderObj.transform, false);
+                    var qrRt = qRow.GetComponent<RectTransform>();
+                    qrRt.anchorMin = new Vector2(0.04f, yBot);
+                    qrRt.anchorMax = new Vector2(0.96f, yTop);
+                    qrRt.sizeDelta = Vector2.zero;
+                    var qImg = qRow.AddComponent<Image>();
+                    qImg.color = new Color(0.14f, 0.20f, 0.32f, 0.90f);
+
+                    var qTextObj = new GameObject("QuestDesc", typeof(RectTransform));
+                    qTextObj.transform.SetParent(qRow.transform, false);
+                    var qtRt = qTextObj.GetComponent<RectTransform>();
+                    qtRt.anchorMin = new Vector2(0.04f, 0.10f);
+                    qtRt.anchorMax = new Vector2(0.68f, 0.90f);
+                    qtRt.sizeDelta = Vector2.zero;
+                    var qtComp = qTextObj.AddComponent<TextMeshProUGUI>();
+                    qtComp.font = GetDefaultFont();
+                    qtComp.fontSize = 17f;
+                    qtComp.alignment = TextAlignmentOptions.MidlineLeft;
+                    qtComp.color = Color.white;
+
+                    var qBtnObj = new GameObject("BtnClaim", typeof(RectTransform));
+                    qBtnObj.transform.SetParent(qRow.transform, false);
+                    var qbRt = qBtnObj.GetComponent<RectTransform>();
+                    qbRt.anchorMin = new Vector2(0.70f, 0.15f);
+                    qbRt.anchorMax = new Vector2(0.96f, 0.85f);
+                    qbRt.sizeDelta = Vector2.zero;
+                    var qbImg = qBtnObj.AddComponent<Image>();
+                    qbImg.color = new Color(0.2f, 0.65f, 0.35f);
+                    var qBtnComp = qBtnObj.AddComponent<Button>();
+                    qBtnComp.targetGraphic = qbImg;
+
+                    var qBtnLblObj = new GameObject("Label", typeof(RectTransform));
+                    qBtnLblObj.transform.SetParent(qBtnObj.transform, false);
+                    var qblRt = qBtnLblObj.GetComponent<RectTransform>();
+                    qblRt.anchorMin = Vector2.zero; qblRt.anchorMax = Vector2.one; qblRt.sizeDelta = Vector2.zero;
+                    var qblComp = qBtnLblObj.AddComponent<TextMeshProUGUI>();
+                    qblComp.font = GetDefaultFont();
+                    qblComp.fontSize = 17f;
+                    qblComp.fontStyle = FontStyles.Bold;
+                    qblComp.alignment = TextAlignmentOptions.Center;
+                    qblComp.color = Color.white;
+                    qblComp.text = "NHẬN";
+                }
+
+                // Reset note footer
+                var phBodyObj = new GameObject("Footer", typeof(RectTransform));
                 phBodyObj.transform.SetParent(_leaderboardPlaceholderObj.transform, false);
                 var phBodyRt = phBodyObj.GetComponent<RectTransform>();
-                phBodyRt.anchorMin = new Vector2(0.08f, 0.25f);
-                phBodyRt.anchorMax = new Vector2(0.92f, 0.52f);
+                phBodyRt.anchorMin = new Vector2(0.05f, 0.02f);
+                phBodyRt.anchorMax = new Vector2(0.95f, 0.12f);
                 phBodyRt.sizeDelta = Vector2.zero;
                 _txtLeaderboardPlaceholderBody = phBodyObj.AddComponent<TextMeshProUGUI>();
                 _txtLeaderboardPlaceholderBody.font = GetDefaultFont();
-                _txtLeaderboardPlaceholderBody.fontSize = 17f;
+                _txtLeaderboardPlaceholderBody.fontSize = 14f;
                 _txtLeaderboardPlaceholderBody.alignment = TextAlignmentOptions.Center;
-                _txtLeaderboardPlaceholderBody.color = new Color(0.85f, 0.90f, 0.96f);
+                _txtLeaderboardPlaceholderBody.color = new Color(0.70f, 0.80f, 0.90f);
+                _txtLeaderboardPlaceholderBody.text = "⏰ Đặt lại lúc 00:00 (Giờ Việt Nam)";
             }
         }
 
@@ -1940,27 +2077,92 @@ namespace HitMe.UI
                 if (_txtTabQuestsLabel != null) _txtTabQuestsLabel.color = _currentLeaderboardTab == 1 ? new Color(0.08f, 0.12f, 0.2f) : Color.white;
             }
 
-            // Check rows in modal
+            // Tab 0: Leaderboard Rows
             var modalBox = dialogLeaderboard != null && dialogLeaderboard.transform.childCount > 0 ? dialogLeaderboard.transform.GetChild(0) : null;
             if (modalBox != null)
             {
+                var mockRanks = RankService.GetMockLeaderboard();
                 for (int i = 0; i < modalBox.childCount; i++)
                 {
                     var child = modalBox.GetChild(i);
                     if (child.name.StartsWith("Row"))
                     {
                         child.gameObject.SetActive(_currentLeaderboardTab == 0);
+                        if (_currentLeaderboardTab == 0 && int.TryParse(child.name.Substring(3), out int rowIdx) && rowIdx < mockRanks.Count)
+                        {
+                            var entry = mockRanks[rowIdx];
+                            var txtRank = child.Find("Rank")?.GetComponent<TextMeshProUGUI>();
+                            var txtName = child.Find("Name")?.GetComponent<TextMeshProUGUI>();
+                            var txtScore = child.Find("Score")?.GetComponent<TextMeshProUGUI>();
+                            if (txtRank != null) txtRank.text = "#" + entry.rank;
+                            if (txtName != null) txtName.text = $"{entry.name} [{entry.tier}]";
+                            if (txtScore != null) txtScore.text = entry.points + " Đ";
+                        }
                     }
                 }
             }
 
+            // Tab 1: Quests Rows
             if (_leaderboardPlaceholderObj != null)
             {
                 _leaderboardPlaceholderObj.SetActive(_currentLeaderboardTab == 1);
-                if (_txtLeaderboardPlaceholderTitle != null)
-                    _txtLeaderboardPlaceholderTitle.text = UiStrings.Get("SẮP RA MẮT");
-                if (_txtLeaderboardPlaceholderBody != null)
-                    _txtLeaderboardPlaceholderBody.text = UiStrings.Get("Hệ thống nhiệm vụ đang hoàn thiện!");
+                if (_currentLeaderboardTab == 1)
+                {
+                    var acc = Game.FakeAccountService.Instance;
+                    var quests = QuestService.GetQuests();
+                    for (int qi = 0; qi < quests.Count && qi < 3; qi++)
+                    {
+                        var q = quests[qi];
+                        var qRow = _leaderboardPlaceholderObj.transform.Find("QuestRow" + qi);
+                        if (qRow != null)
+                        {
+                            var qtComp = qRow.Find("QuestDesc")?.GetComponent<TextMeshProUGUI>();
+                            if (qtComp != null)
+                            {
+                                qtComp.text = $"<b>{q.titleVi}</b> (+{q.rewardGold} Vàng)\n<size=14><color=#b0c4de>{q.descriptionVi} (Tiến độ: {q.currentProgress}/{q.target})</color></size>";
+                            }
+
+                            var qBtn = qRow.Find("BtnClaim")?.GetComponent<Button>();
+                            var qbImg = qBtn != null ? qBtn.targetGraphic as Image : null;
+                            var qbTxt = qBtn != null ? qBtn.transform.Find("Label")?.GetComponent<TextMeshProUGUI>() : null;
+
+                            if (qBtn != null && qbTxt != null)
+                            {
+                                qBtn.onClick.RemoveAllListeners();
+                                if (q.isClaimed)
+                                {
+                                    qbTxt.text = "ĐÃ NHẬN";
+                                    qBtn.interactable = false;
+                                    if (qbImg != null) qbImg.color = new Color(0.3f, 0.35f, 0.4f);
+                                }
+                                else if (q.IsCompleted)
+                                {
+                                    qbTxt.text = "NHẬN";
+                                    qBtn.interactable = true;
+                                    if (qbImg != null) qbImg.color = new Color(0.85f, 0.65f, 0.15f);
+                                    string qIdCopy = q.id;
+                                    qBtn.onClick.AddListener(() =>
+                                    {
+                                        if (QuestService.ClaimReward(qIdCopy, out int rewardGold))
+                                        {
+                                            acc?.AddGold(rewardGold);
+                                            AudioManager.Instance?.PlayCoin();
+                                            ShowToast($"Đã nhận +{rewardGold} Vàng từ nhiệm vụ!");
+                                            RefreshLeaderboardUI();
+                                            RefreshAccountDisplay();
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    qbTxt.text = $"{q.currentProgress}/{q.target}";
+                                    qBtn.interactable = false;
+                                    if (qbImg != null) qbImg.color = new Color(0.2f, 0.28f, 0.38f);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1987,6 +2189,45 @@ namespace HitMe.UI
             {
                 inputLoginGuestName.text = acc.DisplayName;
             }
+
+            // Wire social buttons to display "Sắp ra mắt trong Phase 5!" toast
+            var loginCard = dialogLogin != null && dialogLogin.transform.childCount > 0 ? dialogLogin.transform.GetChild(0) : null;
+            if (loginCard != null)
+            {
+                var btnG = btnLoginGoogle ?? loginCard.Find("BtnGoogle")?.GetComponent<Button>();
+                if (btnG != null)
+                {
+                    btnG.interactable = true;
+                    btnG.onClick.RemoveAllListeners();
+                    btnG.onClick.AddListener(() =>
+                    {
+                        AudioManager.Instance?.PlayClick();
+                        ShowToast("Đăng nhập Google sắp ra mắt trong Phase 5!");
+                    });
+                }
+                var btnF = btnLoginFacebook ?? loginCard.Find("BtnFacebook")?.GetComponent<Button>();
+                if (btnF != null)
+                {
+                    btnF.interactable = true;
+                    btnF.onClick.RemoveAllListeners();
+                    btnF.onClick.AddListener(() =>
+                    {
+                        AudioManager.Instance?.PlayClick();
+                        ShowToast("Đăng nhập Facebook sắp ra mắt trong Phase 5!");
+                    });
+                }
+                var btnA = btnLoginApple ?? loginCard.Find("BtnApple")?.GetComponent<Button>();
+                if (btnA != null)
+                {
+                    btnA.interactable = true;
+                    btnA.onClick.RemoveAllListeners();
+                    btnA.onClick.AddListener(() =>
+                    {
+                        AudioManager.Instance?.PlayClick();
+                        ShowToast("Đăng nhập Apple sắp ra mắt trong Phase 5!");
+                    });
+                }
+            }
         }
 
         public void OnSubmitGuestLogin(string name)
@@ -2004,36 +2245,63 @@ namespace HitMe.UI
         public void OnBuyWeapon(string weaponId)
         {
             var acc = Game.FakeAccountService.Instance;
-            var inv = Game.FakeInventoryService.Instance;
-            if (acc != null && inv != null)
+            ItemCatalog.EnsureInitialized();
+            var item = ItemCatalog.GetItem(weaponId);
+
+            if (acc != null && item != null)
             {
-                if (inv.BuyWeapon(weaponId, acc))
+                if (ItemCatalog.IsOwned(weaponId))
                 {
+                    ShowToast("Bạn đã sở hữu vật phẩm này!");
+                    return;
+                }
+                if (acc.Gold < item.price)
+                {
+                    AudioManager.Instance?.PlayError();
+                    ShowToast("Không đủ vàng để mua!");
+                    return;
+                }
+
+                int gold = acc.Gold;
+                if (ItemCatalog.BuyItem(weaponId, ref gold, out string error))
+                {
+                    acc.DeductGold(item.price);
+                    var inv = Game.FakeInventoryService.Instance;
+                    if (inv != null) inv.BuyWeapon(weaponId, acc);
+
                     AudioManager.Instance?.PlayPurchase();
                     AudioManager.Instance?.PlayCoin();
                     RefreshShopUI();
                     RefreshInventoryUI();
                     RefreshAccountDisplay();
-                    ShowToast("Đã mua vũ khí thành công!");
+                    ShowToast("Đã mua thành công: " + item.GetLocalizedName(!UiStrings.IsVietnamese));
                 }
                 else
                 {
                     AudioManager.Instance?.PlayError();
-                    ShowToast("Không đủ vàng hoặc đã sở hữu!");
+                    ShowToast("Lỗi mua vật phẩm: " + error);
                 }
             }
         }
 
         public void OnEquipWeapon(string weaponId)
         {
-            var inv = Game.FakeInventoryService.Instance;
-            if (inv != null && inv.EquipWeapon(weaponId))
+            ItemCatalog.EnsureInitialized();
+            if (ItemCatalog.EquipItem(weaponId))
             {
+                var inv = Game.FakeInventoryService.Instance;
+                if (inv != null) inv.EquipWeapon(weaponId);
+
                 AudioManager.Instance?.PlayClick();
                 RefreshInventoryUI();
                 RefreshShopUI();
-                var eq = inv.GetEquippedWeapon();
-                ShowToast("Đã trang bị: " + (eq != null ? eq.nameVi : weaponId));
+                var item = ItemCatalog.GetItem(weaponId);
+                string wName = item != null ? item.GetLocalizedName(!UiStrings.IsVietnamese) : weaponId;
+                ShowToast("Đã trang bị: " + wName);
+                if (txtSelectedLoadout != null)
+                {
+                    txtSelectedLoadout.text = "Vũ khí: " + wName;
+                }
             }
         }
 
@@ -2042,7 +2310,15 @@ namespace HitMe.UI
             var acc = Game.FakeAccountService.Instance;
             if (acc != null)
             {
-                if (acc.Rename(newName))
+                int cost = acc.NameChangeCount == 0 ? 0 : 99;
+                if (cost > 0 && acc.Gold < cost)
+                {
+                    AudioManager.Instance?.PlayError();
+                    ShowToast($"Cần {cost} vàng để đổi tên (Bạn có {acc.Gold} vàng)!");
+                    return;
+                }
+
+                if (acc.Rename(newName, cost))
                 {
                     AudioManager.Instance?.PlayClick();
                     RefreshProfileUI();
@@ -2052,7 +2328,7 @@ namespace HitMe.UI
                 else
                 {
                     AudioManager.Instance?.PlayError();
-                    ShowToast("Không đủ 100 vàng để đổi tên!");
+                    ShowToast("Tên phải từ 2 đến 16 ký tự!");
                 }
             }
         }
@@ -3651,6 +3927,30 @@ namespace HitMe.UI
                 StartCoroutine(FadeInResultPanel(cg));
             }
             EnsureVictoryHalo(isLocalWinner);
+
+            // P4-4: Record match stats, daily quest progress & rank points
+            var acc = Game.FakeAccountService.Instance;
+            if (acc != null)
+            {
+                acc.MatchesPlayed++;
+                int myHits = 0;
+                int myRank = 1;
+                if (ranked != null)
+                {
+                    for (int i = 0; i < ranked.Count; i++)
+                    {
+                        if (ranked[i].Id == "player")
+                        {
+                            myHits = ranked[i].HitsLanded;
+                            myRank = i + 1;
+                            break;
+                        }
+                    }
+                }
+                QuestService.RecordMatchPlayed(isLocalWinner, myHits);
+                int delta = RankService.CalculatePointsDelta(myRank, ranked != null ? ranked.Count : 4);
+                acc.RankPoints = Mathf.Max(0, acc.RankPoints + delta);
+            }
 
             if (txtResultTitle != null)
             {

@@ -1,0 +1,26 @@
+{
+  "tiers": [
+    { "nameVi": "Đồng", "nameEn": "Bronze", "minPoints": 0, "maxPoints": 99, "badge": "🥉" },
+    { "nameVi": "Bạc", "nameEn": "Silver", "minPoints": 100, "maxPoints": 299, "badge": "🥈" },
+    { "nameVi": "Vàng", "nameEn": "Gold", "minPoints": 300, "maxPoints": 599, "badge": "🥇" },
+    { "nameVi": "Bạch Kim", "nameEn": "Platinum", "minPoints": 600, "maxPoints": 999, "badge": "💎" },
+    { "nameVi": "Kim Cương", "nameEn": "Diamond", "minPoints": 1000, "maxPoints": 99999, "badge": "👑" }
+  ],
+  "scoringRules": {
+    "rank1": 25,
+    "rank2": 10,
+    "rank3": -5,
+    "rank4": -15,
+    "floor": 0,
+    "multiplier2P": 0.6,
+    "multiplier4P": 1.0,
+    "multiplier6P": 1.2
+  },
+  "mockLeaderboard": [
+    { "rank": 1, "name": "Nguyễn_Vô_Địch", "points": 1250, "tier": "Kim Cương" },
+    { "rank": 2, "name": "Dép_Bay_Sát_Thủ", "points": 980, "tier": "Bạch Kim" },
+    { "rank": 3, "name": "Chảo_Thần_Sầu", "points": 820, "tier": "Bạch Kim" },
+    { "rank": 4, "name": "Bia_Hơi_Hà_Nội", "points": 540, "tier": "Vàng" },
+    { "rank": 5, "name": "Cub50_Bốc_Đầu", "points": 310, "tier": "Vàng" }
+  ]
+}

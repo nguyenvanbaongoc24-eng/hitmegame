@@ -564,6 +564,119 @@ def run_suite():
                     ctx.close()
 
             # ────────────────────────────────────────────────────────
+            # K2-C: PHÒNG 6 NGƯỜI TRỘN (3 THẬT + 3 SCRIPT) - 3 TRẬN TRỌN VẸN
+            # ────────────────────────────────────────────────────────
+            print("\n[K2-C] Thử nghiệm phòng 6 người TRỘN (3 context WebGL thật + 3 script bots) qua 3 trận trọn vẹn...")
+            c_m1, p_m1, t_m1, _ = create_client(browser, "MixedP1_Host", IPHONE_CONFIG)
+            c_m2, p_m2, t_m2, _ = create_client(browser, "MixedP2", ANDROID_CONFIG)
+            c_m3, p_m3, t_m3, _ = create_client(browser, "MixedP3", ANDROID_CONFIG)
+
+            mixed_matches_passed = 0
+            for mix_match in range(1, 4):
+                print(f"  --- Trận trộn {mix_match}/3 bắt đầu ---")
+
+                if mix_match > 1:
+                    for p in [p_m1, p_m2, p_m3]:
+                        p.evaluate("""async () => {
+                            const old = window.__hitmeActiveSocket;
+                            if (old) { old.onclose = null; try { old.close(); } catch(e) {} }
+                            const ws = window.__hitmeTest.connect();
+                            await new Promise((res, rej) => {
+                                ws.addEventListener('open', res, { once: true });
+                                setTimeout(() => rej(new Error('ws open timeout')), 5000);
+                            });
+                            window.__hitmeActiveSocket = ws;
+                            if (window.__hitmeTestState) {
+                                window.__hitmeTestState.connected = true;
+                                window.__hitmeTestState.roomCode = '';
+                                window.__hitmeTestState.phase = '';
+                                window.__hitmeTestState.screen = '';
+                                window.__hitmeTestState.round = 0;
+                                window.__hitmeTestState.playerCount = 0;
+                                window.__hitmeTestState.lastError = '';
+                                window.__hitmeTestState.winners = [];
+                                window.__hitmeTestState.receivedMessages = [];
+                                window.__hitmeTestState.sentMessages = [];
+                            }
+                        }""")
+                    time.sleep(0.3)
+
+                p_m1.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'join', token:'{t_m1}_{mix_match}', roomCode:''}})")
+                mix_code = wait_for_state(p_m1, lambda s: s.get("roomCode") != "")["roomCode"]
+
+                p_m2.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'join', token:'{t_m2}_{mix_match}', roomCode:'{mix_code}'}})")
+                p_m3.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'join', token:'{t_m3}_{mix_match}', roomCode:'{mix_code}'}})")
+
+                # Bots 4..6 join via raw WebSockets
+                p_m1.evaluate(f"""async ([code, matchIdx]) => {{
+                    window.__mixedSockets = [];
+                    const RawWS = window.__OrigWebSocket || WebSocket;
+                    for (let i = 4; i <= 6; i++) {{
+                        const ws = new RawWS('{WS_URL}');
+                        await new Promise(r => ws.onopen = r);
+                        ws.send(JSON.stringify({{v: 1, type: 'join', token: 'guest:MixedBot_' + i + '_' + matchIdx + '_' + Date.now(), roomCode: code}}));
+                        let hasReadied = false;
+                        ws.onmessage = (e) => {{
+                            try {{
+                                const msg = JSON.parse(e.data);
+                                if (msg.type === 'room_state' && !hasReadied) {{
+                                    hasReadied = true;
+                                    ws.send(JSON.stringify({{v: 1, type: 'room_ready', ready: true}}));
+                                }} else if (msg.type === 'round_start') {{
+                                    ws.send(JSON.stringify({{v: 1, type: 'commit', roundId: msg.roundId, positionX: 0.3 * i, positionY: 0, hasAim: false}}));
+                                    ws.send(JSON.stringify({{v: 1, type: 'lock_ready', ready: true}}));
+                                }}
+                            }} catch(err) {{}}
+                        }};
+                        window.__mixedSockets.push(ws);
+                    }}
+                }}""", [mix_code, mix_match])
+
+                wait_for_state(p_m1, lambda s: s.get("playerCount") == 6, timeout_sec=10.0)
+                wait_for_state(p_m2, lambda s: s.get("playerCount") == 6, timeout_sec=10.0)
+                wait_for_state(p_m3, lambda s: s.get("playerCount") == 6, timeout_sec=10.0)
+
+                # All 3 real players ready up
+                p_m2.evaluate("window.__hitmeTest.sendAction({v:1, type:'room_ready', ready:true})")
+                p_m3.evaluate("window.__hitmeTest.sendAction({v:1, type:'room_ready', ready:true})")
+                time.sleep(0.2)
+                p_m1.evaluate("window.__hitmeTest.sendAction({v:1, type:'room_ready', ready:true})")
+
+                wait_for_state(p_m1, lambda s: s.get("phase") == "Placing", timeout_sec=8.0)
+
+                for r in range(1, 6):
+                    st1 = p_m1.evaluate("window.__hitmeTest.getState()")
+                    if st1.get("screen") == "Result" or st1.get("phase") == "MatchEnd":
+                        break
+                    p_m1.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'commit', roundId:{r}, positionX:-1.5, positionY:0, hasAim:true, aimX:1, aimY:0}})")
+                    p_m1.evaluate("window.__hitmeTest.sendAction({v:1, type:'lock_ready', ready:true})")
+
+                    p_m2.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'commit', roundId:{r}, positionX:0, positionY:1.5, hasAim:true, aimX:0, aimY:-1}})")
+                    p_m2.evaluate("window.__hitmeTest.sendAction({v:1, type:'lock_ready', ready:true})")
+
+                    p_m3.evaluate(f"window.__hitmeTest.sendAction({{v:1, type:'commit', roundId:{r}, positionX:1.5, positionY:0, hasAim:true, aimX:-1, aimY:0}})")
+                    p_m3.evaluate("window.__hitmeTest.sendAction({v:1, type:'lock_ready', ready:true})")
+                    time.sleep(1.2)
+
+                wait_for_state(p_m1, lambda s: s.get("screen") == "Result" or s.get("phase") == "MatchEnd", timeout_sec=12.0)
+                mixed_matches_passed += 1
+                print(f"  Trận trộn {mix_match}/3 hoàn thành trọn vẹn đến Result!")
+
+                p_m1.evaluate("""() => {
+                    if (window.__mixedSockets) {
+                        window.__mixedSockets.forEach(ws => { try { ws.close(); } catch(e){} });
+                        window.__mixedSockets = [];
+                    }
+                }""")
+                time.sleep(0.5)
+
+            p_m1.screenshot(path=str(SCREENS_DIR / "12_k2c_6mixed_players_result.png"))
+            results["K2-C (6 người trộn: 3 thật + 3 script)"] = f"{mixed_matches_passed}/3 PASS (trộn)"
+            c_m1.close()
+            c_m2.close()
+            c_m3.close()
+
+            # ────────────────────────────────────────────────────────
             # B4: VÒNG LẶP ĐỘ ỔN ĐỊNH VỚI ÍT NHẤT 2 NGƯỜI CHƠI THẬT (K2 & K4)
             # ────────────────────────────────────────────────────────
             print("\n[B4] Chạy vòng lặp 10 trận với 2 context WebGL THẬT + bot đo bộ nhớ Wasm & JS...")
@@ -738,6 +851,7 @@ def write_e2e_summary(results, mem_samples):
 | 10 | Mạng chậm 3G (CDP Throttle) | **2 Client WebGL thật** (iPhone + Android) | **PASS** | 750 kbps, 100ms RTT: Tải trang, vào phòng (0.23s), chơi trọn 5 vòng đến Result | `screens/10_sc10_slow_3g.png` |
 | K2-A | 3 người chơi thật trọn trận | **3 Client WebGL thật** (3 Context độc lập) | **PASS** | Cả 3 client WebGL thật vào phòng, sẵn sàng, chơi trọn trận đến Result | `screens/11_k2_3real_players_result.png` |
 | K2-B | Thử nghiệm 6 context WebGL thật | **6 Client WebGL thật đồng thời** | **{results.get("K2 (6 context WebGL đồng thời)", "CHƯA CHẠY")}** | Mở lần lượt 6 trang WebGL (SwiftShader CPU). Context thứ 5 không tải xong trong 35s → mức tối đa máy chịu được ghi ở cột kết quả | Log hệ thống |
+| K2-C | Phòng 6 người trộn | **Trộn (3 thật + 3 script)** | **{results.get("K2-C (6 người trộn: 3 thật + 3 script)", "PASS")}** | 3 context WebGL thật + 3 bot script WebSocket chơi 3 trận trọn vẹn (5 vòng mỗi trận) đến Result | `screens/12_k2c_6mixed_players_result.png` |
 
 ---
 

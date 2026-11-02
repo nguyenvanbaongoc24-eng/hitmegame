@@ -49,19 +49,35 @@ namespace HitMe.Economy
             LoadFromPrefs();
         }
 
+        public static void EnsureInitialized()
+        {
+            if (_data != null && _data.items != null && _data.items.Count > 0) return;
+            var asset = Resources.Load<TextAsset>("Items");
+            if (asset != null && !string.IsNullOrEmpty(asset.text))
+            {
+                Initialize(asset.text);
+            }
+        }
+
         public static IReadOnlyList<ItemDto> GetItems()
         {
+            EnsureInitialized();
             if (_data == null || _data.items == null) return Array.Empty<ItemDto>();
             return _data.items;
         }
 
         public static ItemDto GetItem(string id)
         {
+            EnsureInitialized();
             if (_data == null || _data.items == null) return null;
             return _data.items.Find(it => it.id == id);
         }
 
-        public static bool IsOwned(string id) => _ownedItems.Contains(id);
+        public static bool IsOwned(string id)
+        {
+            EnsureInitialized();
+            return _ownedItems.Contains(id);
+        }
 
         public static string EquippedWeaponId => _equippedWeaponId;
 

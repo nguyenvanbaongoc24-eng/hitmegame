@@ -22,10 +22,16 @@
 | 10 | Mạng chậm 3G (CDP Throttle) | **2 Client WebGL thật** (iPhone + Android) | **PASS** | 750 kbps, 100ms RTT: Tải trang, vào phòng (0.23s), chơi trọn 5 vòng đến Result | `screens/10_sc10_slow_3g.png` |
 | K2-A | 3 người chơi thật trọn trận | **3 Client WebGL thật** (3 Context độc lập) | **PASS** | Cả 3 client WebGL thật vào phòng, sẵn sàng, chơi trọn trận đến Result | `screens/11_k2_3real_players_result.png` |
 | K2-B | Thử nghiệm 6 context WebGL thật | **6 Client WebGL thật đồng thời** | **PARTIAL (4/6 context chạy được)** | Mở lần lượt 6 trang WebGL (SwiftShader CPU). Context thứ 5 không tải xong trong 35s → mức tối đa máy chịu được ghi ở cột kết quả | Log hệ thống |
+| K2-C | Phòng 6 người trộn | **Trộn (3 thật + 3 script)** | **PASS** | 3 context WebGL thật (iPhone + 2 Android) + 3 bot script WebSocket chơi 3 trận trọn vẹn (5 vòng mỗi trận) đến Result | `screens/12_k2c_6mixed_players_result.png` |
 
 ---
 
-## 2. Giải Trình Chi Tiết Các Thay Đổi Kịch Bản (K1)
+## 2. Giải Trình Chi Tiết Các Thay Đổi Kịch Bản (K1 & K2-C)
+
+### Kịch bản K2-C (Phòng 6 Người Trộn: 3 Thật + 3 Script)
+- **Bối cảnh kỹ thuật:** Thử nghiệm K2-B cho thấy môi trường giả lập CPU SwiftShader trên máy đạt tải tối đa 4 context WebGL đồng thời trước khi gặp trễ rendering.
+- **Giải pháp minh bạch K2-C:** Tạo phòng 6 người kết hợp chính xác **3 người chơi thật qua 3 context WebGL độc lập** (1 Host iPhone Safari + 2 Peer Android Chrome) cùng **3 bot script WebSocket** kết nối trực tiếp.
+- **Kết quả kiểm chứng:** Cả 6 người chơi tham gia 3 trận liên tiếp trọn vẹn, mỗi trận trải qua đầy đủ 5 vòng đấu Placing -> Lock Ready -> Reveal -> Round Result cho đến khi màn hình Result hiển thị đồng bộ kết quả. Báo cáo ghi nhận minh bạch là "trộn (3 thật + 3 script)", không gán ghép là 6 người thật. Bằng chứng ảnh chụp tại `screens/12_k2c_6mixed_players_result.png`.
 
 ### Kịch bản 6 (AFK và Cấm Đấu 120s)
 - **Trạng thái ban đầu:** Sau khi P6b bị loại ở vòng 2, script gửi lệnh `join` ngay trên WebSocket hiện tại.

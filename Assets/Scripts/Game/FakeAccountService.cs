@@ -31,9 +31,12 @@ namespace HitMe.Game
         public int Gold { get; private set; } = 500;
         public int Gems { get; private set; } = 20;
         public int NameChangeCount { get; private set; } = 0;
+        public int MatchesPlayed { get; set; } = 0;
+        public int RankPoints { get; set; } = 150;
+        public string AvatarId { get; set; } = "avatar_default";
         public bool CosmeticsEnabled { get; set; } = false; // Default off per rule v1.2
 
-        public const int RenameCostGold = 100;
+        public int RenameCostGold { get; set; } = 100;
 
         public event Action OnAccountUpdated;
 
@@ -42,16 +45,19 @@ namespace HitMe.Game
             _instance = this;
         }
 
-        public bool Rename(string newName)
+        public bool Rename(string newName) => Rename(newName, -1);
+
+        public bool Rename(string newName, int customCost)
         {
             if (string.IsNullOrWhiteSpace(newName)) return false;
             newName = newName.Trim();
             if (newName.Length < 2 || newName.Length > 16) return false;
 
+            int effectiveCost = customCost >= 0 ? customCost : RenameCostGold;
             if (NameChangeCount > 0)
             {
-                if (Gold < RenameCostGold) return false;
-                Gold -= RenameCostGold;
+                if (Gold < effectiveCost) return false;
+                Gold -= effectiveCost;
             }
 
             DisplayName = newName;
@@ -82,6 +88,10 @@ namespace HitMe.Game
             Gold = gold;
             Gems = 20;
             NameChangeCount = 0;
+            MatchesPlayed = 0;
+            RankPoints = 150;
+            AvatarId = "avatar_default";
+            RenameCostGold = 100;
             CosmeticsEnabled = false;
             OnAccountUpdated?.Invoke();
         }
