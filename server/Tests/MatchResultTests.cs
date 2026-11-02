@@ -26,6 +26,7 @@ public sealed class MatchResultTests
             var rankings = json.RootElement.GetProperty("rankings");
             Assert.Equal(2, rankings.GetArrayLength());
             Assert.All(rankings.EnumerateArray(), player => Assert.Equal(1, player.GetProperty("rank").GetInt32()));
+            Assert.All(rankings.EnumerateArray(), player => Assert.Equal(100, player.GetProperty("goldReward").GetInt32()));
         }
         Assert.True(store.TryGet(session.MatchId, out var saved));
         Assert.Equal(2, saved.Players.Length);

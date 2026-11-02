@@ -7,7 +7,9 @@ import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '../..');
-let endpoint = process.argv[2];
+const useV2 = process.argv.includes('--v2');
+const wireVersion = useV2 ? 2 : 1;
+let endpoint = process.argv.find((arg, index) => index >= 2 && arg !== '--v2');
 let server;
 if (endpoint === '--local') {
   const probe = createServer();
@@ -39,7 +41,7 @@ try {
       issuedTokens[0] = await tokenFor(`fake_${nonce}_0`);
       clients[0].send({ type: 'join', token: issuedTokens[0] });
       const room = await clients[0].take('room_state');
-      assert.equal(room.protocolVersion, 1);
+      assert.equal(room.protocolVersion, wireVersion);
       assert.equal(room.players.length, 1);
       for (let i = 1; i < count; i++) {
         issuedTokens[i] = await tokenFor(`fake_${nonce}_${i}`);
@@ -75,6 +77,11 @@ try {
       assert.ok(endings && endings.every(end => JSON.stringify(end.winners) === JSON.stringify(endings[0].winners)));
       assert.ok(endings.every(end => end.rankings?.length === count));
       assert.ok(endings[0].rankings.every(row => row.rank >= 1 && row.rank <= count && row.hp >= 0));
+      if (useV2) {
+        assert.ok(endings.every(end => end.v === 2 && end.rankings.every(row => Number.isInteger(row.goldReward))));
+        const table = count === 2 ? [100, 0] : count <= 4 ? [150, 80, 40, 0] : [200, 120, 60, 0, 0, 0];
+        assert.ok(endings[0].rankings.every(row => row.goldReward === (table[row.rank - 1] ?? 0)));
+      }
       assert.ok(round >= 1 && round <= 5);
       assert.ok(endings[0].winners.every(id => finalHp.some(player => player.id === id)));
       const approvedFirstGold = count === 2 ? 100 : count <= 4 ? 150 : 200;
@@ -140,7 +147,7 @@ async function connect(url) {
     socket.addEventListener('error', () => { clearTimeout(timer); fail(new Error('WebSocket open error')); }, { once: true });
   });
   return {
-    send: packet => socket.send(JSON.stringify({ v: 1, ...packet })),
+    send: packet => socket.send(JSON.stringify({ v: wireVersion, ...packet })),
     take: requested => {
       const types = Array.isArray(requested) ? requested : [requested];
       const index = queue.findIndex(packet => types.includes(packet.type) || packet.type === 'error');

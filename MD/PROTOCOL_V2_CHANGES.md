@@ -1,0 +1,11 @@
+# HIT ME protocol v2 handoff to Antigravity
+
+Server branch: `prep/codex`. v1 remains accepted. Unity should send `v:2` with all messages after switching, and expect `v:2` in responses. The server selects the response version for each connection, including mixed v1/v2 rooms. Combat, placement, deadlines and room size are unchanged. See `MD/NET_PROTOCOL.md` for the full wire contract.
+
+1. `join`/`quick_match` with `v:2` returns `room_state.protocolVersion:2`. Keep the private `reconnectToken` out of UI/logs. Reconnect with the same signed identity and token.
+2. New canned chat: send `{v:2,type:"chat",chatId:"hello"}`. Supported IDs: `hello`, `good_luck`, `nice_throw`, `well_played`, `oops`, `thanks`. Render localized text from IDs. Incoming `{v:2,type:"chat",playerId,chatId}` has no world position; during placement show it in player cards, never above hidden characters. One message per second per player; handle `chat_rate_limited` and `invalid_chat_id`.
+3. Final `{v:2,type:"match_end",matchId,winners,rankings}` includes every participant. Each ranking has `playerId`, `rank`, `hp`, `hitsLanded`, `goldReward`. Ties share rank and reward. Show the full table. Do not add `goldReward` to a local wallet: await the server's authoritative profile/balance message (R5, still pending).
+4. Friend request: send `{v:2,type:"friend_request",targetPlayerId}` to a player connected in the same room. The recipient receives `{v:2,type:"friend_request",playerId}` and replies `{v:2,type:"friend_reply",targetPlayerId:senderId,accepted:true|false}`. Both receive `friend_reply`. Current storage is memory only and disappears at server restart; show it as a temporary session feature until durable accounts/friends are added.
+5. v2 clients should continue to handle all v1 match messages (`round_start`, `reveal`, `round_result`, `room_state`, `error`, `emote`) with the envelope version changed to 2. `commit` still uses `hasAim`, `aimX`, `aimY`; no position or aim is broadcast before lock.
+
+Verification: `server/Tests/ProtocolV2Tests.cs` tests chat privacy, limits, friend authorization and versioned room state. `node server/Tools/FakeClient.mjs --local --v2` plays real WebSocket matches with 2, 4 and 6 players. This does not prove Unity WebGL integration or Render deployment.

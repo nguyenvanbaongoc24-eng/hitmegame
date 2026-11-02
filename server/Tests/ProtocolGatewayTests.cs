@@ -73,7 +73,7 @@ public sealed class ProtocolGatewayTests
 
     [Theory]
     [InlineData(0)]
-    [InlineData(2)]
+    [InlineData(3)]
     public void JoinRejectsOlderOrNewerProtocolWithExplicitMismatch(int clientVersion)
     {
         var gateway = Gateway();
@@ -82,6 +82,21 @@ public sealed class ProtocolGatewayTests
         Assert.Equal("error", reply.GetProperty("type").GetString());
         Assert.Equal("protocol_mismatch", reply.GetProperty("code").GetString());
         Assert.Equal(ProtocolGateway.Version, reply.GetProperty("v").GetInt32());
+    }
+
+    [Fact]
+    public void V2JoinUsesV2EnvelopeWhileV1RoomMemberKeepsV1()
+    {
+        var gateway = Gateway();
+        var first = Json(gateway.Handle("c1", Request("join")));
+        var roomCode = first.GetProperty("roomCode").GetString();
+        var request = JsonSerializer.Serialize(new { v = 2, type = "join", token = "test:p2", roomCode });
+        var replies = gateway.HandleMessages("c2", request);
+        using var second = JsonDocument.Parse(replies.Single(message => message.ConnectionId == "c2").Payload);
+        using var firstUpdate = JsonDocument.Parse(replies.Single(message => message.ConnectionId == "c1").Payload);
+        Assert.Equal(2, second.RootElement.GetProperty("v").GetInt32());
+        Assert.Equal(2, second.RootElement.GetProperty("protocolVersion").GetInt32());
+        Assert.Equal(1, firstUpdate.RootElement.GetProperty("v").GetInt32());
     }
 
     [Fact]

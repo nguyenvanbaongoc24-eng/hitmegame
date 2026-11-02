@@ -160,17 +160,20 @@ public sealed class ServerRoundSession
             var finalResult = MatchResultFactory.Create(matchId,
                 (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State, ineligiblePlayers);
             resultStore.TrySave(finalResult);
+            var rewards = new ApprovedGoldByRoomSize(finalResult.Players.Length);
             messages.AddRange(Broadcast(new
             {
                 v = 1,
                 type = "match_end",
+                matchId,
                 winners = match.State.WinnerIds,
                 rankings = finalResult.Players.Select(player => new
                 {
                     playerId = player.PlayerId,
                     rank = player.Rank,
                     hp = player.Hp,
-                    hitsLanded = player.HitsLanded
+                    hitsLanded = player.HitsLanded,
+                    goldReward = player.RewardEligible ? rewards.GoldFor(player) : 0
                 })
             }));
         }

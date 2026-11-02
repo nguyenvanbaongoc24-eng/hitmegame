@@ -1,4 +1,20 @@
-# HIT ME network protocol v1
+# HIT ME network protocol v1 and v2
+
+Protocol v2 is additive. A socket selects its version in `join` or `quick_match`; room broadcasts use each recipient's version. v1 clients remain accepted. A v2 client sends `v:2` on every message and verifies `v:2` in every response. Current friends are kept only in one server process; they do not survive restart and are not yet suitable as a persistent friends feature.
+
+## v2 additions
+
+```json
+{"v":2,"type":"chat","chatId":"hello"}
+{"v":2,"type":"friend_request","targetPlayerId":"g_example"}
+{"v":2,"type":"friend_reply","targetPlayerId":"g_example","accepted":true}
+```
+
+Allowed `chatId` values: `hello`, `good_luck`, `nice_throw`, `well_played`, `oops`, `thanks`. The server broadcasts `{v:2,type:"chat",playerId,chatId}` to v2 sockets in the same room, at most once per second per player. The client maps IDs to localized text; free-form text is rejected. Chat contains no position or aim, including during placement. Friend requests require both players to be connected in the same room on v2. Only the recipient may reply; both receive `{v:2,type:"friend_reply",playerId,targetPlayerId,accepted}`. Duplicate/pending requests return errors. Friend IDs are opaque; never expose tokens.
+
+`match_end` on v2 includes `matchId` and a full `rankings` array: `{playerId,rank,hp,hitsLanded,goldReward}`. `goldReward` follows the approved 2/3–4/5–6 player table and is zero for AFK or disconnected players marked ineligible. It is the reward recorded by the server match result store; clients must read their current balance from the server, not add this field locally. The result store writes the match before broadcasting `match_end`.
+
+New v2 errors: `invalid_chat_id`, `chat_rate_limited`, `invalid_friend_target`, `friend_target_unavailable`, `friend_request_pending`, `friend_request_not_found`, `already_friends`. Friend requests have no durable storage yet. Existing match flow, privacy, room limits, and combat rules remain the same.
 
 The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Every JSON message has `v:1` and `type`. Payloads are limited to 1024 UTF-8 bytes and 20 messages per second per connection. Without `GUEST_TOKEN_SIGNING_KEY`, the server accepts `guest:<name>` for local testing. With that key, obtain a signed guest token from `POST /guest-token` (`{"name":"Nam"}`), then send it in `join.token`; the unsigned form is rejected. This is not yet Supabase Auth. Keep `token` and `reconnectToken` out of logs.
 
@@ -32,7 +48,7 @@ For a new room, omit `roomCode`; for re-entry, include `roomCode` and the privat
 {"v":1,"type":"quick_match_left"}
 ```
 
-Examples show shapes, not exact identifiers or final arena numbers. Always read the live `room_state.config`. `reconnectToken` is private to its owner. `match_end` has winners but **no rankings field** in v1.
+Examples show shapes, not exact identifiers or final arena numbers. Always read the live `room_state.config`. `reconnectToken` is private to its owner. The original v1 contract promised winners only; the current server also sends additive `matchId` and `rankings` fields, which v1 clients may ignore.
 
 ## Match order and privacy
 
@@ -42,6 +58,6 @@ Examples show shapes, not exact identifiers or final arena numbers. Always read 
 
 `room_full`, `room_limit`, `room_not_found`, `room_started`, `not_enough_players`, `host_only`, `wrong_phase`, `wrong_round`, `round_locked`, `invalid_commit`, `reconnect_invalid`, `session_replaced`, `banned` (`remainingSeconds`), `auth_required_use_join_token`, `auth_invalid`, `protocol_mismatch`, `bad_message`, `invalid_json`, `rate_limited`, and `message_too_large` are JSON `error.code` values. `idle_timeout` and `server_shutdown` are WebSocket close reasons. On `protocol_mismatch`, stop play and request an update. Error codes are stable for v1; structural wire changes require a version bump.
 
-Current gaps: Unity WebGL network integration, Supabase Auth, persistent profiles and gold, and ranked `match_end` payload. The browser Online Lab and server WebSocket tests exercise the protocol; they do not prove the Unity client is connected.
+Current gaps: Unity WebGL network integration, Supabase Auth, persistent friend graph, and an authoritative profile/balance message. Signed guest gold persistence is tested locally against Supabase; Render deployment is unverified. The browser Online Lab and server WebSocket tests exercise the protocol; they do not prove the Unity client is connected.
 
 The CLI client `node server/Tools/FakeClient.mjs --local` also exercised the actual v1 sequence for three rooms of 2, 4 and 6 players on 2026-11-02 (`Evidence/round40/C10_fakeclient.txt`). It observed `match_end.winners` only. Its printed reward is an approved-table preview, not wallet credit.
