@@ -34,6 +34,18 @@ public sealed class NetClientContractTests
     }
 
     [Fact]
+    public void MatchEndRankingIsAvailableToTheUnityUi()
+    {
+        var json = "{\"v\":1,\"type\":\"match_end\",\"winners\":[\"g_a\"],\"rankings\":[{\"playerId\":\"g_a\",\"rank\":1,\"hp\":2,\"hitsLanded\":3}]}";
+        var message = Assert.IsType<MatchEndMessage>(ProtocolReader.ReadServerMessage(json, new SystemTextJsonCodec()));
+        Assert.Single(message.rankings);
+        Assert.Equal("g_a", message.rankings[0].playerId);
+        Assert.Equal(1, message.rankings[0].rank);
+        Assert.Equal(2, message.rankings[0].hp);
+        Assert.Equal(3, message.rankings[0].hitsLanded);
+    }
+
+    [Fact]
     public void EveryDtoRoundTripsWithTheJsonUtilityEquivalent()
     {
         var options = SystemTextJsonCodec.Options;

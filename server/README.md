@@ -125,7 +125,7 @@ Thứ tự: (1) thêm DTO và codec JsonUtility, đọc phong bì `{v,type}` tr�
 | `round_start` | `Placing`, lấy `roundId` và `deadline` Unix ms từ server. |
 | `reveal` | `Revealed`, lúc này mới vẽ vị trí/hướng đối thủ. |
 | `round_result` | `RoundResult`, cập nhật HP/hit; server có thể gửi `round_start` kế tiếp ngay sau đó. |
-| `match_end` | `MatchEnd`, hiện người thắng; bảng xếp hạng phải tính từ Core hoặc bổ sung giao thức v2 sau khi thống nhất. |
+| `match_end` | `MatchEnd`, hiện người thắng và toàn bộ `rankings` (`playerId`, hạng, HP, số lần trúng) do Core xếp. |
 | `emote`, `error` | Cập nhật thẻ biểu cảm; hiển thị mã lỗi phù hợp. |
 
 Kiểm tra ngoài Unity: `dotnet build tools/patches/net_client_v1/HitMe.NetClientV1.csproj -f netstandard2.1` và `dotnet test tools/patches/net_client_v1/tests/HitMe.NetClientV1.Tests.csproj --nologo`. Các test dùng codec tương đương qua phản xạ, **chưa phải test `UnityEngine.JsonUtility` thực tế**. AG cần chạy EditMode/PlayMode và WebGL có đồ họa trước khi báo online đạt.

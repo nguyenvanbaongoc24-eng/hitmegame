@@ -128,7 +128,19 @@ public sealed class RevealMessage : ServerMessage { public int roundId; public R
 [Serializable]
 public sealed class RoundResultMessage : ServerMessage { public int roundId; public HitDto[] hits = Array.Empty<HitDto>(); public ResultPlayerDto[] players = Array.Empty<ResultPlayerDto>(); }
 [Serializable]
-public sealed class MatchEndMessage : ServerMessage { public string[] winners = Array.Empty<string>(); }
+public sealed class RankingPlayerDto
+{
+    public string playerId = string.Empty;
+    public int rank;
+    public int hp;
+    public int hitsLanded;
+}
+[Serializable]
+public sealed class MatchEndMessage : ServerMessage
+{
+    public string[] winners = Array.Empty<string>();
+    public RankingPlayerDto[] rankings = Array.Empty<RankingPlayerDto>();
+}
 [Serializable]
 public sealed class EmoteBroadcastMessage : ServerMessage { public string playerId = string.Empty; public string emoteId = string.Empty; public string phase = string.Empty; }
 [Serializable]

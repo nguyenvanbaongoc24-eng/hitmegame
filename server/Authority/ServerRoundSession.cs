@@ -157,12 +157,21 @@ public sealed class ServerRoundSession
 
         if (match.State.Phase == Phase.MatchEnd)
         {
-            resultStore.TrySave(MatchResultFactory.Create(matchId, (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State, ineligiblePlayers));
+            var finalResult = MatchResultFactory.Create(matchId,
+                (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State, ineligiblePlayers);
+            resultStore.TrySave(finalResult);
             messages.AddRange(Broadcast(new
             {
                 v = 1,
                 type = "match_end",
-                winners = match.State.WinnerIds
+                winners = match.State.WinnerIds,
+                rankings = finalResult.Players.Select(player => new
+                {
+                    playerId = player.PlayerId,
+                    rank = player.Rank,
+                    hp = player.Hp,
+                    hitsLanded = player.HitsLanded
+                })
             }));
         }
         else

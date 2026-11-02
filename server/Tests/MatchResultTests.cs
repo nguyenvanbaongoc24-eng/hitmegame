@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json;
 using HitMe.Core;
 using HitMe.Server.Authority;
 using Xunit;
@@ -19,6 +20,13 @@ public sealed class MatchResultTests
         Assert.Empty(session.TryMarkReady("a", out _));
         var messages = session.TryMarkReady("b", out _);
         Assert.Contains(messages, message => message.Payload.Contains("match_end"));
+        var end = messages.First(message => message.Payload.Contains("\"type\":\"match_end\"", StringComparison.Ordinal));
+        using (var json = JsonDocument.Parse(end.Payload))
+        {
+            var rankings = json.RootElement.GetProperty("rankings");
+            Assert.Equal(2, rankings.GetArrayLength());
+            Assert.All(rankings.EnumerateArray(), player => Assert.Equal(1, player.GetProperty("rank").GetInt32()));
+        }
         Assert.True(store.TryGet(session.MatchId, out var saved));
         Assert.Equal(2, saved.Players.Length);
         Assert.All(saved.Players, player => Assert.Equal(1, player.Rank));
