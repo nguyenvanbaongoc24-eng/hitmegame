@@ -15,4 +15,18 @@ Server branch: `prep/codex`. v1 remains accepted. Unity should send `v:2` with a
 
 9. `protocol_violation_eliminated` means the server rejected five malformed/invalid commits in one placement round and removed the player from the match. Valid commit revisions are still permitted until the deadline. Show a match removal notice; do not retry the same invalid packet.
 
+### Mẫu payload v2 hiện có
+
+Các giá trị dưới đây là ví dụ theo đúng trường mà server hiện phát; ID, số dư và mã phòng chỉ minh họa. `profile_state` chỉ đến chủ tài khoản:
+
+```json
+{"v":2,"type":"profile_state","playerId":"g_example","name":"Nam","gold":301,"matchesPlayed":2,"bestRank":1,"rank":"unranked","points":0,"purchasedItemIds":["chao_ran"],"ownedItemIds":["dep_to_ong","chao_ran"],"equippedWeaponId":"chao_ran","equippedCharacterId":null,"renameCount":1,"inventoryStatus":"authoritative"}
+{"v":2,"type":"shop_result","requestId":"30000000-0000-4000-8000-000000000002","action":"equip","gold":301,"displayName":"Nam","renameCount":1,"equippedWeaponId":"chao_ran","equippedCharacterId":null}
+{"v":2,"type":"chat","playerId":"g_example","chatId":"hello"}
+{"v":2,"type":"friend_request","playerId":"g_example"}
+{"v":2,"type":"friend_reply","playerId":"g_friend","targetPlayerId":"g_example","accepted":true}
+```
+
+`rank:"unranked"` và `points:0` là placeholder, **không** phải thứ hạng đã lưu. Server chưa phát thông điệp nhiệm vụ ngày hay đăng nhập Google; tính năng kết bạn hiện chỉ ở RAM và mất khi khởi động lại. AG có thể nối màn hồ sơ/số dư, mua/trang bị/đổi tên khi `inventoryStatus:"authoritative"`, nhưng chưa hiển thị rank/nhiệm vụ/kết bạn như dữ liệu bền vững. Không gửi mật khẩu, service key hay refresh token trong WebSocket.
+
 Verification: `server/Tests/ProtocolV2Tests.cs` tests chat privacy, limits, friend authorization and versioned room state. `node server/Tools/FakeClient.mjs --local --v2` plays real WebSocket matches with 2, 4 and 6 players. This does not prove Unity WebGL integration or Render deployment.

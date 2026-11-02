@@ -22,4 +22,6 @@ L2 preparation only: `MD/AUTH_SETUP.md` lists Google/Supabase dashboard setup an
 
 L5 preparation only: `backend/supabase/cleanup_test_data.sql` is a read-only, empty-allowlist preview; PGlite syntax/no-write check passed 21/21. No live preview or deletion was run; candidate IDs and the replacement DB URL are still unavailable.
 
+L7 partial handoff: `MD/PROTOCOL_V2_CHANGES.md` now includes current v2 payload shapes and explicit placeholder/pending fields. Rank, quests, durable friends and Google login have no live wire contract yet, so this is not a complete L7 handoff.
+
 Owner action: rotate the database password previously exposed in chat before opening the service to external users; keep replacement secrets in local/deployment environment only.
