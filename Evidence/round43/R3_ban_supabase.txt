@@ -1,0 +1,7 @@
+2026-11-02, prep/codex, live Supabase project lpylrbtpruyzdehkcaiu.
+Command: node --env-file=.env -e <spawn dotnet run server/Tools/LiveBanContract/LiveBanContract.csproj>
+Passed! 5/5 live Supabase ban checks (test-prefixed row)
+test-row cleanup: ok
+Checks: write 120-second ban; fresh adapter reads after 20 seconds; slow/fast clock by 2 seconds; expired after 121 seconds.
+This proves persistence across adapter instances; no full server process restart was exercised.
+Secret values and test player ID are omitted.

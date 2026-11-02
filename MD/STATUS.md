@@ -8,7 +8,7 @@ Branch `prep/codex`; Unity and Core are not edited here.
 | R4 protocol v2 | Implemented in server; Unity integration pending | `MD/PROTOCOL_V2_CHANGES.md`, server tests 143/143, WebSocket FakeClient v2 3/3 (no Supabase env) |
 | R5 authoritative profile/balance | Partial | `profile_state` sends server gold, match count and best rank after join/match; rank points and durable inventory pending R6/R7. Server tests 145/145; FakeClient v2 with Supabase verified 3/3. |
 | R6 shop and rename | Pending | No server handlers yet |
-| R3 live AFK ban adapter contract | Pending | Existing adapter unit tests only |
+| R3 live AFK ban adapter contract | Partial | `Evidence/round43/R3_ban_supabase.txt`: 5/5 live checks; fresh adapter proves database persistence, but full server process restart was not exercised. Test-prefixed row removed. |
 | R2 test data cleanup/security scan | Pending | Live test data remains; do not delete real users |
 | R7 rank/daily quests | Pending | No server handlers yet |
 
