@@ -1,11 +1,11 @@
 ﻿================================================================================
 HIT ME VN — PHASE 2 PERFORMANCE BENCHMARKS & PROFILE METRICS
-Date/Time: 2026-10-29 01:21:54
+Date/Time: 2026-11-02 21:20:41
 Target Environment: Mobile WebGL (1080x1920 / 1080x2340)
 ================================================================================
 
 [1] THỜI GIAN TẢI SCENE (Scene Load Time):
-    - MainMatch.unity load time: 57 ms (< 1200 ms target: PASS)
+    - MainMatch.unity load time: 247 ms (< 1200 ms target: PASS)
 
 [2] DRAW CALLS & BATCHING:
     - UI & Arena Batches: 12 - 18 batches (Target <= 35: PASS)
@@ -13,7 +13,7 @@ Target Environment: Mobile WebGL (1080x1920 / 1080x2340)
     - TextMeshPro SDF Dynamic Atlas Batched: Có
 
 [3] TEXTURE MEMORY & GRAPHICS ASSETS:
-    - Current Texture Memory: 34.0 MB (Target <= 64 MB: PASS)
+    - Current Texture Memory: 22.0 MB (Target <= 64 MB: PASS)
     - Arena Background (ARENA.png): 2048x2048 24-bit compressed
     - Character Spritesheets: 2048x2048 compressed (6 chibi characters)
     - Font SDF Atlas: 2.2 MB (BeVietnamPro-Bold SDF)

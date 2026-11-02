@@ -162,11 +162,17 @@ namespace HitMe.Editor
             PlayerSettings.SetIl2CppCompilerConfiguration(UnityEditor.Build.NamedBuildTarget.WebGL, Il2CppCompilerConfiguration.Master);
             PlayerSettings.WebGL.emscriptenArgs = "-Os";
 
-            // Force re-import textures to bake WebGL crunched compression into build
-            string[] textureFolders = new[] { "Assets/Sprites", "Assets/Art/UI", "Assets/Art/VFX", "Assets/Art/Weapons" };
-            string[] texGuids = AssetDatabase.FindAssets("t:Texture2D", textureFolders);
-            Debug.Log($"[WebBuildPipeline] Force reimporting {texGuids.Length} textures for WebGL...");
+            // Force re-import textures and audio to bake WebGL crunched compression into build
+            string[] assetFolders = new[] { "Assets/Sprites", "Assets/Art/UI", "Assets/Art/VFX", "Assets/Art/Weapons" };
+            string[] texGuids = AssetDatabase.FindAssets("t:Texture2D", assetFolders);
+            string[] audioGuids = AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/Audio" });
+            Debug.Log($"[WebBuildPipeline] Force reimporting {texGuids.Length} textures and {audioGuids.Length} audio clips for WebGL...");
             foreach (var guid in texGuids)
+            {
+                string p = AssetDatabase.GUIDToAssetPath(guid);
+                AssetDatabase.ImportAsset(p, ImportAssetOptions.ForceUpdate);
+            }
+            foreach (var guid in audioGuids)
             {
                 string p = AssetDatabase.GUIDToAssetPath(guid);
                 AssetDatabase.ImportAsset(p, ImportAssetOptions.ForceUpdate);

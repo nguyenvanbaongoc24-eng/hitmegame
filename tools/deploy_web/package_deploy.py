@@ -8,6 +8,7 @@ import os
 import sys
 import shutil
 import re
+import json
 import hashlib
 from pathlib import Path
 
@@ -80,6 +81,45 @@ def package():
 
     if not all([data_file, framework_file, code_file, loader_file]):
         raise RuntimeError("Missing one or more required Brotli build assets!")
+
+    # 2b. Optional Wasm Bytecode Optimization pass via wasm-opt
+    wasm_br_path = dst_build_dir / code_file
+    wasm_opt_exe = Path(r"D:\App\UNITY\6000.6.4f1\Editor\Data\PlaybackEngines\WebGLSupport\BuildTools\Emscripten\binaryen\bin\wasm-opt.exe")
+    if wasm_opt_exe.exists() and shutil.which("node"):
+        try:
+            print("[*] Running wasm-opt -Oz post-processing pass...")
+            opt_script = f"""
+const fs = require('fs');
+const zlib = require('zlib');
+const {{ execSync }} = require('child_process');
+
+const wasmBrPath = {json.dumps(str(wasm_br_path))};
+const wasmOptExe = {json.dumps(str(wasm_opt_exe))};
+
+const compressed = fs.readFileSync(wasmBrPath);
+const raw = zlib.brotliDecompressSync(compressed);
+fs.writeFileSync('temp_pack.wasm', raw);
+
+execSync(`"${{wasmOptExe}}" -Oz --all-features --strip-debug --strip-producers temp_pack.wasm -o temp_pack_opt.wasm`);
+const optRaw = fs.readFileSync('temp_pack_opt.wasm');
+
+const optBr = zlib.brotliCompressSync(optRaw, {{
+  params: {{
+    [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+  }}
+}});
+
+if (optBr.length < compressed.length) {{
+  fs.writeFileSync(wasmBrPath, optBr);
+  console.log(`[+] wasm-opt saved: ${{((compressed.length - optBr.length) / 1024).toFixed(1)}} KB (New size: ${{optBr.length}} bytes)`);
+}}
+try {{ fs.unlinkSync('temp_pack.wasm'); }} catch {{}}
+try {{ fs.unlinkSync('temp_pack_opt.wasm'); }} catch {{}}
+"""
+            import subprocess
+            subprocess.run(["node", "-e", opt_script], check=True, cwd=str(REPO_ROOT))
+        except Exception as e:
+            print(f"[-] wasm-opt pass skipped or failed: {e}")
 
     # 3. Copy & Adapt index.html
     template_index = DEPLOY_DIR / "index.html"
