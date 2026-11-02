@@ -32,7 +32,7 @@ begin
       when room_size = 2 and r.placement = 1 then 100
       when room_size between 3 and 4 and r.placement = 1 then 150
       when room_size between 3 and 4 and r.placement = 2 then 80
-      when room_size = 4 and r.placement = 3 then 40
+      when room_size between 3 and 4 and r.placement = 3 then 40
       when room_size between 5 and 6 and r.placement = 1 then 200
       when room_size between 5 and 6 and r.placement = 2 then 120
       when room_size between 5 and 6 and r.placement = 3 then 60

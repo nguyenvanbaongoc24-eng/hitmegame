@@ -78,7 +78,7 @@ public sealed class ApprovedGoldByRoomSize : IRewardPolicy
         byRank = playerCount switch
         {
             2 => new[] { 100, 0 },
-            3 => new[] { 150, 80, 0 },
+            3 => new[] { 150, 80, 40 },
             4 => new[] { 150, 80, 40, 0 },
             5 or 6 => new[] { 200, 120, 60, 0, 0, 0 },
             _ => throw new ArgumentOutOfRangeException(nameof(playerCount))

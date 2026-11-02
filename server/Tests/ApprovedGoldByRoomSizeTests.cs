@@ -6,7 +6,7 @@ public sealed class ApprovedGoldByRoomSizeTests
 {
     [Theory]
     [InlineData(2, 100, 0, 0)]
-    [InlineData(3, 150, 80, 0)]
+    [InlineData(3, 150, 80, 40)]
     [InlineData(4, 150, 80, 40)]
     [InlineData(5, 200, 120, 60)]
     [InlineData(6, 200, 120, 60)]
