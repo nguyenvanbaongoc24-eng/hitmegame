@@ -159,37 +159,34 @@ namespace HitMe.Editor
                 bgImg.color = Color.white;
             }
 
-            // Dark vignette overlay on bottom area for crisp button legibility
-            var vignetteBottom = CreatePanel(homePanel.transform, "BottomVignette", new Vector2(0f, 0f), new Vector2(1f, 0.48f), new Vector2(0.5f, 0f), Vector2.zero, null, new Color(0.04f, 0.05f, 0.08f, 0.72f));
+            // Top Bar: Player profile, Currency Chips, and Settings (Safe Area row Y = 0.965f)
+            var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.16f, 0.965f), new Vector2(0.16f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(230f, 68f));
+            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Khách_4826", 22, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeProfile = btnProfHeader.GetComponent<Button>();
+            uiCtrl.txtHomePlayerName = txtProfHeader;
 
-            // Home Header & Logo
-            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", spriteBannerWood, new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.5f), new Vector2(860f, 150f));
-            var logoTxt = CreateTMP(homeHeader.transform, "LogoTxt", fontAsset, UiStrings.GameTitle, 76, colorGoldSub, TextAlignmentOptions.Center);
+            var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.38f, 0.965f), new Vector2(0.38f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(160f, 58f));
+            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "500 G", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtHomeGold = txtGold;
+
+            var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.53f, 0.965f), new Vector2(0.53f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(130f, 58f));
+            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "20 💎", 20, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.txtHomeGems = txtGem;
+
+            // Settings button on Home Screen (Top Right)
+            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.92f, 0.965f), new Vector2(0.92f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(80f, 80f));
+            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 34, Color.white, TextAlignmentOptions.Center);
+            uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
+
+            // Home Header & Logo (Centered below top bar, Y = 0.875f with ZERO overlap)
+            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", spriteBannerWood, new Vector2(0.5f, 0.875f), new Vector2(0.5f, 0.875f), new Vector2(0.5f, 0.5f), new Vector2(860f, 140f));
+            var logoTxt = CreateTMP(homeHeader.transform, "LogoTxt", fontAsset, UiStrings.GameTitle, 72, colorGoldSub, TextAlignmentOptions.Center);
             logoTxt.fontStyle = FontStyles.Bold;
             FillRect(logoTxt.rectTransform, new Vector2(20f, 10f), new Vector2(-20f, -10f));
             uiCtrl.txtHomeLogo = logoTxt;
 
-            var subtitleTxt = CreateTMP(homePanel.transform, "HomeSubtitle", fontAsset, UiStrings.HomeSubtitle, 28, colorCream, TextAlignmentOptions.Center, new Vector2(0.5f, 0.865f), new Vector2(800f, 40f));
+            var subtitleTxt = CreateTMP(homePanel.transform, "HomeSubtitle", fontAsset, UiStrings.HomeSubtitle, 26, colorCream, TextAlignmentOptions.Center, new Vector2(0.5f, 0.815f), new Vector2(800f, 36f));
             subtitleTxt.fontStyle = FontStyles.Bold;
-
-            // Settings button on Home Screen (Lô 5)
-            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.90f, 0.93f), new Vector2(0.90f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(96f, 96f));
-            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 36, Color.white, TextAlignmentOptions.Center);
-            uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
-
-            // Top resource indicators & profile button (Lô 7 & 8)
-            var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.18f, 0.93f), new Vector2(0.18f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(240f, 80f));
-            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Khách_4826", 24, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.btnHomeProfile = btnProfHeader.GetComponent<Button>();
-            uiCtrl.txtHomePlayerName = txtProfHeader;
-
-            var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.48f, 0.93f), new Vector2(0.48f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(170f, 65f));
-            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "500 G", 22, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.txtHomeGold = txtGold;
-
-            var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.68f, 0.93f), new Vector2(0.68f, 0.93f), new Vector2(0.50f, 0.50f), new Vector2(130f, 65f));
-            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "20 💎", 22, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.txtHomeGems = txtGem;
 
             // Selected Character & Loadout Display Box (middle 0.50f - 0.78f)
             var loadoutCard = CreatePanel(homePanel.transform, "LoadoutCard", new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.5f), new Vector2(940f, 320f), spritePanelDarkGold, Color.white);
@@ -774,13 +771,34 @@ namespace HitMe.Editor
             uiCtrl.btnLanguageEn = btnEn.GetComponent<Button>();
 
             // Action Buttons
-            var btnCloseSettings = CreateButton(settingsCard.transform, "BtnCloseSettings", spriteBtnGreen, new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.5f), new Vector2(440f, 95f));
-            CreateTMP(btnCloseSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 36, Color.white, TextAlignmentOptions.Center, wrap: false);
+            // 1. Report Bug Button (own row, standard 9-slice button)
+            var btnReportBug = CreateButton(settingsCard.transform, "BtnReportBug", spriteBtnYellow, new Vector2(0.5f, 0.21f), new Vector2(0.5f, 0.21f), new Vector2(0.5f, 0.5f), new Vector2(440f, 75f));
+            CreateTMP(btnReportBug.transform, "Label", fontAsset, UiStrings.Get(UiStrings.SettingsBtnReportBug), 30, new Color(0.2f, 0.1f, 0f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnReportBug = btnReportBug.GetComponent<Button>();
+
+            // 2. Close Settings Button
+            var btnCloseSettings = CreateButton(settingsCard.transform, "BtnCloseSettings", spriteBtnGreen, new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.5f), new Vector2(440f, 75f));
+            CreateTMP(btnCloseSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnCloseSettings = btnCloseSettings.GetComponent<Button>();
 
-            var btnLeaveMatchSettings = CreateButton(settingsCard.transform, "BtnLeaveMatchSettings", spriteBtnRed, new Vector2(0.5f, 0.055f), new Vector2(0.5f, 0.055f), new Vector2(0.5f, 0.5f), new Vector2(440f, 80f));
-            CreateTMP(btnLeaveMatchSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnLeaveMatch, 30, Color.white, TextAlignmentOptions.Center, wrap: false);
+            // 3. Leave Match Button (only active during gameplay)
+            var btnLeaveMatchSettings = CreateButton(settingsCard.transform, "BtnLeaveMatchSettings", spriteBtnRed, new Vector2(0.5f, 0.045f), new Vector2(0.5f, 0.045f), new Vector2(0.5f, 0.5f), new Vector2(440f, 65f));
+            CreateTMP(btnLeaveMatchSettings.transform, "Label", fontAsset, UiStrings.SettingsBtnLeaveMatch, 26, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnLeaveMatchFromSettings = btnLeaveMatchSettings.GetComponent<Button>();
+
+            // 4. Build Version Text (below all buttons)
+            var verObj = new GameObject("TxtSettingsBuildVersion", typeof(RectTransform));
+            verObj.transform.SetParent(settingsCard.transform, false);
+            var verRt = verObj.GetComponent<RectTransform>();
+            verRt.anchorMin = new Vector2(0.05f, 0.005f);
+            verRt.anchorMax = new Vector2(0.95f, 0.025f);
+            verRt.sizeDelta = Vector2.zero;
+            var verTxt = verObj.AddComponent<TextMeshProUGUI>();
+            verTxt.font = fontAsset;
+            verTxt.fontSize = 14f;
+            verTxt.alignment = TextAlignmentOptions.Center;
+            verTxt.color = new Color(0.7f, 0.75f, 0.85f, 0.8f);
+            uiCtrl.txtSettingsBuildVersion = verTxt;
 
             if (dialogSettingsObj != null) dialogSettingsObj.transform.SetAsLastSibling();
 
@@ -1010,7 +1028,7 @@ namespace HitMe.Editor
             return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
-        private static GameObject CreatePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Sprite sprite, Color color)
+        private static GameObject CreatePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Sprite sprite, Color color, bool raycastTarget = false)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Image));
             go.transform.SetParent(parent, false);
@@ -1033,17 +1051,18 @@ namespace HitMe.Editor
             img.sprite = sprite;
             img.type = sprite != null ? Image.Type.Sliced : Image.Type.Simple;
             img.color = color;
+            img.raycastTarget = raycastTarget;
             return go;
         }
 
-        private static GameObject CreateImage(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size)
+        private static GameObject CreateImage(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, bool raycastTarget = false)
         {
-            return CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white);
+            return CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white, raycastTarget);
         }
 
         private static GameObject CreateButton(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size)
         {
-            var go = CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white);
+            var go = CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white, raycastTarget: true);
             go.AddComponent<Button>();
             return go;
         }
@@ -1065,7 +1084,7 @@ namespace HitMe.Editor
             slider.value = defaultValue;
 
             // Background track
-            var bgGo = CreatePanel(go.transform, "Background", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, trackSprite, new Color(0.2f, 0.25f, 0.35f, 0.9f));
+            var bgGo = CreatePanel(go.transform, "Background", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, trackSprite, new Color(0.2f, 0.25f, 0.35f, 0.9f), false);
 
             // Fill Area
             var fillArea = new GameObject("Fill Area", typeof(RectTransform));
@@ -1073,7 +1092,8 @@ namespace HitMe.Editor
             var fillAreaRt = fillArea.GetComponent<RectTransform>();
             FillRect(fillAreaRt, new Vector2(10f, 0f), new Vector2(-10f, 0f));
 
-            var fill = CreatePanel(fillArea.transform, "Fill", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, trackSprite, new Color(0.97f, 0.73f, 0.13f, 1f));
+            // Fill bar uses solid color with null sprite so it has NO extra knob or end caps
+            var fill = CreatePanel(fillArea.transform, "Fill", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.97f, 0.73f, 0.13f, 1f), false);
             slider.fillRect = fill.GetComponent<RectTransform>();
 
             // Handle Slide Area
@@ -1082,9 +1102,16 @@ namespace HitMe.Editor
             var handleAreaRt = handleArea.GetComponent<RectTransform>();
             FillRect(handleAreaRt, new Vector2(15f, 0f), new Vector2(-15f, 0f));
 
-            var handle = CreatePanel(handleArea.transform, "Handle", new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f), new Vector2(40f, 40f), knobSprite, Color.white);
-            slider.handleRect = handle.GetComponent<RectTransform>();
-            slider.targetGraphic = handle.GetComponent<Image>();
+            var handle = new GameObject("Handle", typeof(RectTransform), typeof(Image));
+            handle.transform.SetParent(handleArea.transform, false);
+            var handleRt = handle.GetComponent<RectTransform>();
+            handleRt.sizeDelta = new Vector2(48f, 48f);
+            var handleImg = handle.GetComponent<Image>();
+            handleImg.sprite = knobSprite;
+            handleImg.color = Color.white;
+            handleImg.raycastTarget = true;
+            slider.handleRect = handleRt;
+            slider.targetGraphic = handleImg;
 
             return slider;
         }

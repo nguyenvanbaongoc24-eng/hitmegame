@@ -104,9 +104,11 @@ namespace HitMe.UI
             }
 
             // 1. Portrait column horizontal bounds in normalized screen coordinates [0..1]
+            // On portrait mobile devices (aspect <= 1.0), fill full width (0..1) so iPhone SE, iPad portrait, and Android phones have no side letterboxing.
+            // On wide landscape desktop displays (aspect > 1.0), clamp to centered portrait column.
             float portMinX = 0f;
             float portMaxX = 1f;
-            if (currentAspect > TargetPortraitAspect + 0.001f)
+            if (currentAspect > 1.0f)
             {
                 float portraitPixelWidth = screenHeight * TargetPortraitAspect;
                 float normWidth = Mathf.Clamp01(portraitPixelWidth / screenWidth);

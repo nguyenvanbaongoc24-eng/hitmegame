@@ -47,8 +47,8 @@ namespace HitMe.Core
         public uint Seed = 12345;
 
         // V4 Visual Scaling: Hitbox/physics PlayerRadius remains constant (PlayerRadius in GameConfig)
-        public float CharacterScale = 2.0f;
-        public float WeaponScale = 2.0f;
+        public float CharacterScale = 1.0f;
+        public float WeaponScale = 0.65f;
         public float HitRingScale = 1.0f;
         public Vec2 HeadlessAimDragOrigin = new Vec2(0f, -2.50f);
 

@@ -26,25 +26,30 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
       #unity-container {
-        width: 100%;
-        height: 100%;
-        max-height: 100dvh;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
       }
       #unity-fullscreen-container {
-        height: 100%;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
         height: 100dvh;
-        max-height: 100dvh;
-        aspect-ratio: 9 / 19.5;
-        width: auto;
-        max-width: 100vw;
-        position: relative;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 0 40px rgba(0,0,0,0.8);
       }
       #unity-canvas {
         width: 100% !important;
@@ -114,8 +119,10 @@
         item.style.cssText = `padding:8px;background:${type === "error" ? "#d33" : "#fc3"}`;
         banner.appendChild(item); if (type !== "error") setTimeout(() => item.remove(), 5000);
       }
-      ["touchstart", "touchmove", "touchend", "touchcancel"].forEach(type => canvas.addEventListener(type, event => event.preventDefault(), { passive: false }));
-      document.addEventListener("gesturestart", event => event.preventDefault(), { passive: false });
+      document.addEventListener("touchmove", function(e) {
+        if (e.target !== canvas) e.preventDefault();
+      }, { passive: false });
+      document.addEventListener("gesturestart", function(e) { e.preventDefault(); }, { passive: false });
       const buildUrl = "Build";
       const buildVersion = new URLSearchParams(window.location.search).get("v") || "phase1-closed-20261028";
       const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);

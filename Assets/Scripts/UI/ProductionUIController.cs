@@ -689,14 +689,14 @@ namespace HitMe.UI
             {
                 var rt = txtBuildFingerprint.rectTransform;
                 rt.anchorMin = new Vector2(0f, 0f);
-                rt.anchorMax = new Vector2(0f, 0f);
-                rt.pivot = new Vector2(0f, 0f);
-                rt.anchoredPosition = new Vector2(24f, 16f);
-                rt.sizeDelta = new Vector2(700f, 40f);
-                txtBuildFingerprint.fontSize = 22f;
-                txtBuildFingerprint.fontStyle = FontStyles.Bold;
-                txtBuildFingerprint.color = new Color(1f, 0.92f, 0.23f, 0.95f);
-                txtBuildFingerprint.alignment = TextAlignmentOptions.BottomLeft;
+                rt.anchorMax = new Vector2(1f, 0f);
+                rt.pivot = new Vector2(0.5f, 0f);
+                rt.anchoredPosition = new Vector2(0f, 4f);
+                rt.sizeDelta = new Vector2(0f, 20f);
+                txtBuildFingerprint.fontSize = 11f;
+                txtBuildFingerprint.fontStyle = FontStyles.Normal;
+                txtBuildFingerprint.color = new Color(1f, 1f, 1f, 0.40f);
+                txtBuildFingerprint.alignment = TextAlignmentOptions.Bottom;
             }
 
             txtBuildFingerprint.transform.SetAsLastSibling();
@@ -711,17 +711,31 @@ namespace HitMe.UI
             var asset = Resources.Load<TextAsset>("BuildFingerprint");
             if (asset != null && !string.IsNullOrWhiteSpace(asset.text))
             {
-                return asset.text.Trim();
+                string text = asset.text.Trim();
+                text = text.Replace(" · Graybox", "").Replace(" · graybox", "").Replace("Graybox", "").Trim();
+                return text;
             }
 
-            string sceneName = SceneManager.GetActiveScene().name;
-            if (string.IsNullOrEmpty(sceneName)) sceneName = "Graybox";
             string ver = string.IsNullOrEmpty(Application.version) ? "dev" : Application.version;
-            return "build " + ver + " · " + sceneName;
+            return "build " + ver;
+        }
+
+        private static bool IsDebugOverlayEnabled()
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return false;
+            return url.IndexOf("debug=1", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   url.IndexOf("debug=true", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public void EnsureAndRefreshFpsOverlay()
         {
+            if (!IsDebugOverlayEnabled())
+            {
+                if (_fpsOverlayObj != null) _fpsOverlayObj.SetActive(false);
+                return;
+            }
+
             if (_fpsOverlayObj == null)
             {
                 Transform parent = transform.Find("SafeAreaRoot") ?? transform;
@@ -767,7 +781,7 @@ namespace HitMe.UI
                 brt.sizeDelta = Vector2.zero;
                 var hitImg = btnObj.AddComponent<Image>();
                 hitImg.color = new Color(0f, 0f, 0f, 0.001f);
-                hitImg.raycastTarget = true;
+                hitImg.raycastTarget = false;
                 var btn = btnObj.AddComponent<Button>();
                 btn.onClick.AddListener(OnFpsCornerTapped);
 
@@ -1387,6 +1401,11 @@ namespace HitMe.UI
                 toggleReducedMotion.isOn = juiceFeedback.ReducedMotion;
             }
 
+            if (btnLeaveMatchFromSettings != null)
+            {
+                btnLeaveMatchFromSettings.gameObject.SetActive(CurrentScreen == ProductionScreen.Gameplay);
+            }
+
             EnsureSettingsReportBugAndBuildVersion();
         }
 
@@ -1408,15 +1427,23 @@ namespace HitMe.UI
                     var bugObj = new GameObject("BtnReportBug", typeof(RectTransform));
                     bugObj.transform.SetParent(card, false);
                     var rt = bugObj.GetComponent<RectTransform>();
-                    rt.anchorMin = new Vector2(0.12f, 0.08f);
-                    rt.anchorMax = new Vector2(0.88f, 0.15f);
-                    rt.sizeDelta = Vector2.zero;
+                    rt.anchorMin = new Vector2(0.5f, 0.21f);
+                    rt.anchorMax = new Vector2(0.5f, 0.21f);
+                    rt.pivot = new Vector2(0.5f, 0.5f);
+                    rt.sizeDelta = new Vector2(440f, 75f);
 
                     var img = bugObj.AddComponent<Image>();
-                    img.color = new Color(0.85f, 0.35f, 0.12f, 0.95f);
-                    var outline = bugObj.AddComponent<Outline>();
-                    outline.effectColor = new Color(1f, 0.75f, 0.2f, 0.9f);
-                    outline.effectDistance = new Vector2(2f, -2f);
+                    var btnSprite = btnCloseSettings != null ? btnCloseSettings.GetComponent<Image>()?.sprite : null;
+                    if (btnSprite != null)
+                    {
+                        img.sprite = btnSprite;
+                        img.type = Image.Type.Sliced;
+                        img.color = new Color(0.96f, 0.65f, 0.12f, 1f);
+                    }
+                    else
+                    {
+                        img.color = new Color(0.85f, 0.35f, 0.12f, 0.95f);
+                    }
 
                     btnReportBug = bugObj.AddComponent<Button>();
                     btnReportBug.targetGraphic = img;
@@ -1430,7 +1457,7 @@ namespace HitMe.UI
 
                     var txt = txtObj.AddComponent<TextMeshProUGUI>();
                     txt.font = GetDefaultFont();
-                    txt.fontSize = 16f;
+                    txt.fontSize = 26f;
                     txt.fontStyle = FontStyles.Bold;
                     txt.alignment = TextAlignmentOptions.Center;
                     txt.color = Color.white;
@@ -1440,6 +1467,20 @@ namespace HitMe.UI
 
             if (btnReportBug != null)
             {
+                var rt = btnReportBug.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 0.21f);
+                rt.anchorMax = new Vector2(0.5f, 0.21f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.sizeDelta = new Vector2(440f, 75f);
+
+                var img = btnReportBug.GetComponent<Image>();
+                if (img != null && btnCloseSettings != null && img.sprite == null)
+                {
+                    img.sprite = btnCloseSettings.GetComponent<Image>()?.sprite;
+                    img.type = Image.Type.Sliced;
+                    img.color = new Color(0.96f, 0.65f, 0.12f, 1f);
+                }
+
                 btnReportBug.onClick.RemoveAllListeners();
                 btnReportBug.onClick.AddListener(() =>
                 {
@@ -1454,6 +1495,25 @@ namespace HitMe.UI
                 }
             }
 
+            if (btnCloseSettings != null)
+            {
+                var rtClose = btnCloseSettings.GetComponent<RectTransform>();
+                rtClose.anchorMin = new Vector2(0.5f, 0.125f);
+                rtClose.anchorMax = new Vector2(0.5f, 0.125f);
+                rtClose.pivot = new Vector2(0.5f, 0.5f);
+                rtClose.sizeDelta = new Vector2(440f, 75f);
+            }
+
+            if (btnLeaveMatchFromSettings != null)
+            {
+                var rtLeave = btnLeaveMatchFromSettings.GetComponent<RectTransform>();
+                rtLeave.anchorMin = new Vector2(0.5f, 0.045f);
+                rtLeave.anchorMax = new Vector2(0.5f, 0.045f);
+                rtLeave.pivot = new Vector2(0.5f, 0.5f);
+                rtLeave.sizeDelta = new Vector2(440f, 65f);
+                btnLeaveMatchFromSettings.gameObject.SetActive(CurrentScreen == ProductionScreen.Gameplay);
+            }
+
             if (txtSettingsBuildVersion == null)
             {
                 var existing = card.Find("TxtSettingsBuildVersion");
@@ -1466,16 +1526,23 @@ namespace HitMe.UI
                     var verObj = new GameObject("TxtSettingsBuildVersion", typeof(RectTransform));
                     verObj.transform.SetParent(card, false);
                     var rt = verObj.GetComponent<RectTransform>();
-                    rt.anchorMin = new Vector2(0.05f, 0.01f);
-                    rt.anchorMax = new Vector2(0.95f, 0.07f);
+                    rt.anchorMin = new Vector2(0.05f, 0.005f);
+                    rt.anchorMax = new Vector2(0.95f, 0.025f);
                     rt.sizeDelta = Vector2.zero;
 
                     txtSettingsBuildVersion = verObj.AddComponent<TextMeshProUGUI>();
                     txtSettingsBuildVersion.font = GetDefaultFont();
-                    txtSettingsBuildVersion.fontSize = 12f;
+                    txtSettingsBuildVersion.fontSize = 14f;
                     txtSettingsBuildVersion.alignment = TextAlignmentOptions.Center;
                     txtSettingsBuildVersion.color = new Color(0.7f, 0.75f, 0.85f, 0.8f);
                 }
+            }
+            else
+            {
+                var rt = txtSettingsBuildVersion.rectTransform;
+                rt.anchorMin = new Vector2(0.05f, 0.005f);
+                rt.anchorMax = new Vector2(0.95f, 0.025f);
+                rt.sizeDelta = Vector2.zero;
             }
 
             if (txtSettingsBuildVersion != null)
@@ -1639,9 +1706,10 @@ namespace HitMe.UI
                 var toggleObj = new GameObject("BtnHomeLangToggle", typeof(RectTransform));
                 toggleObj.transform.SetParent(homePanel.transform, false);
                 var rt = toggleObj.GetComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0.74f, 0.93f);
-                rt.anchorMax = new Vector2(0.88f, 0.98f);
-                rt.sizeDelta = Vector2.zero;
+                rt.anchorMin = new Vector2(0.73f, 0.965f);
+                rt.anchorMax = new Vector2(0.73f, 0.965f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.sizeDelta = new Vector2(140f, 58f);
 
                 var img = toggleObj.AddComponent<Image>();
                 img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
@@ -4496,18 +4564,35 @@ namespace HitMe.UI
                 if (existingBtn != null)
                 {
                     _btnInGameEmote = existingBtn.GetComponent<Button>();
+                    var img = _btnInGameEmote.GetComponent<Image>();
+                    var circleSprite = btnInGameSettings != null ? btnInGameSettings.GetComponent<Image>()?.sprite : null;
+                    if (circleSprite != null && img != null && img.sprite == null)
+                    {
+                        img.sprite = circleSprite;
+                        img.color = Color.white;
+                    }
                 }
                 else
                 {
                     var btnObj = new GameObject("BtnInGameEmote", typeof(RectTransform));
                     btnObj.transform.SetParent(safeArea, false);
                     var rt = btnObj.GetComponent<RectTransform>();
-                    rt.anchorMin = new Vector2(0.84f, 0.14f);
-                    rt.anchorMax = new Vector2(0.96f, 0.20f);
-                    rt.sizeDelta = Vector2.zero;
+                    rt.anchorMin = new Vector2(0.92f, 0.08f);
+                    rt.anchorMax = new Vector2(0.92f, 0.08f);
+                    rt.pivot = new Vector2(0.5f, 0.5f);
+                    rt.sizeDelta = new Vector2(72f, 72f);
 
                     var img = btnObj.AddComponent<Image>();
-                    img.color = new Color(0.12f, 0.16f, 0.24f, 0.90f);
+                    var circleSprite = btnInGameSettings != null ? btnInGameSettings.GetComponent<Image>()?.sprite : null;
+                    if (circleSprite != null)
+                    {
+                        img.sprite = circleSprite;
+                        img.color = Color.white;
+                    }
+                    else
+                    {
+                        img.color = new Color(0.12f, 0.16f, 0.24f, 0.90f);
+                    }
 
                     _btnInGameEmote = btnObj.AddComponent<Button>();
 
@@ -4520,7 +4605,7 @@ namespace HitMe.UI
 
                     var txt = txtObj.AddComponent<TextMeshProUGUI>();
                     txt.font = GetDefaultFont();
-                    txt.fontSize = 22f;
+                    txt.fontSize = 28f;
                     txt.alignment = TextAlignmentOptions.Center;
                     txt.color = Color.white;
                     txt.text = "💬";

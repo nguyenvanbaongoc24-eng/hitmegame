@@ -134,6 +134,14 @@ namespace HitMe.Gameplay
                 }
             }
 
+            // Dynamic mobile viewport adaptation: adjust orthographic size so the full arena width always fits horizontally
+            if (Application.isPlaying && useOrthographic && cam != null && lockToArenaOverview)
+            {
+                float aspect = cam.aspect > 0.01f ? cam.aspect : ((float)Screen.width / Mathf.Max(1, Screen.height));
+                float targetOrtho = Mathf.Max(orthographicSize, 4.85f / Mathf.Max(0.01f, aspect));
+                cam.orthographicSize = targetOrtho;
+            }
+
             // Tính toán vị trí camera
             Quaternion rotation = lockToArenaOverview ? Quaternion.identity : Quaternion.Euler(pitchAngle, yawAngle, 0f);
             Vector3 targetPosition = focusPoint - (rotation * Vector3.forward * distance);
