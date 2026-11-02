@@ -10,7 +10,13 @@ namespace HitMe.Game
         int Gold { get; }
         int Gems { get; }
         int NameChangeCount { get; }
+        int MatchesPlayed { get; }
+        int RankPoints { get; }
+        string AvatarId { get; }
         bool CosmeticsEnabled { get; set; }
+        bool IsDataLoaded { get; }
+
+        event Action OnAccountUpdated;
 
         bool Rename(string newName);
         bool AddGold(int amount);
@@ -35,6 +41,7 @@ namespace HitMe.Game
         public int RankPoints { get; set; } = 150;
         public string AvatarId { get; set; } = "avatar_default";
         public bool CosmeticsEnabled { get; set; } = false; // Default off per rule v1.2
+        public bool IsDataLoaded => true;
 
         public int RenameCostGold { get; set; } = 100;
 
