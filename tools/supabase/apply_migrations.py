@@ -5,7 +5,7 @@ Run: python Tools/supabase/apply_migrations.py --check
 Reads SUPABASE_DB_URL from the process environment or ignored worktree .env.
 Requires psycopg[binary]. Never prints the connection string or credentials.
 The --check mode is read-only. --apply checks project identity, existing schema,
-checksums, and takes a transaction-scoped lock before applying 001-006.
+checksums, and takes a transaction-scoped lock before applying 001-007.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ SOURCES = ROOT / "backend" / "supabase"
 FILES = [
     "001_schema.sql", "002_rls.sql", "003_functions.sql",
     "004_match_result_store.sql", "005_reward_and_bans.sql",
-    "006_guest_economy.sql",
+    "006_guest_economy.sql", "007_leaderboard_rls.sql",
 ]
 
 

@@ -1,9 +1,10 @@
 2026-11-02 migration preflight on prep/codex.
 Source files: backend/supabase/001_schema.sql, 002_rls.sql, 003_functions.sql,
-004_match_result_store.sql, 005_reward_and_bans.sql, 006_guest_economy.sql. Optional seed.sql excluded
+004_match_result_store.sql, 005_reward_and_bans.sql, 006_guest_economy.sql,
+007_leaderboard_rls.sql. Optional seed.sql excluded
 because product prices are not approved.
 Command: npm test --prefix tools/supabase
-Result: parsed all six files; Passed! 13/13 PGlite SQL and approved reward checks.
+Result after 007: parsed all seven files; Passed! 14/14 PGlite SQL and approved reward checks.
 The 3-player third-place reward was corrected from 0 to approved 40 gold
 in both C# and SQL before any live migration.
 Command: python -m py_compile Tools/supabase/apply_migrations.py
@@ -19,5 +20,24 @@ the atomic record_guest_match RPC; tested against an HTTP stub, not the real pro
 Command: node server/Tools/FakeClient.mjs --local with ephemeral signed-guest key
 Result: Passed! 3/3 real WebSocket matches (N=2,4,6); walletCredit=NOT_CONNECTED
 because SUPABASE_URL and server-only key were not configured.
-Live Supabase migration status: NOT APPLIED. No SUPABASE_DB_URL was present in
-the ignored worktree .env, repository root .env, or process/user/machine env.
+2026-11-02 live Supabase migration (project lpylrbtpruyzdehkcaiu): APPLIED.
+The project owner supplied database connection details directly. The direct
+IPv6 endpoint was unreachable from this machine; the owner then supplied the
+Session pooler hostname (port 5432). The connection string was passed only as
+a temporary process environment variable, not saved in the repository or log.
+Command: python tools/supabase/apply_migrations.py --check
+Result before applying: profiles, ledger, and all target tables absent.
+Command: python tools/supabase/apply_migrations.py --apply
+Result: applied 001 through 006; Migration transaction committed: 6/6.
+Access audit found anon could SELECT the owner-rights leaderboard view.
+Applied 007_leaderboard_rls.sql separately using the same migration ledger.
+Result: 001-006 already applied, 007 applied; committed 7/7.
+Command: python tools/supabase/verify_live.py
+Result after 007: ledger checksums 7/7; RLS enabled on guest_profiles,
+guest_match_credits, server_bans and anon SELECT denied on all three;
+anon leaderboard SELECT denied, authenticated SELECT preserved,
+anon reward RPC EXECUTE denied;
+3-player reward 150/80/40, duplicate match write no-op. The verification
+transaction rolled back and no test rows were retained.
+Server REST adapter is still untested against the live project because the
+owner supplied a publishable key, not a server-only secret key.

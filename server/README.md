@@ -2,15 +2,15 @@
 
 ## Trạng thái tích hợp Supabase (2026-11-02)
 
-Project URL do chủ dự án cung cấp: `https://lpylrbtpruyzdehkcaiu.supabase.co`. URL công khai này **không** phải khóa truy cập. Chưa có `SUPABASE_DB_URL` hay server-only secret trong biến môi trường; migration **chưa áp trên Supabase thật**. SQL và adapter đã qua test cục bộ, gồm thưởng đã duyệt: 2 người 100/0; 3–4 người 150/80/40; 5–6 người 200/120/60. Không đưa khóa vào Git, client hay chat.
+Project URL do chủ dự án cung cấp: `https://lpylrbtpruyzdehkcaiu.supabase.co`. Migration 001–007 **đã áp trên Supabase thật ngày 2026-11-02** qua Session pooler 5432; `verify_live.py` xác nhận ledger 7/7, RLS và RPC thưởng 3 người 150/80/40 trong giao dịch rollback. Migration 007 đóng quyền đọc ẩn danh của view leaderboard vốn chạy theo quyền chủ view; authenticated vẫn đọc qua RLS của mình. Chưa có server-only secret key nên adapter REST chưa thử với project thật. Bảng thưởng: 2 người 100/0; 3–4 người 150/80/40; 5–6 người 200/120/60. Không đưa khóa vào Git, client hay chat; đổi mật khẩu database sau khi đã lộ trong chat.
 
 Xác thực khách có chữ ký: đặt `GUEST_TOKEN_SIGNING_KEY` (base64 của ít nhất 32 byte ngẫu nhiên) trên server; gọi `POST /guest-token` với `{"name":"Nam"}`, rồi dùng token trả về cho `join` hoặc `quick_match`. Lưu token phía client để giữ danh tính sau khởi động lại. Khi không đặt biến này, `guest:<name>` cũ chỉ phục vụ test cục bộ. Token này không phải Supabase Auth. Migration 006 tạo ví khách do server quản lý; client chưa có API đọc số dư.
 
 `MD/NET_PROTOCOL.md` mô tả wire v1 cho AG. `MD/DEPLOY_RENDER.md` là hướng dẫn nháp; `server/render.yaml` đã qua phân tích cú pháp YAML, chưa Docker build hoặc triển khai.
 
-Migration Supabase: tệp nguồn theo thứ tự `backend/supabase/001_schema.sql` đến `006_guest_economy.sql`. `seed.sql` chưa chạy vì giá vật phẩm chỉ là giả định. Đặt `SUPABASE_DB_URL` trong `.env` bị Git bỏ qua hoặc biến môi trường, dùng kết nối trực tiếp hay session pooler cổng 5432; chạy `python tools/supabase/apply_migrations.py --check` trước, sau đó `--apply`. Script từ chối project khác, schema đã có nhưng thiếu ledger, hoặc checksum thay đổi; 6 file áp trong một transaction. Kiểm nhanh sau khi áp: `--check` phải báo `guest_profiles`, `guest_match_credits` cùng các bảng cũ hiện diện. Test SQL cục bộ: `npm ci --prefix tools/supabase && npm test --prefix tools/supabase` (PGlite, không thay cho Supabase thật).
+Migration Supabase: tệp nguồn theo thứ tự `backend/supabase/001_schema.sql` đến `007_leaderboard_rls.sql`. `seed.sql` chưa chạy vì giá vật phẩm chỉ là giả định. Đặt `SUPABASE_DB_URL` trong `.env` bị Git bỏ qua hoặc biến môi trường, dùng kết nối trực tiếp hay session pooler cổng 5432; chạy `python tools/supabase/apply_migrations.py --check` trước, sau đó `--apply`. Script từ chối project khác, schema đã có nhưng thiếu ledger, hoặc checksum thay đổi; 001–006 đã áp trong một transaction, 007 áp sau bằng transaction riêng. Kiểm nhanh sau khi áp: `--check` phải báo `guest_profiles`, `guest_match_credits` cùng các bảng cũ hiện diện. Test SQL cục bộ: `npm ci --prefix tools/supabase && npm test --prefix tools/supabase` (PGlite, không thay cho Supabase thật).
 
-C8/C9: Khi `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (hoặc `SUPABASE_SERVICE_KEY` cũ) và `GUEST_TOKEN_SIGNING_KEY` đều có trên server, `SupabaseBanStore` lưu cấm AFK và `SupabaseGuestMatchStore` gọi RPC `record_guest_match` để ghi kết quả, cộng vàng nguyên tử một lần theo `matchId`. Server chỉ gửi khóa trên header `apikey`. Thiếu một biến thì server dừng khởi động; không có Supabase thì dùng `BAN_STORE_PATH`/RAM và kết quả trận trong RAM. Adapter đã qua test HTTP giả, **chưa gọi Supabase thật**. Giữ nguyên khóa ký qua mọi lần khởi động để khách không mất danh tính.
+C8/C9: Khi `SUPABASE_URL`, `SUPABASE_SECRET_KEY` (hoặc `SUPABASE_SERVICE_KEY` cũ) và `GUEST_TOKEN_SIGNING_KEY` đều có trên server, `SupabaseBanStore` lưu cấm AFK và `SupabaseGuestMatchStore` gọi RPC `record_guest_match` để ghi kết quả, cộng vàng nguyên tử một lần theo `matchId`. Server chỉ gửi khóa trên header `apikey`. Thiếu một biến thì server dừng khởi động; không có Supabase thì dùng `BAN_STORE_PATH`/RAM và kết quả trận trong RAM. Adapter đã qua test HTTP giả, **chưa gọi REST thật** vì chưa có secret key; SQL RPC đã thử trực tiếp trên Supabase trong giao dịch rollback. Giữ nguyên khóa ký qua mọi lần khởi động để khách không mất danh tính.
 
 ## Test cục bộ (Hub + Online Lab)
 
@@ -78,7 +78,7 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 
 **Nhật ký thay đổi giao thức:** v1 (2026-10-31): đóng băng tên tin hiện có, thêm `protocolVersion` vào `room_state`, trả `protocol_mismatch` cho phiên bản sai. Thay đổi cấu trúc/tên tin từ đây phải tăng `ProtocolGateway.Version` và cập nhật cả DTO, test, bảng này.
 
-Đợt 30 (2026-11-02): giữ v1; thêm lỗi `bad_message`, mã phòng khó nhầm và giới hạn tài nguyên cấu hình được. SQL 001–006 đã qua PGlite `Passed! 13/13` gồm bảng thưởng khách và chống cộng trùng; **chưa** thử trên Supabase thật.
+Đợt 30 (2026-11-02): giữ v1; thêm lỗi `bad_message`, mã phòng khó nhầm và giới hạn tài nguyên cấu hình được. SQL 001–007 đã qua PGlite `Passed! 14/14` và đã áp trên Supabase thật; RPC thưởng khách đã kiểm trực tiếp bằng giao dịch rollback.
 
 **Cấu hình tiến trình** (số không hợp lệ dùng mặc định):
 

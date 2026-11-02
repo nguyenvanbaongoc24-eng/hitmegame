@@ -10,7 +10,8 @@ const sql = statement => db.query(statement);
 await db.exec('create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql as $$ select null::uuid $$;');
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
-  '004_match_result_store.sql', '005_reward_and_bans.sql', '006_guest_economy.sql']) {
+  '004_match_result_store.sql', '005_reward_and_bans.sql',
+  '006_guest_economy.sql', '007_leaderboard_rls.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
@@ -80,6 +81,8 @@ for (const [size, expected] of [
   cases++;
 }
 assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_profiles'::regclass`)).rows[0].relrowsecurity, true);
+cases++;
+assert.equal((await sql(`select reloptions from pg_class where oid='public.leaderboard'::regclass`)).rows[0].reloptions.includes('security_invoker=true'), true);
 cases++;
 console.log(`Passed! ${cases}/${cases} PGlite SQL and approved reward checks`);
 await db.close();
