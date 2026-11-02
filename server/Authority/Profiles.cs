@@ -41,7 +41,7 @@ public sealed class InMemoryProfileStore : IProfileStore
                     throw new ArgumentException("Invalid match player result.", nameof(result));
                 if (!profiles.TryGetValue(player.PlayerId, out var prior))
                     prior = new ProfileSnapshot(player.PlayerId, 0, 0, 0);
-                var reward = player.Rank <= 3 ? rewardPolicy.GoldFor(player) : 0;
+                var reward = player.RewardEligible && player.Rank <= 3 ? rewardPolicy.GoldFor(player) : 0;
                 if (reward < 0) throw new InvalidOperationException("Reward policy returned negative gold.");
                 updates[player.PlayerId] = prior with
                 {

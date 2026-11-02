@@ -19,6 +19,7 @@ public sealed class ServerRoundSession
     private readonly IMatchResultStore resultStore;
     private readonly Guid matchId = Guid.NewGuid();
     private readonly HashSet<string> connectedPlayers;
+    private readonly HashSet<string> ineligiblePlayers = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> missedCommitRounds = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DateTimeOffset> lastEmoteAt = new(StringComparer.Ordinal);
     private readonly Dictionary<string, int> emotesThisRound = new(StringComparer.Ordinal);
@@ -89,6 +90,7 @@ public sealed class ServerRoundSession
     public void EliminateDisconnected(string playerId)
     {
         connectedPlayers.Remove(playerId);
+        ineligiblePlayers.Add(playerId);
         var player = match.State.FindPlayer(playerId);
         if (player != null) player.Hp = 0;
     }
@@ -155,7 +157,7 @@ public sealed class ServerRoundSession
 
         if (match.State.Phase == Phase.MatchEnd)
         {
-            resultStore.TrySave(MatchResultFactory.Create(matchId, (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State));
+            resultStore.TrySave(MatchResultFactory.Create(matchId, (timeProvider ?? TimeProvider.System).GetUtcNow(), match.State, ineligiblePlayers));
             messages.AddRange(Broadcast(new
             {
                 v = 1,
@@ -189,6 +191,7 @@ public sealed class ServerRoundSession
             missedCommitRounds[playerId] = misses;
             if (misses < afkPolicy.RoundsWithoutValidCommitBeforeElimination) continue;
             player.Hp = 0;
+            ineligiblePlayers.Add(playerId);
             banStore.Ban(playerId, (active.LockedAt ?? active.Deadline) + TimeSpan.FromSeconds(afkPolicy.BanSeconds));
         }
     }

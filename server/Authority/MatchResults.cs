@@ -4,7 +4,7 @@ using HitMe.Core;
 
 namespace HitMe.Server.Authority;
 
-public sealed record MatchPlayerResult(string PlayerId, int Rank, int Hp, int HitsLanded);
+public sealed record MatchPlayerResult(string PlayerId, int Rank, int Hp, int HitsLanded, bool RewardEligible = true);
 public sealed record MatchResult(Guid MatchId, DateTimeOffset EndedAt,
     ImmutableArray<MatchPlayerResult> Players, int ProtocolVersion, string ConfigVersion);
 
@@ -27,7 +27,8 @@ public static class MatchResultFactory
 {
     public const string ConfigVersion = "core-phase1-v1.3";
 
-    public static MatchResult Create(Guid matchId, DateTimeOffset endedAt, MatchState match)
+    public static MatchResult Create(Guid matchId, DateTimeOffset endedAt, MatchState match,
+        IReadOnlySet<string>? ineligiblePlayers = null)
     {
         var ordered = match.Players.OrderByDescending(player => player.Hp)
             .ThenByDescending(player => player.HitsLanded)
@@ -38,7 +39,8 @@ public static class MatchResultFactory
         {
             if (i == 0 || ordered[i].Hp != ordered[i - 1].Hp || ordered[i].HitsLanded != ordered[i - 1].HitsLanded)
                 rank = i + 1;
-            players.Add(new MatchPlayerResult(ordered[i].Id, rank, ordered[i].Hp, ordered[i].HitsLanded));
+            players.Add(new MatchPlayerResult(ordered[i].Id, rank, ordered[i].Hp,
+                ordered[i].HitsLanded, ineligiblePlayers?.Contains(ordered[i].Id) != true));
         }
         return new MatchResult(matchId, endedAt, players.MoveToImmutable(), 1, ConfigVersion);
     }

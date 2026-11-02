@@ -40,6 +40,17 @@ public sealed class ProfileStoreTests
         Assert.Equal(new ProfileSnapshot("a", 0, 1, 1), store.GetOrCreate("a"));
     }
 
+    [Fact]
+    public void IneligibleAfkWinnerGetsNoGoldButMatchStillCounts()
+    {
+        var store = new InMemoryProfileStore();
+        var result = Result(Guid.NewGuid(), new MatchPlayerResult("afk", 1, 0, 0, false),
+            new MatchPlayerResult("active", 2, 2, 1));
+        Assert.True(store.TryApplyMatch(result, new ApprovedGoldByRoomSize(2)));
+        Assert.Equal(0, store.GetOrCreate("afk").Gold);
+        Assert.Equal(1, store.GetOrCreate("afk").MatchesPlayed);
+    }
+
     private static MatchResult Result(Guid id, params MatchPlayerResult[] players) =>
         new(id, new DateTimeOffset(2026, 11, 2, 0, 0, 0, TimeSpan.Zero),
             ImmutableArray.Create(players), 1, MatchResultFactory.ConfigVersion);
