@@ -1,0 +1,50 @@
+{
+  "reference_resolution": {"width": 853, "height": 1844},
+  "regions": {
+    "top_profile": {
+      "name": "Profile Pill",
+      "box_norm": [0.03, 0.02, 0.28, 0.06],
+      "weight": 1.0
+    },
+    "top_currencies": {
+      "name": "Gold and Gem Pills",
+      "box_norm": [0.32, 0.02, 0.34, 0.06],
+      "weight": 1.0
+    },
+    "top_lang_settings": {
+      "name": "Language Toggle and Settings",
+      "box_norm": [0.68, 0.02, 0.30, 0.06],
+      "weight": 1.0
+    },
+    "banner_title": {
+      "name": "HIT ME Banner Title",
+      "box_norm": [0.08, 0.09, 0.84, 0.11],
+      "weight": 1.5
+    },
+    "character_card": {
+      "name": "Selected Character Card",
+      "box_norm": [0.06, 0.23, 0.88, 0.18],
+      "weight": 1.5
+    },
+    "action_buttons": {
+      "name": "Primary Action CTA Buttons",
+      "box_norm": [0.08, 0.54, 0.84, 0.34],
+      "weight": 2.0
+    },
+    "bottom_nav": {
+      "name": "Bottom Nav Bar",
+      "box_norm": [0.06, 0.90, 0.88, 0.07],
+      "weight": 1.2
+    },
+    "footer_version": {
+      "name": "Footer Build Version Label",
+      "box_norm": [0.15, 0.97, 0.70, 0.03],
+      "weight": 0.8
+    }
+  },
+  "tolerances": {
+    "max_centroid_shift_percent": 2.0,
+    "max_size_diff_percent": 8.0,
+    "min_ssim": 0.85
+  }
+}
