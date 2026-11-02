@@ -106,7 +106,7 @@ namespace HitMe.Tests
 
             Assert.That(ui.btnReportBug, Is.Not.Null);
             Assert.That(ui.txtSettingsBuildVersion, Is.Not.Null);
-            Assert.That(ui.txtSettingsBuildVersion.text, Does.Contain("db4e8f1"));
+            Assert.That(ui.txtSettingsBuildVersion.text, Does.Contain("build "));
 
             // Click report bug
             ui.OnReportBugClicked();

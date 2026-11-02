@@ -1,0 +1,934 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 38512)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 32976)
+VBCSCompiler prewarm took 29.82 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-02T09:53:21Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 34432)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+D:\HITME GAME\unity-client
+-executeMethod
+HitMe.EditorTools.AudioOptimizer.Optimize
+-logFile
+D:\HITME GAME\unity-client\Evidence\round44\audio-optimizer.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [20916]  Target information:
+
+Player connection [20916]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 279169146 [EditorId] 279169146 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [20916] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [20916] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Starting IPC server.
+Waiting for clients to connect on \\.\pipe\Unity-LicenseClient-LENOVO, press Ctrl-C to exit.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-02T09:53:22.3816636Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 34432, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              9e1ad305dd5d4345ac94ba6fa08ca23a
+  Correlation Id:          d09f19f0865d26761fe61559eb9db5ec
+  External correlation Id: 1077040148225701107
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.38s, validation: 0.21s, handshake: 0.06s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-02T09:53:22.6482768Z"
+[Licensing::Module] Connected to LicensingClient (PId: 34432, launch time: 0.01, total connection time: 0.64s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Package Manager] Connected to IPC stream "Upm-12488" after 0.3 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.71s
+[Licensing::Module] Licensing is initialized (took 0.01s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Initialising UDS system complete:
+  - System type: Client
+  - Resource namespace: 54c71a770bce876017f56b388df946c1
+  - Shared memory size: 1073741824
+  - Command buffer id: 1052576
+  - Command buffer size: 8192
+  - Hashmap size: 4194304
+  - Service connected: false
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56488
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001849 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.872 seconds
+Domain Reload Profiling: 1563ms
+	BeginReloadAssembly (167ms)
+		CreateAndSetChildDomain (11ms)
+	RebuildCommonClasses (9ms)
+	RebuildNativeTypeToScriptingClass (21ms)
+	initialDomainReloadingComplete (77ms)
+	LoadAllAssembliesAndSetupDomain (415ms)
+		LoadAssemblies (156ms)
+		TypeCache.Refresh (289ms)
+			TypeCache.ScanAssembly (273ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (874ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (135ms)
+			ProcessInitializeOnLoadAttributes (150ms)
+			ProcessInitializeOnLoadMethodAttributes (313ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 43 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.accessibility@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aE.dag.json" "Library/Bee/2000b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 4 Duration: 1s67ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aE-inputdata.json
+[298/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[299/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\UI\ProductionUIController.cs(1614,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Scripts\UI\ProductionUIController.cs(1614,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+*** Tundra requires additional run (1.00 seconds), 2 items updated, 297 evaluated
+ExitCode: 0 Duration: 0s482ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 3s419ms
+Finished compiling graph: 352 nodes, 4023 flattened edges (3635 ToBuild, 36 ToUse), maximum node priority 208
+[258/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp
+[299/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[342/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll, with 124 defines and 296 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[343/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[344/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+[345/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[346/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 314 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[347/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[348/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (3.38 seconds), 9 items updated, 349 evaluated
+Assets\Scripts\UI\ProductionUIController.cs(1614,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Scripts\UI\ProductionUIController.cs(1614,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Total cache size 268293840
+Total cache size after purge 268293840, took 00:00:00.3370976
+AssetDatabase: script compilation time: 7.135254s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.668 seconds
+Domain Reload Profiling: 1443ms
+	BeginReloadAssembly (330ms)
+		DisableScriptedObjects (40ms)
+		CreateAndSetChildDomain (62ms)
+	RebuildCommonClasses (19ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (56ms)
+	LoadAllAssembliesAndSetupDomain (347ms)
+		LoadAssemblies (298ms)
+		TypeCache.Refresh (31ms)
+			TypeCache.ScanAssembly (24ms)
+		AnalyzeDomain (19ms)
+			BuildScriptInfoCaches (13ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (669ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (132ms)
+			ProcessInitializeOnLoadAttributes (200ms)
+			ProcessInitializeOnLoadMethodAttributes (53ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (34ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=699e854297ae25e43b86e10425f46801): Total: 9.089 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=999 ms
+		Asset DB Callback time: managed=99 ms, native=30 ms
+		Scripting: domain reloads=1, domain reload time=809 ms, compile time=7138 ms, other=11 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=1, changed=3, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 29.454ms
+	ApplyChangesToAssetFolders: 0.785ms
+	Scan: 128.045ms
+	Collect global state as custom dependencies: 9.213ms
+	OnSourceAssetsModified: 0.848ms
+	CategorizeScriptCompilationAssets: 7.154ms
+	ProcessAssetsWithTransientArtifactChanges: 19.838ms
+	CategorizeAssets: 10.137ms
+	CompileScripts: 7138.354ms
+	ImportOutOfDateAssets: 694.343ms (671.757ms without children)
+		UnloadImportedAssets: 1.310ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.211ms
+		ImportSchedulerStart: 21.062ms
+	PostProcessAllAssets: 100.207ms
+		VCAutoAddAssetPostprocess 1.288ms
+		XRBuildSystem.XRAssetImported 0.112ms
+		VersionControlSettings.HiddenFilePostprocess 0.064ms
+		PostProcessCallbackCreateDeferredMaterials 0.061ms
+		MonoPostProcessAllAssets: 98.039ms
+			AssetPostprocessor.OnPostprocessAllAssets 41.174ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.395ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 9.809ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 9.253ms
+			AssetChangedListener.OnPostprocessAllAssets 2.714ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.126ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.129ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.072ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.893ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.719ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.680ms
+			AssetEvents.OnPostprocessAllAssets 0.657ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.565ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.333ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.270ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.253ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.243ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.236ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.231ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.217ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.176ms
+			SyncVS.PostprocessSyncProject 0.166ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.122ms
+	PostAssetChangesProfiler: 1.575ms
+	UnloadStreamsBegin: 2.058ms
+	GenerateScriptTypeHashes: 1.039ms
+	GenerateScriptTypeSerializationHashes: 2.876ms
+	Untracked: 910.304ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 1.613ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 995 unused Assets / (1.7 MB). Loaded Objects now: 1718.
+Memory consumption went from 238.4 MB to 236.6 MB.
+Total: 9.678500 ms (FindLiveObjects: 0.213000 ms CreateObjectMapping: 0.025100 ms MarkObjects: 8.269400 ms  DeleteObjects: 0.964800 ms)
+
+Importing 'GUID: 12a79f7da56699e418cfcae687ad343c - Path: Assets/Audio/amb_crowd_murmur_loop.wav' with importer (AudioImporter)
+Imported 'GUID: 12a79f7da56699e418cfcae687ad343c' -> (Import Result ID: '79c00816c0e5223e9dd1bfbed0acc0fc') in 0.684 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5489f04d7d8a636e804268ae00234887 DependenciesID=1c6203997269a8c317da6e291c8f8362 StaticDependenciesID=0f16791b15561714a8217f162ea6d00e 
+
+Asset Pipeline Refresh (id=3aec32733780da24aa578306e8f6da66): Total: 0.758 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=1 ms, native=750 ms
+		Asset DB Callback time: managed=5 ms, native=1 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.244ms
+	Scan: 32.674ms
+	Collect global state as custom dependencies: 1.456ms
+	OnSourceAssetsModified: 1.080ms
+	CategorizeAssets: 1.558ms
+	ImportOutOfDateAssets: 686.421ms (0.107ms without children)
+		ImportManagerImport: 685.707ms (1.144ms without children)
+		UnloadImportedAssets: 0.203ms
+		ReloadImportedAssets: 0.120ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.092ms
+		ImportSchedulerStart: 0.286ms
+	PostProcessAllAssets: 4.678ms
+		XRBuildSystem.XRAssetImported 0.456ms
+		MonoPostProcessAllAssets: 4.133ms
+			AssetPostprocessor.OnPostprocessAllAssets 3.648ms
+			AssetChangedListener.OnPostprocessAllAssets 0.179ms
+	PostAssetChangesProfiler: 0.476ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.075ms
+	UnloadStreamsBegin: 0.095ms
+	PersistCurrentRevisions: 0.108ms
+	Untracked: 14.081ms
+
+[AudioOptimizer] Optimized Assets/Audio/amb_crowd_murmur_loop.wav (mono=true, format=Vorbis, quality=0.35)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 67ceb48126cba3741aad014475a4d72a - Path: Assets/Audio/bgm_match_loop.wav' with importer (AudioImporter)
+Imported 'GUID: 67ceb48126cba3741aad014475a4d72a' -> (Import Result ID: '330fc73b041545227d5c99c10a1b7439') in 0.432 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d4ece2520eb49b6ab0e8cc8c54bc0ef5 DependenciesID=03ba4253ba8ae1dc2fdbf4b9a94a9a9e StaticDependenciesID=3ff13d4cfc44c7050a020c0bb6e34dad 
+
+Asset Pipeline Refresh (id=318e086e79ae6d349b6d31761dc4d094): Total: 0.456 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=455 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.124ms
+	Scan: 18.146ms
+	Collect global state as custom dependencies: 0.596ms
+	OnSourceAssetsModified: 0.051ms
+	CategorizeAssets: 1.020ms
+	ImportOutOfDateAssets: 433.188ms (0.103ms without children)
+		ImportManagerImport: 432.533ms (0.142ms without children)
+		UnloadImportedAssets: 0.265ms
+		ReloadImportedAssets: 0.097ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.080ms
+		ImportSchedulerStart: 0.192ms
+	PostProcessAllAssets: 0.454ms
+		XRBuildSystem.XRAssetImported 0.066ms
+		MonoPostProcessAllAssets: 0.311ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.063ms
+	PostAssetChangesProfiler: 0.261ms
+	PersistCurrentRevisions: 0.080ms
+	Untracked: 1.994ms
+
+[AudioOptimizer] Optimized Assets/Audio/bgm_match_loop.wav (mono=true, format=Vorbis, quality=0.35)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c4b4837f2ec40a74f9600ba14735dd94 - Path: Assets/Audio/bgm_menu_loop.wav' with importer (AudioImporter)
+Worker ready: AssetImportWorkerHW0 0
+Imported 'GUID: c4b4837f2ec40a74f9600ba14735dd94' -> (Import Result ID: 'f91094acba7f9f9a1bb1b8938f017be9') in 0.545 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dab9a468476cf91f26ef273258661b54 DependenciesID=c2420f42fda21b58c45a55c94d2f2164 StaticDependenciesID=3aab81dde68420e3e6a9076a90d47bc2 
+
+Asset Pipeline Refresh (id=9117690903b5ec04d981ca64772d0b7d): Total: 0.567 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=566 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.119ms
+	Scan: 16.841ms
+	Collect global state as custom dependencies: 0.581ms
+	OnSourceAssetsModified: 0.050ms
+	CategorizeAssets: 0.915ms
+	ImportOutOfDateAssets: 546.180ms (0.090ms without children)
+		ImportManagerImport: 545.533ms (0.157ms without children)
+		UnloadImportedAssets: 0.242ms
+		ReloadImportedAssets: 0.111ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.075ms
+		ImportSchedulerStart: 0.225ms
+	PostProcessAllAssets: 0.547ms
+		XRBuildSystem.XRAssetImported 0.107ms
+		MonoPostProcessAllAssets: 0.359ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.083ms
+	PostAssetChangesProfiler: 0.344ms
+	PersistCurrentRevisions: 0.093ms
+	Untracked: 1.651ms
+
+[AudioOptimizer] Optimized Assets/Audio/bgm_menu_loop.wav (mono=true, format=Vorbis, quality=0.35)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: f47d32e79dce8a948b001e4da3fa64bc - Path: Assets/Audio/sfx_chat_pop.wav' with importer (AudioImporter)
+Imported 'GUID: f47d32e79dce8a948b001e4da3fa64bc' -> (Import Result ID: '340dab87205cf89be5a92046d4955d33') in 0.244 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=deee896e534f9469da1722338f78f432 DependenciesID=3ed77835c5f0c89029671f9c12ef46b0 StaticDependenciesID=c8aef30d12afe84f8f624138cf28ccf7 
+Asset Pipeline Refresh (id=35195ac82e10dd9478f3696dbcddac25): Total: 0.267 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_chat_pop.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: ee264062c48fa5f429a0334aa05a949a - Path: Assets/Audio/sfx_coin.wav' with importer (AudioImporter)
+Imported 'GUID: ee264062c48fa5f429a0334aa05a949a' -> (Import Result ID: '6258a26a01493d67c94617f30d94c1ae') in 0.246 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8f2805999dfd11aa40267f6553ffa0f7 DependenciesID=00c617b4190a5fa216599530aeacc296 StaticDependenciesID=faa211f84b87361753aeee32010a3980 
+Asset Pipeline Refresh (id=9535076a82225b548a35fd2874978fb8): Total: 0.269 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_coin.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c946e8dcef04f24468b5333d0c1e9d6b - Path: Assets/Audio/sfx_countdown_last.wav' with importer (AudioImporter)
+Imported 'GUID: c946e8dcef04f24468b5333d0c1e9d6b' -> (Import Result ID: '7d231bf756f23e2893cec623792b1e82') in 0.248 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1da82e8da1fb59c5104e9ae2e152db8c DependenciesID=339057d2f4d751a98443797b55257609 StaticDependenciesID=dca854f84adc70420dbab8020498bebd 
+Asset Pipeline Refresh (id=ac617050cba0fca42b71f35b0d0be7bc): Total: 0.272 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_countdown_last.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 7fee3d42d5b98474cb551295ed6dcfd0 - Path: Assets/Audio/sfx_countdown_tick.wav' with importer (AudioImporter)
+Imported 'GUID: 7fee3d42d5b98474cb551295ed6dcfd0' -> (Import Result ID: '55e50877a4c1011994b344614884e8f8') in 0.257 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b090e3a296faa41c0835316f090d428b DependenciesID=78dd6d98d1557b39bd1418cdb2c1025c StaticDependenciesID=1277c14e9ed8ce7e39708f39d34f9833 
+Asset Pipeline Refresh (id=485fda8f60567a54e8a10a6f281fc173): Total: 0.284 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_countdown_tick.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 9e504f3589ac3e843aa40f8a290a15b6 - Path: Assets/Audio/sfx_eliminate.wav' with importer (AudioImporter)
+Imported 'GUID: 9e504f3589ac3e843aa40f8a290a15b6' -> (Import Result ID: 'a7efa9b46330ff6b6687fc2fb7aec5e3') in 0.232 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=243225e07a647d35768424a0e7752d1d DependenciesID=5953e38c55c55065c32355373c4fbdcc StaticDependenciesID=c034cd67ce99ca68380cbc2c067ea41d 
+Asset Pipeline Refresh (id=377bf230d2c34684099f0a056ad1025d): Total: 0.255 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_eliminate.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 8f8870e975c61ce4ba9af00061dc1bde - Path: Assets/Audio/sfx_error.wav' with importer (AudioImporter)
+Imported 'GUID: 8f8870e975c61ce4ba9af00061dc1bde' -> (Import Result ID: 'ba6b569850cb905bfcd36aaa3c0eaca6') in 0.229 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3aed5f10adc6c138e4eb13f8b648a3fd DependenciesID=ce212a3ccc8c52a82c10d2e7397e83df StaticDependenciesID=b12c0328c3c14055ea0bb50ed5331df2 
+Asset Pipeline Refresh (id=cbf0b8bef6068544fb374e7a820c9012): Total: 0.256 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_error.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: e1665858b083ae4478fbda4a9e468fec - Path: Assets/Audio/sfx_heart_break.wav' with importer (AudioImporter)
+Imported 'GUID: e1665858b083ae4478fbda4a9e468fec' -> (Import Result ID: '536db5a3254b7626e2ac25fa37092bc5') in 0.268 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3ea2ae2f70f19a7994298d1498db70a7 DependenciesID=0cd37fd8c75a1bff883958f45b56d108 StaticDependenciesID=02db0da24a49ebc089a673bbb3f4db88 
+
+Asset Pipeline Refresh (id=d35d603e312c08d438518b59e0aea7f2): Total: 0.305 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=303 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.198ms
+	Scan: 28.652ms
+	Collect global state as custom dependencies: 0.711ms
+	OnSourceAssetsModified: 0.081ms
+	CategorizeAssets: 1.390ms
+	ImportOutOfDateAssets: 269.839ms (0.098ms without children)
+		ImportManagerImport: 268.855ms (0.155ms without children)
+		UnloadImportedAssets: 0.401ms
+		ReloadImportedAssets: 0.098ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.130ms
+		ImportSchedulerStart: 0.332ms
+	PostProcessAllAssets: 0.468ms
+		XRBuildSystem.XRAssetImported 0.065ms
+		MonoPostProcessAllAssets: 0.331ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.074ms
+	PostAssetChangesProfiler: 0.338ms
+	PersistCurrentRevisions: 0.082ms
+	Untracked: 2.612ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_heart_break.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: feb0abd62903795449ddf5249b9b7963 - Path: Assets/Audio/sfx_hit_bop.wav' with importer (AudioImporter)
+Imported 'GUID: feb0abd62903795449ddf5249b9b7963' -> (Import Result ID: '8dcbdf5fc6a6607a55aeeecc8c3efa34') in 0.260 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f15f3ea557005ffc6c6b6c1a766b999c DependenciesID=308ceb6171b08043ec1f02cd40d5b553 StaticDependenciesID=e18687c96da01fd6c1fde80ab514ba2d 
+Asset Pipeline Refresh (id=424ffb52fee99c940b8939e3e2481473): Total: 0.289 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_hit_bop.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: b50e7cd4cdfd51b4481ca93d6cb35958 - Path: Assets/Audio/sfx_lose.wav' with importer (AudioImporter)
+Imported 'GUID: b50e7cd4cdfd51b4481ca93d6cb35958' -> (Import Result ID: 'c6cac894c5e68303cbf40fc1fe629ff2') in 0.245 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=487972bd2de444ba576f9cd65115cb52 DependenciesID=69ae71c3915f21f597d21b617619be25 StaticDependenciesID=c2e6332f6c50b38e95c5fde962eff2dc 
+Asset Pipeline Refresh (id=124afd9d6f93d444ba4d4e146fb431ca): Total: 0.272 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_lose.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c0dfb400b11e9694e9c62279b01e323b - Path: Assets/Audio/sfx_purchase.wav' with importer (AudioImporter)
+Imported 'GUID: c0dfb400b11e9694e9c62279b01e323b' -> (Import Result ID: 'e79aa036deb64715806dd83fcc845f5a') in 0.238 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a48f4974cbfdc737bf706214a549ed2e DependenciesID=4afd49a86e848c72da2f37d5d782bb5c StaticDependenciesID=55fa0750d01d2715f03fcfd61b9648e7 
+Asset Pipeline Refresh (id=7f9ec79bf6d7d30428cd0826748b96fb): Total: 0.262 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_purchase.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 0b5160b2250dd9040abc4a5f9c478952 - Path: Assets/Audio/sfx_ready.wav' with importer (AudioImporter)
+Imported 'GUID: 0b5160b2250dd9040abc4a5f9c478952' -> (Import Result ID: '66598135ad553e6e811cf6ccd2302b45') in 0.237 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5bfce10f49d619a0c5e4a5b569eead09 DependenciesID=4e2832c102d5521f481ff4871d2a8842 StaticDependenciesID=bc3b51b64d01755e35f2e104a9a5ae1e 
+Asset Pipeline Refresh (id=6a49813f9eb40d74a9abed6bba31bbe6): Total: 0.260 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_ready.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 235fb173c236eda46b6890f2f2b13a3b - Path: Assets/Audio/sfx_reveal.wav' with importer (AudioImporter)
+Imported 'GUID: 235fb173c236eda46b6890f2f2b13a3b' -> (Import Result ID: '4708e8f2e6adfe20440f65a71fc35b04') in 0.228 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cd9a6e2978e04b8aa027dbae062eb006 DependenciesID=a7a91116c334c9eca48e3b3dd9e148a3 StaticDependenciesID=28750e051ecd8de5341d0dd854d66bd0 
+Asset Pipeline Refresh (id=1b0d63ef13ce78949be2d981a8497196): Total: 0.252 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_reveal.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: dc05d06b85f3f544b925abd610836555 - Path: Assets/Audio/sfx_tap_place.wav' with importer (AudioImporter)
+Imported 'GUID: dc05d06b85f3f544b925abd610836555' -> (Import Result ID: '2d71888b367ef1c9698d737ee8a37db5') in 0.323 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=10c5163d92039df59ff06e269be29ec7 DependenciesID=391ba18e61135315fbcc4da9f650ef41 StaticDependenciesID=dfa65de26d19a314330e56e836d66e76 
+
+Asset Pipeline Refresh (id=0d31e05c1b8c21347876284e552b61e3): Total: 0.348 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=346 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.127ms
+	Scan: 18.420ms
+	Collect global state as custom dependencies: 0.504ms
+	OnSourceAssetsModified: 0.100ms
+	CategorizeAssets: 1.306ms
+	ImportOutOfDateAssets: 324.231ms (0.085ms without children)
+		ImportManagerImport: 323.503ms (0.150ms without children)
+		UnloadImportedAssets: 0.322ms
+		ReloadImportedAssets: 0.101ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.110ms
+		ImportSchedulerStart: 0.192ms
+	PostProcessAllAssets: 0.460ms
+		XRBuildSystem.XRAssetImported 0.071ms
+		MonoPostProcessAllAssets: 0.322ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.069ms
+	PostAssetChangesProfiler: 0.268ms
+	PersistCurrentRevisions: 0.074ms
+	Untracked: 1.972ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_tap_place.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 4ef2513640a601a4cb1d44c3074fcb82 - Path: Assets/Audio/sfx_throw.wav' with importer (AudioImporter)
+Imported 'GUID: 4ef2513640a601a4cb1d44c3074fcb82' -> (Import Result ID: '37a3e292d35e26f07e73909fd8fe523e') in 0.243 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0faf223c712f0385238ddd9283a5e9f4 DependenciesID=ac79eb933a5a09f7dc95f7497be96413 StaticDependenciesID=364de0fe679f07cdd61c4d7cecd2fe8f 
+Asset Pipeline Refresh (id=8b31a7686c9a1734c9c6db5b2081dc70): Total: 0.266 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_throw.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 62e48806af640874b94a400f7b1d3a2b - Path: Assets/Audio/sfx_ui_click.wav' with importer (AudioImporter)
+Imported 'GUID: 62e48806af640874b94a400f7b1d3a2b' -> (Import Result ID: '0083ceba3f336df3c7b5f0cbadb70533') in 0.234 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e84f51a9d96495fe94e8ac7bafd7f67c DependenciesID=7c7ce945b8e539c0038ea1437209461a StaticDependenciesID=9984886adb3b95f77285a2c31c2e15fe 
+Asset Pipeline Refresh (id=b57805d774ef3054eb662f6205562dc2): Total: 0.257 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_ui_click.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: bb5fd776f62c1da42912aaeb84fa79ac - Path: Assets/Audio/sfx_wall_thud.wav' with importer (AudioImporter)
+Imported 'GUID: bb5fd776f62c1da42912aaeb84fa79ac' -> (Import Result ID: 'b7016ae472bfd83f185f51b71aa4958a') in 0.228 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0ee803c61d5ddc1c19d018c2627537b4 DependenciesID=7714b18237b484469dc6819db7cef105 StaticDependenciesID=9bf595be2b0bac0b3ab7de64df79e1f9 
+Asset Pipeline Refresh (id=b6c7ed17a7f8398498f33d6f20c40591): Total: 0.249 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_wall_thud.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 0452bd957676ffb4dbcee91f6daef96d - Path: Assets/Audio/sfx_win.wav' with importer (AudioImporter)
+Imported 'GUID: 0452bd957676ffb4dbcee91f6daef96d' -> (Import Result ID: '955dce82c337c7f46473e8aef98d5c8e') in 0.252 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b5c15c1274bc794fd70768774944b138 DependenciesID=15c73667455b9c02d80d359e1cf44376 StaticDependenciesID=8f91930f40133276def321d5234b248a 
+Asset Pipeline Refresh (id=e5cb4c2b01823fa428d803efaac7bb8d): Total: 0.274 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_win.wav (mono=true, format=Vorbis, quality=0.3)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+[AudioOptimizer] Successfully optimized 20 audio clips for WebGL.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:50)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 50)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Shut down.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+Shut down UDS service system complete
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+abort_threads: Failed aborting id: 0000000000005A80, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000079D0, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000005A80, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000079D0, mono_thread_manage will ignore it
+
+debugger-agent: Unable to listen on 3408
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

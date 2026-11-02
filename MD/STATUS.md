@@ -119,3 +119,15 @@
 | **M6** | Chọn sân (Map) theo dữ liệu từ mockup | **ĐÃ XONG** | Tạo `Assets/Resources/Maps.json` gồm 2 sân đấu: `map_street_vietnam` (Phố Cổ Nắng Gắt) và `map_village_lotus` (Sân Đình Ao Sen); tích hợp `MapManager.cs` và nút chọn sân đổi mượt trong Lobby; kích thước sân và luật chơi giữ nguyên (9×11.4); tài liệu giao thức tại `MD/PROTOCOL_MISMATCH.md`. |
 | **M7** | Báo lỗi trong game (Settings Bug Report) & Bộ đệm vòng | **ĐÃ XONG** | Nút "Báo lỗi" và nhãn phiên bản build trong Cài đặt; tích hợp `RingBufferLogger.cs` lưu 50 dòng log gần nhất, lọc sạch token, mật khẩu, bearer, reconnectToken và ID khách; tự động sao chép Markdown report vào clipboard; 182/182 EditMode tests PASS. |
 | **M8** | Kiểm tra toàn diện trên máy chủ Cloud Render (HTTPS + WSS) | **ĐÃ XONG** | Chạy 5 kịch bản trọng yếu K7 trực tiếp trên `https://hitmegame.onrender.com` / `wss://hitmegame.onrender.com/ws`: Cold start 0.49s (HTTP 200), độ trễ trung vị vòng 0.25s, tỷ lệ thành công 5/5 (100% PASS), báo cáo `Evidence/round43/M8_RENDER_REPORT.md`. |
+
+---
+
+## 7. Phase 5, Lượt 1 (Triển Khai Web & Thử Nội Bộ) — hit-me-phase5-ag-luot-1.md
+
+| Mã | Nhiệm vụ | Trạng thái | Ghi chú & Bằng chứng |
+|:---:|---|:---:|---|
+| **N1** | Nhánh `web-dist` độc lập cho Vercel & script tự động hóa | **ĐÃ XONG** | Tạo nhánh mồ côi `web-dist` chỉ chứa gói tĩnh `dist/` (~9.84 MB) ở gốc, không dính lịch sử Unity; push lên GitHub remote; tạo script 1 lệnh `publish_web_dist.py` & `.ps1`; cập nhật `MD/DEPLOY_VERCEL.md` hướng dẫn cấu hình Vercel Dashboard (Production Branch = `web-dist`, Framework Preset = Other, Build Command để trống). |
+| **N2** | Xác định biến môi trường Origin cho máy chủ Render | **ĐÃ XONG** | Khảo sát `ServerRuntimeOptions.cs` và `ConnectionAdmission.cs`: biến môi trường là `ALLOWED_ORIGINS` (danh sách domain phân tách bằng dấu phẩy, mặc định chỉ có localhost). Viết `MD/RENDER_ENV_NEEDED.md` đề xuất giá trị đầy đủ `https://hitmegame-iota.vercel.app,http://localhost,...` cùng danh sách biến Render/Supabase cần thiết. |
+| **N3** | Giảm dung lượng thực tế bằng chuyển đổi âm thanh Vorbis Mono | **ĐÃ XONG** | Tạo `AudioOptimizer.cs` chuyển toàn bộ 20 audio clips sang Vorbis Mono (nhạc chất lượng 0.35, SFX 0.30); build WebGL Release mới; `data.br` giảm từ 5.96 MB xuống 5.36 MB (-343 KB); tổng bundle giảm xuống 9.84 MB; thời gian tải 4 Mbps giảm còn 19.7s; báo cáo `Evidence/round44/N3_size.md`. |
+| **N4** | Cẩm nang người thử nghiệm & UX chia sẻ phòng URL | **ĐÃ XONG** | Viết `MD/TESTER_GUIDE.md` ngắn gọn 5 dòng luật chơi, cách báo lỗi; thêm nhãn "Bản thử nghiệm" (Preview Beta) trên watermark và màn tải; nút copy mã phòng sao chép URL mời trực tiếp `https://hitmegame-iota.vercel.app/?room=ROOMCODE`; tự động nhận param URL `?room=...` vào phòng chờ ngay khi mở trang; 182/182 tests PASS. |
+| **N5** | Thử tải 3 phòng đồng thời (12 người) trên Render Cloud | **ĐÃ XONG** | Chạy `test_render_load_n5.py` gồm 3 phòng song song (2p, 4p, 6p) trực tiếp trên `wss://hitmegame.onrender.com/ws`: 100% 3/3 phòng hoàn tất trọn vẹn 5 vòng đấu đến Result, độ trễ trung bình 0.24s/vòng, 0% rớt kết nối, báo cáo `Evidence/round44/N5_load.md`. |

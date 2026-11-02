@@ -544,6 +544,13 @@ namespace HitMe.UI
                 RefreshAccountDisplay();
             }
 
+            string autoRoom = GetUrlString("room");
+            if (string.IsNullOrEmpty(autoRoom)) autoRoom = GetUrlString("roomCode");
+            if (!string.IsNullOrEmpty(autoRoom))
+            {
+                StartCoroutine(AutoJoinRoomCoroutine(autoRoom.Trim().ToUpperInvariant()));
+            }
+
             RefreshAllScreenTexts();
             HitMeWebBridge.MarkHomeShown();
             Debug.Log("[HITME] HOME_SHOWN");
@@ -580,6 +587,35 @@ namespace HitMe.UI
             string valStr = end > idx ? url.Substring(idx, end - idx) : url.Substring(idx);
             int res;
             return int.TryParse(valStr, out res) ? res : defaultValue;
+        }
+
+        private static string GetUrlString(string key)
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return null;
+            int idx = url.IndexOf(key + "=", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0) return null;
+            idx += key.Length + 1;
+            int end = url.IndexOf('&', idx);
+            return end > idx ? url.Substring(idx, end - idx) : url.Substring(idx);
+        }
+
+        private System.Collections.IEnumerator AutoJoinRoomCoroutine(string roomCode)
+        {
+            yield return new WaitForSeconds(0.4f);
+            if (string.IsNullOrEmpty(roomCode)) yield break;
+            Debug.Log($"[ProductionUI] Auto-joining room from URL: {roomCode}");
+            if (inputRoomCode != null) inputRoomCode.text = roomCode;
+            if (NetConfig.IsOnlineActive)
+            {
+                EnsureOnlineClient();
+                ShowToast($"Đang kết nối vào phòng {roomCode}...", 2.0f);
+                _onlineClient.JoinRoom(roomCode, ClientAuthService.GetOrCreateGuestToken());
+            }
+            else
+            {
+                EnterLobbyWithAutoFill("Phòng Chiến Hữu", roomCode);
+            }
         }
 
         private System.Collections.IEnumerator AutoReadyCoroutine()
@@ -665,8 +701,9 @@ namespace HitMe.UI
 
             txtBuildFingerprint.transform.SetAsLastSibling();
             string fingerprint = ResolveBuildFingerprint();
-            txtBuildFingerprint.text = fingerprint;
-            Debug.Log("[BuildFingerprint] " + fingerprint);
+            string betaBadge = UiStrings.Get(UiStrings.BetaBadge);
+            txtBuildFingerprint.text = $"{fingerprint} · {betaBadge}";
+            Debug.Log("[BuildFingerprint] " + txtBuildFingerprint.text);
         }
 
         public static string ResolveBuildFingerprint()
@@ -840,8 +877,20 @@ namespace HitMe.UI
                 btnCopyRoomCode.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
-                    GUIUtility.systemCopyBuffer = _activeRoomCode;
-                    ShowToast("ĐÃ SAO CHÉP MÃ PHÒNG: " + _activeRoomCode);
+                    string baseUrl = "https://hitmegame-iota.vercel.app/";
+                    if (!string.IsNullOrEmpty(Application.absoluteURL))
+                    {
+                        try
+                        {
+                            var uri = new System.Uri(Application.absoluteURL);
+                            baseUrl = uri.GetLeftPart(System.UriPartial.Path);
+                        }
+                        catch { }
+                    }
+                    if (!baseUrl.EndsWith("/")) baseUrl += "/";
+                    string inviteUrl = $"{baseUrl}?room={_activeRoomCode}";
+                    GUIUtility.systemCopyBuffer = inviteUrl;
+                    ShowToast(UiStrings.Get(UiStrings.InviteLinkCopiedToast), 2.5f);
                 });
             }
 

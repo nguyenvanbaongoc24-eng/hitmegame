@@ -88,6 +88,9 @@ namespace HitMe.UI
         public const string SettingsBtnReportBug = "BÁO LỖI";
         public const string ReportBugCopiedToast = "Đã sao chép thông tin lỗi vào clipboard!";
         public const string LobbyMapSelectorPrefix = "SÂN ĐẤU:";
+        public const string BetaBadge = "Bản thử nghiệm";
+        public const string InviteLinkCopiedToast = "Đã sao chép link mời vào phòng!";
+        public const string BtnShareInviteLink = "CHIA SẺ";
 
         // Gameplay Phases
         public const string PhasePlacing = "ĐẶT VỊ TRÍ & HƯỚNG NÉM";
@@ -235,6 +238,9 @@ namespace HitMe.UI
             { SettingsBtnReportBug, "REPORT BUG" },
             { ReportBugCopiedToast, "Bug report copied to clipboard!" },
             { LobbyMapSelectorPrefix, "ARENA:" },
+            { BetaBadge, "Preview Beta" },
+            { InviteLinkCopiedToast, "Invite link copied to clipboard!" },
+            { BtnShareInviteLink, "SHARE" },
 
             { PhasePlacing, "SET POSITION & AIM" },
             { PhaseLocked, "POSITION LOCKED" },
