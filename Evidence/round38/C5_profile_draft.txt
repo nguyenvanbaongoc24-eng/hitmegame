@@ -2,5 +2,6 @@ Branch: prep/codex
 C5 partial: IProfileStore and InMemoryProfileStore track match count, best rank and gold with matchId idempotency. Only ranks 1-3 can receive a configured reward; NoReward preserves zero gold by default. Existing SQL drafts 001-004 define profiles, wallets, inventory, matches and match_players, but they are not deployed.
 Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~ProfileStoreTests|FullyQualifiedName~MatchResultTests'
 Result: Passed! Failed: 0, Passed: 5, Skipped: 0, Total: 5.
+Full server suite after C4-C5: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore -> Passed! Failed: 0, Passed: 123, Skipped: 0, Total: 123.
 NOT COMPLETE: no Supabase REST adapter or credentialed integration, no approved reward amounts, no wiring of IProfileStore into live match completion. No gold is awarded by the running server.
 Document discrepancy: D:/HITME GAME/MD/DECISIONS.md currently says maxRounds=20 while the approved rule and current Core GameConfig say 5. The shared MD directory was left untouched during AG work.
