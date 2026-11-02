@@ -1,0 +1,4 @@
+C8 local durable ban fallback: BAN_STORE_PATH selects FileBanStore. It writes AFK expiry to JSON with same-directory replacement; a new store instance reads it after restart. If BAN_STORE_PATH is unset, the server still uses InMemoryBanStore.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~FileBanStoreTests|FullyQualifiedName~AfkAndEmoteTests'
+Result: Passed! Failed: 0, Passed: 7, Skipped: 0, Total: 7.
+Limit: a local file is not a shared ban store across Render replicas or an ephemeral filesystem. Supabase-backed persistence and live credentials remain unverified. No Core/Unity code changed.

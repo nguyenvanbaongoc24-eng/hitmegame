@@ -8,7 +8,12 @@ var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVar
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
+builder.Services.AddSingleton<IBanStore>(_ =>
+    string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BAN_STORE_PATH"))
+        ? new InMemoryBanStore()
+        : new FileBanStore(Environment.GetEnvironmentVariable("BAN_STORE_PATH")!));
 builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.MaxRooms,
+    banStore: provider.GetRequiredService<IBanStore>(),
     resultStore: provider.GetRequiredService<IMatchResultStore>()));
 builder.Services.AddSingleton<ProtocolGateway>();
 builder.Services.AddSingleton<ServerMetrics>();
