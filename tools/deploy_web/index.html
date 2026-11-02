@@ -201,7 +201,7 @@
         try {
           const testCanvas = document.createElement("canvas");
           const gl = testCanvas.getContext("webgl2") || testCanvas.getContext("webgl") || testCanvas.getContext("experimental-webgl");
-          return !!(gl && gl instanceof WebGLRenderingContext);
+          return !!gl;
         } catch (e) {
           return false;
         }
@@ -383,7 +383,7 @@
 
       const script = document.createElement("script");
       script.src = versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.loader.js");
-      const totalMB = 10.1;
+      const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {
         const slowNotice = document.getElementById("slow-network-notice");
@@ -408,6 +408,8 @@
         }).then(instance => {
           clearTimeout(slowTimer);
           window.unityInstance = instance;
+          const errorModal = document.getElementById("webgl-error-modal");
+          if (errorModal) errorModal.style.display = "none";
           loading.remove();
           canvas.focus();
         }).catch(error => {
