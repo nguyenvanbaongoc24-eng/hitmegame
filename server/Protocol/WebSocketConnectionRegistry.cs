@@ -66,6 +66,13 @@ public sealed class WebSocketConnectionRegistry
             if (connections.TryRemove(item.Key, out var connection)) await CloseAsync(connection, reason);
     }
 
+    public async Task NotifyRestartAndCloseAsync()
+    {
+        const string payload = "{\"v\":1,\"type\":\"error\",\"code\":\"server_restarting\"}";
+        await Task.WhenAll(connections.Keys.Select(id => SendAsync(new GatewayMessage(id, payload), CancellationToken.None)));
+        await CloseAllAsync("server_restarting");
+    }
+
     public async Task CloseConnectionAsync(string connectionId, string reason)
     {
         if (connections.TryRemove(connectionId, out var connection)) await CloseAsync(connection, reason);

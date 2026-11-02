@@ -58,7 +58,7 @@ Examples show shapes, not exact identifiers or final arena numbers. Always read 
 
 ## Errors and close reasons
 
-`room_full`, `room_limit`, `room_not_found`, `room_started`, `not_enough_players`, `host_only`, `wrong_phase`, `wrong_round`, `round_locked`, `invalid_commit`, `reconnect_invalid`, `session_replaced`, `banned` (`remainingSeconds`), `auth_required_use_join_token`, `auth_invalid`, `protocol_mismatch`, `bad_message`, `invalid_json`, `rate_limited`, and `message_too_large` are JSON `error.code` values. `idle_timeout` and `server_shutdown` are WebSocket close reasons. On `protocol_mismatch`, stop play and request an update. Error codes are stable for v1; structural wire changes require a version bump.
+`room_full`, `room_limit`, `room_not_found`, `room_started`, `not_enough_players`, `host_only`, `wrong_phase`, `wrong_round`, `round_locked`, `invalid_commit`, `reconnect_invalid`, `session_replaced`, `banned` (`remainingSeconds`), `auth_required_use_join_token`, `auth_invalid`, `protocol_mismatch`, `bad_message`, `invalid_json`, `rate_limited`, and `message_too_large` are JSON `error.code` values. `idle_timeout` is a WebSocket close reason; `server_restarting` is both a JSON error code and a close reason. On `protocol_mismatch`, stop play and request an update. Error codes are stable for v1; structural wire changes require a version bump.
 
 Current gaps: Unity WebGL network integration, Supabase Auth, persistent friend graph, and an authoritative profile/balance message. Signed guest gold persistence is tested locally against Supabase; Render deployment is unverified. The browser Online Lab and server WebSocket tests exercise the protocol; they do not prove the Unity client is connected.
 

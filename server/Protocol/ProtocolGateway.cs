@@ -52,6 +52,7 @@ public sealed class ProtocolGateway
     private readonly IAuthVerifier auth;
     private readonly IPlayerProfileReader? profiles;
     private readonly IGuestShopService? shop;
+    private readonly ServerMetrics? metrics;
     private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, PendingQuickMatch> quickMatch = new(StringComparer.Ordinal);
@@ -61,13 +62,14 @@ public sealed class ProtocolGateway
     private readonly HashSet<(string From, string To)> friendRequests = new();
     private readonly HashSet<(string First, string Second)> friends = new();
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
         this.auth = auth ?? new FakeAuthVerifier();
         this.profiles = profiles;
         this.shop = shop;
+        this.metrics = metrics;
     }
 
     public string Handle(string connectionId, string raw)
@@ -139,7 +141,10 @@ public sealed class ProtocolGateway
                     continue;
                 }
                 if (room.RoundSession is null) continue;
-                output.AddRange(Target(room, room.RoundSession.Tick()));
+                var started = System.Diagnostics.Stopwatch.GetTimestamp();
+                var roundMessages = room.RoundSession.Tick();
+                RecordRoundResolutionIfAny(roundMessages, started);
+                output.AddRange(Target(room, roundMessages));
             }
             return MapVersions(output);
         }
@@ -168,7 +173,7 @@ public sealed class ProtocolGateway
         if (string.IsNullOrWhiteSpace(request.RoomCode))
         {
             room = rooms.Create(identity.PlayerId, identity.DisplayName, new GameConfig(), out error);
-            if (room is null) return Error(error);
+            if (room is null) return Error(error == "room_limit" ? "server_busy" : error);
         }
         else if (!rooms.Join(request.RoomCode, identity.PlayerId, identity.DisplayName, out room, out error))
         {
@@ -229,7 +234,7 @@ public sealed class ProtocolGateway
 
         quickMatch.Remove(opponent.Key);
         var room = rooms.Create(opponent.Value.Identity.PlayerId, opponent.Value.Identity.DisplayName, new GameConfig(), out var error);
-        if (room is null) return Reply(connectionId, Error(error));
+        if (room is null) return Reply(connectionId, Error(error == "room_limit" ? "server_busy" : error));
         if (!rooms.Join(room.Code, identity.PlayerId, identity.DisplayName, out _, out error)) return Reply(connectionId, Error(error));
         var first = new Session(room, opponent.Value.Identity.PlayerId, NewReconnectToken(), opponent.Value.Version);
         var second = new Session(room, identity.PlayerId, NewReconnectToken(), request.V);
@@ -296,8 +301,16 @@ public sealed class ProtocolGateway
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
         if (session.Room.RoundSession is null) return Reply(connectionId, Error("wrong_phase"));
         if (!request.Ready) return Reply(connectionId, Error("ready_required"));
+        var started = System.Diagnostics.Stopwatch.GetTimestamp();
         var roundMessages = session.Room.RoundSession.TryMarkReady(session.PlayerId, out var roundError);
+        RecordRoundResolutionIfAny(roundMessages, started);
         return string.IsNullOrEmpty(roundError) ? Target(session.Room, roundMessages) : Reply(connectionId, Error(roundError));
+    }
+
+    private void RecordRoundResolutionIfAny(IReadOnlyList<OutboundMessage> messages, long started)
+    {
+        if (metrics is not null && messages.Any(message => message.Payload.Contains("\"type\":\"round_result\"", StringComparison.Ordinal)))
+            metrics.RecordRoundResolution(System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds);
     }
 
     private IReadOnlyList<GatewayMessage> CommitMessages(string connectionId, ClientEnvelope request)

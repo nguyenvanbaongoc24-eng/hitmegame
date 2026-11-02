@@ -58,7 +58,8 @@ builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.Ma
 builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequiredService<RoomDirectory>(),
     auth: provider.GetRequiredService<IAuthVerifier>(),
     profiles: provider.GetRequiredService<IPlayerProfileReader>(),
-    shop: provider.GetRequiredService<IGuestShopService>()));
+    shop: provider.GetRequiredService<IGuestShopService>(),
+    metrics: provider.GetRequiredService<ServerMetrics>()));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);

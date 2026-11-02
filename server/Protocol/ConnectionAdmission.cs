@@ -30,7 +30,8 @@ public sealed class ConnectionAdmission
         lock (gate)
         {
             byIp.TryGetValue(ip, out var count);
-            if (count >= MaxConnectionsPerIp || totalConnections >= MaxTotalConnections) { error = "connection_limit"; return false; }
+            if (count >= MaxConnectionsPerIp) { error = "connection_limit"; return false; }
+            if (totalConnections >= MaxTotalConnections) { error = "server_busy"; return false; }
             byIp[ip] = count + 1;
             totalConnections++;
             error = string.Empty;

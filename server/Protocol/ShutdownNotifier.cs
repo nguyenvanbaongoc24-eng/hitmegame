@@ -33,6 +33,6 @@ public sealed class ShutdownNotifier : IHostedService
             if (remaining <= TimeSpan.Zero) break;
             await Task.Delay(remaining < TimeSpan.FromMilliseconds(50) ? remaining : TimeSpan.FromMilliseconds(50), CancellationToken.None);
         }
-        await connections.CloseAllAsync("server_shutdown");
+        await connections.NotifyRestartAndCloseAsync();
     }
 }

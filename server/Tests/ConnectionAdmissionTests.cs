@@ -22,7 +22,7 @@ public sealed class ConnectionAdmissionTests
         Assert.True(admission.TryAdmit("10.0.0.1", out _));
         Assert.True(admission.TryAdmit("10.0.0.2", out _));
         Assert.False(admission.TryAdmit("10.0.0.3", out var error));
-        Assert.Equal("connection_limit", error);
+        Assert.Equal("server_busy", error);
         Assert.Equal(2, admission.TotalConnections);
         admission.Release("10.0.0.1");
         Assert.True(admission.TryAdmit("10.0.0.3", out _));

@@ -1,0 +1,9 @@
+# HIT ME — vận hành server (bản nháp)
+
+Render cần `ALLOWED_ORIGINS`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `GUEST_TOKEN_SIGNING_KEY`; bật `SUPABASE_SHOP_ENABLED=true` chỉ sau khi migration 008 đã áp. Không đặt khóa trong Git, client hoặc log. Kiểm `/healthz`, `/metrics` và thử WebSocket bằng `node tools/deploy/smoke_test.mjs wss://<host>/ws`. Render Free có thể ngủ; thử từ điện thoại sau khi health trả lời.
+
+Khi SIGTERM, server đợi tối đa `SHUTDOWN_ROUND_WAIT_SECONDS` cho vòng đang đặt kết thúc rồi gửi `{ "v":1, "type":"error", "code":"server_restarting" }`, đóng WebSocket với lý do `server_restarting`. Client trở về Home, không tự coi trận chưa kết thúc là thắng/thua. Chỉ kết quả cuối trận đã ghi qua RPC giao dịch mới được cộng vàng; vòng chưa hoàn tất không có thưởng. Khởi động lại làm mất phòng RAM; người chơi tạo phòng mới. Chưa thử SIGTERM trên Render thật.
+
+`GET /metrics` chỉ có số tổng phòng, kết nối, trận, trung vị **thời gian xử lý vòng trên server** (`roundResolutionMedianMs`), p95 gửi WebSocket và lỗi theo mã; không có danh tính hoặc token. Giới hạn cấu hình: `MAX_ROOMS`, `MAX_CONNECTIONS`, `MAX_CONNECTIONS_PER_IP`; quá tổng phòng/kết nối trả `server_busy`, quá giới hạn một IP trả `connection_limit`. Số mặc định là điểm khởi đầu, chưa đo tải Render.
+
+Sao lưu thủ công: cài PostgreSQL `pg_dump` tương thích phiên bản Supabase; đặt `SUPABASE_DB_URL` trong `.env` bị Git bỏ qua, rồi chạy `python tools/supabase/export_backup.py --output D:/backup-private/hitme-YYYYMMDD.dump`. Chọn tệp mới bên ngoài repo, giữ riêng tư; lệnh từ chối ghi đè. Máy hiện chưa có `pg_dump`, nên chưa xuất backup thật. Kiểm tệp bằng `pg_restore --list D:/backup-private/hitme-YYYYMMDD.dump`; thử khôi phục trong database thử trước khi cần dùng. Không chạy `cleanup_test_data.sql` cho tới khi chủ dự án xem bản preview và duyệt xóa.

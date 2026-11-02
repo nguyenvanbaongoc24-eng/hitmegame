@@ -14,4 +14,6 @@ Branch `prep/codex`; Unity and Core are not edited here.
 
 L0–L7 handoff: L0 verified directly on 2026-11-02. L1 partially underway (R6 local); R7 and durable friends pending. L2–L7 not completed. Do not present local shop tests as proof of live Supabase or Render behavior.
 
+L4 local work: shutdown now sends `server_restarting` then closes the socket; total capacity returns `server_busy`; `/metrics` includes median round processing time; manual backup script and `MD/OPS.md` added. Server tests 149/149. SIGTERM, capacity and backup have not been exercised on Render; `pg_dump` is absent locally.
+
 Owner action: rotate the database password previously exposed in chat before opening the service to external users; keep replacement secrets in local/deployment environment only.

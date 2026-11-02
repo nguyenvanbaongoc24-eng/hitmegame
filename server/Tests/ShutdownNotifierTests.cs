@@ -28,7 +28,8 @@ public sealed class ShutdownNotifierTests
         room.RoundSession.TryMarkReady("b", out _);
         await stopping;
         Assert.InRange(watch.ElapsedMilliseconds, 60, 450);
-        Assert.Equal("server_shutdown", socket.Reason);
+        Assert.Equal("server_restarting", socket.Reason);
+        Assert.Contains("\"code\":\"server_restarting\"", socket.LastPayload);
         Assert.Equal(0, connections.Count);
     }
 
@@ -44,7 +45,8 @@ public sealed class ShutdownNotifierTests
         var watch = Stopwatch.StartNew();
         await new ShutdownNotifier(connections, rooms, options).StopAsync(CancellationToken.None);
         Assert.InRange(watch.ElapsedMilliseconds, 65, 400);
-        Assert.Equal("server_shutdown", socket.Reason);
+        Assert.Equal("server_restarting", socket.Reason);
+        Assert.Contains("\"code\":\"server_restarting\"", socket.LastPayload);
     }
 
     private static (RoomDirectory Rooms, RoomAuthority Room) StartedRoom()
@@ -61,6 +63,7 @@ public sealed class ShutdownNotifierTests
     {
         private WebSocketState state = WebSocketState.Open;
         public string? Reason { get; private set; }
+        public string? LastPayload { get; private set; }
         public override WebSocketState State => state;
         public override WebSocketCloseStatus? CloseStatus => null;
         public override string? CloseStatusDescription => Reason;
@@ -74,6 +77,6 @@ public sealed class ShutdownNotifierTests
         public override Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken token)
             => throw new NotSupportedException();
         public override Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType type, bool endOfMessage, CancellationToken token)
-            => Task.CompletedTask;
+        { LastPayload = System.Text.Encoding.UTF8.GetString(buffer.Array!, buffer.Offset, buffer.Count); return Task.CompletedTask; }
     }
 }
