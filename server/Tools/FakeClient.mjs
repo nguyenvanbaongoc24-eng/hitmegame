@@ -70,6 +70,8 @@ try {
           endings = await Promise.all(clients.map(client => client.take('match_end')));
       }
       assert.ok(endings && endings.every(end => JSON.stringify(end.winners) === JSON.stringify(endings[0].winners)));
+      assert.ok(endings.every(end => end.rankings?.length === count));
+      assert.ok(endings[0].rankings.every(row => row.rank >= 1 && row.rank <= count && row.hp >= 0));
       assert.ok(round >= 1 && round <= 5);
       assert.ok(endings[0].winners.every(id => finalHp.some(player => player.id === id)));
       // This is a policy preview; the server does not yet credit Supabase wallets.
