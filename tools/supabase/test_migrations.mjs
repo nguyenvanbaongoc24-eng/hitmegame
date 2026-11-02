@@ -10,7 +10,7 @@ const sql = statement => db.query(statement);
 await db.exec('create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql as $$ select null::uuid $$;');
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
-  '004_match_result_store.sql', '005_reward_and_bans.sql']) {
+  '004_match_result_store.sql', '005_reward_and_bans.sql', '006_guest_economy.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
@@ -21,7 +21,7 @@ for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
 
 let cases = 0;
 for (const [size, expected] of [
-  [2, [100, 0]], [3, [150, 80, 0]], [4, [150, 80, 40, 0]],
+  [2, [100, 0]], [3, [150, 80, 40]], [4, [150, 80, 40, 0]],
   [5, [200, 120, 60, 0, 0]], [6, [200, 120, 60, 0, 0, 0]]
 ]) {
   const matchId = `00000000-0000-4000-8000-${String(size).padStart(12, '0')}`;
@@ -56,6 +56,30 @@ await sql(`select public.award_match_gold('${sixMatch}')`);
 const excluded = (await sql(`select gold from public.wallets where player_id=
   (select player_id from public.match_players where match_id='${sixMatch}' and placement=1)`)).rows[0];
 assert.equal(Number(excluded.gold), 0);
+cases++;
+for (const [size, expected] of [
+  [2, [100, 0]], [3, [150, 80, 40]], [4, [150, 80, 40, 0]],
+  [5, [200, 120, 60, 0, 0]], [6, [200, 120, 60, 0, 0, 0]]
+]) {
+  const matchId = `20000000-0000-4000-8000-${String(size).padStart(12, '0')}`;
+  const players = Array.from({ length: size }, (_, i) => ({
+    player_id: `g_${String(size * 10 + i).padStart(32, '0')}`,
+    rank: i + 1, hp: 3, hits_landed: 0, reward_eligible: i !== 0 || size !== 6
+  }));
+  const payload = JSON.stringify(players).replaceAll("'", "''");
+  const call = `select public.record_guest_match('${matchId}',now(),1,'test','${payload}'::jsonb) as inserted`;
+  assert.equal((await sql(call)).rows[0].inserted, true);
+  assert.equal((await sql(call)).rows[0].inserted, false);
+  const rows = (await sql(`select gp.gold,gp.matches_played,mp.gold_reward,mp.reward_eligible
+    from public.match_players mp join public.guest_profiles gp on gp.player_id=mp.server_player_id
+    where mp.match_id='${matchId}' order by mp.placement`)).rows;
+  const rewards = size === 6 ? [0, ...expected.slice(1)] : expected;
+  assert.deepEqual(rows.map(row => Number(row.gold)), rewards);
+  assert.deepEqual(rows.map(row => Number(row.gold_reward)), rewards);
+  assert.deepEqual(rows.map(row => Number(row.matches_played)), Array(size).fill(1));
+  cases++;
+}
+assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_profiles'::regclass`)).rows[0].relrowsecurity, true);
 cases++;
 console.log(`Passed! ${cases}/${cases} PGlite SQL and approved reward checks`);
 await db.close();

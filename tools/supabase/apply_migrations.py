@@ -5,7 +5,7 @@ Run: python Tools/supabase/apply_migrations.py --check
 Reads SUPABASE_DB_URL from the process environment or ignored worktree .env.
 Requires psycopg[binary]. Never prints the connection string or credentials.
 The --check mode is read-only. --apply checks project identity, existing schema,
-checksums, and takes a transaction-scoped lock before applying 001-005.
+checksums, and takes a transaction-scoped lock before applying 001-006.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ SOURCES = ROOT / "backend" / "supabase"
 FILES = [
     "001_schema.sql", "002_rls.sql", "003_functions.sql",
     "004_match_result_store.sql", "005_reward_and_bans.sql",
+    "006_guest_economy.sql",
 ]
 
 
@@ -65,7 +66,7 @@ def main() -> None:
                 database, user, profiles, ledger = cursor.fetchone()
                 print(f"Connected: database={database}, role={user}, profiles_present={profiles is not None}, ledger_present={ledger is not None}")
                 if args.check:
-                    for table in ("profiles", "wallets", "matches", "match_players", "server_bans"):
+                    for table in ("profiles", "wallets", "matches", "match_players", "server_bans", "guest_profiles", "guest_match_credits"):
                         cursor.execute("select to_regclass(%s)", ("public." + table,))
                         print(f"{table}={cursor.fetchone()[0] is not None}")
                     return
@@ -90,7 +91,7 @@ def main() -> None:
                     cursor.execute(source)
                     cursor.execute("insert into public.hitme_schema_migrations(filename,sha256) values (%s,%s)", (filename, digest))
                     print(f"applied: {filename}")
-        print("Migration transaction committed: 5/5 files checked")
+        print(f"Migration transaction committed: {len(FILES)}/{len(FILES)} files checked")
     finally:
         connection.close()
 
