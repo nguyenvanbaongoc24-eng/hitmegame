@@ -1,7 +1,11 @@
 services:
   - type: web
     name: hit-me-server
-    env: docker
+    runtime: docker
     dockerfilePath: ./server/Dockerfile
+    dockerContext: .
     healthCheckPath: /healthz
     autoDeploy: false
+    envVars:
+      - key: ALLOWED_ORIGINS
+        sync: false
