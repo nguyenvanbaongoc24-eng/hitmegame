@@ -1,65 +1,75 @@
-# HIT ME — BÁO CÁO KIỂM THỬ THIẾT BỊ DI ĐỘNG & BẢN DỰNG (ROUND 45)
+# HIT ME — BÁO CÁO TOÀN DIỆN THIẾT BỊ & RỦI RO CODEX (ROUND 45)
 
-**Thời gian:** 2026-11-02 18:15 UTC+7  
+**Thời gian:** 2026-11-02 19:45 UTC+7  
 **Bản dựng WebGL:** `WebGL_Release_20261102_188344e`  
 **Nhánh Git Vercel:** `web-dist` (Commit: `58895db`)  
-**Kết quả Unit Tests:** 182 / 182 PASS (100%)  
-**Môi trường kiểm thử:** WebKit Mobile Touch Emulation (Playwright) trên 2 cấu hình thiết bị thực tế:  
-1. **iPhone 15 Pro** (393 × 852, DPR 3, Touchscreen)  
-2. **iPhone SE** (375 × 667, DPR 2, Touchscreen 16:9)
+**URL Trực tiếp Vercel:** [hitmegame-iota.vercel.app](https://hitmegame-iota.vercel.app/)  
+**Độ phủ kiểm thử:** Playwright WebKit + Chromium trên 4 dòng thiết bị (cả Dọc và Ngang), tổng cộng 32 ảnh chụp màn hình kiểm chứng.
 
 ---
 
-## 1. TỔNG HỢP KẾT QUẢ ĐẠT ĐƯỢC (F0 — F6)
+## 1. RÀ SOÁT & XỬ LÝ DANH SÁCH RỦI RO CODEX (CAO / TRUNG BÌNH)
 
-| Mục | Nội dung kiểm thử | Hiện trạng trước | Kết quả sau xử lý | Trạng thái |
-| :--- | :--- | :--- | :--- | :---: |
-| **F0** | Kiểm thử cảm ứng WebKit thực tế | Dùng giả lập synthetic `__hitmeTest` | Dùng `page.touchscreen.tap` trực tiếp trên canvas WebKit | **ĐẠT** |
-| **F1** | Tràn viền 100vw × 100dvh, bỏ viền đen | Bị viền đen hai bên trên iPhone SE / iPad do ép tỉ lệ 9:19.5 | Canvas 100vw × 100dvh trọn màn hình, camera tự co giãn | **ĐẠT** |
-| **F2** | Lỗi liệt cảm ứng trên WebKit/Mobile | Chạm vào sân bị nuốt, không di chuyển được nhân vật | Gỡ bỏ `raycastTarget` trên HUD panel, gỡ `preventDefault` | **ĐẠT** |
-| **F3** | Tỉ lệ nhân vật & vũ khí, ô xám battle | Nhân vật & dép khổng lồ (2.0f); nút góc dưới có ô xám chưa gán sprite | Nhân vật 1.0f, dép 0.65f; nút cảm xúc tròn có texture | **ĐẠT** |
-| **F4** | Nút kéo kép, nút Báo Lỗi đè chữ | Thanh trượt 2 núm; nút Báo Lỗi nằm đè nút Đóng; hiện Rời Trận ở Home | 1 núm chuẩn; Báo Lỗi dòng riêng; ẩn Rời Trận tại Home | **ĐẠT** |
-| **F5** | Xếp thẳng hàng Top Bar, bỏ vệt đen sân | Banner HIT ME đè lên tiền; vệt đen cắt ngang nền; dính chữ "Graybox" | Top bar 1 hàng Y=0.965; Banner ở dưới; xóa vệt đen; fingerprint sạch | **ĐẠT** |
-| **F6** | Báo cáo kiểm thử & triển khai web-dist | Chưa đẩy bundle mới lên Vercel | Đã đóng gói và đẩy commit `58895db` lên nhánh `web-dist` | **ĐẠT** |
+| Hạng mục rủi ro | Mức độ | Hiện trạng & Xử lý | Trạng thái |
+| :--- | :---: | :--- | :---: |
+| **R1. Render Build & Health Check** | **CAO** | Server Render bị lỗi `open Dockerfile: no such file or directory`. Codex đã bổ sung `Dockerfile` và `render.yaml` ở thư mục gốc (commit `17e5112`). Kiểm tra cục bộ `/health` và `/healthz` đều trả về HTTP 200 (329ms). Biến môi trường then chốt: **`ALLOWED_ORIGINS`** cần chứa `https://hitmegame-iota.vercel.app` (không có dấu gạch chéo cuối). | **ĐÃ CẤP SỬA** |
+| **R2. Rò rỉ mật khẩu / Dọn dữ liệu** | **CAO** | Đã chạy công cụ quét an toàn `tools/supabase/scan_secrets.py`: **0 vi phạm** (blobs=2676, findings=0). Đã thêm hook `pre-commit` chặn commit `.env`. **Hành động người dùng:** Reset database password trên Supabase Dashboard và nhập vào Render Environment. | **ĐÃ KIỂM TRA** |
+| **R3. Adapter cấm AFK trên Supabase** | **TRUNG BÌNH** | Đã chạy contract test trực tiếp với Supabase: **5/5 PASS** (`Evidence/round43/R3_ban_supabase.txt`). Dữ liệu test tự động dọn sạch. | **ĐẠT** |
+| **R4 & R5. Protocol v2 & Số dư server** | **TRUNG BÌNH** | Codex đã hoàn thành protocol v2 trong `ProtocolGateway.cs` và `PlayerProfileReader.cs` (145/145 server tests pass). Client Unity WebGL tương thích cả envelope v1 và v2. | **ĐẠT** |
 
 ---
 
-## 2. NGUYÊN NHÂN GỐC RỄ LỖI CẢM ỨNG (ROOT CAUSE OF TOUCH FAILURE)
+## 2. KIỂM TRA BẢN BUILD TRÊN VERCEL (hitmegame-iota.vercel.app)
 
-1. **HUD nuốt trọn sự kiện chạm (`GameplayHudPanel`):**
-   - Trong `ProductionUISetup.cs`, hàm `CreatePanel` mặc định gán `Image.raycastTarget = true`.
-   - Bảng điều khiển trận đấu `GameplayHudPanel` phủ kín 100% diện tích màn hình. Khi người chơi chạm vào bất cứ đâu trên sân cỏ, `EventSystem.current.IsPointerOverGameObject()` luôn trả về `true`, khiến đoạn mã xử lý đặt quân trong `PlacementInput.cs` lập tức hủy lệnh (`continue`/`return`).
-   - **Khắc phục:** Chuyển `GameplayHudPanel` và các panel bao phủ toàn màn hình sang `raycastTarget = false`. Chỉ các nút bấm tương tác (`Button`) mới nhận raycast.
-
-2. **Xung đột sự kiện trình duyệt trong `index.html`:**
-   - Script khởi tạo WebGL gắn trình lắng nghe `touchstart` / `touchmove` trực tiếp vào `#unity-canvas` với `event.preventDefault()`, vô hiệu hóa pipeline dịch sự kiện của Emscripten WebKit.
-   - **Khắc phục:** Loại bỏ chặn sự kiện trên canvas; chỉ chặn cuộn trang ngoài vùng canvas.
+- **Trạng thái HTTP:** HTTP 200 OK.
+- **Tài sản WebGL:** File `WebGL_Release_20261102_188344e.wasm.br` (4,613,397 bytes) trả về đúng `Content-Encoding: br`, `Content-Type: application/wasm`, `Etag: "1988ed57ce7beaf20208b4a47643da46"`.
+- **Tránh Cache bản cũ:** File tải trang index.html gọi trực tiếp gói `WebGL_Release_20261102_188344e`. Khởi tạo thành công vào màn hình Home trong 20.63s, không còn cảnh báo lỗi WebGL.
+- **Ảnh chụp trực tiếp từ Vercel:** `Evidence/round45/vercel_live_home.png`.
 
 ---
 
-## 3. BẰNG CHỨNG HÌNH ẢNH (SCREENSHOTS ĐỐI CHIẾU)
+## 3. MA TRẬN KIỂM THỬ THIẾT BỊ: PLAYWRIGHT WEBKIT + CHROMIUM (8 CẤU HÌNH)
 
-### A. Màn hình chính (Home Screen)
-- **iPhone 15 Pro:** `Evidence/round45/01_home_iphone_15_pro.png`
-- **iPhone SE:** `Evidence/round45/01_home_iphone_se.png`
-- *Ghi nhận:* Thanh Top bar (Khách, Vàng, Kim cương, Đổi ngôn ngữ, Nút Cài đặt) thẳng tắp 1 hàng. Banner HIT ME nằm thoáng phía dưới. Vết đen cắt ngang đã biến mất hoàn toàn. Fingerprint hiển thị tinh tế ở mép dưới cùng, không còn chữ "Graybox".
+Toàn bộ 32 ảnh chụp màn hình kiểm chứng lưu tại thư mục: `Evidence/round45/matrix/`.
 
-### B. Hộp thoại Cài đặt (Settings Dialog)
-- **iPhone 15 Pro:** `Evidence/round45/02_settings_iphone_15_pro.png`
-- **iPhone SE:** `Evidence/round45/02_settings_iphone_se.png`
-- *Ghi nhận:* Hai thanh âm lượng chỉ có DUY NHẤT 1 núm kéo tròn. Nút BÁO LỖI tách biệt thành hàng riêng chuẩn 9-slice vàng. Nút ĐÓNG màu xanh riêng biệt. Không còn nút "RỜI TRẬN" khi đang ở Home. Số phiên bản hiển thị gọn bên dưới.
+| Thiết bị | Động cơ Browser | Hướng màn hình | Kích thước (CSS) | Màn Home | Màn Cài đặt | Màn Đặt quân | Màn Trận đấu |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **iPhone SE** | WebKit | Dọc (Portrait) | 375 × 667 | PASS | PASS | PASS | PASS |
+| **iPhone SE** | WebKit | Ngang (Landscape) | 667 × 375 | Lock banner | Lock banner | Lock banner | Lock banner |
+| **iPhone 15 Pro** | WebKit | Dọc (Portrait) | 393 × 852 | PASS | PASS | PASS | PASS |
+| **iPhone 15 Pro** | WebKit | Ngang (Landscape) | 852 × 393 | Lock banner | Lock banner | Lock banner | Lock banner |
+| **Pixel 7** | Chromium | Dọc (Portrait) | 412 × 915 | PASS | PASS | PASS | PASS |
+| **Pixel 7** | Chromium | Ngang (Landscape) | 915 × 412 | Lock banner | Lock banner | Lock banner | Lock banner |
+| **iPad** | WebKit | Dọc (Portrait) | 810 × 1080 | PASS | PASS | PASS | PASS |
+| **iPad** | WebKit | Ngang (Landscape) | 1080 × 810 | PASS (Pillar) | PASS (Pillar) | PASS (Pillar) | PASS (Pillar) |
 
-### C. Giai đoạn Đặt quân (Placing Phase) & Chiến đấu (Battle)
-- **iPhone 15 Pro:** `Evidence/round45/03_gameplay_placing_iphone_15_pro.png` & `04_gameplay_battle_iphone_15_pro.png`
-- **iPhone SE:** `Evidence/round45/03_gameplay_placing_iphone_se.png` & `04_gameplay_battle_iphone_se.png`
-- *Ghi nhận:* 
-  - Toàn bộ sân đình 100% hiển thị không bị viền đen cắt xén.
-  - Thao tác cảm ứng `page.touchscreen.tap` đặt chính xác nhân vật vào vị trí chỉ định.
-  - Tỉ lệ nhân vật và dép hài hòa 1.0f / 0.65f.
-  - Nút cảm xúc góc dưới bên phải hiển thị icon tròn tối màu có viền (`ui_btn_circle_dark`), hoàn toàn không còn ô xám placeholder lỗi texture.
+*Ghi chú về chế độ Ngang (Landscape):*
+- Trên điện thoại di động (iPhone SE, iPhone 15 Pro, Pixel 7), màn hình hiển thị thông báo xoay màn hình chuẩn: **"VUI LÒNG XOAY DỌC MÀN HÌNH - Trò chơi được thiết kế tối ưu cho trải nghiệm màn hình dọc điện thoại"**.
+- Trên máy tính bảng (iPad), hệ thống tự động căn giữa cột dọc (pillar-box) để đảm bảo tỉ lệ sân đình hiển thị chuẩn xác không bị bóp méo.
 
 ---
 
-## 4. KẾT LUẬN & TRẠNG THÁI TRIỂN KHAI
+## 4. BẢNG PHÂN ĐỊNH RÕ RÀNG: GIẢ LẬP VS MÁY THẬT (PHỤC VỤ ĐÁNH GIÁ KHÁCH QUAN)
 
-Toàn bộ các mục từ F0 đến F6 đã hoàn tất 100%, vượt qua tất cả 182 bài unit tests. Mã nguồn và gói triển khai tĩnh đã được đẩy lên nhánh `web-dist` (Commit `58895db`) để Vercel tự động cập nhật bản chơi trực tiếp tại https://hitmegame-iota.vercel.app/.
+> [!IMPORTANT]
+> Để đảm bảo tính trung thực tuyệt đối theo tiêu chuẩn dự án, dưới đây là phân định chi tiết giữa kết quả giả lập và máy vật lý:
+
+### A. Đã xác nhận trên MÁY THẬT VẬT LÝ (Người dùng kiểm chứng)
+1. **Lỗi hiển thị trước đây (Bản cũ 52f9100):** Đã được người dùng chụp lại từ iPhone thật mở qua Safari/Zalo:
+   - Viền đen bó khung hai bên.
+   - Nút Cài đặt bị đè chữ; hai núm kéo trùng lặp; nút Báo Lỗi phẳng khối cam đè nút Đóng.
+   - Nhân vật/vũ khí to quá khổ (2.0x).
+   - Ô vuông xám không texture ở góc dưới bên phải trận đấu.
+   - Vết đen cắt ngang nền sân đình.
+
+### B. Đã xác nhận trên GIẢ LẬP TỰ ĐỘNG HÓA (Playwright WebKit & Chromium)
+1. **Cảm ứng WebKit:** Mô phỏng chạm ngón tay thật qua `page.touchscreen.tap` trên WebKit iOS engine (không dùng synthetic hook). Nhân vật nhận vị trí chạm và di chuyển chính xác.
+2. **Kích thước & Tràn viền:** 100vw × 100dvh trên cả 4 kích thước iPhone SE, iPhone 15 Pro, Pixel 7, iPad (0% viền đen).
+3. **Căn chỉnh UI:** 100% các nút và banner đã thẳng hàng, nút Báo lỗi nằm riêng hàng, nút Rời trận ẩn tại Home, thanh trượt chỉ 1 núm tròn.
+4. **Vercel Live:** Kiểm thử headless tải thành công từ CDN Vercel đạt 20.63s.
+
+### C. CẦN KIỂM TRA TRÊN MÁY THẬT VẬT LÝ (Bước người dùng thực hiện tiếp)
+1. Mở Safari trên điện thoại iPhone thật (khuyến nghị mở Tab Ẩn danh / Private Tab hoặc xóa cache để đảm bảo không lưu bản cũ).
+2. Truy cập: `https://hitmegame-iota.vercel.app/`
+3. Quan sát góc dưới màn hình hiển thị: `build 188344e ... Bản thử nghiệm`.
+4. Dùng ngón tay chạm thử vào sân trong chế độ "Luyện với Bot" để cảm nhận độ nhạy cảm ứng vuốt thật trên mặt kính điện thoại.
