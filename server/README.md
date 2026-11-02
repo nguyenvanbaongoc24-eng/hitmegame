@@ -1,5 +1,11 @@
 # HIT ME authoritative server
 
+## Trạng thái tích hợp Supabase (2026-11-02)
+
+Project URL do chủ dự án cung cấp: `https://lpylrbtpruyzdehkcaiu.supabase.co`. URL công khai này **không** phải khóa truy cập. Chưa có server-only secret trong biến môi trường và chưa xác nhận các migration SQL đã chạy trên project; vì vậy C5b chưa thể kiểm thử trên Supabase thật. Bản SQL `003_functions.sql` còn công thức thưởng cũ và không được chạy để phát thưởng. Bảng thưởng được duyệt ngày 2026-11-02 đã nằm trong `ApprovedGoldByRoomSize` (test 2–6 người); luồng trận vẫn chỉ lưu kết quả trong RAM, chưa cộng vào ví. C8 có `FileBanStore` bật bằng `BAN_STORE_PATH` để giữ cấm AFK sau khi khởi động lại trên một máy; khi triển khai Render hoặc nhiều replica cần kho bền dùng chung. Không đưa khóa vào Git, client hay chat.
+
+`MD/NET_PROTOCOL.md` mô tả wire v1 cho AG. `MD/DEPLOY_RENDER.md` là hướng dẫn nháp; `server/render.yaml` đã qua phân tích cú pháp YAML, chưa Docker build hoặc triển khai.
+
 ## Test cục bộ (Hub + Online Lab)
 
 1. Từ `D:\HITME GAME\worktrees\codex-prep`, chạy `powershell -ExecutionPolicy Bypass -File tools\dev\run_local.ps1 -Open` (cần .NET 8 và Node 22+). Nếu 8100/8080 đang dùng, thêm `-HubPort 8110 -ServerPort 8081`.

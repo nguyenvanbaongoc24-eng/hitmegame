@@ -1,0 +1,5 @@
+2026-11-02: python -c import yaml; yaml.safe_load(server/render.yaml)
+Result: Render YAML parsed: 1 Docker web service; runtime=docker;
+dockerfilePath=./server/Dockerfile; dockerContext=.; healthCheckPath=/healthz.
+Docker build: NOT RUN (Docker unavailable locally).
+Render deployment and public WSS: NOT RUN.

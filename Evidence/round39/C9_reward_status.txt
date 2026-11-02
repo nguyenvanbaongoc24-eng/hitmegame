@@ -1,0 +1,10 @@
+2026-11-02: project owner approved gold table.
+2 players: ranks 1/2 = 100/0.
+3 players: ranks 1/2/3 = 150/80/0.
+4 players: ranks 1/2/3/4 = 150/80/40/0.
+5-6 players: ranks 1/2/3/4+ = 200/120/60/0.
+ApprovedGoldByRoomSizeTests: Passed! 8/8.
+Full server suite: Passed! 132/132.
+Reward calculation only. Live wallet credit is disabled: guest-only authentication,
+Supabase migrations not confirmed, no server secret in environment, and existing
+003_functions.sql contains old reward values. No real Supabase call was made.
