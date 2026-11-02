@@ -32,15 +32,18 @@ let passed = 0;
 try {
   for (const count of [2, 4, 6]) {
     const clients = [];
+    const issuedTokens = [];
     try {
       for (let i = 0; i < count; i++) clients.push(await connect(endpoint));
       const nonce = `${Date.now()}_${count}`;
-      clients[0].send({ type: 'join', token: await tokenFor(`fake_${nonce}_0`) });
+      issuedTokens[0] = await tokenFor(`fake_${nonce}_0`);
+      clients[0].send({ type: 'join', token: issuedTokens[0] });
       const room = await clients[0].take('room_state');
       assert.equal(room.protocolVersion, 1);
       assert.equal(room.players.length, 1);
       for (let i = 1; i < count; i++) {
-        clients[i].send({ type: 'join', token: await tokenFor(`fake_${nonce}_${i}`), roomCode: room.roomCode });
+        issuedTokens[i] = await tokenFor(`fake_${nonce}_${i}`);
+        clients[i].send({ type: 'join', token: issuedTokens[i], roomCode: room.roomCode });
         const joined = await clients[i].take('room_state');
         assert.equal(joined.players.length, i + 1);
       }
@@ -74,9 +77,9 @@ try {
       assert.ok(endings[0].rankings.every(row => row.rank >= 1 && row.rank <= count && row.hp >= 0));
       assert.ok(round >= 1 && round <= 5);
       assert.ok(endings[0].winners.every(id => finalHp.some(player => player.id === id)));
-      // This is a policy preview; the server does not yet credit Supabase wallets.
       const approvedFirstGold = count === 2 ? 100 : count <= 4 ? 150 : 200;
-      console.log(`match N=${count} room=${room.roomCode} rounds=${round} winners=${endings[0].winners.length} approvedRank1Gold=${approvedFirstGold} walletCredit=NOT_CONNECTED`);
+      const walletCredit = await verifyLiveCredits(issuedTokens, endings[0].rankings, count);
+      console.log(`match N=${count} room=${room.roomCode} rounds=${round} winners=${endings[0].winners.length} approvedRank1Gold=${approvedFirstGold} walletCredit=${walletCredit}`);
       passed++;
     } finally { clients.forEach(client => client.close()); }
   }
@@ -92,6 +95,30 @@ async function tokenFor(name) {
     body: JSON.stringify({ name }) });
   assert.equal(response.status, 200, `Guest token endpoint returned ${response.status}`);
   return (await response.json()).token;
+}
+
+async function verifyLiveCredits(tokens, rankings, size) {
+  const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_KEY;
+  const project = process.env.SUPABASE_URL;
+  if (!key || !project) return 'NOT_CONNECTED';
+  assert.ok(tokens.every(token => token.startsWith('guest1.')), 'Live credits require signed guest tokens');
+  const ids = tokens.map(token => JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8')).id);
+  for (const id of ids) {
+    const ranking = rankings.find(row => row.playerId === id);
+    assert.ok(ranking, `Missing result ranking for ${id}`);
+    const url = new URL('/rest/v1/guest_profiles', project);
+    url.searchParams.set('select', 'gold,matches_played,best_rank');
+    url.searchParams.set('player_id', `eq.${id}`);
+    const response = await fetch(url, { headers: { apikey: key } });
+    assert.equal(response.status, 200, `Guest wallet query returned HTTP ${response.status}`);
+    const rows = await response.json();
+    assert.equal(rows.length, 1, `Missing guest wallet for ${id}`);
+    const expected = size === 2 ? [100, 0] : size <= 4 ? [150, 80, 40, 0] : [200, 120, 60, 0, 0, 0];
+    assert.equal(rows[0].gold, expected[ranking.rank - 1] ?? 0, `Wrong gold for ${id}`);
+    assert.equal(rows[0].matches_played, 1, `Wrong match count for ${id}`);
+    assert.equal(rows[0].best_rank, ranking.rank, `Wrong best rank for ${id}`);
+  }
+  return 'VERIFIED';
 }
 
 async function connect(url) {
