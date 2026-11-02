@@ -1202,6 +1202,14 @@ namespace HitMe.UI
             if (lobbyPanel != null) lobbyPanel.SetActive(screen == ProductionScreen.Lobby);
             if (botTrainingPanel != null) botTrainingPanel.SetActive(screen == ProductionScreen.BotTraining);
             if (gameplayHudPanel != null) gameplayHudPanel.SetActive(screen == ProductionScreen.Gameplay);
+            if (screen == ProductionScreen.Gameplay)
+            {
+                EnsureInGameEmoteTray();
+            }
+            else
+            {
+                if (_inGameEmoteTray != null) _inGameEmoteTray.SetActive(false);
+            }
             if (resultPanel != null) resultPanel.SetActive(screen == ProductionScreen.Result);
 
             if (screen != ProductionScreen.Gameplay && roundResultOverlay != null)
@@ -3427,6 +3435,26 @@ namespace HitMe.UI
             bool isTie = winnerIds != null && winnerIds.Count > 1;
             bool isLocalWinner = winnerIds != null && winnerIds.Contains("player");
 
+            // A5: Result SFX (Win/Lose)
+            if (isLocalWinner)
+            {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayWin();
+                else Audio.AudioService.Instance?.PlayWin();
+            }
+            else
+            {
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayLose();
+                else Audio.AudioService.Instance?.PlayLose();
+            }
+
+            // A5: Smooth transition
+            if (resultPanel != null)
+            {
+                var cg = resultPanel.GetComponent<CanvasGroup>();
+                if (cg == null) cg = resultPanel.AddComponent<CanvasGroup>();
+                StartCoroutine(FadeInResultPanel(cg));
+            }
+
             if (txtResultTitle != null)
             {
                 if (isTie)
@@ -3515,7 +3543,262 @@ namespace HitMe.UI
                 {
                     row.imgBg.color = isMe ? new Color(1f, 1f, 1f, 1f) : new Color(0.92f, 0.95f, 1f, 0.92f);
                 }
+
+                // A5: Friend request button after match
+                EnsureRowFriendButton(row, p.Id, p.Name, isMe);
             }
         }
+
+        private IEnumerator FadeInResultPanel(CanvasGroup cg)
+        {
+            if (cg == null) yield break;
+            cg.alpha = 0f;
+            float duration = 0.25f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                cg.alpha = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
+            cg.alpha = 1f;
+        }
+
+        private void EnsureRowFriendButton(ResultRowUI row, string playerId, string playerName, bool isMe)
+        {
+            if (row == null || row.root == null) return;
+
+            Transform existing = row.root.transform.Find("BtnFriendRequest");
+            if (isMe)
+            {
+                if (existing != null) existing.gameObject.SetActive(false);
+                return;
+            }
+
+            Button btn;
+            TextMeshProUGUI txt;
+            if (existing != null)
+            {
+                existing.gameObject.SetActive(true);
+                btn = existing.GetComponent<Button>();
+                txt = existing.GetComponentInChildren<TextMeshProUGUI>();
+            }
+            else
+            {
+                var obj = new GameObject("BtnFriendRequest", typeof(RectTransform));
+                obj.transform.SetParent(row.root.transform, false);
+                var rt = obj.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.78f, 0.20f);
+                rt.anchorMax = new Vector2(0.98f, 0.80f);
+                rt.sizeDelta = Vector2.zero;
+
+                var img = obj.AddComponent<Image>();
+                img.color = theme != null ? theme.actionGreen : new Color(0.18f, 0.65f, 0.38f, 0.95f);
+
+                btn = obj.AddComponent<Button>();
+
+                var txtObj = new GameObject("Text", typeof(RectTransform));
+                txtObj.transform.SetParent(obj.transform, false);
+                var txtRt = txtObj.GetComponent<RectTransform>();
+                txtRt.anchorMin = Vector2.zero;
+                txtRt.anchorMax = Vector2.one;
+                txtRt.sizeDelta = Vector2.zero;
+
+                txt = txtObj.AddComponent<TextMeshProUGUI>();
+                TMP_FontAsset font = GetDefaultFont();
+                if (font != null) txt.font = font;
+                txt.fontSize = 13f;
+                txt.fontStyle = FontStyles.Bold;
+                txt.alignment = TextAlignmentOptions.Center;
+                txt.color = Color.white;
+            }
+
+            if (btn != null && txt != null)
+            {
+                btn.interactable = true;
+                txt.text = UiStrings.Get(UiStrings.BtnAddFriend);
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    btn.interactable = false;
+                    txt.text = UiStrings.Get(UiStrings.BtnFriendSent);
+                    var img = btn.GetComponent<Image>();
+                    if (img != null) img.color = new Color(0.40f, 0.45f, 0.50f, 0.85f);
+                    ShowToast(string.Format(UiStrings.Get("Đã gửi lời mời kết bạn tới {0}!"), playerName));
+                });
+            }
+        }
+
+        #region In-Game Quick Chat & Emote Tray (A6)
+
+        private GameObject _inGameEmoteTray;
+        private Button _btnInGameEmote;
+
+        public void EnsureInGameEmoteTray()
+        {
+            if (gameplayHudPanel == null) return;
+
+            Transform safeArea = gameplayHudPanel.transform.Find("SafeAreaRoot") ?? gameplayHudPanel.transform;
+
+            if (_btnInGameEmote == null)
+            {
+                Transform existingBtn = safeArea.Find("BtnInGameEmote");
+                if (existingBtn != null)
+                {
+                    _btnInGameEmote = existingBtn.GetComponent<Button>();
+                }
+                else
+                {
+                    var btnObj = new GameObject("BtnInGameEmote", typeof(RectTransform));
+                    btnObj.transform.SetParent(safeArea, false);
+                    var rt = btnObj.GetComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0.84f, 0.14f);
+                    rt.anchorMax = new Vector2(0.96f, 0.20f);
+                    rt.sizeDelta = Vector2.zero;
+
+                    var img = btnObj.AddComponent<Image>();
+                    img.color = new Color(0.12f, 0.16f, 0.24f, 0.90f);
+
+                    _btnInGameEmote = btnObj.AddComponent<Button>();
+
+                    var txtObj = new GameObject("Text", typeof(RectTransform));
+                    txtObj.transform.SetParent(btnObj.transform, false);
+                    var txtRt = txtObj.GetComponent<RectTransform>();
+                    txtRt.anchorMin = Vector2.zero;
+                    txtRt.anchorMax = Vector2.one;
+                    txtRt.sizeDelta = Vector2.zero;
+
+                    var txt = txtObj.AddComponent<TextMeshProUGUI>();
+                    txt.font = GetDefaultFont();
+                    txt.fontSize = 22f;
+                    txt.alignment = TextAlignmentOptions.Center;
+                    txt.color = Color.white;
+                    txt.text = "💬";
+
+                    _btnInGameEmote.onClick.AddListener(() =>
+                    {
+                        AudioManager.Instance?.PlayClick();
+                        if (_inGameEmoteTray != null)
+                        {
+                            _inGameEmoteTray.SetActive(!_inGameEmoteTray.activeSelf);
+                        }
+                    });
+                }
+            }
+
+            if (_inGameEmoteTray == null)
+            {
+                Transform existingTray = safeArea.Find("InGameEmoteTray");
+                if (existingTray != null)
+                {
+                    _inGameEmoteTray = existingTray.gameObject;
+                }
+                else
+                {
+                    var trayObj = new GameObject("InGameEmoteTray", typeof(RectTransform));
+                    trayObj.transform.SetParent(safeArea, false);
+                    var trayRt = trayObj.GetComponent<RectTransform>();
+                    trayRt.anchorMin = new Vector2(0.15f, 0.21f);
+                    trayRt.anchorMax = new Vector2(0.96f, 0.36f);
+                    trayRt.sizeDelta = Vector2.zero;
+
+                    var trayBg = trayObj.AddComponent<Image>();
+                    trayBg.color = new Color(0.08f, 0.12f, 0.18f, 0.95f);
+
+                    // Row 1: Emote Icons
+                    string[] emotes = { "😎", "🔥", "🎯", "😅", "💀" };
+                    float colWidth = 1f / emotes.Length;
+                    for (int i = 0; i < emotes.Length; i++)
+                    {
+                        string emote = emotes[i];
+                        var itemObj = new GameObject("Emote_" + i, typeof(RectTransform));
+                        itemObj.transform.SetParent(trayObj.transform, false);
+                        var itemRt = itemObj.GetComponent<RectTransform>();
+                        itemRt.anchorMin = new Vector2(i * colWidth + 0.02f, 0.54f);
+                        itemRt.anchorMax = new Vector2((i + 1) * colWidth - 0.02f, 0.94f);
+                        itemRt.sizeDelta = Vector2.zero;
+
+                        var itemImg = itemObj.AddComponent<Image>();
+                        itemImg.color = new Color(0.20f, 0.25f, 0.35f, 0.90f);
+
+                        var itemBtn = itemObj.AddComponent<Button>();
+
+                        var itemTxtObj = new GameObject("Text", typeof(RectTransform));
+                        itemTxtObj.transform.SetParent(itemObj.transform, false);
+                        var itemTxtRt = itemTxtObj.GetComponent<RectTransform>();
+                        itemTxtRt.anchorMin = Vector2.zero;
+                        itemTxtRt.anchorMax = Vector2.one;
+                        itemTxtRt.sizeDelta = Vector2.zero;
+
+                        var itemTxt = itemTxtObj.AddComponent<TextMeshProUGUI>();
+                        itemTxt.font = GetDefaultFont();
+                        itemTxt.fontSize = 20f;
+                        itemTxt.alignment = TextAlignmentOptions.Center;
+                        itemTxt.color = Color.white;
+                        itemTxt.text = emote;
+
+                        itemBtn.onClick.AddListener(() =>
+                        {
+                            SendInGameEmoteOrPhrase(emote);
+                        });
+                    }
+
+                    // Row 2: Quick Chat Phrases
+                    string[] phrases = { "Hay quá!", "Trận sau phục thù!", "Đừng ném tôi!" };
+                    float pColWidth = 1f / phrases.Length;
+                    for (int i = 0; i < phrases.Length; i++)
+                    {
+                        string phrase = phrases[i];
+                        var pObj = new GameObject("Phrase_" + i, typeof(RectTransform));
+                        pObj.transform.SetParent(trayObj.transform, false);
+                        var pRt = pObj.GetComponent<RectTransform>();
+                        pRt.anchorMin = new Vector2(i * pColWidth + 0.02f, 0.08f);
+                        pRt.anchorMax = new Vector2((i + 1) * pColWidth - 0.02f, 0.48f);
+                        pRt.sizeDelta = Vector2.zero;
+
+                        var pImg = pObj.AddComponent<Image>();
+                        pImg.color = new Color(0.16f, 0.22f, 0.32f, 0.90f);
+
+                        var pBtn = pObj.AddComponent<Button>();
+
+                        var pTxtObj = new GameObject("Text", typeof(RectTransform));
+                        pTxtObj.transform.SetParent(pObj.transform, false);
+                        var pTxtRt = pTxtObj.GetComponent<RectTransform>();
+                        pTxtRt.anchorMin = Vector2.zero;
+                        pTxtRt.anchorMax = Vector2.one;
+                        pTxtRt.sizeDelta = Vector2.zero;
+
+                        var pTxt = pTxtObj.AddComponent<TextMeshProUGUI>();
+                        pTxt.font = GetDefaultFont();
+                        pTxt.fontSize = 11f;
+                        pTxt.fontStyle = FontStyles.Bold;
+                        pTxt.alignment = TextAlignmentOptions.Center;
+                        pTxt.color = new Color(1f, 0.9f, 0.4f);
+                        pTxt.text = phrase;
+
+                        pBtn.onClick.AddListener(() =>
+                        {
+                            SendInGameEmoteOrPhrase(phrase);
+                        });
+                    }
+
+                    _inGameEmoteTray = trayObj;
+                    _inGameEmoteTray.SetActive(false);
+                }
+            }
+        }
+
+        private void SendInGameEmoteOrPhrase(string content)
+        {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayChatPop();
+            else Audio.AudioService.Instance?.PlayChatPop();
+
+            if (_inGameEmoteTray != null) _inGameEmoteTray.SetActive(false);
+
+            ShowToast($"💬 Nam Làng: {content}", 2.0f);
+        }
+
+        #endregion
     }
 }

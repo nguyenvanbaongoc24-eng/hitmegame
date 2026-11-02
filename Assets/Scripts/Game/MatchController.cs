@@ -674,6 +674,8 @@ namespace HitMe.Game
                 ClearWeapons();
 
                 // Trigger Hit / Defeat animations for feedback
+                bool anyHit = false;
+                bool anyDefeat = false;
                 for (int i = 0; i < State.Players.Count; i++)
                 {
                     var p = State.Players[i];
@@ -682,16 +684,28 @@ namespace HitMe.Game
                         if (!p.IsAlive || p.Hp <= 0)
                         {
                             view.PlayAnimation("Defeat");
+                            anyDefeat = true;
                         }
                         else if (_hpBeforeResolve.TryGetValue(p.Id, out int oldHp) && p.Hp < oldHp)
                         {
                             view.PlayAnimation("Hit");
+                            anyHit = true;
                         }
                         else
                         {
                             view.PlayAnimation("Idle");
                         }
                     }
+                }
+                if (anyDefeat)
+                {
+                    if (AudioManager.Instance != null) AudioManager.Instance.PlayDeath();
+                    else Audio.AudioService.Instance?.PlayDamage();
+                }
+                else if (anyHit)
+                {
+                    if (AudioManager.Instance != null) AudioManager.Instance.PlayHit();
+                    else Audio.AudioService.Instance?.PlayHit();
                 }
                 if (State.Phase == Phase.MatchEnd)
                 {

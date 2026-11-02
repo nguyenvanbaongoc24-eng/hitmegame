@@ -108,6 +108,8 @@ namespace HitMe.UI
         public const string BtnCopyRoomCode = "SAO CHÉP MÃ";
         public const string BtnCodeCopied = "ĐÃ SAO CHÉP!";
         public const string BtnSettings = "CÀI ĐẶT";
+        public const string BtnAddFriend = "+ KẾT BẠN";
+        public const string BtnFriendSent = "✓ ĐÃ GỬI";
 
         // Matchmaking & Lobby Notifications
         public const string MatchmakingSearching = "Đang tìm đối thủ...";
@@ -322,7 +324,10 @@ namespace HitMe.UI
             { "Sân Làng", "Village Arena" },
             { "XÁC NHẬN RỜI TRẬN", "LEAVE MATCH CONFIRMATION" },
             { "Bạn có chắc chắn muốn rời trận không?", "Are you sure you want to leave the match?" },
-            { "ĐÃ SAO CHÉP MÃ PHÒNG: ", "ROOM CODE COPIED: " }
+            { "ĐÃ SAO CHÉP MÃ PHÒNG: ", "ROOM CODE COPIED: " },
+            { BtnAddFriend, "+ ADD FRIEND" },
+            { BtnFriendSent, "✓ SENT" },
+            { "Đã gửi lời mời kết bạn tới {0}!", "Friend request sent to {0}!" }
         };
 
         /// <summary>
