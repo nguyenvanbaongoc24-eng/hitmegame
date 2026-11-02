@@ -188,6 +188,11 @@ namespace HitMe.UI
         public const string LoginTitle = "ĐĂNG NHẬP";
         public const string LoginGuest = "CHƠI VỚI TƯ CÁCH KHÁCH";
         public const string LoginComingSoon = "SẮP CÓ";
+        public const string LoginGoogleComingSoon = "Đăng nhập Google sắp ra mắt";
+        public const string LoginFacebookComingSoon = "Đăng nhập Facebook sắp ra mắt";
+        public const string LoginAppleComingSoon = "Đăng nhập Apple sắp ra mắt";
+        public const string LoadingData = "Đang tải...";
+        public const string NoData = "Chưa có dữ liệu";
         public const string BtnBuy = "MUA";
         public const string BtnEquip = "TRANG BỊ";
         public const string BtnEquipped = "ĐANG DÙNG";
@@ -298,6 +303,11 @@ namespace HitMe.UI
             { LoginTitle, "LOGIN" },
             { LoginGuest, "PLAY AS GUEST" },
             { LoginComingSoon, "COMING SOON" },
+            { LoginGoogleComingSoon, "Google login coming soon" },
+            { LoginFacebookComingSoon, "Facebook login coming soon" },
+            { LoginAppleComingSoon, "Apple login coming soon" },
+            { LoadingData, "Loading..." },
+            { NoData, "No data" },
             { BtnBuy, "BUY" },
             { BtnEquip, "EQUIP" },
             { BtnEquipped, "EQUIPPED" },

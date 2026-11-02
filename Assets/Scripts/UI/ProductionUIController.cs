@@ -1690,15 +1690,39 @@ namespace HitMe.UI
         // ──────────────────────────────────────────────────
         // Lô 7: Profile, Shop, Inventory, Leaderboard
         // Lô 8: Guest Login
+        // L1 / L6: Online Account State & Server Readiness
         // ──────────────────────────────────────────────────
+        private bool _isOnlineAccountLoaded = false;
+        public bool IsOnlineAccountLoaded
+        {
+            get => _isOnlineAccountLoaded;
+            set
+            {
+                _isOnlineAccountLoaded = value;
+                RefreshAccountDisplay();
+                RefreshProfileUI();
+                RefreshLeaderboardUI();
+            }
+        }
+
+        public bool IsOnlineActiveMode => HitMe.NetClientV1.NetConfig.IsOnlineActive || (_onlineClient != null && _onlineClient.IsConnected);
+
         public void RefreshAccountDisplay()
         {
             var acc = Game.FakeAccountService.Instance;
             if (acc == null) return;
 
             if (txtHomePlayerName != null) txtHomePlayerName.text = acc.DisplayName;
-            if (txtHomeGold != null) txtHomeGold.text = acc.Gold.ToString() + " G";
-            if (txtHomeGems != null) txtHomeGems.text = acc.Gems.ToString();
+            if (IsOnlineActiveMode && !_isOnlineAccountLoaded)
+            {
+                if (txtHomeGold != null) txtHomeGold.text = UiStrings.Get(UiStrings.LoadingData);
+                if (txtHomeGems != null) txtHomeGems.text = "-";
+            }
+            else
+            {
+                if (txtHomeGold != null) txtHomeGold.text = acc.Gold.ToString() + " G";
+                if (txtHomeGems != null) txtHomeGems.text = acc.Gems.ToString();
+            }
         }
 
         public void ShowProfileDialog()
@@ -1732,7 +1756,14 @@ namespace HitMe.UI
 
             if (txtProfileGold != null)
             {
-                txtProfileGold.text = $"{acc.Gold} VÀNG • {tierBadge} {tierName} ({acc.RankPoints} Đ) • {acc.MatchesPlayed} Trận";
+                if (IsOnlineActiveMode && !_isOnlineAccountLoaded)
+                {
+                    txtProfileGold.text = $"{UiStrings.Get(UiStrings.LoadingData)} • {acc.MatchesPlayed} Trận";
+                }
+                else
+                {
+                    txtProfileGold.text = $"{acc.Gold} VÀNG • {tierBadge} {tierName} ({acc.RankPoints} Đ) • {acc.MatchesPlayed} Trận";
+                }
             }
 
             if (txtProfileRenameCost != null)
@@ -2081,6 +2112,7 @@ namespace HitMe.UI
             var modalBox = dialogLeaderboard != null && dialogLeaderboard.transform.childCount > 0 ? dialogLeaderboard.transform.GetChild(0) : null;
             if (modalBox != null)
             {
+                bool isOnlinePending = IsOnlineActiveMode && !_isOnlineAccountLoaded;
                 var mockRanks = RankService.GetMockLeaderboard();
                 for (int i = 0; i < modalBox.childCount; i++)
                 {
@@ -2088,15 +2120,24 @@ namespace HitMe.UI
                     if (child.name.StartsWith("Row"))
                     {
                         child.gameObject.SetActive(_currentLeaderboardTab == 0);
-                        if (_currentLeaderboardTab == 0 && int.TryParse(child.name.Substring(3), out int rowIdx) && rowIdx < mockRanks.Count)
+                        if (_currentLeaderboardTab == 0 && int.TryParse(child.name.Substring(3), out int rowIdx))
                         {
-                            var entry = mockRanks[rowIdx];
                             var txtRank = child.Find("Rank")?.GetComponent<TextMeshProUGUI>();
                             var txtName = child.Find("Name")?.GetComponent<TextMeshProUGUI>();
                             var txtScore = child.Find("Score")?.GetComponent<TextMeshProUGUI>();
-                            if (txtRank != null) txtRank.text = "#" + entry.rank;
-                            if (txtName != null) txtName.text = $"{entry.name} [{entry.tier}]";
-                            if (txtScore != null) txtScore.text = entry.points + " Đ";
+                            if (txtRank != null) txtRank.text = "#" + (rowIdx + 1);
+
+                            if (isOnlinePending)
+                            {
+                                if (txtName != null) txtName.text = UiStrings.Get(UiStrings.NoData);
+                                if (txtScore != null) txtScore.text = "-";
+                            }
+                            else if (rowIdx < mockRanks.Count)
+                            {
+                                var entry = mockRanks[rowIdx];
+                                if (txtName != null) txtName.text = $"{entry.name} [{entry.tier}]";
+                                if (txtScore != null) txtScore.text = entry.points + " Đ";
+                            }
                         }
                     }
                 }
@@ -2190,7 +2231,7 @@ namespace HitMe.UI
                 inputLoginGuestName.text = acc.DisplayName;
             }
 
-            // Wire social buttons to display "Sắp ra mắt trong Phase 5!" toast
+            // Wire social buttons to display "Sắp ra mắt" toast (VI / EN)
             var loginCard = dialogLogin != null && dialogLogin.transform.childCount > 0 ? dialogLogin.transform.GetChild(0) : null;
             if (loginCard != null)
             {
@@ -2202,7 +2243,7 @@ namespace HitMe.UI
                     btnG.onClick.AddListener(() =>
                     {
                         AudioManager.Instance?.PlayClick();
-                        ShowToast("Đăng nhập Google sắp ra mắt trong Phase 5!");
+                        ShowToast(UiStrings.Get(UiStrings.LoginGoogleComingSoon));
                     });
                 }
                 var btnF = btnLoginFacebook ?? loginCard.Find("BtnFacebook")?.GetComponent<Button>();
@@ -2213,7 +2254,7 @@ namespace HitMe.UI
                     btnF.onClick.AddListener(() =>
                     {
                         AudioManager.Instance?.PlayClick();
-                        ShowToast("Đăng nhập Facebook sắp ra mắt trong Phase 5!");
+                        ShowToast(UiStrings.Get(UiStrings.LoginFacebookComingSoon));
                     });
                 }
                 var btnA = btnLoginApple ?? loginCard.Find("BtnApple")?.GetComponent<Button>();
@@ -2224,7 +2265,7 @@ namespace HitMe.UI
                     btnA.onClick.AddListener(() =>
                     {
                         AudioManager.Instance?.PlayClick();
-                        ShowToast("Đăng nhập Apple sắp ra mắt trong Phase 5!");
+                        ShowToast(UiStrings.Get(UiStrings.LoginAppleComingSoon));
                     });
                 }
             }
@@ -2244,6 +2285,12 @@ namespace HitMe.UI
 
         public void OnBuyWeapon(string weaponId)
         {
+            if (IsOnlineActiveMode && !_isOnlineAccountLoaded)
+            {
+                ShowToast(UiStrings.IsVietnamese ? "Đang xử lý giao dịch với máy chủ..." : "Processing transaction with server...");
+                return;
+            }
+
             var acc = Game.FakeAccountService.Instance;
             ItemCatalog.EnsureInitialized();
             var item = ItemCatalog.GetItem(weaponId);
@@ -2286,6 +2333,12 @@ namespace HitMe.UI
 
         public void OnEquipWeapon(string weaponId)
         {
+            if (IsOnlineActiveMode && !_isOnlineAccountLoaded)
+            {
+                ShowToast(UiStrings.IsVietnamese ? "Đang đồng bộ trang bị với máy chủ..." : "Syncing equipment with server...");
+                return;
+            }
+
             ItemCatalog.EnsureInitialized();
             if (ItemCatalog.EquipItem(weaponId))
             {
