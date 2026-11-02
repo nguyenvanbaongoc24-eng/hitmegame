@@ -11,7 +11,7 @@ await db.exec('create schema auth; create table auth.users(id uuid primary key);
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
   '004_match_result_store.sql', '005_reward_and_bans.sql',
-  '006_guest_economy.sql', '007_leaderboard_rls.sql']) {
+  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
@@ -83,6 +83,29 @@ for (const [size, expected] of [
 assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_profiles'::regclass`)).rows[0].relrowsecurity, true);
 cases++;
 assert.equal((await sql(`select reloptions from pg_class where oid='public.leaderboard'::regclass`)).rows[0].reloptions.includes('security_invoker=true'), true);
+cases++;
+const shopper = 'g_' + 'f'.repeat(32);
+const request = n => `30000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
+const action = (n, kind, item = null, name = null) => sql(`select public.guest_shop_action('${shopper}', '${request(n)}', '${kind}', ${item ? `'${item}'` : 'null'}, ${name ? `'${name}'` : 'null'}) as result`);
+await sql(`insert into public.guest_profiles(player_id,gold) values ('${shopper}',500)`);
+const bought = (await action(1, 'buy', 'chao_ran')).rows[0].result;
+assert.equal(bought.gold, 301);
+assert.equal((await action(1, 'buy', 'chao_ran')).rows[0].result.gold, 301);
+assert.equal(Number((await sql(`select gold from public.guest_profiles where player_id='${shopper}'`)).rows[0].gold), 301);
+cases++;
+await action(2, 'equip', 'chao_ran');
+assert.equal((await sql(`select equipped_weapon_id from public.guest_profiles where player_id='${shopper}'`)).rows[0].equipped_weapon_id, 'chao_ran');
+cases++;
+assert.equal((await action(3, 'rename', null, 'First Name')).rows[0].result.gold, 301);
+assert.equal((await action(4, 'rename', null, 'Second Name')).rows[0].result.gold, 101);
+cases++;
+await assert.rejects(action(5, 'rename', null, 'Third Name'), /insufficient_gold/);
+await assert.rejects(action(1, 'buy', 'vot_pickleball'), /request_id_reused/);
+cases++;
+await assert.rejects(action(6, 'buy', 'chao_ran'), /already_owned/);
+await assert.rejects(action(7, 'equip', 'vot_pickleball'), /not_owned/);
+cases++;
+assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_inventory'::regclass`)).rows[0].relrowsecurity, true);
 cases++;
 console.log(`Passed! ${cases}/${cases} PGlite SQL and approved reward checks`);
 await db.close();

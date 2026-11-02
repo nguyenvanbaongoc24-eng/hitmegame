@@ -32,22 +32,27 @@ public sealed class SupabaseGuestProfileReader : IPlayerProfileReader
     private readonly HttpClient http;
     private readonly Uri root;
     private readonly string key;
+    private readonly bool shopSchemaEnabled;
 
-    public SupabaseGuestProfileReader(Uri projectUrl, string secretKey, HttpClient? http = null)
+    public SupabaseGuestProfileReader(Uri projectUrl, string secretKey, HttpClient? http = null, bool shopSchemaEnabled = false)
     {
         if (projectUrl.Scheme != Uri.UriSchemeHttps) throw new ArgumentException("Supabase URL must use HTTPS.", nameof(projectUrl));
         SupabaseServerKeyGuard.Validate(secretKey);
         root = new Uri(projectUrl, "/rest/v1/");
         key = secretKey;
         this.http = http ?? new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
+        this.shopSchemaEnabled = shopSchemaEnabled;
     }
 
     public ProfileSnapshot Read(string playerId)
     {
         if (!System.Text.RegularExpressions.Regex.IsMatch(playerId, "^g_[0-9a-f]{32}$"))
             throw new ArgumentException("Invalid guest ID.", nameof(playerId));
+        var fields = shopSchemaEnabled
+            ? "gold,matches_played,best_rank,display_name,rename_count,equipped_weapon_id,equipped_character_id"
+            : "gold,matches_played,best_rank";
         using var request = new HttpRequestMessage(HttpMethod.Get,
-            new Uri(root, $"guest_profiles?select=gold,matches_played,best_rank&player_id=eq.{playerId}"));
+            new Uri(root, $"guest_profiles?select={fields}&player_id=eq.{playerId}"));
         request.Headers.TryAddWithoutValidation("apikey", key);
         using var response = http.Send(request);
         if (!response.IsSuccessStatusCode)
@@ -55,7 +60,22 @@ public sealed class SupabaseGuestProfileReader : IPlayerProfileReader
         using var json = JsonDocument.Parse(response.Content.ReadAsStream());
         if (json.RootElement.GetArrayLength() == 0) return new ProfileSnapshot(playerId, 0, 0, 0);
         var profile = json.RootElement[0];
+        if (!shopSchemaEnabled)
+            return new ProfileSnapshot(playerId, profile.GetProperty("gold").GetInt32(),
+                profile.GetProperty("matches_played").GetInt32(), profile.GetProperty("best_rank").GetInt32());
+        using var inventoryRequest = new HttpRequestMessage(HttpMethod.Get,
+            new Uri(root, $"guest_inventory?select=item_id&player_id=eq.{playerId}"));
+        inventoryRequest.Headers.TryAddWithoutValidation("apikey", key);
+        using var inventoryResponse = http.Send(inventoryRequest);
+        if (!inventoryResponse.IsSuccessStatusCode)
+            throw new HttpRequestException($"Supabase inventory read returned HTTP {(int)inventoryResponse.StatusCode}.");
+        using var inventory = JsonDocument.Parse(inventoryResponse.Content.ReadAsStream());
+        var purchased = inventory.RootElement.EnumerateArray()
+            .Select(row => row.GetProperty("item_id").GetString()!).ToArray();
         return new ProfileSnapshot(playerId, profile.GetProperty("gold").GetInt32(),
-            profile.GetProperty("matches_played").GetInt32(), profile.GetProperty("best_rank").GetInt32());
+            profile.GetProperty("matches_played").GetInt32(), profile.GetProperty("best_rank").GetInt32(),
+            profile.GetProperty("display_name").GetString(), profile.GetProperty("rename_count").GetInt32(),
+            purchased, profile.GetProperty("equipped_weapon_id").GetString()!,
+            profile.GetProperty("equipped_character_id").GetString());
     }
 }

@@ -16,6 +16,7 @@ var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
 var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_SECRET_KEY")
     ?? Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
 var guestSigningKey = Environment.GetEnvironmentVariable("GUEST_TOKEN_SIGNING_KEY");
+var shopEnabled = string.Equals(Environment.GetEnvironmentVariable("SUPABASE_SHOP_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
 if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supabaseKey))
 {
     if (string.IsNullOrWhiteSpace(supabaseUrl) || string.IsNullOrWhiteSpace(supabaseKey)
@@ -24,6 +25,12 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supaba
     SupabaseServerKeyGuard.Validate(supabaseKey);
 }
 builder.Services.AddSingleton<InMemoryProfileStore>();
+builder.Services.AddSingleton(_ => new ItemCatalog(Path.Combine(AppContext.BaseDirectory, "Data", "Items.json")));
+builder.Services.AddSingleton<IGuestShopService>(provider =>
+    string.IsNullOrWhiteSpace(supabaseUrl)
+        ? new InMemoryGuestShopService(provider.GetRequiredService<InMemoryProfileStore>(), provider.GetRequiredService<ItemCatalog>())
+        : shopEnabled ? new SupabaseGuestShopService(new Uri(supabaseUrl), supabaseKey!)
+        : new UnavailableGuestShopService());
 builder.Services.AddSingleton<IMatchResultStore>(provider =>
     string.IsNullOrWhiteSpace(supabaseUrl)
         ? new ProfiledMatchResultStore(new InMemoryMatchResultStore(), provider.GetRequiredService<InMemoryProfileStore>())
@@ -31,7 +38,7 @@ builder.Services.AddSingleton<IMatchResultStore>(provider =>
 builder.Services.AddSingleton<IPlayerProfileReader>(provider =>
     string.IsNullOrWhiteSpace(supabaseUrl)
         ? new InMemoryPlayerProfileReader(provider.GetRequiredService<InMemoryProfileStore>())
-        : new SupabaseGuestProfileReader(new Uri(supabaseUrl), supabaseKey!));
+        : new SupabaseGuestProfileReader(new Uri(supabaseUrl), supabaseKey!, shopSchemaEnabled: shopEnabled));
 builder.Services.AddSingleton<IAuthVerifier>(_ =>
 {
     return string.IsNullOrWhiteSpace(guestSigningKey)
@@ -50,7 +57,8 @@ builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.Ma
     resultStore: provider.GetRequiredService<IMatchResultStore>()));
 builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequiredService<RoomDirectory>(),
     auth: provider.GetRequiredService<IAuthVerifier>(),
-    profiles: provider.GetRequiredService<IPlayerProfileReader>()));
+    profiles: provider.GetRequiredService<IPlayerProfileReader>(),
+    shop: provider.GetRequiredService<IGuestShopService>()));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);

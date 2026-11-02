@@ -28,6 +28,9 @@ public sealed class ClientEnvelope
     public string? ChatId { get; set; }
     public string? TargetPlayerId { get; set; }
     public bool Accepted { get; set; }
+    public string? RequestId { get; set; }
+    public string? ItemId { get; set; }
+    public string? NewName { get; set; }
 }
 
 public sealed record GatewayMessage(string ConnectionId, string Payload, string? CloseReason = null);
@@ -41,13 +44,14 @@ public sealed class ProtocolGateway
     public const int QuickMatchHintSeconds = 30;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> WireFields = new(StringComparer.Ordinal)
-    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted" };
+    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName" };
     public static readonly IReadOnlySet<string> AllowedChatIds = new HashSet<string>(StringComparer.Ordinal)
     { "hello", "good_luck", "nice_throw", "well_played", "oops", "thanks" };
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
     private readonly IAuthVerifier auth;
     private readonly IPlayerProfileReader? profiles;
+    private readonly IGuestShopService? shop;
     private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, PendingQuickMatch> quickMatch = new(StringComparer.Ordinal);
@@ -57,12 +61,13 @@ public sealed class ProtocolGateway
     private readonly HashSet<(string From, string To)> friendRequests = new();
     private readonly HashSet<(string First, string Second)> friends = new();
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
         this.auth = auth ?? new FakeAuthVerifier();
         this.profiles = profiles;
+        this.shop = shop;
     }
 
     public string Handle(string connectionId, string raw)
@@ -104,6 +109,9 @@ public sealed class ProtocolGateway
                 "chat" when request.V == LatestVersion => ChatMessages(connectionId, request),
                 "friend_request" when request.V == LatestVersion => FriendRequestMessages(connectionId, request),
                 "friend_reply" when request.V == LatestVersion => FriendReplyMessages(connectionId, request),
+                "buy_item" when request.V == LatestVersion => ShopMessages(connectionId, request, "buy"),
+                "equip_item" when request.V == LatestVersion => ShopMessages(connectionId, request, "equip"),
+                "rename_player" when request.V == LatestVersion => ShopMessages(connectionId, request, "rename"),
                 "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
                 "commit" => CommitMessages(connectionId, request),
                 _ => Reply(connectionId, Error("unknown_type"))
@@ -370,6 +378,30 @@ public sealed class ProtocolGateway
     private static (string First, string Second) FriendKey(string a, string b) =>
         string.CompareOrdinal(a, b) < 0 ? (a, b) : (b, a);
 
+    private IReadOnlyList<GatewayMessage> ShopMessages(string connectionId, ClientEnvelope request, string action)
+    {
+        if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
+        if (shop is null) return Reply(connectionId, Error("shop_unavailable"));
+        if (!Guid.TryParse(request.RequestId, out var requestId) || requestId == Guid.Empty)
+            return Reply(connectionId, Error("invalid_shop_request"));
+        try
+        {
+            var result = shop.Execute(session.PlayerId, new ShopRequest(action, requestId, request.ItemId, request.NewName));
+            var output = new List<GatewayMessage>
+            {
+                new(connectionId, JsonSerializer.Serialize(new { v = LatestVersion, type = "shop_result",
+                    requestId, action, gold = result.Gold, displayName = result.DisplayName,
+                    renameCount = result.RenameCount, equippedWeaponId = result.EquippedWeaponId,
+                    equippedCharacterId = result.EquippedCharacterId }, Json)),
+                new(connectionId, ProfileMessage(session))
+            };
+            return output;
+        }
+        catch (ShopException error) { return Reply(connectionId, Error(error.Code)); }
+        catch (Exception error) when (error is HttpRequestException or TaskCanceledException or JsonException or IOException)
+        { return Reply(connectionId, Error("shop_unavailable")); }
+    }
+
     private string Reconnect(string connectionId, string reconnectToken, string authenticatedPlayerId)
     {
         PruneDisconnected();
@@ -464,13 +496,14 @@ public sealed class ProtocolGateway
             return JsonSerializer.Serialize(new
             {
                 v = LatestVersion, type = "profile_state", playerId = session.PlayerId,
-                name = session.Room.Players.FirstOrDefault(player => player.Id == session.PlayerId)?.Name ?? session.PlayerId,
+                name = snapshot.DisplayName ?? session.Room.Players.FirstOrDefault(player => player.Id == session.PlayerId)?.Name ?? session.PlayerId,
                 gold = snapshot.Gold, matchesPlayed = snapshot.MatchesPlayed, bestRank = snapshot.BestRank,
                 rank = "unranked", points = 0,
-                purchasedItemIds = Array.Empty<string>(),
-                ownedItemIds = new[] { "dep_to_ong" },
-                equippedWeaponId = "dep_to_ong", equippedCharacterId = (string?)null,
-                inventoryStatus = "starter_only"
+                purchasedItemIds = snapshot.PurchasedItemIds ?? Array.Empty<string>(),
+                ownedItemIds = new[] { "dep_to_ong" }.Concat(snapshot.PurchasedItemIds ?? Array.Empty<string>()).Distinct().ToArray(),
+                equippedWeaponId = snapshot.EquippedWeaponId, equippedCharacterId = snapshot.EquippedCharacterId,
+                renameCount = snapshot.RenameCount,
+                inventoryStatus = snapshot.PurchasedItemIds is null ? "starter_only" : "authoritative"
             }, Json);
         }
         catch (HttpRequestException) { return Error("profile_unavailable"); }
