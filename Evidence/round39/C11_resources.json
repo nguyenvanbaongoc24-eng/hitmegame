@@ -1,0 +1,88 @@
+[
+  {
+    "build": "dev",
+    "commit": "8c6b328",
+    "home_ms": 17918.600000000093,
+    "last_core_response_ms": 14783,
+    "post_transfer_to_home_ms": 3136,
+    "files_bytes": {
+      "WebGL_20261102_8c6b328.data": 17485331,
+      "WebGL_20261102_8c6b328.framework.js": 329643,
+      "WebGL_20261102_8c6b328.loader.js": 27914,
+      "WebGL_20261102_8c6b328.wasm": 18465254
+    },
+    "core_resources": [
+      {
+        "name": "WebGL_20261102_8c6b328.loader.js",
+        "durationMs": 54,
+        "responseEndMs": 269,
+        "transferBytes": 28214,
+        "decodedBytes": 27914
+      },
+      {
+        "name": "WebGL_20261102_8c6b328.framework.js",
+        "durationMs": 300,
+        "responseEndMs": 741,
+        "transferBytes": 329943,
+        "decodedBytes": 329643
+      },
+      {
+        "name": "WebGL_20261102_8c6b328.data",
+        "durationMs": 13735,
+        "responseEndMs": 14186,
+        "transferBytes": 17485631,
+        "decodedBytes": 17485331
+      },
+      {
+        "name": "WebGL_20261102_8c6b328.wasm",
+        "durationMs": 14012,
+        "responseEndMs": 14783,
+        "transferBytes": 18465554,
+        "decodedBytes": 18465254
+      }
+    ]
+  },
+  {
+    "build": "release",
+    "commit": "8c6b328",
+    "home_ms": 9926.399999999907,
+    "last_core_response_ms": 7291,
+    "post_transfer_to_home_ms": 2635,
+    "files_bytes": {
+      "WebGL_Release_20261102_8c6b328.data.br": 12037445,
+      "WebGL_Release_20261102_8c6b328.framework.js.br": 65693,
+      "WebGL_Release_20261102_8c6b328.loader.js": 27914,
+      "WebGL_Release_20261102_8c6b328.wasm.br": 4390929
+    },
+    "core_resources": [
+      {
+        "name": "WebGL_Release_20261102_8c6b328.loader.js",
+        "durationMs": 68,
+        "responseEndMs": 213,
+        "transferBytes": 28214,
+        "decodedBytes": 27914
+      },
+      {
+        "name": "WebGL_Release_20261102_8c6b328.framework.js.br",
+        "durationMs": 101,
+        "responseEndMs": 330,
+        "transferBytes": 65993,
+        "decodedBytes": 329643
+      },
+      {
+        "name": "WebGL_Release_20261102_8c6b328.data.br",
+        "durationMs": 7050,
+        "responseEndMs": 7291,
+        "transferBytes": 12037745,
+        "decodedBytes": 17485331
+      },
+      {
+        "name": "WebGL_Release_20261102_8c6b328.wasm.br",
+        "durationMs": 3734,
+        "responseEndMs": 4093,
+        "transferBytes": 4391229,
+        "decodedBytes": 18465254
+      }
+    ]
+  }
+]
