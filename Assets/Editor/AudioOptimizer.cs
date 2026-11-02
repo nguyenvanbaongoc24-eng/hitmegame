@@ -17,20 +17,20 @@ namespace HitMe.EditorTools
                 if (importer == null) continue;
 
                 bool isBgmOrAmb = path.Contains("bgm_") || path.Contains("amb_");
-                importer.forceToMono = true; // Monophonic audio cuts memory/transfer in half for mobile
+                importer.forceToMono = true;
 
                 var defaultSettings = importer.defaultSampleSettings;
                 if (isBgmOrAmb)
                 {
                     defaultSettings.loadType = AudioClipLoadType.CompressedInMemory;
                     defaultSettings.compressionFormat = AudioCompressionFormat.Vorbis;
-                    defaultSettings.quality = 0.35f; // ~96 kbps Vorbis
+                    defaultSettings.quality = 0.20f; // ~64 kbps Vorbis for BGM
                 }
                 else
                 {
                     defaultSettings.loadType = AudioClipLoadType.DecompressOnLoad;
                     defaultSettings.compressionFormat = AudioCompressionFormat.Vorbis;
-                    defaultSettings.quality = 0.30f; // Lightweight SFX
+                    defaultSettings.quality = 0.15f; // Lightweight SFX ~40 kbps
                 }
 
                 importer.defaultSampleSettings = defaultSettings;
