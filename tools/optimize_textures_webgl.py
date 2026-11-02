@@ -5,7 +5,7 @@ from pathlib import Path
 
 UNITY_CLIENT = Path("unity-client")
 
-def optimize_texture_meta(meta_path, max_size=256, crunched=1):
+def optimize_texture_meta(meta_path, max_size=128, crunched=1):
     with open(meta_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -33,11 +33,9 @@ def main():
     for p in (UNITY_CLIENT / "Assets" / "Sprites").glob("*.png.meta"):
         name = p.stem.lower()
         if "arena" in name:
-            max_s = 512
-        elif any(k in name for k in ["dot", "glow", "marker", "ring", "shadow", "avatar"]):
-            max_s = 128
-        else:
             max_s = 256
+        else:
+            max_s = 128
         if optimize_texture_meta(p, max_size=max_s, crunched=1):
             modified += 1
 
@@ -45,11 +43,9 @@ def main():
     for p in (UNITY_CLIENT / "Assets" / "Art" / "UI").rglob("*.png.meta"):
         name = p.stem.lower()
         if "bg" in name or "village" in name:
-            max_s = 512
-        elif any(k in name for k in ["icon", "heart", "gem", "coin", "arrow", "dot", "knob", "track"]):
-            max_s = 128
-        else:
             max_s = 256
+        else:
+            max_s = 128
         if optimize_texture_meta(p, max_size=max_s, crunched=1):
             modified += 1
 
@@ -60,10 +56,10 @@ def main():
 
     # 4. Assets/Art/Weapons/**/*.png.meta
     for p in (UNITY_CLIENT / "Assets" / "Art" / "Weapons").rglob("*.png.meta"):
-        if optimize_texture_meta(p, max_size=256, crunched=1):
+        if optimize_texture_meta(p, max_size=128, crunched=1):
             modified += 1
 
-    print(f"Successfully optimized {modified} texture meta files with mobile-tuned resolutions (256/512)!")
+    print(f"Successfully tuned {modified} texture meta files to 128/256 for mobile WebGL budget!")
 
 if __name__ == "__main__":
     main()
