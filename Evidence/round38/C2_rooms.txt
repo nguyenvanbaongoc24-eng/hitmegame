@@ -1,0 +1,6 @@
+Branch: prep/codex
+Room lifecycle: one waiting human cannot start; 2-6 humans can start; seventh is rejected; all room-ready triggers a 3-second server countdown; unready/leave cancels it; late join is rejected. The host may start early with at least 2 humans, per the previously approved room UX.
+Added tests: HostDepartureTransfersOwnershipToEarliestRemainingPlayer; LastPlayerLeavingRemovesRoomCode.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~RoomLifecycleTests|FullyQualifiedName~ProtocolGatewayTests'
+Result: Passed! Failed: 0, Passed: 50, Skipped: 0, Total: 50.
+No bots are inserted into online rooms.
