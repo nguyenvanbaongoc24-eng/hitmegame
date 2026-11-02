@@ -137,18 +137,99 @@ namespace HitMe.UI
         }
 
         // ──────────────────────────────────────────────────
-        // Damage Number Popup
+        // Damage Number Popup & Game Feel (Lô 4 & L5)
         // ──────────────────────────────────────────────────
 
         /// <summary>
-        /// Show floating damage text at a screen position (over UI).
-        /// Uses the existing toast system or a simple popup.
+        /// Show floating damage text at a world position.
         /// </summary>
         public void ShowDamageNumber(Vector3 worldPos, int damage, Camera cam)
         {
             if (_reducedMotion) return;
-            // Damage popups handled via HitFx sprite overlay for now
             PlayHitImpact(worldPos);
+            PlayCameraShake(0.08f, 0.14f);
+            PlayHitStop(0.04f);
+            StartCoroutine(SpawnFloatingDamageText(worldPos, damage));
+        }
+
+        private IEnumerator SpawnFloatingDamageText(Vector3 worldPos, int damage)
+        {
+            var go = new GameObject("DamageTextPopup");
+            go.transform.position = worldPos + Vector3.up * 0.4f;
+            var text = go.AddComponent<TMPro.TextMeshPro>();
+            text.text = $"-{damage} HP 💔";
+            text.fontSize = 4.5f;
+            text.fontStyle = TMPro.FontStyles.Bold;
+            text.color = new Color(1f, 0.25f, 0.25f, 1f);
+            text.alignment = TMPro.TextAlignmentOptions.Center;
+            text.sortingOrder = 10;
+
+            float elapsed = 0f;
+            float duration = 0.55f;
+            Vector3 startPos = go.transform.position;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float p = elapsed / duration;
+                if (go != null)
+                {
+                    go.transform.position = startPos + Vector3.up * (p * 0.6f);
+                    text.color = new Color(1f, 0.25f, 0.25f, 1f - p);
+                    float s = 1f + Mathf.Sin(p * Mathf.PI) * 0.25f;
+                    go.transform.localScale = new Vector3(s, s, 1f);
+                }
+                yield return null;
+            }
+
+            if (go != null) Destroy(go);
+        }
+
+        /// <summary>
+        /// Rung nhẹ camera khi trúng đòn (Game feel L5)
+        /// </summary>
+        public void PlayCameraShake(float intensity = 0.08f, float duration = 0.14f)
+        {
+            if (_reducedMotion) return;
+            var cam = Camera.main;
+            if (cam == null) return;
+            StartCoroutine(CameraShakeRoutine(cam.transform, intensity, duration));
+        }
+
+        private IEnumerator CameraShakeRoutine(Transform camTr, float intensity, float duration)
+        {
+            Vector3 originalPos = camTr.position;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float damper = 1f - (elapsed / duration);
+                float x = (Random.value * 2f - 1f) * intensity * damper;
+                float y = (Random.value * 2f - 1f) * intensity * damper;
+                if (camTr != null)
+                {
+                    camTr.position = new Vector3(originalPos.x + x, originalPos.y + y, originalPos.z);
+                }
+                yield return null;
+            }
+            if (camTr != null) camTr.position = originalPos;
+        }
+
+        /// <summary>
+        /// Hit-stop ngắn tạo độ nảy / cảm giác va chạm có trọng lượng (Game feel L5)
+        /// </summary>
+        public void PlayHitStop(float duration = 0.04f)
+        {
+            if (_reducedMotion) return;
+            StartCoroutine(HitStopRoutine(duration));
+        }
+
+        private IEnumerator HitStopRoutine(float duration)
+        {
+            float prevScale = Time.timeScale;
+            Time.timeScale = 0.1f;
+            yield return new WaitForSecondsRealtime(duration);
+            Time.timeScale = prevScale;
         }
 
         // ──────────────────────────────────────────────────
