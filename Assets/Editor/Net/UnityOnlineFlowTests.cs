@@ -178,5 +178,64 @@ namespace HitMe.Tests
                 Assert.IsFalse(msgVi.Contains("Lỗi mạng: " + code), $"Code {code} was not localized in VI!");
             }
         }
+
+        [Test]
+        public void Test_SessionReplaced_DispatchesErrorToUi()
+        {
+            var codec = UnityJsonProtocol.Instance;
+            var ui = new FakeOnlineUi();
+            using var transport = new LoopbackTransport(codec, _ => Array.Empty<string>());
+            using var session = new ClientMatchSession(transport);
+            using var flow = new OnlineFlowController(session, ui);
+
+            transport.Connect();
+            transport.Deliver("{\"v\":1,\"type\":\"error\",\"code\":\"session_replaced\"}");
+
+            Assert.IsTrue(ui.Calls.Contains("error:session_replaced"));
+        }
+
+        [Test]
+        public void Test_BannedPlayer_IncludesRemainingSecondsInMessage()
+        {
+            var codec = UnityJsonProtocol.Instance;
+            var ui = new FakeOnlineUi();
+            using var transport = new LoopbackTransport(codec, _ => Array.Empty<string>());
+            using var session = new ClientMatchSession(transport);
+            using var flow = new OnlineFlowController(session, ui);
+
+            transport.Connect();
+            transport.Deliver("{\"v\":1,\"type\":\"error\",\"code\":\"banned\",\"remainingSeconds\":120}");
+
+            Assert.IsTrue(ui.Calls.Contains("error:banned"));
+        }
+
+        [Test]
+        public void Test_Reconnect_IncludesPrivateReconnectToken()
+        {
+            var codec = UnityJsonProtocol.Instance;
+            var ui = new FakeOnlineUi();
+            var sent = new List<string>();
+            using var transport = new LoopbackTransport(codec, raw =>
+            {
+                sent.Add(raw);
+                return Array.Empty<string>();
+            });
+            using var session = new ClientMatchSession(transport);
+            using var flow = new OnlineFlowController(session, ui);
+
+            transport.Connect();
+            flow.Join("guest:Player1", "HM4826");
+
+            // Receive private reconnect token
+            transport.Deliver("{\"v\":1,\"type\":\"room_state\",\"protocolVersion\":1,\"roomCode\":\"HM4826\",\"reconnectToken\":\"secret_tok_123\",\"players\":[{\"id\":\"p1\",\"name\":\"Player1\",\"ready\":false}],\"config\":{\"maxPlayers\":6,\"minPlayersToStart\":2}}");
+            Assert.AreEqual("secret_tok_123", session.ReconnectToken);
+
+            sent.Clear();
+            flow.Reconnect();
+
+            Assert.AreEqual(1, sent.Count);
+            Assert.IsTrue(sent[0].Contains("secret_tok_123"));
+            Assert.IsTrue(sent[0].Contains("guest:Player1"));
+        }
     }
 }

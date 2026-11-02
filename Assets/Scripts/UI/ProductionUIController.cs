@@ -5,6 +5,7 @@ using System.Text;
 using HitMe.Core;
 using HitMe.Audio;
 using HitMe.Game;
+using HitMe.NetClientV1;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -288,6 +289,8 @@ namespace HitMe.UI
         private string _activeRoomCode = "HM4826";
         private int _selectedBotCount = 3;
         private int _selectedPracticeCharIndex = 0;
+        private IGameClient _onlineClient;
+        public IGameClient OnlineClient => _onlineClient;
 
         private GameObject _fpsOverlayObj;
         private TextMeshProUGUI _txtFps;
@@ -891,8 +894,17 @@ namespace HitMe.UI
                     string roomName = inputRoomName != null && !string.IsNullOrEmpty(inputRoomName.text)
                         ? inputRoomName.text
                         : "Phòng Chiến Hữu";
-                    _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
-                    EnterLobbyWithAutoFill(roomName, _activeRoomCode);
+                    if (NetConfig.IsOnlineActive)
+                    {
+                        EnsureOnlineClient();
+                        ShowToast("Đang kết nối tạo phòng trực tuyến...", 2.0f);
+                        _onlineClient.CreateRoom(ClientAuthService.GetOrCreateGuestToken());
+                    }
+                    else
+                    {
+                        _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
+                        EnterLobbyWithAutoFill(roomName, _activeRoomCode);
+                    }
                 });
             }
 
@@ -933,7 +945,16 @@ namespace HitMe.UI
                     string code = inputRoomCode != null && !string.IsNullOrEmpty(inputRoomCode.text)
                         ? inputRoomCode.text.ToUpperInvariant()
                         : "HM4826";
-                    EnterLobbyWithAutoFill("Phòng Chiến Hữu", code);
+                    if (NetConfig.IsOnlineActive)
+                    {
+                        EnsureOnlineClient();
+                        ShowToast($"Đang kết nối vào phòng {code}...", 2.0f);
+                        _onlineClient.JoinRoom(code, ClientAuthService.GetOrCreateGuestToken());
+                    }
+                    else
+                    {
+                        EnterLobbyWithAutoFill("Phòng Chiến Hữu", code);
+                    }
                 });
             }
 
@@ -958,6 +979,10 @@ namespace HitMe.UI
                     AudioManager.Instance?.PlayClick();
                     ShowLeaveConfirmationDialog("XÁC NHẬN RỜI PHÒNG", "Bạn có chắc chắn muốn rời phòng không?\nMọi kết quả của trận đấu sẽ không được lưu.", () =>
                     {
+                        if (NetConfig.IsOnlineActive && _onlineClient != null && _onlineClient.IsConnected)
+                        {
+                            _onlineClient.LeaveRoom();
+                        }
                         if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
                         ShowScreen(ProductionScreen.Home);
                     });
@@ -2283,6 +2308,11 @@ namespace HitMe.UI
             _isLocalPlayerReady = !_isLocalPlayerReady;
             AudioManager.Instance?.PlayReady();
 
+            if (NetConfig.IsOnlineActive && _onlineClient != null && _onlineClient.IsConnected)
+            {
+                _onlineClient.SetRoomReady(_isLocalPlayerReady);
+            }
+
             if (lobbySlots.Count > 0 && lobbySlots[0].txtStatus != null)
             {
                 lobbySlots[0].isReady = _isLocalPlayerReady;
@@ -2323,6 +2353,59 @@ namespace HitMe.UI
             ShowScreen(ProductionScreen.Lobby);
             UpdateLobbyRoster(total, "Phòng Online Lab", "LAB001");
             ShowToast($"[Online Lab] 1 người chơi thật + {total - 1} người chơi Loopback", 3.0f);
+        }
+
+        public void EnsureOnlineClient()
+        {
+            if (_onlineClient != null) return;
+            var client = new WebSocketGameClient();
+            client.OnRoomStateUpdated += HandleOnlineRoomState;
+            client.OnErrorReceived += HandleOnlineError;
+            client.OnDisconnected += HandleOnlineDisconnected;
+            _onlineClient = client;
+        }
+
+        private void HandleOnlineRoomState(RoomStateMessage room)
+        {
+            if (room == null) return;
+            _activeRoomCode = room.roomCode;
+            int count = room.players != null ? room.players.Length : 0;
+            _currentLobbyHumanCount = Mathf.Clamp(count, 1, 6);
+            UpdateLobbyRoster(count, "Phòng Chiến Hữu", room.roomCode);
+
+            for (int i = 0; i < lobbySlots.Count && i < count; i++)
+            {
+                var p = room.players[i];
+                var slot = lobbySlots[i];
+                bool isHost = p.id == room.hostId;
+                slot.isReady = p.ready;
+                if (slot.txtName != null)
+                {
+                    slot.txtName.text = (isHost ? "👑 " : "") + p.name;
+                }
+                if (slot.txtStatus != null)
+                {
+                    slot.txtStatus.text = p.ready ? "ĐÃ SẴN SÀNG" : "CHƯA SẴN SÀNG";
+                    slot.txtStatus.color = p.ready ? new Color(0.2f, 1f, 0.4f) : new Color(1f, 0.7f, 0.2f);
+                }
+            }
+        }
+
+        private void HandleOnlineError(string code, string viMsg)
+        {
+            ShowErrorToast(viMsg);
+            if (code == "session_replaced" || code == "banned" || code == "reconnect_invalid" || code == "server_shutdown")
+            {
+                ShowScreen(ProductionScreen.Home);
+            }
+        }
+
+        private void HandleOnlineDisconnected(string reason)
+        {
+            if (reason != "client_leave")
+            {
+                ShowToast("Đã ngắt kết nối máy chủ.", 2.5f);
+            }
         }
 
         private IEnumerator LobbyCountdownRoutine()
@@ -3567,6 +3650,7 @@ namespace HitMe.UI
                 if (cg == null) cg = resultPanel.AddComponent<CanvasGroup>();
                 StartCoroutine(FadeInResultPanel(cg));
             }
+            EnsureVictoryHalo(isLocalWinner);
 
             if (txtResultTitle != null)
             {
@@ -3659,6 +3743,54 @@ namespace HitMe.UI
 
                 // A5: Friend request button after match
                 EnsureRowFriendButton(row, p.Id, p.Name, isMe);
+            }
+        }
+
+        private GameObject _victoryHaloObj;
+        private Coroutine _haloRotateCoroutine;
+
+        private void EnsureVictoryHalo(bool isVisible)
+        {
+            try
+            {
+                if (resultPanel == null) return;
+                if (!isVisible)
+                {
+                    if (_victoryHaloObj != null) _victoryHaloObj.SetActive(false);
+                    return;
+                }
+
+                if (_victoryHaloObj == null)
+                {
+                    var haloGo = new GameObject("VictoryHaloGlow", typeof(RectTransform));
+                    haloGo.transform.SetParent(resultPanel.transform, false);
+                    haloGo.transform.SetAsFirstSibling();
+                    var rt = haloGo.GetComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0.5f, 0.82f);
+                    rt.anchorMax = new Vector2(0.5f, 0.82f);
+                    rt.sizeDelta = new Vector2(280f, 280f);
+                    var img = haloGo.AddComponent<Image>();
+                    img.color = new Color(1f, 0.85f, 0.20f, 0.35f);
+                    img.raycastTarget = false;
+                    _victoryHaloObj = haloGo;
+                }
+
+                _victoryHaloObj.SetActive(true);
+                if (_haloRotateCoroutine != null) StopCoroutine(_haloRotateCoroutine);
+                _haloRotateCoroutine = StartCoroutine(RotateHaloRoutine(_victoryHaloObj.transform));
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ProductionUIController] EnsureVictoryHalo caught: {ex.Message}");
+            }
+        }
+
+        private IEnumerator RotateHaloRoutine(Transform target)
+        {
+            while (target != null && target.gameObject.activeInHierarchy)
+            {
+                target.Rotate(0f, 0f, -35f * Time.unscaledDeltaTime);
+                yield return null;
             }
         }
 

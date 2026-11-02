@@ -484,8 +484,18 @@ namespace HitMe.Game
                     var direction = new Vector3(player.Facing.X, player.Facing.Y, 0f);
                     float start = touchRadius;
                     float length = Mathf.Max(2f, aimPreviewLength + aimLineExtraLength);
-                    _aim.SetPosition(0, transform.position + direction * start);
-                    _aim.SetPosition(1, transform.position + direction * (start + length));
+                    Vector3 startPos = transform.position + direction * start;
+                    Vector3 tipPos = transform.position + direction * (start + length);
+                    Vector3 perp = new Vector3(-direction.y, direction.x, 0f);
+                    float arrowSize = 0.35f;
+                    Vector3 wingLeft = tipPos - direction * arrowSize + perp * (arrowSize * 0.45f);
+                    Vector3 wingRight = tipPos - direction * arrowSize - perp * (arrowSize * 0.45f);
+                    if (_aim.positionCount < 5) _aim.positionCount = 5;
+                    _aim.SetPosition(0, startPos);
+                    _aim.SetPosition(1, tipPos);
+                    _aim.SetPosition(2, wingLeft);
+                    _aim.SetPosition(3, tipPos);
+                    _aim.SetPosition(4, wingRight);
                 }
             }
 
