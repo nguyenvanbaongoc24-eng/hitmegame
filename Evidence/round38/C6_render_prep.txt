@@ -1,0 +1,4 @@
+Branch: prep/codex
+Reviewed existing server/Dockerfile and server/render.yaml: Dockerfile publishes .NET 8, runs as APP_UID, exposes 10000, has /healthz HEALTHCHECK; Render blueprint points to that Dockerfile and /healthz.
+Added deployment steps, environment variables, WSS smoke command and limits to server/README.md.
+Verification: docker --version -> command not found on this machine. Docker image build and Render deployment are UNVERIFIED. No credentials or deployment were created.
