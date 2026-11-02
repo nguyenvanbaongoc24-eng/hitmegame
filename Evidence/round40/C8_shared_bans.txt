@@ -1,0 +1,7 @@
+2026-11-02: SupabaseBanStore REST adapter for shared AFK bans.
+Uses server-only apikey header (no Authorization bearer), migration 005 table,
+HTTPS, and explicit HTTP error propagation. Program selects it only when both
+SUPABASE_URL and SUPABASE_SECRET_KEY / SUPABASE_SERVICE_KEY are configured.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo --filter FullyQualifiedName~SupabaseBanStoreTests --verbosity quiet
+Result: Passed! 1/1 with stub HTTP responses. The real project is untested
+because no service key and no applied migration were available.

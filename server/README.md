@@ -10,6 +10,8 @@ Xác thực khách có chữ ký: đặt `GUEST_TOKEN_SIGNING_KEY` (base64 của
 
 Migration Supabase: tệp nguồn theo thứ tự `backend/supabase/001_schema.sql`, `002_rls.sql`, `003_functions.sql`, `004_match_result_store.sql`, `005_reward_and_bans.sql`. `seed.sql` chưa chạy vì giá vật phẩm chỉ là giả định. Đặt `SUPABASE_DB_URL` trong `.env` bị Git bỏ qua hoặc biến môi trường, dùng kết nối trực tiếp hay session pooler cổng 5432; chạy `python Tools/supabase/apply_migrations.py --check` trước, sau đó `--apply`. Script từ chối project khác, schema đã có nhưng thiếu ledger, hoặc checksum thay đổi; 5 file áp trong một transaction. Kiểm nhanh sau khi áp: `--check` phải báo `profiles`, `wallets`, `matches`, `match_players`, `server_bans` đều hiện diện. Test SQL cục bộ: `npm ci --prefix Tools/supabase && npm test --prefix Tools/supabase` (PGlite, không thay cho Supabase thật). Chưa có `SupabaseProfileStore`, chưa gọi RPC thưởng từ trận thật.
 
+C8: Khi `SUPABASE_URL` và `SUPABASE_SECRET_KEY` (hoặc khóa `SUPABASE_SERVICE_KEY` cũ) đều có trên server, `SupabaseBanStore` dùng bảng `server_bans` và gửi khóa trên header `apikey`; nếu không, dùng `BAN_STORE_PATH` cục bộ hoặc RAM. Adapter đã qua test HTTP giả, chưa gọi Supabase thật. Nếu chỉ đặt một trong hai biến Supabase, server dừng khởi động để tránh tưởng nhầm lệnh cấm đã bền vững.
+
 ## Test cục bộ (Hub + Online Lab)
 
 1. Từ `D:\HITME GAME\worktrees\codex-prep`, chạy `powershell -ExecutionPolicy Bypass -File tools\dev\run_local.ps1 -Open` (cần .NET 8 và Node 22+). Nếu 8100/8080 đang dùng, thêm `-HubPort 8110 -ServerPort 8081`.

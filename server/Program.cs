@@ -21,9 +21,19 @@ builder.Services.AddSingleton<IAuthVerifier>(_ =>
         : new SignedGuestAuthVerifier(Convert.FromBase64String(encoded));
 });
 builder.Services.AddSingleton<IBanStore>(_ =>
-    string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BAN_STORE_PATH"))
-        ? new InMemoryBanStore()
-        : new FileBanStore(Environment.GetEnvironmentVariable("BAN_STORE_PATH")!));
+{
+    var url = Environment.GetEnvironmentVariable("SUPABASE_URL");
+    var key = Environment.GetEnvironmentVariable("SUPABASE_SECRET_KEY")
+        ?? Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
+    if (!string.IsNullOrWhiteSpace(url) || !string.IsNullOrWhiteSpace(key))
+    {
+        if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(key))
+            throw new InvalidOperationException("Both SUPABASE_URL and server-only secret key are required for shared bans.");
+        return new SupabaseBanStore(new Uri(url), key);
+    }
+    var path = Environment.GetEnvironmentVariable("BAN_STORE_PATH");
+    return string.IsNullOrWhiteSpace(path) ? new InMemoryBanStore() : new FileBanStore(path);
+});
 builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.MaxRooms,
     banStore: provider.GetRequiredService<IBanStore>(),
     resultStore: provider.GetRequiredService<IMatchResultStore>()));
