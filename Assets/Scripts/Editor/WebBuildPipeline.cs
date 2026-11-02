@@ -112,7 +112,7 @@ namespace HitMe.Editor
                 if (File.Exists(indexPath))
                 {
                     string html = File.ReadAllText(indexPath);
-                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Graybox\">";
+                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Production\">";
                     if (!html.Contains("build-fingerprint"))
                     {
                         html = html.Replace("<head>", "<head>\n    " + metaTag);
@@ -133,7 +133,7 @@ namespace HitMe.Editor
         [MenuItem("Tools/HIT ME/Build WebGL (Release Profile - Brotli - Lo 10)")]
         public static void BuildWebRelease()
         {
-            string commitShort = WriteBuildFingerprintResource("Graybox");
+            string commitShort = WriteBuildFingerprintResource("Production");
             string dateTag = DateTime.Now.ToString("yyyyMMdd");
 
             Debug.Log($"Starting HIT ME Release Profile WebGL Build (commit={commitShort}, date={dateTag}, compression=Brotli)...");
@@ -152,11 +152,12 @@ namespace HitMe.Editor
             PlayerSettings.defaultWebScreenWidth = 540;
             PlayerSettings.defaultWebScreenHeight = 960;
 
-            // Release optimizations per Round 35 Lo 10 & Round 38 A7
+            // Release optimizations per Round 35 Lo 10 & Round 38 A7 & Round 45 D9 Bundle Optimization
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
             PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-            PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.Medium);
+            PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.High);
+            PlayerSettings.stripEngineCode = true;
 
             string folderName = $"WebGL_Release_{dateTag}_{commitShort}";
             string buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));
@@ -187,7 +188,7 @@ namespace HitMe.Editor
                 if (File.Exists(indexPath))
                 {
                     string html = File.ReadAllText(indexPath);
-                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Graybox\">";
+                    string metaTag = $"<meta name=\"build-fingerprint\" content=\"build {commitShort} · {dateTag} · Production\">";
                     if (!html.Contains("build-fingerprint"))
                     {
                         html = html.Replace("<head>", "<head>\n    " + metaTag);
