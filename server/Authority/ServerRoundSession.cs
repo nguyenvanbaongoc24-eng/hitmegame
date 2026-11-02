@@ -95,6 +95,14 @@ public sealed class ServerRoundSession
         if (player != null) player.Hp = 0;
     }
 
+    /// <summary>Protocol abuse removes match eligibility without an AFK ban.</summary>
+    public void EliminateForProtocolViolation(string playerId)
+    {
+        ineligiblePlayers.Add(playerId);
+        var player = match.State.FindPlayer(playerId);
+        if (player != null) player.Hp = 0;
+    }
+
     public bool TrySendEmote(string playerId, string? emoteId, DateTimeOffset now, out string error)
     {
         if (round is null || round.IsLocked || match.State.Phase != Phase.Placing) { error = "wrong_phase"; return false; }

@@ -13,4 +13,6 @@ Server branch: `prep/codex`. v1 remains accepted. Unity should send `v:2` with a
 
 8. On graceful restart, server sends `{ "v":1, "type":"error", "code":"server_restarting" }` before closing the socket with reason `server_restarting`. Show a short notice and return Home; do not award an unfinished match. A new server process does not restore in-memory rooms. `server_busy` means total room or connection capacity is full; `connection_limit` means the per-IP limit is reached.
 
+9. `protocol_violation_eliminated` means the server rejected five malformed/invalid commits in one placement round and removed the player from the match. Valid commit revisions are still permitted until the deadline. Show a match removal notice; do not retry the same invalid packet.
+
 Verification: `server/Tests/ProtocolV2Tests.cs` tests chat privacy, limits, friend authorization and versioned room state. `node server/Tools/FakeClient.mjs --local --v2` plays real WebSocket matches with 2, 4 and 6 players. This does not prove Unity WebGL integration or Render deployment.

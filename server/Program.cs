@@ -59,7 +59,10 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     auth: provider.GetRequiredService<IAuthVerifier>(),
     profiles: provider.GetRequiredService<IPlayerProfileReader>(),
     shop: provider.GetRequiredService<IGuestShopService>(),
-    metrics: provider.GetRequiredService<ServerMetrics>()));
+    metrics: provider.GetRequiredService<ServerMetrics>(),
+    auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
+        .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",
+            entry.RoomId, entry.MatchId, entry.Code, entry.Count)));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);

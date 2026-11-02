@@ -34,6 +34,7 @@ public sealed class ClientEnvelope
 }
 
 public sealed record GatewayMessage(string ConnectionId, string Payload, string? CloseReason = null);
+public sealed record ProtocolViolationAudit(string RoomId, Guid MatchId, string Code, int Count);
 
 public sealed class ProtocolGateway
 {
@@ -42,6 +43,7 @@ public sealed class ProtocolGateway
     public const int MaxMessageBytes = 1024;
     public const int MaxMessagesPerSecond = 20;
     public const int QuickMatchHintSeconds = 30;
+    public const int MaxInvalidCommitViolations = 5;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> WireFields = new(StringComparer.Ordinal)
     { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName" };
@@ -53,6 +55,7 @@ public sealed class ProtocolGateway
     private readonly IPlayerProfileReader? profiles;
     private readonly IGuestShopService? shop;
     private readonly ServerMetrics? metrics;
+    private readonly Action<ProtocolViolationAudit>? auditViolation;
     private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, PendingQuickMatch> quickMatch = new(StringComparer.Ordinal);
@@ -62,7 +65,7 @@ public sealed class ProtocolGateway
     private readonly HashSet<(string From, string To)> friendRequests = new();
     private readonly HashSet<(string First, string Second)> friends = new();
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
@@ -70,6 +73,7 @@ public sealed class ProtocolGateway
         this.profiles = profiles;
         this.shop = shop;
         this.metrics = metrics;
+        this.auditViolation = auditViolation;
     }
 
     public string Handle(string connectionId, string raw)
@@ -90,7 +94,7 @@ public sealed class ProtocolGateway
             catch (JsonException) { return Reply(connectionId, Error("invalid_json")); }
             using (document)
             {
-                if (!ValidEnvelope(document.RootElement)) return Reply(connectionId, Error("bad_message"));
+                if (!ValidEnvelope(document.RootElement)) return InvalidCommitWireReply(connectionId, document.RootElement);
             }
             ClientEnvelope? request;
             try { request = JsonSerializer.Deserialize<ClientEnvelope>(raw, Json); }
@@ -164,7 +168,8 @@ public sealed class ProtocolGateway
             sessions.Remove(active.Key);
             disconnected.Remove(active.Value.ReconnectToken);
             replacedConnection = active.Key;
-            var resumed = new Session(active.Value.Room, active.Value.PlayerId, NewReconnectToken(), request.V);
+            var resumed = new Session(active.Value.Room, active.Value.PlayerId, NewReconnectToken(), request.V)
+            { InvalidCommitViolations = active.Value.InvalidCommitViolations, ViolationRoundId = active.Value.ViolationRoundId, Disqualified = active.Value.Disqualified };
             sessions[connectionId] = resumed;
             return RoomState(resumed.Room, resumed.ReconnectToken);
         }
@@ -318,17 +323,46 @@ public sealed class ProtocolGateway
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
         var roundSession = session.Room.RoundSession;
         if (roundSession is null) return Reply(connectionId, Error("match_not_started"));
+        if (session.Disqualified) return Reply(connectionId, Error("protocol_violation_eliminated"));
         if (!request.PositionX.HasValue || !request.PositionY.HasValue)
-            return Reply(connectionId, Error("invalid_commit"));
+            return InvalidCommitReply(connectionId, session, "invalid_commit");
 
         Vec2? aim = request.HasAim != false && request.AimX.HasValue && request.AimY.HasValue
             ? new Vec2(request.AimX.Value, request.AimY.Value)
             : null;
         var commit = new RoundCommit(request.RoundId, new Vec2(request.PositionX.Value, request.PositionY.Value), aim);
-        if (!roundSession.TryCommit(session.PlayerId, commit, out var error)) return Reply(connectionId, Error(error));
+        if (!roundSession.TryCommit(session.PlayerId, commit, out var error))
+            return error == "invalid_commit" ? InvalidCommitReply(connectionId, session, error) : Reply(connectionId, Error(error));
 
         // Deliberately only acknowledge the submitting client while placement is private.
         return Reply(connectionId, RoomState(session.Room));
+    }
+
+    private IReadOnlyList<GatewayMessage> InvalidCommitWireReply(string connectionId, JsonElement root)
+    {
+        if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("type", out var type)
+            && type.ValueKind == JsonValueKind.String && type.GetString() == "commit"
+            && sessions.TryGetValue(connectionId, out var session))
+            return InvalidCommitReply(connectionId, session, "bad_message");
+        return Reply(connectionId, Error("bad_message"));
+    }
+
+    private IReadOnlyList<GatewayMessage> InvalidCommitReply(string connectionId, Session session, string code)
+    {
+        var roundSession = session.Room.RoundSession;
+        if (roundSession is null || roundSession.ActiveRound.IsLocked || session.Disqualified)
+            return Reply(connectionId, Error(session.Disqualified ? "protocol_violation_eliminated" : code));
+        if (session.ViolationRoundId != roundSession.ActiveRound.RoundId)
+        {
+            session.ViolationRoundId = roundSession.ActiveRound.RoundId;
+            session.InvalidCommitViolations = 0;
+        }
+        session.InvalidCommitViolations++;
+        auditViolation?.Invoke(new ProtocolViolationAudit(session.Room.Code, roundSession.MatchId, code, session.InvalidCommitViolations));
+        if (session.InvalidCommitViolations < MaxInvalidCommitViolations) return Reply(connectionId, Error(code));
+        session.Disqualified = true;
+        roundSession.EliminateForProtocolViolation(session.PlayerId);
+        return Reply(connectionId, Error("protocol_violation_eliminated"));
     }
 
     private IReadOnlyList<GatewayMessage> EmoteMessages(string connectionId, ClientEnvelope request)
@@ -425,7 +459,8 @@ public sealed class ProtocolGateway
             return Error("reconnect_invalid");
         }
 
-        var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken(), detached.Session.Version);
+        var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken(), detached.Session.Version)
+        { InvalidCommitViolations = detached.Session.InvalidCommitViolations, ViolationRoundId = detached.Session.ViolationRoundId, Disqualified = detached.Session.Disqualified };
         sessions[connectionId] = session;
         session.Room.RoundSession?.SetConnected(session.PlayerId, true);
         return RoomState(session.Room, session.ReconnectToken);
@@ -571,6 +606,9 @@ public sealed class ProtocolGateway
         public string PlayerId { get; }
         public string ReconnectToken { get; }
         public int Version { get; }
+        public int InvalidCommitViolations { get; set; }
+        public int ViolationRoundId { get; set; }
+        public bool Disqualified { get; set; }
     }
 
     private sealed record DisconnectedSession(Session Session, DateTimeOffset ExpiresAt);

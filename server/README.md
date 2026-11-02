@@ -99,6 +99,8 @@ Mỗi tin JSON có `v:int=1` và `type:string`. `v` khác 1 nhận `error.code=p
 
 Đang dở: H3 kiểm seed nội bộ; H6 chaos qua WebSocket; R3 xác nhận SQL và adapter trên Supabase thật; T3 bộ smoke triển khai bao phủ đủ Online Lab. H4 đã có bài takeover WebSocket thật; H5 đợi vòng khi tắt đã kiểm bằng đồng hồ cục bộ, chưa thử SIGTERM thật trong môi trường triển khai. Giới hạn hiện tại không áp quy tắc "một commit mỗi vòng" vì người chơi được đặt/ngắm lại trong 5 giây; tọa độ ngoài sân vẫn được Core kẹp theo luật hiện hành. Cần quyết định luật riêng trước khi đổi hai hành vi này.
 
+L3 local: five malformed/invalid commit packets in one placement round remove the sender from match eligibility (`protocol_violation_eliminated`); valid placement revisions remain allowed, and late or stale-round commits do not count. Reconnect cannot reset the count. Audit logs only room ID, match ID, code and count. Server suite 152/152; not tested on Render. Gold/item fields from clients are rejected by the wire allowlist.
+
 **AG tích hợp online (đề xuất tuần tự):**
 
 1. Lấy commit mới nhất `prep/codex`; giữ Unity/Core của AG, không chép lại luật.

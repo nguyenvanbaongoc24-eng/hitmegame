@@ -54,6 +54,77 @@ public sealed class ProtocolGatewayTests
         Assert.Empty(rooms.Snapshot()[0].RoundSession!.ActiveRound.Commits);
     }
 
+    [Fact]
+    public void RepeatedMalformedCommitsEliminateOffenderWithoutChangingOtherPlayer()
+    {
+        var audits = new List<ProtocolViolationAudit>();
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier(), auditViolation: audits.Add);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        var match = rooms.Snapshot()[0].RoundSession!;
+        var malformed = "{\"v\":1,\"type\":\"commit\",\"roundId\":1,\"positionX\":1e100,\"positionY\":0}";
+        for (var i = 1; i <= ProtocolGateway.MaxInvalidCommitViolations; i++)
+        {
+            var response = Json(gateway.Handle("c1", malformed));
+            Assert.Equal(i == ProtocolGateway.MaxInvalidCommitViolations ? "protocol_violation_eliminated" : "bad_message",
+                response.GetProperty("code").GetString());
+        }
+        Assert.Equal(0, match.Match.State.FindPlayer("p1")!.Hp);
+        Assert.Equal(3, match.Match.State.FindPlayer("p2")!.Hp);
+        Assert.Empty(match.ActiveRound.Commits);
+        Assert.Equal(ProtocolGateway.MaxInvalidCommitViolations, audits.Count);
+        Assert.All(audits, entry =>
+        {
+            Assert.Equal("HM0001", entry.RoomId);
+            Assert.Equal(match.MatchId, entry.MatchId);
+            Assert.Equal("bad_message", entry.Code);
+        });
+        var valid = Json(gateway.Handle("c1", JsonSerializer.Serialize(new
+        { v = 1, type = "commit", roundId = 1, positionX = 0, positionY = 0 })));
+        Assert.Equal("protocol_violation_eliminated", valid.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void ValidPlacementRevisionsAreAllowedAndNeverCountAsCheating()
+    {
+        var audits = new List<ProtocolViolationAudit>();
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier(), auditViolation: audits.Add);
+        gateway.Handle("c1", Request("join"));
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        for (var i = 0; i < 3; i++)
+        {
+            var response = Json(gateway.Handle("c1", JsonSerializer.Serialize(new
+            { v = 1, type = "commit", roundId = 1, positionX = i, positionY = 0, hasAim = true, aimX = 1, aimY = 0 })));
+            Assert.Equal("room_state", response.GetProperty("type").GetString());
+        }
+        Assert.Equal(2, rooms.Snapshot()[0].RoundSession!.ActiveRound.Commits["p1"].Position.X);
+        Assert.Empty(audits);
+    }
+
+    [Fact]
+    public void ReconnectCannotResetInvalidCommitCountWithinSameRound()
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        var first = Json(gateway.Handle("c1", Request("join")));
+        var reconnectToken = first.GetProperty("reconnectToken").GetString();
+        gateway.Handle("c2", Request("join", "p2", "Two", "HM0001"));
+        gateway.Handle("c1", Request("start"));
+        var invalid = "{\"v\":1,\"type\":\"commit\",\"roundId\":1}";
+        for (var i = 0; i < ProtocolGateway.MaxInvalidCommitViolations - 1; i++)
+            Assert.Equal("invalid_commit", Json(gateway.Handle("c1", invalid)).GetProperty("code").GetString());
+        gateway.Disconnect("c1");
+        var resumed = Json(gateway.Handle("resumed", JsonSerializer.Serialize(new
+        { v = 1, type = "join", token = "test:p1", reconnectToken })));
+        Assert.Equal("room_state", resumed.GetProperty("type").GetString());
+        Assert.Equal("protocol_violation_eliminated",
+            Json(gateway.Handle("resumed", invalid)).GetProperty("code").GetString());
+    }
+
     [Fact] public void CreateJoinAndHostStartRoom()
     {
         var gateway = Gateway();

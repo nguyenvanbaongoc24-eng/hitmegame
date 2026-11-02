@@ -16,4 +16,6 @@ L0–L7 handoff: L0 verified directly on 2026-11-02. L1 partially underway (R6 l
 
 L4 local work: shutdown now sends `server_restarting` then closes the socket; total capacity returns `server_busy`; `/metrics` includes median round processing time; manual backup script and `MD/OPS.md` added. Server tests 149/149. SIGTERM, capacity and backup have not been exercised on Render; `pg_dump` is absent locally.
 
+L3 local work: repeated malformed/invalid commit packets (5 in one placement round) eliminate the sender without an AFK ban. Valid placement revisions remain allowed. Reconnect cannot reset the count. Audit records room ID, match ID, code and count, never raw payloads or tokens. Server tests 152/152. This has not been exercised on Render.
+
 Owner action: rotate the database password previously exposed in chat before opening the service to external users; keep replacement secrets in local/deployment environment only.
