@@ -23,10 +23,15 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supaba
         throw new InvalidOperationException("Supabase persistence requires URL, server-only key, and durable guest signing key.");
     SupabaseServerKeyGuard.Validate(supabaseKey);
 }
-builder.Services.AddSingleton<IMatchResultStore>(_ =>
+builder.Services.AddSingleton<InMemoryProfileStore>();
+builder.Services.AddSingleton<IMatchResultStore>(provider =>
     string.IsNullOrWhiteSpace(supabaseUrl)
-        ? new InMemoryMatchResultStore()
+        ? new ProfiledMatchResultStore(new InMemoryMatchResultStore(), provider.GetRequiredService<InMemoryProfileStore>())
         : new SupabaseGuestMatchStore(new Uri(supabaseUrl), supabaseKey!));
+builder.Services.AddSingleton<IPlayerProfileReader>(provider =>
+    string.IsNullOrWhiteSpace(supabaseUrl)
+        ? new InMemoryPlayerProfileReader(provider.GetRequiredService<InMemoryProfileStore>())
+        : new SupabaseGuestProfileReader(new Uri(supabaseUrl), supabaseKey!));
 builder.Services.AddSingleton<IAuthVerifier>(_ =>
 {
     return string.IsNullOrWhiteSpace(guestSigningKey)
@@ -43,7 +48,9 @@ builder.Services.AddSingleton<IBanStore>(_ =>
 builder.Services.AddSingleton(provider => new RoomDirectory(maxRooms: runtime.MaxRooms,
     banStore: provider.GetRequiredService<IBanStore>(),
     resultStore: provider.GetRequiredService<IMatchResultStore>()));
-builder.Services.AddSingleton<ProtocolGateway>();
+builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequiredService<RoomDirectory>(),
+    auth: provider.GetRequiredService<IAuthVerifier>(),
+    profiles: provider.GetRequiredService<IPlayerProfileReader>()));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);

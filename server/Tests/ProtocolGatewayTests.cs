@@ -92,7 +92,8 @@ public sealed class ProtocolGatewayTests
         var roomCode = first.GetProperty("roomCode").GetString();
         var request = JsonSerializer.Serialize(new { v = 2, type = "join", token = "test:p2", roomCode });
         var replies = gateway.HandleMessages("c2", request);
-        using var second = JsonDocument.Parse(replies.Single(message => message.ConnectionId == "c2").Payload);
+        using var second = JsonDocument.Parse(replies.First(message => message.ConnectionId == "c2"
+            && message.Payload.Contains("\"type\":\"room_state\"", StringComparison.Ordinal)).Payload);
         using var firstUpdate = JsonDocument.Parse(replies.Single(message => message.ConnectionId == "c1").Payload);
         Assert.Equal(2, second.RootElement.GetProperty("v").GetInt32());
         Assert.Equal(2, second.RootElement.GetProperty("protocolVersion").GetInt32());

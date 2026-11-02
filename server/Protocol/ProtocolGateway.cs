@@ -47,6 +47,7 @@ public sealed class ProtocolGateway
     private readonly RoomDirectory rooms;
     private readonly TimeProvider clock;
     private readonly IAuthVerifier auth;
+    private readonly IPlayerProfileReader? profiles;
     private readonly object gate = new();
     private readonly Dictionary<string, Session> sessions = new(StringComparer.Ordinal);
     private readonly Dictionary<string, PendingQuickMatch> quickMatch = new(StringComparer.Ordinal);
@@ -56,11 +57,12 @@ public sealed class ProtocolGateway
     private readonly HashSet<(string From, string To)> friendRequests = new();
     private readonly HashSet<(string First, string Second)> friends = new();
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
         this.auth = auth ?? new FakeAuthVerifier();
+        this.profiles = profiles;
     }
 
     public string Handle(string connectionId, string raw)
@@ -176,6 +178,8 @@ public sealed class ProtocolGateway
         // Every connected member must learn the new roster. RoomState contains
         // no private placement coordinates or aims, including during reconnect.
         var messages = RoomStateBroadcast(session.Room).ToList();
+        if (session.Version == LatestVersion)
+            messages.Add(new GatewayMessage(connectionId, ProfileMessage(session)));
         if (replacedConnection is not null)
             messages.Add(new GatewayMessage(replacedConnection, Error("session_replaced"), "session_replaced"));
         if (session.Room.RoundSession is { } roundSession && roundSession.Match.State.Phase == Phase.Placing)
@@ -225,7 +229,14 @@ public sealed class ProtocolGateway
         sessions[connectionId] = second;
         room.TrySetRoomReady(first.PlayerId, true, clock.GetUtcNow(), out _);
         room.TrySetRoomReady(second.PlayerId, true, clock.GetUtcNow(), out _);
-        return new[] { new GatewayMessage(opponent.Key, RoomState(room, first.ReconnectToken)), new GatewayMessage(connectionId, RoomState(room, second.ReconnectToken)) };
+        var paired = new List<GatewayMessage>
+        {
+            new(opponent.Key, RoomState(room, first.ReconnectToken)),
+            new(connectionId, RoomState(room, second.ReconnectToken))
+        };
+        if (first.Version == LatestVersion) paired.Add(new GatewayMessage(opponent.Key, ProfileMessage(first)));
+        if (second.Version == LatestVersion) paired.Add(new GatewayMessage(connectionId, ProfileMessage(second)));
+        return paired;
     }
 
     public void Disconnect(string connectionId)
@@ -445,6 +456,26 @@ public sealed class ProtocolGateway
     private static string Error(string code) => JsonSerializer.Serialize(new { v = Version, type = "error", code }, Json);
     private static string BannedError(int remainingSeconds) => JsonSerializer.Serialize(new { v = Version, type = "error", code = "banned", remainingSeconds }, Json);
 
+    private string ProfileMessage(Session session)
+    {
+        try
+        {
+            var snapshot = profiles?.Read(session.PlayerId) ?? new ProfileSnapshot(session.PlayerId, 0, 0, 0);
+            return JsonSerializer.Serialize(new
+            {
+                v = LatestVersion, type = "profile_state", playerId = session.PlayerId,
+                name = session.Room.Players.FirstOrDefault(player => player.Id == session.PlayerId)?.Name ?? session.PlayerId,
+                gold = snapshot.Gold, matchesPlayed = snapshot.MatchesPlayed, bestRank = snapshot.BestRank,
+                rank = "unranked", points = 0,
+                purchasedItemIds = Array.Empty<string>(),
+                ownedItemIds = new[] { "dep_to_ong" },
+                equippedWeaponId = "dep_to_ong", equippedCharacterId = (string?)null,
+                inventoryStatus = "starter_only"
+            }, Json);
+        }
+        catch (HttpRequestException) { return Error("profile_unavailable"); }
+    }
+
     private static string NewReconnectToken()
     {
         Span<byte> bytes = stackalloc byte[32];
@@ -477,7 +508,11 @@ public sealed class ProtocolGateway
             foreach (var session in sessions)
             {
                 if (ReferenceEquals(session.Value.Room, room) && session.Value.PlayerId == message.PlayerId)
+                {
                     output.Add(new GatewayMessage(session.Key, message.Payload));
+                    if (session.Value.Version == LatestVersion && message.Payload.Contains("\"type\":\"match_end\"", StringComparison.Ordinal))
+                        output.Add(new GatewayMessage(session.Key, ProfileMessage(session.Value)));
+                }
             }
         }
         return output;

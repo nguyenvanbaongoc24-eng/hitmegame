@@ -84,6 +84,17 @@ try {
       }
       assert.ok(round >= 1 && round <= 5);
       assert.ok(endings[0].winners.every(id => finalHp.some(player => player.id === id)));
+      if (useV2) {
+        const profiles = await Promise.all(clients.map(client => client.take('profile_state')));
+        // The first profile on each socket is sent at join; the second follows match_end.
+        const updated = await Promise.all(clients.map(client => client.take('profile_state')));
+        assert.ok(profiles.every(profile => profile.matchesPlayed === 0));
+        assert.ok(updated.every(profile => profile.matchesPlayed === 1));
+        for (const profile of updated) {
+          const ranking = endings[0].rankings.find(row => row.playerId === profile.playerId);
+          assert.equal(profile.gold, ranking.goldReward);
+        }
+      }
       const approvedFirstGold = count === 2 ? 100 : count <= 4 ? 150 : 200;
       const walletCredit = await verifyLiveCredits(issuedTokens, endings[0].rankings, count);
       console.log(`match N=${count} room=${room.roomCode} rounds=${round} winners=${endings[0].winners.length} approvedRank1Gold=${approvedFirstGold} walletCredit=${walletCredit}`);
