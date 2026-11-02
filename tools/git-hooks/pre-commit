@@ -1,0 +1,4 @@
+#!/bin/sh
+# Install with: git config core.hooksPath tools/git-hooks
+# Checks the staged tree; it never prints credential values.
+python tools/supabase/scan_secrets.py --staged
