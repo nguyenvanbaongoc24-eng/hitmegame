@@ -18,4 +18,6 @@ L4 local work: shutdown now sends `server_restarting` then closes the socket; to
 
 L3 local work: repeated malformed/invalid commit packets (5 in one placement round) eliminate the sender without an AFK ban. Valid placement revisions remain allowed. Reconnect cannot reset the count. Audit records room ID, match ID, code and count, never raw payloads or tokens. Server tests 152/152. This has not been exercised on Render.
 
+L2 preparation only: `MD/AUTH_SETUP.md` lists Google/Supabase dashboard setup and required acceptance tests. OAuth provider configuration, server token verification, guest-account merge and Unity callback are not implemented or tested yet.
+
 Owner action: rotate the database password previously exposed in chat before opening the service to external users; keep replacement secrets in local/deployment environment only.
