@@ -10,7 +10,7 @@ import time
 sys.stdout.reconfigure(encoding="utf-8")
 from playwright.sync_api import sync_playwright
 
-OUT_DIR = r"D:\HITME GAME\unity-client\Evidence\round37"
+OUT_DIR = r"D:\HITME GAME\unity-client\Evidence\round38"
 os.makedirs(OUT_DIR, exist_ok=True)
 TARGET_URL = "http://127.0.0.1:8103/"
 

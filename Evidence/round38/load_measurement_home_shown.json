@@ -1,0 +1,122 @@
+{
+  "target_url": "http://127.0.0.1:8103/",
+  "build_profile": "Release Brotli (Port 8103)",
+  "timestamp": "2026-11-02T04:23:23Z",
+  "measurement_marker": "window.__hitmeHomeShown / console.log('[HITME] HOME_SHOWN')",
+  "scenarios": {
+    "20mbps_cold": {
+      "bandwidth_mbps": 20,
+      "latency_ms": 40,
+      "is_cached": false,
+      "time_to_home_shown_seconds": 5.98,
+      "total_bundle_bytes": 10620462,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.loader.js?v=db4e8f1",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 104
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.framework.js.br?v=db4e8f1",
+          "transferSize": 66155,
+          "encodedBodySize": 65855,
+          "decodedBodySize": 329708,
+          "duration_ms": 107
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.data.br?v=db4e8f1",
+          "transferSize": 5964079,
+          "encodedBodySize": 5963779,
+          "decodedBodySize": 10173504,
+          "duration_ms": 4355
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.wasm.br?v=db4e8f1",
+          "transferSize": 4562014,
+          "encodedBodySize": 4561714,
+          "decodedBodySize": 19326960,
+          "duration_ms": 3747
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round38\\home_shown_20mbps_cold.png"
+    },
+    "5mbps_cold": {
+      "bandwidth_mbps": 5,
+      "latency_ms": 100,
+      "is_cached": false,
+      "time_to_home_shown_seconds": 18.46,
+      "total_bundle_bytes": 10620462,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.loader.js?v=db4e8f1",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 162
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.framework.js.br?v=db4e8f1",
+          "transferSize": 66155,
+          "encodedBodySize": 65855,
+          "decodedBodySize": 329708,
+          "duration_ms": 327
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.data.br?v=db4e8f1",
+          "transferSize": 5964079,
+          "encodedBodySize": 5963779,
+          "decodedBodySize": 10173504,
+          "duration_ms": 16741
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.wasm.br?v=db4e8f1",
+          "transferSize": 4562014,
+          "encodedBodySize": 4561714,
+          "decodedBodySize": 19326960,
+          "duration_ms": 14441
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round38\\home_shown_5mbps_cold.png"
+    },
+    "cached_reload": {
+      "bandwidth_mbps": 20,
+      "latency_ms": 40,
+      "is_cached": true,
+      "time_to_home_shown_seconds": 5.51,
+      "total_bundle_bytes": 10620462,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.loader.js?v=db4e8f1",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 65
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.framework.js.br?v=db4e8f1",
+          "transferSize": 66155,
+          "encodedBodySize": 65855,
+          "decodedBodySize": 329708,
+          "duration_ms": 110
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.data.br?v=db4e8f1",
+          "transferSize": 5964079,
+          "encodedBodySize": 5963779,
+          "decodedBodySize": 10173504,
+          "duration_ms": 4355
+        },
+        {
+          "name": "WebGL_Release_20261102_db4e8f1.wasm.br?v=db4e8f1",
+          "transferSize": 4562014,
+          "encodedBodySize": 4561714,
+          "decodedBodySize": 19326960,
+          "duration_ms": 3764
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round38\\home_shown_cached_reload.png"
+    }
+  }
+}
