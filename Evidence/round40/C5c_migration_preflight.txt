@@ -1,13 +1,23 @@
 2026-11-02 migration preflight on prep/codex.
 Source files: backend/supabase/001_schema.sql, 002_rls.sql, 003_functions.sql,
-004_match_result_store.sql, 005_reward_and_bans.sql. Optional seed.sql excluded
+004_match_result_store.sql, 005_reward_and_bans.sql, 006_guest_economy.sql. Optional seed.sql excluded
 because product prices are not approved.
-Command: npm test --prefix Tools/supabase
-Result: parsed all five files; Passed! 7/7 PGlite SQL and approved reward checks.
+Command: npm test --prefix tools/supabase
+Result: parsed all six files; Passed! 13/13 PGlite SQL and approved reward checks.
+The 3-player third-place reward was corrected from 0 to approved 40 gold
+in both C# and SQL before any live migration.
 Command: python -m py_compile Tools/supabase/apply_migrations.py
 Result: success.
-Command: python Tools/supabase/apply_migrations.py --check
+Command: python tools/supabase/apply_migrations.py --check
 Result: stopped before connection: SUPABASE_DB_URL missing from environment and
 ignored worktree .env. No migration was applied to Supabase.
 Warning: PGlite used a stub auth.users/auth.uid and skipped pgcrypto extension;
 it does not prove compatibility with the actual remote project's existing schema.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo --verbosity quiet
+Result: Passed! 139/139. SupabaseGuestMatchStore uses a server-only apikey and
+the atomic record_guest_match RPC; tested against an HTTP stub, not the real project.
+Command: node server/Tools/FakeClient.mjs --local with ephemeral signed-guest key
+Result: Passed! 3/3 real WebSocket matches (N=2,4,6); walletCredit=NOT_CONNECTED
+because SUPABASE_URL and server-only key were not configured.
+Live Supabase migration status: NOT APPLIED. No SUPABASE_DB_URL was present in
+the ignored worktree .env, repository root .env, or process/user/machine env.
