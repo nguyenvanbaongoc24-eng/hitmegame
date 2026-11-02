@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hit-me-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeploy: false
+    envVars:
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: GUEST_TOKEN_SIGNING_KEY
+        sync: false
