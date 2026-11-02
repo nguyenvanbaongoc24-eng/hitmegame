@@ -1,0 +1,13 @@
+2026-11-02 migration preflight on prep/codex.
+Source files: backend/supabase/001_schema.sql, 002_rls.sql, 003_functions.sql,
+004_match_result_store.sql, 005_reward_and_bans.sql. Optional seed.sql excluded
+because product prices are not approved.
+Command: npm test --prefix Tools/supabase
+Result: parsed all five files; Passed! 7/7 PGlite SQL and approved reward checks.
+Command: python -m py_compile Tools/supabase/apply_migrations.py
+Result: success.
+Command: python Tools/supabase/apply_migrations.py --check
+Result: stopped before connection: SUPABASE_DB_URL missing from environment and
+ignored worktree .env. No migration was applied to Supabase.
+Warning: PGlite used a stub auth.users/auth.uid and skipped pgcrypto extension;
+it does not prove compatibility with the actual remote project's existing schema.

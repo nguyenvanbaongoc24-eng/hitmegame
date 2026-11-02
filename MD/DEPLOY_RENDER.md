@@ -4,7 +4,7 @@ This is a deployment guide, not evidence of a live service. The server still acc
 
 1. Push and merge reviewed server changes to the repository branch intended for deployment.
 2. In Render, create a Blueprint from that repository and select the custom Blueprint path `server/render.yaml`. Its Docker build context is the repository root and Dockerfile is `server/Dockerfile`.
-3. Set `ALLOWED_ORIGINS` to the exact HTTPS origin of the WebGL site, such as `https://game.example.com` (no trailing slash). The Blueprint prompts for this value.
+3. Set `ALLOWED_ORIGINS` to the exact HTTPS origin of the WebGL site, such as `https://game.example.com` (no trailing slash). Set `GUEST_TOKEN_SIGNING_KEY` to a private, persistent base64 string of at least 32 random bytes. The Blueprint prompts for these values. Rotating this key invalidates existing guest tokens.
 4. Render provides `PORT`; the server listens on `0.0.0.0:$PORT`. Health path is `/healthz`. Do not put service keys in the Blueprint or WebGL client.
 5. Once the service is healthy, open `https://<render-host>/healthz` and verify `status: ok`.
 6. Run `node tools/deploy/smoke_test.mjs wss://<render-host>/ws` from a network allowed by `ALLOWED_ORIGINS`; the smoke tool and browser origin admission may need separate configuration. Check the script's origin before running.
