@@ -558,6 +558,7 @@ public sealed class ProtocolGatewayTests
         gateway.HandleMessages("c2", JsonSerializer.Serialize(new { v = 1, type = "commit", roundId = 1, positionX = 3.14159f, positionY = -2.71828f, aimX = 0.12345f, aimY = -0.98765f }));
 
         gateway.Disconnect("c1");
+        clock.Advance(TimeSpan.FromSeconds(20));
         var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new { v = 1, type = "join", playerId = "forged", token = "test:p1", reconnectToken = token })));
         Assert.Equal("room_state", rejoined.GetProperty("type").GetString());
         var payload = rejoined.GetRawText();

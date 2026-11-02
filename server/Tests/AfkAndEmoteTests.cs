@@ -76,6 +76,23 @@ public sealed class AfkAndEmoteTests
     }
 
     [Fact]
+    public void BanAlsoBlocksQuickMatchAndReportsRemainingSeconds()
+    {
+        var clock = new FakeTimeProvider(Start);
+        var bans = new InMemoryBanStore();
+        bans.Ban("p1", Start + TimeSpan.FromSeconds(120));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM0001", banStore: bans), clock, new FixedAuth("p1"));
+
+        var blocked = Json(gateway.Handle("c1", Request("quick_match")));
+        Assert.Equal("banned", blocked.GetProperty("code").GetString());
+        Assert.Equal(120, blocked.GetProperty("remainingSeconds").GetInt32());
+        clock.Advance(TimeSpan.FromSeconds(119));
+        Assert.Equal(1, Json(gateway.Handle("c1", Request("quick_match"))).GetProperty("remainingSeconds").GetInt32());
+        clock.Advance(TimeSpan.FromSeconds(1));
+        Assert.Equal("quick_match_waiting", Json(gateway.Handle("c1", Request("quick_match"))).GetProperty("type").GetString());
+    }
+
+    [Fact]
     public void EmotesArePlacementOnlyRateLimitedAndNeverContainAimOrPosition()
     {
         var clock = new FakeTimeProvider(Start);

@@ -1,0 +1,6 @@
+Branch: prep/codex
+Existing server policy: 2 connected rounds without a valid commit eliminate and ban for 120 seconds; valid commit resets count. Disconnect does not increment AFK, 30-second reconnect token keeps the room and HP, expiry removes the player without a ban. Session takeover sends session_replaced and closes the old socket.
+Added coverage: a ban also blocks quick_match with exact remainingSeconds at 120 and 1 seconds; a disconnected player reconnects after 20 seconds and retains ready/HP/private-commit secrecy.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~AfkAndEmoteTests|FullyQualifiedName~ProtocolGatewayTests.Reconnect|FullyQualifiedName~ProtocolGatewayTests.ASecondConnection|FullyQualifiedName~ProtocolGatewayTests.RacingReconnect'
+Result: Passed! Failed: 0, Passed: 10, Skipped: 0, Total: 10.
+Limit: ban store is in memory and resets with the server; durable storage belongs to C5.
