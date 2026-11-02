@@ -1311,72 +1311,79 @@ namespace HitMe.UI
 
         public void RefreshAllScreenTexts()
         {
-            // 1. Enforce fonts
-            EnforceFontAcrossAllTexts();
-
-            // 2. Home screen labels & buttons
-            if (txtHomeLogo != null) txtHomeLogo.text = UiStrings.GameTitle;
-            var subTxt = homePanel != null ? homePanel.transform.Find("HomeSubtitle")?.GetComponent<TextMeshProUGUI>() : null;
-            if (subTxt != null) subTxt.text = UiStrings.Get(UiStrings.HomeSubtitle);
-
-            UpdateBtnText(btnQuickMatch, UiStrings.Get(UiStrings.BtnPlayNow));
-            UpdateBtnText(btnCreateRoom, UiStrings.Get(UiStrings.BtnCreateRoom));
-            UpdateBtnText(btnJoinRoom, UiStrings.Get(UiStrings.BtnJoinRoom));
-            UpdateBtnText(btnBotTraining, UiStrings.Get(UiStrings.BtnPracticeBots));
-
-            UpdateBtnText(btnHomeShop, UiStrings.Get(UiStrings.ShopTitle));
-            UpdateBtnText(btnHomeInventory, UiStrings.Get(UiStrings.InventoryTitle));
-            UpdateBtnText(btnHomeLeaderboard, UiStrings.Get("BẢNG XẾP HẠNG"));
-            UpdateBtnText(btnHomeLogin, UiStrings.Get(UiStrings.LoginTitle));
-            UpdateBtnText(btnHomeSettings, UiStrings.Get(UiStrings.BtnSettings));
-
-            // 3. Bot Training Panel
-            RefreshBotTrainingDisplay();
-
-            // 4. Lobby Panel
-            if (txtLobbyHeader != null)
+            try
             {
-                txtLobbyHeader.text = $"{UiStrings.Get(UiStrings.LobbyTitle)} ({_currentLobbyHumanCount}/6 {UiStrings.Get("NGƯỜI THẬT")})";
-            }
-            UpdateBtnText(btnLobbyReady, _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady));
-            UpdateBtnText(btnLeaveRoom, UiStrings.Get(UiStrings.BtnLeaveRoom));
-            UpdateBtnText(btnLobbyToBotTraining, UiStrings.Get(UiStrings.BtnGoToBotTraining));
-            if (txtLobbyCountdown != null)
-            {
-                if (_currentLobbyHumanCount <= 1)
-                    txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyOnePlayerWarning);
-                else
-                    txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyWaitingAllReady);
-            }
+                // 1. Enforce fonts
+                EnforceFontAcrossAllTexts();
 
-            // 5. Gameplay HUD
-            if (txtInGameReadyLabel != null)
-            {
-                txtInGameReadyLabel.text = _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady);
-            }
-            if (txtRound != null && _lastDisplayedRound > 0)
-            {
-                txtRound.text = string.Format(UiStrings.Get("VÒNG {0}/{1}"), _lastDisplayedRound, _lastDisplayedMaxRounds);
-            }
-            if (txtPhaseBanner != null && matchController != null && matchController.State != null)
-            {
-                ApplyPhaseState(matchController.State.Phase);
-            }
+                // 2. Home screen labels & buttons
+                if (txtHomeLogo != null) txtHomeLogo.text = UiStrings.GameTitle;
+                var subTxt = homePanel != null ? homePanel.transform.Find("HomeSubtitle")?.GetComponent<TextMeshProUGUI>() : null;
+                if (subTxt != null) subTxt.text = UiStrings.Get(UiStrings.HomeSubtitle);
 
-            // 6. Result Screen
-            if (txtResultTitle != null) txtResultTitle.text = UiStrings.Get(UiStrings.MatchResultTitle);
-            UpdateBtnText(btnReplay, UiStrings.Get(UiStrings.BtnReplay));
-            UpdateBtnText(btnBackToHome, UiStrings.Get(UiStrings.BtnBackToHome));
+                UpdateBtnText(btnQuickMatch, UiStrings.Get(UiStrings.BtnPlayNow));
+                UpdateBtnText(btnCreateRoom, UiStrings.Get(UiStrings.BtnCreateRoom));
+                UpdateBtnText(btnJoinRoom, UiStrings.Get(UiStrings.BtnJoinRoom));
+                UpdateBtnText(btnBotTraining, UiStrings.Get(UiStrings.BtnPracticeBots));
 
-            // 7. Dialogs & Overlays
-            RefreshSettingsUI();
-            RefreshTutorialUI();
-            RefreshProfileUI();
-            RefreshShopUI();
-            RefreshInventoryUI();
-            RefreshLeaderboardUI();
-            RefreshLoginUI();
-            RefreshHomeLangToggleVisual();
+                UpdateBtnText(btnHomeShop, UiStrings.Get(UiStrings.ShopTitle));
+                UpdateBtnText(btnHomeInventory, UiStrings.Get(UiStrings.InventoryTitle));
+                UpdateBtnText(btnHomeLeaderboard, UiStrings.Get("BẢNG XẾP HẠNG"));
+                UpdateBtnText(btnHomeLogin, UiStrings.Get(UiStrings.LoginTitle));
+                UpdateBtnText(btnHomeSettings, UiStrings.Get(UiStrings.BtnSettings));
+
+                // 3. Bot Training Panel
+                RefreshBotTrainingDisplay();
+
+                // 4. Lobby Panel
+                if (txtLobbyHeader != null)
+                {
+                    txtLobbyHeader.text = $"{UiStrings.Get(UiStrings.LobbyTitle)} ({_currentLobbyHumanCount}/6 {UiStrings.Get("NGƯỜI THẬT")})";
+                }
+                UpdateBtnText(btnLobbyReady, _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady));
+                UpdateBtnText(btnLeaveRoom, UiStrings.Get(UiStrings.BtnLeaveRoom));
+                UpdateBtnText(btnLobbyToBotTraining, UiStrings.Get(UiStrings.BtnGoToBotTraining));
+                if (txtLobbyCountdown != null)
+                {
+                    if (_currentLobbyHumanCount <= 1)
+                        txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyOnePlayerWarning);
+                    else
+                        txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyWaitingAllReady);
+                }
+
+                // 5. Gameplay HUD
+                if (txtInGameReadyLabel != null)
+                {
+                    txtInGameReadyLabel.text = _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady);
+                }
+                if (txtRound != null && _lastDisplayedRound > 0)
+                {
+                    txtRound.text = string.Format(UiStrings.Get("VÒNG {0}/{1}"), _lastDisplayedRound, _lastDisplayedMaxRounds);
+                }
+                if (txtPhaseBanner != null && matchController != null && matchController.State != null)
+                {
+                    ApplyPhaseState(matchController.State.Phase);
+                }
+
+                // 6. Result Screen
+                if (txtResultTitle != null) txtResultTitle.text = UiStrings.Get(UiStrings.MatchResultTitle);
+                UpdateBtnText(btnReplay, UiStrings.Get(UiStrings.BtnReplay));
+                UpdateBtnText(btnBackToHome, UiStrings.Get(UiStrings.BtnBackToHome));
+
+                // 7. Dialogs & Overlays
+                RefreshSettingsUI();
+                RefreshTutorialUI();
+                RefreshProfileUI();
+                RefreshShopUI();
+                RefreshInventoryUI();
+                RefreshLeaderboardUI();
+                RefreshLoginUI();
+                RefreshHomeLangToggleVisual();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ProductionUIController] RefreshAllScreenTexts caught: {ex.Message}");
+            }
         }
 
         private static void UpdateBtnText(Button btn, string text)
@@ -1397,54 +1404,72 @@ namespace HitMe.UI
 
         public void EnforceFontAcrossAllTexts()
         {
-            var targetFont = GetDefaultFont();
-            if (targetFont == null) return;
-            var allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            for (int i = 0; i < allTexts.Length; i++)
+            try
             {
-                var txt = allTexts[i];
-                if (txt != null && (txt.font == null || txt.font.name.Contains("LiberationSans")))
+                var targetFont = GetDefaultFont();
+                if (targetFont == null) return;
+                var allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                for (int i = 0; i < allTexts.Length; i++)
                 {
-                    txt.font = targetFont;
+                    var txt = allTexts[i];
+                    if (txt != null)
+                    {
+                        if (txt.font == null || (txt.font.name != null && txt.font.name.Contains("LiberationSans")))
+                        {
+                            txt.font = targetFont;
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ProductionUIController] EnforceFont caught: {ex.Message}");
             }
         }
 
         public void EnsureHomeLanguageToggle()
         {
-            if (homePanel == null || _btnHomeLangToggle != null) return;
-
-            var toggleObj = new GameObject("BtnHomeLangToggle", typeof(RectTransform));
-            toggleObj.transform.SetParent(homePanel.transform, false);
-            var rt = toggleObj.GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.74f, 0.93f);
-            rt.anchorMax = new Vector2(0.88f, 0.98f);
-            rt.sizeDelta = Vector2.zero;
-
-            var img = toggleObj.AddComponent<Image>();
-            img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
-            _btnHomeLangToggle = toggleObj.AddComponent<Button>();
-            _btnHomeLangToggle.onClick.AddListener(() =>
+            try
             {
-                AudioManager.Instance?.PlayClick();
-                SetLanguageFromSettings(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? AppLanguage.English : AppLanguage.Vietnamese);
-                ShowToast(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? "Đã chuyển sang Tiếng Việt" : "Switched to English");
-            });
+                if (homePanel == null || _btnHomeLangToggle != null) return;
 
-            var textObj = new GameObject("Text", typeof(RectTransform));
-            textObj.transform.SetParent(toggleObj.transform, false);
-            var textRt = textObj.GetComponent<RectTransform>();
-            textRt.anchorMin = Vector2.zero;
-            textRt.anchorMax = Vector2.one;
-            textRt.sizeDelta = Vector2.zero;
+                var toggleObj = new GameObject("BtnHomeLangToggle", typeof(RectTransform));
+                toggleObj.transform.SetParent(homePanel.transform, false);
+                var rt = toggleObj.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.74f, 0.93f);
+                rt.anchorMax = new Vector2(0.88f, 0.98f);
+                rt.sizeDelta = Vector2.zero;
 
-            _txtHomeLangToggle = textObj.AddComponent<TextMeshProUGUI>();
-            _txtHomeLangToggle.font = GetDefaultFont();
-            _txtHomeLangToggle.fontSize = 18f;
-            _txtHomeLangToggle.fontStyle = FontStyles.Bold;
-            _txtHomeLangToggle.alignment = TextAlignmentOptions.Center;
-            _txtHomeLangToggle.color = new Color(1f, 0.88f, 0.2f);
-            RefreshHomeLangToggleVisual();
+                var img = toggleObj.AddComponent<Image>();
+                img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
+                _btnHomeLangToggle = toggleObj.AddComponent<Button>();
+                _btnHomeLangToggle.targetGraphic = img;
+                _btnHomeLangToggle.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    SetLanguageFromSettings(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? AppLanguage.English : AppLanguage.Vietnamese);
+                    ShowToast(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? "Đã chuyển sang Tiếng Việt" : "Switched to English");
+                });
+
+                var textObj = new GameObject("Text", typeof(RectTransform));
+                textObj.transform.SetParent(toggleObj.transform, false);
+                var textRt = textObj.GetComponent<RectTransform>();
+                textRt.anchorMin = Vector2.zero;
+                textRt.anchorMax = Vector2.one;
+                textRt.sizeDelta = Vector2.zero;
+
+                _txtHomeLangToggle = textObj.AddComponent<TextMeshProUGUI>();
+                _txtHomeLangToggle.font = GetDefaultFont();
+                _txtHomeLangToggle.fontSize = 18f;
+                _txtHomeLangToggle.fontStyle = FontStyles.Bold;
+                _txtHomeLangToggle.alignment = TextAlignmentOptions.Center;
+                _txtHomeLangToggle.color = new Color(1f, 0.88f, 0.2f);
+                RefreshHomeLangToggleVisual();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[ProductionUIController] EnsureHomeLanguageToggle caught: {ex.Message}");
+            }
         }
 
         public void RefreshHomeLangToggleVisual()
@@ -1688,8 +1713,10 @@ namespace HitMe.UI
                 tabLbRt.anchorMin = new Vector2(0f, 0f);
                 tabLbRt.anchorMax = new Vector2(0.48f, 1f);
                 tabLbRt.sizeDelta = Vector2.zero;
-                tabLbObj.AddComponent<Image>().color = new Color(0.85f, 0.65f, 0.15f);
+                var imgLb = tabLbObj.AddComponent<Image>();
+                imgLb.color = new Color(0.85f, 0.65f, 0.15f);
                 _btnTabLeaderboard = tabLbObj.AddComponent<Button>();
+                _btnTabLeaderboard.targetGraphic = imgLb;
                 _btnTabLeaderboard.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
@@ -1716,8 +1743,10 @@ namespace HitMe.UI
                 tabQRt.anchorMin = new Vector2(0.52f, 0f);
                 tabQRt.anchorMax = new Vector2(1f, 1f);
                 tabQRt.sizeDelta = Vector2.zero;
-                tabQObj.AddComponent<Image>().color = new Color(0.2f, 0.28f, 0.4f);
+                var imgQ = tabQObj.AddComponent<Image>();
+                imgQ.color = new Color(0.2f, 0.28f, 0.4f);
                 _btnTabQuests = tabQObj.AddComponent<Button>();
+                _btnTabQuests.targetGraphic = imgQ;
                 _btnTabQuests.onClick.AddListener(() =>
                 {
                     AudioManager.Instance?.PlayClick();
@@ -1793,12 +1822,14 @@ namespace HitMe.UI
 
             if (_btnTabLeaderboard != null)
             {
-                _btnTabLeaderboard.image.color = _currentLeaderboardTab == 0 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
+                var img = _btnTabLeaderboard.targetGraphic as Image;
+                if (img != null) img.color = _currentLeaderboardTab == 0 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
                 if (_txtTabLeaderboardLabel != null) _txtTabLeaderboardLabel.color = _currentLeaderboardTab == 0 ? new Color(0.08f, 0.12f, 0.2f) : Color.white;
             }
             if (_btnTabQuests != null)
             {
-                _btnTabQuests.image.color = _currentLeaderboardTab == 1 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
+                var img = _btnTabQuests.targetGraphic as Image;
+                if (img != null) img.color = _currentLeaderboardTab == 1 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
                 if (_txtTabQuestsLabel != null) _txtTabQuestsLabel.color = _currentLeaderboardTab == 1 ? new Color(0.08f, 0.12f, 0.2f) : Color.white;
             }
 

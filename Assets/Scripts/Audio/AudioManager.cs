@@ -93,8 +93,15 @@ namespace HitMe.Audio
             if (clip == null || bgmSource == null) return;
             if (bgmSource.clip == clip && bgmSource.isPlaying) return;
 
-            bgmSource.clip = clip;
-            bgmSource.Play();
+            try
+            {
+                bgmSource.clip = clip;
+                bgmSource.Play();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[AudioManager] PlayBgm safely ignored: {ex.Message}");
+            }
         }
 
         public void PlayMenuBgm() => PlayBgm(bgmMenu);
@@ -104,7 +111,14 @@ namespace HitMe.Audio
         {
             if (clip != null && sfxSource != null)
             {
-                sfxSource.PlayOneShot(clip);
+                try
+                {
+                    sfxSource.PlayOneShot(clip);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"[AudioManager] PlaySfx safely ignored: {ex.Message}");
+                }
             }
         }
 
