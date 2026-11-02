@@ -1,0 +1,6 @@
+Branch: prep/codex
+H4 session takeover: ProtocolGatewayTests, WebSocketConnectionRegistryTests and real WebSocketEndToEndTests cover session_replaced and old-socket closure.
+H5 graceful shutdown: ShutdownNotifierTests cover current-round completion and bounded close; ServerRuntimeOptionsTests cover the configured wait.
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo -v quiet --no-restore --filter 'FullyQualifiedName~ShutdownNotifierTests|FullyQualifiedName~WebSocketConnectionRegistryTests|FullyQualifiedName~WebSocketEndToEndTests|FullyQualifiedName~ProtocolGatewayTests.Session'
+Result: Passed! Failed: 0, Passed: 9, Skipped: 0, Total: 9.
+Linked Core/Phase1 still emits nine nullable warnings; no Core source was modified.
