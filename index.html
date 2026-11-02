@@ -30,29 +30,30 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
       #unity-container {
-        width: 100%;
-        height: 100%;
-        max-height: 100dvh;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: env(safe-area-inset-top);
-        padding-right: env(safe-area-inset-right);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
       }
       #unity-fullscreen-container {
-        height: 100%;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
         height: 100dvh;
-        max-height: 100dvh;
-        aspect-ratio: 9 / 19.5;
-        width: auto;
-        max-width: 100vw;
-        position: relative;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 0 50px rgba(0,0,0,0.85);
       }
       #unity-canvas {
         width: 100% !important;
@@ -358,10 +359,12 @@
         if (type !== "error") setTimeout(() => item.remove(), 5000);
       }
 
-      ["touchstart", "touchmove", "touchend", "touchcancel"].forEach(type => {
-        canvas.addEventListener(type, event => event.preventDefault(), { passive: false });
-      });
-      document.addEventListener("gesturestart", event => event.preventDefault(), { passive: false });
+      // Safari mobile touch & scroll safety: canvas has touch-action: none.
+      // Do NOT preventDefault on canvas touch events so Emscripten and Unity receive touch data.
+      document.addEventListener("touchmove", function(e) {
+        if (e.target !== canvas) e.preventDefault();
+      }, { passive: false });
+      document.addEventListener("gesturestart", function(e) { e.preventDefault(); }, { passive: false });
 
       // 5. Unity WebGL Instantiation with Progress Callback
       const buildUrl = "Build";
@@ -370,9 +373,9 @@
 
       const config = {
         arguments: [],
-        dataUrl: versioned(buildUrl + "/WebGL_Release_20261102_52f9100.data.br"),
-        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261102_52f9100.framework.js.br"),
-        codeUrl: versioned(buildUrl + "/WebGL_Release_20261102_52f9100.wasm.br"),
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261102_188344e.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261102_188344e.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261102_188344e.wasm.br"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HitMeStudio",
         productName: "HIT ME",
@@ -382,7 +385,7 @@
       };
 
       const script = document.createElement("script");
-      script.src = versioned(buildUrl + "/WebGL_Release_20261102_52f9100.loader.js");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261102_188344e.loader.js");
       const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {
