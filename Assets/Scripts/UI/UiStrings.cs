@@ -301,7 +301,28 @@ namespace HitMe.UI
             { BtnEquipped, "EQUIPPED" },
             { BtnRename, "RENAME" },
             { FreeRenameLabel, "FIRST TIME FREE" },
-            { CostRenameLabel, "100 GOLD" }
+            { CostRenameLabel, "100 GOLD" },
+            { "BẢNG XẾP HẠNG", "LEADERBOARD" },
+            { "NHIỆM VỤ", "QUESTS" },
+            { "SẮP RA MẮT", "COMING SOON" },
+            { "Hệ thống nhiệm vụ đang hoàn thiện!", "Quest system is under development!" },
+            { "Bảng xếp hạng mùa giải sẽ mở trong bản cập nhật tới!", "Season leaderboard will open in the next update!" },
+            { "👑 [CHỦ PHÒNG] Nam Làng (Bạn)", "👑 [HOST] Nam Lang (You)" },
+            { "Đang chờ…", "Waiting…" },
+            { "Bạn", "You" },
+            { "Còn sống", "Alive" },
+            { "Đã loại", "Eliminated" },
+            { "Đồng thắng: ", "Co-winners: " },
+            { "Người thắng: ", "Winner: " },
+            { "Không có", "None" },
+            { "Thời gian còn lại: ", "Time remaining: " },
+            { "Đã hủy kết nối lại và về trang chủ.", "Reconnection canceled. Returned to Home." },
+            { "Phiên vào lại đã hết hạn (30s). Đã trở về trang chủ.", "Reconnection expired (30s). Returned to Home." },
+            { "Phòng Chiến Hữu", "Friends Lobby" },
+            { "Sân Làng", "Village Arena" },
+            { "XÁC NHẬN RỜI TRẬN", "LEAVE MATCH CONFIRMATION" },
+            { "Bạn có chắc chắn muốn rời trận không?", "Are you sure you want to leave the match?" },
+            { "ĐÃ SAO CHÉP MÃ PHÒNG: ", "ROOM CODE COPIED: " }
         };
 
         /// <summary>

@@ -269,6 +269,17 @@ namespace HitMe.UI
 
         public ProductionScreen CurrentScreen { get; private set; } = ProductionScreen.Home;
 
+        private int _currentLeaderboardTab = 0; // 0 = Leaderboard, 1 = Quests
+        private GameObject _leaderboardPlaceholderObj;
+        private TextMeshProUGUI _txtLeaderboardPlaceholderTitle;
+        private TextMeshProUGUI _txtLeaderboardPlaceholderBody;
+        private Button _btnTabLeaderboard;
+        private Button _btnTabQuests;
+        private TextMeshProUGUI _txtTabLeaderboardLabel;
+        private TextMeshProUGUI _txtTabQuestsLabel;
+        private Button _btnHomeLangToggle;
+        private TextMeshProUGUI _txtHomeLangToggle;
+
         private Coroutine _toastCoroutine;
         private Coroutine _lobbyCountdownCoroutine;
         private Coroutine _quickMatchCoroutine;
@@ -357,8 +368,27 @@ namespace HitMe.UI
                 matchController = FindAnyObjectByType<MatchController>();
             }
 
+            UiStrings.OnLanguageChanged += HandleLanguageChanged;
             ResolveHudElementContainers();
             BindEvents();
+        }
+
+        private void OnDestroy()
+        {
+            UiStrings.OnLanguageChanged -= HandleLanguageChanged;
+            if (matchController != null)
+            {
+                matchController.OnRoundStarted -= HandleRoundStarted;
+                matchController.OnPhaseChanged -= HandlePhaseChanged;
+                matchController.OnTimerTick -= HandleTimerTick;
+                matchController.OnToastRequested -= ShowToast;
+                matchController.OnMatchEnded -= HandleMatchEnded;
+            }
+        }
+
+        private void HandleLanguageChanged()
+        {
+            RefreshAllScreenTexts();
         }
 
         public void ResolveHudElementContainers()
@@ -396,6 +426,8 @@ namespace HitMe.UI
 
             EnsureAndRefreshBuildFingerprint();
             EnsureAndRefreshFpsOverlay();
+            EnsureHomeLanguageToggle();
+            EnforceFontAcrossAllTexts();
 
             int practiceBots = GetUrlInt("practiceBots", -1);
             if (practiceBots < 0) practiceBots = GetUrlInt("bots", -1);
@@ -498,6 +530,7 @@ namespace HitMe.UI
                 RefreshAccountDisplay();
             }
 
+            RefreshAllScreenTexts();
             HitMeWebBridge.MarkHomeShown();
             Debug.Log("[HITME] HOME_SHOWN");
         }
@@ -1096,6 +1129,36 @@ namespace HitMe.UI
             if (btnCloseLogin != null) btnCloseLogin.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); HideLoginDialog(); });
             if (btnSubmitGuestLogin != null) btnSubmitGuestLogin.onClick.AddListener(() => { OnSubmitGuestLogin(inputLoginGuestName != null ? inputLoginGuestName.text : ""); });
 
+            // Character cycling & weapon inventory tap on Home
+            if (imgHomeCharPortrait != null)
+            {
+                var charBtn = imgHomeCharPortrait.GetComponent<Button>() ?? imgHomeCharPortrait.gameObject.AddComponent<Button>();
+                charBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    CycleHomeCharacter();
+                });
+            }
+            if (txtHomeCharName != null)
+            {
+                var nameBtn = txtHomeCharName.GetComponent<Button>() ?? txtHomeCharName.gameObject.AddComponent<Button>();
+                nameBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    CycleHomeCharacter();
+                });
+            }
+            var wepPill = homePanel != null ? homePanel.transform.Find("LoadoutCard/WeaponPillHome") : null;
+            if (wepPill != null)
+            {
+                var wepBtn = wepPill.GetComponent<Button>() ?? wepPill.gameObject.AddComponent<Button>();
+                wepBtn.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    ShowInventoryDialog();
+                });
+            }
+
             // Lô 4: Wire juice feedback — register all buttons for press-scale
             if (juiceFeedback != null)
             {
@@ -1240,15 +1303,158 @@ namespace HitMe.UI
 
         public void RefreshAllScreenTexts()
         {
-            // Update button labels and headers across screens
-            if (txtInGameReadyLabel != null) txtInGameReadyLabel.text = _isLocalPlayerReady ? UiStrings.BtnLocked : UiStrings.BtnReady;
+            // 1. Enforce fonts
+            EnforceFontAcrossAllTexts();
+
+            // 2. Home screen labels & buttons
+            if (txtHomeLogo != null) txtHomeLogo.text = UiStrings.GameTitle;
+            var subTxt = homePanel != null ? homePanel.transform.Find("HomeSubtitle")?.GetComponent<TextMeshProUGUI>() : null;
+            if (subTxt != null) subTxt.text = UiStrings.Get(UiStrings.HomeSubtitle);
+
+            UpdateBtnText(btnQuickMatch, UiStrings.Get(UiStrings.BtnPlayNow));
+            UpdateBtnText(btnCreateRoom, UiStrings.Get(UiStrings.BtnCreateRoom));
+            UpdateBtnText(btnJoinRoom, UiStrings.Get(UiStrings.BtnJoinRoom));
+            UpdateBtnText(btnBotTraining, UiStrings.Get(UiStrings.BtnPracticeBots));
+
+            UpdateBtnText(btnHomeShop, UiStrings.Get(UiStrings.ShopTitle));
+            UpdateBtnText(btnHomeInventory, UiStrings.Get(UiStrings.InventoryTitle));
+            UpdateBtnText(btnHomeLeaderboard, UiStrings.Get("BẢNG XẾP HẠNG"));
+            UpdateBtnText(btnHomeLogin, UiStrings.Get(UiStrings.LoginTitle));
+            UpdateBtnText(btnHomeSettings, UiStrings.Get(UiStrings.BtnSettings));
+
+            // 3. Bot Training Panel
+            RefreshBotTrainingDisplay();
+
+            // 4. Lobby Panel
+            if (txtLobbyHeader != null)
+            {
+                txtLobbyHeader.text = $"{UiStrings.Get(UiStrings.LobbyTitle)} ({_currentLobbyHumanCount}/6 {UiStrings.Get("NGƯỜI THẬT")})";
+            }
+            UpdateBtnText(btnLobbyReady, _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady));
+            UpdateBtnText(btnLeaveRoom, UiStrings.Get(UiStrings.BtnLeaveRoom));
+            UpdateBtnText(btnLobbyToBotTraining, UiStrings.Get(UiStrings.BtnGoToBotTraining));
+            if (txtLobbyCountdown != null)
+            {
+                if (_currentLobbyHumanCount <= 1)
+                    txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyOnePlayerWarning);
+                else
+                    txtLobbyCountdown.text = UiStrings.Get(UiStrings.LobbyWaitingAllReady);
+            }
+
+            // 5. Gameplay HUD
+            if (txtInGameReadyLabel != null)
+            {
+                txtInGameReadyLabel.text = _isLocalPlayerReady ? UiStrings.Get(UiStrings.BtnLocked) : UiStrings.Get(UiStrings.BtnReady);
+            }
+            if (txtRound != null && _lastDisplayedRound > 0)
+            {
+                txtRound.text = string.Format(UiStrings.Get("VÒNG {0}/{1}"), _lastDisplayedRound, _lastDisplayedMaxRounds);
+            }
             if (txtPhaseBanner != null && matchController != null && matchController.State != null)
             {
                 ApplyPhaseState(matchController.State.Phase);
             }
-            if (dialogTutorial != null && dialogTutorial.activeSelf)
+
+            // 6. Result Screen
+            if (txtResultTitle != null) txtResultTitle.text = UiStrings.Get(UiStrings.MatchResultTitle);
+            UpdateBtnText(btnReplay, UiStrings.Get(UiStrings.BtnReplay));
+            UpdateBtnText(btnBackToHome, UiStrings.Get(UiStrings.BtnBackToHome));
+
+            // 7. Dialogs & Overlays
+            RefreshSettingsUI();
+            RefreshTutorialUI();
+            RefreshProfileUI();
+            RefreshShopUI();
+            RefreshInventoryUI();
+            RefreshLeaderboardUI();
+            RefreshLoginUI();
+            RefreshHomeLangToggleVisual();
+        }
+
+        private static void UpdateBtnText(Button btn, string text)
+        {
+            if (btn == null) return;
+            var tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmp != null) tmp.text = text;
+        }
+
+        public TMP_FontAsset GetDefaultFont()
+        {
+            if (theme != null && theme.defaultFont != null) return theme.defaultFont;
+            if (txtHomeLogo != null && txtHomeLogo.font != null) return txtHomeLogo.font;
+            if (txtRound != null && txtRound.font != null) return txtRound.font;
+            if (txtLobbyHeader != null && txtLobbyHeader.font != null) return txtLobbyHeader.font;
+            return Resources.Load<TMP_FontAsset>("Fonts/BeVietnamPro-Bold SDF");
+        }
+
+        public void EnforceFontAcrossAllTexts()
+        {
+            var targetFont = GetDefaultFont();
+            if (targetFont == null) return;
+            var allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < allTexts.Length; i++)
             {
-                RefreshTutorialUI();
+                var txt = allTexts[i];
+                if (txt != null && (txt.font == null || txt.font.name.Contains("LiberationSans")))
+                {
+                    txt.font = targetFont;
+                }
+            }
+        }
+
+        public void EnsureHomeLanguageToggle()
+        {
+            if (homePanel == null || _btnHomeLangToggle != null) return;
+
+            var toggleObj = new GameObject("BtnHomeLangToggle", typeof(RectTransform));
+            toggleObj.transform.SetParent(homePanel.transform, false);
+            var rt = toggleObj.GetComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.74f, 0.93f);
+            rt.anchorMax = new Vector2(0.88f, 0.98f);
+            rt.sizeDelta = Vector2.zero;
+
+            var img = toggleObj.AddComponent<Image>();
+            img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
+            _btnHomeLangToggle = toggleObj.AddComponent<Button>();
+            _btnHomeLangToggle.onClick.AddListener(() =>
+            {
+                AudioManager.Instance?.PlayClick();
+                SetLanguageFromSettings(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? AppLanguage.English : AppLanguage.Vietnamese);
+                ShowToast(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? "Đã chuyển sang Tiếng Việt" : "Switched to English");
+            });
+
+            var textObj = new GameObject("Text", typeof(RectTransform));
+            textObj.transform.SetParent(toggleObj.transform, false);
+            var textRt = textObj.GetComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.sizeDelta = Vector2.zero;
+
+            _txtHomeLangToggle = textObj.AddComponent<TextMeshProUGUI>();
+            _txtHomeLangToggle.font = GetDefaultFont();
+            _txtHomeLangToggle.fontSize = 18f;
+            _txtHomeLangToggle.fontStyle = FontStyles.Bold;
+            _txtHomeLangToggle.alignment = TextAlignmentOptions.Center;
+            _txtHomeLangToggle.color = new Color(1f, 0.88f, 0.2f);
+            RefreshHomeLangToggleVisual();
+        }
+
+        public void RefreshHomeLangToggleVisual()
+        {
+            if (_txtHomeLangToggle != null)
+            {
+                _txtHomeLangToggle.text = UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? "VI | en" : "vi | EN";
+            }
+        }
+
+        public void CycleHomeCharacter()
+        {
+            _selectedPracticeCharIndex = (_selectedPracticeCharIndex + 1) % 7;
+            RefreshBotTrainingDisplay();
+            var names = UiStrings.GetLocalizedCharacterNames();
+            if (_selectedPracticeCharIndex < names.Length)
+            {
+                ShowToast(names[_selectedPracticeCharIndex]);
             }
         }
 
@@ -1442,6 +1648,7 @@ namespace HitMe.UI
             {
                 dialogLeaderboard.transform.SetAsLastSibling();
                 dialogLeaderboard.SetActive(true);
+                EnsureLeaderboardTabsAndPlaceholder();
             }
             RefreshLeaderboardUI();
         }
@@ -1451,9 +1658,164 @@ namespace HitMe.UI
             if (dialogLeaderboard != null) dialogLeaderboard.SetActive(false);
         }
 
+        public void EnsureLeaderboardTabsAndPlaceholder()
+        {
+            if (dialogLeaderboard == null) return;
+            var modalBox = dialogLeaderboard.transform.childCount > 0 ? dialogLeaderboard.transform.GetChild(0) : dialogLeaderboard.transform;
+
+            if (_btnTabLeaderboard == null)
+            {
+                // Tab Header Bar
+                var tabContainer = new GameObject("TabHeaderBar", typeof(RectTransform));
+                tabContainer.transform.SetParent(modalBox, false);
+                var tcRt = tabContainer.GetComponent<RectTransform>();
+                tcRt.anchorMin = new Vector2(0.10f, 0.77f);
+                tcRt.anchorMax = new Vector2(0.90f, 0.85f);
+                tcRt.sizeDelta = Vector2.zero;
+
+                // Tab 1: Leaderboard
+                var tabLbObj = new GameObject("BtnTabLeaderboard", typeof(RectTransform));
+                tabLbObj.transform.SetParent(tabContainer.transform, false);
+                var tabLbRt = tabLbObj.GetComponent<RectTransform>();
+                tabLbRt.anchorMin = new Vector2(0f, 0f);
+                tabLbRt.anchorMax = new Vector2(0.48f, 1f);
+                tabLbRt.sizeDelta = Vector2.zero;
+                tabLbObj.AddComponent<Image>().color = new Color(0.85f, 0.65f, 0.15f);
+                _btnTabLeaderboard = tabLbObj.AddComponent<Button>();
+                _btnTabLeaderboard.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    _currentLeaderboardTab = 0;
+                    RefreshLeaderboardUI();
+                });
+
+                var txtLbObj = new GameObject("Text", typeof(RectTransform));
+                txtLbObj.transform.SetParent(tabLbObj.transform, false);
+                var txtLbRt = txtLbObj.GetComponent<RectTransform>();
+                txtLbRt.anchorMin = Vector2.zero; txtLbRt.anchorMax = Vector2.one; txtLbRt.sizeDelta = Vector2.zero;
+                _txtTabLeaderboardLabel = txtLbObj.AddComponent<TextMeshProUGUI>();
+                _txtTabLeaderboardLabel.font = GetDefaultFont();
+                _txtTabLeaderboardLabel.fontSize = 18f;
+                _txtTabLeaderboardLabel.fontStyle = FontStyles.Bold;
+                _txtTabLeaderboardLabel.alignment = TextAlignmentOptions.Center;
+                _txtTabLeaderboardLabel.color = new Color(0.08f, 0.12f, 0.2f);
+                _txtTabLeaderboardLabel.text = UiStrings.Get("BẢNG XẾP HẠNG");
+
+                // Tab 2: Quests
+                var tabQObj = new GameObject("BtnTabQuests", typeof(RectTransform));
+                tabQObj.transform.SetParent(tabContainer.transform, false);
+                var tabQRt = tabQObj.GetComponent<RectTransform>();
+                tabQRt.anchorMin = new Vector2(0.52f, 0f);
+                tabQRt.anchorMax = new Vector2(1f, 1f);
+                tabQRt.sizeDelta = Vector2.zero;
+                tabQObj.AddComponent<Image>().color = new Color(0.2f, 0.28f, 0.4f);
+                _btnTabQuests = tabQObj.AddComponent<Button>();
+                _btnTabQuests.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    _currentLeaderboardTab = 1;
+                    RefreshLeaderboardUI();
+                });
+
+                var txtQObj = new GameObject("Text", typeof(RectTransform));
+                txtQObj.transform.SetParent(tabQObj.transform, false);
+                var txtQRt = txtQObj.GetComponent<RectTransform>();
+                txtQRt.anchorMin = Vector2.zero; txtQRt.anchorMax = Vector2.one; txtQRt.sizeDelta = Vector2.zero;
+                _txtTabQuestsLabel = txtQObj.AddComponent<TextMeshProUGUI>();
+                _txtTabQuestsLabel.font = GetDefaultFont();
+                _txtTabQuestsLabel.fontSize = 18f;
+                _txtTabQuestsLabel.fontStyle = FontStyles.Bold;
+                _txtTabQuestsLabel.alignment = TextAlignmentOptions.Center;
+                _txtTabQuestsLabel.color = Color.white;
+                _txtTabQuestsLabel.text = UiStrings.Get("NHIỆM VỤ");
+            }
+
+            if (_leaderboardPlaceholderObj == null)
+            {
+                // Placeholder Container for empty tab / Quests tab ("Sắp ra mắt")
+                _leaderboardPlaceholderObj = new GameObject("PlaceholderComingSoon", typeof(RectTransform));
+                _leaderboardPlaceholderObj.transform.SetParent(modalBox, false);
+                var phRt = _leaderboardPlaceholderObj.GetComponent<RectTransform>();
+                phRt.anchorMin = new Vector2(0.10f, 0.18f);
+                phRt.anchorMax = new Vector2(0.90f, 0.72f);
+                phRt.sizeDelta = Vector2.zero;
+
+                var phImg = _leaderboardPlaceholderObj.AddComponent<Image>();
+                phImg.color = new Color(0.10f, 0.15f, 0.25f, 0.95f);
+
+                var phTitleObj = new GameObject("Title", typeof(RectTransform));
+                phTitleObj.transform.SetParent(_leaderboardPlaceholderObj.transform, false);
+                var phTitleRt = phTitleObj.GetComponent<RectTransform>();
+                phTitleRt.anchorMin = new Vector2(0.05f, 0.55f);
+                phTitleRt.anchorMax = new Vector2(0.95f, 0.75f);
+                phTitleRt.sizeDelta = Vector2.zero;
+                _txtLeaderboardPlaceholderTitle = phTitleObj.AddComponent<TextMeshProUGUI>();
+                _txtLeaderboardPlaceholderTitle.font = GetDefaultFont();
+                _txtLeaderboardPlaceholderTitle.fontSize = 26f;
+                _txtLeaderboardPlaceholderTitle.fontStyle = FontStyles.Bold;
+                _txtLeaderboardPlaceholderTitle.alignment = TextAlignmentOptions.Center;
+                _txtLeaderboardPlaceholderTitle.color = new Color(1f, 0.85f, 0.25f);
+
+                var phBodyObj = new GameObject("Body", typeof(RectTransform));
+                phBodyObj.transform.SetParent(_leaderboardPlaceholderObj.transform, false);
+                var phBodyRt = phBodyObj.GetComponent<RectTransform>();
+                phBodyRt.anchorMin = new Vector2(0.08f, 0.25f);
+                phBodyRt.anchorMax = new Vector2(0.92f, 0.52f);
+                phBodyRt.sizeDelta = Vector2.zero;
+                _txtLeaderboardPlaceholderBody = phBodyObj.AddComponent<TextMeshProUGUI>();
+                _txtLeaderboardPlaceholderBody.font = GetDefaultFont();
+                _txtLeaderboardPlaceholderBody.fontSize = 17f;
+                _txtLeaderboardPlaceholderBody.alignment = TextAlignmentOptions.Center;
+                _txtLeaderboardPlaceholderBody.color = new Color(0.85f, 0.90f, 0.96f);
+            }
+        }
+
         public void RefreshLeaderboardUI()
         {
-            if (txtLeaderboardTitle != null) txtLeaderboardTitle.text = UiStrings.Get(UiStrings.LeaderboardTitle);
+            EnsureLeaderboardTabsAndPlaceholder();
+            if (txtLeaderboardTitle != null)
+            {
+                txtLeaderboardTitle.text = _currentLeaderboardTab == 0
+                    ? UiStrings.Get("BẢNG XẾP HẠNG")
+                    : UiStrings.Get("NHIỆM VỤ");
+            }
+
+            if (_txtTabLeaderboardLabel != null) _txtTabLeaderboardLabel.text = UiStrings.Get("BẢNG XẾP HẠNG");
+            if (_txtTabQuestsLabel != null) _txtTabQuestsLabel.text = UiStrings.Get("NHIỆM VỤ");
+
+            if (_btnTabLeaderboard != null)
+            {
+                _btnTabLeaderboard.image.color = _currentLeaderboardTab == 0 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
+                if (_txtTabLeaderboardLabel != null) _txtTabLeaderboardLabel.color = _currentLeaderboardTab == 0 ? new Color(0.08f, 0.12f, 0.2f) : Color.white;
+            }
+            if (_btnTabQuests != null)
+            {
+                _btnTabQuests.image.color = _currentLeaderboardTab == 1 ? new Color(0.85f, 0.65f, 0.15f) : new Color(0.18f, 0.25f, 0.38f);
+                if (_txtTabQuestsLabel != null) _txtTabQuestsLabel.color = _currentLeaderboardTab == 1 ? new Color(0.08f, 0.12f, 0.2f) : Color.white;
+            }
+
+            // Check rows in modal
+            var modalBox = dialogLeaderboard != null && dialogLeaderboard.transform.childCount > 0 ? dialogLeaderboard.transform.GetChild(0) : null;
+            if (modalBox != null)
+            {
+                for (int i = 0; i < modalBox.childCount; i++)
+                {
+                    var child = modalBox.GetChild(i);
+                    if (child.name.StartsWith("Row"))
+                    {
+                        child.gameObject.SetActive(_currentLeaderboardTab == 0);
+                    }
+                }
+            }
+
+            if (_leaderboardPlaceholderObj != null)
+            {
+                _leaderboardPlaceholderObj.SetActive(_currentLeaderboardTab == 1);
+                if (_txtLeaderboardPlaceholderTitle != null)
+                    _txtLeaderboardPlaceholderTitle.text = UiStrings.Get("SẮP RA MẮT");
+                if (_txtLeaderboardPlaceholderBody != null)
+                    _txtLeaderboardPlaceholderBody.text = UiStrings.Get("Hệ thống nhiệm vụ đang hoàn thiện!");
+            }
         }
 
         public void ShowLoginDialog()

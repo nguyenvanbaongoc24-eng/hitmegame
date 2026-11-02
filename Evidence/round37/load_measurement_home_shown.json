@@ -1,0 +1,101 @@
+{
+  "target_url": "http://127.0.0.1:8103/",
+  "build_profile": "Release Brotli (Port 8103)",
+  "timestamp": "2026-11-01T18:51:14Z",
+  "measurement_marker": "window.__hitmeHomeShown / console.log('[HITME] HOME_SHOWN')",
+  "scenarios": {
+    "20mbps_cold": {
+      "bandwidth_mbps": 20,
+      "latency_ms": 40,
+      "is_cached": false,
+      "time_to_home_shown_seconds": 91.19,
+      "total_bundle_bytes": 12131952,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_8c6b328.loader.js?v=8c6b328",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 121
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.framework.js.br?v=8c6b328",
+          "transferSize": 65993,
+          "encodedBodySize": 65693,
+          "decodedBodySize": 65693,
+          "duration_ms": 97
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.data.br?v=8c6b328",
+          "transferSize": 12037745,
+          "encodedBodySize": 12037445,
+          "decodedBodySize": 12037445,
+          "duration_ms": 4775
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round37\\home_shown_20mbps_cold.png"
+    },
+    "5mbps_cold": {
+      "bandwidth_mbps": 5,
+      "latency_ms": 100,
+      "is_cached": false,
+      "time_to_home_shown_seconds": 91.4,
+      "total_bundle_bytes": 12131952,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_8c6b328.loader.js?v=8c6b328",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 157
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.framework.js.br?v=8c6b328",
+          "transferSize": 65993,
+          "encodedBodySize": 65693,
+          "decodedBodySize": 65693,
+          "duration_ms": 313
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.data.br?v=8c6b328",
+          "transferSize": 12037745,
+          "encodedBodySize": 12037445,
+          "decodedBodySize": 12037445,
+          "duration_ms": 18775
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round37\\home_shown_5mbps_cold.png"
+    },
+    "cached_reload": {
+      "bandwidth_mbps": 20,
+      "latency_ms": 40,
+      "is_cached": true,
+      "time_to_home_shown_seconds": 91.03,
+      "total_bundle_bytes": 12131952,
+      "core_files": [
+        {
+          "name": "WebGL_Release_20261102_8c6b328.loader.js?v=8c6b328",
+          "transferSize": 28214,
+          "encodedBodySize": 27914,
+          "decodedBodySize": 27914,
+          "duration_ms": 61
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.framework.js.br?v=8c6b328",
+          "transferSize": 65993,
+          "encodedBodySize": 65693,
+          "decodedBodySize": 65693,
+          "duration_ms": 119
+        },
+        {
+          "name": "WebGL_Release_20261102_8c6b328.data.br?v=8c6b328",
+          "transferSize": 12037745,
+          "encodedBodySize": 12037445,
+          "decodedBodySize": 12037445,
+          "duration_ms": 4779
+        }
+      ],
+      "screenshot": "D:\\HITME GAME\\unity-client\\Evidence\\round37\\home_shown_cached_reload.png"
+    }
+  }
+}

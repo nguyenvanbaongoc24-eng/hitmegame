@@ -26,6 +26,11 @@ namespace HitMe.Game
                 for (int i = 0; i < Input.touchCount; i++)
                 {
                     var touch = Input.GetTouch(i);
+                    // Rule G7 / A4: Chạm bắt đầu lên HUD / nút không đặt nhân vật
+                    if (touch.phase == TouchPhase.Began && UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                    {
+                        continue;
+                    }
                     var phase = ToPointerPhase(touch.phase);
                     if (!_touchGate.TryAccept(touch.fingerId, phase)) continue;
                     Forward("touch#" + touch.fingerId, touch.position, phase, touch.fingerId);
@@ -35,7 +40,15 @@ namespace HitMe.Game
             }
 
             _touchGate.Reset();
-            if (Input.GetMouseButtonDown(0)) Forward("mouse", Input.mousePosition, PointerPhase.Began, 0);
+            if (Input.GetMouseButtonDown(0))
+            {
+                // Rule G7 / A4: Chạm bắt đầu lên HUD không đặt nhân vật
+                if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }
+                Forward("mouse", Input.mousePosition, PointerPhase.Began, 0);
+            }
             else if (Input.GetMouseButton(0)) Forward("mouse", Input.mousePosition, PointerPhase.Moved, 0);
             else if (Input.GetMouseButtonUp(0)) Forward("mouse", Input.mousePosition, PointerPhase.Ended, 0);
         }

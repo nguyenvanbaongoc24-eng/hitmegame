@@ -365,5 +365,69 @@ namespace HitMe.Tests
             long deltaBytes = afterBytes - beforeBytes;
             Assert.AreEqual(0L, deltaBytes, $"Expected 0 bytes allocated across 3,600 steady-state frames (60s @ 60fps), but got {deltaBytes} B.");
         }
+
+        [Test]
+        public void Test20_HudTouchBeganIsRejectedAndDoesNotPlaceCharacter()
+        {
+            var g = CreateGesture();
+            // Pointer down on HUD (insideArena = false, representing HUD element or button)
+            Down(g, 1, 100f, 900f, 0f, 4.5f, inside: false);
+            var s = g.Snapshot();
+            Assert.IsFalse(s.HasPlaced, "Touch started on HUD must not place character");
+            Assert.AreEqual(2f, s.Position.X, 0.001f, "Position must remain previous round position");
+            Assert.AreEqual(2f, s.Position.Y, 0.001f);
+            Assert.AreEqual(Vec2.Up.X, s.Facing.X, 0.001f);
+            Assert.IsFalse(s.AimActive);
+        }
+
+        [Test]
+        public void Test21_FiveSecondTimerAutoLockPreservesStateAndBlocksNewInput()
+        {
+            var g = CreateGesture();
+            float minAim = PlacementGestureV2.MmToPixels(4.0f, 160f);
+
+            // 1. Touch and aim at t = 1000ms
+            g.PointerDown(1, new Vec2(100f, 100f), new Vec2(2f, 2f), true, 1000L);
+            g.PointerMove(1, new Vec2(160f, 100f), new Vec2(5f, 2f), true, 1500L, minAim);
+            var s1 = g.Snapshot();
+            Assert.IsTrue(s1.HasPlaced);
+            Assert.IsTrue(s1.AimActive);
+            Assert.AreEqual(1f, s1.Facing.X, 0.001f);
+
+            // 2. 5s countdown expires at t = 5000ms -> Auto-Lock triggered
+            g.Lock();
+            var sLocked = g.Snapshot();
+            Assert.IsTrue(sLocked.Locked, "Gesture must be locked when 5s timer expires");
+            Assert.AreEqual(2f, sLocked.Position.X, 0.001f);
+            Assert.AreEqual(1f, sLocked.Facing.X, 0.001f);
+
+            // 3. Late pointer input at t = 5200ms is ignored
+            g.PointerMove(1, new Vec2(200f, 300f), new Vec2(8f, 8f), true, 5200L, minAim);
+            g.PointerDown(2, new Vec2(50f, 50f), new Vec2(1f, 1f), true, 5300L);
+            var sLate = g.Snapshot();
+            Assert.AreEqual(2f, sLate.Position.X, 0.001f, "Late position input must be rejected");
+            Assert.AreEqual(1f, sLate.Facing.X, 0.001f, "Late aim input must be rejected");
+        }
+
+        [Test]
+        public void Test22_SingleFingerArbitrationStrictlyEnforced()
+        {
+            var g = CreateGesture();
+            float minAim = PlacementGestureV2.MmToPixels(4.0f, 160f);
+
+            // Finger 1 touches down at P(1, 1)
+            g.PointerDown(10, new Vec2(100f, 100f), new Vec2(1f, 1f), true, 0);
+
+            // Finger 2 touches down at Q(4, 4) concurrently
+            g.PointerDown(20, new Vec2(300f, 300f), new Vec2(4f, 4f), true, 10);
+
+            // Finger 2 moves
+            g.PointerMove(20, new Vec2(400f, 300f), new Vec2(6f, 4f), true, 20, minAim);
+
+            var snap = g.Snapshot();
+            Assert.AreEqual(1f, snap.Position.X, 0.001f, "Position must remain finger 1's position");
+            Assert.AreEqual(1f, snap.Position.Y, 0.001f);
+            Assert.IsFalse(snap.AimActive, "Finger 2 moves must not affect aim while finger 1 holds");
+        }
     }
 }
