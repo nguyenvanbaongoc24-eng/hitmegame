@@ -160,6 +160,7 @@ namespace HitMe.Editor
             PlayerSettings.stripEngineCode = true;
             PlayerSettings.SetIl2CppCodeGeneration(UnityEditor.Build.NamedBuildTarget.WebGL, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
             PlayerSettings.SetIl2CppCompilerConfiguration(UnityEditor.Build.NamedBuildTarget.WebGL, Il2CppCompilerConfiguration.Master);
+            PlayerSettings.WebGL.emscriptenArgs = "-Os";
 
             // Force re-import textures to bake WebGL crunched compression into build
             string[] textureFolders = new[] { "Assets/Sprites", "Assets/Art/UI", "Assets/Art/VFX", "Assets/Art/Weapons" };
