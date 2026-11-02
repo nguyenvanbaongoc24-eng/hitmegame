@@ -24,4 +24,6 @@ L5 preparation only: `backend/supabase/cleanup_test_data.sql` is a read-only, em
 
 L7 partial handoff: `MD/PROTOCOL_V2_CHANGES.md` now includes current v2 payload shapes and explicit placeholder/pending fields. Rank, quests, durable friends and Google login have no live wire contract yet, so this is not a complete L7 handoff.
 
+L6 live Render probe: **not passed**. A 601-second run of 3 concurrent rooms (2/4/6 clients) completed 58/60 matches and measured 290 rounds; mean/p95/max lock-to-result = 170/528/1590 ms, 2 errors and 1 unexpected disconnect. CPU/RAM unavailable. Evidence: `Evidence/round46/L6_load.md` and `L6_validated_raw.txt`. Local server suite rerun: Passed! 152/152. Do not claim live capacity or production authentication from this run.
+
 Owner action: rotate the database password previously exposed in chat before opening the service to external users; keep replacement secrets in local/deployment environment only.
