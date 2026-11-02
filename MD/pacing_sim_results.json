@@ -1,0 +1,118 @@
+{
+  "Baseline (Arena 10x16, R=0.45, No Round Limit)": {
+    "avg_rounds": 24.35,
+    "min_rounds": 6,
+    "max_rounds": 74,
+    "tie_percentage": 11.1,
+    "prob_by_alive": {
+      "2": 7.8,
+      "3": 15.75,
+      "4": 20.65,
+      "5": 27.06,
+      "6": 37.62
+    }
+  },
+  "Option 1A: maxRounds = 5 (HP tiebreaker)": {
+    "avg_rounds": 5.0,
+    "min_rounds": 5,
+    "max_rounds": 5,
+    "tie_percentage": 16.0,
+    "prob_by_alive": {
+      "3": 18.63,
+      "4": 18.63,
+      "5": 27.0,
+      "6": 38.05
+    }
+  },
+  "Option 1B: maxRounds = 8 (HP tiebreaker)": {
+    "avg_rounds": 8.0,
+    "min_rounds": 6,
+    "max_rounds": 8,
+    "tie_percentage": 11.2,
+    "prob_by_alive": {
+      "2": 7.22,
+      "3": 16.61,
+      "4": 20.05,
+      "5": 27.1,
+      "6": 37.65
+    }
+  },
+  "Option 1C: maxRounds = 10 (HP tiebreaker)": {
+    "avg_rounds": 9.96,
+    "min_rounds": 6,
+    "max_rounds": 10,
+    "tie_percentage": 8.3,
+    "prob_by_alive": {
+      "2": 6.17,
+      "3": 15.94,
+      "4": 20.48,
+      "5": 27.17,
+      "6": 37.63
+    }
+  },
+  "Option 2A: Arena thu nho 25% (7.5x12), No Round Limit": {
+    "avg_rounds": 18.65,
+    "min_rounds": 5,
+    "max_rounds": 74,
+    "tie_percentage": 11.2,
+    "prob_by_alive": {
+      "2": 10.36,
+      "3": 20.45,
+      "4": 27.48,
+      "5": 35.26,
+      "6": 47.55
+    }
+  },
+  "Option 2B: PlayerRadius tang len 0.60, No Round Limit": {
+    "avg_rounds": 18.65,
+    "min_rounds": 5,
+    "max_rounds": 74,
+    "tie_percentage": 11.2,
+    "prob_by_alive": {
+      "2": 10.36,
+      "3": 20.45,
+      "4": 27.48,
+      "5": 35.26,
+      "6": 47.55
+    }
+  },
+  "Option 3: Bot AI thong minh (Predictor+Hunter)": {
+    "avg_rounds": 15.86,
+    "min_rounds": 5,
+    "max_rounds": 51,
+    "tie_percentage": 4.3,
+    "prob_by_alive": {
+      "2": 13.45,
+      "3": 17.0,
+      "4": 20.87,
+      "5": 25.37,
+      "6": 51.32
+    }
+  },
+  "Option 4: Arena 8x12.8 (giam 20%) + maxRounds = 5": {
+    "avg_rounds": 5.0,
+    "min_rounds": 5,
+    "max_rounds": 5,
+    "tie_percentage": 13.9,
+    "prob_by_alive": {
+      "2": 0.0,
+      "3": 22.55,
+      "4": 24.35,
+      "5": 33.08,
+      "6": 45.37
+    }
+  },
+  "Option 5: Arena 8x12.8 (giam 20%) + maxRounds = 8": {
+    "avg_rounds": 7.98,
+    "min_rounds": 5,
+    "max_rounds": 8,
+    "tie_percentage": 10.0,
+    "prob_by_alive": {
+      "2": 9.02,
+      "3": 19.84,
+      "4": 25.7,
+      "5": 32.64,
+      "6": 45.2
+    }
+  }
+}

@@ -48,3 +48,32 @@
 - Khi bật chế độ này:
   - Tắt rung camera và hiệu ứng hạt nặng.
   - Vsync được khóa ở 30 FPS giúp tiết kiệm pin cho thiết bị yếu.
+
+
+---
+
+## 4. Giới Hạn Của Số Đo Hiệu Năng & Kiểm Chứng GPU Phần Mềm vs Thật (M4)
+
+Để đảm bảo tính minh bạch khoa học và không ngộ nhận chỉ số giả lập, môi trường WebGL đã được kiểm tra trực tiếp thông qua extension `WEBGL_debug_renderer_info`:
+
+### 4.1. Thông Tin GPU Đo Thực Tế
+
+1. **Chế độ kiểm thử tự động CI / Headless (SwiftShader - Software GPU):**
+   - **Vendor:** `Google Inc. (Google)`
+   - **Unmasked Renderer:** `ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)`
+   - **Bản chất:** Hoàn toàn là giả lập đồ họa bằng CPU đa luồng (x86-64 Subzero JIT). Mọi thao tác vẽ WebGL, rasterization, và shader execution đều do CPU máy tính đảm nhiệm chứ không qua vi mạch đồ họa.
+
+2. **Chế độ chạy phần cứng thật (`--enable-gpu --use-angle=d3d11`):**
+   - **Vendor:** `Google Inc. (AMD)`
+   - **Unmasked Renderer:** `ANGLE (AMD, AMD Radeon 780M Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)`
+   - **Bản chất:** Sử dụng GPU vật lý của máy trạm thông qua driver Direct3D 11, giải phóng toàn bộ tải đồ họa khỏi CPU.
+
+### 4.2. So Sánh và Kết Luận Giới Hạn (Điều KHÔNG Thể Suy Ra Cho Điện Thoại Thật)
+
+| Thành phần kiểm thử | Số đo trên máy tính (Playwright) | Khả năng ngoại suy cho điện thoại thật | Lý do & Giới hạn phần cứng |
+|---|---|---|---|
+| **Logic game & Netcode** | 59.9 FPS median trên CPU 4x/6x | **Suy ra được (Đáng tin cậy)** | Logic game 2D (tính tọa độ, đếm ngược, xử lý gói tin WebSocket) là tính toán CPU thuần túy. Nếu CPU 6x throttle chạy mượt thì chip di động tầm trung sẽ xử lý nhẹ nhàng. |
+| **Bộ nhớ Wasm Heap** | 16 MB cố định | **Suy ra được (Chính xác 100%)** | Cấu trúc bộ nhớ tuyến tính WebAssembly của Unity không phụ thuộc vào thiết bị; mức tiêu thụ RAM 16 MB là mức tối ưu tuyệt đối cho mọi điện thoại. |
+| **Tốc độ đổ bóng & Shader fillrate di động** | 60 FPS | **KHÔNG THỂ SUY RA** | Chip đồ họa di động (như Mali-G52, Adreno 610) có kiến trúc Tile-Based Deferred Rendering (TBDR) với băng thông bộ nhớ RAM chia sẻ (UFS/LPDDR). SwiftShader trên CPU đa lõi PC và AMD Radeon 780M mạnh hơn GPU máy yếu gấp 5–10 lần về fillrate. |
+| **Nhiệt độ & Throttling pin dài hạn** | Không đo được trên PC | **KHÔNG THỂ SUY RA** | Điện thoại yếu chơi game WebGL sau 15–20 phút sẽ bị tăng nhiệt độ dẫn đến SoC tự hạ xung (thermal throttling) xuống 50% xung nhịp. |
+| **Cử chỉ cảm ứng đa điểm & Input Latency** | Chuỗi sự kiện mô phỏng | **CẦN TEST TRÊN MÁY THẬT** | Trình duyệt giả lập dispatch sự kiện touch tổng hợp, không có độ trễ lấy mẫu màn hình cảm ứng (touch sample rate 60Hz/120Hz) và không gặp hiện tượng trượt ngón tay bám mồ hôi. |

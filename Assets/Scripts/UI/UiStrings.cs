@@ -85,6 +85,9 @@ namespace HitMe.UI
         public const string SettingsLanguage = "NGÔN NGỮ";
         public const string SettingsBtnClose = "ĐÓNG";
         public const string SettingsBtnLeaveMatch = "THOÁT TRẬN";
+        public const string SettingsBtnReportBug = "BÁO LỖI";
+        public const string ReportBugCopiedToast = "Đã sao chép thông tin lỗi vào clipboard!";
+        public const string LobbyMapSelectorPrefix = "SÂN ĐẤU:";
 
         // Gameplay Phases
         public const string PhasePlacing = "ĐẶT VỊ TRÍ & HƯỚNG NÉM";
@@ -229,6 +232,9 @@ namespace HitMe.UI
             { SettingsLanguage, "LANGUAGE" },
             { SettingsBtnClose, "CLOSE" },
             { SettingsBtnLeaveMatch, "LEAVE MATCH" },
+            { SettingsBtnReportBug, "REPORT BUG" },
+            { ReportBugCopiedToast, "Bug report copied to clipboard!" },
+            { LobbyMapSelectorPrefix, "ARENA:" },
 
             { PhasePlacing, "SET POSITION & AIM" },
             { PhaseLocked, "POSITION LOCKED" },

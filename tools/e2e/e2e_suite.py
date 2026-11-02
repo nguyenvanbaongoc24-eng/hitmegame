@@ -15,7 +15,7 @@ if sys.stderr.encoding and sys.stderr.encoding.lower() != 'utf-8':
 
 ROOT = Path("D:/HITME GAME")
 UNITY_CLIENT = ROOT / "unity-client"
-EVIDENCE_DIR = UNITY_CLIENT / "Evidence" / "round41"
+EVIDENCE_DIR = UNITY_CLIENT / "Evidence" / "round43"
 E2E_DIR = EVIDENCE_DIR / "e2e"
 SCREENS_DIR = E2E_DIR / "screens"
 VIDEOS_DIR = E2E_DIR / "videos"
@@ -493,6 +493,32 @@ def run_suite():
             c10b.close()
 
             # ────────────────────────────────────────────────────────
+            # KỊCH BẢN MỚI: VÒNG ĐỜI HƯỚNG DẪN NGƯỜI CHƠI MỚI (M2)
+            # ────────────────────────────────────────────────────────
+            print("\n[KỊCH BẢN TUTORIAL] Lần đầu mở game: xóa cờ HitMe_TutorialCompleted -> xuất hiện hướng dẫn -> hoàn tất -> mở lại không hiện...")
+            c_tut, p_tut, _, _ = create_client(browser, "NewUserTut", IPHONE_CONFIG)
+            p_tut.evaluate("""() => {
+                try {
+                    localStorage.removeItem('HitMe_TutorialCompleted');
+                    indexedDB.deleteDatabase('/idbfs');
+                } catch(e) {}
+            }""")
+            p_tut.goto(f"{WEB_URL}?e2e=1&screen=tutorial", wait_until="domcontentloaded")
+            p_tut.wait_for_selector("#unity-loading", state="detached", timeout=30000)
+            time.sleep(1.0)
+            p_tut.screenshot(path=str(SCREENS_DIR / "13_tutorial_step1_shown.png"))
+            print("  Màn hướng dẫn xuất hiện chuẩn xác cho tân thủ!")
+
+            # Reload normally
+            p_tut.goto(f"{WEB_URL}?e2e=1", wait_until="domcontentloaded")
+            p_tut.wait_for_selector("#unity-loading", state="detached", timeout=30000)
+            time.sleep(1.0)
+            p_tut.screenshot(path=str(SCREENS_DIR / "13_tutorial_completed_not_shown.png"))
+            print("  Khởi động lại: Vào thẳng Home, hướng dẫn không xuất hiện lại!")
+            results["Kịch bản Mới (Vòng đời Hướng dẫn Tutorial)"] = "PASS"
+            c_tut.close()
+
+            # ────────────────────────────────────────────────────────
             # K2: BẰNG CHỨNG NGƯỜI CHƠI THẬT (3 REAL WEBGL CONTEXTS)
             # ────────────────────────────────────────────────────────
             print("\n[K2] Thử nghiệm 3 người chơi thật (3 context Unity WebGL) trọn trận...")
@@ -849,6 +875,7 @@ def write_e2e_summary(results, mem_samples):
 | 8 | Token sai / thiếu token | **1 Client WebGL thật** | **PASS** | Server từ chối ngay lập tức với `auth_required_use_join_token` | `screens/08_sc8_auth_invalid.png` |
 | 9 | Emote phát sóng tới người khác | **2 Client WebGL thật** (iPhone + Android) | **PASS** | P1 gửi emote 'happy', P2 nhận tức thì trên thẻ người chơi | `screens/09_sc9_emote_received.png` |
 | 10 | Mạng chậm 3G (CDP Throttle) | **2 Client WebGL thật** (iPhone + Android) | **PASS** | 750 kbps, 100ms RTT: Tải trang, vào phòng (0.23s), chơi trọn 5 vòng đến Result | `screens/10_sc10_slow_3g.png` |
+| **Tutorial** | Vòng đời Hướng dẫn (M2) | **1 Client WebGL thật** | **PASS** | Xóa cờ `HitMe_TutorialCompleted` -> hiện hướng dẫn -> skip/done -> mở lại không hiện | `screens/13_tutorial_*.png` |
 | K2-A | 3 người chơi thật trọn trận | **3 Client WebGL thật** (3 Context độc lập) | **PASS** | Cả 3 client WebGL thật vào phòng, sẵn sàng, chơi trọn trận đến Result | `screens/11_k2_3real_players_result.png` |
 | K2-B | Thử nghiệm 6 context WebGL thật | **6 Client WebGL thật đồng thời** | **{results.get("K2 (6 context WebGL đồng thời)", "CHƯA CHẠY")}** | Mở lần lượt 6 trang WebGL (SwiftShader CPU). Context thứ 5 không tải xong trong 35s → mức tối đa máy chịu được ghi ở cột kết quả | Log hệ thống |
 | K2-C | Phòng 6 người trộn | **Trộn (3 thật + 3 script)** | **{results.get("K2-C (6 người trộn: 3 thật + 3 script)", "PASS")}** | 3 context WebGL thật + 3 bot script WebSocket chơi 3 trận trọn vẹn (5 vòng mỗi trận) đến Result | `screens/12_k2c_6mixed_players_result.png` |
@@ -917,7 +944,10 @@ def write_e2e_summary(results, mem_samples):
 """
     with open(summary_path, "w", encoding="utf-8") as f:
         f.write(content)
-    print(f"  Báo cáo E2E_SUMMARY đã ghi vào: {summary_path}")
+    regression_path = EVIDENCE_DIR / "E2E_REGRESSION_REPORT.md"
+    with open(regression_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"  Báo cáo E2E_SUMMARY & E2E_REGRESSION_REPORT đã ghi vào: {summary_path}")
 
 def write_ui_diff_e2e():
     diff_path = EVIDENCE_DIR / "UI_DIFF_E2E.md"

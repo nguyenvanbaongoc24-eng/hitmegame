@@ -268,6 +268,10 @@ namespace HitMe.UI
         public Button btnLoginFacebook;
         public Button btnLoginApple;
         public Button btnCloseLogin;
+        public Button btnReportBug;
+        public TextMeshProUGUI txtSettingsBuildVersion;
+        private Button _btnLobbyMapSelector;
+        private TextMeshProUGUI _txtLobbyMapSelector;
 
         public ProductionScreen CurrentScreen { get; private set; } = ProductionScreen.Home;
 
@@ -373,6 +377,7 @@ namespace HitMe.UI
             }
 
             UiStrings.OnLanguageChanged += HandleLanguageChanged;
+            HitMe.UI.RingBufferLogger.Initialize();
             ResolveHudElementContainers();
             BindEvents();
         }
@@ -1332,6 +1337,123 @@ namespace HitMe.UI
             {
                 toggleReducedMotion.isOn = juiceFeedback.ReducedMotion;
             }
+
+            EnsureSettingsReportBugAndBuildVersion();
+        }
+
+        public void EnsureSettingsReportBugAndBuildVersion()
+        {
+            if (dialogSettings == null) return;
+
+            var card = dialogSettings.transform.childCount > 0 ? dialogSettings.transform.GetChild(0) : dialogSettings.transform;
+
+            if (btnReportBug == null)
+            {
+                var existing = card.Find("BtnReportBug");
+                if (existing != null)
+                {
+                    btnReportBug = existing.GetComponent<Button>();
+                }
+                else
+                {
+                    var bugObj = new GameObject("BtnReportBug", typeof(RectTransform));
+                    bugObj.transform.SetParent(card, false);
+                    var rt = bugObj.GetComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0.12f, 0.08f);
+                    rt.anchorMax = new Vector2(0.88f, 0.15f);
+                    rt.sizeDelta = Vector2.zero;
+
+                    var img = bugObj.AddComponent<Image>();
+                    img.color = new Color(0.85f, 0.35f, 0.12f, 0.95f);
+                    var outline = bugObj.AddComponent<Outline>();
+                    outline.effectColor = new Color(1f, 0.75f, 0.2f, 0.9f);
+                    outline.effectDistance = new Vector2(2f, -2f);
+
+                    btnReportBug = bugObj.AddComponent<Button>();
+                    btnReportBug.targetGraphic = img;
+
+                    var txtObj = new GameObject("Text", typeof(RectTransform));
+                    txtObj.transform.SetParent(bugObj.transform, false);
+                    var txtRt = txtObj.GetComponent<RectTransform>();
+                    txtRt.anchorMin = Vector2.zero;
+                    txtRt.anchorMax = Vector2.one;
+                    txtRt.sizeDelta = Vector2.zero;
+
+                    var txt = txtObj.AddComponent<TextMeshProUGUI>();
+                    txt.font = GetDefaultFont();
+                    txt.fontSize = 16f;
+                    txt.fontStyle = FontStyles.Bold;
+                    txt.alignment = TextAlignmentOptions.Center;
+                    txt.color = Color.white;
+                    txt.text = UiStrings.Get(UiStrings.SettingsBtnReportBug);
+                }
+            }
+
+            if (btnReportBug != null)
+            {
+                btnReportBug.onClick.RemoveAllListeners();
+                btnReportBug.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    OnReportBugClicked();
+                });
+
+                var txt = btnReportBug.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null)
+                {
+                    txt.text = UiStrings.Get(UiStrings.SettingsBtnReportBug);
+                }
+            }
+
+            if (txtSettingsBuildVersion == null)
+            {
+                var existing = card.Find("TxtSettingsBuildVersion");
+                if (existing != null)
+                {
+                    txtSettingsBuildVersion = existing.GetComponent<TextMeshProUGUI>();
+                }
+                else
+                {
+                    var verObj = new GameObject("TxtSettingsBuildVersion", typeof(RectTransform));
+                    verObj.transform.SetParent(card, false);
+                    var rt = verObj.GetComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0.05f, 0.01f);
+                    rt.anchorMax = new Vector2(0.95f, 0.07f);
+                    rt.sizeDelta = Vector2.zero;
+
+                    txtSettingsBuildVersion = verObj.AddComponent<TextMeshProUGUI>();
+                    txtSettingsBuildVersion.font = GetDefaultFont();
+                    txtSettingsBuildVersion.fontSize = 12f;
+                    txtSettingsBuildVersion.alignment = TextAlignmentOptions.Center;
+                    txtSettingsBuildVersion.color = new Color(0.7f, 0.75f, 0.85f, 0.8f);
+                }
+            }
+
+            if (txtSettingsBuildVersion != null)
+            {
+                string fp = ResolveBuildFingerprint();
+                txtSettingsBuildVersion.text = (UiStrings.CurrentLanguage == AppLanguage.English ? "Build: " : "Phiên bản: ") + fp;
+            }
+        }
+
+        public void OnReportBugClicked()
+        {
+            string fp = ResolveBuildFingerprint();
+            string lang = UiStrings.CurrentLanguage.ToString();
+            string screen = CurrentScreen.ToString();
+            string room = !string.IsNullOrEmpty(_activeRoomCode) ? _activeRoomCode : "N/A";
+
+            string report = HitMe.UI.RingBufferLogger.BuildBugReport(fp, lang, screen, room);
+            try
+            {
+                GUIUtility.systemCopyBuffer = report;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("[ProductionUIController] Failed to copy to clipboard: " + ex.Message);
+            }
+
+            ShowToast(UiStrings.Get(UiStrings.ReportBugCopiedToast));
         }
 
         public void SetLanguageFromSettings(AppLanguage lang)
@@ -2555,6 +2677,7 @@ namespace HitMe.UI
             }
 
             EnsureLobbyToBotTrainingButton();
+            EnsureLobbyMapSelector();
             if (btnLobbyToBotTraining != null)
             {
                 btnLobbyToBotTraining.gameObject.SetActive(_currentLobbyHumanCount < 2);
@@ -2798,6 +2921,85 @@ namespace HitMe.UI
             txt.alignment = TextAlignmentOptions.Center;
             txt.color = Color.white;
             txt.text = "SANG MENU LUYỆN VỚI BOT";
+        }
+
+        public void EnsureLobbyMapSelector()
+        {
+            if (lobbyPanel == null) return;
+
+            if (_btnLobbyMapSelector == null)
+            {
+                var existing = lobbyPanel.transform.Find("BtnLobbyMapSelector");
+                if (existing != null)
+                {
+                    _btnLobbyMapSelector = existing.GetComponent<Button>();
+                    _txtLobbyMapSelector = _btnLobbyMapSelector.GetComponentInChildren<TextMeshProUGUI>();
+                }
+                else
+                {
+                    var mapObj = new GameObject("BtnLobbyMapSelector", typeof(RectTransform));
+                    mapObj.transform.SetParent(lobbyPanel.transform, false);
+                    var rt = mapObj.GetComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0.12f, 0.20f);
+                    rt.anchorMax = new Vector2(0.88f, 0.25f);
+                    rt.sizeDelta = Vector2.zero;
+
+                    var img = mapObj.AddComponent<Image>();
+                    img.color = new Color(0.12f, 0.30f, 0.45f, 0.95f);
+                    var outline = mapObj.AddComponent<Outline>();
+                    outline.effectColor = new Color(0.4f, 0.8f, 1.0f, 0.8f);
+                    outline.effectDistance = new Vector2(2f, -2f);
+
+                    _btnLobbyMapSelector = mapObj.AddComponent<Button>();
+                    _btnLobbyMapSelector.targetGraphic = img;
+
+                    var txtObj = new GameObject("Text", typeof(RectTransform));
+                    txtObj.transform.SetParent(mapObj.transform, false);
+                    var txtRt = txtObj.GetComponent<RectTransform>();
+                    txtRt.anchorMin = Vector2.zero;
+                    txtRt.anchorMax = Vector2.one;
+                    txtRt.sizeDelta = Vector2.zero;
+
+                    _txtLobbyMapSelector = txtObj.AddComponent<TextMeshProUGUI>();
+                    _txtLobbyMapSelector.font = GetDefaultFont();
+                    _txtLobbyMapSelector.fontSize = 15f;
+                    _txtLobbyMapSelector.fontStyle = FontStyles.Bold;
+                    _txtLobbyMapSelector.alignment = TextAlignmentOptions.Center;
+                    _txtLobbyMapSelector.color = Color.white;
+                }
+            }
+
+            if (_btnLobbyMapSelector != null)
+            {
+                _btnLobbyMapSelector.onClick.RemoveAllListeners();
+                _btnLobbyMapSelector.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    if (Game.MapManager.Instance != null)
+                    {
+                        var nextMap = Game.MapManager.Instance.CycleNextMap();
+                        RefreshLobbyMapSelectorVisual();
+                        if (nextMap != null)
+                        {
+                            ShowToast((UiStrings.CurrentLanguage == AppLanguage.English ? "Map: " : "Sân: ") + nextMap.GetDisplayName(UiStrings.CurrentLanguage == AppLanguage.English));
+                        }
+                    }
+                });
+            }
+
+            RefreshLobbyMapSelectorVisual();
+        }
+
+        public void RefreshLobbyMapSelectorVisual()
+        {
+            if (_txtLobbyMapSelector == null) return;
+            string prefix = UiStrings.Get(UiStrings.LobbyMapSelectorPrefix);
+            string mapName = "Phố Cổ Nắng Gắt";
+            if (Game.MapManager.Instance != null && Game.MapManager.Instance.CurrentMap != null)
+            {
+                mapName = Game.MapManager.Instance.CurrentMap.GetDisplayName(UiStrings.CurrentLanguage == AppLanguage.English);
+            }
+            _txtLobbyMapSelector.text = $"🏟️ {prefix} {mapName} ⇄";
         }
 
         public void EnsureBotTrainingPanel()

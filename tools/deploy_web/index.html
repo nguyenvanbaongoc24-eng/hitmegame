@@ -169,7 +169,8 @@
       <div class="progress-container">
         <div class="progress-fill" id="progress-fill"></div>
       </div>
-      <div class="loading-status" id="loading-status">Đang tải dữ liệu trò chơi… 0%</div>
+      <div class="loading-status" id="loading-status">Đang tải dữ liệu trò chơi… 0% (0.0 / 10.1 MB)</div>
+      <div id="slow-network-notice" style="display: none; margin-top: 14px; padding: 8px 16px; background: rgba(230, 126, 34, 0.2); border: 1px solid #e67e22; border-radius: 8px; font-size: 12px; color: #f39c12; max-width: 280px; line-height: 1.4;"></div>
     </div>
 
     <div id="unity-warning"></div>
@@ -381,20 +382,35 @@
 
       const script = document.createElement("script");
       script.src = versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.loader.js");
+      const totalMB = 10.1;
+      const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
+      const slowTimer = setTimeout(() => {
+        const slowNotice = document.getElementById("slow-network-notice");
+        if (slowNotice) {
+          slowNotice.style.display = "block";
+          slowNotice.textContent = isVi
+            ? "⚠️ Mạng đang chậm, vui lòng đợi thêm giây lát…"
+            : "⚠️ Slow network detected, please hold on…";
+        }
+      }, 15000);
+
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           const pct = Math.round(progress * 100);
+          const downloadedMB = (progress * totalMB).toFixed(1);
           if (progressFill) progressFill.style.width = pct + "%";
           if (loadingStatus) {
-            loadingStatus.textContent = progress < 0.9
-              ? `Đang tải dữ liệu trò chơi… ${pct}%`
-              : `Đang khởi tạo sân làng… ${pct}%`;
+            loadingStatus.textContent = isVi
+              ? (progress < 0.9 ? `Đang tải dữ liệu trò chơi… ${pct}% (${downloadedMB} / ${totalMB} MB)` : `Đang khởi tạo sân làng… ${pct}% (${downloadedMB} / ${totalMB} MB)`)
+              : (progress < 0.9 ? `Downloading assets… ${pct}% (${downloadedMB} / ${totalMB} MB)` : `Initializing village arena… ${pct}% (${downloadedMB} / ${totalMB} MB)`);
           }
         }).then(instance => {
+          clearTimeout(slowTimer);
           window.unityInstance = instance;
           loading.remove();
           canvas.focus();
         }).catch(error => {
+          clearTimeout(slowTimer);
           unityShowBanner(error, "error");
         });
       };
