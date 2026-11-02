@@ -237,5 +237,38 @@ namespace HitMe.Tests
             Assert.IsTrue(sent[0].Contains("secret_tok_123"));
             Assert.IsTrue(sent[0].Contains("guest:Player1"));
         }
+
+        [Test]
+        public void Test_RoomReady_IsSentExactlyOnce_NotRepeatedOnRoomState()
+        {
+            var codec = UnityJsonProtocol.Instance;
+            var ui = new FakeOnlineUi();
+            var sent = new List<string>();
+            using var transport = new LoopbackTransport(codec, raw =>
+            {
+                sent.Add(raw);
+                return Array.Empty<string>();
+            });
+            using var session = new ClientMatchSession(transport);
+            using var flow = new OnlineFlowController(session, ui);
+
+            transport.Connect();
+            flow.Join("guest:Player1", "HM4826");
+            sent.Clear();
+
+            // 1. User clicks ready -> exactly 1 room_ready is sent
+            flow.SetRoomReady(true);
+            Assert.AreEqual(1, sent.Count, "SetRoomReady should send exactly 1 message");
+            Assert.IsTrue(sent[0].Contains("room_ready"), "Message must be room_ready");
+
+            // 2. Server broadcasts 5 consecutive room_state updates (peers joining, ready status updates)
+            for (int i = 1; i <= 5; i++)
+            {
+                transport.Deliver($"{{\"v\":1,\"type\":\"room_state\",\"protocolVersion\":1,\"roomCode\":\"HM4826\",\"players\":[{{\"id\":\"p1\",\"name\":\"Player1\",\"ready\":true}},{{\"id\":\"p{i+1}\",\"name\":\"Player{i+1}\",\"ready\":false}}],\"config\":{{\"maxPlayers\":6,\"minPlayersToStart\":2}}}}");
+            }
+
+            // 3. Verify sent count is STILL 1 (no automatic repetition of room_ready)
+            Assert.AreEqual(1, sent.Count, "Client must NEVER automatically re-send room_ready upon receiving room_state");
+        }
     }
 }
