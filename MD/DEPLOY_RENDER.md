@@ -1,6 +1,12 @@
 # Render deployment draft for HIT ME
 
-This is a deployment guide, not evidence of a live service. The server still accepts only `guest:` identities; do not enable real-money or persistent rewards on this build.
+This is a deployment guide, not evidence of a live service. Signed guest identities and durable Supabase match rewards are supported when the server-only environment variables are configured. Keep those keys out of the WebGL client.
+
+## R1 diagnosis (2026-11-02)
+
+`https://hitmegame.onrender.com/healthz` timed out from this workstation after 35 seconds; the web fetch also could not reach it. This does not establish whether the Render service is deployed, asleep, or failing to start. The same source started locally with `PORT=18765`, logged `Now listening on: http://0.0.0.0:18765`, and `GET /healthz` returned HTTP 200 in 329 ms with `{"status":"ok","protocol":1}`. The health handler has no database dependency. `server/Dockerfile` publishes the .NET 8 app and starts `HitMe.Server.dll`; `server/render.yaml` uses that Dockerfile and `/healthz`. Docker is unavailable on this workstation, so the image itself remains unverified.
+
+For the live diagnosis, open Render Dashboard → `hit-me-server` → Events and Logs. Confirm the Blueprint's deployed commit, successful image build, `PORT` binding, and health check result. From a terminal run `curl -i --max-time 90 https://hitmegame.onrender.com/healthz`; expect HTTP 200 and `status: ok`. If it still times out, compare the dashboard's actual service URL with this URL and inspect startup errors before changing server code.
 
 1. Push and merge reviewed server changes to the repository branch intended for deployment.
 2. In Render, create a Blueprint from that repository and select the custom Blueprint path `server/render.yaml`. Its Docker build context is the repository root and Dockerfile is `server/Dockerfile`.
@@ -12,4 +18,4 @@ This is a deployment guide, not evidence of a live service. The server still acc
 
 The optional `BAN_STORE_PATH` file persists AFK bans only on one host with durable storage. Render's ephemeral filesystem or multiple replicas require a shared store; this deployment draft therefore does not claim durable bans. `SUPABASE_URL` and a server-only secret key will be needed once the reviewed Supabase adapter and migrations exist. Never put a secret in a client build or Git.
 
-Not verified here: Docker build, Render deployment, public WSS/TLS, Supabase schema, and iPhone play. The proposed live gold policy is approved, but crediting remains disabled until authenticated account mapping and atomic persistence are tested.
+Not verified here: Docker build, Render deployment, public WSS/TLS, and iPhone play against Render. The Supabase migration and local signed-guest wallet credit have separate evidence; those checks do not verify this deployment.
