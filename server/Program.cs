@@ -12,25 +12,30 @@ builder.Services.AddRateLimiter(options => options.AddPolicy("guest-token", cont
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
-builder.Services.AddSingleton<IMatchResultStore, InMemoryMatchResultStore>();
+var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
+var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_SECRET_KEY")
+    ?? Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
+var guestSigningKey = Environment.GetEnvironmentVariable("GUEST_TOKEN_SIGNING_KEY");
+if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supabaseKey))
+{
+    if (string.IsNullOrWhiteSpace(supabaseUrl) || string.IsNullOrWhiteSpace(supabaseKey)
+        || string.IsNullOrWhiteSpace(guestSigningKey))
+        throw new InvalidOperationException("Supabase persistence requires URL, server-only key, and durable guest signing key.");
+}
+builder.Services.AddSingleton<IMatchResultStore>(_ =>
+    string.IsNullOrWhiteSpace(supabaseUrl)
+        ? new InMemoryMatchResultStore()
+        : new SupabaseGuestMatchStore(new Uri(supabaseUrl), supabaseKey!));
 builder.Services.AddSingleton<IAuthVerifier>(_ =>
 {
-    var encoded = Environment.GetEnvironmentVariable("GUEST_TOKEN_SIGNING_KEY");
-    return string.IsNullOrWhiteSpace(encoded)
+    return string.IsNullOrWhiteSpace(guestSigningKey)
         ? new FakeAuthVerifier()
-        : new SignedGuestAuthVerifier(Convert.FromBase64String(encoded));
+        : new SignedGuestAuthVerifier(Convert.FromBase64String(guestSigningKey));
 });
 builder.Services.AddSingleton<IBanStore>(_ =>
 {
-    var url = Environment.GetEnvironmentVariable("SUPABASE_URL");
-    var key = Environment.GetEnvironmentVariable("SUPABASE_SECRET_KEY")
-        ?? Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
-    if (!string.IsNullOrWhiteSpace(url) || !string.IsNullOrWhiteSpace(key))
-    {
-        if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(key))
-            throw new InvalidOperationException("Both SUPABASE_URL and server-only secret key are required for shared bans.");
-        return new SupabaseBanStore(new Uri(url), key);
-    }
+    if (!string.IsNullOrWhiteSpace(supabaseUrl))
+        return new SupabaseBanStore(new Uri(supabaseUrl), supabaseKey!);
     var path = Environment.GetEnvironmentVariable("BAN_STORE_PATH");
     return string.IsNullOrWhiteSpace(path) ? new InMemoryBanStore() : new FileBanStore(path);
 });
