@@ -1,0 +1,49 @@
+{
+  "builds": [
+    "D:\\HITME GAME\\unity-client\\Builds\\WebGL_20261102_8c6b328",
+    "D:\\HITME GAME\\unity-client\\Builds\\WebGL_Release_20261102_8c6b328"
+  ],
+  "network": "20 Mbps download, 40 ms latency",
+  "runs": [
+    {
+      "build": "dev",
+      "run": 1,
+      "seconds": 17.743,
+      "error": null
+    },
+    {
+      "build": "dev",
+      "run": 2,
+      "seconds": 17.318,
+      "error": null
+    },
+    {
+      "build": "dev",
+      "run": 3,
+      "seconds": 17.672,
+      "error": null
+    },
+    {
+      "build": "release",
+      "run": 1,
+      "seconds": 10.026,
+      "error": null
+    },
+    {
+      "build": "release",
+      "run": 2,
+      "seconds": 9.996,
+      "error": null
+    },
+    {
+      "build": "release",
+      "run": 3,
+      "seconds": 10.006,
+      "error": null
+    }
+  ],
+  "median_seconds": {
+    "dev": 17.672,
+    "release": 10.006
+  }
+}
