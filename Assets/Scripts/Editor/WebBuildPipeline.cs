@@ -158,6 +158,19 @@ namespace HitMe.Editor
             PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
             PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.High);
             PlayerSettings.stripEngineCode = true;
+            PlayerSettings.SetIl2CppCodeGeneration(UnityEditor.Build.NamedBuildTarget.WebGL, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
+            PlayerSettings.SetIl2CppCompilerConfiguration(UnityEditor.Build.NamedBuildTarget.WebGL, Il2CppCompilerConfiguration.Master);
+
+            // Force re-import textures to bake WebGL crunched compression into build
+            string[] textureFolders = new[] { "Assets/Sprites", "Assets/Art/UI", "Assets/Art/VFX", "Assets/Art/Weapons" };
+            string[] texGuids = AssetDatabase.FindAssets("t:Texture2D", textureFolders);
+            Debug.Log($"[WebBuildPipeline] Force reimporting {texGuids.Length} textures for WebGL...");
+            foreach (var guid in texGuids)
+            {
+                string p = AssetDatabase.GUIDToAssetPath(guid);
+                AssetDatabase.ImportAsset(p, ImportAssetOptions.ForceUpdate);
+            }
+            AssetDatabase.SaveAssets();
 
             string folderName = $"WebGL_Release_{dateTag}_{commitShort}";
             string buildDir = Path.GetFullPath(Path.Combine("Builds", folderName));

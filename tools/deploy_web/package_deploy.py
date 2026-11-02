@@ -39,7 +39,13 @@ def package():
     print(f"[*] Packaging from source build: {build_src.name}")
 
     if DIST_DIR.exists():
-        shutil.rmtree(DIST_DIR)
+        dst_build_dir = DIST_DIR / "Build"
+        if dst_build_dir.exists():
+            for f in dst_build_dir.iterdir():
+                try:
+                    f.unlink()
+                except Exception:
+                    pass
     DIST_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Copy Build directory
@@ -48,7 +54,7 @@ def package():
     if not src_build_dir.exists():
         raise FileNotFoundError(f"Build folder not found in {build_src}")
     
-    shutil.copytree(src_build_dir, dst_build_dir)
+    shutil.copytree(src_build_dir, dst_build_dir, dirs_exist_ok=True)
     print(f"[+] Copied Build/ directory ({len(list(dst_build_dir.iterdir()))} files)")
 
     # 2. Identify build files
