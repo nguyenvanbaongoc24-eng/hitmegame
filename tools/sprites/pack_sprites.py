@@ -17,7 +17,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from validate_pack import SIZE, validate_directory
+from validate_pack import SIZE, validate_directory, validate_gp_directory
 
 
 def pack(input_dir: Path, output_dir: Path, columns: int = 6) -> tuple[Path, Path]:
@@ -27,9 +27,16 @@ def pack(input_dir: Path, output_dir: Path, columns: int = 6) -> tuple[Path, Pat
         raise ValueError("Output must be outside the source directory")
     if columns < 1 or columns > 64:
         raise ValueError("columns must be between 1 and 64")
-    results, set_issues = validate_directory(source)
-    if set_issues or any(item.issues for item in results):
-        raise ValueError("Sprite set did not pass validation; run validate_pack.py first")
+    gp_mode = (source / "anchors.json").exists()
+    if gp_mode:
+        gp_frames, set_issues = validate_gp_directory(source)
+        if set_issues:
+            raise ValueError("GP sprite set did not pass validation: " + "; ".join(set_issues))
+        results = gp_frames
+    else:
+        results, set_issues = validate_directory(source)
+        if set_issues or any(item.issues for item in results):
+            raise ValueError("Sprite set did not pass validation; run validate_pack.py first")
     atlas_path, manifest_path = target / "gameplay_atlas.png", target / "gameplay_atlas.json"
     if atlas_path.exists() or manifest_path.exists():
         raise FileExistsError("Atlas or manifest already exists; choose a new output directory")
@@ -38,14 +45,19 @@ def pack(input_dir: Path, output_dir: Path, columns: int = 6) -> tuple[Path, Pat
     frames = []
     for index, item in enumerate(results):
         x, y = index % columns * SIZE, index // columns * SIZE
-        with Image.open(source / item.path) as frame:
+        name = item["name"] if gp_mode else item.path
+        with Image.open(source / name) as frame:
             atlas.alpha_composite(frame, (x, y))
-        frames.append({"name": Path(item.path).name, "source": item.path,
-                       "characterId": item.character_id, "pose": item.pose,
-                       "direction": item.direction,
-                       "rect": {"x": x, "y": y, "width": SIZE, "height": SIZE},
-                       "pivotPixelsTopLeft": {"x": item.foot_anchor[0],
-                                              "y": item.foot_anchor[1]}})
+        if gp_mode:
+            frames.append({**item, "source": name,
+                           "rect": {"x": x, "y": y, "width": SIZE, "height": SIZE}})
+        else:
+            frames.append({"name": Path(item.path).name, "source": item.path,
+                           "characterId": item.character_id, "pose": item.pose,
+                           "direction": item.direction,
+                           "rect": {"x": x, "y": y, "width": SIZE, "height": SIZE},
+                           "pivotPixelsTopLeft": {"x": item.foot_anchor[0],
+                                                  "y": item.foot_anchor[1]}})
     manifest = {"version": 1, "atlas": atlas_path.name,
                 "coordinateSystem": "top-left pixels",
                 "width": atlas.width, "height": atlas.height,

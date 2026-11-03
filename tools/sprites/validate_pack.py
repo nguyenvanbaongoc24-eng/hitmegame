@@ -27,6 +27,44 @@ NAME = re.compile(
     r"^char_([a-z][a-z0-9_]*)_(idle|aim|throw|hit|ko|win)_(down|up|side)\.png$"
 )
 SIZE = 256
+GP_NAME = re.compile(r"^gp_([a-z][a-z0-9_]*)_(idle|aim|throw|hit|ko|win)_(down|up|side)_([1-4])\.png$")
+
+
+def validate_gp_directory(root: Path) -> tuple[list[dict], list[str]]:
+    """Validate a partial gp_ animation set exported by slice_sheet.py."""
+    issues: list[str] = []
+    try:
+        manifest = json.loads((root / "anchors.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return [], [f"invalid_anchors_manifest: {type(exc).__name__}"]
+    frames = manifest.get("frames", [])
+    if len(frames) not in (8, 12):
+        issues.append("expected_8_or_12_frames")
+    named = {p.name for p in root.glob("gp_*.png")}
+    expected = {entry.get("name") for entry in frames}
+    if named != expected or len(expected) != len(frames):
+        issues.append("manifest_frame_mismatch")
+    for entry in frames:
+        name = entry.get("name", "")
+        if not GP_NAME.fullmatch(name):
+            issues.append(f"invalid_gp_name: {name}")
+            continue
+        try:
+            with Image.open(root / name) as image:
+                if image.size != (SIZE, SIZE) or image.mode != "RGBA":
+                    issues.append(f"invalid_gp_image: {name}")
+                    continue
+                alpha = np.asarray(image.getchannel("A"))
+                ys, xs = np.nonzero(alpha > 32)
+                if len(xs) == 0 or xs.min() == 0 or xs.max() == 255 or ys.min() == 0:
+                    issues.append(f"empty_or_edge_gp_frame: {name}")
+                if len(ys) and ys.max() != 253:
+                    issues.append(f"wrong_gp_foot_line: {name}")
+        except (OSError, ValueError):
+            issues.append(f"unreadable_gp_frame: {name}")
+        if entry.get("pivotPixelsTopLeft") != {"x": 128, "y": 253}:
+            issues.append(f"wrong_gp_pivot: {name}")
+    return frames, issues
 
 
 @dataclass
@@ -141,6 +179,17 @@ def main() -> int:
     parser.add_argument("input", type=Path)
     parser.add_argument("--json", type=Path, help="optional machine-readable report")
     args = parser.parse_args()
+    if (args.input / "anchors.json").exists():
+        frames, issues = validate_gp_directory(args.input)
+        for entry in frames:
+            print(entry.get("name", "?"))
+        for issue in issues:
+            print(issue)
+        print(f"Checked {len(frames)} GP frames; {len(issues)} failures")
+        if args.json:
+            args.json.parent.mkdir(parents=True, exist_ok=True)
+            args.json.write_text(json.dumps({"frames": frames, "setIssues": issues}, indent=2) + "\n", encoding="utf-8")
+        return 1 if issues else 0
     try:
         results, set_issues = validate_directory(args.input)
     except ValueError as exc:

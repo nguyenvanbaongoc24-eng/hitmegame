@@ -1,0 +1,8 @@
+2026-11-03 | prep/codex | synthetic sprite sheet verification
+Command: python -m unittest discover -s tools/sprites -p 'test_*.py'
+Ran 24 tests in 1.283s; OK (6 new slice_sheet tests)
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo
+Passed! - Failed: 0, Passed: 170, Skipped: 0, Total: 170
+Cases: correct 4x2 and 4x3; missing cell; merged cells touching grid edge;
+green fringe; uneven background; manifest validation and atlas pack.
+No AI generated sheet or Unity import was tested. Input source is read-only.
