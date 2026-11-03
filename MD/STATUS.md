@@ -89,3 +89,5 @@ Beta P6 final local probe (2026-11-03): seeded varied faults across 2/4/6-player
 Beta P3 follow-up (2026-11-03): report text redaction also strips PostgreSQL connection URLs; test covers accidental database password in a submitted note. Full server suite Passed! 198/198. No report payloads or credentials were logged.
 
 Beta credential scan (2026-11-03): current tracked/staged files report zero credential-shaped matches. Historical scan still flags three old test-fixture blobs (not live secrets); history was not rewritten. Server Passed! 198/198 and database URL unit tests 4/4 after fixture refactor.
+
+Beta P7 release candidate (2026-11-03): `MD/RELEASE_PROCESS.md` now cites migrations 011–012 and the 900-second local probe. Local server Passed! 198/198 and PGlite Passed! 26/26. Render branch/configuration and Unity/iPhone compatibility are not verified; do not manually deploy until those checks.

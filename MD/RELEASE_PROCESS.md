@@ -8,4 +8,4 @@
 4. Rollback: choose the prior known good `beta-0.1.N` commit for a manual deploy, then restore the matching WebGL client. Keep database migrations additive; do not roll back schema by deleting live player data. If compatibility is uncertain, set `MIN_CLIENT_VERSION=0.0.0` until the client is checked.
 5. Freeze during the closed test. Ship only critical fixes, repeat checks and tag a new beta increment. Record tester visible changes and the affected build ID.
 
-The current candidate has passed local tests and migration 011 on Supabase, but has **not** passed a Render deploy or the iPhone client handshake. Do not move Render to `server-release` yet.
+The current beta candidate has passed the local server suite (198/198), PGlite SQL suite (26/26), a 900-second local 2/4/6-player chaos probe, and migrations 011–012 with server-only RLS on Supabase. See `Evidence/round49/P6_chaos.md`. It has **not** passed a new Render deploy or the iPhone client handshake with `hello`. Do not move Render to `server-release` yet. `SERVER_VERSION` and `MIN_CLIENT_VERSION` remain operator settings; keep the minimum at `0.0.0` until Antigravity verifies the client version message.
