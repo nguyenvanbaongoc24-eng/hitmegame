@@ -860,6 +860,23 @@ public sealed class ProtocolGatewayTests
     }
 
     [Fact]
+    public void ReconnectCannotRestoreAnExpiredLobby()
+    {
+        var rooms = new RoomDirectory(n => "HM0001");
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        var joined = Json(gateway.Handle("original", Request("join")));
+        var token = joined.GetProperty("reconnectToken").GetString();
+        gateway.Disconnect("original");
+        Assert.Single(rooms.PruneExpiredLobbies(DateTimeOffset.UtcNow.AddMinutes(11), TimeSpan.FromMinutes(10)));
+        Assert.Empty(rooms.Snapshot());
+
+        var response = Json(gateway.Handle("rejoined", JsonSerializer.Serialize(new
+        { v = 1, type = "join", token = "test:p1", reconnectToken = token })));
+        Assert.Equal("reconnect_invalid", response.GetProperty("code").GetString());
+        Assert.False(gateway.HasJoinedOrQueued("rejoined"));
+    }
+
+    [Fact]
     public void ASecondConnectionWithTheSameIdentityReplacesTheOldOneWithoutDuplicatingPlayer()
     {
         var rooms = new RoomDirectory(n => "HM0001");

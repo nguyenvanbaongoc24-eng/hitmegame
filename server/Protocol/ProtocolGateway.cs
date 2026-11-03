@@ -518,6 +518,10 @@ public sealed class ProtocolGateway
             disconnected[detached.Session.ReconnectToken] = detached;
             return Error("reconnect_invalid");
         }
+        if (!rooms.TryGet(detached.Session.Room.Code, out var currentRoom)
+            || !ReferenceEquals(currentRoom, detached.Session.Room)
+            || !currentRoom.Players.Any(player => player.Id == detached.Session.PlayerId))
+            return Error("reconnect_invalid");
 
         var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken(), detached.Session.Version)
         { InvalidCommitViolations = detached.Session.InvalidCommitViolations, ViolationRoundId = detached.Session.ViolationRoundId, Disqualified = detached.Session.Disqualified };
