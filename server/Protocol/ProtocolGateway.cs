@@ -31,6 +31,8 @@ public sealed class ClientEnvelope
     public string? RequestId { get; set; }
     public string? ItemId { get; set; }
     public string? NewName { get; set; }
+    public string? CharacterId { get; set; }
+    public string? WeaponId { get; set; }
 }
 
 public sealed record GatewayMessage(string ConnectionId, string Payload, string? CloseReason = null);
@@ -46,7 +48,7 @@ public sealed class ProtocolGateway
     public const int MaxInvalidCommitViolations = 5;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> WireFields = new(StringComparer.Ordinal)
-    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName" };
+    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName", "characterId", "weaponId" };
     public static readonly IReadOnlySet<string> AllowedChatIds = new HashSet<string>(StringComparer.Ordinal)
     { "hello", "good_luck", "nice_throw", "well_played", "oops", "thanks" };
     private readonly RoomDirectory rooms;
@@ -54,6 +56,7 @@ public sealed class ProtocolGateway
     private readonly IAuthVerifier auth;
     private readonly IPlayerProfileReader? profiles;
     private readonly IGuestShopService? shop;
+    private readonly RoomLoadoutPolicy? loadouts;
     private readonly ServerMetrics? metrics;
     private readonly Action<ProtocolViolationAudit>? auditViolation;
     private readonly object gate = new();
@@ -65,13 +68,14 @@ public sealed class ProtocolGateway
     private readonly HashSet<(string From, string To)> friendRequests = new();
     private readonly HashSet<(string First, string Second)> friends = new();
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
         this.auth = auth ?? new FakeAuthVerifier();
         this.profiles = profiles;
         this.shop = shop;
+        this.loadouts = loadouts;
         this.metrics = metrics;
         this.auditViolation = auditViolation;
     }
@@ -162,6 +166,7 @@ public sealed class ProtocolGateway
         if (!auth.TryVerify(request.Token, out var identity, out var authError)) return Error(authError);
         if (rooms.BanStore.TryGetRemaining(identity.PlayerId, clock.GetUtcNow(), out var remainingSeconds)) return BannedError(remainingSeconds);
         if (!string.IsNullOrWhiteSpace(request.ReconnectToken)) return Reconnect(connectionId, request.ReconnectToken, identity.PlayerId);
+        if (!TryLoadout(identity.PlayerId, request, out var characterId, out var weaponId, out var loadoutError)) return Error(loadoutError);
         var active = sessions.FirstOrDefault(pair => pair.Value.PlayerId == identity.PlayerId);
         if (active.Key is not null)
         {
@@ -185,6 +190,9 @@ public sealed class ProtocolGateway
             return Error(error);
         }
         var session = new Session(room!, identity.PlayerId, NewReconnectToken(), request.V);
+        var player = room!.Players.Single(p => p.Id == identity.PlayerId);
+        player.CharacterId = characterId;
+        player.WeaponId = weaponId;
         sessions[connectionId] = session;
         return RoomState(room!, session.ReconnectToken);
     }
@@ -289,8 +297,30 @@ public sealed class ProtocolGateway
     {
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
         if (session.Room.RoundSession is not null) return Reply(connectionId, Error("wrong_phase"));
+        if (!TryLoadout(session.PlayerId, request, out var characterId, out var weaponId, out var loadoutError,
+                session.Room.Players.Single(p => p.Id == session.PlayerId))) return Reply(connectionId, Error(loadoutError));
         if (!session.Room.TrySetRoomReady(session.PlayerId, request.Ready, clock.GetUtcNow(), out var error)) return Reply(connectionId, Error(error));
+        var player = session.Room.Players.Single(p => p.Id == session.PlayerId);
+        player.CharacterId = characterId;
+        player.WeaponId = weaponId;
         return RoomStateBroadcast(session.Room);
+    }
+
+    private bool TryLoadout(string playerId, ClientEnvelope request, out string characterId,
+        out string weaponId, out string error, RoomPlayer? current = null)
+    {
+        characterId = request.CharacterId ?? current?.CharacterId ?? RoomLoadoutPolicy.DefaultCharacterId;
+        weaponId = request.WeaponId ?? current?.WeaponId ?? RoomLoadoutPolicy.DefaultWeaponId;
+        error = string.Empty;
+        if (loadouts is null) return true; // Legacy test host without a catalog.
+        ProfileSnapshot? profile = null;
+        if (weaponId != RoomLoadoutPolicy.DefaultWeaponId)
+        {
+            if (profiles is null) { error = "profile_unavailable"; return false; }
+            try { profile = profiles.Read(playerId); }
+            catch (HttpRequestException) { error = "profile_unavailable"; return false; }
+        }
+        return loadouts.TryResolve(characterId, weaponId, profile, out characterId, out weaponId, out error);
     }
 
     private IReadOnlyList<GatewayMessage> HostStartMessages(string connectionId)
@@ -520,7 +550,7 @@ public sealed class ProtocolGateway
         roomCode = room.Code,
         hostId = room.HostId,
         started = room.Started,
-        players = room.Players.Select(p => new { id = p.Id, name = p.Name, slot = p.Slot, ready = p.Ready }),
+        players = room.Players.Select(p => new { id = p.Id, name = p.Name, slot = p.Slot, ready = p.Ready, characterId = p.CharacterId, weaponId = p.WeaponId }),
         reconnectToken,
         config = new { maxPlayers = room.Config.MaxPlayers, minPlayersToStart = RoomAuthority.MinPlayers, startHp = room.Config.StartHp, placeSeconds = room.Config.PlaceSeconds, maxRounds = room.Config.MaxRounds, arenaWidth = room.Config.ArenaWidth, arenaHeight = room.Config.ArenaHeight, playerRadius = room.Config.PlayerRadius }
     }, Json);

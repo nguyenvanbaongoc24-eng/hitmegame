@@ -23,8 +23,8 @@ The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Ever
 ## Client messages
 
 ```json
-{"v":1,"type":"join","token":"guest:Nam","roomCode":"HM4826"}
-{"v":1,"type":"room_ready","ready":true}
+{"v":1,"type":"join","token":"guest:Nam","roomCode":"HM4826","characterId":"nam_lang","weaponId":"dep_to_ong"}
+{"v":1,"type":"room_ready","ready":true,"characterId":"co_ba","weaponId":"chao_ran"}
 {"v":1,"type":"start"}
 {"v":1,"type":"commit","roundId":1,"positionX":1.2,"positionY":-0.8,"hasAim":true,"aimX":0,"aimY":1}
 {"v":1,"type":"lock_ready","ready":true}
@@ -35,10 +35,12 @@ The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Ever
 
 For a new room, omit `roomCode`; for re-entry, include `roomCode` and the private `reconnectToken` received earlier. `commit` with `hasAim:false` and no aim coordinates invokes the server's `ThrowFacing` behavior. The old `aimDir:null` form is accepted by the gateway for compatibility. `room_ready` is for the lobby, `lock_ready` for the 5-second placement phase. Legacy `ready` returns `legacy_ready_use_room_ready_or_lock_ready`.
 
+`characterId` and `weaponId` are optional on first `join` (defaults: `nam_lang`, `dep_to_ong`) and on `room_ready` (keeps the current selection). Selection is frozen after the room starts. The trial roster is `nam_lang`, `nu_nang_dong`, `co_ba`, `anh_teen`; operators may set `ENABLED_CHARACTER_IDS` to a comma-separated subset containing `nam_lang`. Trial characters are currently free to select; weapon ownership comes from the server profile/catalog. Different players may select the same character. Errors: `character_not_found`, `character_locked`, `weapon_not_found`, `weapon_not_owned`, `profile_unavailable`. A rejected selection does not change readiness or loadout.
+
 ## Server messages
 
 ```json
-{"v":1,"type":"room_state","protocolVersion":1,"roomCode":"HM4826","hostId":"p1","started":false,"players":[{"id":"p1","name":"Nam","slot":0,"ready":false}],"reconnectToken":"private","config":{"maxPlayers":6,"minPlayersToStart":2,"startHp":3,"placeSeconds":5,"maxRounds":5,"arenaWidth":8,"arenaHeight":12,"playerRadius":0.4}}
+{"v":1,"type":"room_state","protocolVersion":1,"roomCode":"HM4826","hostId":"p1","started":false,"players":[{"id":"p1","name":"Nam","slot":0,"ready":false,"characterId":"nam_lang","weaponId":"dep_to_ong"}],"reconnectToken":"private","config":{"maxPlayers":6,"minPlayersToStart":2,"startHp":3,"placeSeconds":5,"maxRounds":5,"arenaWidth":8,"arenaHeight":12,"playerRadius":0.4}}
 {"v":1,"type":"round_start","roundId":1,"deadline":1790000000000}
 {"v":1,"type":"reveal","roundId":1,"players":[{"id":"p1","position":{"x":1.2,"y":-0.8},"aim":{"x":0,"y":1}}]}
 {"v":1,"type":"round_result","roundId":1,"hits":[{"shooterId":"p1","targetId":"p2","point":{"x":0,"y":0},"distance":2}],"players":[{"id":"p1","hp":3,"eliminated":false}]}

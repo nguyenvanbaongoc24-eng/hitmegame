@@ -26,6 +26,8 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supaba
 }
 builder.Services.AddSingleton<InMemoryProfileStore>();
 builder.Services.AddSingleton(_ => new ItemCatalog(Path.Combine(AppContext.BaseDirectory, "Data", "Items.json")));
+builder.Services.AddSingleton(provider => RoomLoadoutPolicy.FromEnvironment(
+    provider.GetRequiredService<ItemCatalog>(), Environment.GetEnvironmentVariable("ENABLED_CHARACTER_IDS")));
 builder.Services.AddSingleton<IGuestShopService>(provider =>
     string.IsNullOrWhiteSpace(supabaseUrl)
         ? new InMemoryGuestShopService(provider.GetRequiredService<InMemoryProfileStore>(), provider.GetRequiredService<ItemCatalog>())
@@ -59,6 +61,7 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     auth: provider.GetRequiredService<IAuthVerifier>(),
     profiles: provider.GetRequiredService<IPlayerProfileReader>(),
     shop: provider.GetRequiredService<IGuestShopService>(),
+    loadouts: provider.GetRequiredService<RoomLoadoutPolicy>(),
     metrics: provider.GetRequiredService<ServerMetrics>(),
     auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
         .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",

@@ -1,0 +1,7 @@
+2026-11-03 | prep/codex | server lobby loadouts
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --filter FullyQualifiedName~RoomLoadoutTests --nologo
+Passed! - Failed: 0, Passed: 11, Skipped: 0, Total: 11
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo
+Passed! - Failed: 0, Passed: 170, Skipped: 0, Total: 170
+Coverage: 2-6 players, stable slots, duplicate character choice, defaults, ready change, reconnect, unknown/locked character, unknown/unowned weapon, rejected ready unchanged.
+Limit: no Unity client or live Render loadout validation; trial characters are free to use until durable character ownership is defined.

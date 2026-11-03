@@ -10,6 +10,8 @@ public sealed class RoomPlayer
     public string Name { get; }
     public int Slot { get; }
     public bool Ready { get; set; }
+    public string CharacterId { get; set; } = RoomLoadoutPolicy.DefaultCharacterId;
+    public string WeaponId { get; set; } = RoomLoadoutPolicy.DefaultWeaponId;
 }
 
 public sealed class RoomAuthority
