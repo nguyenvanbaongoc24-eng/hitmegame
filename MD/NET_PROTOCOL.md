@@ -1,5 +1,7 @@
 # HIT ME network protocol v1 and v2
 
+Beta 0.1 handshake: the first WebSocket packet is `{"v":2,"type":"hello","serverVersion":"0.1.0-beta.1","minClientVersion":"0.0.0"}`. Send `clientVersion` with `join` or `quick_match`. A version below `MIN_CLIENT_VERSION` receives `error.code=client_outdated`, then a graceful socket close. `SERVER_VERSION` and `MIN_CLIENT_VERSION` are configurable server environment variables. The default minimum `0.0.0` accepts legacy clients until the updated Unity client is verified.
+
 Protocol v2 is additive. A socket selects its version in `join` or `quick_match`; room broadcasts use each recipient's version. v1 clients remain accepted. A v2 client sends `v:2` on every message and verifies `v:2` in every response. Friend requests use a shared IFriendStore. In-memory mode resets on restart; Supabase mode requires migrations 009-010 and SUPABASE_FRIENDS_ENABLED=true.
 
 ## v2 additions

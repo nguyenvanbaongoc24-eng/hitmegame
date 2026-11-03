@@ -35,9 +35,11 @@ public sealed class WebSocketEndToEndTests
         using var replacement = new ClientWebSocket();
         var endpoint = new Uri($"ws://127.0.0.1:{port}/ws");
         await old.ConnectAsync(endpoint, timeout.Token);
+        Assert.Equal("hello", (await Read(old)).GetProperty("type").GetString());
         await Send(old);
         Assert.Equal("room_state", (await Read(old)).GetProperty("type").GetString());
         await replacement.ConnectAsync(endpoint, timeout.Token);
+        Assert.Equal("hello", (await Read(replacement)).GetProperty("type").GetString());
         await Send(replacement);
         var newState = await Read(replacement);
         var notice = await Read(old);
@@ -235,6 +237,8 @@ public sealed class WebSocketEndToEndTests
         {
             var bot = new LiveBot(new Uri($"ws://127.0.0.1:{port}/ws"), token);
             await bot.socket.ConnectAsync(bot.uri, cancellationToken);
+            var hello = await bot.ReceiveAsync(cancellationToken);
+            Assert.Equal("hello", hello.GetProperty("type").GetString());
             return bot;
         }
 

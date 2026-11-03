@@ -10,6 +10,7 @@ builder.Services.AddRateLimiter(options => options.AddPolicy("guest-token", cont
     RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ =>
         new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
+var clientVersions = ClientVersionPolicy.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
@@ -68,12 +69,14 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     loadouts: provider.GetRequiredService<RoomLoadoutPolicy>(),
     friendStore: provider.GetRequiredService<IFriendStore>(),
     metrics: provider.GetRequiredService<ServerMetrics>(),
+    versions: provider.GetRequiredService<ClientVersionPolicy>(),
     auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
         .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",
             entry.RoomId, entry.MatchId, entry.Code, entry.Count)));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);
+builder.Services.AddSingleton(clientVersions);
 builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerIp,
     runtime.AllowedOrigins, runtime.MaxConnections));
 builder.Services.AddHostedService<RoundDeadlineService>();
@@ -114,6 +117,7 @@ app.Map("/ws", async context => {
     connections.Register(connectionId, socket);
     try
     {
+        await connections.SendAsync(new GatewayMessage(connectionId, clientVersions.Hello()), context.RequestAborted);
         while (socket.State == WebSocketState.Open)
         {
             string? raw;

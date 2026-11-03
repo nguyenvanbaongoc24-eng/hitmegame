@@ -33,6 +33,7 @@ public sealed class ClientEnvelope
     public string? NewName { get; set; }
     public string? CharacterId { get; set; }
     public string? WeaponId { get; set; }
+    public string? ClientVersion { get; set; }
 }
 
 public sealed record GatewayMessage(string ConnectionId, string Payload, string? CloseReason = null);
@@ -48,7 +49,7 @@ public sealed class ProtocolGateway
     public const int MaxInvalidCommitViolations = 5;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> WireFields = new(StringComparer.Ordinal)
-    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName", "characterId", "weaponId" };
+    { "v", "type", "roomCode", "playerId", "name", "token", "ready", "start", "reconnectToken", "roundId", "positionX", "positionY", "aimX", "aimY", "hasAim", "emoteId", "chatId", "targetPlayerId", "accepted", "requestId", "itemId", "newName", "characterId", "weaponId", "clientVersion" };
     public static readonly IReadOnlySet<string> AllowedChatIds = new HashSet<string>(StringComparer.Ordinal)
     { "hello", "good_luck", "nice_throw", "well_played", "oops", "thanks" };
     private readonly RoomDirectory rooms;
@@ -66,8 +67,9 @@ public sealed class ProtocolGateway
     private readonly Dictionary<string, RateWindow> rateWindows = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DateTimeOffset> lastChat = new(StringComparer.Ordinal);
     private readonly IFriendStore friendStore;
+    private readonly ClientVersionPolicy versions;
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null, ClientVersionPolicy? versions = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
@@ -78,6 +80,7 @@ public sealed class ProtocolGateway
         this.metrics = metrics;
         this.auditViolation = auditViolation;
         this.friendStore = friendStore ?? new InMemoryFriendStore();
+        this.versions = versions ?? ClientVersionPolicy.FromEnvironment(_ => null);
     }
 
     public string Handle(string connectionId, string raw)
@@ -106,6 +109,8 @@ public sealed class ProtocolGateway
             { return Reply(connectionId, Error("bad_message")); }
             if (request is null || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
             if (request.V is not (Version or LatestVersion)) return Reply(connectionId, Error("protocol_mismatch"));
+            if (request.Type is ("join" or "quick_match") && !versions.IsSupported(request.ClientVersion))
+                return new[] { new GatewayMessage(connectionId, Error("client_outdated"), "client_outdated") };
 
             var messages = request.Type switch
             {

@@ -1,5 +1,7 @@
 # Codex preparation status (2026-11-02)
 
+Beta P1 (2026-11-03): server emits a version hello on each WebSocket, accepts `clientVersion` in join/quick_match, and returns `client_outdated` with a graceful close when below the configured minimum. Default minimum 0.0.0 preserves the deployed client. Full local server suite Passed! 180/180. Render deployment and Unity handling are not verified.
+
 Branch `prep/codex`; Unity and Core are not edited here.
 
 | Task | Status | Evidence |
