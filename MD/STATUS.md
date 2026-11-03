@@ -49,3 +49,5 @@ K5 L6 diagnostic (2026-11-03): Render load harness now emits redacted room/cycle
 K5 L7 partial handoff (2026-11-03): `MD/PROTOCOL_V2_CHANGES.md` now carries the stable slot field, placement privacy, independent sprite/harness paths, and correct migration 008 live status. Rank, daily quests, durable friends and Google login still have no complete wire contract.
 
 K4 follow-up: layout touch-size threshold now scales by `pixelsPerCssPixel` for high-DPI screenshots; harness tests 7/7. Evidence updated in `Evidence/round47/K4_harness.txt`.
+
+K5/L6 live Render retry (2026-11-03): 600-second, 3-concurrent-room probe completed 60/60 matches and 300/300 rounds with 0 errors/disconnects; lock-to-result mean/p95/max 72/91/285 ms. Evidence: `Evidence/round47/K5_load_10min.txt` and raw log. Prior 58/60 failure did not recur, but root cause is undetermined. CPU/RAM and production-auth capacity remain unverified. Other K5 items above remain open.

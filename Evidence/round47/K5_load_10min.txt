@@ -1,0 +1,16 @@
+K5/L6 live Render load retry, 2026-11-03, prep/codex
+
+Command: node server/Tools/RenderLoad.mjs wss://hitmegame.onrender.com/ws --seconds 600 --interval 30
+Process exit: 0. Duration: 600 seconds. Full redacted output in K5_load_10min_raw.txt.
+Three rooms per cycle with 2, 4 and 6 WebSocket clients; 20 cycles.
+Expected/completed matches: 60/60. Expected/measured rounds: 300/300.
+Unexpected disconnects: 0. Errors: 0. Peak observed connections: 12.
+Lock-to-result mean/p95/max: 72/91/285 ms.
+Before /metrics errorsByCode: {}. After /metrics errorsByCode: {}.
+
+The prior 2026-11-02 run failed 58/60 with two errors and one disconnect;
+this retry did not reproduce them. It does not prove the prior root cause.
+CPU and peak RAM cannot be read from the public Render metrics endpoint.
+This test used the currently deployed guest-token behavior and does not prove
+production auth, Supabase shop persistence, or capacity above three concurrent
+rooms / twelve sockets. No deployment change was made by this run.
