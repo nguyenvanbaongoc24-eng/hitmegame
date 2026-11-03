@@ -14,6 +14,7 @@ builder.Services.AddRateLimiter(options => options.AddPolicy("beta-report", cont
         new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var clientVersions = ClientVersionPolicy.FromEnvironment(Environment.GetEnvironmentVariable);
+var displayNames = DisplayNamePolicy.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
 if (listenUrl is not null) builder.WebHost.UseUrls(listenUrl);
 var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
@@ -55,7 +56,7 @@ builder.Services.AddSingleton<IAuthVerifier>(_ =>
 {
     return string.IsNullOrWhiteSpace(guestSigningKey)
         ? new FakeAuthVerifier()
-        : new SignedGuestAuthVerifier(Convert.FromBase64String(guestSigningKey));
+        : new SignedGuestAuthVerifier(Convert.FromBase64String(guestSigningKey), names: displayNames);
 });
 builder.Services.AddSingleton<IBanStore>(_ =>
 {
@@ -75,6 +76,7 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     friendStore: provider.GetRequiredService<IFriendStore>(),
     metrics: provider.GetRequiredService<ServerMetrics>(),
     versions: provider.GetRequiredService<ClientVersionPolicy>(),
+    names: provider.GetRequiredService<DisplayNamePolicy>(),
     auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
         .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",
             entry.RoomId, entry.MatchId, entry.Code, entry.Count)));
@@ -82,6 +84,7 @@ builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
 builder.Services.AddSingleton(runtime);
 builder.Services.AddSingleton(clientVersions);
+builder.Services.AddSingleton(displayNames);
 builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerIp,
     runtime.AllowedOrigins, runtime.MaxConnections));
 builder.Services.AddHostedService<RoundDeadlineService>();

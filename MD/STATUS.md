@@ -1,5 +1,7 @@
 # Codex preparation status (2026-11-02)
 
+Beta P5 (2026-11-03): signed guest names and rename requests now pass a configurable server name policy; room joins reject a case-insensitive duplicate display name. Local server suite Passed! 197/197. No live Render name traffic has been checked.
+
 Beta P7 (2026-11-03): MD/RELEASE_PROCESS.md describes tagged manual deployment and rollback. The server-release branch is a candidate only; Render has not been switched and the Unity client has not been checked against the new hello packet.
 
 Beta P3 (2026-11-03): POST /report validates CORS, 4 KB body, 5 reports/min/IP, required fields and redacts common token/password/key patterns. Migration 011 applied to live Supabase; read-only check confirms RLS on, anon INSERT denied, service_role INSERT allowed. Local server tests Passed! 185/185; PGlite SQL Passed! 24/24. No production report has yet been sent through Render. Handoff: MD/BETA_REPORT_API.md and tools/beta/list_reports.py.

@@ -4,6 +4,8 @@ Beta 0.1 handshake: the first WebSocket packet is `{"v":2,"type":"hello","server
 
 Beta room cleanup: an untouched lobby expires after ten minutes and each connected participant receives `error.code=room_expired` before socket close. Finished rooms may also expire after ten minutes. Return to Home and create or join another room. `/healthz` does not depend on Supabase. Default beta caps are 50 rooms and 120 sockets, overridable by `MAX_ROOMS` and `MAX_CONNECTIONS`; saturation returns `server_busy`.
 
+Guest names: the signed token issuer accepts 2–24 Unicode letters/digits/spaces (including Vietnamese combining marks); rename requires 3–24. The server rejects configured `BANNED_NAME_TERMS` (comma separated; default admin, moderator, fuck), invalid symbols and duplicate names within one room (`name_taken_in_room`). The database still applies its own rename guard.
+
 Protocol v2 is additive. A socket selects its version in `join` or `quick_match`; room broadcasts use each recipient's version. v1 clients remain accepted. A v2 client sends `v:2` on every message and verifies `v:2` in every response. Friend requests use a shared IFriendStore. In-memory mode resets on restart; Supabase mode requires migrations 009-010 and SUPABASE_FRIENDS_ENABLED=true.
 
 ## v2 additions

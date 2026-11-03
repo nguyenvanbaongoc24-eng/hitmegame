@@ -49,6 +49,8 @@ public sealed class RoomAuthority
         if (Started) { error = "room_started"; return false; }
         if (string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(name)) { error = "invalid_player"; return false; }
         if (players.Any(p => p.Id == playerId)) { error = "duplicate_player"; return false; }
+        if (players.Any(p => string.Equals(p.Name.Normalize(), name.Normalize(), StringComparison.OrdinalIgnoreCase)))
+        { error = "name_taken_in_room"; return false; }
         if (players.Count >= MaxPlayers) { error = "room_full"; return false; }
         var slot = Enumerable.Range(0, MaxPlayers).First(index => players.All(p => p.Slot != index));
         players.Add(new RoomPlayer(playerId, name, slot));

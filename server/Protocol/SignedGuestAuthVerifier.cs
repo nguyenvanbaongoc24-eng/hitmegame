@@ -13,19 +13,21 @@ public sealed class SignedGuestAuthVerifier : IAuthVerifier
 {
     private readonly byte[] key;
     private readonly TimeProvider clock;
+    private readonly DisplayNamePolicy names;
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
-    public SignedGuestAuthVerifier(byte[] key, TimeProvider? clock = null)
+    public SignedGuestAuthVerifier(byte[] key, TimeProvider? clock = null, DisplayNamePolicy? names = null)
     {
         if (key is null || key.Length < 32) throw new ArgumentException("Signing key must contain at least 32 bytes.", nameof(key));
         this.key = (byte[])key.Clone();
         this.clock = clock ?? TimeProvider.System;
+        this.names = names ?? new DisplayNamePolicy();
     }
 
     public string Issue(string displayName, TimeSpan? lifetime = null)
     {
         var safeName = FakeAuthVerifier.SanitizeDisplayName(displayName ?? string.Empty);
-        if (safeName.Length is < 1 or > 24) throw new ArgumentException("Guest name is required.", nameof(displayName));
+        if (!names.IsAllowed(safeName)) throw new ArgumentException("Invalid guest name.", nameof(displayName));
         var duration = lifetime ?? TimeSpan.FromDays(30);
         if (duration <= TimeSpan.Zero || duration > TimeSpan.FromDays(30)) throw new ArgumentOutOfRangeException(nameof(lifetime));
         var claims = new GuestClaims("g_" + Convert.ToHexString(RandomNumberGenerator.GetBytes(16)).ToLowerInvariant(),

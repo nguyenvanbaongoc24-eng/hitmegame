@@ -68,8 +68,9 @@ public sealed class ProtocolGateway
     private readonly Dictionary<string, DateTimeOffset> lastChat = new(StringComparer.Ordinal);
     private readonly IFriendStore friendStore;
     private readonly ClientVersionPolicy versions;
+    private readonly DisplayNamePolicy names;
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null, ClientVersionPolicy? versions = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null, ClientVersionPolicy? versions = null, DisplayNamePolicy? names = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
@@ -81,6 +82,7 @@ public sealed class ProtocolGateway
         this.auditViolation = auditViolation;
         this.friendStore = friendStore ?? new InMemoryFriendStore();
         this.versions = versions ?? ClientVersionPolicy.FromEnvironment(_ => null);
+        this.names = names ?? new DisplayNamePolicy();
     }
 
     public string Handle(string connectionId, string raw)
@@ -475,6 +477,8 @@ public sealed class ProtocolGateway
         if (shop is null) return Reply(connectionId, Error("shop_unavailable"));
         if (!Guid.TryParse(request.RequestId, out var requestId) || requestId == Guid.Empty)
             return Reply(connectionId, Error("invalid_shop_request"));
+        if (action == "rename" && (!names.IsAllowed(request.NewName) || request.NewName!.Length < 3))
+            return Reply(connectionId, Error("invalid_name"));
         try
         {
             var result = shop.Execute(session.PlayerId, new ShopRequest(action, requestId, request.ItemId, request.NewName));
