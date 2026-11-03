@@ -398,15 +398,15 @@
 
       const config = {
         arguments: [],
-        dataUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.data.br"),
-        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.framework.js.br"),
-        codeUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.wasm.br"),
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.wasm.br"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HitMeStudio",
         productName: "HIT ME",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
-        matchWebGLToCanvasSize: true,
+        matchWebGLToCanvasSize: false,
         devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
       };
 
@@ -420,7 +420,7 @@
       window.addEventListener("resize", updateCanvasResolution);
 
       const script = document.createElement("script");
-      script.src = versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.loader.js");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.loader.js");
       const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {
