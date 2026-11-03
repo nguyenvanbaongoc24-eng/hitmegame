@@ -46,6 +46,10 @@ public sealed class WebSocketEndToEndTests
         var response = await http.SendAsync(normal);
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
         Assert.Equal("http://localhost", response.Headers.GetValues("Access-Control-Allow-Origin").Single());
+        using var nullLog = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent("{\"clientVersion\":\"0.1.0\",\"buildId\":\"b1\",\"browser\":\"Safari\",\"screen\":\"phone\",\"note\":\"bug\",\"recentLogs\":[null]}", Encoding.UTF8, "application/json") };
+        nullLog.Headers.TryAddWithoutValidation("Origin", "http://localhost");
+        Assert.Equal(HttpStatusCode.BadRequest, (await http.SendAsync(nullLog)).StatusCode);
     }
 
     [Fact]
