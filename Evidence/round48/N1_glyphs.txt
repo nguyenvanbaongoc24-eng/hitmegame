@@ -1,0 +1,11 @@
+2026-11-03 | N1 glyph coverage
+Command: python -m unittest discover -s tools/ui -p 'test_*.py'
+Ran 3 tests; OK (synthetic fonts and strings)
+Command: python tools/ui/glyph_coverage.py Assets/Fonts/BeVietnamPro-Medium.ttf [UiStrings.cs CharacterRegistry.cs Items.json QuestsConfig.json] --vietnamese --json Evidence/round48/N1_glyph_coverage.json
+Checked 4 files and 214 characters; missing 2: U+2713 check mark (UiStrings.cs:118,351), U+1F451 crown (UiStrings.cs:334). Exit 1 as required.
+HitMeFont.ttf produced the same two missing glyphs (N1_hitmefont_coverage.json).
+Command: python -m unittest discover -s tools/sprites -p 'test_*.py'
+Ran 24 tests; OK
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --no-restore --nologo --verbosity quiet
+Passed! - Failed: 0, Passed: 170, Skipped: 0, Total: 170
+No Unity files modified; Unicode coverage is font cmap coverage, not actual TextMeshPro rendering.

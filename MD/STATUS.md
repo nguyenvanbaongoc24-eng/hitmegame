@@ -57,3 +57,5 @@ M1 (2026-11-03): Server lobby accepts selected character/weapon on join and room
 M2 verified (2026-11-03): K1 secrecy and K2 slot evidence already exists in `Evidence/round47/K1_secrecy.txt` and `K2_slots.txt`; no new Unity/live-render claim.
 
 M4 (2026-11-03): `tools/sprites/slice_sheet.py` slices 4×2 or 4×3 flat-green sheets into shared-scale 256×256 `gp_` frames with common foot anchor; rejects missing/merged/uneven/fringed cells with an annotated image. `validate_pack.py` and `pack_sprites.py` accept this partial GP format via `anchors.json`; complete `char_` format remains unchanged. Synthetic tests 24/24; no ChatGPT sheet or Unity import tested. Evidence: `Evidence/round48/M4_slice_sheet.txt`.
+
+N1 (2026-11-03): `tools/ui/glyph_coverage.py` audits C#/JSON/Markdown UI text against a TTF/OTF cmap with file:line diagnostics and full Vietnamese character mode. Three synthetic tests passed; actual BeVietnamPro-Medium and HitMeFont scans of four UI/data files find only missing check mark and crown glyphs (not Vietnamese letters). Evidence: `Evidence/round48/N1_glyphs.txt` and JSON reports. Rendering in Unity remains unverified.
