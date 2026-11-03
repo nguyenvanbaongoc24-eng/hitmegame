@@ -48,6 +48,13 @@ class BlackboxTests(unittest.TestCase):
             Image.new("RGB", (1179, 2556), "#26170e").save(path)
             self.assertTrue(image_content(path)["blank_or_uniform"])
 
+    def test_loading_page_is_never_visual_pass(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "page.html").write_text("<div id='unity-loading'>Downloading assets... 0%</div>", encoding="utf-8")
+            result = probe((root / "page.html").as_uri(), root / "evidence", load_timeout_ms=100)
+            self.assertEqual(result["T6"]["status"], "SKIP")
+
     def test_golden_requires_reference(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

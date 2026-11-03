@@ -44,7 +44,7 @@ def image_content(path: Path) -> dict:
             "blank_or_uniform": len(colors) < 16 or float(pixels.std()) < 5}
 
 
-def probe(url: str, output: Path, device: str = "iPhone 15 Pro") -> dict:
+def probe(url: str, output: Path, device: str = "iPhone 15 Pro", load_timeout_ms: int = 120000) -> dict:
     output.mkdir(parents=True, exist_ok=True)
     results = {}
     with sync_playwright() as playwright:
@@ -64,7 +64,7 @@ def probe(url: str, output: Path, device: str = "iPhone 15 Pro") -> dict:
                     const error = document.getElementById('webgl-error-modal');
                     return (!loading || getComputedStyle(loading).display === 'none') &&
                            (!error || getComputedStyle(error).display === 'none');
-                }""", timeout=120000)
+                }""", timeout=load_timeout_ms)
             except Exception:
                 pass  # Preserve a timeout screenshot; never treat it as gameplay evidence.
             loading = page.evaluate("""() => {
@@ -133,8 +133,9 @@ def main():
     parser.add_argument("--url", default="https://hitmegame-iota.vercel.app/?e2e=1")
     parser.add_argument("--device", default="iPhone 15 Pro")
     parser.add_argument("--output", type=Path, default=ROOT / "Evidence" / "blackbox" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))
+    parser.add_argument("--load-timeout-ms", type=int, default=120000)
     args = parser.parse_args()
-    result = probe(args.url, args.output, args.device)
+    result = probe(args.url, args.output, args.device, args.load_timeout_ms)
     print(json.dumps({key: value["status"] for key, value in result.items() if key.startswith("T")}, sort_keys=True))
     print(args.output)
     return int(any(value["status"] == "FAIL" for key, value in result.items() if key.startswith("T")))
