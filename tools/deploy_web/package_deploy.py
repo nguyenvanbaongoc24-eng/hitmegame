@@ -10,6 +10,7 @@ import shutil
 import re
 import json
 import hashlib
+from datetime import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -137,9 +138,17 @@ try {{ fs.unlinkSync('temp_pack_opt.wasm'); }} catch {{}}
         f.write(html)
     print(f"[+] Wrote customized index.html")
 
-    # 4. Copy vercel.json & config.json
+    # 4. Copy vercel.json & config.json, generate version.json
     shutil.copy(DEPLOY_DIR / "vercel.json", DIST_DIR / "vercel.json")
     shutil.copy(DEPLOY_DIR / "config.json", DIST_DIR / "config.json")
+    version_info = {
+        "version": "0.1.0-beta.1",
+        "build": build_src.name.split("_")[-1] if "_" in build_src.name else "latest",
+        "timestamp": datetime.now().isoformat()
+    }
+    with open(DIST_DIR / "version.json", "w", encoding="utf-8") as vf:
+        json.dump(version_info, vf, indent=2)
+    print(f"[+] Generated version.json: {version_info}")
     print(f"[+] Copied vercel.json and config.json")
 
     # 5. Integrity verification & manifest

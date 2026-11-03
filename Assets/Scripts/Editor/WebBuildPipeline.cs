@@ -73,8 +73,8 @@ namespace HitMe.Editor
             PlayerSettings.productName = "HIT ME";
             PlayerSettings.companyName = "HitMeStudio";
             PlayerSettings.bundleVersion = "1.0.0";
-            PlayerSettings.defaultWebScreenWidth = 540;
-            PlayerSettings.defaultWebScreenHeight = 960;
+            PlayerSettings.defaultWebScreenWidth = 1080;
+            PlayerSettings.defaultWebScreenHeight = 2340;
 
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
             PlayerSettings.WebGL.linkerTarget = WebGLLinkerTarget.Wasm;
@@ -141,8 +141,8 @@ namespace HitMe.Editor
             PlayerSettings.productName = "HIT ME";
             PlayerSettings.companyName = "HitMeStudio";
             PlayerSettings.bundleVersion = "1.0.0";
-            PlayerSettings.defaultWebScreenWidth = 540;
-            PlayerSettings.defaultWebScreenHeight = 960;
+            PlayerSettings.defaultWebScreenWidth = 1080;
+            PlayerSettings.defaultWebScreenHeight = 2340;
 
             // Release optimizations per Round 35 Lo 10 & Round 38 A7 & Round 45 D9 Bundle Optimization
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;

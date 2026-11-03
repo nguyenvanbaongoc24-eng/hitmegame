@@ -1799,7 +1799,7 @@ namespace HitMe.UI
                 leftTxtRt.sizeDelta = Vector2.zero;
                 var leftTxt = leftTxtGo.AddComponent<TextMeshProUGUI>();
                 leftTxt.font = GetDefaultFont();
-                leftTxt.text = "❮";
+                leftTxt.text = "<";
                 leftTxt.fontSize = 28f;
                 leftTxt.fontStyle = FontStyles.Bold;
                 leftTxt.alignment = TextAlignmentOptions.Center;
@@ -1830,7 +1830,7 @@ namespace HitMe.UI
                 rightTxtRt.sizeDelta = Vector2.zero;
                 var rightTxt = rightTxtGo.AddComponent<TextMeshProUGUI>();
                 rightTxt.font = GetDefaultFont();
-                rightTxt.text = "❯";
+                rightTxt.text = ">";
                 rightTxt.fontSize = 28f;
                 rightTxt.fontStyle = FontStyles.Bold;
                 rightTxt.alignment = TextAlignmentOptions.Center;
@@ -1997,7 +1997,7 @@ namespace HitMe.UI
             RankService.EnsureInitialized();
             var tier = RankService.GetTierForPoints(acc.RankPoints);
             string tierName = tier != null ? tier.GetLocalizedName(!UiStrings.IsVietnamese) : "Đồng";
-            string tierBadge = tier != null ? tier.badge : "🥉";
+            string tierBadge = tier != null ? tier.badge : "";
 
             if (txtProfileTitle != null) txtProfileTitle.text = UiStrings.Get(UiStrings.ProfileTitle);
             if (txtProfilePlayerName != null) txtProfilePlayerName.text = acc.DisplayName;
@@ -2011,7 +2011,7 @@ namespace HitMe.UI
                 }
                 else
                 {
-                    txtProfileGold.text = $"{acc.Gold} VÀNG • {tierBadge} {tierName} ({acc.RankPoints} Đ) • {acc.MatchesPlayed} Trận";
+                    txtProfileGold.text = $"{acc.Gold} VÀNG • {tierName} ({acc.RankPoints} Đ) • {acc.MatchesPlayed} Trận";
                 }
             }
 
@@ -2327,7 +2327,7 @@ namespace HitMe.UI
                 _txtLeaderboardPlaceholderBody.fontSize = 14f;
                 _txtLeaderboardPlaceholderBody.alignment = TextAlignmentOptions.Center;
                 _txtLeaderboardPlaceholderBody.color = new Color(0.70f, 0.80f, 0.90f);
-                _txtLeaderboardPlaceholderBody.text = "⏰ Đặt lại lúc 00:00 (Giờ Việt Nam)";
+                _txtLeaderboardPlaceholderBody.text = "Đặt lại lúc 00:00 (Giờ Việt Nam)";
             }
         }
 
@@ -2643,7 +2643,7 @@ namespace HitMe.UI
         public void ShowErrorToast(string message, float duration = 3.0f)
         {
             AudioManager.Instance?.PlayError();
-            ShowToast("⚠️ [LỖI] " + message, duration);
+            ShowToast("[LỖI] " + message, duration);
         }
 
         public void ShowToast(string message, float duration)
@@ -2660,7 +2660,7 @@ namespace HitMe.UI
                 if (txtToast != null)
                 {
                     txtToast.text = message;
-                    if (message.Contains("[LỖI]") || message.Contains("⚠️"))
+                    if (message.Contains("[LỖI]") || message.Contains("[LỖI]"))
                     {
                         txtToast.color = new Color(1f, 0.4f, 0.4f);
                     }
@@ -2688,7 +2688,7 @@ namespace HitMe.UI
                 roomFoundCard.SetActive(found);
                 if (txtFoundRoomInfo != null && found)
                 {
-                    txtFoundRoomInfo.text = "✅ Đã tìm thấy: Phòng Chiến Hữu\nChủ phòng: Nam Làng • 4/6 người • Sân Làng";
+                    txtFoundRoomInfo.text = "Đã tìm thấy: Phòng Chiến Hữu\nChủ phòng: Nam Làng • 4/6 người • Sân Làng";
                 }
             }
         }
@@ -2766,7 +2766,7 @@ namespace HitMe.UI
                 {
                     if (slot.txtName != null)
                     {
-                        slot.txtName.text = i == 0 ? "👑 [CHỦ PHÒNG] Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
+                        slot.txtName.text = i == 0 ? "[CHỦ PHÒNG] Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
                     }
                     if (i == 0)
                     {
@@ -2960,7 +2960,7 @@ namespace HitMe.UI
                 slot.isReady = p.ready;
                 if (slot.txtName != null)
                 {
-                    slot.txtName.text = (isHost ? "👑 " : "") + p.name;
+                    slot.txtName.text = (isHost ? "[CHỦ PHÒNG] " : "") + p.name;
                 }
                 if (slot.txtStatus != null)
                 {
@@ -3126,7 +3126,7 @@ namespace HitMe.UI
             {
                 mapName = Game.MapManager.Instance.CurrentMap.GetDisplayName(UiStrings.CurrentLanguage == AppLanguage.English);
             }
-            _txtLobbyMapSelector.text = $"🏟️ {prefix} {mapName} ⇄";
+            _txtLobbyMapSelector.text = $"[BẢN ĐỒ] {prefix} {mapName}";
         }
 
         public void EnsureBotTrainingPanel()
@@ -3511,7 +3511,7 @@ namespace HitMe.UI
                     {
                         colMinX = 3 * 0.14f + 0.005f;
                         colMaxX = 3 * 0.14f + 0.28f - 0.005f;
-                        keyLabel = "⌫ XÓA";
+                        keyLabel = "XÓA";
                         keyAction = OnKeypadBackspacePressed;
                     }
                     else
@@ -4422,12 +4422,12 @@ namespace HitMe.UI
                 {
                     if (won)
                     {
-                        row.txtStatus.text = isTie ? "★ ĐỒNG HẠNG 1" : "★ THẮNG";
+                        row.txtStatus.text = isTie ? "ĐỒNG HẠNG 1" : "CHIẾN THẮNG";
                         row.txtStatus.color = new Color(1f, 0.92f, 0.25f);
                     }
                     else
                     {
-                        row.txtStatus.text = p.IsAlive ? "Còn sống" : "✖ Đã loại";
+                        row.txtStatus.text = p.IsAlive ? "Còn sống" : "Đã loại";
                         row.txtStatus.color = p.IsAlive ? Color.white : new Color(1f, 0.44f, 0.44f);
                     }
                 }
@@ -4632,7 +4632,7 @@ namespace HitMe.UI
                     txt.fontSize = 28f;
                     txt.alignment = TextAlignmentOptions.Center;
                     txt.color = Color.white;
-                    txt.text = "💬";
+                    txt.text = "CHAT";
 
                     _btnInGameEmote.onClick.AddListener(() =>
                     {
@@ -4668,7 +4668,7 @@ namespace HitMe.UI
                     trayOutline.effectDistance = new Vector2(2f, -2f);
 
                     // Row 1: Emote Icons
-                    string[] emotes = { "😎", "🔥", "🎯", "😅", "💀" };
+                    string[] emotes = { "Haha", "Hay", "Né đi", "Ôi", "Cay" };
                     float colWidth = 1f / emotes.Length;
                     for (int i = 0; i < emotes.Length; i++)
                     {
@@ -4757,7 +4757,7 @@ namespace HitMe.UI
 
             if (_inGameEmoteTray != null) _inGameEmoteTray.SetActive(false);
 
-            ShowToast($"💬 Nam Làng: {content}", 2.0f);
+            ShowToast($"Nam Làng: {content}", 2.0f);
         }
 
         #endregion

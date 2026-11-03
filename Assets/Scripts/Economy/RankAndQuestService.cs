@@ -94,11 +94,11 @@ namespace HitMe.Economy
             {
                 tiers = new List<RankTierDto>
                 {
-                    new RankTierDto { nameVi = "Đồng", nameEn = "Bronze", minPoints = 0, maxPoints = 99, badge = "🥉" },
-                    new RankTierDto { nameVi = "Bạc", nameEn = "Silver", minPoints = 100, maxPoints = 299, badge = "🥈" },
-                    new RankTierDto { nameVi = "Vàng", nameEn = "Gold", minPoints = 300, maxPoints = 599, badge = "🥇" },
-                    new RankTierDto { nameVi = "Bạch Kim", nameEn = "Platinum", minPoints = 600, maxPoints = 999, badge = "💎" },
-                    new RankTierDto { nameVi = "Kim Cương", nameEn = "Diamond", minPoints = 1000, maxPoints = 99999, badge = "👑" }
+                    new RankTierDto { nameVi = "Đồng", nameEn = "Bronze", minPoints = 0, maxPoints = 99, badge = "I" },
+                    new RankTierDto { nameVi = "Bạc", nameEn = "Silver", minPoints = 100, maxPoints = 299, badge = "II" },
+                    new RankTierDto { nameVi = "Vàng", nameEn = "Gold", minPoints = 300, maxPoints = 599, badge = "III" },
+                    new RankTierDto { nameVi = "Bạch Kim", nameEn = "Platinum", minPoints = 600, maxPoints = 999, badge = "IV" },
+                    new RankTierDto { nameVi = "Kim Cương", nameEn = "Diamond", minPoints = 1000, maxPoints = 99999, badge = "V" }
                 },
                 scoringRules = new ScoringRulesDto(),
                 mockLeaderboard = new List<LeaderboardEntryDto>

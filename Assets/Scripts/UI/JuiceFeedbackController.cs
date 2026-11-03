@@ -157,7 +157,7 @@ namespace HitMe.UI
             var go = new GameObject("DamageTextPopup");
             go.transform.position = worldPos + Vector3.up * 0.4f;
             var text = go.AddComponent<TMPro.TextMeshPro>();
-            text.text = $"-{damage} HP 💔";
+            text.text = $"-{damage} HP";
             text.fontSize = 4.5f;
             text.fontStyle = TMPro.FontStyles.Bold;
             text.color = new Color(1f, 0.25f, 0.25f, 1f);

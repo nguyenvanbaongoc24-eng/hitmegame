@@ -115,7 +115,7 @@ namespace HitMe.UI
         public const string BtnCodeCopied = "ĐÃ SAO CHÉP!";
         public const string BtnSettings = "CÀI ĐẶT";
         public const string BtnAddFriend = "+ KẾT BẠN";
-        public const string BtnFriendSent = "✓ ĐÃ GỬI";
+        public const string BtnFriendSent = "ĐÃ GỬI";
 
         // Matchmaking & Lobby Notifications
         public const string MatchmakingSearching = "Đang tìm đối thủ...";
@@ -330,7 +330,7 @@ namespace HitMe.UI
             { "SẮP RA MẮT", "COMING SOON" },
             { "Hệ thống nhiệm vụ đang hoàn thiện!", "Quest system is under development!" },
             { "Bảng xếp hạng mùa giải sẽ mở trong bản cập nhật tới!", "Season leaderboard will open in the next update!" },
-            { "👑 [CHỦ PHÒNG] Nam Làng (Bạn)", "👑 [HOST] Nam Lang (You)" },
+            { "[CHỦ PHÒNG] Nam Làng (Bạn)", "[HOST] Nam Lang (You)" },
             { "Đang chờ…", "Waiting…" },
             { "Bạn", "You" },
             { "Còn sống", "Alive" },
@@ -347,7 +347,7 @@ namespace HitMe.UI
             { "Bạn có chắc chắn muốn rời trận không?", "Are you sure you want to leave the match?" },
             { "ĐÃ SAO CHÉP MÃ PHÒNG: ", "ROOM CODE COPIED: " },
             { BtnAddFriend, "+ ADD FRIEND" },
-            { BtnFriendSent, "✓ SENT" },
+            { BtnFriendSent, "SENT" },
             { "Đã gửi lời mời kết bạn tới {0}!", "Friend request sent to {0}!" }
         };
 

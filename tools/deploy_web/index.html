@@ -406,13 +406,13 @@
         productName: "HIT ME",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
-        matchWebGLToCanvasSize: false,
-        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.0)
+        matchWebGLToCanvasSize: true,
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
       };
 
       // Retina display support
       function updateCanvasResolution() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
         canvas.width = Math.round(window.innerWidth * dpr);
         canvas.height = Math.round(window.innerHeight * dpr);
       }

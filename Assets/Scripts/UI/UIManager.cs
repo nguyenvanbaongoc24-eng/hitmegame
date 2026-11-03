@@ -235,7 +235,7 @@ namespace HitMe.UI
             string s = "";
             for (int i = 0; i < max; i++)
             {
-                s += (i < current) ? "♥ " : "♡ ";
+                s += (i < current) ? "[HP] " : "[-] ";
             }
             return s.TrimEnd();
         }
