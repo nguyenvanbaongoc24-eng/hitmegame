@@ -1,0 +1,22 @@
+K1 placement privacy, 2026-11-03, prep/codex
+
+Test: ProtocolGatewayTests.TwoClientPlacementTranscriptIsDataIndependentUntilIdenticalReveal
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo --filter FullyQualifiedName~TwoClientPlacementTranscriptIsDataIndependentUntilIdenticalReveal --verbosity minimal
+Result: Passed! 1/1
+Full suite: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo --verbosity minimal
+Result: Passed! 153/153, Failed 0, Skipped 0
+
+Two in-process fake clients share one room. Client A sends two different valid
+position/aim revisions within the server's 5-second window. B receives zero
+new packets from either revision. Both A's acknowledgments have identical
+bytes/length. B disconnects and reconnects during placement; its full prelock
+transcript is scanned for both positions, both aims, and location/lock fields.
+Neither A nor reconnected B receives reveal before both lock. On lock, both
+receive byte-identical reveal payloads with both players' position and aim.
+
+The existing SixConnectionPreLockTranscriptNeverLeaksTraceCommitToAnyOpponent
+also scans all six connection transcripts for unusual coordinate/aim markers.
+This test is in-process protocol evidence, not a Unity rendering test or a
+live WebSocket packet capture. The server cannot prove a malicious client
+cannot infer data from external network timing; no per-commit broadcast is
+sent to opponents by this code path.

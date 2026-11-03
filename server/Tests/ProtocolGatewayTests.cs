@@ -631,6 +631,85 @@ public sealed class ProtocolGatewayTests
     }
 
     [Fact]
+    public void TwoClientPlacementTranscriptIsDataIndependentUntilIdenticalReveal()
+    {
+        var clock = new FakeTimeProvider(new DateTimeOffset(2026, 11, 3, 0, 0, 0, TimeSpan.Zero));
+        var gateway = new ProtocolGateway(new RoomDirectory(n => "HM3141"), clock, new TestAuthVerifier());
+        var transcript = new Dictionary<string, List<string>>();
+        IReadOnlyList<GatewayMessage> Send(string client, object packet)
+        {
+            var sent = gateway.HandleMessages(client, JsonSerializer.Serialize(packet));
+            foreach (var message in sent)
+            {
+                if (!transcript.TryGetValue(message.ConnectionId, out var payloads))
+                    transcript[message.ConnectionId] = payloads = new List<string>();
+                payloads.Add(message.Payload);
+            }
+            return sent;
+        }
+
+        Send("a", new { v = 1, type = "join", token = "test:p1" });
+        var joinedB = Send("b", new { v = 1, type = "join", token = "test:p2", roomCode = "HM3141" });
+        var reconnectToken = joinedB.Single(message => message.ConnectionId == "b")
+            .Payload;
+        reconnectToken = Json(reconnectToken).GetProperty("reconnectToken").GetString()!;
+        Send("a", new { v = 1, type = "start" });
+        var originalBCount = transcript["b"].Count;
+
+        // Both placements are valid revisions in the same five-second window.
+        var first = Send("a", new { v = 1, type = "commit", roundId = 1,
+            positionX = 3.14159f, positionY = -2.71828f,
+            hasAim = true, aimX = 0.12345f, aimY = -0.98765f });
+        var second = Send("a", new { v = 1, type = "commit", roundId = 1,
+            positionX = -3.12345f, positionY = 2.71828f,
+            hasAim = true, aimX = -0.23456f, aimY = 0.87654f });
+        Assert.Equal(originalBCount, transcript["b"].Count); // no packet or length side channel
+        Assert.Single(first);
+        Assert.Single(second);
+        Assert.Equal(first[0].Payload, second[0].Payload); // submitter ack length/content invariant
+        Assert.Equal("room_state", Json(first[0].Payload).GetProperty("type").GetString());
+
+        gateway.Disconnect("b");
+        clock.Advance(TimeSpan.FromSeconds(1));
+        Send("b2", new { v = 1, type = "join", token = "test:p2", reconnectToken });
+        Assert.Contains(transcript["b2"], payload => Json(payload).GetProperty("type").GetString() == "round_start");
+        foreach (var payload in transcript["b"].Concat(transcript["b2"]))
+        {
+            Assert.DoesNotContain("3.14159", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("-2.71828", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("-3.12345", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("2.71828", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("0.12345", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("-0.98765", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("-0.23456", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("0.87654", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("\"position\"", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("\"aim\"", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("\"hasAim\"", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("\"committed\"", payload, StringComparison.Ordinal);
+            Assert.DoesNotContain("\"locked\"", payload, StringComparison.Ordinal);
+        }
+
+        Send("b2", new { v = 1, type = "commit", roundId = 1,
+            positionX = 0f, positionY = 0f, hasAim = true, aimX = 0f, aimY = 1f });
+        Assert.DoesNotContain(transcript["a"], payload => Json(payload).GetProperty("type").GetString() == "reveal");
+        Send("a", new { v = 1, type = "lock_ready", ready = true });
+        Assert.DoesNotContain(transcript["b2"], payload => Json(payload).GetProperty("type").GetString() == "reveal");
+        var locked = Send("b2", new { v = 1, type = "lock_ready", ready = true });
+        var reveals = locked.Where(message => Json(message.Payload).GetProperty("type").GetString() == "reveal").ToArray();
+        Assert.Equal(2, reveals.Length);
+        Assert.Equal(reveals[0].Payload, reveals[1].Payload);
+        Assert.Equal(new[] { "a", "b2" }, reveals.Select(message => message.ConnectionId).OrderBy(id => id));
+        var players = Json(reveals[0].Payload).GetProperty("players");
+        Assert.Equal(2, players.GetArrayLength());
+        Assert.All(players.EnumerateArray(), player =>
+        {
+            Assert.True(player.TryGetProperty("position", out _));
+            Assert.True(player.TryGetProperty("aim", out _));
+        });
+    }
+
+    [Fact]
     public void ReconnectWithinThirtySecondsKeepsRoomStateWithoutLeakingOpponentCommit()
     {
         var clock = new FakeTimeProvider(new DateTimeOffset(2026, 10, 29, 12, 0, 0, TimeSpan.Zero));
