@@ -103,7 +103,7 @@ namespace HitMe.UI
         public const string BtnReady = "SẴN SÀNG";
         public const string BtnLocked = "ĐÃ KHÓA";
         public const string BtnStart = "BẮT ĐẦU";
-        public const string BtnPlayNow = "CHƠI NGAY / GHÉP NHANH";
+        public const string BtnPlayNow = "CHƠI NHANH";
         public const string BtnPracticeBots = "LUYỆN VỚI BOT";
         public const string BtnCreateRoom = "TẠO PHÒNG";
         public const string BtnJoinRoom = "VÀO PHÒNG";

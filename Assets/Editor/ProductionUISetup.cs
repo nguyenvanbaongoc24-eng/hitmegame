@@ -301,6 +301,7 @@ namespace HitMe.Editor
             var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam Làng", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
             charNameTxt.fontStyle = FontStyles.Bold;
             uiCtrl.txtHomeCharName = charNameTxt;
+            uiCtrl.imgHomeCharCardIcon = charIcon.GetComponent<Image>();
 
             // Right Card: Weapon Selector
             var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.420f), new Vector2(0.715f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 100f), spritePanelCardDarkGold, Color.white);
