@@ -43,3 +43,5 @@ K3 independent sprite inventory (2026-11-03): read-only scan of Unity Characters
 K4 independent harness library (2026-11-03): `tools/harness_lib/` checks UI safe-area/overlap/target/text geometry, regional global SSIM/pixel difference/color centroid with overlay, head/body ratio, and Markdown summaries. Six synthetic tests passed; full server suite Passed! 159/159 and sprite suite 18/18. Evidence: `Evidence/round47/K4_harness.txt`. No real Unity UI dump or full-match target screenshot was supplied to calibrate thresholds.
 
 K5 remains open: L1 rank/quests/durable friends; L2 Google token verification and guest merge; live Render shop/auth/operation validation; L6 live load retry. Existing local code/evidence are described above. Do not treat K1–K4 as completion of K5.
+
+K5 L6 diagnostic (2026-11-03): Render load harness now emits redacted room/cycle/stage/last-packet context on failure and fails pending reads immediately on unexpected socket close. Short live Render dry run completed 3/3 matches and 15/15 rounds; 0 errors/disconnects. Evidence: `Evidence/round47/K5_load_dryrun.txt`. Ten-minute retry remains pending.

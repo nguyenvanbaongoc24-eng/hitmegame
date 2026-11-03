@@ -1,0 +1,12 @@
+K5 Render load diagnostic dry run, 2026-11-03
+
+RenderLoad.mjs now records room/cycle/size/stage and last packet type/round on
+failures without logging token, position, aim, or raw payload. Unexpected
+socket closes immediately reject pending waits rather than hanging 15 seconds.
+
+Command: node --check server/Tools/RenderLoad.mjs
+Result: exit 0.
+Command: node server/Tools/RenderLoad.mjs wss://hitmegame.onrender.com/ws --seconds 15 --interval 30
+Result: 3/3 matches, 15/15 rounds, 0 errors, 0 unexpected disconnects;
+round lock-to-result mean/p95/max 82/203/203 ms. Peak 12 connections.
+CPU/RAM unavailable. Short dry run does not pass the required 10-minute L6.

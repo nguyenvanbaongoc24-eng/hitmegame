@@ -68,21 +68,29 @@ if (failures.length || completed !== cycles * 3 || samples.length !== completed 
 
 async function playRoom(count, cycle) {
   const clients = [];
+  let roomCode = 'not_created';
+  let stage = 'connect';
   try {
     for (let i = 0; i < count; i++) clients.push(await connect());
     const roomTag = `load_${started}_${count}_${cycle}`;
+    stage = 'create_room';
     clients[0].send({ type: 'join', token: `guest:${roomTag}_0` });
     const room = await clients[0].take('room_state');
+    roomCode = room.roomCode;
     assert.equal(room.players.length, 1);
     for (let i = 1; i < count; i++) {
+      stage = `join_${i}`;
       clients[i].send({ type: 'join', token: `guest:${roomTag}_${i}`, roomCode: room.roomCode });
       assert.equal((await clients[i].take('room_state')).players.length, i + 1);
     }
+    stage = 'start';
     clients[0].send({ type: 'start' });
     const roundTimes = [];
     for (let round = 1; round <= 5; round++) {
+      stage = `round_${round}_start`;
       const begins = await Promise.all(clients.map(client => client.take('round_start')));
       assert.ok(begins.every(begin => begin.roundId === round));
+      stage = `round_${round}_commit`;
       for (let i = 0; i < count; i++) clients[i].send({
         type: 'commit', roundId: round, positionX: -3 + i * 1.2, positionY: 0,
         hasAim: true, aimX: 0, aimY: 1
@@ -90,15 +98,20 @@ async function playRoom(count, cycle) {
       // The server processes each socket's commit before its subsequent lock_ready.
       const lockAt = Date.now();
       clients.forEach(client => client.send({ type: 'lock_ready', ready: true }));
+      stage = `round_${round}_reveal`;
       const reveals = await Promise.all(clients.map(client => client.take('reveal')));
+      stage = `round_${round}_result`;
       const results = await Promise.all(clients.map(client => client.take('round_result')));
       assert.ok(reveals.every(reveal => reveal.roundId === round));
       assert.ok(results.every(result => result.roundId === round));
       roundTimes.push(Date.now() - lockAt);
     }
+    stage = 'match_end';
     const endings = await Promise.all(clients.map(client => client.take('match_end')));
     assert.ok(endings.every(end => end.rankings?.length === count));
     return roundTimes;
+  } catch (error) {
+    throw new Error(`cycle=${cycle} size=${count} room=${roomCode} stage=${stage} cause=${error?.message ?? error}`);
   } finally {
     clients.forEach(client => client.close());
   }
@@ -109,16 +122,24 @@ async function connect() {
   let expectedClose = false;
   const queue = [];
   const waiters = [];
+  let lastPacket = 'none';
   socket.addEventListener('message', event => {
     let packet;
     try { packet = JSON.parse(event.data); } catch { return; }
+    lastPacket = `${packet.type ?? 'unknown'}:${packet.roundId ?? '-'}`;
     const waiter = waiters.find(item => item.type === packet.type || packet.type === 'error');
     if (!waiter) { queue.push(packet); return; }
     waiters.splice(waiters.indexOf(waiter), 1);
     clearTimeout(waiter.timer);
     packet.type === 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
   });
-  socket.addEventListener('close', () => { if (!expectedClose) disconnects++; });
+  socket.addEventListener('close', () => {
+    if (!expectedClose) disconnects++;
+    for (const waiter of waiters.splice(0)) {
+      clearTimeout(waiter.timer);
+      waiter.reject(new Error(`socket_closed_waiting_${waiter.type}_after_${lastPacket}`));
+    }
+  });
   await new Promise((done, fail) => {
     const timer = setTimeout(() => fail(new Error('open_timeout')), 10000);
     socket.addEventListener('open', () => { clearTimeout(timer); done(); }, { once: true });
@@ -136,7 +157,7 @@ async function connect() {
         const waiter = { type, resolve, reject };
         waiter.timer = setTimeout(() => {
           waiters.splice(waiters.indexOf(waiter), 1);
-          reject(new Error(`wait_timeout_${type}`));
+          reject(new Error(`wait_timeout_${type}_after_${lastPacket}`));
         }, 15000);
         waiters.push(waiter);
       });
