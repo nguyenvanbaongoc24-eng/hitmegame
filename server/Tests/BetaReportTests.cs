@@ -13,11 +13,13 @@ public sealed class BetaReportTests
     public void RedactsSecretsFromAllUntrustedTextAndLimitsLogs()
     {
         var report = new BetaReport("0.1.0", "build", "Safari", "1179x2556", "HM4826",
-            "token=abc123 sb_secret_testvalue", Enumerable.Repeat("Authorization: Bearer eyJabc.eyJdef.signature", 60).ToArray());
+            "token=abc123 sb_secret_testvalue postgresql://user:secret@host:5432/db", Enumerable.Repeat("Authorization: Bearer eyJabc.eyJdef.signature", 60).ToArray());
         var clean = BetaReportFilter.Clean(report);
         Assert.Equal(50, clean.RecentLogs.Length);
         Assert.DoesNotContain("abc123", clean.Note);
         Assert.DoesNotContain("sb_secret_", clean.Note);
+        Assert.DoesNotContain("postgresql://", clean.Note);
+        Assert.DoesNotContain("secret@host", clean.Note);
         Assert.All(clean.RecentLogs, line => Assert.DoesNotContain("eyJabc", line));
     }
 

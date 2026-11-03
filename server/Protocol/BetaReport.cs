@@ -8,7 +8,7 @@ public sealed record BetaReport(string ClientVersion, string BuildId, string Bro
 
 public static class BetaReportFilter
 {
-    private static readonly Regex Secrets = new(@"(?i)(sb_(?:secret|publishable)_[A-Za-z0-9_-]+|(?:bearer\s+)?eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|(?:token|password|secret|apikey)\s*[:=]\s*[^\s,;]+)", RegexOptions.Compiled);
+    private static readonly Regex Secrets = new(@"(?i)(postgres(?:ql)?://[^\s""'<>]+|sb_(?:secret|publishable)_[A-Za-z0-9_-]+|(?:bearer\s+)?eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+|(?:token|password|secret|apikey)\s*[:=]\s*[^\s,;]+)", RegexOptions.Compiled);
 
     public static BetaReport Clean(BetaReport source)
     {
