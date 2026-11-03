@@ -26,6 +26,29 @@ public sealed class WebSocketEndToEndTests
     public WebSocketEndToEndTests(ITestOutputHelper output) => this.output = output;
 
     [Fact]
+    public async Task ReportEndpointRejectsForeignOriginAndOversizedBodyWithoutDatabase()
+    {
+        var port = ReservePort();
+        await using var host = await RunningServer.StartAsync(port);
+        using var http = new HttpClient();
+        var url = $"http://127.0.0.1:{port}/report";
+        using var foreign = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent("{}", Encoding.UTF8, "application/json") };
+        foreign.Headers.TryAddWithoutValidation("Origin", "https://foreign.example");
+        Assert.Equal(HttpStatusCode.Forbidden, (await http.SendAsync(foreign)).StatusCode);
+        using var large = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent(new string('x', 5000), Encoding.UTF8, "application/json") };
+        large.Headers.TryAddWithoutValidation("Origin", "http://localhost");
+        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, (await http.SendAsync(large)).StatusCode);
+        using var normal = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent("{\"clientVersion\":\"0.1.0\",\"buildId\":\"b1\",\"browser\":\"Safari\",\"screen\":\"1179x2556\",\"note\":\"ok\",\"recentLogs\":[]}", Encoding.UTF8, "application/json") };
+        normal.Headers.TryAddWithoutValidation("Origin", "http://localhost");
+        var response = await http.SendAsync(normal);
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.Equal("http://localhost", response.Headers.GetValues("Access-Control-Allow-Origin").Single());
+    }
+
+    [Fact]
     public async Task DuplicateGuestConnectionNotifiesAndClosesOldSocketOverRealWebSockets()
     {
         var port = ReservePort();

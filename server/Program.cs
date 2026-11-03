@@ -9,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRateLimiter(options => options.AddPolicy("guest-token", context =>
     RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ =>
         new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
+builder.Services.AddRateLimiter(options => options.AddPolicy("beta-report", context =>
+    RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ =>
+        new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 })));
 var runtime = ServerRuntimeOptions.FromEnvironment(Environment.GetEnvironmentVariable);
 var clientVersions = ClientVersionPolicy.FromEnvironment(Environment.GetEnvironmentVariable);
 var listenUrl = ServerHostOptions.UrlForPort(Environment.GetEnvironmentVariable("PORT"));
@@ -17,6 +20,8 @@ var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
 var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_SECRET_KEY")
     ?? Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
 var guestSigningKey = Environment.GetEnvironmentVariable("GUEST_TOKEN_SIGNING_KEY");
+var reportStore = !string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey)
+    ? new SupabaseBetaReportStore(new Uri(supabaseUrl), supabaseKey) : null;
 var shopEnabled = string.Equals(Environment.GetEnvironmentVariable("SUPABASE_SHOP_ENABLED"), "true", StringComparison.OrdinalIgnoreCase);
 if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supabaseKey))
 {
@@ -86,6 +91,41 @@ app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
+app.MapMethods("/report", new[] { "OPTIONS" }, (HttpContext context, ConnectionAdmission admission) =>
+{
+    var origin = context.Request.Headers.Origin.ToString();
+    if (!admission.IsAllowedOrigin(origin)) return Results.StatusCode(403);
+    if (!string.IsNullOrEmpty(origin)) context.Response.Headers.AccessControlAllowOrigin = origin;
+    context.Response.Headers.AccessControlAllowMethods = "POST, OPTIONS";
+    context.Response.Headers.AccessControlAllowHeaders = "Content-Type";
+    return Results.NoContent();
+});
+app.MapPost("/report", async (HttpContext context, ConnectionAdmission admission) =>
+{
+    var origin = context.Request.Headers.Origin.ToString();
+    if (!admission.IsAllowedOrigin(origin)) return Results.StatusCode(403);
+    if (!string.IsNullOrEmpty(origin)) context.Response.Headers.AccessControlAllowOrigin = origin;
+    using var body = new MemoryStream();
+    var buffer = new byte[1024];
+    int count;
+    while ((count = await context.Request.Body.ReadAsync(buffer, context.RequestAborted)) > 0)
+    {
+        if (body.Length + count > 4096) return Results.Json(new { code = "report_too_large" }, statusCode: 413);
+        body.Write(buffer, 0, count);
+    }
+    BetaReport? report;
+    try { report = System.Text.Json.JsonSerializer.Deserialize<BetaReport>(body.ToArray(), new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }
+    catch (System.Text.Json.JsonException) { return Results.BadRequest(new { code = "invalid_report" }); }
+    if (report is null || !BetaReportFilter.IsValid(report)) return Results.BadRequest(new { code = "invalid_report" });
+    if (reportStore is null) return Results.Json(new { code = "report_unavailable" }, statusCode: 503);
+    try
+    {
+        var saved = await reportStore.SaveAsync(BetaReportFilter.Clean(report), context.RequestAborted);
+        return saved ? Results.Accepted() : Results.Json(new { code = "report_unavailable" }, statusCode: 503);
+    }
+    catch (HttpRequestException) { return Results.Json(new { code = "report_unavailable" }, statusCode: 503); }
+    catch (TaskCanceledException) { return Results.Json(new { code = "report_unavailable" }, statusCode: 503); }
+}).RequireRateLimiting("beta-report");
 app.MapPost("/guest-token", (GuestTokenRequest request, IAuthVerifier verifier) =>
 {
     if (verifier is not SignedGuestAuthVerifier signed) return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);

@@ -23,7 +23,7 @@ FILES = [
     "001_schema.sql", "002_rls.sql", "003_functions.sql",
     "004_match_result_store.sql", "005_reward_and_bans.sql",
     "006_guest_economy.sql", "007_leaderboard_rls.sql", "008_guest_shop.sql",
-    "009_guest_friends.sql", "010_friend_role_guard.sql",
+    "009_guest_friends.sql", "010_friend_role_guard.sql", "011_beta_reports.sql",
 ]
 
 

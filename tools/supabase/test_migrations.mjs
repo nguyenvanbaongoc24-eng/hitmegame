@@ -11,7 +11,7 @@ await db.exec('create schema auth; create table auth.users(id uuid primary key);
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
   '004_match_result_store.sql', '005_reward_and_bans.sql',
-  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql', '009_guest_friends.sql', '010_friend_role_guard.sql']) {
+  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql', '009_guest_friends.sql', '010_friend_role_guard.sql', '011_beta_reports.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
