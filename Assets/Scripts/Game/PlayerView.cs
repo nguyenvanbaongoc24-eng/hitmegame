@@ -617,11 +617,11 @@ namespace HitMe.Game
             else if (stateName == "Throw")
             {
                 _throwTimer = 0.35f;
-                if (_throwSprites != null && idx < _throwSprites.Length && _throwSprites[idx] != null)
+                if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
                 {
-                    _body.sprite = _throwSprites[idx];
-                    return;
+                    _body.sprite = _defaultSprites[idx];
                 }
+                return;
             }
             else if (stateName == "Aim")
             {
@@ -732,15 +732,17 @@ namespace HitMe.Game
                 {
                     _aimConeMesh = new Mesh();
                     _aimConeMesh.name = "AimConeMesh";
-                    if (_aimConeFilter != null) _aimConeFilter.mesh = _aimConeMesh;
+                    if (_aimConeFilter != null) _aimConeFilter.sharedMesh = _aimConeMesh;
                 }
                 _aimConeMesh.Clear();
                 _aimConeMesh.vertices = new Vector3[] { localBaseLeft, localBaseRight, localTipLeft, localTipRight };
+                _aimConeMesh.uv = new Vector2[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) };
                 Color startCol = new Color(1f, 1f, 1f, 0.12f);
                 Color endCol = new Color(0f, 0.898f, 1f, 0.38f);
                 _aimConeMesh.colors = new Color[] { startCol, startCol, endCol, endCol };
-                _aimConeMesh.triangles = new int[] { 0, 1, 2, 2, 1, 3 };
+                _aimConeMesh.triangles = new int[] { 0, 2, 1, 1, 2, 3 };
                 _aimConeMesh.RecalculateBounds();
+                if (_aimConeFilter != null) _aimConeFilter.sharedMesh = _aimConeMesh;
 
                 if (_aimConeOutline != null)
                 {
@@ -863,6 +865,10 @@ namespace HitMe.Game
                 {
                     _aimConeFilter = cGo.GetComponent<MeshFilter>();
                     _aimConeRenderer = cGo.GetComponent<MeshRenderer>();
+                }
+                if (_aimConeFilter != null && _aimConeMesh != null)
+                {
+                    _aimConeFilter.sharedMesh = _aimConeMesh;
                 }
                 if (_aimConeRenderer != null)
                 {
