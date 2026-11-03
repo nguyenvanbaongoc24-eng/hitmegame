@@ -1,0 +1,24 @@
+K3 independent Unity sprite inventory, 2026-11-03, prep/codex
+
+Command: python tools/sprites/inventory.py --source "D:/HITME GAME/unity-client/Assets/Art/Characters" --out tools/sprites/out
+Result: 14 PNG source textures, 840 Unity .meta sprite entries, 810 flagged.
+Of these, 128 metadata rectangles extend outside their actual PNG. The other
+flags are not exclusive: 592 no_real_alpha, 594 touches_frame_edge, 272
+size_outlier, 89 multiple_large_components, 32 unusual_aspect, 4 possible_text_or_ui.
+The 128 invalid rectangles are concentrated in eight 1536x1024 sheets whose
+.meta layouts reference out-of-image cells; inspect each source/metadata pair.
+
+Command: python -m unittest discover -s tools/sprites -p 'test_*.py' -v
+Result: Ran 18 tests, OK (5 new inventory synthetic cases plus 13 prior).
+
+Outputs: tools/sprites/out/inventory.json, contact_sheet.png, frames/.
+The contact sheet was opened visually. Six mapped roster candidates contain
+HIT ME logo/background or clipped character art in the first metadata frame;
+none is a verified clean transparent character frame. Cô Ba has no identified
+source under this directory. Roster mapping is a hypothesis based on folder
+names and PlayerView character order, not an AG-confirmed asset contract.
+Automated flags are screening hints; attachments and separated body parts can
+trigger multiple-component warnings. Do not import or replace Unity sprites
+from these crops without a manual source review.
+
+No file in unity-client/Assets/ was written by this command.
