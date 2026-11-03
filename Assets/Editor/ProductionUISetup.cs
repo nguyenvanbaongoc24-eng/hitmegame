@@ -80,7 +80,7 @@ namespace HitMe.Editor
                 if (bgObj == null) bgObj = new GameObject("ArenaBackground");
                 bgObj.transform.SetParent(arenaGo.transform);
                 bgObj.transform.position = Vector3.zero;
-                bgObj.transform.localScale = new Vector3(1.05f, 1.05f, 1f);
+                bgObj.transform.localScale = new Vector3(1.42f, 1.42f, 1f);
                 var sr = bgObj.GetComponent<SpriteRenderer>();
                 if (sr == null) sr = bgObj.AddComponent<SpriteRenderer>();
                 sr.sprite = spriteArena;
@@ -159,100 +159,120 @@ namespace HitMe.Editor
                 bgImg.color = Color.white;
             }
 
-            // Top Bar: Player profile, Currency Chips, and Settings (Safe Area row Y = 0.965f)
-            var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.16f, 0.965f), new Vector2(0.16f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(230f, 68f));
-            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Khách_4826", 22, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            // Top Bar: Player profile, Currency Chips, and Settings (Safe Area row Y = 0.960f)
+            var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.18f, 0.960f), new Vector2(0.18f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(250f, 68f));
+            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Nam L?ng\n<size=16><color=#aaccff>H? s? ?</color></size>", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeProfile = btnProfHeader.GetComponent<Button>();
             uiCtrl.txtHomePlayerName = txtProfHeader;
 
-            var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.38f, 0.965f), new Vector2(0.38f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(160f, 58f));
-            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "500 G", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.58f, 0.960f), new Vector2(0.58f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(190f, 56f));
+            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "?? 1.250 +", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtHomeGold = txtGold;
 
-            var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.53f, 0.965f), new Vector2(0.53f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(130f, 58f));
-            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "20 💎", 20, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
+            // Hidden or compact gem pill
+            var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.76f, 0.960f), new Vector2(0.76f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(110f, 56f));
+            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "?? 50", 18, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtHomeGems = txtGem;
 
             // Settings button on Home Screen (Top Right)
-            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.92f, 0.965f), new Vector2(0.92f, 0.965f), new Vector2(0.50f, 0.50f), new Vector2(80f, 80f));
-            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 34, Color.white, TextAlignmentOptions.Center);
+            var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.92f, 0.960f), new Vector2(0.92f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(72f, 72f));
+            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "?", 34, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
 
-            // Home Header & Logo (Centered below top bar, Y = 0.875f with ZERO overlap)
-            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", spriteBannerWood, new Vector2(0.5f, 0.875f), new Vector2(0.5f, 0.875f), new Vector2(0.5f, 0.5f), new Vector2(860f, 140f));
-            var logoTxt = CreateTMP(homeHeader.transform, "LogoTxt", fontAsset, UiStrings.GameTitle, 72, colorGoldSub, TextAlignmentOptions.Center);
+            // Home Header & Logo (Centered below top bar, Y = 0.840f)
+            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", spriteBannerWood, new Vector2(0.5f, 0.840f), new Vector2(0.5f, 0.840f), new Vector2(0.5f, 0.5f), new Vector2(720f, 130f));
+            var logoTxt = CreateTMP(homeHeader.transform, "LogoTxt", fontAsset, UiStrings.GameTitle, 68, colorGoldSub, TextAlignmentOptions.Center);
             logoTxt.fontStyle = FontStyles.Bold;
             FillRect(logoTxt.rectTransform, new Vector2(20f, 10f), new Vector2(-20f, -10f));
             uiCtrl.txtHomeLogo = logoTxt;
 
-            var subtitleTxt = CreateTMP(homePanel.transform, "HomeSubtitle", fontAsset, UiStrings.HomeSubtitle, 26, colorCream, TextAlignmentOptions.Center, new Vector2(0.5f, 0.815f), new Vector2(800f, 36f));
-            subtitleTxt.fontStyle = FontStyles.Bold;
+            // Hero Pedestal & Character Display (Y = 0.52f - 0.76f)
+            var spritePedestal = LoadSprite("Assets/Art/Arena/arena_center_lotus_decal.png") ?? spriteBannerWood;
+            var pedestalObj = CreateImage(homePanel.transform, "HeroPedestal", spritePedestal, new Vector2(0.5f, 0.535f), new Vector2(0.5f, 0.535f), new Vector2(0.5f, 0.5f), new Vector2(360f, 90f));
+            pedestalObj.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.85f);
 
-            // Selected Character & Loadout Display Box (middle 0.50f - 0.78f)
-            var loadoutCard = CreatePanel(homePanel.transform, "LoadoutCard", new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.63f), new Vector2(0.5f, 0.5f), new Vector2(940f, 320f), spritePanelDarkGold, Color.white);
-            
-            // Character Portrait inside Card Frame
-            var portraitFrame = CreateImage(loadoutCard.transform, "PortraitFrame", spriteCardSelected, new Vector2(0.18f, 0.5f), new Vector2(0.18f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(200f, 260f));
-            var portraitImgObj = CreateImage(portraitFrame.transform, "PortraitSprite", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(170f, 220f));
-            var portraitImg = portraitImgObj.GetComponent<Image>();
-            portraitImg.preserveAspect = true;
-            uiCtrl.imgHomeCharPortrait = portraitImg;
+            var heroObj = CreateImage(homePanel.transform, "HeroCharacter", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.5f, 0.640f), new Vector2(0.5f, 0.640f), new Vector2(0.5f, 0.5f), new Vector2(340f, 400f));
+            var heroImg = heroObj.GetComponent<Image>();
+            heroImg.preserveAspect = true;
+            uiCtrl.imgHomeCharPortrait = heroImg;
 
-            // Character Info (Right Side)
-            var charHeaderTxt = CreateTMP(loadoutCard.transform, "CharHeader", fontAsset, "NHÂN VẬT ĐANG CHỌN", 24, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.64f, 0.80f), new Vector2(460f, 35f));
-            var charNameTxt = CreateTMP(loadoutCard.transform, "CharName", fontAsset, UiStrings.Char1Name, 40, colorCream, TextAlignmentOptions.Left, new Vector2(0.64f, 0.60f), new Vector2(460f, 50f));
+            // Hero Navigation Arrows (? and ?)
+            var btnPrevHero = CreateButton(homePanel.transform, "BtnHeroPrev", spriteCircleBack, new Vector2(0.20f, 0.620f), new Vector2(0.20f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
+            CreateTMP(btnPrevHero.transform, "Label", fontAsset, "?", 32, colorGoldSub, TextAlignmentOptions.Center);
+            btnPrevHero.GetComponent<Button>().onClick.AddListener(() => {
+                AudioManager.Instance?.PlayClick();
+                uiCtrl.ChangePracticeCharacter(-1);
+            });
+
+            var btnNextHero = CreateButton(homePanel.transform, "BtnHeroNext", spriteCircleBack, new Vector2(0.80f, 0.620f), new Vector2(0.80f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
+            CreateTMP(btnNextHero.transform, "Label", fontAsset, "?", 32, colorGoldSub, TextAlignmentOptions.Center);
+            btnNextHero.GetComponent<Button>().onClick.AddListener(() => {
+                AudioManager.Instance?.PlayClick();
+                uiCtrl.ChangePracticeCharacter(1);
+            });
+
+            // 2 Loadout Selector Cards side by side (Y = 0.420f)
+            // Left Card: Character Selector
+            var charCard = CreatePanel(homePanel.transform, "CharCard", new Vector2(0.285f, 0.420f), new Vector2(0.285f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 96f), spritePanelDarkGold, Color.white);
+            var charCardBtn = charCard.AddComponent<Button>();
+            charCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); uiCtrl.ChangePracticeCharacter(1); });
+            var charIcon = CreateImage(charCard.transform, "Icon", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.15f, 0.5f), new Vector2(0.15f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(68f, 68f));
+            charIcon.GetComponent<Image>().preserveAspect = true;
+            CreateTMP(charCard.transform, "Title", fontAsset, "NH?N V?T", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
+            var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam L?ng ?", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
             charNameTxt.fontStyle = FontStyles.Bold;
             uiCtrl.txtHomeCharName = charNameTxt;
 
-            var charDescTxt = CreateTMP(loadoutCard.transform, "CharDesc", fontAsset, UiStrings.Char1Desc, 22, colorCream, TextAlignmentOptions.Left, new Vector2(0.64f, 0.40f), new Vector2(460f, 50f), wrap: true);
-            uiCtrl.txtHomeCharDesc = charDescTxt;
-
-            var weaponPillHome = CreateImage(loadoutCard.transform, "WeaponPillHome", spriteBannerWood, new Vector2(0.64f, 0.18f), new Vector2(0.64f, 0.18f), new Vector2(0.5f, 0.5f), new Vector2(460f, 56f));
-            var weaponIconHome = CreateImage(weaponPillHome.transform, "Icon", spriteWeaponDep, new Vector2(0.10f, 0.5f), new Vector2(0.10f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(42f, 42f));
-            var weaponTxtHome = CreateTMP(weaponPillHome.transform, "Text", fontAsset, UiStrings.WeaponSandalName, 22, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.58f, 0.5f), new Vector2(300f, 40f));
+            // Right Card: Weapon Selector
+            var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.420f), new Vector2(0.715f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 96f), spritePanelDarkGold, Color.white);
+            var weaponIconHome = CreateImage(weaponCard.transform, "Icon", spriteWeaponDep, new Vector2(0.15f, 0.5f), new Vector2(0.15f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(64f, 64f));
+            weaponIconHome.GetComponent<Image>().preserveAspect = true;
+            CreateTMP(weaponCard.transform, "Title", fontAsset, "V? KH?", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
+            var weaponTxtHome = CreateTMP(weaponCard.transform, "Text", fontAsset, "D?p ?", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
             weaponTxtHome.fontStyle = FontStyles.Bold;
 
-            // 4 Action Buttons strictly in priority order (lower 1/3 of screen, touch area >= 135px)
-            // 1. LUYỆN VỚI BOT (CTA Vàng chính)
-            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBtnYellow, new Vector2(0.5f, 0.36f), new Vector2(0.5f, 0.36f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
-            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, UiStrings.BtnPracticeBots, 44, new Color(0.22f, 0.11f, 0.02f), TextAlignmentOptions.Center, wrap: false);
-            btnBotTxt.fontStyle = FontStyles.Bold;
-            uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
-
-            // 2. CHƠI NGAY / GHÉP NHANH (CTA Xanh dương)
-            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnBlue, new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.25f), new Vector2(0.5f, 0.5f), new Vector2(880f, 120f));
-            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, UiStrings.BtnPlayNow, 38, Color.white, TextAlignmentOptions.Center, wrap: false);
+            // Action Buttons
+            // 1. CH?I NHANH (Primary CTA V?ng - Y = 0.305f)
+            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnYellow, new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.5f), new Vector2(880f, 115f));
+            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, "? " + UiStrings.BtnPlayNow, 40, new Color(0.24f, 0.12f, 0.02f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.60f), new Vector2(840f, 50f));
             btnQuickTxt.fontStyle = FontStyles.Bold;
+            var btnQuickSub = CreateTMP(btnQuick.transform, "Sub", fontAsset, "Online ? T?i ?a 6 ng??i", 20, new Color(0.38f, 0.22f, 0.05f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.26f), new Vector2(840f, 30f));
             uiCtrl.btnQuickMatch = btnQuick.GetComponent<Button>();
 
-            // 3. TẠO PHÒNG (CTA Xanh lá)
-            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnGreen, new Vector2(0.5f, 0.155f), new Vector2(0.5f, 0.155f), new Vector2(0.5f, 0.5f), new Vector2(880f, 110f));
-            var btnCreateTxt = CreateTMP(btnCreate.transform, "Label", fontAsset, UiStrings.BtnCreateRoom, 36, Color.white, TextAlignmentOptions.Center, wrap: false);
+            // 2. T?O PH?NG (Xanh d??ng) + V?O PH?NG (Xanh l?) - Row Y = 0.205f
+            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue, new Vector2(0.285f, 0.205f), new Vector2(0.285f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 95f));
+            var btnCreateTxt = CreateTMP(btnCreate.transform, "Label", fontAsset, "??+ " + UiStrings.BtnCreateRoom, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
             btnCreateTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
-            // 4. VÀO PHÒNG (CTA Xanh dương / kit)
-            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnBlue, new Vector2(0.50f, 0.075f), new Vector2(0.50f, 0.075f), new Vector2(0.50f, 0.50f), new Vector2(880f, 100f));
-            var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, UiStrings.BtnJoinRoom, 36, Color.white, TextAlignmentOptions.Center, wrap: false);
+            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen, new Vector2(0.715f, 0.205f), new Vector2(0.715f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 95f));
+            var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, "?? " + UiStrings.BtnJoinRoom, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
             btnJoinTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
 
-            // Bottom Nav bar buttons (Lô 7 & 8)
-            var btnShopBottom = CreateButton(homePanel.transform, "BtnBottomShop", spriteBtnYellow, new Vector2(0.20f, 0.020f), new Vector2(0.20f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
-            CreateTMP(btnShopBottom.transform, "Label", fontAsset, "CỬA HÀNG", 20, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.btnHomeShop = btnShopBottom.GetComponent<Button>();
+            // 3. LUY?N V?I BOT (Dark Blue/Wood - Y = 0.115f)
+            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBannerWood, new Vector2(0.5f, 0.115f), new Vector2(0.5f, 0.115f), new Vector2(0.5f, 0.5f), new Vector2(880f, 75f));
+            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, "?? " + UiStrings.BtnPracticeBots + " ?", 30, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            btnBotTxt.fontStyle = FontStyles.Bold;
+            uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
 
-            var btnInvBottom = CreateButton(homePanel.transform, "BtnBottomInv", spriteBtnBlue, new Vector2(0.40f, 0.020f), new Vector2(0.40f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
-            CreateTMP(btnInvBottom.transform, "Label", fontAsset, "TÚI ĐỒ", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.btnHomeInventory = btnInvBottom.GetComponent<Button>();
+            // Bottom Nav bar buttons (Y = 0.035f, 3 tabs: Trang ch?, X?p h?ng, Nhi?m v?)
+            var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.035f), new Vector2(0.5f, 0.035f), new Vector2(0.5f, 0.5f), new Vector2(1080f, 75f), null, new Color(0.06f, 0.08f, 0.12f, 0.95f));
+            
+            var btnHomeTab = CreateButton(navBarBg.transform, "BtnTabHome", null, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
+            var txtHomeTab = CreateTMP(btnHomeTab.transform, "Label", fontAsset, "?? Trang ch?\n<color=#00E5FF>???</color>", 20, new Color(0.00f, 0.898f, 1f), TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeLogin = btnHomeTab.GetComponent<Button>();
 
-            var btnLbBottom = CreateButton(homePanel.transform, "BtnBottomLb", spriteBtnGreen, new Vector2(0.60f, 0.020f), new Vector2(0.60f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
-            CreateTMP(btnLbBottom.transform, "Label", fontAsset, "XẾP HẠNG", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            var btnLbBottom = CreateButton(navBarBg.transform, "BtnBottomLb", null, new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
+            CreateTMP(btnLbBottom.transform, "Label", fontAsset, "?? X?p h?ng", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeLeaderboard = btnLbBottom.GetComponent<Button>();
 
-            var btnLoginBottom = CreateButton(homePanel.transform, "BtnBottomLogin", spriteCircleBack, new Vector2(0.80f, 0.020f), new Vector2(0.80f, 0.020f), new Vector2(0.50f, 0.50f), new Vector2(200f, 55f));
-            CreateTMP(btnLoginBottom.transform, "Label", fontAsset, "KHÁCH", 20, colorCream, TextAlignmentOptions.Center, wrap: false);
-            uiCtrl.btnHomeLogin = btnLoginBottom.GetComponent<Button>();
+            var btnShopBottom = CreateButton(navBarBg.transform, "BtnBottomShop", null, new Vector2(0.80f, 0.50f), new Vector2(0.80f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
+            CreateTMP(btnShopBottom.transform, "Label", fontAsset, "?? Nhi?m v?", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeShop = btnShopBottom.GetComponent<Button>();
+
+            var btnInvBottom = CreateButton(homePanel.transform, "BtnBottomInv", null, new Vector2(-10f, -10f), new Vector2(-10f, -10f), new Vector2(0.5f, 0.5f), Vector2.one);
+            uiCtrl.btnHomeInventory = btnInvBottom.GetComponent<Button>();
 
             // ==================== C. CREATE ROOM PANEL ====================
             var createRoomPanel = CreatePanel(rootTr, "CreateRoomPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.05f, 0.07f, 0.95f));

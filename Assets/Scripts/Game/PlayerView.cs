@@ -719,19 +719,19 @@ namespace HitMe.Game
             if (activeAim)
             {
                 Vector3 dir = new Vector3(_currentAimDirection.x, _currentAimDirection.y, 0f).normalized;
-                float startDist = touchRadius;
+                float startDist = 0.45f;
                 float length = Mathf.Clamp(aimPreviewLength + aimLineExtraLength, 0.6f, 3.5f);
-                Vector3 startPos = transform.position + dir * startDist;
-                Vector3 tipPos = transform.position + dir * (startDist + length);
+                Vector3 localStartPos = dir * startDist;
+                Vector3 localTipPos = dir * (startDist + length);
                 Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
 
                 float halfBaseWidth = 0.08f;
                 float halfTipWidth = 0.08f + length * 0.1763f; // 20 deg opening (tan 10 deg ~ 0.1763)
 
-                Vector3 baseLeft = startPos + perp * halfBaseWidth;
-                Vector3 baseRight = startPos - perp * halfBaseWidth;
-                Vector3 tipLeft = tipPos + perp * halfTipWidth;
-                Vector3 tipRight = tipPos - perp * halfTipWidth;
+                Vector3 localBaseLeft = localStartPos + perp * halfBaseWidth;
+                Vector3 localBaseRight = localStartPos - perp * halfBaseWidth;
+                Vector3 localTipLeft = localTipPos + perp * halfTipWidth;
+                Vector3 localTipRight = localTipPos - perp * halfTipWidth;
 
                 if (_aimConeMesh == null)
                 {
@@ -740,20 +740,21 @@ namespace HitMe.Game
                     if (_aimConeFilter != null) _aimConeFilter.mesh = _aimConeMesh;
                 }
                 _aimConeMesh.Clear();
-                _aimConeMesh.vertices = new Vector3[] { baseLeft, baseRight, tipLeft, tipRight };
-                Color startCol = new Color(1f, 1f, 1f, 0.10f);
-                Color endCol = new Color(0f, 0.898f, 1f, 0.42f);
+                _aimConeMesh.vertices = new Vector3[] { localBaseLeft, localBaseRight, localTipLeft, localTipRight };
+                Color startCol = new Color(1f, 1f, 1f, 0.12f);
+                Color endCol = new Color(0f, 0.898f, 1f, 0.38f);
                 _aimConeMesh.colors = new Color[] { startCol, startCol, endCol, endCol };
                 _aimConeMesh.triangles = new int[] { 0, 1, 2, 2, 1, 3 };
                 _aimConeMesh.RecalculateBounds();
 
                 if (_aimConeOutline != null)
                 {
+                    _aimConeOutline.useWorldSpace = false;
                     if (_aimConeOutline.positionCount < 4) _aimConeOutline.positionCount = 4;
-                    _aimConeOutline.SetPosition(0, baseLeft);
-                    _aimConeOutline.SetPosition(1, tipLeft);
-                    _aimConeOutline.SetPosition(2, tipRight);
-                    _aimConeOutline.SetPosition(3, baseRight);
+                    _aimConeOutline.SetPosition(0, localBaseLeft);
+                    _aimConeOutline.SetPosition(1, localTipLeft);
+                    _aimConeOutline.SetPosition(2, localTipRight);
+                    _aimConeOutline.SetPosition(3, localBaseRight);
                 }
 
                 if (_aimDots != null)
@@ -763,9 +764,9 @@ namespace HitMe.Game
                         if (_aimDots[i] == null) continue;
                         _aimDots[i].enabled = true;
                         float t = (i + 0.8f) / (_aimDots.Length + 0.5f);
-                        Vector3 dotPos = Vector3.Lerp(startPos, tipPos, t);
+                        Vector3 dotPos = Vector3.Lerp(localStartPos, localTipPos, t);
                         dotPos.z = -0.02f;
-                        _aimDots[i].transform.position = dotPos;
+                        _aimDots[i].transform.localPosition = dotPos;
                         float dotScale = Mathf.Lerp(0.045f, 0.09f, t);
                         _aimDots[i].transform.localScale = new Vector3(dotScale, dotScale, 1f);
                         _aimDots[i].color = new Color(1f, 1f, 1f, Mathf.Lerp(0.55f, 0.95f, t));
@@ -775,17 +776,17 @@ namespace HitMe.Game
                 if (_aimReticle != null)
                 {
                     float pulse = 1.0f + Mathf.Sin(Time.time * 5.0f) * 0.05f;
-                    float reticleScale = 0.45f * pulse;
-                    _aimReticle.transform.position = tipPos + new Vector3(0f, 0f, -0.03f);
+                    float reticleScale = 0.50f * pulse;
+                    _aimReticle.transform.localPosition = localTipPos + new Vector3(0f, 0f, -0.03f);
                     _aimReticle.transform.localScale = new Vector3(reticleScale, reticleScale, 1f);
                     _aimReticle.color = new Color(0f, 0.898f, 1f, 0.85f);
                 }
 
                 if (_aimWeaponIcon != null)
                 {
-                    _aimWeaponIcon.transform.position = tipPos + new Vector3(0f, 0f, -0.04f);
-                    float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                    _aimWeaponIcon.transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
+                    _aimWeaponIcon.transform.localPosition = localTipPos + new Vector3(0f, 0f, -0.04f);
+                    float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
+                    _aimWeaponIcon.transform.localRotation = Quaternion.Euler(0f, 0f, rotZ);
                     _aimWeaponIcon.transform.localScale = new Vector3(0.40f, 0.40f, 1f);
                     if (_defaultWeaponIcon != null) _aimWeaponIcon.sprite = _defaultWeaponIcon;
                 }
@@ -803,7 +804,7 @@ namespace HitMe.Game
 
             if (_touchRing != null)
             {
-                _touchRing.enabled = visible && showTouchRing && player.IsAlive;
+                _touchRing.enabled = false;
                 if (_touchRing.enabled && Mathf.Abs(touchRadius - _lastTouchRadius) > 0.001f)
                 {
                     _lastTouchRadius = touchRadius;

@@ -406,8 +406,18 @@
         productName: "HIT ME",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
-        matchWebGLToCanvasSize: true
+        matchWebGLToCanvasSize: false,
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.0)
       };
+
+      // Retina display support
+      function updateCanvasResolution() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+        canvas.width = Math.round(window.innerWidth * dpr);
+        canvas.height = Math.round(window.innerHeight * dpr);
+      }
+      updateCanvasResolution();
+      window.addEventListener("resize", updateCanvasResolution);
 
       const script = document.createElement("script");
       script.src = versioned(buildUrl + "/WebGL_Release_20261102_db4e8f1.loader.js");

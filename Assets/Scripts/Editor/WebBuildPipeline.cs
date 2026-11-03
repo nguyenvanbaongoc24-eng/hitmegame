@@ -66,11 +66,7 @@ namespace HitMe.Editor
 
             Debug.Log($"Starting HIT ME Clean Fingerprinted WebGL Build (commit={commitShort}, date={dateTag})...");
 
-            var configAsset = AssetDatabase.LoadAssetAtPath<HitMe.Game.GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
-            if (configAsset == null || configAsset.characterIdleSprites == null || configAsset.characterIdleSprites.Length < 7)
-            {
-                ProductionUISetup.BuildProductionUI();
-            }
+            ProductionUISetup.BuildProductionUI();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
 
@@ -138,11 +134,7 @@ namespace HitMe.Editor
 
             Debug.Log($"Starting HIT ME Release Profile WebGL Build (commit={commitShort}, date={dateTag}, compression=Brotli)...");
 
-            var configAsset = AssetDatabase.LoadAssetAtPath<HitMe.Game.GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
-            if (configAsset == null || configAsset.characterIdleSprites == null || configAsset.characterIdleSprites.Length < 7)
-            {
-                ProductionUISetup.BuildProductionUI();
-            }
+            ProductionUISetup.BuildProductionUI();
 
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.WebGL, BuildTarget.WebGL);
 

@@ -851,7 +851,7 @@ namespace HitMe.Game
 
                 bool visible = placing ? isLocal : p.IsAlive;
                 bool showAim = placing ? (isLocal && snap.AimActive) : (showAllAim && p.IsAlive);
-                bool showTouchRing = placing && isLocal;
+                bool showTouchRing = false;
 
                 if (_views.TryGetValue(p.Id, out var view) && view != null)
                 {
