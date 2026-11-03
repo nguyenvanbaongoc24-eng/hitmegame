@@ -4,6 +4,8 @@ Command: python -m unittest discover -s tools/harness_lib -p 'test_*.py' -v
 Result: Ran 6 tests, OK. Cases include valid/overlapping/undersized/outside-safe-area
 layout, text outside parent, correct/incorrect head fraction, matching/shifted
 images with overlay, and Markdown PASS/FAIL report.
+Follow-up: `pixelsPerCssPixel` scales the 44 CSS-pixel touch target when dump
+rectangles are in high-DPI screenshot pixels. Same command: Ran 7 tests, OK.
 
 Command: python -m unittest discover -s tools/sprites -p 'test_*.py' -v
 Result: Ran 18 tests, OK.

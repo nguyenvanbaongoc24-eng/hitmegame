@@ -25,14 +25,15 @@ def check(dump):
     safe = dump["safeArea"]
     elements = dump["elements"]
     failures = []
+    minimum_touch = float(dump.get("minTouchCssPx", 44)) * float(dump.get("pixelsPerCssPixel", 1))
     for element in elements:
         name, rect = element["name"], element["rect"]
         if area(rect) <= 0:
             failures.append(f"{name}: empty_rect")
         if not contains(safe, rect):
             failures.append(f"{name}: outside_safe_area")
-        if element.get("clickable") and (rect[2] < 44 or rect[3] < 44):
-            failures.append(f"{name}: touch_target_below_44px")
+        if element.get("clickable") and (rect[2] < minimum_touch or rect[3] < minimum_touch):
+            failures.append(f"{name}: touch_target_below_{minimum_touch:g}px")
         if element.get("text") and not contains(rect, element.get("textRect", rect)):
             failures.append(f"{name}: text_outside_rect")
     clickable = [e for e in elements if e.get("clickable")]

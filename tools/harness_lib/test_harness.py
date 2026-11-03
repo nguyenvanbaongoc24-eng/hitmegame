@@ -29,6 +29,12 @@ class HarnessTests(unittest.TestCase):
             {"name": "Title", "rect": [0, 0, 30, 30], "text": "HIT ME", "textRect": [0, 0, 90, 30]}]})
         self.assertEqual(2, len(result["failures"]))
 
+    def test_touch_target_scales_with_device_pixel_ratio(self):
+        element = {"name": "Ready", "rect": [0, 0, 60, 60], "clickable": True}
+        dump = {"safeArea": [0, 0, 200, 200], "pixelsPerCssPixel": 2,
+                "elements": [element]}
+        self.assertTrue(any("touch_target_below_88px" in x for x in layout_check.check(dump)["failures"]))
+
     def test_head_ratio_pass_and_fail(self):
         anatomy = {"points": {"headTop": [0, 0], "chin": [0, 25], "hip": [0, 60], "heel": [0, 100]},
                    "expectedHeadFraction": 0.25, "tolerance": 0.02}
