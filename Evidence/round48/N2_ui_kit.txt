@@ -1,0 +1,57 @@
+test_complete_fake_font_passes_json_and_md (test_glyph_coverage.GlyphCoverageTests.test_complete_fake_font_passes_json_and_md) ... ok
+test_missing_glyph_reports_file_and_line (test_glyph_coverage.GlyphCoverageTests.test_missing_glyph_reports_file_and_line) ... ok
+test_vietnamese_set_includes_precomposed_tones (test_glyph_coverage.GlyphCoverageTests.test_vietnamese_set_includes_precomposed_tones) ... ok
+test_extracts_named_items_with_true_alpha_and_contact_sheet (test_slice_ui_kit.UiKitTests.test_extracts_named_items_with_true_alpha_and_contact_sheet) ... ok
+test_missing_item_rejects_with_annotated_image (test_slice_ui_kit.UiKitTests.test_missing_item_rejects_with_annotated_image) ... ok
+test_nineslice_warns_on_patterned_center (test_slice_ui_kit.UiKitTests.test_nineslice_warns_on_patterned_center) ... ok
+test_touching_items_rejects_instead_of_guessing (test_slice_ui_kit.UiKitTests.test_touching_items_rejects_instead_of_guessing) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.264s
+
+OK
+test_cut_edge (test_inventory.InventoryTests.test_cut_edge) ... ok
+test_multiple_figures (test_inventory.InventoryTests.test_multiple_figures) ... ok
+test_text_or_ui (test_inventory.InventoryTests.test_text_or_ui) ... ok
+test_unity_bottom_origin_and_meta_inventory (test_inventory.InventoryTests.test_unity_bottom_origin_and_meta_inventory) ... ok
+test_valid_single_figure (test_inventory.InventoryTests.test_valid_single_figure) ... ok
+test_green_fringe_rejected (test_slice_sheet.SliceSheetTests.test_green_fringe_rejected) ... ok
+test_merged_cells_rejected (test_slice_sheet.SliceSheetTests.test_merged_cells_rejected) ... ok
+test_missing_frame_rejected_and_annotated (test_slice_sheet.SliceSheetTests.test_missing_frame_rejected_and_annotated) ... ok
+test_uneven_background_rejected (test_slice_sheet.SliceSheetTests.test_uneven_background_rejected) ... ok
+test_valid_four_by_three (test_slice_sheet.SliceSheetTests.test_valid_four_by_three) ... ok
+test_valid_four_by_two_has_shared_scale_foot_line_and_manifest (test_slice_sheet.SliceSheetTests.test_valid_four_by_two_has_shared_scale_foot_line_and_manifest) ... ok
+test_baked_cyan_ring (test_sprites.SpriteToolTests.test_baked_cyan_ring) ... ok
+test_baked_dark_shadow (test_sprites.SpriteToolTests.test_baked_dark_shadow) ... ok
+test_character_height (test_sprites.SpriteToolTests.test_character_height) ... ok
+test_fake_transparency_or_missing_alpha (test_sprites.SpriteToolTests.test_fake_transparency_or_missing_alpha) ... ok
+test_foot_above_bottom (test_sprites.SpriteToolTests.test_foot_above_bottom) ... ok
+test_foot_off_center (test_sprites.SpriteToolTests.test_foot_off_center) ... ok
+test_invalid_name (test_sprites.SpriteToolTests.test_invalid_name) ... ok
+test_missing_frames_and_duplicate (test_sprites.SpriteToolTests.test_missing_frames_and_duplicate) ... ok
+test_opaque_border (test_sprites.SpriteToolTests.test_opaque_border) ... ok
+test_pack_manifest_is_lossless_and_deterministic (test_sprites.SpriteToolTests.test_pack_manifest_is_lossless_and_deterministic) ... ok
+test_pack_refuses_invalid_set_and_source_output (test_sprites.SpriteToolTests.test_pack_refuses_invalid_set_and_source_output) ... ok
+test_valid_frame_and_foot_pivot (test_sprites.SpriteToolTests.test_valid_frame_and_foot_pivot) ... ok
+test_wrong_dimensions (test_sprites.SpriteToolTests.test_wrong_dimensions) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 1.667s
+
+OK
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\Vec2.cs(24,30): warning CS8765: Nullability of type of parameter 'obj' doesn't match overridden member (possibly because of nullability attributes). [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\RoundResolver.cs(21,77): warning CS8600: Converting null literal or possible null value to non-nullable type. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\MatchState.cs(17,16): warning CS8618: Non-nullable property 'LastResolution' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\MatchState.cs(30,30): warning CS8625: Cannot convert null literal to non-nullable reference type. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\MatchState.cs(49,61): warning CS8600: Converting null literal or possible null value to non-nullable type. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\Models.cs(43,23): warning CS8618: Non-nullable field 'ShooterId' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\Models.cs(44,23): warning CS8618: Non-nullable field 'TargetId' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\MatchState.cs(87,57): warning CS8600: Converting null literal or possible null value to non-nullable type. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+D:\HITME GAME\worktrees\codex-prep\Assets\Scripts\Core\Phase1\MatchState.cs(201,20): warning CS8603: Possible null reference return. [D:\HITME GAME\worktrees\codex-prep\server\HitMe.Server.csproj]
+Test run for D:\HITME GAME\worktrees\codex-prep\server\Tests\bin\Debug\net8.0\HitMe.Server.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   170, Skipped:     0, Total:   170, Duration: 2 s - HitMe.Server.Tests.dll (net8.0)
