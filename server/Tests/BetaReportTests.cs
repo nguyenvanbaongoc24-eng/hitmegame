@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.Json;
 using HitMe.Server.Protocol;
 using Xunit;
 
@@ -30,6 +31,16 @@ public sealed class BetaReportTests
             new string('x', 501), Array.Empty<string>())));
         Assert.False(BetaReportFilter.IsValid(new BetaReport("0.1.0", "build", "Safari", "screen", null,
             "note", Enumerable.Repeat("line", 51).ToArray())));
+    }
+
+    [Fact]
+    public void NullLogEntryFromJsonIsRejectedWithoutThrowing()
+    {
+        var report = JsonSerializer.Deserialize<BetaReport>("""
+            {"clientVersion":"0.1.0","buildId":"b1","browser":"Safari","screen":"phone","note":"bug","recentLogs":[null]}
+            """, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        Assert.NotNull(report);
+        Assert.False(BetaReportFilter.IsValid(report));
     }
 
     [Fact]

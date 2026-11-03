@@ -28,7 +28,7 @@ public static class BetaReportFilter
         (report.Browser?.Length ?? 0) <= 160 && (report.Screen?.Length ?? 0) <= 40 &&
         (report.RoomCode?.Length ?? 0) <= 12 && (report.Note?.Length ?? 0) <= 500 &&
         (report.RecentLogs?.Length ?? 0) <= 50 &&
-        (report.RecentLogs ?? Array.Empty<string>()).All(line => line.Length <= 200);
+        (report.RecentLogs ?? Array.Empty<string>()).All(line => line is not null && line.Length <= 200);
 }
 
 public sealed class SupabaseBetaReportStore
