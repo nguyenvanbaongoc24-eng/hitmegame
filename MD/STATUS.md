@@ -1,5 +1,7 @@
 # Codex preparation status (2026-11-02)
 
+Beta P8 (2026-11-03): cleanup_test_data.sql remains preview only, with empty allowlists and counts for shop, friend and bug report rows. No DELETE, UPDATE or TRUNCATE; no live data was removed.
+
 Beta P5 (2026-11-03): signed guest names and rename requests now pass a configurable server name policy; room joins reject a case-insensitive duplicate display name. Local server suite Passed! 197/197. No live Render name traffic has been checked.
 
 Beta P7 (2026-11-03): MD/RELEASE_PROCESS.md describes tagged manual deployment and rollback. The server-release branch is a candidate only; Render has not been switched and the Unity client has not been checked against the new hello packet.
