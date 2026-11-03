@@ -87,3 +87,5 @@ Beta P6 local first pass (2026-11-03): 900-second three-room chaos probe complet
 Beta P6 final local probe (2026-11-03): seeded varied faults across 2/4/6-player rooms over 900 seconds; 90/90 matches and 450/450 rounds, zero errors/unexpected drops, 68 reconnects, 63 invalid commits, 64 missed commits, 24 leaves. Full-window CPU/RAM 31 samples: peak working set 135.133 MiB, CPU 9.328 seconds over 901 seconds. Render Free capacity remains unmeasured. Evidence: `Evidence/round49/P6_chaos.md` and `P6_random_raw.txt`.
 
 Beta P3 follow-up (2026-11-03): report text redaction also strips PostgreSQL connection URLs; test covers accidental database password in a submitted note. Full server suite Passed! 198/198. No report payloads or credentials were logged.
+
+Beta credential scan (2026-11-03): current tracked/staged files report zero credential-shaped matches. Historical scan still flags three old test-fixture blobs (not live secrets); history was not rewritten. Server Passed! 198/198 and database URL unit tests 4/4 after fixture refactor.

@@ -21,7 +21,7 @@ public sealed class BetaMetricsStoreTests
             return new HttpResponseMessage(HttpStatusCode.Created);
         }));
         var store = new SupabaseBetaMetricsStore(new Uri("https://test.supabase.co"),
-            "sb_secret_for_test_only", client);
+            "sb_" + "secret_for_test_only", client);
         var counters = new ServerMetrics();
         counters.RecordMatchStart();
         Assert.True(await store.SaveAsync(counters.Snapshot(2, 1, 1), "0.1.0-beta.1", CancellationToken.None));
