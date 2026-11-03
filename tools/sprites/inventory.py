@@ -99,7 +99,8 @@ def crop_unity(image, rect):
 
 
 def font(size):
-    for path in (Path("C:/Windows/Fonts/arial.ttf"), Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")):
+    for path in (Path(__file__).resolve().parents[1] / "ui" / "fonts" / "BeVietnamPro-Medium.ttf",
+                 Path("C:/Windows/Fonts/arial.ttf"), Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")):
         if path.exists():
             return ImageFont.truetype(str(path), size)
     raise RuntimeError("Vietnamese-capable font required for contact sheet")
