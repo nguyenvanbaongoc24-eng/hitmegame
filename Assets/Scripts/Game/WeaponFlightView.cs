@@ -63,7 +63,7 @@ namespace HitMe.Game
             if (_shadow == null)
             {
                 var sGo = new GameObject("Shadow");
-                sGo.transform.SetParent(transform.parent, false);
+                sGo.transform.SetParent(transform, false);
                 _shadow = sGo.AddComponent<SpriteRenderer>();
                 _shadow.sortingOrder = 3;
                 _shadow.color = new Color(0f, 0f, 0f, 0.40f);
@@ -78,6 +78,9 @@ namespace HitMe.Game
             if (_shadow != null && _shadowSprite != null)
             {
                 _shadow.sprite = _shadowSprite;
+            }
+            if (_shadow != null)
+            {
                 _shadow.gameObject.SetActive(true);
             }
 
@@ -146,6 +149,14 @@ namespace HitMe.Game
                     _shadow.gameObject.SetActive(false);
                 }
                 gameObject.SetActive(false);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_shadow != null)
+            {
+                _shadow.gameObject.SetActive(false);
             }
         }
     }

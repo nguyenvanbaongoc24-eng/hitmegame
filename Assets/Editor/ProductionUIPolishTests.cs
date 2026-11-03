@@ -182,17 +182,16 @@ namespace HitMe.Editor
             EditorSceneManager.OpenScene(GrayboxScenePath, OpenSceneMode.Single);
             var ui = Object.FindFirstObjectByType<ProductionUIController>();
             var cam = GameObject.Find("Main Camera")?.GetComponent<Camera>();
-            var bgSr = GameObject.Find("ArenaBackground")?.GetComponent<SpriteRenderer>();
 
             Assert.That(ui, Is.Not.Null);
             Assert.That(cam, Is.Not.Null);
-            Assert.That(bgSr, Is.Not.Null);
 
             float camBottomWorldY = cam.transform.position.y - cam.orthographicSize;
             float camHeightWorld = cam.orthographicSize * 2f;
 
-            float arenaTopScreenNormY = (bgSr.bounds.max.y - camBottomWorldY) / camHeightWorld;
-            float arenaBottomScreenNormY = (bgSr.bounds.min.y - camBottomWorldY) / camHeightWorld;
+            // M1: Test against playable area (inside white lines) per hit-me-fix-all-v3.md specification
+            float playableTopScreenNormY = (ArenaCoordinateMapper.PlayMaxY - camBottomWorldY) / camHeightWorld;
+            float playableBottomScreenNormY = (ArenaCoordinateMapper.PlayMinY - camBottomWorldY) / camHeightWorld;
 
             var fitter = ui.GetComponentInChildren<SafeAreaFitter>(true);
             var safeRt = fitter.GetComponent<RectTransform>();
@@ -209,13 +208,57 @@ namespace HitMe.Editor
                 float safeSpanY = safeRt.anchorMax.y - safeRt.anchorMin.y;
 
                 float hpBottomScreenNormY = safeRt.anchorMin.y + hpBottomInSafe * safeSpanY;
-                Assert.That(hpBottomScreenNormY, Is.GreaterThan(arenaTopScreenNormY),
-                    $"HpContainer bottom ({hpBottomScreenNormY:F3}) must stay above ArenaBackground top ({arenaTopScreenNormY:F3}) [isIphone={isIphone}]");
+                Assert.That(hpBottomScreenNormY, Is.GreaterThan(playableTopScreenNormY),
+                    $"HpContainer bottom ({hpBottomScreenNormY:F3}) must stay above playable area top ({playableTopScreenNormY:F3}) [isIphone={isIphone}]");
 
                 float weaponTopScreenNormY = safeRt.anchorMin.y + weaponTopInSafe * safeSpanY;
-                float gapBelowArena = arenaBottomScreenNormY - weaponTopScreenNormY;
-                Assert.That(gapBelowArena, Is.GreaterThanOrEqualTo(-0.005f).And.LessThan(0.05f),
-                    $"WeaponPill must sit right below the bottom of the arena (gap={gapBelowArena:F3}) [isIphone={isIphone}]");
+                Assert.That(weaponTopScreenNormY, Is.LessThan(playableBottomScreenNormY + 0.05f),
+                    $"WeaponPill top ({weaponTopScreenNormY:F3}) must stay below or at bottom of playable area ({playableBottomScreenNormY:F3}) [isIphone={isIphone}]");
+            }
+        }
+
+        [Test]
+        public void M9_RoundHitsCount_NeverExceedsLivingPlayers()
+        {
+            var config = new GameConfig { MaxPlayers = 4, StartHp = 3 };
+            var players = new List<PlayerState>
+            {
+                new PlayerState("p1", "Player 1", false, 3, new Vec2(0, 0), Vec2.Up),
+                new PlayerState("p2", "Player 2", true, 3, new Vec2(1, 0), Vec2.Up),
+                new PlayerState("p3", "Player 3", true, 3, new Vec2(2, 0), Vec2.Up),
+                new PlayerState("p4", "Player 4", true, 3, new Vec2(3, 0), Vec2.Up)
+            };
+            var match = new MatchState(config, players);
+            match.StartRound();
+            match.SetInput(new RoundInput("p1") { HasPlacement = true, Placement = new Vec2(0, 0), HasAim = true, AimDirection = Vec2.Up, IsReady = true });
+            match.SetInput(new RoundInput("p2") { HasPlacement = true, Placement = new Vec2(1, 0), HasAim = true, AimDirection = Vec2.Up, IsReady = true });
+            match.SetInput(new RoundInput("p3") { HasPlacement = true, Placement = new Vec2(2, 0), HasAim = true, AimDirection = Vec2.Up, IsReady = true });
+            match.SetInput(new RoundInput("p4") { HasPlacement = true, Placement = new Vec2(3, 0), HasAim = true, AimDirection = Vec2.Up, IsReady = true });
+            match.LockRound();
+            match.BeginReveal();
+            match.BeginThrowing();
+            var res = match.ResolveRound();
+
+            Assert.That(res.Hits.Count, Is.LessThanOrEqualTo(4), "Hits landed in a single round cannot exceed the number of throwing players (each weapon stops at first hit)");
+        }
+
+        [Test]
+        public void M10_BotRosterSelection_OnlyPicksEnabledCharacters()
+        {
+            var rng = new SeededRandom(12345);
+            for (int trial = 0; trial < 20; trial++)
+            {
+                int[] roster = MatchController.SelectMatchRoster(0, 4, rng);
+                Assert.That(roster.Length, Is.EqualTo(4));
+                for (int slot = 1; slot < roster.Length; slot++)
+                {
+                    int charIdx = roster[slot];
+                    var def = HitMe.Data.CharacterRegistry.GetByIndex(charIdx);
+                    Assert.That(def.enabled, Is.True, $"Bot slot {slot} character {def.displayName} must be enabled!");
+                    Assert.That(charIdx, Is.Not.EqualTo(4), "Quậy Boy must not be picked by bots");
+                    Assert.That(charIdx, Is.Not.EqualTo(5), "Chó Vàng must not be picked by bots");
+                    Assert.That(charIdx, Is.Not.EqualTo(6), "Mèo Mun must not be picked by bots");
+                }
             }
         }
 

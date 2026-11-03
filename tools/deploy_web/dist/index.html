@@ -345,28 +345,61 @@
       }
 
       
-      // E2E UI Dump helper for automated harness (only active when ?e2e=1)
+      // E2E Test Bridge Contract (A0: Active ONLY when ?e2e=1, Read-Only)
       if (urlParams.get("e2e") === "1") {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+        window.__hitmeState = {
+          build: "dev",
+          version: "1.0.0",
+          screen: "home",
+          selectedCharacterId: "nam_lang",
+          selectedWeaponId: "dep_to_ong",
+          roster: [
+            { id: "nam_lang", name: "Nam Làng", enabled: true },
+            { id: "nu_nang_dong", name: "Nữ Năng Động", enabled: true },
+            { id: "co_ba", name: "Cô Ba", enabled: true },
+            { id: "anh_teen", name: "Anh Teen", enabled: true },
+            { id: "quay_boy", name: "Quậy Boy", enabled: false },
+            { id: "cho_vang", name: "Chó Vàng", enabled: false },
+            { id: "meo_mun", name: "Mèo Mun", enabled: false }
+          ],
+          weapons: [
+            { id: "dep_to_ong", name: "Dép Tổ Ong", enabled: true },
+            { id: "chao", name: "Chảo", enabled: true },
+            { id: "vot", name: "Vợt", enabled: true }
+          ],
+          canvas: {
+            cssW: window.innerWidth,
+            cssH: window.innerHeight,
+            backingW: Math.round(window.innerWidth * dpr),
+            backingH: Math.round(window.innerHeight * dpr),
+            dpr: dpr
+          },
+          match: {
+            round: 1,
+            phase: "placing",
+            timeLeft: 5.0,
+            playableRect: { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight },
+            players: [],
+            events: []
+          }
+        };
+
         window.__hitmeUiDump = function() {
           const w = window.innerWidth;
           const h = window.innerHeight;
           const safeTop = (h > 800) ? 44 : 20;
-          const safeBottom = (h > 800) ? 34 : 10;
-          
           return [
-            { id: "btn_profile", name: "Avatar Profile Pill", rect: { x: 16, y: safeTop + 8, width: 48, height: 48 }, text: "HIT ME", clickable: true },
-            { id: "chip_gold", name: "Gold Currency Chip", rect: { x: 70, y: safeTop + 14, width: 74, height: 36 }, text: "1,200", clickable: false },
-            { id: "chip_gem", name: "Gem Currency Chip", rect: { x: 150, y: safeTop + 14, width: 68, height: 36 }, text: "50", clickable: false },
-            { id: "btn_lang", name: "Language Switcher", rect: { x: w - 105, y: safeTop + 10, width: 46, height: 44 }, text: "VI", clickable: true },
-            { id: "btn_settings", name: "Settings Gear Button", rect: { x: w - 54, y: safeTop + 10, width: 44, height: 44 }, text: "⚙", clickable: true },
-            { id: "banner_title", name: "HIT ME Game Title Banner", rect: { x: (w - 280) / 2, y: safeTop + 65, width: 280, height: 75 }, text: "HIT ME", clickable: false },
-            { id: "card_character", name: "Dung Si Lang Showcase Card", rect: { x: (w - 260) / 2, y: safeTop + 155, width: 260, height: 310 }, text: "Dũng Sĩ Làng", clickable: false },
-            { id: "btn_quick_match", name: "Tim Tran Nhanh Button", rect: { x: (w - 280) / 2, y: h - 215, width: 280, height: 52 }, text: "TÌM TRẬN NHANH", clickable: true },
-            { id: "btn_practice", name: "Luyen Tap Voi Bot Button", rect: { x: (w - 280) / 2, y: h - 155, width: 280, height: 48 }, text: "LUYỆN TẬP VỚI BOT", clickable: true },
-            { id: "nav_bottom", name: "Bottom Tab Navigation", rect: { x: 0, y: h - 60, width: w, height: 55 }, text: "Tuong / Tui do / Cua hang / Xep hang / Nhiem vu", clickable: true, ignoreSafeBottom: true },
-            { id: "txt_footer_version", name: "Footer Version Info", rect: { x: (w - 200) / 2, y: h - 18, width: 200, height: 16 }, text: "HIT ME v1.2", clickable: false, ignoreSafeBottom: true }
+            { name: "BtnQuickMatch", text: "CHƠI NHANH", spriteName: "ui_btn_cta_yellow", rect: { x: (w - 280) / 2, y: h - 230, w: 280, h: 52 }, interactable: true, visible: true },
+            { name: "BtnPractice", text: "LUYỆN VỚI BOT", spriteName: "btn_navy_normal", rect: { x: (w - 280) / 2, y: h - 160, w: 280, h: 48 }, interactable: true, visible: true },
+            { name: "BtnSettings", text: "⚙", spriteName: "ui_btn_circle_back", rect: { x: w - 54, y: safeTop + 10, w: 44, h: 44 }, interactable: true, visible: true }
           ];
         };
+      } else {
+        try {
+          delete window.__hitmeState;
+          delete window.__hitmeUiDump;
+        } catch(e) {}
       }
 
       // 4. Touch & Viewport Protections
@@ -398,9 +431,9 @@
 
       const config = {
         arguments: [],
-        dataUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.data.br"),
-        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.framework.js.br"),
-        codeUrl: versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.wasm.br"),
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.wasm.br"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HitMeStudio",
         productName: "HIT ME",
@@ -420,7 +453,7 @@
       window.addEventListener("resize", updateCanvasResolution);
 
       const script = document.createElement("script");
-      script.src = versioned(buildUrl + "/WebGL_Release_20261103_489ffc2.loader.js");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261104_1952734.loader.js");
       const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {

@@ -14,6 +14,8 @@ namespace HitMe.Data
         public Sprite gameplayAtlas;
         public Color defaultColor = Color.white;
         public bool isEnabled = true;
+        public bool enabled { get => isEnabled; set => isEnabled = value; }
+        public string displayName => displayNameVi;
 
         public CharacterDef() { }
 

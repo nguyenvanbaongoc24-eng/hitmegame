@@ -93,10 +93,10 @@ namespace HitMe.Editor
             var cam = camGo.GetComponent<Camera>();
             if (cam == null) cam = camGo.AddComponent<Camera>();
             cam.orthographic = true;
-            cam.orthographicSize = 7.8f;
+            cam.orthographicSize = 6.45f;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(36f / 255f, 24f / 255f, 16f / 255f, 1f); // Z6: #241810
-            camGo.transform.position = new Vector3(0f, 0.80f, -10f);
+            camGo.transform.position = new Vector3(0f, 0.40f, -10f);
 
             // 2. Setup ArenaView
             var arenaGo = GameObject.Find("Arena");
@@ -119,13 +119,13 @@ namespace HitMe.Editor
                 var backdropObj = GameObject.Find("ArenaBackdrop");
                 if (backdropObj == null) backdropObj = new GameObject("ArenaBackdrop");
                 backdropObj.transform.SetParent(arenaGo.transform);
-                backdropObj.transform.position = new Vector3(0f, 0.80f, 0f);
-                backdropObj.transform.localScale = new Vector3(2.8f, 2.8f, 1f);
+                backdropObj.transform.position = new Vector3(0f, 0.40f, 0f);
+                backdropObj.transform.localScale = new Vector3(1.35f, 1.35f, 1f);
                 var bsr = backdropObj.GetComponent<SpriteRenderer>();
                 if (bsr == null) bsr = backdropObj.AddComponent<SpriteRenderer>();
-                bsr.sprite = spriteBgHome ?? spriteArena;
-                bsr.sortingOrder = -10;
-                bsr.color = Color.white;
+                bsr.sprite = spriteArena; // M1: Extend using arena texture itself
+                bsr.sortingOrder = -8;
+                bsr.color = new Color(0.88f, 0.88f, 0.90f, 1f);
             }
             var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
             if (configAsset != null)
@@ -684,7 +684,9 @@ namespace HitMe.Editor
             uiCtrl.timerPulseRing = timerPulse.GetComponent<Image>();
 
             var timerPill = CreateImage(topPlacingBar.transform, "TimerPill", spriteTimerGold, new Vector2(0.50f, 0.5f), new Vector2(0.50f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(80f, 80f));
-            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 28, colorCream, TextAlignmentOptions.Center);
+            var timerTxt = CreateTMP(timerPill.transform, "Text", fontAsset, "5.0s", 32, Color.white, TextAlignmentOptions.Center);
+            timerTxt.outlineWidth = 0.25f;
+            timerTxt.outlineColor = new Color32(0, 0, 0, 255);
             timerTxt.fontStyle = FontStyles.Bold;
             FillRect(timerTxt.rectTransform, Vector2.zero, Vector2.zero);
             uiCtrl.timerPill = timerPill;
@@ -714,14 +716,14 @@ namespace HitMe.Editor
             uiCtrl.txtPhaseBanner = phaseTxt;
 
             // P3: 6 HP Cards in 2 rows x 3 columns
-            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 150f), null, Color.clear);
+            var hpContainer = CreatePanel(hudPanel.transform, "HpContainer", new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.858f), new Vector2(0.5f, 0.5f), new Vector2(1040f, 180f), null, Color.clear);
             uiCtrl.hpCardsContainer = hpContainer.transform;
             uiCtrl.hpCards.Clear();
 
             string[] playerIds = new string[] { "player", "bot-1", "bot-2", "bot-3", "bot-4", "bot-5" };
             string[] shortNames = new string[] { "Nam Làng", "Nữ Năng Động", "Cô Ba", "Anh Teen", "Quậy Boy", "Chú Chó Vàng" };
             float[] colAnchors = new float[] { 0.17f, 0.50f, 0.83f };
-            float[] rowAnchors = new float[] { 0.76f, 0.24f };
+            float[] rowAnchors = new float[] { 0.75f, 0.25f };
 
             for (int i = 0; i < 6; i++)
             {
@@ -729,20 +731,20 @@ namespace HitMe.Editor
                 int row = i / 3;
                 Vector2 cardAnchor = new Vector2(colAnchors[col], rowAnchors[row]);
                 var cardSprite = i == 0 ? spriteCardSelected : spriteCardChar;
-                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 72f), cardSprite, Color.white);
+                var cardObj = CreatePanel(hpContainer.transform, "HpCard_" + i, cardAnchor, cardAnchor, new Vector2(0.5f, 0.5f), new Vector2(330f, 76f), cardSprite, Color.white);
                 var cardImg = cardObj.GetComponent<Image>();
                 if (cardImg != null) cardImg.type = Image.Type.Sliced;
 
-                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 20, colorGoldSub, TextAlignmentOptions.MidlineLeft, new Vector2(0.28f, 0.68f), new Vector2(210f, 30f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 24, colorGoldSub, TextAlignmentOptions.MidlineLeft, new Vector2(0.28f, 0.68f), new Vector2(210f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cName.fontStyle = FontStyles.Bold;
 
                 // Hearts Container with 3 sprite hearts
-                var heartsContainer = CreatePanel(cardObj.transform, "HeartsContainer", new Vector2(0.78f, 0.68f), new Vector2(0.78f, 0.68f), new Vector2(0.5f, 0.5f), new Vector2(88f, 28f), null, Color.clear);
+                var heartsContainer = CreatePanel(cardObj.transform, "HeartsContainer", new Vector2(0.78f, 0.68f), new Vector2(0.78f, 0.68f), new Vector2(0.5f, 0.5f), new Vector2(110f, 38f), null, Color.clear);
                 Image[] heartImgs = new Image[3];
                 for (int h = 0; h < 3; h++)
                 {
-                    float hx = (h - 1) * 26f;
-                    var hObj = CreateImage(heartsContainer.transform, "Heart_" + h, spriteHeartFull, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(22f, 22f));
+                    float hx = (h - 1) * 34f;
+                    var hObj = CreateImage(heartsContainer.transform, "Heart_" + h, spriteHeartFull, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(34f, 34f));
                     hObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(hx, 0f);
                     heartImgs[h] = hObj.GetComponent<Image>();
                 }
@@ -751,7 +753,7 @@ namespace HitMe.Editor
                 cHearts.fontStyle = FontStyles.Bold;
                 cHearts.gameObject.SetActive(false);
 
-                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 18, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(400f, 24f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 22, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(400f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cHpNum.fontStyle = FontStyles.Bold;
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
@@ -1176,6 +1178,9 @@ namespace HitMe.Editor
             EditorBuildSettings.scenes = scenes.ToArray();
 
             EditorSceneManager.MarkSceneDirty(scene);
+            var bridgeGo = GameObject.Find("HitMeE2EBridge") ?? new GameObject("HitMeE2EBridge");
+            if (bridgeGo.GetComponent<HitMeE2EBridge>() == null) bridgeGo.AddComponent<HitMeE2EBridge>();
+
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
 
