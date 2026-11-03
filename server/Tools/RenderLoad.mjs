@@ -79,6 +79,8 @@ async function playRoom(count, cycle) {
   const clients = [];
   const tokens = [];
   const reconnectTokens = [];
+  let seed = Math.imul(cycle + 1, 2654435761) ^ Math.imul(count, 2246822519);
+  const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
   let roomCode = 'not_created';
   let stage = 'connect';
   try {
@@ -99,6 +101,8 @@ async function playRoom(count, cycle) {
       reconnectTokens[i] = joined.reconnectToken;
       assert.equal(joined.players.length, i + 1);
     }
+    const connectedSnapshot = await metrics();
+    if (connectedSnapshot) peakConnections = Math.max(peakConnections, connectedSnapshot.connections ?? 0);
     stage = 'start';
     clients[0].send({ type: 'start' });
     const roundTimes = [];
@@ -106,8 +110,8 @@ async function playRoom(count, cycle) {
       stage = `round_${round}_start`;
       const begins = await Promise.all(clients.map(client => client.take('round_start')));
       assert.ok(begins.every(begin => begin.roundId === round));
-      if (chaos && round === 2) {
-        const index = clients.length - 1;
+      if (chaos && round === 2 && random() < 0.7) {
+        const index = Math.floor(random() * clients.length);
         clients[index].close();
         await delay(100);
         clients[index] = await connect();
@@ -118,20 +122,20 @@ async function playRoom(count, cycle) {
         assert.equal((await clients[index].take('round_start')).roundId, round);
         injectedReconnects++;
       }
-      if (chaos && round === 3 && count === 6) {
+      if (chaos && round === 3 && count === 6 && random() < 0.7) {
         clients.at(-1).send({ type: 'leave' });
         await clients.at(-1).take('room_state');
         clients.pop().close();
         injectedLeaves++;
       }
       stage = `round_${round}_commit`;
-      if (chaos && round === 1) {
+      if (chaos && round === 1 && random() < 0.7) {
         clients[0].send({ type: 'commit', roundId: round, positionX: 'bad' });
         assert.equal((await clients[0].take('error')).code, 'bad_message');
         injectedInvalidCommits++;
       }
       for (let i = 0; i < clients.length; i++) {
-        if (chaos && round === 1 && i === clients.length - 1) { injectedMissedCommits++; continue; }
+        if (chaos && round === 1 && i === clients.length - 1 && random() < 0.7) { injectedMissedCommits++; continue; }
         clients[i].send({
         type: 'commit', roundId: round, positionX: -3 + i * 1.2, positionY: 0,
         hasAim: true, aimX: 0, aimY: 1
