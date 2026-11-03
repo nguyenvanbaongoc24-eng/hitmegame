@@ -68,8 +68,8 @@ namespace HitMe.UI
         // Headers & Screen Titles
         public const string GameTitle = "HIT ME";
         public const string HomeSubtitle = "NÉM DÉP LÀNG QUÊ";
-        public const string BotTrainingTitle = "LUYỆN VỚI BOT (CỤC BỘ)";
-        public const string BotTrainingSubtitle = "Chơi một mình trên máy • Không cần mạng\nĐúng luật v1.2 (3 HP, 5s đặt, ném đồng thời)";
+        public const string BotTrainingTitle = "LUYỆN VỚI BOT";
+        public const string BotTrainingSubtitle = "Chơi một mình trên máy • Không cần mạng\n3 Mạng • 5s đặt • Ném đồng thời";
         public const string LobbyTitle = "PHÒNG CHIẾN HỮU • SÂN LÀNG";
         public const string MatchResultTitle = "KẾT THÚC TRẬN ĐẤU";
         public const string VictorySubtitle = "CHIẾN THẮNG TUYỆT ĐỐI!";
@@ -142,12 +142,12 @@ namespace HitMe.UI
 
         public static readonly string[] CharacterNames =
         {
-            Char1Name, Char2Name, Char3Name, Char4Name, Char5Name, Char6Name, Char7Name
+            Char1Name, Char2Name, Char4Name, Char5Name, Char3Name, Char6Name, Char7Name
         };
 
         public static readonly string[] CharacterDescriptions =
         {
-            Char1Desc, Char2Desc, Char3Desc, Char4Desc, Char5Desc, Char6Desc, Char7Desc
+            Char1Desc, Char2Desc, Char4Desc, Char5Desc, Char3Desc, Char6Desc, Char7Desc
         };
 
         // Weapon
@@ -219,8 +219,7 @@ namespace HitMe.UI
         private static readonly Dictionary<string, string> EnglishMap = new Dictionary<string, string>
         {
             { HomeSubtitle, "VILLAGE SLIPPER TOSS" },
-            { BotTrainingTitle, "BOT PRACTICE (OFFLINE)" },
-            { BotTrainingSubtitle, "Solo on device • No internet needed\nRule v1.2 compliant (3 HP, 5s placing, simultaneous throw)" },
+            { BotTrainingSubtitle, "Solo on device • No internet needed\n3 Lives • 5s placing • Simultaneous throw" },
             { LobbyTitle, "FRIENDS LOBBY • VILLAGE ARENA" },
             { MatchResultTitle, "MATCH FINISHED" },
             { VictorySubtitle, "GLORIOUS VICTORY!" },

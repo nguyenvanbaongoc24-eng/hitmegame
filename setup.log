@@ -1,0 +1,815 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 5936)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 14136)
+VBCSCompiler prewarm took 31.70 ms
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::Module] Trying to connect to existing licensing client channel...
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-03T04:22:53Z
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 5540)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:/HITME GAME/unity-client
+-executeMethod
+HitMe.Editor.ProductionUISetup.BuildProductionUI
+-logFile
+D:/HITME GAME/unity-client/setup.log
+Successfully changed project path to: D:/HITME GAME/unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [32448]  Target information:
+
+Player connection [32448]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 1554923999 [EditorId] 1554923999 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [32448] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [32448] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-03T04:22:53.4431396Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 5540, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              65cca3fe126d486faf51a5e3051e2c8d
+  Correlation Id:          f599881646582440ee5555b87890850f
+  External correlation Id: 6716861962112434966
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.38s, validation: 0.11s, handshake: 0.05s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-03T04:22:53.6030993Z"
+[Licensing::Module] Connected to LicensingClient (PId: 5540, launch time: 0.01, total connection time: 0.54s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.60s
+[Package Manager] Connected to IPC stream "Upm-7232" after 0.3 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56232
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001830 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.961 seconds
+Domain Reload Profiling: 1610ms
+	BeginReloadAssembly (150ms)
+		CreateAndSetChildDomain (8ms)
+	RebuildCommonClasses (6ms)
+	RebuildNativeTypeToScriptingClass (22ms)
+	initialDomainReloadingComplete (70ms)
+	LoadAllAssembliesAndSetupDomain (399ms)
+		LoadAssemblies (142ms)
+		TypeCache.Refresh (272ms)
+			TypeCache.ScanAssembly (253ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (963ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (154ms)
+			ProcessInitializeOnLoadAttributes (151ms)
+			ProcessInitializeOnLoadMethodAttributes (324ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 20 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 2s967ms
+[299/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[345/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[346/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 314 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[347/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[348/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (2.90 seconds), 5 items updated, 349 evaluated
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Total cache size 267639736
+Total cache size after purge 267639736, took 00:00:00.7036284
+AssetDatabase: script compilation time: 4.671748s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.812 seconds
+Domain Reload Profiling: 1649ms
+	BeginReloadAssembly (374ms)
+		DisableScriptedObjects (80ms)
+		CreateAndSetChildDomain (69ms)
+	RebuildCommonClasses (26ms)
+	RebuildNativeTypeToScriptingClass (40ms)
+	initialDomainReloadingComplete (61ms)
+	LoadAllAssembliesAndSetupDomain (335ms)
+		LoadAssemblies (296ms)
+		TypeCache.Refresh (25ms)
+			TypeCache.ScanAssembly (19ms)
+		AnalyzeDomain (15ms)
+			BuildScriptInfoCaches (11ms)
+	FinalizeReload (814ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (177ms)
+			ProcessInitializeOnLoadAttributes (247ms)
+			ProcessInitializeOnLoadMethodAttributes (57ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (40ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: 204520815a388be49905d8dba561e774 - Path: Assets/Art/UI/Kit/ui_btn_cta_red.png' with importer (TextureImporter)
+crunched in 0.043782
+Imported 'GUID: 204520815a388be49905d8dba561e774' -> (Import Result ID: 'a46d5b541645716c92c9a6eee7f82b5f') in 0.074 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c8322439ae10060742cf6de518d3da88 DependenciesID=1ef6efb5ffb3360febb94c999007dd1c StaticDependenciesID=139e3c34065248ae5cd0dccf995e467f 
+Importing 'GUID: 504285e5d1e7a2a49a5daf4a6a222522 - Path: Assets/Art/UI/Kit/ui_aim_target_reticle.png' with importer (TextureImporter)
+crunched in 0.100090
+Imported 'GUID: 504285e5d1e7a2a49a5daf4a6a222522' -> (Import Result ID: 'e2d637930e32d9b7584ad4d0cc0df4a4') in 0.118 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=705199fd445fc0d61f947c2368f67859 DependenciesID=72defa3537a1dbc5bd3132a62795491b StaticDependenciesID=d47af72aa6f162ee1d704a1bf412b3e4 
+Importing 'GUID: 6072106a710c1d544a9986155a6c4746 - Path: Assets/Sprites/anh_non_la_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: 6072106a710c1d544a9986155a6c4746' -> (Import Result ID: 'b2f0bd202b15ddf9a3536c0a304a0dbf') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1c2e53e63a1442cb26851ede6f46eb37 DependenciesID=65e306e9597f55e677a4e9ac6de246ea StaticDependenciesID=e3a62f97226cfcb2bf5e064546233f59 
+Importing 'GUID: 60287b4204c30c14a9e96ca683e5e410 - Path: Assets/Art/UI/Kit/ui_card_char_selected.png' with importer (TextureImporter)
+crunched in 0.024646
+Imported 'GUID: 60287b4204c30c14a9e96ca683e5e410' -> (Import Result ID: '837f5a18b2a0a292201e13e0b1ca9ee7') in 0.031 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=20a9ea94a33f8ad54aabc5e6b4a32dc7 DependenciesID=de86a35d4150e33d944ca4dcfb6e9b3e StaticDependenciesID=a443e2e98678a11a9ffe492aa564bd7b 
+Importing 'GUID: a085466d44303d447b4f10318ff48721 - Path: Assets/Art/UI/Kit/ui_card_slot_selected_cyan.png' with importer (TextureImporter)
+crunched in 0.031043
+Imported 'GUID: a085466d44303d447b4f10318ff48721' -> (Import Result ID: '465398e9d19ff9f0ec340bd11082d077') in 0.039 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=21bcd7c400f1feb435c86af0089b7071 DependenciesID=666f0afe6b7ee9a0883f3edeab1d51db StaticDependenciesID=468e5e3201b4dc399dc815cad295e7c7 
+Importing 'GUID: a079589acf64e793d70558189a7683fa - Path: Assets/Art/Weapons/chao_chong_dinh_projectile.png' with importer (TextureImporter)
+crunched in 0.030709
+Imported 'GUID: a079589acf64e793d70558189a7683fa' -> (Import Result ID: '8776dee8836db14d7b402119450af4f5') in 0.037 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=10e3efa5f299a436e8ee686ffbb0de76 DependenciesID=5d134822ff9b1a8994a602b180719a0f StaticDependenciesID=6b6d449e9866f872b896fdf296fdef1e 
+Importing 'GUID: a0d95fa3d26f0e942a76129c1d3f8cce - Path: Assets/Art/UI/Kit/ui_player_foot_ring_cyan.png' with importer (TextureImporter)
+crunched in 0.006994
+Imported 'GUID: a0d95fa3d26f0e942a76129c1d3f8cce' -> (Import Result ID: '669e14292d2a036958861531506b6fff') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0b105da26dedb7d6cfd20a65e79c5d92 DependenciesID=bf818d7d24156d310298b07f8023c935 StaticDependenciesID=6f5df2c49928e6319a0a6ec114265627 
+Importing 'GUID: b0f0b2401ba71054eb6ed0a517066aa1 - Path: Assets/Sprites/dep_icon.png' with importer (TextureImporter)
+crunched in 0.054077
+Imported 'GUID: b0f0b2401ba71054eb6ed0a517066aa1' -> (Import Result ID: '814d554f32aad9b737da6a9dd936f1f5') in 0.061 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6dbbad44af3d5df403c0c7ff926e231f DependenciesID=fd53c1602b1bb17c36394e1f712785e3 StaticDependenciesID=ee01ea9c8f0492e9f3e1d48a34a9d12b 
+Importing 'GUID: b0f47194c0b99221750e1dbfa6136f4b - Path: Assets/Art/UI/btn_secondary_wood_9slice.png' with importer (TextureImporter)
+Imported 'GUID: b0f47194c0b99221750e1dbfa6136f4b' -> (Import Result ID: '99b5c22d6a5366a55e7c0c6d652bd94a') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=48c78d11b4f04cc24288de1031c6bddb DependenciesID=a2b7efd46b3bff147103b4aedebc3d4e StaticDependenciesID=8b77e6c46e01746426b06c4c16d5e7b5 
+Importing 'GUID: d07fc88b6e17f4f488bb8eaa04e2ce2d - Path: Assets/Art/Characters/meo_mun/Gameplay/gp_meo_mun_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: d07fc88b6e17f4f488bb8eaa04e2ce2d' -> (Import Result ID: 'f19175484de558b195caf46440cd8225') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=72ad9cabb64441b0dafc26795e43401f DependenciesID=850aa9342aff37039200865f59288e99 StaticDependenciesID=ee371cdc7feecbd17e720adac878486f 
+Importing 'GUID: f08301955c62a3a41aa71f7cba0d0623 - Path: Assets/Art/Characters/cho_vang/Menu/menu_cho_vang_portrait.png' with importer (TextureImporter)
+Imported 'GUID: f08301955c62a3a41aa71f7cba0d0623' -> (Import Result ID: '92d3d7c35c7d7b51a2dab2079ba9c1df') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=07aa7bce644657c1593ba65e22e7850a DependenciesID=3dc6c11dd7157bddc80c0140aee51b60 StaticDependenciesID=4c5337a5311237d9f9a6d83a91b065cf 
+Importing 'GUID: f02f6478ee9b64a42b0d01eed31bffd8 - Path: Assets/Art/UI/Kit/ui_hud_pill_dark.png' with importer (TextureImporter)
+crunched in 0.009165
+Imported 'GUID: f02f6478ee9b64a42b0d01eed31bffd8' -> (Import Result ID: '9b2c817ad57e966e10fda5d0676107d5') in 0.015 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9ab5e400bb08a27805070ad0aa3d7087 DependenciesID=28e2eee3c4e240928ad9581b6b73d232 StaticDependenciesID=d6e26796c1afafa2c13f428cf3cd918a 
+Importing 'GUID: 0197388888c671dd8e6afded7213821f - Path: Assets/Art/Weapons/coc_bia_icon.png' with importer (TextureImporter)
+crunched in 0.039866
+Imported 'GUID: 0197388888c671dd8e6afded7213821f' -> (Import Result ID: 'e67c1aab96b82db7dcd9bdc7eb0b1999') in 0.046 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=634c8255cde8e113762e3419eaff3de9 DependenciesID=3f9925f45b8b4bf9934eabc6f4ba239d StaticDependenciesID=e5f0d7e7619a6bb1f067613bc7635c4b 
+Importing 'GUID: 01f9cf0e27ae8fc45b6db0e167d9c495 - Path: Assets/Art/UI/Kit/ui_toggle_off.png' with importer (TextureImporter)
+crunched in 0.009258
+Imported 'GUID: 01f9cf0e27ae8fc45b6db0e167d9c495' -> (Import Result ID: '8c02c6cdbb9b6348c71951540c79ad48') in 0.013 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=86079d54104bbbec1064d0b124b15046 DependenciesID=3ab2d3495e35f1dc4e2e528c4895c132 StaticDependenciesID=7d22c228205a1fd634880786c2530913 
+Importing 'GUID: 11018a5851131964498b1fd032c4d7d4 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_SHEET_3x2.png' with importer (TextureImporter)
+Imported 'GUID: 11018a5851131964498b1fd032c4d7d4' -> (Import Result ID: '7244d03dff99d5052903a0613fae6e76') in 0.058 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1276835c2c0bb21ed7e2434651912c4f DependenciesID=289868c03bfc530f1d00a5df12d69c6c StaticDependenciesID=d90263160030443daf2ab74b44394d37 
+Importing 'GUID: 31c2afd9f0ff6b73fa609e3681009a18 - Path: Assets/Art/Weapons/dep_to_ong_held.png' with importer (TextureImporter)
+crunched in 0.042397
+Imported 'GUID: 31c2afd9f0ff6b73fa609e3681009a18' -> (Import Result ID: '093c835baa09cb7348c38da1820d2953') in 0.071 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=16018bf41affe9ab315f7104c8871f3b DependenciesID=0598b9852349db1ade3c96529e23446d StaticDependenciesID=89fd827db3471639e5e2903f9281a632 
+Importing 'GUID: 512b3a8d1ad1ce6448a82d28d4853d9b - Path: Assets/Art/UI/Kit/ui_chat_row_normal.png' with importer (TextureImporter)
+crunched in 0.009459
+Imported 'GUID: 512b3a8d1ad1ce6448a82d28d4853d9b' -> (Import Result ID: 'ad8812820e7765c309ecbaf70e69622b') in 0.015 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a0cd6bd3a7c184ca9c8ce7b2e494872a DependenciesID=5cd864dfcd5e18c7450b415882db918a StaticDependenciesID=2e076deee2efadf63de484872e9d69de 
+Importing 'GUID: 51edf84b53aa8c84594b2daa2ad53f42 - Path: Assets/Sprites/chao_icon.png' with importer (TextureImporter)
+crunched in 0.040379
+Imported 'GUID: 51edf84b53aa8c84594b2daa2ad53f42' -> (Import Result ID: '5407735e3c9017353f565cbd4ca02831') in 0.046 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=61cb13ce7cf6c22dbc91f1704f476662 DependenciesID=4b89013c7236a5e44bf927b2a166eb37 StaticDependenciesID=f3eddc32c3f54dd40a34925661157b67 
+Importing 'GUID: 71ff84f4b85f76d4abe0092ae7eb95ae - Path: Assets/Art/Characters/meo_mun/Menu/menu_meo_mun_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 71ff84f4b85f76d4abe0092ae7eb95ae' -> (Import Result ID: 'e31b1a874d20d6ba257ae729529e045e') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=78849d026e0877dc0c7414f16331013d DependenciesID=f17e60e9074382606baea18f2f9ce91e StaticDependenciesID=f3e018848405e61e526352e6fd0c79d7 
+Importing 'GUID: c11a6db9dc456de014a165b2b55d4ff8 - Path: Assets/Art/Weapons/chao_chong_dinh_icon.png' with importer (TextureImporter)
+crunched in 0.032277
+Imported 'GUID: c11a6db9dc456de014a165b2b55d4ff8' -> (Import Result ID: 'c8bd49adb608a30d5ae799679fae07ac') in 0.040 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=735aa5e8a12c62170ff2ee5086547026 DependenciesID=056bcd512eb6d5994cb6a73eedec8495 StaticDependenciesID=ae224cf8a57207bbb395b4383c0d9fae 
+Importing 'GUID: 0271cb527a0586d4c975a7b44d186242 - Path: Assets/HITME_AimKit/Art/Aim_Direction_Arrow.png' with importer (TextureImporter)
+Imported 'GUID: 0271cb527a0586d4c975a7b44d186242' -> (Import Result ID: '2303ea307400ebc0502175c83eff826b') in 0.017 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=effc0bf4dcd7d14cf4ea34b5939257dd DependenciesID=a9fe1f2d6513c97dd366a565c2b00779 StaticDependenciesID=08e3088c563008d8cd2f4cdee88c8b34 
+Importing 'GUID: 02d1f702b464f3744a48e0449039f512 - Path: Assets/Sprites/cau_be_lang_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: 02d1f702b464f3744a48e0449039f512' -> (Import Result ID: '412295e436951e59a9521046fa75acb1') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8f6cc6508d76228af5ae4b6309fc8acd DependenciesID=0716034b01a2c7365e999b81d9c22b00 StaticDependenciesID=1c84f859704727d4e41e05089283bd5e 
+Importing 'GUID: 02139b9b1dfa77ef5bd745d6615730b9 - Path: Assets/Art/Weapons/vot_pickleball_icon.png' with importer (TextureImporter)
+crunched in 0.036360
+Imported 'GUID: 02139b9b1dfa77ef5bd745d6615730b9' -> (Import Result ID: '16403cd026ea8bd4c234d97d1beae1a0') in 0.042 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cbab19d0ecbfb9fa0964af6f4c5d3d34 DependenciesID=53703be0e35b342f40a5d53fbda94b04 StaticDependenciesID=d51e105dc28c2032ecfdcdbb68ed1ae4 
+Importing 'GUID: 02a9b4d3afe328842bf037a2cd68026f - Path: Assets/Art/UI/Kit/ui_btn_cta_green.png' with importer (TextureImporter)
+Imported 'GUID: 02a9b4d3afe328842bf037a2cd68026f' -> (Import Result ID: 'c29c910553096716f0502e10eba636f7') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=583a700bdd05c630e70768b1f334e397 DependenciesID=d29e26dc4ad6dd955d05831b46d44227 StaticDependenciesID=97eed5c6d17e54e204b6d80e58b44bd3 
+Importing 'GUID: 324681cb9598c393dc0f0415c485f299 - Path: Assets/Art/Weapons/bong_da_projectile.png' with importer (TextureImporter)
+crunched in 0.040154
+Imported 'GUID: 324681cb9598c393dc0f0415c485f299' -> (Import Result ID: '6500bf7a913673238146814f9436c0fa') in 0.047 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5da0b087546a563d0a4ae4e7033a0b04 DependenciesID=09c2b5f0594d47121eec207699e0be88 StaticDependenciesID=d9fcb127a5389ef110b9cc3a7ce5db6f 
+Importing 'GUID: 4278cffb09e2b2a428a3e2c26fd11283 - Path: Assets/Art/UI/Kit/ui_slider_track_fill.png' with importer (TextureImporter)
+crunched in 0.005919
+Imported 'GUID: 4278cffb09e2b2a428a3e2c26fd11283' -> (Import Result ID: 'f1bb5970c3b7e8153c1130767fb29527') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b81e53fb12421344eb5e31fd931ab023 DependenciesID=98c583cb2b5620f656e84732bd693b4b StaticDependenciesID=2c62889c7dd966721fddcd00319ecbbd 
+Importing 'GUID: 52a8c641294daa54dbc289910c7d4b0b - Path: Assets/HITME_AimKit/Art/Aim_Origin_Ring.png' with importer (TextureImporter)
+Imported 'GUID: 52a8c641294daa54dbc289910c7d4b0b' -> (Import Result ID: 'c020eacde6468f5200226e1d8f763a50') in 0.022 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=71ee944f48b2e99069692eab16724562 DependenciesID=83aae0d8f0b6855ea2d54f7dd7aee46d StaticDependenciesID=244f9e35a743ab69bf3c4ba9903ecffb 
+Importing 'GUID: 7269f914c3e56f6428218b225fc58df3 - Path: Assets/Sprites/cau_be_lang_idle.png' with importer (TextureImporter)
+Imported 'GUID: 7269f914c3e56f6428218b225fc58df3' -> (Import Result ID: 'b568dd0195c1a236165bb70318a4e0cd') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ac53116e9b4c0477321608f77cc3b193 DependenciesID=9a341d0eb0f002b7f348d01813397244 StaticDependenciesID=67e5ee8af7240b3f61982c3d27eb675a 
+Importing 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Tiny.png' with importer (TextureImporter)
+Imported 'GUID: b2d051ed2eb5d4148a7eb847625dc5d2' -> (Import Result ID: 'b5ed9df4b9c94d72ff97ff685fae8569') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d3059f0fa413033a410a3f9114625d14 DependenciesID=1787e2b8886306ddf2f8d49e0a839b87 StaticDependenciesID=0bc0186f4ef1eaa2bb416fe20484d03d 
+Importing 'GUID: b21621f487d3b4e4faa9e001094cd18b - Path: Assets/Sprites/anh_non_la_throw_windup.png' with importer (TextureImporter)
+crunched in 0.085643
+Imported 'GUID: b21621f487d3b4e4faa9e001094cd18b' -> (Import Result ID: '5fa15aec34ab4f6dffabac29a4ab044d') in 0.094 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2b26ff077e98d67ec07c7029566e1d1b DependenciesID=68b98fd7d69a97a0628bde762406f280 StaticDependenciesID=b87c83d89bd3ca4c67426fdcecdff582 
+Importing 'GUID: c2a5d50909aeb074a9d1e1b962958def - Path: Assets/Sprites/anh_nui_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: c2a5d50909aeb074a9d1e1b962958def' -> (Import Result ID: '6a854f500984ea6f3d66c73711a0ebf2') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=99bb8581a925181415378efdbb743579 DependenciesID=914ce65c61ab6eb92973a864187ad886 StaticDependenciesID=662522fb5d1c1e823307570e364e4cac 
+Importing 'GUID: d21b04768a8a65c4b9c66fc57fb1dec0 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F03.png' with importer (TextureImporter)
+crunched in 0.319228
+Imported 'GUID: d21b04768a8a65c4b9c66fc57fb1dec0' -> (Import Result ID: '8033ec46bf34757b9e616d44b5d2ed87') in 0.344 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2a8fde5913778d499e6be4aa494d7bd1 DependenciesID=b1cc2fd83a273c9175c40a58a46ee690 StaticDependenciesID=0879b337e177555f9c6f0320e95c15c8 
+Importing 'GUID: 136eb9b796c135344b478626c0ccd1c5 - Path: Assets/HITME_AimKit/Art/Aim_Beam_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 136eb9b796c135344b478626c0ccd1c5' -> (Import Result ID: '6d00b0d449f9fd43f60dceabe24b2171') in 0.026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ba2665d5a81b00b51c54d2feb4d0e534 DependenciesID=c7e17e8a0a6758be7f379bb6c57b8f05 StaticDependenciesID=c182aec05d5d3a9ffaba67864252e839 
+Importing 'GUID: 23f4a8403c59b1c4ba4b16bb47fd1f2d - Path: Assets/Sprites/cau_be_lang_throw_windup.png' with importer (TextureImporter)
+Imported 'GUID: 23f4a8403c59b1c4ba4b16bb47fd1f2d' -> (Import Result ID: '125335777de5c134d3f63dc121cc1aad') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=68089b93edb633159d1af109c7a4374b DependenciesID=77c6c2efbb75a7e3d1e85ec99d689733 StaticDependenciesID=9337f5a3a9d9b3ac0c928a426bf953af 
+Importing 'GUID: 63e36874bdf029943bc06b1a3b25113e - Path: Assets/Sprites/weapon_chao_full.png' with importer (TextureImporter)
+Imported 'GUID: 63e36874bdf029943bc06b1a3b25113e' -> (Import Result ID: '112706b1dc240ae52eabda50d4214d5c') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d91e97e374a5f9b3588400b9d426217a DependenciesID=d3e3c5f69cbb8097124a454bd7636522 StaticDependenciesID=622ac3e9ead1892b84387ce260a0f461 
+Importing 'GUID: 63e64c9e0463357859aa211cec4c9f4c - Path: Assets/Art/Characters/nam_lang/nam_lang_atlas.png' with importer (TextureImporter)
+Imported 'GUID: 63e64c9e0463357859aa211cec4c9f4c' -> (Import Result ID: '2a43a32664f876e057365c85de792ad6') in 0.697 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a374c4897478e2fb63acfb9d163974b2 DependenciesID=aef7201db60d460d022120a0ca7a0c2c StaticDependenciesID=a9a934de0b7cdb94f27f4f9e5d554425 
+Importing 'GUID: 8314012697dce6c4da4511e2c1e7f86e - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F05.png' with importer (TextureImporter)
+crunched in 0.325742
+Imported 'GUID: 8314012697dce6c4da4511e2c1e7f86e' -> (Import Result ID: '598e8a5bb0bdf980bc8ff9bf7d5e97c2') in 0.350 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=84bc33c23ea77daaa77544f87af2b06a DependenciesID=0b26abceacc2c407db88d326875ff11a StaticDependenciesID=b7a3d4d1dea345fbd48ace1fd2233fe0 
+Importing 'GUID: a37800dd72f41374e8f7816f5cc2c5ad - Path: Assets/Art/UI/Kit/ui_card_char_normal.png' with importer (TextureImporter)
+crunched in 0.021922
+Imported 'GUID: a37800dd72f41374e8f7816f5cc2c5ad' -> (Import Result ID: '81771521be627e56b2fb7ee5dc5626fd') in 0.028 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d4262b7841a20929ae1d4e697705e425 DependenciesID=e93cc807fd72e9416fe6d95e983976fa StaticDependenciesID=daa2498c0320d3a4fc5e6540c860c18a 
+Importing 'GUID: 14996186ef95b7346a865f2138443486 - Path: Assets/Art/Characters/cho_vang/Gameplay/gp_cho_vang_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 14996186ef95b7346a865f2138443486' -> (Import Result ID: '40b04c374c25b2bd154db017aa00f15a') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=94f4297b15f6f9abc60e9ff842f53243 DependenciesID=f4c732ccc4a2ec5e6ab155c7418efe1e StaticDependenciesID=4154765a643f0d02fd82c0a49edc78ef 
+Importing 'GUID: 246eb6f0d59d9764e8382c815bc64a58 - Path: Assets/Sprites/weapon_pickleball_full.png' with importer (TextureImporter)
+Imported 'GUID: 246eb6f0d59d9764e8382c815bc64a58' -> (Import Result ID: '65b932dccdcb38c8e545bc74c6cdf89c') in 0.006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=32da7c16dc77f0f49eea93f717b1dffd DependenciesID=dd79f595cdc5d26bf1db7c11841c29f5 StaticDependenciesID=c1a80fd8d87b9113febfc8e3b9b9c6ee 
+Importing 'GUID: 54af92167d9032b95dbb5dd857daa124 - Path: Assets/Art/Weapons/chao_chong_dinh_held.png' with importer (TextureImporter)
+crunched in 0.022576
+Imported 'GUID: 54af92167d9032b95dbb5dd857daa124' -> (Import Result ID: '80ece96d11ab4cdf608752e3e02aef88') in 0.029 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c2f5fcb904fdd53f6293a39ccf03c45e DependenciesID=38768ddfafed23128a884a5228fa1f17 StaticDependenciesID=7df6ff3a65b1be98fdfcaa99f1d3cd77 
+Importing 'GUID: 648262db49d1c0648b401fdfaa33c3ad - Path: Assets/Art/UI/Kit/ui_card_slot_normal.png' with importer (TextureImporter)
+crunched in 0.012027
+Imported 'GUID: 648262db49d1c0648b401fdfaa33c3ad' -> (Import Result ID: '9e9dd80f534bcec2845fd46d783ce142') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=49ce03cd4f995ac00cc182cf41ab0e93 DependenciesID=5e643cb9c96424c5d082c351d3eeb865 StaticDependenciesID=70fca10e8d4f7f027ecc29e6a1bfe014 
+Importing 'GUID: 6459a0d26caaa404da24c851b9b84117 - Path: Assets/Art/UI/Kit/ui_btn_circle_dark.png' with importer (TextureImporter)
+crunched in 0.007403
+Imported 'GUID: 6459a0d26caaa404da24c851b9b84117' -> (Import Result ID: '1ce89112895dc34501206da430562e1d') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cb1da85fa9034a633d55e11b40f4c2a8 DependenciesID=a399cbf90cd1bcdefcda5d0047026af2 StaticDependenciesID=2c8b2351d1cd61f53bde852610a20e29 
+Importing 'GUID: 74a83171284373841a0ba56a55a4d93d - Path: Assets/HITME_AimKit/Art/Aim_Weapon_Preview_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 74a83171284373841a0ba56a55a4d93d' -> (Import Result ID: 'd36f606e03475372740b3d3a1af98ef6') in 0.021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=99666d0c5f92154f6f15fb2383fa9a87 DependenciesID=9e641cdbd111513e866e8d3e9aa74680 StaticDependenciesID=a0ff0f745fc75970f339942d0b43e621 
+Importing 'GUID: 94ef3ddeb3d08c8a6b3c49077f4ae42a - Path: Assets/Art/Weapons/tu_lanh_projectile.png' with importer (TextureImporter)
+crunched in 0.050036
+Imported 'GUID: 94ef3ddeb3d08c8a6b3c49077f4ae42a' -> (Import Result ID: 'abf476d5bc94f8bdf5c4bcb29d744ba8') in 0.056 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b3186bb92313fa0bfe10efc28c4c5793 DependenciesID=04fff3d37e814311b0a91ef3181bf693 StaticDependenciesID=3ece0141b33fa52fa99062c6d9b1bc05 
+Importing 'GUID: e4a580cd261835b46aa564cd198312fc - Path: Assets/HITME_AimKit/Art/Aim_Fan_Soft.png' with importer (TextureImporter)
+Imported 'GUID: e4a580cd261835b46aa564cd198312fc' -> (Import Result ID: '71dabfa4c7359f1bcc90620ff8d525df') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5dad8537569e408577a4ebdbf5b1f333 DependenciesID=df96aedf260328eb9e976ca2cdb2c825 StaticDependenciesID=2509838fafe1aea7874cab0daea7d2f7 
+Importing 'GUID: f49f3acb13e835149b73f7cbbac62194 - Path: Assets/Sprites/meo_mun_idle.png' with importer (TextureImporter)
+Imported 'GUID: f49f3acb13e835149b73f7cbbac62194' -> (Import Result ID: 'e2fddfe78e639102233df7632edb4403') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=424fb3a78de142b0fccd102d40c634d5 DependenciesID=1f5977c36d639832b20325a105054ab0 StaticDependenciesID=d860e89a4fbde353c569db7e05585db8 
+Importing 'GUID: f4afd75042b4a014db1f0f6db974717a - Path: Assets/Sprites/anh_non_la_idle.png' with importer (TextureImporter)
+Imported 'GUID: f4afd75042b4a014db1f0f6db974717a' -> (Import Result ID: '320de3c02b3209910e43013329d085a7') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=42c77bbff9744ebf0765a1f7918fbe20 DependenciesID=48603574a01757e431bda13fc34920ed StaticDependenciesID=9044060dec038cdad47114741020720a 
+Importing 'GUID: 05b4ed5f3e673ed96fdb0cc23679ef79 - Path: Assets/Art/Arena/arena_boundary_line.png' with importer (TextureImporter)
+Imported 'GUID: 05b4ed5f3e673ed96fdb0cc23679ef79' -> (Import Result ID: '852dd59c2647fe2c8d79d098efbf6734') in 0.068 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2ba97c9b407619a20db130d4090234a6 DependenciesID=a04472de8525a46929b64c52c5c6c683 StaticDependenciesID=0a23d1b71105dcd83856ce9bb0a4c470 
+Importing 'GUID: 0569539048f9e5cb6a2c5dc71fbc2516 - Path: Assets/Art/Weapons/tu_lanh_icon.png' with importer (TextureImporter)
+crunched in 0.043562
+Imported 'GUID: 0569539048f9e5cb6a2c5dc71fbc2516' -> (Import Result ID: 'a9d70313f338856610ca9ef25004d5ae') in 0.050 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=74db60fd640530f47eb2dadb64020aa1 DependenciesID=d881c9f725609e0057cbd5295c3b49f0 StaticDependenciesID=5ebc21ead22f381d7d93485c90ea074d 
+Importing 'GUID: 050fe0ef77d766947a7f5165e5bdf0ae - Path: Assets/Sprites/weapon_dep_full.png' with importer (TextureImporter)
+Imported 'GUID: 050fe0ef77d766947a7f5165e5bdf0ae' -> (Import Result ID: 'e212e9b531bb752a75350a2676414260') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=474f0e88647eaed32b0e56b2f3748ddc DependenciesID=01b50d9e5a6796f9129927a62741125f StaticDependenciesID=2d8c90e7bc24c3fe416c9eb3ca1c400a 
+Importing 'GUID: 152c56b8e1c64084fbfc40ca5e300e13 - Path: Assets/Art/Characters/quay_boy/Menu/menu_quay_boy_head.png' with importer (TextureImporter)
+Imported 'GUID: 152c56b8e1c64084fbfc40ca5e300e13' -> (Import Result ID: '33af3ea885e50cdb65af6e8556347320') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=21b1ba33d3ff974aab89e01a956308d4 DependenciesID=43d1209b2ac44345a57f47a428c3ca8f StaticDependenciesID=79fab972facfabf306c458c619fce1fb 
+Importing 'GUID: 75eb0d3e697a9e848a84042e52f128df - Path: Assets/Art/Characters/nam_lang/Menu/menu_nam_lang_head.png' with importer (TextureImporter)
+Imported 'GUID: 75eb0d3e697a9e848a84042e52f128df' -> (Import Result ID: '122a501f8c2f9cb7f13e90f36360d607') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8bc9ce1144ea820a1953895ba90720cf DependenciesID=c3bd4ea178b768332e33584195493f00 StaticDependenciesID=fad89fc6db6a8ac77ac2d4ab7f750d45 
+Importing 'GUID: 853b68dbbc10d974697e1e072acea985 - Path: Assets/Art/UI/Kit/ui_speech_bubble.png' with importer (TextureImporter)
+crunched in 0.006872
+Imported 'GUID: 853b68dbbc10d974697e1e072acea985' -> (Import Result ID: '79ef46ed0526bc6aef1c2b175cd9d5d7') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=295ed833c126839c5b612a7f4063e87a DependenciesID=ad670ff4c9e28e09d7254068fb0caf70 StaticDependenciesID=6158725ec1806fbe695154698fc7b4f5 
+Importing 'GUID: a50876785f521204792789641faf247e - Path: Assets/HITME_AimKit/Art/Aim_Dot_Bright.png' with importer (TextureImporter)
+Imported 'GUID: a50876785f521204792789641faf247e' -> (Import Result ID: 'c2a811a2b61a28f325272bfe378e2d4e') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b86b760f3288b9406e442a59103a963b DependenciesID=23e96f617254043fb9d6635cf26cc35c StaticDependenciesID=fdfc21c3ea0816da04fe5ba018a6cf05 
+Importing 'GUID: c542c6d91e8e4304380c28defa4b5e75 - Path: Assets/Art/Characters/nu_nang_dong/Menu/menu_nu_nang_dong_head.png' with importer (TextureImporter)
+Imported 'GUID: c542c6d91e8e4304380c28defa4b5e75' -> (Import Result ID: 'e34aa566057c7208d50572012b35cbd6') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=05488cdd0d71484cba6be6ad901ed03f DependenciesID=fb2909c3930b8031652733f8f8be8e8a StaticDependenciesID=6f44db852e5606b9cdfabec3e92f92e3 
+Importing 'GUID: c5341d4b4be72af41af3116dbfe4cda3 - Path: Assets/Sprites/pickleball_projectile.png' with importer (TextureImporter)
+Imported 'GUID: c5341d4b4be72af41af3116dbfe4cda3' -> (Import Result ID: '7b532bd92437b42043312e47462aac83') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=435f9eab630f4d8def32b9be67566329 DependenciesID=3e09e9c8ef4c5bb61fdb77f6320cb462 StaticDependenciesID=2b497fe88ffb39a1fc0efab27520eff3 
+Importing 'GUID: e532f3cf0e7b9b74893fc12cf5832256 - Path: Assets/Art/UI/Kit/ui_btn_cta_blue.png' with importer (TextureImporter)
+Imported 'GUID: e532f3cf0e7b9b74893fc12cf5832256' -> (Import Result ID: '4a78c32a5077c4b62be111f96ea7ddf5') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=449304644782c2d05a4e7f8607f8c669 DependenciesID=860748db0ba5d8fbd7fa55c27cbd9103 StaticDependenciesID=b161da16a60dab8dd196a8543507b3c6 
+Importing 'GUID: 068e4be4656d721fb34d69b1eee173cc - Path: Assets/Art/UI/banner_ribbon_header.png' with importer (TextureImporter)
+Imported 'GUID: 068e4be4656d721fb34d69b1eee173cc' -> (Import Result ID: '8208a94071ca602b20291c0907a0d58b') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cb7a5c9af77d77771a8e5050aa7f12e5 DependenciesID=961be115745ab85da5069ec4c40fb2bc StaticDependenciesID=805d7d9ebe352a8bfcd8cd870bbcfc3a 
+Importing 'GUID: 16d5bd57f06f57577d6a8663c017eff1 - Path: Assets/Art/UI/slider_track_9slice.png' with importer (TextureImporter)
+crunched in 0.026417
+Imported 'GUID: 16d5bd57f06f57577d6a8663c017eff1' -> (Import Result ID: 'c531a4259a19bc3403e4e25d70860661') in 0.030 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cda926be48c896a36ed3ec0ada84afbe DependenciesID=a62764a70d7d61c966cd3d2eb795e8ec StaticDependenciesID=7a80c36009963146d0faa21bf66042d1 
+Importing 'GUID: 26eb78be2a70da34287b3ddd2ffc80b7 - Path: Assets/Art/Characters/co_ba/Menu/menu_co_ba_head.png' with importer (TextureImporter)
+Imported 'GUID: 26eb78be2a70da34287b3ddd2ffc80b7' -> (Import Result ID: 'd9b5f25ef29d92309f6687d898ef4892') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6ba1097338e52c64731fdb7670c9dd4f DependenciesID=231fb70222e9575d54c3795da78a9f4f StaticDependenciesID=2aec2ae1fe9b8e1dcd85c334339493cc 
+Importing 'GUID: 36ec9adb98882a54388e8204113b02dd - Path: Assets/Art/UI/Kit/ui_row_leaderboard.png' with importer (TextureImporter)
+Imported 'GUID: 36ec9adb98882a54388e8204113b02dd' -> (Import Result ID: '18f447c2d227af4a22f2b4746cf832c9') in 0.006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7a797d3a442df74cec396b9798461cae DependenciesID=d91eb67b73efe5a7e37d91f0afd3960f StaticDependenciesID=ecc1fb92649ea96876ae283988717798 
+Importing 'GUID: 46eb8aefd56eb3a4b9dc9af79e6cccb0 - Path: Assets/Sprites/co_nang_the_thao_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: 46eb8aefd56eb3a4b9dc9af79e6cccb0' -> (Import Result ID: 'b75fac8071b2ab4a05871f1b239e59c2') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=90ece7345bbafc5bf366769eea7f5624 DependenciesID=bf90b135b591b9329f174fa4315ebb15 StaticDependenciesID=437c3a5a7b1594792c1985d0f355c331 
+Importing 'GUID: 560df64f652eda8478efcb53c1458d00 - Path: Assets/Art/UI/Kit/ui_btn_circle_cyan_active.png' with importer (TextureImporter)
+crunched in 0.030442
+Imported 'GUID: 560df64f652eda8478efcb53c1458d00' -> (Import Result ID: 'd11bee377aa3167d52cd2e72ecb6749b') in 0.035 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=21d2cffcd5b6da24d20932d8e1782516 DependenciesID=71647fbcd95e362c436ccfa9806e2dbb StaticDependenciesID=57fa3cbad17f49283d987fea8acc92f8 
+Importing 'GUID: 76f51a4d25ca7d84da4e7a7b1ef810de - Path: Assets/Art/Characters/nam_lang/Menu/menu_nam_lang_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 76f51a4d25ca7d84da4e7a7b1ef810de' -> (Import Result ID: '62ffbe79135d187babf5c86825bce46f') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3fd1d37b4449d1b49f1253894165e3c5 DependenciesID=312092129f5d03443478ccbd059b564e StaticDependenciesID=e0880b214547ac1d3f452811f27e1644 
+Importing 'GUID: 761f26123645720449016ceaa1b47174 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F02.png' with importer (TextureImporter)
+Worker ready: AssetImportWorkerHW0 0
+crunched in 0.298053
+Imported 'GUID: 761f26123645720449016ceaa1b47174' -> (Import Result ID: '5945f8ff595e2a51c6aa7681b78065db') in 0.321 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6f08f2d0f168acd284cad44b879a1d77 DependenciesID=e4449d8237c32ddc9209dee368c3c02e StaticDependenciesID=aaf3c1dcb4c6e7cae1935be24418a3ef 
+Importing 'GUID: 86b2e0693ff3ff145a394e3f09e07ce1 - Path: Assets/Art/UI/Kit/ui_banner_wood.png' with importer (TextureImporter)
+crunched in 0.034198
+Imported 'GUID: 86b2e0693ff3ff145a394e3f09e07ce1' -> (Import Result ID: 'fae39fdb5587007bd5f0a7a30a75647d') in 0.041 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=981c5e74016fdc599f9ce8e388301a47 DependenciesID=8215ed63a91b300e99760b8a2ce38cb3 StaticDependenciesID=cc4ebbf478f1bc0348914ecfe09c259c 
+Importing 'GUID: c6e6ef9049a03b54192d8adfba13a571 - Path: Assets/Art/Characters/meo_mun/Menu/menu_meo_mun_head.png' with importer (TextureImporter)
+Imported 'GUID: c6e6ef9049a03b54192d8adfba13a571' -> (Import Result ID: 'e5ff8ddc6e9cda3e854ea84f2efd034c') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9895c0c94b7040e8637d7b849adf8041 DependenciesID=5f6700ada62cd5d838db7d79f9457ed3 StaticDependenciesID=11e82ae70b458c7ca0c07e56e8df3f72 
+Importing 'GUID: c6efe9133bc6f35459735440b36eff15 - Path: Assets/Sprites/ui_menu_top.png' with importer (TextureImporter)
+crunched in 0.053335
+Imported 'GUID: c6efe9133bc6f35459735440b36eff15' -> (Import Result ID: 'df53345e2b31c35eb623021e2ff9ade6') in 0.063 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d0840a67155e78761ce3d9ec1741db07 DependenciesID=8417f929a0bc655bacace1be975cdbe3 StaticDependenciesID=be3d4f4b36e9b67851cb8d968dd27314 
+Importing 'GUID: d6b7ddd7ff5f0fe42ffcca2503a8f194 - Path: Assets/Art/Weapons/vot_pickleball_projectile.png' with importer (TextureImporter)
+crunched in 0.039542
+Imported 'GUID: d6b7ddd7ff5f0fe42ffcca2503a8f194' -> (Import Result ID: '96acc31497e1f71497310e4c520bc0db') in 0.045 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=87c254c5b9598153ed80a87876110f66 DependenciesID=2f70e141cea220a335e4650e42743c88 StaticDependenciesID=9e64de67f25ffac07ee8c14f356b9f2a 
+Importing 'GUID: e6e411d4f159f324a9d14470cdd17504 - Path: Assets/HITME_AimKit/Art/Aim_Trail_Spark.png' with importer (TextureImporter)
+Imported 'GUID: e6e411d4f159f324a9d14470cdd17504' -> (Import Result ID: 'bba94e70e7aa9e7ed3c8cbe1c827d9cb') in 0.015 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=896854b2c64209cd6e1941aa387e5f82 DependenciesID=4af875a26f17c39c09d2509e94856d36 StaticDependenciesID=cc42e8e8c9c30260621e7453f5ed052c 
+Importing 'GUID: 1776b375694e4a243914799c75a0c492 - Path: Assets/HITME_AimKit/Art/Aim_Target_Halo.png' with importer (TextureImporter)
+Imported 'GUID: 1776b375694e4a243914799c75a0c492' -> (Import Result ID: 'e8305fae35e7b02f2815bc015b03648b') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=af54deaa2fbc59b964d263abe102d236 DependenciesID=6e94df30f9df000adae0cb0adcfc3fb4 StaticDependenciesID=a0036d25364115bf77d14a35204ac424 
+Importing 'GUID: 370113fec9530d04dba51cf560da17c1 - Path: Assets/Art/Characters/nam_lang/Gameplay/gp_nam_lang_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 370113fec9530d04dba51cf560da17c1' -> (Import Result ID: '3c3c46fbbbd3ca3d33bf1a2ab5d0c8f9') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=00665a730ca8c118c9face8870f706ba DependenciesID=9d64572d2145f6b254d966d6850cca93 StaticDependenciesID=7ab57e31d67010e40414402ff00b4423 
+Importing 'GUID: 47100e44e75b7c6488896ca161a3f076 - Path: Assets/Art/UI/Kit/ui_aim_origin_ring.png' with importer (TextureImporter)
+crunched in 0.175001
+Imported 'GUID: 47100e44e75b7c6488896ca161a3f076' -> (Import Result ID: '4833e7c014356c0267b77397f51ca358') in 0.189 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d66b0899d7495dcf33a4013070e02748 DependenciesID=f1c2efa2c66939ce24270d65c64783c9 StaticDependenciesID=babc225c4bff5dfc65f6dc12ce82fd2e 
+Importing 'GUID: 578ed33a539838c4aa0a841ea6ffc16c - Path: Assets/Art/Characters/quay_boy/Gameplay/gp_quay_boy_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 578ed33a539838c4aa0a841ea6ffc16c' -> (Import Result ID: '1c89ed1232ce0de8bfe46b0f7bd3a0bf') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=93fd810ddbae580e0b3892a354526bee DependenciesID=0c979adca2f3590f433c92ccf255cb16 StaticDependenciesID=6783caae724f738fbbbdc4604da8e404 
+Importing 'GUID: 67a0973286654494c97d3e2c14c11814 - Path: Assets/HITME_AimKit/Art/Aim_Dot_Soft.png' with importer (TextureImporter)
+Imported 'GUID: 67a0973286654494c97d3e2c14c11814' -> (Import Result ID: '0162f98881dc1d91d912abee38777e01') in 0.012 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e76e103106f5ee35d245e0974d548db6 DependenciesID=8656b82b616c56e2301281a620724ad9 StaticDependenciesID=a1d78948c428783f84a2739418a8c87d 
+Importing 'GUID: 6771a1a064d588b499ff130bfe8ab3aa - Path: Assets/Art/Characters/nu_nang_dong/Menu/menu_nu_nang_dong_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 6771a1a064d588b499ff130bfe8ab3aa' -> (Import Result ID: '0c9eb2fde21c09f8d8596b6bc8d57c5a') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e5c80b7bbc9d58312e7f730a24c53a77 DependenciesID=bcaa37f3d74ad6bad47c20f961d1ef96 StaticDependenciesID=02f3dfd44c4226ed117a7b031d06b79d 
+Importing 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02 - Path: Assets/HITME_AimKit/Art/Aim_Origin_Glow.png' with importer (TextureImporter)
+Imported 'GUID: 67b9027cf5c5c0345a7632f3e1a7ae02' -> (Import Result ID: 'd530fe1447eddd08460c65b49102aa57') in 0.021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=88f198e1536e36bf63980f7b92e409fb DependenciesID=6556796c553f15cd5ccf94235f3be060 StaticDependenciesID=d9c74a1bfa6e45bc42bfa2dc25ea79e4 
+Importing 'GUID: 67eace86ac09742d66397914ca7e0a71 - Path: Assets/Art/Weapons/vot_pickleball_held.png' with importer (TextureImporter)
+crunched in 0.031400
+Imported 'GUID: 67eace86ac09742d66397914ca7e0a71' -> (Import Result ID: '9c6fdc2497fecdb9518d50d4963a7352') in 0.038 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c8015d2fc098abdd3afb836755c37f85 DependenciesID=827c54c52dc3ccd4d60a025bc8d56fcb StaticDependenciesID=4fe214b83b6f2aba11b52642f5c6a7e6 
+Importing 'GUID: 973a3e469b63f9940afd0c6d305b265e - Path: Assets/Art/Characters/anh_teen/Menu/menu_anh_teen_head.png' with importer (TextureImporter)
+Imported 'GUID: 973a3e469b63f9940afd0c6d305b265e' -> (Import Result ID: '54e7760e2e8e96d0d556f5ffb5394171') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4b56549cce1ec984845ad6374cec7722 DependenciesID=1e3ba5a5f91c445ec402feb11bccc4ba StaticDependenciesID=7acda9e531fc06f9d6d5515a2f4c08aa 
+Importing 'GUID: a7634cbda2a8c6b4da6b5d96c061c7c2 - Path: Assets/Art/UI/Kit/ui_icon_heart_break.png' with importer (TextureImporter)
+crunched in 0.270917
+Imported 'GUID: a7634cbda2a8c6b4da6b5d96c061c7c2' -> (Import Result ID: '544c8c473bca2635fa53338bb96fd3d7') in 0.290 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1c2fdf27d35fc6cc8dab38c937a5471f DependenciesID=3ceb484f30cacfbd763a1b50956e615b StaticDependenciesID=64d56c5600c69b88b8d8fe687f58323f 
+Importing 'GUID: b788df7cf7459ef4fea9769b80db00d0 - Path: Assets/Art/Arena/arena_center_lotus_decal.png' with importer (TextureImporter)
+Imported 'GUID: b788df7cf7459ef4fea9769b80db00d0' -> (Import Result ID: 'ce5d19cca58a19eb2c8001d23472857a') in 0.041 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=29015b334f70eb43e7d98dfd02acbf4f DependenciesID=925f9e294dbf0c5cd978aeaa151e7ad8 StaticDependenciesID=7e45d01e822fea500287b3315c569ff3 
+Importing 'GUID: d741b73b66c6b3a44b249bb4a1e9901b - Path: Assets/Sprites/chu_cho_vang_idle.png' with importer (TextureImporter)
+Imported 'GUID: d741b73b66c6b3a44b249bb4a1e9901b' -> (Import Result ID: 'ecd3b86c49cb8065f44e2e29059c62e7') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9d39e65e329fc2542dd9cb3ba58ce9d3 DependenciesID=c3b6c54969e5555f5a225c41aeffdd33 StaticDependenciesID=59bf4a1333c09c450b07d8053fd4d7e7 
+Importing 'GUID: d72644a544a63b947942222115d5f9d9 - Path: Assets/Sprites/mai_hong_idle.png' with importer (TextureImporter)
+Imported 'GUID: d72644a544a63b947942222115d5f9d9' -> (Import Result ID: 'f84ab4bfd6ac468c52ea7cc52a6c6861') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=422c3d7c432e2d9bb6cad3eb19be698f DependenciesID=d3f4b7663f4896a199325dce97a4df65 StaticDependenciesID=234c5e279075fdf9d0091d3bbf1b5863 
+Importing 'GUID: f72321a7d5f053aa0a6f8c629f9a59ad - Path: Assets/Art/UI/btn_primary_gold_9slice.png' with importer (TextureImporter)
+Imported 'GUID: f72321a7d5f053aa0a6f8c629f9a59ad' -> (Import Result ID: '73e20a75970a59c4badbf219c57738f4') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6c92106c102210558053631ea9b25aa8 DependenciesID=2a126cacf181d98e0ba66a40cb786b46 StaticDependenciesID=2e8ce2822c9a7b2029cdf0f49a4c5ec1 
+Importing 'GUID: 181e3fc1ea6ece04cbcf7948839a81c6 - Path: Assets/Art/UI/Kit/ui_slider_track.png' with importer (TextureImporter)
+crunched in 0.008935
+Imported 'GUID: 181e3fc1ea6ece04cbcf7948839a81c6' -> (Import Result ID: '4a3bc81f8e0f822691543d6adcb61751') in 0.012 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=55f87f137430512c6cb44e4e87ad2377 DependenciesID=55fb8ee47c7fe6ea5405036339c409df StaticDependenciesID=e6820fe00426f623dfb102b0d91c6cc9 
+Importing 'GUID: 38945aa9e647eb74a961aec091b6aaa7 - Path: Assets/Art/Characters/cho_vang/Menu/menu_cho_vang_head.png' with importer (TextureImporter)
+Imported 'GUID: 38945aa9e647eb74a961aec091b6aaa7' -> (Import Result ID: 'efe549727725425b85fc3a10ee827239') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7d4e70e214af8f450096c0d53ceea526 DependenciesID=65e75130026b03801c4b27f4e9dbdf4b StaticDependenciesID=93e03f8c4572bc3ffc710892d0bc0748 
+Importing 'GUID: 48525458e668d594aaf02ccc3f80ab0b - Path: Assets/Art/UI/Kit/ui_slider_track_empty.png' with importer (TextureImporter)
+crunched in 0.008133
+Imported 'GUID: 48525458e668d594aaf02ccc3f80ab0b' -> (Import Result ID: 'cdbd72e7fc71dbde436816adbbdf9ff8') in 0.013 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a2f517ffcd2c431c839084d8214a5e3d DependenciesID=a36038da3c72de4336db7764a74edc58 StaticDependenciesID=66dd2a8e75a9abd2e84d1e71c672db38 
+Importing 'GUID: 588d8ac635a7d4243bfc1ee5fa77c3cd - Path: Assets/Art/UI/Kit/ui_timer_circle_gold.png' with importer (TextureImporter)
+crunched in 0.007957
+Imported 'GUID: 588d8ac635a7d4243bfc1ee5fa77c3cd' -> (Import Result ID: '805d20dae024b5066dab37fa60b71a17') in 0.013 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0dd0a44ccd3d034d73453259ba92a33e DependenciesID=82d6f2fa2d407dc5a3b0b880d4b8b4a4 StaticDependenciesID=f55c18da7fb5601bd185122c6a92f30a 
+Importing 'GUID: 88aafc7d33ce4aa4282cbaf8505b75bb - Path: Assets/Sprites/dep_projectile.png' with importer (TextureImporter)
+crunched in 0.055373
+Imported 'GUID: 88aafc7d33ce4aa4282cbaf8505b75bb' -> (Import Result ID: '516bd41396405c43c7571b4555bc94cc') in 0.063 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a803fd0e30e52f8d84ef71d5d056147b DependenciesID=39cee73ed0232d40e3e73eab7da158e9 StaticDependenciesID=386af7533774bc28c4127c57fef2b8ac 
+Importing 'GUID: 886eff95e46ed6f4f89d040afa066c6e - Path: Assets/Art/Characters/quay_boy/Menu/menu_quay_boy_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 886eff95e46ed6f4f89d040afa066c6e' -> (Import Result ID: 'b4efb975b9d59fdc9591a645bec966fb') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ee9fb1acd0e8d70960e8d445a02ce0a7 DependenciesID=329b77fe07a9c1538ce49bd26a986927 StaticDependenciesID=0f0f35e13742732d8c214cf9dc424365 
+Importing 'GUID: a8e938dc6058b3dad7dde56fb86f9bf7 - Path: Assets/Art/Weapons/bong_da_icon.png' with importer (TextureImporter)
+crunched in 0.032764
+Imported 'GUID: a8e938dc6058b3dad7dde56fb86f9bf7' -> (Import Result ID: '080d84c501a9203326cfdced470548d6') in 0.038 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cb29ff3c81ee2ffa0a609bc5cfc23d9f DependenciesID=16cae5ecb8309802cd73df6ce2d7f683 StaticDependenciesID=3fa59c27c71cc1a7dfc090cec3faf0d9 
+Importing 'GUID: b898fd9d48293684eb88fd6b5fc05f68 - Path: Assets/Art/UI/Kit/ui_aim_direction_arrow.png' with importer (TextureImporter)
+crunched in 0.017874
+Imported 'GUID: b898fd9d48293684eb88fd6b5fc05f68' -> (Import Result ID: '8d0b203b99b14e410796ef4629825c5c') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=686f53a94eecb32feccc16b3a1c74184 DependenciesID=244c8ef2ccc4a42df131b4d1c246a9f4 StaticDependenciesID=062b6f86e462922072162b34693fc9ee 
+Importing 'GUID: b8be736df1a43af4787c26c2fb2a9756 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png' with importer (TextureImporter)
+crunched in 0.262601
+Imported 'GUID: b8be736df1a43af4787c26c2fb2a9756' -> (Import Result ID: '0d37ad374d276aca873fce9b222b133f') in 0.288 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=74d345874fff1e36647c997b42f6c776 DependenciesID=360131c06cce95eff2f6c0749d2ca19a StaticDependenciesID=4830b28ed0c9076f26756f7d016e31c6 
+Importing 'GUID: c835b4fc41808724188bb6280e4e5aeb - Path: Assets/Sprites/ui_menu_logo.png' with importer (TextureImporter)
+Imported 'GUID: c835b4fc41808724188bb6280e4e5aeb' -> (Import Result ID: '467d017f6db1bb46d8a3fa175673efd1') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=446b6781161dd6db7bb8bbc99247fcf7 DependenciesID=ef7d0931737ab6b91c78eb434c5e627f StaticDependenciesID=242a87a2d5864abb34d754f359f17b4f 
+Importing 'GUID: f8a8ff0bc64474b48b65fd804b3c9cef - Path: Assets/Art/UI/Kit/ui_chat_row_selected.png' with importer (TextureImporter)
+crunched in 0.030617
+Imported 'GUID: f8a8ff0bc64474b48b65fd804b3c9cef' -> (Import Result ID: '647fb764b8fed25050d3e31a206b22e0') in 0.036 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=503cb5302db5ac52bad00d6f7e1272d0 DependenciesID=94b10ae53b9fbd720bbf3d1be3fe47c8 StaticDependenciesID=7e5c1bf5a2ead181963796e3384a24db 
+Importing 'GUID: 29d673c48656da178e37266567a05887 - Path: Assets/Art/Weapons/tivi_crt_icon.png' with importer (TextureImporter)
+crunched in 0.063497
+Imported 'GUID: 29d673c48656da178e37266567a05887' -> (Import Result ID: '5954c65686415ff67b34f7abd97db936') in 0.071 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e7d0c02c4fa77f456a680c121c1a4cde DependenciesID=bf6dee1555d8fcd1ec5ae305fd2aab97 StaticDependenciesID=a4352830d8e56cb2febbfbd2a3245dc2 
+Importing 'GUID: 392c7fe589253d0e58f7028759066194 - Path: Assets/Art/Weapons/coc_bia_projectile.png' with importer (TextureImporter)
+crunched in 0.037094
+Imported 'GUID: 392c7fe589253d0e58f7028759066194' -> (Import Result ID: 'dea8e067ea56fab4247c139ae96e11f5') in 0.044 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1c04877bded8b8fe779f2dcda40a36bd DependenciesID=1fc999ac5650bd87b257423c9cba2145 StaticDependenciesID=3b66907ca25628ae23532d8c97f5a4a6 
+Importing 'GUID: 69b299dedf0419142acba4460c3c7d34 - Path: Assets/Sprites/ui_menu_full.png' with importer (TextureImporter)
+Imported 'GUID: 69b299dedf0419142acba4460c3c7d34' -> (Import Result ID: '6bcc6d28467a5bd92bc8a9e7f4cc7371') in 0.058 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=23c1615b5cb45a4953713e821aa051ba DependenciesID=626b3d69198157958cd8d9fba256658a StaticDependenciesID=013015db9c3cb2b6a5b6a65c885f4c63 
+Importing 'GUID: 69a7eed8b7eac56448dfd5d1ebb773f1 - Path: Assets/Art/UI/Kit/ui_input_box_cyan.png' with importer (TextureImporter)
+crunched in 0.015940
+Imported 'GUID: 69a7eed8b7eac56448dfd5d1ebb773f1' -> (Import Result ID: '655f58cb986b1d72844b44dc7f63eb16') in 0.021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3719c3df7196f90c4a3cdf98f8cecb26 DependenciesID=e2aa2e0dc6022150ec0357bbd0c668e8 StaticDependenciesID=d16709196b2058104c744b732e9e2d21 
+Importing 'GUID: 69ea9e77a4f53e249bdb668b1865d27f - Path: Assets/Art/UI/Kit/ui_aim_target_locked.png' with importer (TextureImporter)
+crunched in 0.066776
+Imported 'GUID: 69ea9e77a4f53e249bdb668b1865d27f' -> (Import Result ID: '84d36757f2443d5e280a64f773b7f90f') in 0.081 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d19a850ef6910306f87981e227ce04b3 DependenciesID=3e8b49859c863f798a5a18ad3a8bfc57 StaticDependenciesID=06d863520bd88afa00c7d2437cfa7c78 
+Importing 'GUID: 89d87ff4c29358f4a1e9e4a879a67e1c - Path: Assets/Art/UI/frame_card_slot_9slice.png' with importer (TextureImporter)
+Imported 'GUID: 89d87ff4c29358f4a1e9e4a879a67e1c' -> (Import Result ID: '500e53f2b9ed050aa70b4bd10e5d54ed') in 0.006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f60474415c494192d4af86e848319931 DependenciesID=42f5cc4c4baa3d5c796c05d49fb3d9de StaticDependenciesID=3e1870fdb91a9032781b1b32f3638904 
+Importing 'GUID: 899db241d9758a9499dcfbeb6bc39d45 - Path: Assets/Art/UI/Kit/ui_aim_pulse_gold.png' with importer (TextureImporter)
+crunched in 0.065971
+Imported 'GUID: 899db241d9758a9499dcfbeb6bc39d45' -> (Import Result ID: 'c34812cc734496911e4827cd4e5c0dfc') in 0.077 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d964b1a5ae295a40772af45022696a0a DependenciesID=cba7dbf156f72045047a7748154abdc2 StaticDependenciesID=9e13740e0a21162ff28896f649b22ad1 
+Importing 'GUID: f97acee173593d646a58259310a4a119 - Path: Assets/Art/UI/Kit/ui_panel_dark_gold.png' with importer (TextureImporter)
+crunched in 0.054325
+Imported 'GUID: f97acee173593d646a58259310a4a119' -> (Import Result ID: 'd463fe51e9c12e28f7d29693abf7ac7d') in 0.068 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8ec3c62d2d5fb6974602816522247149 DependenciesID=2eb1397b543826e0d6b8f94ff5fcbd2f StaticDependenciesID=aec3b4d87bfbc73df95e1ed9a81a4e12 
+Importing 'GUID: 4a439af72d5d8db43b1d5a5f73f2f121 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F04.png' with importer (TextureImporter)
+crunched in 0.280104
+Imported 'GUID: 4a439af72d5d8db43b1d5a5f73f2f121' -> (Import Result ID: '24c39fe5ae8def91efa795d99c6dc2eb') in 0.301 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=aabae6aaa80d19928343c59824122397 DependenciesID=5e751f80cc5277a9275f05383d56da86 StaticDependenciesID=eb6f08e082378aaa4c3a9e7c125241d5 
+Importing 'GUID: 4a74db621a004af48aea4d1557ca408f - Path: Assets/Art/UI/Kit/ui_btn_cta_yellow.png' with importer (TextureImporter)
+crunched in 0.023588
+Imported 'GUID: 4a74db621a004af48aea4d1557ca408f' -> (Import Result ID: '4bf5c5d1aa35f461a6f3e0a3443b8dc4') in 0.031 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2c3121ea0d4a5a5c556c74ed90ae23fe DependenciesID=ae86b11b55bc47a724b288c0b6bec0c0 StaticDependenciesID=ab567fdba978dcbaede6ce610c94deb0 
+Importing 'GUID: ca3f5ac28cb5ac040a4df0adef2fdeaf - Path: Assets/Art/UI/Kit/ui_aim_beam_soft.png' with importer (TextureImporter)
+crunched in 0.015054
+Imported 'GUID: ca3f5ac28cb5ac040a4df0adef2fdeaf' -> (Import Result ID: 'eb1e2de70769b049783ef46ce5285215') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c0a28bf672616c8b2bbd6a8b6ae251a1 DependenciesID=139deec4f1d8858604da1cf9aeb33690 StaticDependenciesID=257eedd1042c006da7a50769c643dcd8 
+Importing 'GUID: eaff44e64ce322c469061b37acb1b645 - Path: Assets/Art/UI/Kit/ui_toggle_on.png' with importer (TextureImporter)
+crunched in 0.009131
+Imported 'GUID: eaff44e64ce322c469061b37acb1b645' -> (Import Result ID: '85a702501d25a236cb0a5191d5288ed9') in 0.012 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3985701660c4ac64e1063568eb5b824a DependenciesID=b450c2565db2340a365bbd46981ee11e StaticDependenciesID=72b19751c504c78e0f6819d0e342dc5b 
+Importing 'GUID: fad2059ca463d711d43178579e5bbfb8 - Path: Assets/Art/Weapons/dieu_cay_icon.png' with importer (TextureImporter)
+crunched in 0.029992
+Imported 'GUID: fad2059ca463d711d43178579e5bbfb8' -> (Import Result ID: '01665492c4eccf7687ba364995bea03b') in 0.036 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2bca69716fa28a764eafb5367324809c DependenciesID=9d2c5a4d034a01e81432cf3bb04fd3da StaticDependenciesID=419c6366890bbc9daf805db0d49ff4a1 
+Importing 'GUID: 3bac430955e7f434582db3a9d95b93df - Path: Assets/HITME_AimKit/Art/Aim_Target_Reticle.png' with importer (TextureImporter)
+Imported 'GUID: 3bac430955e7f434582db3a9d95b93df' -> (Import Result ID: '0720096585cc1b66bc2144fc857a282d') in 0.040 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1ac4e5259f205c0d696be3ce8558b811 DependenciesID=532734f69041813055547fdbf2f309df StaticDependenciesID=e1f9a5a0fa0c10192a48c40b84dc692c 
+Importing 'GUID: 6bb55d35027d07b20363300c11e10e22 - Path: Assets/Art/Weapons/bua_dong_dinh_projectile.png' with importer (TextureImporter)
+crunched in 0.033595
+Imported 'GUID: 6bb55d35027d07b20363300c11e10e22' -> (Import Result ID: 'cffd6940e3968f26520c7823d1548222') in 0.040 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7a265ed5cd8b32715b6a4bf353295526 DependenciesID=a4972024b1795b3ffde64b76a0c728c3 StaticDependenciesID=db6f4f13557f3a06750545670e77145a 
+Importing 'GUID: db54b871770edfb4d8bf211280685a9b - Path: Assets/Sprites/ARENA.png' with importer (TextureImporter)
+Imported 'GUID: db54b871770edfb4d8bf211280685a9b' -> (Import Result ID: '43e24275786b354089b96e389114811e') in 0.074 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=eed0a78984a3fa697327eec6fd6bdab9 DependenciesID=44968944c30bc29f576db1200dc22cd6 StaticDependenciesID=acca28bb4ce7952d61526ce87df3be5e 
+Importing 'GUID: 2c909e81df0bda9b89e5bb0fd51995e9 - Path: Assets/Art/Weapons/tivi_crt_projectile.png' with importer (TextureImporter)
+crunched in 0.032427
+Imported 'GUID: 2c909e81df0bda9b89e5bb0fd51995e9' -> (Import Result ID: '7395eb9deddbbde2c212c0768553d11f') in 0.039 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=09657663ba80cf8662ec759da3e94a53 DependenciesID=e08338d84673c52c2b2470e9b97769b8 StaticDependenciesID=ff822f56ccadae0cd98399b358ceea78 
+Importing 'GUID: 5ca4d6f97aa3a8a70da6910c36958201 - Path: Assets/Art/Weapons/dieu_cay_projectile.png' with importer (TextureImporter)
+crunched in 0.029446
+Imported 'GUID: 5ca4d6f97aa3a8a70da6910c36958201' -> (Import Result ID: '182e86833b42282a93254622d037fe2e') in 0.035 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8a15d602d5ba1adb1436490f68c0633e DependenciesID=4da5460c526e4374a2894882ae844263 StaticDependenciesID=8721c013c8d793cf989a995acb478810 
+Importing 'GUID: 7c0336fa3f325114ca9fceea6d1a3b12 - Path: Assets/Art/UI/Kit/ui_btn_circle_back.png' with importer (TextureImporter)
+crunched in 0.015552
+Imported 'GUID: 7c0336fa3f325114ca9fceea6d1a3b12' -> (Import Result ID: 'd02ab5929b137c4d2ed7cbf93729f818') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7b796626779bd8fbd039cd32c2abad0a DependenciesID=ad7f65817834a81e717daa3061c3174a StaticDependenciesID=58f7f1d374a2823e04cf0d4cdf366010 
+Importing 'GUID: ecd2e36405a3b1445b52a37be92a1f05 - Path: Assets/Art/Characters/co_ba/Menu/menu_co_ba_portrait.png' with importer (TextureImporter)
+Imported 'GUID: ecd2e36405a3b1445b52a37be92a1f05' -> (Import Result ID: 'bf9ebd7bd5416eb1ac881b6608ae86e4') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3fa63f9eb4542d6305e02d71d101a4b2 DependenciesID=a83c179352ce0a4083fa9edc92f13b2c StaticDependenciesID=85f112e8cbd3344417e3abb7ada0a59f 
+Importing 'GUID: ecf64a5a95b5f07faf949880ac557130 - Path: Assets/Art/Weapons/dep_to_ong_icon.png' with importer (TextureImporter)
+crunched in 0.024820
+Imported 'GUID: ecf64a5a95b5f07faf949880ac557130' -> (Import Result ID: 'ad6eee54a36ce55a09f390d081e3f3e2') in 0.030 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b5837550b9a89cc118c7041666a4a5b2 DependenciesID=6be71235ea16b630b04ec9355dc1cbb6 StaticDependenciesID=20edc67865c7a98d1eb813fcad07fa9e 
+Importing 'GUID: fca6bdec7e8bdf245a7414e99eb9b773 - Path: Assets/Art/Characters/anh_teen/Gameplay/gp_anh_teen_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: fca6bdec7e8bdf245a7414e99eb9b773' -> (Import Result ID: '4179556175f1fd8ffeac510656a5cf4b') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f7e6e7ce16c35fbd00a3fabcc4956679 DependenciesID=b7206c60acf9338148aa32d907ab09e3 StaticDependenciesID=2681b4e6d985162dba70c089dfe2a24f 
+Importing 'GUID: fc0f60a40abcf544c80e0771a26a815c - Path: Assets/Sprites/anh_nui_idle.png' with importer (TextureImporter)
+Imported 'GUID: fc0f60a40abcf544c80e0771a26a815c' -> (Import Result ID: '9a3c28a8a4eba868d557bcfcdc524a38') in 0.008 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=37841f9985eca337cb405443e537e76f DependenciesID=3bcf62d3f6589e32afb14a1adbe0b275 StaticDependenciesID=b1cdf7dbecc37d5b95cf638daca275e8 
+Importing 'GUID: 0d8b7dc17edde645005dd2764625dc93 - Path: Assets/Art/Weapons/bua_dong_dinh_icon.png' with importer (TextureImporter)
+crunched in 0.031487
+Imported 'GUID: 0d8b7dc17edde645005dd2764625dc93' -> (Import Result ID: '91ee53b801eb128860568f95317a9073') in 0.037 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f2362ba47edb1f5ce2ccb76316190300 DependenciesID=b47b34ef2adf6e4807b64193951504fe StaticDependenciesID=5a13fda6aab208a7f67a142a8d989f90 
+Importing 'GUID: 5d6577f12c150004eb186a3dcd9f3179 - Path: Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F06.png' with importer (TextureImporter)
+crunched in 0.293794
+Imported 'GUID: 5d6577f12c150004eb186a3dcd9f3179' -> (Import Result ID: '1a3283d715f049a2d4a785f553f6ae11') in 0.317 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=04b50d6ca2da40d9520c060e0a091de5 DependenciesID=5e0d74aefe4550a2e2480ee6d940554e StaticDependenciesID=b7f197426e7aff911c36b765922020ab 
+Importing 'GUID: 7df2b04cc88b2d440b1e6d3be2875d9d - Path: Assets/Art/UI/Kit/ui_slider_knob.png' with importer (TextureImporter)
+crunched in 0.008338
+Imported 'GUID: 7df2b04cc88b2d440b1e6d3be2875d9d' -> (Import Result ID: '159f66625b3d7826ebe87c3770c4f129') in 0.011 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f96cd081baa9d6abf8439d43536dd32f DependenciesID=ec19174c75f7d68cc836214e5d919bd2 StaticDependenciesID=610aa90293546d9c309b7decb73fd024 
+Importing 'GUID: 7d2a019354df37b4abe8e95af31d319b - Path: Assets/Art/Characters/anh_teen/Menu/menu_anh_teen_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 7d2a019354df37b4abe8e95af31d319b' -> (Import Result ID: 'ccccf4fa1f8268a446e188d900430584') in 0.006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=456c7079f4e22c5f66361020a34da0f6 DependenciesID=c290a60e720e01fe462b5562c76df34b StaticDependenciesID=a1fd7895615f383964af0878252a4c8e 
+Importing 'GUID: 7d5e6675116973940a251ebd3e15f365 - Path: Assets/Sprites/pickleball_icon.png' with importer (TextureImporter)
+Imported 'GUID: 7d5e6675116973940a251ebd3e15f365' -> (Import Result ID: 'fda053d4e98112cdd21bd58d6ba27faf') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=86e716819b672a96692bc1aa9f0559e8 DependenciesID=c5159e2fbfa6d5e923e1dbf15c3e08f6 StaticDependenciesID=ce13988ea02d3289d26f0b554a457d67 
+Importing 'GUID: 9df3b5bf908a940f189d53ac8b19c61a - Path: Assets/Art/Arena/arena_floor_background.png' with importer (TextureImporter)
+Imported 'GUID: 9df3b5bf908a940f189d53ac8b19c61a' -> (Import Result ID: '7de1d62b4ff0d975e8b6c16f2f95389c') in 0.112 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=184d0073e1893f5d849cd3627f8539d7 DependenciesID=70155b1186b8b067c85e3e82a93f2240 StaticDependenciesID=074aec3bc585e44af48bc12699883f9a 
+Importing 'GUID: fdc2db1ba0bd45f4d8a94308dfe36b37 - Path: Assets/Sprites/ui_menu_nav.png' with importer (TextureImporter)
+Imported 'GUID: fdc2db1ba0bd45f4d8a94308dfe36b37' -> (Import Result ID: 'b914e129086c5750943afe358d68b879') in 0.010 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=29796cd325fd9a0d47cf0acdfed9b798 DependenciesID=fa5fae09843da7218a659eb5aba0698c StaticDependenciesID=d094826a6621d716afb86339ce79013e 
+Importing 'GUID: 7e05a16e3302f064a8ac62c44358dc2d - Path: Assets/Sprites/ui_slot_dep.png' with importer (TextureImporter)
+Imported 'GUID: 7e05a16e3302f064a8ac62c44358dc2d' -> (Import Result ID: '9136c6dd1399e0b9df651802a1816f71') in 0.003 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b03557abec47675f9ae88f23cdcd8e15 DependenciesID=b135dc3ae0984da22b344b2e94173ed5 StaticDependenciesID=4c0d7fe2d7e2754232f2142dccb174e6 
+Importing 'GUID: 8e5a09347fdb61f468e3fd391d717e88 - Path: Assets/Sprites/chao_projectile.png' with importer (TextureImporter)
+crunched in 0.041343
+Imported 'GUID: 8e5a09347fdb61f468e3fd391d717e88' -> (Import Result ID: 'cd7011a7b76d49deb8f52c938e1f819c') in 0.048 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e1f624aea31cfc4ac6c45cce2aa3fee8 DependenciesID=fa701ceaac5ae4fc99b69154e1ad76f8 StaticDependenciesID=0126626af528e45ab344f25bf05dd43f 
+Importing 'GUID: ae4fc6b1931ff88467438b6ede375b3f - Path: Assets/Art/Weapons/dep_to_ong_projectile.png' with importer (TextureImporter)
+crunched in 0.030175
+Imported 'GUID: ae4fc6b1931ff88467438b6ede375b3f' -> (Import Result ID: '539989ae1d90760cd0682bbafca031f5') in 0.035 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bf03dbcdba17c80cd5c424a3d57ba24d DependenciesID=2736bbe2216387b01bffaf71aba46c33 StaticDependenciesID=fee97c3036595974cd3d966d3e13baf0 
+Importing 'GUID: ce07d4df64d86cb4bbeace121175c53d - Path: Assets/Art/UI/Kit/ui_icon_heart_full.png' with importer (TextureImporter)
+crunched in 0.190148
+Imported 'GUID: ce07d4df64d86cb4bbeace121175c53d' -> (Import Result ID: 'bd9fae800c9c0bf44a1242fa00f89c7f') in 0.206 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=60afd7ab90f29e35df046149f5f78aeb DependenciesID=595e6194c1ec511b7da4dd0b826df7b5 StaticDependenciesID=2bd45fd8337182a7b52d0b5954689787 
+Importing 'GUID: ee32749a2edb3312ee0cb94620b39d68 - Path: Assets/Art/UI/panel_modal_wood_9slice.png' with importer (TextureImporter)
+Imported 'GUID: ee32749a2edb3312ee0cb94620b39d68' -> (Import Result ID: 'f4ed0c9a6d66b2ee69fde80a026144da') in 0.008 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ee19e570b9ce4c98882d8c6ae8e22a29 DependenciesID=1b69903616188afbfe19b56ff321d5c0 StaticDependenciesID=0b2870488eced5c64da587772c1cb7cc 
+Importing 'GUID: 0f3ea20f34851494e8713b236feaeb4a - Path: Assets/Sprites/co_nang_the_thao_idle.png' with importer (TextureImporter)
+Imported 'GUID: 0f3ea20f34851494e8713b236feaeb4a' -> (Import Result ID: 'c3584a8e3256f2c1e2ec942417f33503') in 0.004 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1519aab6fda4015929f38bd8bb27744f DependenciesID=63ddd4886e7a7c32f1d93ead1f2be854 StaticDependenciesID=aa9f0e81587caf005967de7604d33f74 
+Importing 'GUID: 1fe4a6d37b3f84a42958bfff6d917e97 - Path: Assets/Art/Characters/nu_nang_dong/Gameplay/gp_nu_nang_dong_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 1fe4a6d37b3f84a42958bfff6d917e97' -> (Import Result ID: 'fad68ce3555f2bbe1a01cb99e1b74c51') in 0.003 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8384bf708d0d1d4b0f3434ad3e62b097 DependenciesID=7e7d054b08633ff4c553db6f6e101cfe StaticDependenciesID=75dda3b4c781fbb73a9582f9573fa41d 
+Importing 'GUID: 4faccf8a3463cc64e968641c0c360d30 - Path: Assets/Sprites/anh_non_la_hit.png' with importer (TextureImporter)
+Imported 'GUID: 4faccf8a3463cc64e968641c0c360d30' -> (Import Result ID: 'bdea39aabe9648f709cc8ef3dabb7f9f') in 0.007 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0b42ec5854c752127547c98a598d03aa DependenciesID=d7fda13ec541496eede9f5ad9f980020 StaticDependenciesID=113349d06d8e63319dd1294bb2302df7 
+Importing 'GUID: 8fa92bf2541a7984bb306ca27d04892c - Path: Assets/Sprites/arena_lotus_yard.png' with importer (TextureImporter)
+crunched in 0.318369
+Imported 'GUID: 8fa92bf2541a7984bb306ca27d04892c' -> (Import Result ID: 'cadd9d18d8c419d9942c42e22368c999') in 0.390 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fb0584e2edbbbe985a6064ecb6f95f2f DependenciesID=c187b60bf077ab9275558a7952ccca0f StaticDependenciesID=f439251639fb185cdc3e7219bea073dd 
+Importing 'GUID: 9fcfff780565e9044a2cbe291d1c4aca - Path: Assets/HITME_AimKit/Art/Aim_Target_Locked.png' with importer (TextureImporter)
+Imported 'GUID: 9fcfff780565e9044a2cbe291d1c4aca' -> (Import Result ID: '7d5db76001d42b19580848993da140a3') in 0.025 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=13fcdc0919bd940add920f15f63cc614 DependenciesID=382b597240b45d2f69a1c0bf5bf8a31c StaticDependenciesID=a06460e0430cbe8b1caf19d400638041 
+Importing 'GUID: af2936ba883a32d4e870c48a4c787225 - Path: Assets/Sprites/cau_be_lang_hit.png' with importer (TextureImporter)
+Imported 'GUID: af2936ba883a32d4e870c48a4c787225' -> (Import Result ID: 'dc3a036859e9418a20139a5f80b90a70') in 0.009 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e5212088ea577256f14aa2afbc58e9f9 DependenciesID=647dc8ef203b7e4fff4d8e16d7d2e433 StaticDependenciesID=58d6f419b6ab4f3fa0f0ed04cefdb353 
+Importing 'GUID: bf1e1334102f502428526cd7d5d1fc97 - Path: Assets/Art/UI/Kit/ui_row_leaderboard_me.png' with importer (TextureImporter)
+Imported 'GUID: bf1e1334102f502428526cd7d5d1fc97' -> (Import Result ID: '82f5b2b22657b1b11c2ee67be06a6c2b') in 0.005 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1a85debaccc1f73a248934b8b3b01e64 DependenciesID=fec328ff7590ba58908e7b1b50d59922 StaticDependenciesID=54b44102e2baf11a569ceec0e51f477a 
+Importing 'GUID: cfcb34f0aa353ee419ffdb9fbdbf47ef - Path: Assets/Art/UI/ui_bg_home_village.png' with importer (TextureImporter)
+crunched in 0.310341
+Imported 'GUID: cfcb34f0aa353ee419ffdb9fbdbf47ef' -> (Import Result ID: 'fc48f71d36f2ec05c35c75f399cbc217') in 0.358 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c23cec2c7548359b75512f56e22c89d2 DependenciesID=918fa3fd6cde9a655e2a039a22fc88c2 StaticDependenciesID=9a424ade1fb54938daabcd0dad137827 
+Importing 'GUID: efac4ec391763f94fa169270a8cc122e - Path: Assets/HITME_AimKit/Art/Aim_Target_Invalid.png' with importer (TextureImporter)
+Imported 'GUID: efac4ec391763f94fa169270a8cc122e' -> (Import Result ID: '9202a83bd2344f21ca66552c12259725') in 0.039 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=09d50c2b01d946154b2beb28caa20e38 DependenciesID=62c2ed12daccb5f4ab29c36031b59042 StaticDependenciesID=5e34880a4f2dfe33fd8235d58e7e78c3 
+Importing 'GUID: ffc2a37a97dddc34286755daf37fc778 - Path: Assets/Sprites/arena_background.png' with importer (TextureImporter)
+Imported 'GUID: ffc2a37a97dddc34286755daf37fc778' -> (Import Result ID: '1b81e4847b0a348f6885ef0c1bc74ae9') in 0.079 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=254fdbb7f5c5b1ed5c98ceddcb3c423c DependenciesID=3ad4da07ec287260fa31d94233d76c0b StaticDependenciesID=f44cfa7c1cbca78a2558d54ada19235b 
+
+Asset Pipeline Refresh (id=c2e2ff33a24fe164d8ce80b8f03201dc): Total: 15.005 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=141 (actual=141, local cache=0, cache server=0)
+		Asset DB Process Time: managed=41 ms, native=9295 ms
+		Asset DB Callback time: managed=85 ms, native=19 ms
+		Scripting: domain reloads=1, domain reload time=870 ms, compile time=4675 ms, other=16 ms
+		Project Asset Count: scripts=322, non-scripts=482
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 17.182ms
+	ApplyChangesToAssetFolders: 1.749ms
+	Scan: 184.428ms
+	Collect global state as custom dependencies: 12.966ms
+	OnSourceAssetsModified: 1.106ms
+	CategorizeScriptCompilationAssets: 6.785ms
+	ProcessAssetsWithTransientArtifactChanges: 21.799ms
+	CategorizeAssets: 8.323ms
+	CompileScripts: 4675.319ms
+	ImportOutOfDateAssets: 8304.951ms (815.274ms without children)
+		ImportManagerImport: 7467.036ms (7.308ms without children)
+			UpdateCategorizedAssets: 0.747ms
+		UnloadImportedAssets: 2.033ms
+		ReloadImportedAssets: 0.092ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.174ms
+		ImportSchedulerStart: 20.421ms
+	PostProcessAllAssets: 86.308ms
+		ShaderAssetModifiedCallback 0.257ms
+		PostProcessCallbackCreateDeferredMaterials 0.176ms
+		RaytracingShaderImportPostprocess 0.154ms
+		ComputeShaderImportPostprocess 0.141ms
+		SpeedTreeImporter.PostprocessAllAssets 0.109ms
+		XRBuildSystem.XRAssetImported 0.097ms
+		LocalizationDatabase.AssetDatabasePostprocessCallback 0.073ms
+		BlockShaderImporter.PostprocessAllAssets 0.061ms
+		AssemblyValidation.PostprocessAllAssets 0.058ms
+		MonoPostProcessAllAssets: 83.371ms
+			AssetPostprocessor.OnPostprocessAllAssets 29.939ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.169ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 9.023ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 6.423ms
+			AssetChangedListener.OnPostprocessAllAssets 4.302ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 3.380ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.599ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.460ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.032ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.670ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.477ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.348ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.334ms
+			AssetEvents.OnPostprocessAllAssets 0.303ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.303ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.286ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.194ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.187ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.169ms
+			SyncVS.PostprocessSyncProject 0.169ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.136ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.128ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.103ms
+	PostAssetChangesProfiler: 2.029ms
+	UnloadStreamsBegin: 2.217ms
+	PersistCurrentRevisions: 0.315ms
+	GenerateScriptTypeHashes: 0.609ms
+	GenerateScriptTypeSerializationHashes: 1.763ms
+	Untracked: 1636.740ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Scanning for USB devices : 1.488ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 998 unused Assets / (2.0 MB). Loaded Objects now: 1725.
+Memory consumption went from 242.1 MB to 240.1 MB.
+Total: 11.293200 ms (FindLiveObjects: 0.214700 ms CreateObjectMapping: 0.028000 ms MarkObjects: 7.356700 ms  DeleteObjects: 3.350300 ms)
+
+Opening scene 'Assets/Scenes/Graybox.unity'
+Unloading 69 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/Graybox.unity'
+	Deserialize:            87.471 ms
+	Integration:            97.433 ms
+	Integration of assets:  8.076 ms
+	Thread Wait Time:       0.143 ms
+	Total Operation Time:   193.122 ms
+Unloading 1 unused Assets / (2.7 KB). Loaded Objects now: 3574.
+Memory consumption went from 246.9 MB to 246.9 MB.
+Total: 9.122600 ms (FindLiveObjects: 0.746400 ms CreateObjectMapping: 0.041800 ms MarkObjects: 8.031300 ms  DeleteObjects: 0.030700 ms)
+
+Importing 'GUID: a578f894c98eba64282cbd29c3bfdbdd - Path: Assets/ScriptableObjects/GameConfig_Phase1.asset' with importer (NativeFormatImporter)
+Imported 'GUID: a578f894c98eba64282cbd29c3bfdbdd' -> (Import Result ID: '3ed702d84cd9dbad5c7edd5e51786466') in 0.002 seconds [static dependencies only]. Details - ImportResultOutputID=00e8548e8221960b8599c1c56a17b221 DependenciesID=4b2cc9f9700151367fe54bdee93074c9 StaticDependenciesID=7d4d61b66c6d9a2b5eb819dfdc71b4b6 
+Asset Pipeline Refresh (id=34879bf5b037d654bb855806b878077d): Total: 0.032 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: caf319bfa22fcba44ab8e48cb674f131 - Path: Assets/Scenes/Graybox.unity' with importer (DefaultImporter)
+Imported 'GUID: caf319bfa22fcba44ab8e48cb674f131' -> (Import Result ID: 'c64c3f2eb4d93e0f0b9eaa7ac4aa972a') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=32d30909a76a8601a85a6e616f6168fe DependenciesID=1bb293b8aef733e41c26c91a6a2430d8 StaticDependenciesID=e6b8a31f99e5aa006478f350b1d06905 
+Asset Pipeline Refresh (id=1f9dfab956f9e6b4089cd6faaee0c822): Total: 0.013 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Successfully built Production UI for Graybox.unity!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.Editor.ProductionUISetup:BuildProductionUI () (at Assets/Editor/ProductionUISetup.cs:1043)
+
+(Filename: Assets/Editor/ProductionUISetup.cs Line: 1043)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

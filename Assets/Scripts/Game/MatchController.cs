@@ -381,8 +381,13 @@ namespace HitMe.Game
             var config = State.Config;
             var gamePos = new Vec2(worldPos.x, worldPos.y);
             var screenVec = new Vec2(screenPos.x, screenPos.y);
-            bool insideArena = gamePos.X >= config.MinX && gamePos.X <= config.MaxX &&
-                               gamePos.Y >= config.MinY && gamePos.Y <= config.MaxY;
+            // Z10: Player placement is strictly constrained inside white court boundary
+            float clampMinX = ArenaCoordinateMapper.PlayMinX;
+            float clampMaxX = ArenaCoordinateMapper.PlayMaxX;
+            float clampMinY = ArenaCoordinateMapper.PlayMinY;
+            float clampMaxY = ArenaCoordinateMapper.PlayMaxY;
+            bool insideArena = gamePos.X >= clampMinX && gamePos.X <= clampMaxX &&
+                               gamePos.Y >= clampMinY && gamePos.Y <= clampMaxY;
             long nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             float dpi = Screen.dpi > 0f ? Screen.dpi : 160f;

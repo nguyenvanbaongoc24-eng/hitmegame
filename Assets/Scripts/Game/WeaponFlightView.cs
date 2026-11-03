@@ -12,7 +12,7 @@ namespace HitMe.Game
         public HitFx PooledHitFx;
         public bool SpawnHitEffect;
 
-        public static float VisualWeaponScale = 0.65f;
+        public static float VisualWeaponScale = 0.28f;
         public static bool CustomScaleApplied;
 
         public static void SetVisualWeaponScale(float scale, bool fromUrl = false)

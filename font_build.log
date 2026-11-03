@@ -1,0 +1,457 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 11176)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 13448)
+VBCSCompiler prewarm took 34.51 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-03T08:00:37Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 22312)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:/HITME GAME/unity-client
+-executeMethod
+Phase2FontBuilder.BuildFontAsset
+-logFile
+D:/HITME GAME/unity-client/font_build.log
+Successfully changed project path to: D:/HITME GAME/unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [14452]  Target information:
+
+Player connection [14452]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 2492883144 [EditorId] 2492883144 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [14452] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [14452] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-03T08:00:38.0132831Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 22312, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              4c287cca0f554f69a0d685978e2a6b53
+  Correlation Id:          12b5f81a2746a65efdc982d9ae8d28a9
+  External correlation Id: 4217262065652630936
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.57s, validation: 0.16s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-03T08:00:38.2492854Z"
+[Licensing::Module] Connected to LicensingClient (PId: 22312, launch time: 0.01, total connection time: 0.80s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Package Manager] Connected to IPC stream "Upm-16336" after 0.4 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.89s
+[Licensing::Module] Licensing is initialized (took 0.07s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56336
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002278 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.098 seconds
+Domain Reload Profiling: 1968ms
+	BeginReloadAssembly (215ms)
+		CreateAndSetChildDomain (4ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (27ms)
+	initialDomainReloadingComplete (95ms)
+	LoadAllAssembliesAndSetupDomain (524ms)
+		LoadAssemblies (210ms)
+		TypeCache.Refresh (355ms)
+			TypeCache.ScanAssembly (334ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1100ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (6ms)
+			BeforeProcessingInitializeOnLoad (164ms)
+			ProcessInitializeOnLoadAttributes (204ms)
+			ProcessInitializeOnLoadMethodAttributes (392ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 20 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 3s620ms
+[299/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[345/349    1s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[346/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 314 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[347/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[348/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (3.57 seconds), 5 items updated, 349 evaluated
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Total cache size 267639736
+Total cache size after purge 267639736, took 00:00:00.5683148
+AssetDatabase: script compilation time: 5.424499s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.874 seconds
+Domain Reload Profiling: 1770ms
+	BeginReloadAssembly (380ms)
+		DisableScriptedObjects (44ms)
+		CreateAndSetChildDomain (76ms)
+	RebuildCommonClasses (17ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (69ms)
+	LoadAllAssembliesAndSetupDomain (399ms)
+		LoadAssemblies (347ms)
+		TypeCache.Refresh (33ms)
+			TypeCache.ScanAssembly (24ms)
+		AnalyzeDomain (18ms)
+			BuildScriptInfoCaches (13ms)
+	FinalizeReload (877ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (189ms)
+			ProcessInitializeOnLoadAttributes (253ms)
+			ProcessInitializeOnLoadMethodAttributes (71ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (49ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=c18d88c676c91b54697b4eaff3656f36): Total: 7.759 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=1215 ms
+		Asset DB Callback time: managed=129 ms, native=30 ms
+		Scripting: domain reloads=1, domain reload time=938 ms, compile time=5430 ms, other=15 ms
+		Project Asset Count: scripts=322, non-scripts=483
+		Asset File Changes: new=0, changed=2, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 23.894ms
+	ApplyChangesToAssetFolders: 0.970ms
+	Scan: 99.204ms
+	Collect global state as custom dependencies: 12.695ms
+	OnSourceAssetsModified: 1.043ms
+	CategorizeScriptCompilationAssets: 7.513ms
+	ProcessAssetsWithTransientArtifactChanges: 19.286ms
+	CategorizeAssets: 9.158ms
+	CompileScripts: 5429.552ms
+	ImportOutOfDateAssets: 902.649ms (878.871ms without children)
+		UnloadImportedAssets: 2.135ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.218ms
+		ImportSchedulerStart: 21.418ms
+	PostProcessAllAssets: 131.170ms
+		VCAutoAddAssetPostprocess 1.781ms
+		XRBuildSystem.XRAssetImported 0.139ms
+		PostProcessCallbackCreateDeferredMaterials 0.086ms
+		MonoPostProcessAllAssets: 128.305ms
+			AssetPostprocessor.OnPostprocessAllAssets 53.515ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 16.047ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 15.124ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 10.165ms
+			AssetChangedListener.OnPostprocessAllAssets 3.197ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 3.154ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.877ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.335ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 1.162ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.891ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.794ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.733ms
+			AssetEvents.OnPostprocessAllAssets 0.599ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.534ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.330ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.300ms
+			SyncVS.PostprocessSyncProject 0.262ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.257ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.250ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.225ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.208ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.207ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.190ms
+	PostAssetChangesProfiler: 5.709ms
+	UnloadStreamsBegin: 2.665ms
+	GenerateScriptTypeHashes: 0.872ms
+	GenerateScriptTypeSerializationHashes: 2.665ms
+	Untracked: 1073.713ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Scanning for USB devices : 1.172ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 998 unused Assets / (1.9 MB). Loaded Objects now: 1723.
+Memory consumption went from 239.2 MB to 237.3 MB.
+Total: 20.849300 ms (FindLiveObjects: 0.259100 ms CreateObjectMapping: 0.035400 ms MarkObjects: 7.877000 ms  DeleteObjects: 12.504200 ms)
+
+Add Vietnamese Glyphs success: False, missing: ←↑→↓⇄⌫⏰▲►▼◄●★☆♡♥⚙⚠✅✓✕✖✗❮❯️
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2FontBuilder:BuildFontAsset () (at Assets/Editor/Phase2FontBuilder.cs:61)
+
+(Filename: Assets/Editor/Phase2FontBuilder.cs Line: 61)
+
+Importing 'GUID: 480637c9bd8055048acc4c58e27c2dc7 - Path: Assets/Fonts/BeVietnamPro-Bold SDF.asset' with importer (NativeFormatImporter)
+Imported 'GUID: 480637c9bd8055048acc4c58e27c2dc7' -> (Import Result ID: '3dd678563eb28393a156dce17ee87d29') in 0.008 seconds [static dependencies only]. Details - ImportResultOutputID=00ed2411ff380b407541b584ea0f3ef9 DependenciesID=b3bf061679e4448f888301540fcc6fa4 StaticDependenciesID=0247088e12c2a3d61fcb909511ed7fc7 
+Asset Pipeline Refresh (id=909cb6b650c540a4e98ba56394116c8d): Total: 0.068 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: 480637c9bd8055048acc4c58e27c2dc7 - Path: Assets/Fonts/BeVietnamPro-Bold SDF.asset' with importer (NativeFormatImporter)
+Imported 'GUID: 480637c9bd8055048acc4c58e27c2dc7' -> (Import Result ID: '8a47e1f4b269445b9c34bb391894193a') in 0.008 seconds [static dependencies only]. Details - ImportResultOutputID=5326bd7a765131e10fd2d9ee703a40fe DependenciesID=19627472b4cd91dafea58b38b31febd7 StaticDependenciesID=a12ba3ff6beb5526d5b0e166d95c09ec 
+Asset Pipeline Refresh (id=6d69b147a224012429f95d39de476fcb): Total: 0.034 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=4589a62b452595745b2fc1628a2b0ffe): Total: 0.010 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+Successfully created Static Atlas Vietnamese Font Asset at: Assets/Fonts/BeVietnamPro-Bold SDF.asset
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+Phase2FontBuilder:BuildFontAsset () (at Assets/Editor/Phase2FontBuilder.cs:110)
+
+(Filename: Assets/Editor/Phase2FontBuilder.cs Line: 110)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

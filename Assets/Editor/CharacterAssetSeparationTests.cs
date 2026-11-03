@@ -13,9 +13,9 @@ namespace HitMe.Editor
         {
             "nam_lang",
             "nu_nang_dong",
-            "quay_boy",
             "co_ba",
             "anh_teen",
+            "quay_boy",
             "cho_vang",
             "meo_mun"
         };

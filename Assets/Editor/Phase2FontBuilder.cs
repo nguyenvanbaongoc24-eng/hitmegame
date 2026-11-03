@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEditor;
@@ -19,7 +20,12 @@ public static class Phase2FontBuilder
         Font font = AssetDatabase.LoadAssetAtPath<Font>(fontPath);
         if (font == null)
         {
-            Debug.LogError("Cannot load font at " + fontPath);
+            fontPath = "Assets/Fonts/HitMeFont.ttf";
+            font = AssetDatabase.LoadAssetAtPath<Font>(fontPath);
+        }
+        if (font == null)
+        {
+            Debug.LogError("Cannot load font at Assets/Fonts/BeVietnamPro-Bold.ttf or HitMeFont.ttf");
             return;
         }
 
@@ -39,11 +45,36 @@ public static class Phase2FontBuilder
             return;
         }
 
+        string glyphFilePath = "Assets/Editor/all_glyphs.txt";
+        string glyphsToLoad = VietnameseGlyphs;
+        if (File.Exists(glyphFilePath))
+        {
+            glyphsToLoad = File.ReadAllText(glyphFilePath, System.Text.Encoding.UTF8);
+            foreach (char c in VietnameseGlyphs)
+            {
+                if (!glyphsToLoad.Contains(c)) glyphsToLoad += c;
+            }
+        }
+
         string missing;
-        bool success = fontAsset.TryAddCharacters(VietnameseGlyphs, out missing);
+        bool success = fontAsset.TryAddCharacters(glyphsToLoad, out missing);
         Debug.Log("Add Vietnamese Glyphs success: " + success + ", missing: " + (string.IsNullOrEmpty(missing) ? "None" : missing));
 
+        // Save as Static mode so all added glyphs are serialized into the asset on disk
         fontAsset.atlasPopulationMode = AtlasPopulationMode.Static;
+
+        var fallback = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/TextMesh Pro/Fonts & Materials/LiberationSans SDF.asset");
+        if (fallback != null)
+        {
+            if (fontAsset.fallbackFontAssetTable == null)
+            {
+                fontAsset.fallbackFontAssetTable = new List<TMP_FontAsset>();
+            }
+            if (!fontAsset.fallbackFontAssetTable.Contains(fallback))
+            {
+                fontAsset.fallbackFontAssetTable.Add(fallback);
+            }
+        }
 
         string targetPath = "Assets/Fonts/BeVietnamPro-Bold SDF.asset";
         AssetDatabase.CreateAsset(fontAsset, targetPath);

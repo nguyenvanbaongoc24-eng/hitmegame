@@ -1,0 +1,596 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 26804)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 452)
+VBCSCompiler prewarm took 44.45 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-02T13:35:13Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 33544)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+D:\HITME GAME\unity-client
+-executeMethod
+TextureFormatChecker.Check
+-logFile
+D:\HITME GAME\unity-client\Evidence\round45\unity-manifest-test2.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [32404]  Target information:
+
+Player connection [32404]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 3421793553 [EditorId] 3421793553 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [32404] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [32404] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-02T13:35:14.2701492Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 33544, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              ae45ed3909f949fda1ac8d63232fef72
+  Correlation Id:          2b7ad8d4b8e1e4da0e9ad280c3fc0315
+  External correlation Id: 540253851740874830
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.57s, validation: 0.08s, handshake: 0.08s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-02T13:35:14.4293043Z"
+[Licensing::Module] Connected to LicensingClient (PId: 33544, launch time: 0.01, total connection time: 0.73s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Package Manager] Connected to IPC stream "Upm-36504" after 0.4 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.79s
+[Licensing::Module] Licensing is initialized (took 0.04s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56504
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002117 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.137 seconds
+Domain Reload Profiling: 2025ms
+	BeginReloadAssembly (206ms)
+		CreateAndSetChildDomain (17ms)
+	RebuildCommonClasses (9ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (95ms)
+	LoadAllAssembliesAndSetupDomain (548ms)
+		LoadAssemblies (189ms)
+		TypeCache.Refresh (380ms)
+			TypeCache.ScanAssembly (358ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1139ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (174ms)
+			ProcessInitializeOnLoadAttributes (215ms)
+			ProcessInitializeOnLoadMethodAttributes (372ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 19 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.03 seconds
+[Package Manager] Done resolving packages in 3.23 seconds
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Lock file was modified
+[Package Manager] Registered 20 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.00 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 4 Duration: 0s706ms
+[292/349    0s] CopyFiles Library/ScriptAssemblies/Unity.Rider.Editor.dll
+[293/349    0s] CopyFiles Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll
+[294/349    0s] CopyFiles Library/ScriptAssemblies/Unity.VisualStudio.Editor.pdb
+[295/349    0s] CopyFiles Library/ScriptAssemblies/Unity.Rider.Editor.pdb
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aE-inputdata.json
+[296/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra requires additional run (0.65 seconds), 6 items updated, 295 evaluated
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aE.dag.json" "Library/Bee/2000b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 0s576ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 7s986ms
+Finished compiling graph: 352 nodes, 3816 flattened edges (3428 ToBuild, 36 ToUse), maximum node priority 208
+[203/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll.mvfrm.rsp
+[208/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll.mvfrm.rsp
+[209/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.rsp
+[210/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.rsp
+[213/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll.mvfrm.rsp
+[214/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.dll.mvfrm.rsp
+[215/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll.mvfrm.rsp
+[216/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.rsp
+[226/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Economy.dll.mvfrm.rsp
+[228/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll.mvfrm.rsp
+[229/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Economy.rsp
+[230/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.rsp
+[231/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/3833972990134957139.rsp
+[232/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.rsp
+[233/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.rsp
+[234/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/3037372816226278216.rsp
+[235/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.dll.mvfrm.rsp
+[242/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/11156376441211079237.rsp
+[243/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/4578819986643379617.rsp
+[244/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/8542837875481535423.rsp
+[245/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.rsp
+[246/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll.mvfrm.rsp
+[247/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/10376552923787358332.rsp
+[248/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/5078033456694669035.rsp
+[249/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/10307860231964595937.rsp
+[250/349    0s] WriteResponseFile Library/Bee/artifacts/rsp/11251452017025166380.rsp
+[251/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.rsp
+[252/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[254/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Core.dll
+[255/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Core.pdb
+[256/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll.mvfrm
+[257/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll.mvfrm
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll (+2 others) [CacheMiss d21f3e953d17b2230c38180b717ce0e700000000000000000000000000000006]
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll (+2 others) [CacheMiss 036e84352cb89cc88c9558a64c5ae86e00000000000000000000000000000006]
+[258/349    1s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll (+2 others)
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll (+2 others) [CacheWrite 036e84352cb89cc88c9558a64c5ae86e00000000000000000000000000000006]
+[263/349    1s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll (+2 others)
+[264/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/UnityEngine.TestRunner.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/UnityEngine.TestRunner.dll, with 125 defines and 260 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[265/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/UnityEditor.TestRunner.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/UnityEditor.TestRunner.dll, with 123 defines and 298 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[266/349    0s] CopyFiles Library/ScriptAssemblies/UnityEngine.TestRunner.pdb
+[267/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.TestRunner.pdb
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll (+2 others) [CacheWrite d21f3e953d17b2230c38180b717ce0e700000000000000000000000000000006]
+[283/349    0s] CopyFiles Library/ScriptAssemblies/UnityEngine.TestRunner.dll
+[284/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.TestRunner.dll
+[285/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/UnityEditor.UI.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/UnityEditor.UI.dll, with 125 defines and 301 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[286/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/UnityEngine.UI.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/UnityEngine.UI.dll, with 128 defines and 263 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[287/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.dll.mvfrm
+[288/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll.mvfrm
+[289/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.dll.mvfrm
+[290/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/HitMe.Economy.dll.mvfrm
+[291/349    0s] CopyFiles Library/ScriptAssemblies/UnityEngine.UI.pdb
+[292/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.UI.pdb
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll (+2 others) [CacheMiss f9f511f30fc17578768291820d7cc3ec00000000000000000000000000000006]
+[293/349    0s] CopyFiles Library/ScriptAssemblies/UnityEngine.UI.dll
+[294/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Economy.dll (+2 others)
+[295/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.dll (+2 others)
+[296/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll (+2 others)
+[297/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.dll (+2 others)
+Assets\Scripts\Net\ClientMatchSession.cs(30,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\ClientMatchSession.cs(31,42): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\ClientMatchSession.cs(32,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\MatchTransports.cs(29,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\MatchTransports.cs(30,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\MatchTransports.cs(118,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\MatchTransports.cs(119,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\OnlineGlue\OnlineFlowController.cs(46,95): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
+Assets\Scripts\Net\MockGameClient.cs(28,29): warning CS0067: The event 'MockGameClient.OnQuickMatchHint' is never used
+
+Assets\Scripts\Net\WebGLWebSocketTransport.cs(19,21): warning CS0414: The field 'WebGLWebSocketTransport._handle' is assigned but its value is never used
+
+Assets\Scripts\Net\MatchTransports.cs(119,34): warning CS0414: The field 'WebSocketTransport.Closed' is assigned but its value is never used
+
+Assets\Scripts\Net\MatchTransports.cs(118,41): warning CS0414: The field 'WebSocketTransport.Received' is assigned but its value is never used
+[298/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.UI.dll
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll (+2 others) [CacheWrite f9f511f30fc17578768291820d7cc3ec00000000000000000000000000000006]
+[300/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Audio.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Audio.dll, with 124 defines and 265 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[301/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Audio.pdb
+[302/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Economy.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Economy.dll, with 124 defines and 265 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[303/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Economy.pdb
+[304/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Audio.dll
+[305/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Unity.InternalAPIEngineBridge.004.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Unity.InternalAPIEngineBridge.004.dll, with 124 defines and 265 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[306/349    0s] CopyFiles Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
+[307/349    0s] CopyFiles Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
+[308/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Economy.dll
+[309/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Net.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Net.dll, with 124 defines and 266 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[310/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll.mvfrm
+[311/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Net.pdb
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll (+2 others) [CacheMiss 41c6ffcc9a129bfb038df0e14c51c4fc00000000000000000000000000000006]
+[312/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Net.dll
+[313/349    1s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll (+2 others)
+[           0s] Csc Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll (+2 others) [CacheWrite 41c6ffcc9a129bfb038df0e14c51c4fc00000000000000000000000000000006]
+[322/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/UnityEditor.UI.Analytics.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/UnityEditor.UI.Analytics.dll, with 122 defines and 303 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[323/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Unity.TextMeshPro.Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.Editor.dll, with 122 defines and 303 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[324/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Unity.TextMeshPro.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Unity.TextMeshPro.dll, with 125 defines and 266 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[325/349    0s] CopyFiles Library/ScriptAssemblies/Unity.TextMeshPro.Editor.pdb
+[326/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.UI.Analytics.pdb
+[327/349    0s] CopyFiles Library/ScriptAssemblies/UnityEditor.UI.Analytics.dll
+[328/349    0s] CopyFiles Library/ScriptAssemblies/Unity.TextMeshPro.pdb
+[329/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll.mvfrm
+[330/349    0s] MovedFromExtractor-Combine Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll.mvfrm
+[331/349    0s] CopyFiles Library/ScriptAssemblies/Unity.TextMeshPro.dll
+[332/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll (+2 others)
+[334/349    0s] CopyFiles Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll
+[335/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Game.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll, with 124 defines and 268 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[336/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Game.pdb
+[337/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Tests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.dll, with 122 defines and 305 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[338/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.pdb
+[339/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Game.dll
+[340/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.dll
+[341/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\UI\ProductionUIController.cs(1681,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Scripts\UI\ProductionUIController.cs(1681,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+[343/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 314 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[344/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll, with 124 defines and 273 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[345/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[346/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[347/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+[348/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (7.94 seconds), 93 items updated, 349 evaluated
+Assets\Scripts\Net\ClientMatchSession.cs(30,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\ClientMatchSession.cs(31,42): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\ClientMatchSession.cs(32,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\MatchTransports.cs(29,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\MatchTransports.cs(30,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\MatchTransports.cs(118,39): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\MatchTransports.cs(119,32): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\OnlineGlue\OnlineFlowController.cs(46,95): warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+Assets\Scripts\Net\MockGameClient.cs(28,29): warning CS0067: The event 'MockGameClient.OnQuickMatchHint' is never used
+Assets\Scripts\Net\WebGLWebSocketTransport.cs(19,21): warning CS0414: The field 'WebGLWebSocketTransport._handle' is assigned but its value is never used
+Assets\Scripts\Net\MatchTransports.cs(119,34): warning CS0414: The field 'WebSocketTransport.Closed' is assigned but its value is never used
+Assets\Scripts\Net\MatchTransports.cs(118,41): warning CS0414: The field 'WebSocketTransport.Received' is assigned but its value is never used
+Assets\Scripts\UI\ProductionUIController.cs(1681,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Scripts\UI\ProductionUIController.cs(1681,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Total cache size 271767332
+Total cache size after purge 268225032, took 00:00:00.5762218
+AssetDatabase: script compilation time: 14.466890s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.912 seconds
+Domain Reload Profiling: 1834ms
+	BeginReloadAssembly (377ms)
+		DisableScriptedObjects (43ms)
+		CreateAndSetChildDomain (74ms)
+	RebuildCommonClasses (17ms)
+	RebuildNativeTypeToScriptingClass (28ms)
+	initialDomainReloadingComplete (61ms)
+	LoadAllAssembliesAndSetupDomain (436ms)
+		LoadAssemblies (355ms)
+		TypeCache.Refresh (41ms)
+			TypeCache.ScanAssembly (29ms)
+		AnalyzeDomain (19ms)
+			BuildScriptInfoCaches (14ms)
+	FinalizeReload (914ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (5ms)
+			BeforeProcessingInitializeOnLoad (196ms)
+			ProcessInitializeOnLoadAttributes (256ms)
+			ProcessInitializeOnLoadMethodAttributes (72ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (48ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=6989df9e2751dab46966d93e59d460ab): Total: 22.240 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=3389 ms
+		Asset DB Callback time: managed=114 ms, native=3283 ms
+		Scripting: domain reloads=1, domain reload time=961 ms, compile time=14472 ms, other=18 ms
+		Project Asset Count: scripts=301, non-scripts=456
+		Asset File Changes: new=3, changed=3, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 3281.601ms
+	ApplyChangesToAssetFolders: 0.721ms
+	Scan: 91.936ms
+	Collect global state as custom dependencies: 12.700ms
+	OnSourceAssetsModified: 0.967ms
+	CategorizeScriptCompilationAssets: 7.380ms
+	ProcessAssetsWithTransientArtifactChanges: 25.209ms
+	CategorizeAssets: 9.044ms
+	CompileScripts: 14472.127ms
+	ImportOutOfDateAssets: 939.664ms (917.299ms without children)
+		UnloadImportedAssets: 1.936ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.203ms
+		ImportSchedulerStart: 20.222ms
+	PostProcessAllAssets: 114.490ms
+		VCAutoAddAssetPostprocess 1.649ms
+		XRBuildSystem.XRAssetImported 0.127ms
+		MonoPostProcessAllAssets: 111.815ms
+			AssetPostprocessor.OnPostprocessAllAssets 41.826ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 14.883ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 13.131ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 9.084ms
+			AssetChangedListener.OnPostprocessAllAssets 4.975ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.318ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.060ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.517ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 1.499ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.851ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.496ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.481ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.451ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.444ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.424ms
+			AssetEvents.OnPostprocessAllAssets 0.402ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.347ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.340ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.248ms
+			SyncVS.PostprocessSyncProject 0.243ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.242ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.168ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.115ms
+	PostAssetChangesProfiler: 3.594ms
+	UnloadStreamsBegin: 2.365ms
+	PersistCurrentRevisions: 0.501ms
+	GenerateScriptTypeHashes: 0.754ms
+	GenerateScriptTypeSerializationHashes: 2.185ms
+	Untracked: 3235.264ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 1.163ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 996 unused Assets / (1.8 MB). Loaded Objects now: 1719.
+Memory consumption went from 239.6 MB to 237.8 MB.
+Total: 10.279400 ms (FindLiveObjects: 0.403900 ms CreateObjectMapping: 0.057100 ms MarkObjects: 8.581800 ms  DeleteObjects: 1.038800 ms)
+
+[Check] Assets/Sprites/ARENA.png: overridden=True, maxTextureSize=1024, format=AutomaticCompressed, crunched=True, textureCompression=Compressed
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+TextureFormatChecker:Check () (at Assets/Editor/TextureFormatChecker.cs:20)
+
+(Filename: Assets/Editor/TextureFormatChecker.cs Line: 20)
+
+[Check] Assets/Sprites/cau_be_lang_hit.png: overridden=True, maxTextureSize=512, format=AutomaticCompressed, crunched=True, textureCompression=Compressed
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+TextureFormatChecker:Check () (at Assets/Editor/TextureFormatChecker.cs:20)
+
+(Filename: Assets/Editor/TextureFormatChecker.cs Line: 20)
+
+[Check] Assets/Art/UI/Kit/ui_btn_cta_green.png: overridden=True, maxTextureSize=512, format=AutomaticCompressed, crunched=True, textureCompression=Compressed
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+TextureFormatChecker:Check () (at Assets/Editor/TextureFormatChecker.cs:20)
+
+(Filename: Assets/Editor/TextureFormatChecker.cs Line: 20)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

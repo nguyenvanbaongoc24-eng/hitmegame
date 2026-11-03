@@ -55,8 +55,8 @@ namespace HitMe.UI
 
         private const string HpHiddenText = "HP: ???";
         private const string StatusHiddenText = "ĐANG ẨN";
-        private const string StatusAliveText = "● CÒN SỐNG";
-        private const string StatusEliminatedText = "✖ ĐÃ LOẠI";
+        private const string StatusAliveText = "CÒN SỐNG";
+        private const string StatusEliminatedText = "ĐÃ LOẠI";
 
         private static string[] BuildTenthsTimerCache(int maxTenths)
         {
@@ -702,7 +702,8 @@ namespace HitMe.UI
             txtBuildFingerprint.transform.SetAsLastSibling();
             string fingerprint = ResolveBuildFingerprint();
             string betaBadge = UiStrings.Get(UiStrings.BetaBadge);
-            txtBuildFingerprint.text = $"{fingerprint} · {betaBadge}";
+            txtBuildFingerprint.text = $"{fingerprint}";
+            txtBuildFingerprint.gameObject.SetActive(false);
             Debug.Log("[BuildFingerprint] " + txtBuildFingerprint.text);
         }
 
@@ -712,7 +713,7 @@ namespace HitMe.UI
             if (asset != null && !string.IsNullOrWhiteSpace(asset.text))
             {
                 string text = asset.text.Trim();
-                text = text.Replace(" · Graybox", "").Replace(" · graybox", "").Replace("Graybox", "").Trim();
+                text = text.Replace(" · Production", "").Replace(" · production", "").Replace("Production", "").Replace(" · Graybox", "").Replace(" · graybox", "").Replace("Graybox", "").Trim();
                 return text;
             }
 
@@ -1600,7 +1601,7 @@ namespace HitMe.UI
                 UpdateBtnText(btnHomeInventory, UiStrings.Get(UiStrings.InventoryTitle));
                 UpdateBtnText(btnHomeLeaderboard, UiStrings.Get("BẢNG XẾP HẠNG"));
                 UpdateBtnText(btnHomeLogin, UiStrings.Get(UiStrings.LoginTitle));
-                UpdateBtnText(btnHomeSettings, UiStrings.Get(UiStrings.BtnSettings));
+                // btnHomeSettings is a gear icon button, do not overwrite with text
 
                 // 3. Bot Training Panel
                 RefreshBotTrainingDisplay();
@@ -3777,7 +3778,7 @@ namespace HitMe.UI
                 }
                 if (txtSelectedCharDetail != null)
                 {
-                    txtSelectedCharDetail.text = charDesc + " • Vũ khí: Dép Tổ Ong (Bán kính 0.52m)";
+                    txtSelectedCharDetail.text = charDesc + " • Vũ khí: Dép Tổ Ong";
                 }
 
                 if (botCharCardFrames != null && theme != null)
@@ -4091,20 +4092,20 @@ namespace HitMe.UI
             switch (clamped)
             {
                 case 2:
-                    anchors = new[] { new Vector2(0.28f, 0.50f), new Vector2(0.72f, 0.50f) };
-                    cardSize = new Vector2(380f, 62f);
+                    anchors = new[] { new Vector2(0.27f, 0.50f), new Vector2(0.73f, 0.50f) };
+                    cardSize = new Vector2(460f, 78f);
                     break;
                 case 3:
                     anchors = new[] { new Vector2(0.17f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.83f, 0.50f) };
-                    cardSize = new Vector2(328f, 60f);
+                    cardSize = new Vector2(330f, 72f);
                     break;
                 case 4:
                     anchors = new[]
                     {
-                        new Vector2(0.28f, 0.76f), new Vector2(0.72f, 0.76f),
-                        new Vector2(0.28f, 0.24f), new Vector2(0.72f, 0.24f)
+                        new Vector2(0.27f, 0.76f), new Vector2(0.73f, 0.76f),
+                        new Vector2(0.27f, 0.24f), new Vector2(0.73f, 0.24f)
                     };
-                    cardSize = new Vector2(380f, 60f);
+                    cardSize = new Vector2(460f, 78f);
                     break;
                 case 5:
                     anchors = new[]
@@ -4112,7 +4113,7 @@ namespace HitMe.UI
                         new Vector2(0.17f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.83f, 0.76f),
                         new Vector2(0.33f, 0.24f), new Vector2(0.67f, 0.24f)
                     };
-                    cardSize = new Vector2(328f, 60f);
+                    cardSize = new Vector2(330f, 72f);
                     break;
                 case 6:
                 default:
@@ -4121,7 +4122,7 @@ namespace HitMe.UI
                         new Vector2(0.17f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.83f, 0.76f),
                         new Vector2(0.17f, 0.24f), new Vector2(0.50f, 0.24f), new Vector2(0.83f, 0.24f)
                     };
-                    cardSize = new Vector2(328f, 60f);
+                    cardSize = new Vector2(330f, 72f);
                     break;
             }
 

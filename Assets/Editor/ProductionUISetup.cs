@@ -66,7 +66,7 @@ namespace HitMe.Editor
             cam.orthographic = true;
             cam.orthographicSize = 7.8f;
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.06f, 0.07f, 0.09f, 1f);
+            cam.backgroundColor = new Color(36f / 255f, 24f / 255f, 16f / 255f, 1f); // Z6: #241810
             camGo.transform.position = new Vector3(0f, 0.80f, -10f);
 
             // 2. Setup ArenaView
@@ -80,7 +80,7 @@ namespace HitMe.Editor
                 if (bgObj == null) bgObj = new GameObject("ArenaBackground");
                 bgObj.transform.SetParent(arenaGo.transform);
                 bgObj.transform.position = Vector3.zero;
-                bgObj.transform.localScale = new Vector3(1.42f, 1.42f, 1f);
+                bgObj.transform.localScale = new Vector3(1.05f, 1.05f, 1f);
                 var sr = bgObj.GetComponent<SpriteRenderer>();
                 if (sr == null) sr = bgObj.AddComponent<SpriteRenderer>();
                 sr.sprite = spriteArena;
@@ -154,6 +154,10 @@ namespace HitMe.Editor
             if (spriteBgHome != null)
             {
                 var bgObj = CreateImage(homePanel.transform, "HomeBgVillage", spriteBgHome, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero);
+                var bgRt = bgObj.GetComponent<RectTransform>();
+                // Expand to cover outside safe area notch/home bar
+                bgRt.offsetMin = new Vector2(-60f, -120f);
+                bgRt.offsetMax = new Vector2(60f, 120f);
                 var bgImg = bgObj.GetComponent<Image>();
                 bgImg.preserveAspect = false;
                 bgImg.color = Color.white;
@@ -161,22 +165,22 @@ namespace HitMe.Editor
 
             // Top Bar: Player profile, Currency Chips, and Settings (Safe Area row Y = 0.960f)
             var btnProfHeader = CreateButton(homePanel.transform, "BtnHomeProfileHeader", spriteCardSelected, new Vector2(0.18f, 0.960f), new Vector2(0.18f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(250f, 68f));
-            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Nam L?ng\n<size=16><color=#aaccff>H? s? ?</color></size>", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            var txtProfHeader = CreateTMP(btnProfHeader.transform, "Name", fontAsset, "Nam Làng\n<size=16><color=#aaccff>Hồ sơ ▸</color></size>", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeProfile = btnProfHeader.GetComponent<Button>();
             uiCtrl.txtHomePlayerName = txtProfHeader;
 
             var goldPill = CreateImage(homePanel.transform, "GoldPill", spriteBannerWood, new Vector2(0.58f, 0.960f), new Vector2(0.58f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(190f, 56f));
-            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "?? 1.250 +", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "🪙 1.250 +", 20, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtHomeGold = txtGold;
 
             // Hidden or compact gem pill
             var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.76f, 0.960f), new Vector2(0.76f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(110f, 56f));
-            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "?? 50", 18, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
+            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "💎 50", 18, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.txtHomeGems = txtGem;
 
             // Settings button on Home Screen (Top Right)
             var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleBack, new Vector2(0.92f, 0.960f), new Vector2(0.92f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(72f, 72f));
-            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "?", 34, Color.white, TextAlignmentOptions.Center);
+            CreateTMP(btnHomeSettings.transform, "Label", fontAsset, "⚙", 34, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnHomeSettings = btnHomeSettings.GetComponent<Button>();
 
             // Home Header & Logo (Centered below top bar, Y = 0.840f)
@@ -198,14 +202,14 @@ namespace HitMe.Editor
 
             // Hero Navigation Arrows (? and ?)
             var btnPrevHero = CreateButton(homePanel.transform, "BtnHeroPrev", spriteCircleBack, new Vector2(0.20f, 0.620f), new Vector2(0.20f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
-            CreateTMP(btnPrevHero.transform, "Label", fontAsset, "?", 32, colorGoldSub, TextAlignmentOptions.Center);
+            CreateTMP(btnPrevHero.transform, "Label", fontAsset, "❮", 32, colorGoldSub, TextAlignmentOptions.Center);
             btnPrevHero.GetComponent<Button>().onClick.AddListener(() => {
                 AudioManager.Instance?.PlayClick();
                 uiCtrl.ChangePracticeCharacter(-1);
             });
 
             var btnNextHero = CreateButton(homePanel.transform, "BtnHeroNext", spriteCircleBack, new Vector2(0.80f, 0.620f), new Vector2(0.80f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
-            CreateTMP(btnNextHero.transform, "Label", fontAsset, "?", 32, colorGoldSub, TextAlignmentOptions.Center);
+            CreateTMP(btnNextHero.transform, "Label", fontAsset, "❯", 32, colorGoldSub, TextAlignmentOptions.Center);
             btnNextHero.GetComponent<Button>().onClick.AddListener(() => {
                 AudioManager.Instance?.PlayClick();
                 uiCtrl.ChangePracticeCharacter(1);
@@ -218,8 +222,8 @@ namespace HitMe.Editor
             charCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); uiCtrl.ChangePracticeCharacter(1); });
             var charIcon = CreateImage(charCard.transform, "Icon", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.15f, 0.5f), new Vector2(0.15f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(68f, 68f));
             charIcon.GetComponent<Image>().preserveAspect = true;
-            CreateTMP(charCard.transform, "Title", fontAsset, "NH?N V?T", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
-            var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam L?ng ?", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
+            CreateTMP(charCard.transform, "Title", fontAsset, "NHÂN VẬT", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
+            var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam Làng ▸", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
             charNameTxt.fontStyle = FontStyles.Bold;
             uiCtrl.txtHomeCharName = charNameTxt;
 
@@ -227,14 +231,14 @@ namespace HitMe.Editor
             var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.420f), new Vector2(0.715f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 96f), spritePanelDarkGold, Color.white);
             var weaponIconHome = CreateImage(weaponCard.transform, "Icon", spriteWeaponDep, new Vector2(0.15f, 0.5f), new Vector2(0.15f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(64f, 64f));
             weaponIconHome.GetComponent<Image>().preserveAspect = true;
-            CreateTMP(weaponCard.transform, "Title", fontAsset, "V? KH?", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
-            var weaponTxtHome = CreateTMP(weaponCard.transform, "Text", fontAsset, "D?p ?", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
+            CreateTMP(weaponCard.transform, "Title", fontAsset, "VŨ KHÍ", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
+            var weaponTxtHome = CreateTMP(weaponCard.transform, "Text", fontAsset, "Dép ▸", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
             weaponTxtHome.fontStyle = FontStyles.Bold;
 
             // Action Buttons
             // 1. CH?I NHANH (Primary CTA V?ng - Y = 0.305f)
             var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnYellow, new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.5f), new Vector2(880f, 115f));
-            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, "? " + UiStrings.BtnPlayNow, 40, new Color(0.24f, 0.12f, 0.02f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.60f), new Vector2(840f, 50f));
+            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, "► " + UiStrings.BtnPlayNow, 40, new Color(0.24f, 0.12f, 0.02f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.60f), new Vector2(840f, 50f));
             btnQuickTxt.fontStyle = FontStyles.Bold;
             var btnQuickSub = CreateTMP(btnQuick.transform, "Sub", fontAsset, "Online ? T?i ?a 6 ng??i", 20, new Color(0.38f, 0.22f, 0.05f), TextAlignmentOptions.Center, new Vector2(0.5f, 0.26f), new Vector2(840f, 30f));
             uiCtrl.btnQuickMatch = btnQuick.GetComponent<Button>();
@@ -246,13 +250,13 @@ namespace HitMe.Editor
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
             var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen, new Vector2(0.715f, 0.205f), new Vector2(0.715f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 95f));
-            var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, "?? " + UiStrings.BtnJoinRoom, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
+            var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, "⚔ " + UiStrings.BtnJoinRoom, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
             btnJoinTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
 
             // 3. LUY?N V?I BOT (Dark Blue/Wood - Y = 0.115f)
             var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBannerWood, new Vector2(0.5f, 0.115f), new Vector2(0.5f, 0.115f), new Vector2(0.5f, 0.5f), new Vector2(880f, 75f));
-            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, "?? " + UiStrings.BtnPracticeBots + " ?", 30, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
+            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, "🤖 " + UiStrings.BtnPracticeBots + " ▸", 30, colorGoldSub, TextAlignmentOptions.Center, wrap: false);
             btnBotTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
 
@@ -260,15 +264,15 @@ namespace HitMe.Editor
             var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.035f), new Vector2(0.5f, 0.035f), new Vector2(0.5f, 0.5f), new Vector2(1080f, 75f), null, new Color(0.06f, 0.08f, 0.12f, 0.95f));
             
             var btnHomeTab = CreateButton(navBarBg.transform, "BtnTabHome", null, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
-            var txtHomeTab = CreateTMP(btnHomeTab.transform, "Label", fontAsset, "?? Trang ch?\n<color=#00E5FF>???</color>", 20, new Color(0.00f, 0.898f, 1f), TextAlignmentOptions.Center, wrap: false);
+            var txtHomeTab = CreateTMP(btnHomeTab.transform, "Label", fontAsset, "🏠 Trang chủ", 20, new Color(0.00f, 0.898f, 1f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeLogin = btnHomeTab.GetComponent<Button>();
 
             var btnLbBottom = CreateButton(navBarBg.transform, "BtnBottomLb", null, new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
-            CreateTMP(btnLbBottom.transform, "Label", fontAsset, "?? X?p h?ng", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            CreateTMP(btnLbBottom.transform, "Label", fontAsset, "🏆 Xếp hạng", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeLeaderboard = btnLbBottom.GetComponent<Button>();
 
             var btnShopBottom = CreateButton(navBarBg.transform, "BtnBottomShop", null, new Vector2(0.80f, 0.50f), new Vector2(0.80f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(240f, 65f));
-            CreateTMP(btnShopBottom.transform, "Label", fontAsset, "?? Nhi?m v?", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
+            CreateTMP(btnShopBottom.transform, "Label", fontAsset, "📜 Nhiệm vụ", 20, Color.white, TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnHomeShop = btnShopBottom.GetComponent<Button>();
 
             var btnInvBottom = CreateButton(homePanel.transform, "BtnBottomInv", null, new Vector2(-10f, -10f), new Vector2(-10f, -10f), new Vector2(0.5f, 0.5f), Vector2.one);
@@ -580,7 +584,7 @@ namespace HitMe.Editor
             uiCtrl.hpCards.Clear();
 
             string[] playerIds = new string[] { "player", "bot-1", "bot-2", "bot-3", "bot-4", "bot-5" };
-            string[] shortNames = new string[] { "Nam Làng", "Nữ Năng Động", "Quậy Boy", "Cô Ba", "Anh Teen", "Chú Chó Vàng" };
+            string[] shortNames = new string[] { "Nam Làng", "Nữ Năng Động", "Cô Ba", "Anh Teen", "Quậy Boy", "Chú Chó Vàng" };
             float[] colAnchors = new float[] { 0.17f, 0.50f, 0.83f };
             float[] rowAnchors = new float[] { 0.76f, 0.24f };
 
@@ -594,25 +598,25 @@ namespace HitMe.Editor
                 var cardImg = cardObj.GetComponent<Image>();
                 if (cardImg != null) cardImg.type = Image.Type.Sliced;
 
-                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 22, colorGoldSub, TextAlignmentOptions.MidlineLeft, new Vector2(0.33f, 0.70f), new Vector2(180f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cName = CreateTMP(cardObj.transform, "Name", fontAsset, shortNames[i], 20, colorGoldSub, TextAlignmentOptions.MidlineLeft, new Vector2(0.28f, 0.68f), new Vector2(210f, 30f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cName.fontStyle = FontStyles.Bold;
 
                 // Hearts Container with 3 sprite hearts
-                var heartsContainer = CreatePanel(cardObj.transform, "HeartsContainer", new Vector2(0.80f, 0.70f), new Vector2(0.80f, 0.70f), new Vector2(0.5f, 0.5f), new Vector2(96f, 30f), null, Color.clear);
+                var heartsContainer = CreatePanel(cardObj.transform, "HeartsContainer", new Vector2(0.78f, 0.68f), new Vector2(0.78f, 0.68f), new Vector2(0.5f, 0.5f), new Vector2(88f, 28f), null, Color.clear);
                 Image[] heartImgs = new Image[3];
                 for (int h = 0; h < 3; h++)
                 {
-                    float hx = (h - 1) * 28f;
-                    var hObj = CreateImage(heartsContainer.transform, "Heart_" + h, spriteHeartFull, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(24f, 24f));
+                    float hx = (h - 1) * 26f;
+                    var hObj = CreateImage(heartsContainer.transform, "Heart_" + h, spriteHeartFull, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(22f, 22f));
                     hObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(hx, 0f);
                     heartImgs[h] = hObj.GetComponent<Image>();
                 }
 
-                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 22, colorGreen, TextAlignmentOptions.MidlineRight, new Vector2(0.80f, 0.70f), new Vector2(110f, 32f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cHearts = CreateTMP(cardObj.transform, "Hearts", fontAsset, "HP: 3/3", 20, colorGreen, TextAlignmentOptions.MidlineRight, new Vector2(0.78f, 0.68f), new Vector2(100f, 28f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cHearts.fontStyle = FontStyles.Bold;
                 cHearts.gameObject.SetActive(false);
 
-                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 20, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(300f, 26f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
+                var cHpNum = CreateTMP(cardObj.transform, "HpNum", fontAsset, "CÒN SỐNG", 18, colorGreen, TextAlignmentOptions.Center, new Vector2(0.50f, 0.24f), new Vector2(400f, 24f), wrap: false, pivot: new Vector2(0.5f, 0.5f));
                 cHpNum.fontStyle = FontStyles.Bold;
 
                 uiCtrl.hpCards.Add(new ProductionUIController.PlayerHpCardUI
@@ -1082,7 +1086,8 @@ namespace HitMe.Editor
 
         private static GameObject CreateButton(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size)
         {
-            var go = CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white, raycastTarget: true);
+            Color color = sprite != null ? Color.white : Color.clear;
+            var go = CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, color, raycastTarget: true);
             go.AddComponent<Button>();
             return go;
         }
@@ -1240,13 +1245,14 @@ namespace HitMe.Editor
             configAsset.characterIdleSprites = new Sprite[]
             {
                 LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
-                LoadSprite("Assets/Sprites/co_nang_the_thao_idle.png"),
-                LoadSprite("Assets/Sprites/anh_nui_idle.png"),
                 LoadSprite("Assets/Sprites/mai_hong_idle.png"),
                 LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
+                LoadSprite("Assets/Sprites/anh_nui_idle.png"),
+                LoadSprite("Assets/Sprites/co_nang_the_thao_idle.png"),
                 LoadSprite("Assets/Sprites/chu_cho_vang_idle.png"),
                 LoadSprite("Assets/Sprites/meo_mun_idle.png")
             };
+            configAsset.weaponScale = 0.28f;
             configAsset.namLangPoseSprites = new Sprite[]
             {
                 LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),

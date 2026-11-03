@@ -1,0 +1,319 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 24080)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 17080)
+VBCSCompiler prewarm took 32.54 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-03T08:01:07Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 18436)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:/HITME GAME/unity-client
+-executeMethod
+HitMe.Editor.ProductionUISetup.BuildProductionUI
+-logFile
+D:/HITME GAME/unity-client/ui_setup.log
+Successfully changed project path to: D:/HITME GAME/unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [26604]  Target information:
+
+Player connection [26604]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 4064164573 [EditorId] 4064164573 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [26604] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [26604] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-03T08:01:08.4381513Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 18436, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Package Manager] Connected to IPC stream "Upm-6820" after 0.4 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              622822b3b60f407a9c8a13f19ca2a2f9
+  Correlation Id:          7e713f64f9d8fa494bbfc47d526b40ad
+  External correlation Id: 6125814519975143234
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.57s, validation: 0.09s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-03T08:01:08.5967267Z"
+[Licensing::Module] Connected to LicensingClient (PId: 18436, launch time: 0.01, total connection time: 0.73s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.80s
+[Licensing::Module] Licensing is initialized (took 0.07s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56820
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002220 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.105 seconds
+Domain Reload Profiling: 2029ms
+	BeginReloadAssembly (219ms)
+		CreateAndSetChildDomain (14ms)
+	RebuildCommonClasses (12ms)
+	RebuildNativeTypeToScriptingClass (38ms)
+	initialDomainReloadingComplete (106ms)
+	LoadAllAssembliesAndSetupDomain (548ms)
+		LoadAssemblies (205ms)
+		TypeCache.Refresh (371ms)
+			TypeCache.ScanAssembly (349ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1107ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (6ms)
+			BeforeProcessingInitializeOnLoad (174ms)
+			ProcessInitializeOnLoadAttributes (215ms)
+			ProcessInitializeOnLoadMethodAttributes (367ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 20 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.02 seconds
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 0s278ms
+[300/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra build success (0.22 seconds), 1 items updated, 349 evaluated
+AssetDatabase: script compilation time: 0.951966s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.882 seconds
+Domain Reload Profiling: 1943ms
+	BeginReloadAssembly (523ms)
+		DisableScriptedObjects (50ms)
+		CreateAndSetChildDomain (185ms)
+	RebuildCommonClasses (23ms)
+	RebuildNativeTypeToScriptingClass (32ms)
+	initialDomainReloadingComplete (65ms)
+	LoadAllAssembliesAndSetupDomain (417ms)
+		LoadAssemblies (357ms)
+		TypeCache.Refresh (37ms)
+			TypeCache.ScanAssembly (28ms)
+		AnalyzeDomain (18ms)
+			BuildScriptInfoCaches (14ms)
+	FinalizeReload (884ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (177ms)
+			ProcessInitializeOnLoadAttributes (252ms)
+			ProcessInitializeOnLoadMethodAttributes (65ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (47ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=f2919f832816d814696683a9ba393ab5): Total: 3.343 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=1217 ms
+		Asset DB Callback time: managed=38 ms, native=19 ms
+		Scripting: domain reloads=1, domain reload time=1095 ms, compile time=957 ms, other=15 ms
+		Project Asset Count: scripts=322, non-scripts=483
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 21.641ms
+	ApplyChangesToAssetFolders: 0.627ms
+	Scan: 92.043ms
+	Collect global state as custom dependencies: 12.565ms
+	CategorizeScriptCompilationAssets: 7.170ms
+	ProcessAssetsWithTransientArtifactChanges: 19.087ms
+	CategorizeAssets: 10.255ms
+	CompileScripts: 956.588ms
+	ImportOutOfDateAssets: 909.266ms (886.341ms without children)
+		UnloadImportedAssets: 1.923ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.193ms
+		ImportSchedulerStart: 20.805ms
+	PostProcessAllAssets: 38.999ms
+		MonoPostProcessAllAssets: 38.888ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 17.284ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.965ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.774ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.599ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.369ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.359ms
+			SyncVS.PostprocessSyncProject 0.177ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.170ms
+	UnloadStreamsBegin: 2.249ms
+	GenerateScriptTypeHashes: 0.888ms
+	GenerateScriptTypeSerializationHashes: 2.462ms
+	Untracked: 1228.766ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Scanning for USB devices : 1.435ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 998 unused Assets / (1.9 MB). Loaded Objects now: 1723.
+Memory consumption went from 238.8 MB to 236.9 MB.
+Total: 27.953800 ms (FindLiveObjects: 0.273000 ms CreateObjectMapping: 0.032900 ms MarkObjects: 7.444000 ms  DeleteObjects: 20.001900 ms)
+
+Opening scene 'Assets/Scenes/Graybox.unity'
+Unloading 74 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/Scenes/Graybox.unity'
+	Deserialize:            165.520 ms
+	Integration:            143.455 ms
+	Integration of assets:  6.247 ms
+	Thread Wait Time:       -0.113 ms
+	Total Operation Time:   315.109 ms
+Unloading 1 unused Assets / (2.8 KB). Loaded Objects now: 3608.
+Memory consumption went from 246.9 MB to 246.9 MB.
+Total: 9.067500 ms (FindLiveObjects: 0.718000 ms CreateObjectMapping: 0.047100 ms MarkObjects: 8.047100 ms  DeleteObjects: 0.031100 ms)
+
+Importing 'GUID: a578f894c98eba64282cbd29c3bfdbdd - Path: Assets/ScriptableObjects/GameConfig_Phase1.asset' with importer (NativeFormatImporter)
+Imported 'GUID: a578f894c98eba64282cbd29c3bfdbdd' -> (Import Result ID: '7de3a47788f32f7481e5388b6c250fda') in 0.006 seconds [static dependencies only]. Details - ImportResultOutputID=00e8548e8221960b8599c1c56a17b221 DependenciesID=de9330c8fefdc05006bc5bc8300b1c50 StaticDependenciesID=eb6a745772a00ec69d3e79f89131f036 
+Importing 'GUID: 480637c9bd8055048acc4c58e27c2dc7 - Path: Assets/Fonts/BeVietnamPro-Bold SDF.asset' with importer (NativeFormatImporter)
+Imported 'GUID: 480637c9bd8055048acc4c58e27c2dc7' -> (Import Result ID: 'ae8eb33601d7ebe3325da386b7e846d7') in 0.008 seconds [static dependencies only]. Details - ImportResultOutputID=5326bd7a765131e10fd2d9ee703a40fe DependenciesID=65744311c091ef8f0c7bfad66b9f0d1f StaticDependenciesID=d88960d64a39352142a6e96d47160e10 
+Asset Pipeline Refresh (id=f797a4338c8c1cb439ddcf3a13332eee): Total: 0.118 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Importing 'GUID: caf319bfa22fcba44ab8e48cb674f131 - Path: Assets/Scenes/Graybox.unity' with importer (DefaultImporter)
+Imported 'GUID: caf319bfa22fcba44ab8e48cb674f131' -> (Import Result ID: '79ef3b805f238e2b41a69608e7404834') in 0.001 seconds [static dependencies only]. Details - ImportResultOutputID=32d30909a76a8601a85a6e616f6168fe DependenciesID=bb586d1ff8f4cb07e6d7d765e07e8dbc StaticDependenciesID=f5f277867640bfed5dc8871b9fd0cf38 
+Asset Pipeline Refresh (id=88d206da2d0beed4e90d274b84e820f5): Total: 0.020 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Successfully built Production UI for Graybox.unity!
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.Editor.ProductionUISetup:BuildProductionUI () (at Assets/Editor/ProductionUISetup.cs:1047)
+
+(Filename: Assets/Editor/ProductionUISetup.cs Line: 1047)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

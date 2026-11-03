@@ -13,9 +13,9 @@ namespace HitMe.Game
         {
             "Nam Làng",
             "Nữ Năng Động",
-            "Quậy Boy",
             "Cô Ba",
             "Anh Teen",
+            "Quậy Boy",
             "Chó Vàng",
             "Mèo Mun"
         };
@@ -24,9 +24,9 @@ namespace HitMe.Game
         {
             0.7235f, // 0: Nam Làng (311px @ 150 PPU = 2.073u -> 1.50u)
             1.2016f, // 1: Nữ Năng Động (181px @ 150 PPU = 1.207u -> 1.45u)
-            0.8638f, // 2: Quậy Boy (257px @ 150 PPU = 1.713u -> 1.48u)
-            0.7740f, // 3: Cô Ba (281px @ 150 PPU = 1.873u -> 1.45u)
-            0.7985f, // 4: Anh Teen (278px @ 150 PPU = 1.853u -> 1.48u)
+            0.7740f, // 2: Cô Ba (281px @ 150 PPU = 1.873u -> 1.45u)
+            0.7985f, // 3: Anh Teen (278px @ 150 PPU = 1.853u -> 1.48u)
+            0.8638f, // 4: Quậy Boy (257px @ 150 PPU = 1.713u -> 1.48u)
             1.1820f, // 5: Chó Vàng (138px @ 150 PPU = 0.920u -> 1.0875u, 72.5% human)
             1.0660f  // 6: Mèo Mun (153px @ 150 PPU = 1.020u -> 1.0875u, 72.5% human)
         };
@@ -35,9 +35,9 @@ namespace HitMe.Game
         {
             0.18f, // 0: Nam Làng (18% chìm -> đầu nhìn thấy 56.7%)
             0.18f, // 1: Nữ Năng Động (18% chìm -> đầu nhìn thấy 56.1%)
-            0.00f, // 2: Quậy Boy (tạm thời 0%, chờ ảnh Chibi mới)
-            0.10f, // 3: Cô Ba (10% chìm -> đầu nhìn thấy 58.0%)
-            0.10f, // 4: Anh Teen (10% chìm -> đầu nhìn thấy 58.3%)
+            0.10f, // 2: Cô Ba (10% chìm -> đầu nhìn thấy 58.0%)
+            0.10f, // 3: Anh Teen (10% chìm -> đầu nhìn thấy 58.3%)
+            0.00f, // 4: Quậy Boy (tạm thời 0%, chờ ảnh Chibi mới)
             0.08f, // 5: Chó Vàng (8% chìm -> đầu nhìn thấy 57.2%)
             0.08f  // 6: Mèo Mun (8% chìm -> đầu nhìn thấy 58.0%)
         };
@@ -181,7 +181,7 @@ namespace HitMe.Game
                     float leanAngle = -_currentAimDirection.x * 7.0f;
                     _body.transform.localRotation = Quaternion.Euler(0f, 0f, leanAngle);
                     _body.transform.localPosition = new Vector3(_currentAimDirection.x * 0.04f, _sinkOffsetY + _currentAimDirection.y * 0.02f, 0f);
-                    _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * 0.5f), _baseBodyScale.y * (1f + breath), 1f);
+                    _body.transform.localScale = _baseBodyScale * (1f + breath);
                 }
                 else
                 {
@@ -296,7 +296,7 @@ namespace HitMe.Game
                 {
                     float breath = Mathf.Sin(Time.time * 3.2f) * 0.025f;
                     float breathFactor = 0.50f;
-                    _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * breathFactor), _baseBodyScale.y * (1f + breath), 1f);
+                    _body.transform.localScale = _baseBodyScale * (1f + breath);
                 }
                 else
                 {
@@ -418,7 +418,7 @@ namespace HitMe.Game
                 sGo.transform.localPosition = new Vector3(0f, -0.05f, 0f);
                 _shadow = sGo.AddComponent<SpriteRenderer>();
                 _shadow.sprite = _defaultShadow;
-                _shadow.sortingOrder = 0;
+                _shadow.sortingOrder = -1;
                 _shadow.color = new Color(0f, 0f, 0f, 0.44f);
                 float shadowScale = 0.66f * VisualCharacterScale * 0.70f;
                 sGo.transform.localScale = new Vector3(shadowScale, shadowScale, 1f);
@@ -625,15 +625,10 @@ namespace HitMe.Game
             }
             else if (stateName == "Aim")
             {
-                if (idx == 0 && _namLangPoses != null && _namLangPoses.Length >= 5)
+                // Z7: Keep high-res idle sprite instead of swapping to low-res aim sprite
+                if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
                 {
-                    _body.sprite = _namLangPoses[1];
-                    return;
-                }
-                if (idx == 4 && _anhNonLaPoses != null && _anhNonLaPoses.Length >= 5)
-                {
-                    _body.sprite = _anhNonLaPoses[1];
-                    return;
+                    _body.sprite = _defaultSprites[idx];
                 }
             }
             else if (stateName == "Idle")
@@ -787,7 +782,7 @@ namespace HitMe.Game
                     _aimWeaponIcon.transform.localPosition = localTipPos + new Vector3(0f, 0f, -0.04f);
                     float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
                     _aimWeaponIcon.transform.localRotation = Quaternion.Euler(0f, 0f, rotZ);
-                    _aimWeaponIcon.transform.localScale = new Vector3(0.40f, 0.40f, 1f);
+                    _aimWeaponIcon.transform.localScale = new Vector3(0.28f, 0.28f, 1f);
                     if (_defaultWeaponIcon != null) _aimWeaponIcon.sprite = _defaultWeaponIcon;
                 }
             }
@@ -872,14 +867,14 @@ namespace HitMe.Game
                 if (_aimConeRenderer != null)
                 {
                     _aimConeRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                    _aimConeRenderer.sortingOrder = 4;
+                    _aimConeRenderer.sortingOrder = 1;
                 }
             }
 
             if (_aimConeOutline == null)
             {
                 _aimConeOutline = CreateLine("AimConeOutline");
-                _aimConeOutline.sortingOrder = 4;
+                _aimConeOutline.sortingOrder = 1;
                 _aimConeOutline.startWidth = 0.025f;
                 _aimConeOutline.endWidth = 0.025f;
                 _aimConeOutline.loop = true;
@@ -906,7 +901,7 @@ namespace HitMe.Game
                         _aimDots[i] = dTransform.GetComponent<SpriteRenderer>();
                     }
                     _aimDots[i].sprite = _defaultDot != null ? _defaultDot : _defaultRing;
-                    _aimDots[i].sortingOrder = 4;
+                    _aimDots[i].sortingOrder = 1;
                     _aimDots[i].enabled = false;
                 }
             }
@@ -983,10 +978,10 @@ namespace HitMe.Game
             {
                 _defaultSprites = new Sprite[TotalCharacterCount];
                 _defaultSprites[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
-                _defaultSprites[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/co_nang_the_thao_idle.png");
-                _defaultSprites[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_nui_idle.png");
-                _defaultSprites[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/mai_hong_idle.png");
-                _defaultSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _defaultSprites[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/mai_hong_idle.png");
+                _defaultSprites[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _defaultSprites[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_nui_idle.png");
+                _defaultSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/co_nang_the_thao_idle.png");
                 _defaultSprites[5] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/chu_cho_vang_idle.png");
                 _defaultSprites[6] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/meo_mun_idle.png");
             }

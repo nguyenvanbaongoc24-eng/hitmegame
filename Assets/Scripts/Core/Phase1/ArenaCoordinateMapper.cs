@@ -19,6 +19,12 @@ namespace HitMe.Core
         public const float CoreMinY = -5.0f;
         public const float CoreMaxY = 4.2f;
 
+        // Z10: Playable court boundary (inside white lines)
+        public const float PlayMinX = -2.45f;
+        public const float PlayMaxX = 2.45f;
+        public const float PlayMinY = -3.80f;
+        public const float PlayMaxY = 2.80f;
+
         private static float Clamp(float val, float min, float max)
         {
             if (val < min) return min;

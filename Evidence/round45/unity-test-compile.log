@@ -1,0 +1,879 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 40820)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 12652)
+VBCSCompiler prewarm took 36.42 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-02T13:29:21Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 37972)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+D:\HITME GAME\unity-client
+-executeMethod
+HitMe.EditorTools.AudioOptimizer.Optimize
+-logFile
+D:\HITME GAME\unity-client\Evidence\round45\unity-test-compile.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [8068]  Target information:
+
+Player connection [8068]  * "[IP] 192.168.0.135 [Port] 55504 [Flags] 2 [Guid] 2003130562 [EditorId] 2003130562 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [8068] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [8068] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-02T13:29:22.5570745Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 37972, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              2b3016d6b26d4c6ca8bafb0f56bb444a
+  Correlation Id:          cb8ce18e3b6b3c341349fe38d27b94dc
+  External correlation Id: 4614273474330096980
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 0.57s, validation: 0.12s, handshake: 0.08s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-02T13:29:22.7602694Z"
+[Licensing::Module] Connected to LicensingClient (PId: 37972, launch time: 0.01, total connection time: 0.77s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.02
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.86s
+[Package Manager] Connected to IPC stream "Upm-34404" after 0.5 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56404
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.001825 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.127 seconds
+Domain Reload Profiling: 2029ms
+	BeginReloadAssembly (208ms)
+		CreateAndSetChildDomain (14ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (30ms)
+	initialDomainReloadingComplete (98ms)
+	LoadAllAssembliesAndSetupDomain (555ms)
+		LoadAssemblies (194ms)
+		TypeCache.Refresh (366ms)
+			TypeCache.ScanAssembly (343ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1129ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (178ms)
+			ProcessInitializeOnLoadAttributes (214ms)
+			ProcessInitializeOnLoadMethodAttributes (374ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 43 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.accessibility@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.accessibility)
+    com.unity.modules.adaptiveperformance@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.adaptiveperformance)
+    com.unity.modules.ai@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ai)
+    com.unity.modules.androidjni@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.androidjni)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.assetbundle)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.cloth@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.cloth)
+    com.unity.modules.director@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.director)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.terrain@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrain)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.terrainphysics)
+    com.unity.modules.tetgen@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tetgen)
+    com.unity.modules.tilemap@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.tilemap)
+    com.unity.modules.timelinefoundation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.timelinefoundation)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.umbra@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.umbra)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unityanalytics)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestaudio)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequestwww)
+    com.unity.modules.vectorgraphics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vectorgraphics)
+    com.unity.modules.vehicles@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.vehicles)
+    com.unity.modules.video@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.video)
+    com.unity.modules.wind@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.wind)
+    com.unity.modules.xr@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.xr)
+    com.unity.modules.subsystems@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.subsystems)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.04 seconds
+A meta data file (.meta) exists but its asset 'Assets/link.xml' can't be found. When moving or deleting files outside of Unity, please ensure that the corresponding .meta file is moved or deleted along with it.
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 0s296ms
+[300/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+*** Tundra build success (0.24 seconds), 1 items updated, 349 evaluated
+AssetDatabase: script compilation time: 0.974262s
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.877 seconds
+Domain Reload Profiling: 1891ms
+	BeginReloadAssembly (508ms)
+		DisableScriptedObjects (45ms)
+		CreateAndSetChildDomain (179ms)
+	RebuildCommonClasses (19ms)
+	RebuildNativeTypeToScriptingClass (29ms)
+	initialDomainReloadingComplete (55ms)
+	LoadAllAssembliesAndSetupDomain (399ms)
+		LoadAssemblies (336ms)
+		TypeCache.Refresh (34ms)
+			TypeCache.ScanAssembly (25ms)
+		AnalyzeDomain (23ms)
+			BuildScriptInfoCaches (18ms)
+	FinalizeReload (879ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (179ms)
+			ProcessInitializeOnLoadAttributes (262ms)
+			ProcessInitializeOnLoadMethodAttributes (72ms)
+			AfterProcessingInitializeOnLoad (4ms)
+		AwakeInstancesAfterBackupRestoration (46ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=2034faa29a2404c45b54d54d66c48269): Total: 3.411 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=1209 ms
+		Asset DB Callback time: managed=103 ms, native=50 ms
+		Scripting: domain reloads=1, domain reload time=1051 ms, compile time=978 ms, other=16 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=1
+		Scan Filter Count: 0
+	InvokePackagesCallback: 49.855ms
+	ApplyChangesToAssetFolders: 0.993ms
+	Scan: 89.431ms
+	Collect global state as custom dependencies: 12.787ms
+	OnSourceAssetsModified: 1.008ms
+	CategorizeScriptCompilationAssets: 9.911ms
+	ProcessAssetsWithTransientArtifactChanges: 24.972ms
+	CategorizeAssets: 12.515ms
+	CompileScripts: 978.466ms
+	ImportOutOfDateAssets: 908.463ms (881.825ms without children)
+		UnloadImportedAssets: 2.044ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.207ms
+		ImportSchedulerStart: 24.381ms
+	PostProcessAllAssets: 104.195ms
+		SpriteAtlasDatabase.OnAssetPostprocessCallback 1.543ms
+		XRBuildSystem.XRAssetImported 0.130ms
+		MonoPostProcessAllAssets: 101.639ms
+			AssetPostprocessor.OnPostprocessAllAssets 38.462ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 13.357ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 10.778ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 9.209ms
+			AssetChangedListener.OnPostprocessAllAssets 2.942ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 2.243ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.358ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 1.264ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.904ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.534ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.531ms
+			AssetEvents.OnPostprocessAllAssets 0.506ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.501ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.424ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.318ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.306ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.288ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.253ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.229ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.223ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.188ms
+			SyncVS.PostprocessSyncProject 0.176ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.135ms
+	PostAssetChangesProfiler: 2.315ms
+	UnloadStreamsBegin: 2.025ms
+	PersistCurrentRevisions: 0.141ms
+	GenerateScriptTypeHashes: 0.796ms
+	GenerateScriptTypeSerializationHashes: 2.197ms
+	Untracked: 1177.013ms
+
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 1.950ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 995 unused Assets / (1.9 MB). Loaded Objects now: 1719.
+Memory consumption went from 238.3 MB to 236.4 MB.
+Total: 10.779600 ms (FindLiveObjects: 0.314600 ms CreateObjectMapping: 0.249600 ms MarkObjects: 9.052000 ms  DeleteObjects: 0.990700 ms)
+
+Importing 'GUID: 12a79f7da56699e418cfcae687ad343c - Path: Assets/Audio/amb_crowd_murmur_loop.wav' with importer (AudioImporter)
+Imported 'GUID: 12a79f7da56699e418cfcae687ad343c' -> (Import Result ID: '3aab9b16e78093d69b3989f5555198a6') in 0.541 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=49e4a8b849970ee6404f09ef9ebce07c DependenciesID=49fc9b4fe729f75d885c23c604bc4fd8 StaticDependenciesID=ef5fd6ed5c9d014053ec83debeaa9d9e 
+
+Asset Pipeline Refresh (id=0c926de94a1fd2f4db0bcba48f7e3674): Total: 0.594 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=2 ms, native=584 ms
+		Asset DB Callback time: managed=5 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.201ms
+	Scan: 22.661ms
+	Collect global state as custom dependencies: 1.102ms
+	CategorizeAssets: 0.806ms
+	ImportOutOfDateAssets: 543.936ms (0.169ms without children)
+		ImportManagerImport: 543.134ms (1.291ms without children)
+		UnloadImportedAssets: 0.228ms
+		ReloadImportedAssets: 0.114ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.108ms
+		ImportSchedulerStart: 0.275ms
+	PostProcessAllAssets: 6.063ms
+		XRBuildSystem.XRAssetImported 0.465ms
+		MonoPostProcessAllAssets: 5.506ms
+			AssetPostprocessor.OnPostprocessAllAssets 4.438ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.557ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 0.123ms
+			SyncVS.PostprocessSyncProject 0.060ms
+	PostAssetChangesProfiler: 0.408ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.543ms
+	UnloadStreamsBegin: 0.105ms
+	Untracked: 1.445ms
+
+[AudioOptimizer] Optimized Assets/Audio/amb_crowd_murmur_loop.wav (mono=true, format=Vorbis, quality=0.2)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 67ceb48126cba3741aad014475a4d72a - Path: Assets/Audio/bgm_match_loop.wav' with importer (AudioImporter)
+Imported 'GUID: 67ceb48126cba3741aad014475a4d72a' -> (Import Result ID: 'af2aaa6692247b7d44b49e7d8a24ebc8') in 0.569 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3849b763fc2b601cd5b35326bd184d17 DependenciesID=5a8c7b525e58c0dc0fc46f20c48482c5 StaticDependenciesID=92b8772d14667f2192c77a5c9dc4b83b 
+
+Asset Pipeline Refresh (id=ae7f93bad8c97e54e99b78f95fa2f78e): Total: 0.583 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=582 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.117ms
+	Scan: 9.088ms
+	Collect global state as custom dependencies: 0.381ms
+	CategorizeAssets: 0.550ms
+	ImportOutOfDateAssets: 570.920ms (0.094ms without children)
+		ImportManagerImport: 570.090ms (0.172ms without children)
+		UnloadImportedAssets: 0.330ms
+		ReloadImportedAssets: 0.108ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.128ms
+		ImportSchedulerStart: 0.247ms
+	PostProcessAllAssets: 0.537ms
+		XRBuildSystem.XRAssetImported 0.084ms
+		MonoPostProcessAllAssets: 0.376ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.071ms
+			SyncVS.PostprocessSyncProject 0.069ms
+	PostAssetChangesProfiler: 0.379ms
+	Untracked: 1.052ms
+
+[AudioOptimizer] Optimized Assets/Audio/bgm_match_loop.wav (mono=true, format=Vorbis, quality=0.2)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c4b4837f2ec40a74f9600ba14735dd94 - Path: Assets/Audio/bgm_menu_loop.wav' with importer (AudioImporter)
+Imported 'GUID: c4b4837f2ec40a74f9600ba14735dd94' -> (Import Result ID: 'd6a1474bd1178b13579652089d5b7884') in 0.658 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5ad13bb99f4b42502ed9c5580872f275 DependenciesID=a6088eb7d9eea21608a720f7162fcfeb StaticDependenciesID=14aaca7b6a1ba8dcccbceb61930def3c 
+
+Asset Pipeline Refresh (id=47f9bcf88ba0c844ea46978c1dbb34e7): Total: 0.671 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=669 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.110ms
+	Scan: 7.362ms
+	Collect global state as custom dependencies: 0.335ms
+	CategorizeAssets: 0.562ms
+	ImportOutOfDateAssets: 660.131ms (0.109ms without children)
+		ImportManagerImport: 659.249ms (0.168ms without children)
+		UnloadImportedAssets: 0.383ms
+		ReloadImportedAssets: 0.112ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.120ms
+		ImportSchedulerStart: 0.246ms
+	PostProcessAllAssets: 0.967ms
+		XRBuildSystem.XRAssetImported 0.112ms
+		MonoPostProcessAllAssets: 0.742ms
+			AssetChangedListener.OnPostprocessAllAssets 0.350ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.075ms
+			SyncVS.PostprocessSyncProject 0.068ms
+	PostAssetChangesProfiler: 0.390ms
+	Untracked: 1.034ms
+
+[AudioOptimizer] Optimized Assets/Audio/bgm_menu_loop.wav (mono=true, format=Vorbis, quality=0.2)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: f47d32e79dce8a948b001e4da3fa64bc - Path: Assets/Audio/sfx_chat_pop.wav' with importer (AudioImporter)
+Curl error 7: Failed to connect to config.uca.cloud.unity3d.com port 443 after 2051 ms: Could not connect to server
+Curl error 7: Failed to connect to cdp.cloud.unity3d.com port 443 after 2230 ms: Could not connect to server
+Imported 'GUID: f47d32e79dce8a948b001e4da3fa64bc' -> (Import Result ID: '8157256ec6bd559e184c6006e55eebd2') in 0.260 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5e8feaddc119a92018c774ded22a9722 DependenciesID=b313e225553357469f12ac8a77c683a2 StaticDependenciesID=8d3176bcbcaff3afec826024a6408892 
+Asset Pipeline Refresh (id=480f04a0a9b18074c8ad3cde2d0959cd): Total: 0.271 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_chat_pop.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: ee264062c48fa5f429a0334aa05a949a - Path: Assets/Audio/sfx_coin.wav' with importer (AudioImporter)
+Worker ready: AssetImportWorkerHW0 0
+Imported 'GUID: ee264062c48fa5f429a0334aa05a949a' -> (Import Result ID: 'd4a1a467a99516a78324b9e4f3228ac0') in 0.289 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=825f781fb95fa8140598c9272a65b8f8 DependenciesID=3991a72c94011ce5beaa6820777e3dd1 StaticDependenciesID=0fb90d3836872920d2f35ecd9098d9e9 
+
+Asset Pipeline Refresh (id=8ab0e1449dfc2514d925ce23de1819ca): Total: 0.303 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=301 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.136ms
+	Scan: 8.241ms
+	Collect global state as custom dependencies: 0.335ms
+	CategorizeAssets: 0.444ms
+	ImportOutOfDateAssets: 290.947ms (0.098ms without children)
+		ImportManagerImport: 290.149ms (0.189ms without children)
+		UnloadImportedAssets: 0.307ms
+		ReloadImportedAssets: 0.119ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.095ms
+		ImportSchedulerStart: 0.275ms
+	PostProcessAllAssets: 0.569ms
+		XRBuildSystem.XRAssetImported 0.086ms
+		MonoPostProcessAllAssets: 0.402ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.087ms
+			SyncVS.PostprocessSyncProject 0.058ms
+	PostAssetChangesProfiler: 0.373ms
+	Untracked: 1.587ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_coin.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c946e8dcef04f24468b5333d0c1e9d6b - Path: Assets/Audio/sfx_countdown_last.wav' with importer (AudioImporter)
+Imported 'GUID: c946e8dcef04f24468b5333d0c1e9d6b' -> (Import Result ID: '20886fba89f6cf189041d68b6dc7a66d') in 0.265 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5f506c4d51338f04d77620824b28f0cb DependenciesID=1a261504a1ab3371d110d778038c3584 StaticDependenciesID=18c721a45fa586101ae67444aed8733b 
+Asset Pipeline Refresh (id=9a01257bed7d28a4e8b7fdbbf8ec00c1): Total: 0.277 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_countdown_last.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 7fee3d42d5b98474cb551295ed6dcfd0 - Path: Assets/Audio/sfx_countdown_tick.wav' with importer (AudioImporter)
+Imported 'GUID: 7fee3d42d5b98474cb551295ed6dcfd0' -> (Import Result ID: '5c657db5baf28b025460e972ccd6133f') in 0.248 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=80ebde62f098f52b810bf262d4ed8994 DependenciesID=30799625538c0c2afc5ba7d5f389a1d4 StaticDependenciesID=313c3351f1ab2fa46996c91b714665b7 
+Asset Pipeline Refresh (id=4cd189d15d6401546ab29d11890e172e): Total: 0.260 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_countdown_tick.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 9e504f3589ac3e843aa40f8a290a15b6 - Path: Assets/Audio/sfx_eliminate.wav' with importer (AudioImporter)
+Imported 'GUID: 9e504f3589ac3e843aa40f8a290a15b6' -> (Import Result ID: '4b3616723aacbb7529da3f7fc3225027') in 0.286 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bfc11596044951b0eb84f28e2739d0a3 DependenciesID=10210b6202ef51d930a4e8b2f293d77b StaticDependenciesID=c343223402b067913138fd9d86becef4 
+Asset Pipeline Refresh (id=0a2c9be2fe647274283f35f784c39ccb): Total: 0.300 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_eliminate.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 8f8870e975c61ce4ba9af00061dc1bde - Path: Assets/Audio/sfx_error.wav' with importer (AudioImporter)
+Imported 'GUID: 8f8870e975c61ce4ba9af00061dc1bde' -> (Import Result ID: '310ec24b1497f91dbb843499e2f6b9c6') in 0.277 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=2211a637832a7272500d2381c8b0b426 DependenciesID=198f3656897a8c847311c07ebbd353e5 StaticDependenciesID=c9dd7ace69980a2713c684928501647a 
+Asset Pipeline Refresh (id=9e94f6964a9ef78418ff09af79c6ed17): Total: 0.288 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_error.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: e1665858b083ae4478fbda4a9e468fec - Path: Assets/Audio/sfx_heart_break.wav' with importer (AudioImporter)
+Imported 'GUID: e1665858b083ae4478fbda4a9e468fec' -> (Import Result ID: 'ff522ba5241b1f497318f02bf4a42364') in 0.272 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=eaa9b86ed5fc823d0595d2e7020d1310 DependenciesID=7e13f6b1041abe77b4b6ab53852ccc52 StaticDependenciesID=9eac3fd0f1fc8537540d416093f093ed 
+Asset Pipeline Refresh (id=cb5e4c16a75efed409d92435d541cb49): Total: 0.284 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_heart_break.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: feb0abd62903795449ddf5249b9b7963 - Path: Assets/Audio/sfx_hit_bop.wav' with importer (AudioImporter)
+Imported 'GUID: feb0abd62903795449ddf5249b9b7963' -> (Import Result ID: '11bd031ee66438ab0aecd8cb06ca6913') in 0.268 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=90088f2fe989fe3daf925c5e383d6b4f DependenciesID=96eaf9ad1725dd924505b33ba07f74bb StaticDependenciesID=e90f08a617d699ca52fb55e88fccf370 
+Asset Pipeline Refresh (id=a71ad10965b26f54bbe120ed8371acc5): Total: 0.280 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_hit_bop.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: b50e7cd4cdfd51b4481ca93d6cb35958 - Path: Assets/Audio/sfx_lose.wav' with importer (AudioImporter)
+Imported 'GUID: b50e7cd4cdfd51b4481ca93d6cb35958' -> (Import Result ID: 'bc869adda6447e041f08d45f3d23c0d2') in 0.302 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=588795c0f349f5bc982013376cdfcfb7 DependenciesID=2a74ba8a5bd5e44313c6fc156f666b8a StaticDependenciesID=530dfa5645bfd47822aeb5b7549c0f57 
+
+Asset Pipeline Refresh (id=8c6d8385df4e4b84094620370369bbe6): Total: 0.313 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=311 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.094ms
+	Scan: 6.128ms
+	Collect global state as custom dependencies: 0.307ms
+	CategorizeAssets: 0.468ms
+	ImportOutOfDateAssets: 303.369ms (0.094ms without children)
+		ImportManagerImport: 302.651ms (0.164ms without children)
+		UnloadImportedAssets: 0.260ms
+		ReloadImportedAssets: 0.116ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.114ms
+		ImportSchedulerStart: 0.230ms
+	PostProcessAllAssets: 0.622ms
+		XRBuildSystem.XRAssetImported 0.092ms
+		MonoPostProcessAllAssets: 0.446ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.120ms
+			SyncVS.PostprocessSyncProject 0.059ms
+	PostAssetChangesProfiler: 0.411ms
+	Untracked: 1.059ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_lose.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: c0dfb400b11e9694e9c62279b01e323b - Path: Assets/Audio/sfx_purchase.wav' with importer (AudioImporter)
+Imported 'GUID: c0dfb400b11e9694e9c62279b01e323b' -> (Import Result ID: 'a9003eec9951941663b7bd1061d1cd96') in 0.311 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=02f8df691428ab2d2e92dbb477cf0ba8 DependenciesID=208851f0e93e920cf6b50aaebfd0adbc StaticDependenciesID=3ff392aaf76544d1c4616dee48da020d 
+
+Asset Pipeline Refresh (id=7cd70e4a3ae196947b8664ba9094adde): Total: 0.323 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=321 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.093ms
+	Scan: 6.383ms
+	Collect global state as custom dependencies: 0.385ms
+	CategorizeAssets: 0.592ms
+	ImportOutOfDateAssets: 313.320ms (0.145ms without children)
+		ImportManagerImport: 312.386ms (0.223ms without children)
+		UnloadImportedAssets: 0.380ms
+		ReloadImportedAssets: 0.145ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.117ms
+		ImportSchedulerStart: 0.269ms
+	PostProcessAllAssets: 0.793ms
+		XRBuildSystem.XRAssetImported 0.123ms
+		MonoPostProcessAllAssets: 0.556ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.098ms
+			SyncVS.PostprocessSyncProject 0.080ms
+	PostAssetChangesProfiler: 0.538ms
+	Untracked: 1.115ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_purchase.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 0b5160b2250dd9040abc4a5f9c478952 - Path: Assets/Audio/sfx_ready.wav' with importer (AudioImporter)
+Imported 'GUID: 0b5160b2250dd9040abc4a5f9c478952' -> (Import Result ID: 'a8755873f4019bb9e10bf187b5b35002') in 0.293 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3ffadde17d7344ea8e890a3ab0134733 DependenciesID=ce217a14e1ec19da7c511d028ce54f36 StaticDependenciesID=228509a6a8061fa681c0541be99ae96c 
+
+Asset Pipeline Refresh (id=2ea6c4af7ed143f43bfaa0ec5767c7cb): Total: 0.308 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=306 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.123ms
+	Scan: 9.626ms
+	Collect global state as custom dependencies: 0.521ms
+	CategorizeAssets: 0.417ms
+	ImportOutOfDateAssets: 294.839ms (0.136ms without children)
+		ImportManagerImport: 293.935ms (0.243ms without children)
+		UnloadImportedAssets: 0.298ms
+		ReloadImportedAssets: 0.149ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.122ms
+		ImportSchedulerStart: 0.321ms
+	PostProcessAllAssets: 0.623ms
+		XRBuildSystem.XRAssetImported 0.107ms
+		MonoPostProcessAllAssets: 0.414ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.080ms
+			SyncVS.PostprocessSyncProject 0.060ms
+	PostAssetChangesProfiler: 0.421ms
+	Untracked: 1.236ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_ready.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 235fb173c236eda46b6890f2f2b13a3b - Path: Assets/Audio/sfx_reveal.wav' with importer (AudioImporter)
+Imported 'GUID: 235fb173c236eda46b6890f2f2b13a3b' -> (Import Result ID: '0c379dd0f09d5357525cd6adac1e3bdc') in 0.249 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6d3b8e540856b1c4852b22794effc1f3 DependenciesID=d903f87d85b0dd20c31d5498c0b74b36 StaticDependenciesID=3c7cc20cf23f5e7eb9d3aad915bce6a0 
+Asset Pipeline Refresh (id=ebc3fae3488a3e044b83bc03b4904d98): Total: 0.260 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_reveal.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: dc05d06b85f3f544b925abd610836555 - Path: Assets/Audio/sfx_tap_place.wav' with importer (AudioImporter)
+Imported 'GUID: dc05d06b85f3f544b925abd610836555' -> (Import Result ID: 'f644d6cfe6d9b1f10fce2b36153b6ac8') in 0.299 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ac8adf6311a02e60c724039ed96c6872 DependenciesID=b0319f3c952f52919e2ef2f8f4fb1e61 StaticDependenciesID=f26c9c85f5f0c2ce3a35d629147ba644 
+
+Asset Pipeline Refresh (id=747b6b444763244428fc09d7d2fcd7ce): Total: 0.313 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=311 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.129ms
+	Scan: 8.996ms
+	Collect global state as custom dependencies: 0.430ms
+	CategorizeAssets: 0.707ms
+	ImportOutOfDateAssets: 300.315ms (0.102ms without children)
+		ImportManagerImport: 299.596ms (0.178ms without children)
+		UnloadImportedAssets: 0.260ms
+		ReloadImportedAssets: 0.113ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.103ms
+		ImportSchedulerStart: 0.234ms
+	PostProcessAllAssets: 0.570ms
+		XRBuildSystem.XRAssetImported 0.086ms
+		MonoPostProcessAllAssets: 0.394ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.085ms
+			SyncVS.PostprocessSyncProject 0.060ms
+	PostAssetChangesProfiler: 0.383ms
+	GatherAllCurrentPrimaryImportResultRevisions: 0.057ms
+	Untracked: 1.274ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_tap_place.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 4ef2513640a601a4cb1d44c3074fcb82 - Path: Assets/Audio/sfx_throw.wav' with importer (AudioImporter)
+Imported 'GUID: 4ef2513640a601a4cb1d44c3074fcb82' -> (Import Result ID: 'f4fc1bb84e674171bcf280b29d2dcd23') in 0.270 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1bd16163486a940a59fe484335656da6 DependenciesID=5c48d25912bcb527ebca37a4eb4f929d StaticDependenciesID=7daa3c00edefe861ef3227da8dba89b6 
+Asset Pipeline Refresh (id=566b0d433bdebf04bbe85efc44792a5e): Total: 0.281 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_throw.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 62e48806af640874b94a400f7b1d3a2b - Path: Assets/Audio/sfx_ui_click.wav' with importer (AudioImporter)
+Imported 'GUID: 62e48806af640874b94a400f7b1d3a2b' -> (Import Result ID: '023a4118acc456c0177df9164d9919ee') in 0.272 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6bf679d3916f6b19988c317b3df4fe5c DependenciesID=bb9a6b65363c80bd09df0298d46b770e StaticDependenciesID=d5a870e2cb8b8f1b9316170138e75033 
+Asset Pipeline Refresh (id=b81bef9a3ef685848948c73c6e97d051): Total: 0.283 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_ui_click.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: bb5fd776f62c1da42912aaeb84fa79ac - Path: Assets/Audio/sfx_wall_thud.wav' with importer (AudioImporter)
+Imported 'GUID: bb5fd776f62c1da42912aaeb84fa79ac' -> (Import Result ID: '8c93b9a22cc354c92880caf5775f2e31') in 0.270 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=483a97430538d3354ded94593fad4a60 DependenciesID=8b66e011be952f0120d2fbfff909c5ad StaticDependenciesID=65c2a6239e52866f8e02ceca68f626e5 
+Asset Pipeline Refresh (id=f6ccf5890cbe34e46a4776e09bcc7b22): Total: 0.281 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+[AudioOptimizer] Optimized Assets/Audio/sfx_wall_thud.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+Importing 'GUID: 0452bd957676ffb4dbcee91f6daef96d - Path: Assets/Audio/sfx_win.wav' with importer (AudioImporter)
+Imported 'GUID: 0452bd957676ffb4dbcee91f6daef96d' -> (Import Result ID: 'db6680ba376e4575278a03640b5db235') in 0.313 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=29746c3cfc47e89c6ba37acb58a9047a DependenciesID=956d631f25d70f7847518aa79e1728c9 StaticDependenciesID=37125f7804d81d6cc7b4ab69d9913537 
+
+Asset Pipeline Refresh (id=a9a17860eb27f144883ef5ebb848d3b9): Total: 0.324 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=1 (actual=1, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=323 ms
+		Asset DB Callback time: managed=0 ms, native=0 ms
+		Scripting: domain reloads=0, domain reload time=0 ms, compile time=0 ms, other=0 ms
+		Project Asset Count: scripts=347, non-scripts=479
+		Asset File Changes: new=0, changed=0, moved=0, deleted=0
+		Scan Filter Count: 3
+	ApplyChangesToAssetFolders: 0.096ms
+	Scan: 6.114ms
+	Collect global state as custom dependencies: 0.302ms
+	CategorizeAssets: 0.413ms
+	ImportOutOfDateAssets: 315.025ms (0.085ms without children)
+		ImportManagerImport: 314.267ms (0.169ms without children)
+		UnloadImportedAssets: 0.319ms
+		ReloadImportedAssets: 0.107ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.100ms
+		ImportSchedulerStart: 0.230ms
+	PostProcessAllAssets: 0.530ms
+		XRBuildSystem.XRAssetImported 0.084ms
+		MonoPostProcessAllAssets: 0.369ms
+			AssetPostprocessor.OnPostprocessAllAssets 0.073ms
+			SyncVS.PostprocessSyncProject 0.062ms
+	PostAssetChangesProfiler: 0.342ms
+	Untracked: 1.456ms
+
+[AudioOptimizer] Optimized Assets/Audio/sfx_win.wav (mono=true, format=Vorbis, quality=0.15)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:47)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 47)
+
+[AudioOptimizer] Successfully optimized 20 audio clips for WebGL.
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+HitMe.EditorTools.AudioOptimizer:Optimize () (at Assets/Editor/AudioOptimizer.cs:50)
+
+(Filename: Assets/Editor/AudioOptimizer.cs Line: 50)
+
+Batchmode quit successfully invoked - shutting down!
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0
