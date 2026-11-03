@@ -42,6 +42,7 @@ public sealed class RoomAuthority
     public DateTimeOffset? StartDeadline { get; private set; }
     public ServerRoundSession? RoundSession { get; private set; }
     public IReadOnlyList<RoomPlayer> Players => players;
+    public DateTimeOffset LastLobbyActivityUtc { get; private set; } = DateTimeOffset.UtcNow;
 
     public bool TryJoin(string playerId, string name, out string error)
     {
@@ -51,6 +52,7 @@ public sealed class RoomAuthority
         if (players.Count >= MaxPlayers) { error = "room_full"; return false; }
         var slot = Enumerable.Range(0, MaxPlayers).First(index => players.All(p => p.Slot != index));
         players.Add(new RoomPlayer(playerId, name, slot));
+        LastLobbyActivityUtc = DateTimeOffset.UtcNow;
         error = string.Empty;
         return true;
     }
@@ -60,6 +62,7 @@ public sealed class RoomAuthority
         var player = players.FirstOrDefault(p => p.Id == playerId);
         if (player is null) { error = "not_in_room"; return false; }
         players.Remove(player);
+        LastLobbyActivityUtc = DateTimeOffset.UtcNow;
         StartDeadline = null;
         if (player.Id == HostId && players.Count > 0) HostId = players[0].Id;
         error = string.Empty;
@@ -72,6 +75,7 @@ public sealed class RoomAuthority
         var player = players.FirstOrDefault(p => p.Id == playerId);
         if (player is null) { error = "not_in_room"; return false; }
         player.Ready = ready;
+        LastLobbyActivityUtc = DateTimeOffset.UtcNow;
         if (!ready) StartDeadline = null;
         else if (players.Count >= MinPlayers && players.All(candidate => candidate.Ready))
             StartDeadline = now + TimeSpan.FromSeconds(startCountdownSeconds);
@@ -155,6 +159,18 @@ public sealed class RoomDirectory
     public IReadOnlyList<RoomAuthority> Snapshot()
     {
         lock (gate) return rooms.Values.ToArray();
+    }
+
+    public IReadOnlyList<RoomAuthority> PruneExpiredLobbies(DateTimeOffset now, TimeSpan idleLimit)
+    {
+        lock (gate)
+        {
+            var expired = rooms.Values.Where(room =>
+                (!room.Started || room.RoundSession?.Match.State.Phase == Phase.MatchEnd) &&
+                now - room.LastLobbyActivityUtc >= idleLimit).ToArray();
+            foreach (var room in expired) rooms.Remove(room.Code);
+            return expired;
+        }
     }
 
     public bool Join(string code, string playerId, string playerName, out RoomAuthority? room, out string error)

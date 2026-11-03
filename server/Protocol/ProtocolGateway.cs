@@ -141,6 +141,14 @@ public sealed class ProtocolGateway
         {
             PruneDisconnected();
             var output = new List<GatewayMessage>();
+            foreach (var expired in rooms.PruneExpiredLobbies(clock.GetUtcNow(), TimeSpan.FromMinutes(10)))
+            {
+                foreach (var entry in sessions.Where(pair => ReferenceEquals(pair.Value.Room, expired)).ToArray())
+                {
+                    output.Add(new GatewayMessage(entry.Key, Error("room_expired"), "room_expired"));
+                    sessions.Remove(entry.Key);
+                }
+            }
             foreach (var entry in quickMatch.Where(pair => !pair.Value.Hinted && clock.GetUtcNow() - pair.Value.QueuedAt >= TimeSpan.FromSeconds(QuickMatchHintSeconds)).ToArray())
             {
                 entry.Value.Hinted = true;

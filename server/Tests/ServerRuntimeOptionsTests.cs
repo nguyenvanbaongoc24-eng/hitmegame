@@ -8,8 +8,8 @@ public sealed class ServerRuntimeOptionsTests
     public void DefaultsBoundResourcesAndReadOnlyOriginList()
     {
         var options = ServerRuntimeOptions.FromEnvironment(_ => null);
-        Assert.Equal(200, options.MaxRooms);
-        Assert.Equal(500, options.MaxConnections);
+        Assert.Equal(50, options.MaxRooms);
+        Assert.Equal(120, options.MaxConnections);
         Assert.Equal(12, options.MaxConnectionsPerIp);
         Assert.Equal(10, options.JoinTimeout.TotalSeconds);
         Assert.Equal(90, options.IdleTimeout.TotalSeconds);

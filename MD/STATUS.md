@@ -1,5 +1,7 @@
 # Codex preparation status (2026-11-02)
 
+Beta P2 (2026-11-03): local healthz already avoids DB, SIGTERM already sends server_restarting, message rate limiting and safe logs were present. Conservative default caps reduced to 50 rooms/120 sockets; lobbies without activity for 10 minutes now expire with room_expired. These caps are not measured on Render. Full server suite result is recorded in the next commit/test evidence.
+
 Beta P1 (2026-11-03): server emits a version hello on each WebSocket, accepts `clientVersion` in join/quick_match, and returns `client_outdated` with a graceful close when below the configured minimum. Default minimum 0.0.0 preserves the deployed client. Full local server suite Passed! 180/180. Render deployment and Unity handling are not verified.
 
 Branch `prep/codex`; Unity and Core are not edited here.

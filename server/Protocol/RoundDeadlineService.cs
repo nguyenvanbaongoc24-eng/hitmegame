@@ -23,7 +23,10 @@ public sealed class RoundDeadlineService : BackgroundService
             foreach (var connectionId in idle) gateway.Disconnect(connectionId);
             var unjoined = await connections.CloseUnjoinedAsync(options.JoinTimeout, gateway.HasJoinedOrQueued);
             foreach (var connectionId in unjoined) gateway.Disconnect(connectionId);
-            await Task.WhenAll(gateway.Tick().Select(message => connections.SendAsync(message, stoppingToken)));
+            var messages = gateway.Tick();
+            await Task.WhenAll(messages.Select(message => connections.SendAsync(message, stoppingToken)));
+            foreach (var message in messages.Where(message => message.CloseReason is not null))
+                await connections.CloseConnectionAsync(message.ConnectionId, message.CloseReason!);
         }
     }
 }

@@ -19,7 +19,7 @@ public sealed record ServerRuntimeOptions(
         static int Positive(Func<string, string?> read, string key, int fallback) =>
             int.TryParse(read(key), out var value) && value > 0 ? value : fallback;
         return new ServerRuntimeOptions(idle, TimeSpan.FromSeconds(30), origins,
-            Positive(read, "MAX_ROOMS", 200), Positive(read, "MAX_CONNECTIONS", 500),
+            Positive(read, "MAX_ROOMS", 50), Positive(read, "MAX_CONNECTIONS", 120),
             Positive(read, "MAX_CONNECTIONS_PER_IP", 12),
             TimeSpan.FromSeconds(Positive(read, "JOIN_TIMEOUT_SECONDS", 10)),
             TimeSpan.FromSeconds(Positive(read, "SHUTDOWN_ROUND_WAIT_SECONDS", 6)));
