@@ -19,6 +19,7 @@ public sealed class ClientVersionPolicyTests
     [InlineData(null, false)]
     [InlineData("0.0.9", false)]
     [InlineData("0.1.0", true)]
+    [InlineData("0.1.0-beta.1", false)]
     [InlineData("0.2.0", true)]
     [InlineData("invalid", false)]
     public void MinimumVersionComparison(string? client, bool supported)
@@ -35,5 +36,13 @@ public sealed class ClientVersionPolicyTests
         Assert.Equal("client_outdated", messages[0].CloseReason);
         using var response = JsonDocument.Parse(messages[0].Payload);
         Assert.Equal("client_outdated", response.RootElement.GetProperty("code").GetString());
+    }
+
+    [Fact]
+    public void BetaNumericSuffixUsesNumericOrdering()
+    {
+        var policy = new ClientVersionPolicy("0.1.0-beta.10", "0.1.0-beta.2");
+        Assert.True(policy.IsSupported("0.1.0-beta.10"));
+        Assert.False(policy.IsSupported("0.1.0-beta.1"));
     }
 }
