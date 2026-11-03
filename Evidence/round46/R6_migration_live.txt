@@ -1,0 +1,33 @@
+2026-11-03 | Supabase project lpylrbtpruyzdehkcaiu | migration 008_guest_shop.sql
+Connection values and credentials are not recorded in this file.
+
+python tools/supabase/apply_migrations.py --check
+Connected: database=postgres, role=postgres, profiles_present=True, ledger_present=True
+guest_catalog=False; guest_inventory=False; guest_shop_requests=False
+Exit: 0 (read-only preflight)
+
+python tools/supabase/apply_migrations.py --apply
+already applied: 001_schema.sql through 007_leaderboard_rls.sql
+applied: 008_guest_shop.sql
+Migration transaction committed: 8/8 files checked
+Exit: 0
+
+python tools/supabase/verify_live.py
+Migration ledger: 8/8 checksums match
+RLS: 3/3 server-only tables enabled; anon cannot SELECT
+Access audit: anon_leaderboard=False, authenticated_leaderboard=True, anon_reward_rpc=False
+Guest reward RPC: 3-player 150/80/40; duplicate is a no-op
+Shop RLS: 4/4 server-only tables enabled; anon cannot SELECT or execute shop RPC
+Shop RPC: first rename free, purchase 199, equip, second rename 200; replays unchanged
+Verification transaction rolled back; no test rows retained
+Exit: 0
+
+REST read via server-only key: guest_catalog HTTP 200 (previously HTTP 404)
+Post-migration --check: guest_catalog=True; guest_inventory=True; guest_shop_requests=True
+dotnet test server/Tests/HitMe.Server.Tests.csproj: Passed! 152/152
+node tools/supabase/test_migrations.mjs: Passed! 21/21
+python -m unittest tools/supabase/test_db_url.py -q: Ran 4 tests; OK
+
+Scope: migration and database RPC verified on the live project. The deployed Render
+server has not been reconfigured or tested with shop enabled; this file is not
+evidence that WebGL users can buy or rename yet.
