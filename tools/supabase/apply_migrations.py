@@ -14,7 +14,7 @@ import argparse
 import hashlib
 import os
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 PROJECT_REF = "lpylrbtpruyzdehkcaiu"
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +37,14 @@ def db_url() -> str:
                     break
     if not value:
         raise RuntimeError("SUPABASE_DB_URL is missing from environment and ignored .env")
+    # Passwords copied from the dashboard may contain raw @, [ or ] characters.
+    # Escape only userinfo in memory; never rewrite or print the ignored .env.
+    if "://" in value and "@" in value:
+        scheme, authority = value.split("://", 1)
+        userinfo, separator, host_and_path = authority.rpartition("@")
+        if separator and ":" in userinfo:
+            user, password = userinfo.split(":", 1)
+            value = scheme + "://" + user + ":" + quote(unquote(password), safe="") + "@" + host_and_path
     parsed = urlsplit(value)
     username = unquote(parsed.username or "")
     if parsed.scheme not in ("postgres", "postgresql") or PROJECT_REF not in (parsed.hostname or "") + username:
