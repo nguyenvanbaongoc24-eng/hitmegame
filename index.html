@@ -398,21 +398,21 @@
 
       const config = {
         arguments: [],
-        dataUrl: versioned(buildUrl + "/WebGL_Release_20261103_4e9a395.data.br"),
-        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261103_4e9a395.framework.js.br"),
-        codeUrl: versioned(buildUrl + "/WebGL_Release_20261103_4e9a395.wasm.br"),
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.wasm.br"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HitMeStudio",
         productName: "HIT ME",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
-        matchWebGLToCanvasSize: false,
-        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.0)
+        matchWebGLToCanvasSize: true,
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
       };
 
       // Retina display support
       function updateCanvasResolution() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
         canvas.width = Math.round(window.innerWidth * dpr);
         canvas.height = Math.round(window.innerHeight * dpr);
       }
@@ -420,7 +420,7 @@
       window.addEventListener("resize", updateCanvasResolution);
 
       const script = document.createElement("script");
-      script.src = versioned(buildUrl + "/WebGL_Release_20261103_4e9a395.loader.js");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261103_0f1501b.loader.js");
       const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {
