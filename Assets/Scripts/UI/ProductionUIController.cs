@@ -1756,7 +1756,16 @@ namespace HitMe.UI
 
         public void CycleHomeCharacter()
         {
-            _selectedPracticeCharIndex = (_selectedPracticeCharIndex + 1) % 7;
+            int next = _selectedPracticeCharIndex;
+            for (int k = 0; k < 7; k++)
+            {
+                next = (next + 1) % 7;
+                if (HitMe.Data.CharacterRegistry.GetByIndex(next).isEnabled)
+                {
+                    _selectedPracticeCharIndex = next;
+                    break;
+                }
+            }
             RefreshBotTrainingDisplay();
             var names = UiStrings.GetLocalizedCharacterNames();
             if (_selectedPracticeCharIndex < names.Length)
@@ -3724,14 +3733,28 @@ namespace HitMe.UI
         public void ChangePracticeCharacter(int delta)
         {
             AudioManager.Instance?.PlayClick();
-            int total = PlayerView.CharacterNames.Length;
-            _selectedPracticeCharIndex = ((_selectedPracticeCharIndex + delta) % total + total) % total;
+            int dir = delta > 0 ? 1 : -1;
+            int next = _selectedPracticeCharIndex;
+            for (int k = 0; k < 7; k++)
+            {
+                next = ((next + dir) % 7 + 7) % 7;
+                if (HitMe.Data.CharacterRegistry.GetByIndex(next).isEnabled)
+                {
+                    _selectedPracticeCharIndex = next;
+                    break;
+                }
+            }
             RefreshBotTrainingDisplay();
         }
 
         public void SetSelectedPracticeCharacter(int index)
         {
             AudioManager.Instance?.PlayClick();
+            if (!HitMe.Data.CharacterRegistry.GetByIndex(index).isEnabled)
+            {
+                ShowToast("Nhân vật đang được hoàn thiện (Sắp ra mắt)!");
+                return;
+            }
             _selectedPracticeCharIndex = Mathf.Clamp(index, 0, 6);
             RefreshBotTrainingDisplay();
         }

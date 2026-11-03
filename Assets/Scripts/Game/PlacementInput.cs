@@ -21,36 +21,83 @@ namespace HitMe.Game
                 return;
             }
 
+            // 1. Process real touch events first (mobile / WebKit / Android)
             if (Input.touchCount > 0)
             {
-                for (int i = 0; i < Input.touchCount; i++)
+                var touch = Input.GetTouch(0); // Primary finger only per rule G6
+                var phase = ToPointerPhase(touch.phase);
+
+                if (phase == PointerPhase.Began)
                 {
-                    var touch = Input.GetTouch(i);
-                    // Rule G7 / A4: Chạm bắt đầu lên HUD / nút không đặt nhân vật
-                    if (touch.phase == TouchPhase.Began && UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+                    if (IsPointerOverHud(touch.position, touch.fingerId)) return;
+                    _touchGate.Reset();
+                }
+
+                if (_touchGate.TryAccept(touch.fingerId, phase))
+                {
+                    Forward("touch#" + touch.fingerId, touch.position, phase, touch.fingerId);
+                    return;
+                }
+            }
+
+            // 2. Desktop mouse / pointer fallback
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (IsPointerOverHud(Input.mousePosition, 0)) return;
+                _touchGate.Reset();
+                if (_touchGate.TryAccept(0, PointerPhase.Began))
+                {
+                    Forward("mouse", Input.mousePosition, PointerPhase.Began, 0);
+                }
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                if (_touchGate.TryAccept(0, PointerPhase.Moved))
+                {
+                    Forward("mouse", Input.mousePosition, PointerPhase.Moved, 0);
+                }
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                if (_touchGate.TryAccept(0, PointerPhase.Ended))
+                {
+                    Forward("mouse", Input.mousePosition, PointerPhase.Ended, 0);
+                }
+            }
+        }
+
+        private bool IsPointerOverHud(Vector2 screenPos, int pointerId)
+        {
+            float screenH = Screen.height;
+            // Immediate top bar check (Timer, Phase title, Settings gear)
+            if (screenPos.y > screenH * 0.88f) return true;
+            // Immediate bottom bar check (Weapon pill, Chat, Navigation)
+            if (screenPos.y < screenH * 0.10f) return true;
+
+            var es = UnityEngine.EventSystems.EventSystem.current;
+            if (es != null)
+            {
+                var eventData = new UnityEngine.EventSystems.PointerEventData(es) { position = screenPos };
+                var results = new System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult>();
+                es.RaycastAll(eventData, results);
+                foreach (var r in results)
+                {
+                    if (r.gameObject == null) continue;
+                    string gname = r.gameObject.name;
+                    // Ignore root canvases and full-screen layout containers
+                    if (gname == "ProductionCanvas" || gname == "SafeAreaRoot" || gname == "GameplayHudPanel" || gname == "HUD")
                     {
                         continue;
                     }
-                    var phase = ToPointerPhase(touch.phase);
-                    if (!_touchGate.TryAccept(touch.fingerId, phase)) continue;
-                    Forward("touch#" + touch.fingerId, touch.position, phase, touch.fingerId);
-                    break;
+                    // Block placement only if over an actual interactive UI Button or Selectable control
+                    if (r.gameObject.GetComponentInParent<UnityEngine.UI.Button>() != null ||
+                        r.gameObject.GetComponentInParent<UnityEngine.UI.Selectable>() != null)
+                    {
+                        return true;
+                    }
                 }
-                return;
             }
-
-            _touchGate.Reset();
-            if (Input.GetMouseButtonDown(0))
-            {
-                // Rule G7 / A4: Chạm bắt đầu lên HUD không đặt nhân vật
-                if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                {
-                    return;
-                }
-                Forward("mouse", Input.mousePosition, PointerPhase.Began, 0);
-            }
-            else if (Input.GetMouseButton(0)) Forward("mouse", Input.mousePosition, PointerPhase.Moved, 0);
-            else if (Input.GetMouseButtonUp(0)) Forward("mouse", Input.mousePosition, PointerPhase.Ended, 0);
+            return false;
         }
 
         private void Forward(string source, Vector2 raw, PointerPhase phase, int pointerId)

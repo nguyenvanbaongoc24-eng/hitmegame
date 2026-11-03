@@ -1,0 +1,94 @@
+{
+  "referenceImage": "asset/GAMEPLAY_AIM_REFERENCE.png",
+  "referenceImageResolution": {
+    "width": 316,
+    "height": 304
+  },
+  "tileUnit": {
+    "referencePixelSize": 52.5,
+    "description": "Standard ground tile unit = 1.0"
+  },
+  "character": {
+    "heightInTiles": 1.48,
+    "widthInTiles": 1.14,
+    "arenaWidthRatio": 0.10,
+    "headRatio": 0.564,
+    "torsoRatio": 0.333,
+    "legRatioVisible": 0.103,
+    "feetSinkRatioDefault": 0.09,
+    "characterSinkRatios": {
+      "nam_lang": 0.18,
+      "nu_nang_dong": 0.18,
+      "co_ba": 0.10,
+      "anh_teen": 0.10,
+      "cho_vang": 0.08,
+      "meo_mun": 0.08,
+      "quay_boy": 0.00
+    },
+    "gameplayFrameResolution": [256, 256],
+    "targetCharacterHeightPixels": 218,
+    "perspective": "3/4 top-down super-deformed chibi"
+  },
+  "groundRing": {
+    "widthInTiles": 1.31,
+    "heightInTiles": 0.91,
+    "strokeThicknessRatio": 0.087,
+    "pulsePeriodSeconds": 1.5,
+    "defaultColorHex": "#00E5FF",
+    "frontHalfLayerOffset": 1,
+    "backHalfLayerOffset": -1,
+    "playerPalette": [
+      { "playerId": 0, "name": "Self", "hex": "#00E5FF" },
+      { "playerId": 1, "name": "Opponent 1", "hex": "#FFD700" },
+      { "playerId": 2, "name": "Opponent 2", "hex": "#FF3366" },
+      { "playerId": 3, "name": "Opponent 3", "hex": "#00FF88" },
+      { "playerId": 4, "name": "Opponent 4", "hex": "#B366FF" },
+      { "playerId": 5, "name": "Opponent 5", "hex": "#FF9900" }
+    ]
+  },
+  "shadow": {
+    "widthInTiles": 0.95,
+    "heightInTiles": 0.45,
+    "offsetXInTiles": -0.15,
+    "offsetYInTiles": -0.15,
+    "opacity": 0.40,
+    "softness": 0.75
+  },
+  "aimCone": {
+    "openingAngleDegrees": 20.0,
+    "openingAngleRange": [18.0, 22.0],
+    "minDragMm": 4.0,
+    "maxDragRatioOfArenaHeight": 0.35,
+    "defaultDirection": [0.0, 1.0],
+    "fadeDurationSeconds": 0.18,
+    "coneColorStart": "rgba(255, 255, 255, 0.10)",
+    "coneColorEnd": "rgba(0, 229, 255, 0.42)",
+    "outlineColor": "rgba(255, 255, 255, 0.85)",
+    "outlineWidthPixels": 2.0
+  },
+  "trajectoryDots": {
+    "dotCount": 10,
+    "dotRadiusInTiles": 0.045,
+    "dotColor": "rgba(255, 255, 255, 0.95)",
+    "glowColor": "rgba(0, 229, 255, 0.50)"
+  },
+  "weaponIcon": {
+    "lengthInTiles": 0.80,
+    "targetAuraRadiusInTiles": 0.67,
+    "rotatesWithAimDirection": true,
+    "pulsePeriodSeconds": 1.2
+  },
+  "layerOrder": [
+    "ArenaFloor",
+    "FloorDecals",
+    "BlobShadow",
+    "RingBackHalf",
+    "CharacterChibi",
+    "RingFrontHalf",
+    "AimConeAndDots",
+    "WeaponProjectile",
+    "HitVFX",
+    "HUD",
+    "Notifications"
+  ]
+}

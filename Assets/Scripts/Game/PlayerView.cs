@@ -31,6 +31,17 @@ namespace HitMe.Game
             1.0660f  // 6: Mèo Mun (153px @ 150 PPU = 1.020u -> 1.0875u, 72.5% human)
         };
 
+        public static readonly float[] CharacterSinkRatios =
+        {
+            0.18f, // 0: Nam Làng (18% chìm -> đầu nhìn thấy 56.7%)
+            0.18f, // 1: Nữ Năng Động (18% chìm -> đầu nhìn thấy 56.1%)
+            0.00f, // 2: Quậy Boy (tạm thời 0%, chờ ảnh Chibi mới)
+            0.10f, // 3: Cô Ba (10% chìm -> đầu nhìn thấy 58.0%)
+            0.10f, // 4: Anh Teen (10% chìm -> đầu nhìn thấy 58.3%)
+            0.08f, // 5: Chó Vàng (8% chìm -> đầu nhìn thấy 57.2%)
+            0.08f  // 6: Mèo Mun (8% chìm -> đầu nhìn thấy 58.0%)
+        };
+
         public string playerId;
         public int characterIndex;
 
@@ -50,15 +61,40 @@ namespace HitMe.Game
         [SerializeField] private Animator _animator;
         [SerializeField] private SpriteRenderer _shadow;
         [SerializeField] private SpriteRenderer _footRing;
+        [SerializeField] private SpriteRenderer _footRingFront;
         [SerializeField] private LineRenderer _hitboxCircle;
         [SerializeField] private TextMeshPro _label;
         [SerializeField] private LineRenderer _aim;
         [SerializeField] private LineRenderer _touchRing;
 
+        [Header("E3 Aim Visual Components")]
+        [SerializeField] private MeshFilter _aimConeFilter;
+        [SerializeField] private MeshRenderer _aimConeRenderer;
+        [SerializeField] private LineRenderer _aimConeOutline;
+        [SerializeField] private SpriteRenderer[] _aimDots;
+        [SerializeField] private SpriteRenderer _aimReticle;
+        [SerializeField] private SpriteRenderer _aimWeaponIcon;
+        private Mesh _aimConeMesh;
+
+        public static readonly Color[] PlayerRingPalette = new Color[]
+        {
+            new Color(0.00f, 0.898f, 1.00f, 0.95f), // 0: Self (Cyan #00E5FF)
+            new Color(1.00f, 0.843f, 0.00f, 0.95f), // 1: Opponent 1 (Gold #FFD700)
+            new Color(1.00f, 0.200f, 0.400f, 0.95f), // 2: Opponent 2 (Pink/Red #FF3366)
+            new Color(0.00f, 1.000f, 0.533f, 0.95f), // 3: Opponent 3 (Green #00FF88)
+            new Color(0.702f, 0.400f, 1.000f, 0.95f), // 4: Opponent 4 (Purple #B366FF)
+            new Color(1.00f, 0.600f, 0.000f, 0.95f)  // 5: Opponent 5 (Orange #FF9900)
+        };
+
         private static Sprite _defaultShadow;
         private static Sprite _defaultRing;
+        private static Sprite _defaultRingBack;
+        private static Sprite _defaultRingFront;
+        private static Sprite _defaultDot;
+        private static Sprite _defaultWeaponIcon;
         private static TMP_FontAsset _defaultFont;
         private static Sprite[] _defaultSprites;
+        private static Sprite[] _throwSprites;
         private static Sprite[] _namLangPoses;
         private static Sprite[] _anhNonLaPoses;
 
@@ -97,7 +133,12 @@ namespace HitMe.Game
         private string _currentState = "Idle";
         private Vector3 _baseBodyScale = Vector3.one;
         private float _hitReactionTimer;
-        private Vector3 _hitRecoilOffset;
+        private float _spawnTimer;
+        private float _throwTimer;
+        private float _defeatStartTime;
+        private Vector2 _currentAimDirection = Vector2.up;
+        private Color _ringBaseColor = Color.white;
+        private float _sinkOffsetY;
 
         private void Update()
         {
@@ -105,27 +146,162 @@ namespace HitMe.Game
 
             bool reducedMotion = string.Equals(PlayerPrefs.GetString("HitMe_ReducedMotion", "0"), "1", StringComparison.Ordinal);
 
-            if (_hitReactionTimer > 0f)
+            if (_currentState == "Spawn")
             {
-                _hitReactionTimer -= Time.deltaTime;
+                _spawnTimer += Time.deltaTime;
+                float progress = Mathf.Clamp01(_spawnTimer / 0.40f);
                 if (!reducedMotion)
                 {
-                    float t = Mathf.Clamp01(_hitReactionTimer / 0.22f);
-                    _body.transform.localPosition = Vector3.Lerp(Vector3.zero, _hitRecoilOffset, t);
+                    // Scale pops from 60% to 100% with bounce overshoot
+                    float bounceFactor = Mathf.Sin(progress * Mathf.PI) * 0.15f;
+                    float s = Mathf.Lerp(0.60f, 1.0f, progress) + bounceFactor;
+                    _body.transform.localScale = _baseBodyScale * s;
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY + (1f - progress) * 0.10f, 0f);
                 }
-                if (_hitReactionTimer <= 0f)
+                else
                 {
-                    _body.transform.localPosition = Vector3.zero;
-                    _body.color = Color.white;
+                    _body.transform.localScale = _baseBodyScale * Mathf.Lerp(0.60f, 1.0f, progress);
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                }
+
+                if (progress >= 1.0f)
+                {
+                    _currentState = "Idle";
+                    _body.transform.localScale = _baseBodyScale;
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
                 }
             }
-            else if (_currentState == "Idle" && !reducedMotion)
+            else if (_currentState == "Aim")
             {
-                float breath = Mathf.Sin(Time.time * 3.2f) * 0.025f;
-                // UiTheme is in Assembly-CSharp; HitMe.Game cannot reference it.
-                // Default constants inlined: idleBreathHorizontalFactor = 0.50f
-                float breathFactor = 0.50f;
-                _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * breathFactor), _baseBodyScale.y * (1f + breath), 1f);
+                // Faster breathing pulse
+                float breath = Mathf.Sin(Time.time * 7.0f) * 0.035f;
+                if (!reducedMotion)
+                {
+                    // Tilt slightly in aim direction
+                    float leanAngle = -_currentAimDirection.x * 7.0f;
+                    _body.transform.localRotation = Quaternion.Euler(0f, 0f, leanAngle);
+                    _body.transform.localPosition = new Vector3(_currentAimDirection.x * 0.04f, _sinkOffsetY + _currentAimDirection.y * 0.02f, 0f);
+                    _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * 0.5f), _baseBodyScale.y * (1f + breath), 1f);
+                }
+                else
+                {
+                    _body.transform.localRotation = Quaternion.identity;
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                    _body.transform.localScale = _baseBodyScale;
+                }
+            }
+            else if (_currentState == "Throw")
+            {
+                if (_throwTimer > 0f)
+                {
+                    _throwTimer -= Time.deltaTime;
+                    if (!reducedMotion)
+                    {
+                        float p = Mathf.Clamp01(1f - (_throwTimer / 0.35f));
+                        float lunge = Mathf.Sin(p * Mathf.PI);
+                        _body.transform.localPosition = new Vector3(_currentAimDirection.x * 0.08f * lunge, _sinkOffsetY + _currentAimDirection.y * 0.06f * lunge, 0f);
+                    }
+                    if (_throwTimer <= 0f)
+                    {
+                        _currentState = "Idle";
+                        _body.transform.localRotation = Quaternion.identity;
+                        _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                        _body.transform.localScale = _baseBodyScale;
+                        ApplyCharacterVisual(characterIndex);
+                    }
+                }
+            }
+            else if (_currentState == "Hit")
+            {
+                if (_hitReactionTimer > 0f)
+                {
+                    _hitReactionTimer -= Time.deltaTime;
+                    // White flash
+                    bool flash = Mathf.FloorToInt(_hitReactionTimer * 30f) % 2 == 0;
+                    _body.color = flash ? new Color(1.8f, 1.8f, 1.8f, 1f) : Color.white;
+
+                    if (!reducedMotion)
+                    {
+                        float vibration = Mathf.Sin(_hitReactionTimer * 60f) * 0.04f;
+                        float recoil = (_hitReactionTimer / 0.25f) * -0.08f;
+                        _body.transform.localPosition = new Vector3(vibration, _sinkOffsetY + recoil, 0f);
+                    }
+                    if (_hitReactionTimer <= 0f)
+                    {
+                        _currentState = "Idle";
+                        _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                        _body.color = Color.white;
+                    }
+                }
+            }
+            else if (_currentState == "Defeat" || _currentState == "KO")
+            {
+                _body.color = new Color(0.35f, 0.35f, 0.40f, 0.75f);
+                float elapsed = Time.time - _defeatStartTime;
+                if (!reducedMotion)
+                {
+                    float fallProgress = Mathf.Clamp01(elapsed / 0.30f);
+                    float targetAngle = _body.flipX ? -75f : 75f;
+                    _body.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Lerp(0f, targetAngle, fallProgress));
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY - 0.12f * fallProgress, 0f);
+                }
+                else
+                {
+                    _body.transform.localRotation = Quaternion.identity;
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY - 0.08f, 0f);
+                }
+
+                // Fade out ground rings
+                float ringAlpha = Mathf.Clamp01(1f - (elapsed / 0.40f));
+                if (_footRing != null)
+                {
+                    _footRing.color = new Color(_ringBaseColor.r, _ringBaseColor.g, _ringBaseColor.b, _ringBaseColor.a * ringAlpha);
+                }
+                if (_footRingFront != null)
+                {
+                    _footRingFront.color = new Color(_ringBaseColor.r, _ringBaseColor.g, _ringBaseColor.b, _ringBaseColor.a * ringAlpha);
+                }
+            }
+            else if (_currentState == "Win")
+            {
+                float bounce = Mathf.Abs(Mathf.Sin(Time.time * 7.0f));
+                if (!reducedMotion)
+                {
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY + bounce * 0.18f, 0f);
+                    _body.transform.localScale = _baseBodyScale * (1.0f + bounce * 0.08f);
+                }
+                else
+                {
+                    _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                    _body.transform.localScale = _baseBodyScale * 1.05f;
+                }
+
+                // Ring flashing
+                float ringFlash = Mathf.PingPong(Time.time * 5.0f, 1.0f);
+                float ringA = Mathf.Lerp(0.35f, 1.0f, ringFlash);
+                if (_footRing != null)
+                {
+                    _footRing.color = new Color(_ringBaseColor.r, _ringBaseColor.g, _ringBaseColor.b, ringA);
+                }
+                if (_footRingFront != null)
+                {
+                    _footRingFront.color = new Color(_ringBaseColor.r, _ringBaseColor.g, _ringBaseColor.b, ringA);
+                }
+            }
+            else // Idle
+            {
+                _body.transform.localRotation = Quaternion.identity;
+                _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
+                if (!reducedMotion)
+                {
+                    float breath = Mathf.Sin(Time.time * 3.2f) * 0.025f;
+                    float breathFactor = 0.50f;
+                    _body.transform.localScale = new Vector3(_baseBodyScale.x * (1f + breath * breathFactor), _baseBodyScale.y * (1f + breath), 1f);
+                }
+                else
+                {
+                    _body.transform.localScale = _baseBodyScale;
+                }
             }
         }
 
@@ -148,6 +324,10 @@ namespace HitMe.Game
             if (configAsset.anhNonLaPoseSprites != null && configAsset.anhNonLaPoseSprites.Length >= 5)
             {
                 _anhNonLaPoses = configAsset.anhNonLaPoseSprites;
+            }
+            if (configAsset.sandalProjectileSprite != null)
+            {
+                _defaultWeaponIcon = configAsset.sandalProjectileSprite;
             }
         }
 
@@ -222,6 +402,8 @@ namespace HitMe.Game
         {
             playerId = id;
             characterIndex = ((charIndex % TotalCharacterCount) + TotalCharacterCount) % TotalCharacterCount;
+            _ringBaseColor = color;
+            _sinkOffsetY = -CharacterSinkRatios[characterIndex] * 1.48f;
             _lastLabelName = null;
             _lastLabelHp = -999;
             BindComponents();
@@ -250,7 +432,9 @@ namespace HitMe.Game
                 _shadow.transform.localPosition = new Vector3(0f, -0.05f, 0f);
             }
 
-            // 2. Foot Ring: Standardized procedural ring for GameConfig.PlayerRadius (width = 1.125u, height = 0.675u, h/w = 0.6)
+            // 2. Foot Ring: Standardized procedural two-half ring (G5)
+            // Back half (sortingOrder = 1) renders behind the character body
+            // Front half (sortingOrder = 3) renders in front of submerged feet
             float ringScale = 0.66f * VisualHitRingScale;
             if (_footRing == null)
             {
@@ -258,26 +442,53 @@ namespace HitMe.Game
                 rGo.transform.SetParent(transform, false);
                 rGo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
                 _footRing = rGo.AddComponent<SpriteRenderer>();
-                _footRing.sprite = _defaultRing;
+                _footRing.sprite = _defaultRingBack != null ? _defaultRingBack : _defaultRing;
                 _footRing.sortingOrder = 1;
                 _footRing.color = color;
                 rGo.transform.localScale = new Vector3(ringScale, ringScale, 1f);
             }
             else
             {
-                _footRing.sprite = _defaultRing;
+                _footRing.sprite = _defaultRingBack != null ? _defaultRingBack : _defaultRing;
                 _footRing.color = color;
+                _footRing.sortingOrder = 1;
                 _footRing.transform.localScale = new Vector3(ringScale, ringScale, 1f);
                 _footRing.transform.localPosition = new Vector3(0f, 0.02f, 0f);
             }
 
-            // 3. Body
+            if (_footRingFront == null)
+            {
+                var rfGo = new GameObject("FootRingFront");
+                rfGo.transform.SetParent(transform, false);
+                rfGo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+                _footRingFront = rfGo.AddComponent<SpriteRenderer>();
+                _footRingFront.sprite = _defaultRingFront != null ? _defaultRingFront : _defaultRing;
+                _footRingFront.sortingOrder = 3;
+                _footRingFront.color = color;
+                rfGo.transform.localScale = new Vector3(ringScale, ringScale, 1f);
+            }
+            else
+            {
+                _footRingFront.sprite = _defaultRingFront != null ? _defaultRingFront : _defaultRing;
+                _footRingFront.color = color;
+                _footRingFront.sortingOrder = 3;
+                _footRingFront.transform.localScale = new Vector3(ringScale, ringScale, 1f);
+                _footRingFront.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            }
+
+            // 3. Body: Submerged per CharacterSinkRatios (G1d-3)
+            float sinkRatio = CharacterSinkRatios[characterIndex];
+            float sinkOffsetY = -sinkRatio * 1.48f;
             if (_body == null)
             {
                 var bGo = new GameObject("Body");
                 bGo.transform.SetParent(transform, false);
-                bGo.transform.localPosition = Vector3.zero;
+                bGo.transform.localPosition = new Vector3(0f, sinkOffsetY, 0f);
                 _body = bGo.AddComponent<SpriteRenderer>();
+            }
+            else
+            {
+                _body.transform.localPosition = new Vector3(0f, sinkOffsetY, 0f);
             }
 
             if (_animator != null)
@@ -389,46 +600,52 @@ namespace HitMe.Game
             if (_body == null) return;
             _currentState = stateName;
             int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+            _sinkOffsetY = -CharacterSinkRatios[idx] * 1.48f;
 
             if (stateName == "Hit")
             {
-                _hitReactionTimer = 0.22f;
-                _hitRecoilOffset = new Vector3(0f, -0.10f, 0f);
-                _body.color = new Color(1f, 0.70f, 0.70f, 1f);
+                _hitReactionTimer = 0.25f;
             }
-            else if (stateName == "Defeat")
+            else if (stateName == "Defeat" || stateName == "KO")
             {
-                _body.color = new Color(0.60f, 0.60f, 0.65f, 0.90f);
-                _body.transform.localPosition = new Vector3(0f, -0.08f, 0f);
+                _defeatStartTime = Time.time;
             }
-            else
+            else if (stateName == "Spawn")
+            {
+                _spawnTimer = 0f;
+            }
+            else if (stateName == "Throw")
+            {
+                _throwTimer = 0.35f;
+                if (_throwSprites != null && idx < _throwSprites.Length && _throwSprites[idx] != null)
+                {
+                    _body.sprite = _throwSprites[idx];
+                    return;
+                }
+            }
+            else if (stateName == "Aim")
+            {
+                if (idx == 0 && _namLangPoses != null && _namLangPoses.Length >= 5)
+                {
+                    _body.sprite = _namLangPoses[1];
+                    return;
+                }
+                if (idx == 4 && _anhNonLaPoses != null && _anhNonLaPoses.Length >= 5)
+                {
+                    _body.sprite = _anhNonLaPoses[1];
+                    return;
+                }
+            }
+            else if (stateName == "Idle")
             {
                 _body.color = Color.white;
-                _body.transform.localPosition = Vector3.zero;
+                _body.transform.localRotation = Quaternion.identity;
+                _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
                 _body.transform.localScale = _baseBodyScale;
-            }
-
-            if (idx == 0 && _namLangPoses != null && _namLangPoses.Length >= 5)
-            {
-                if (stateName == "Aim") _body.sprite = _namLangPoses[1];
-                else if (stateName == "Throw") _body.sprite = _namLangPoses[2];
-                else if (stateName == "Hit") _body.sprite = _namLangPoses[3];
-                else if (stateName == "Defeat") _body.sprite = _namLangPoses[4];
-                else _body.sprite = _namLangPoses[0];
-                return;
-            }
-            if (idx == 4 && _anhNonLaPoses != null && _anhNonLaPoses.Length >= 5)
-            {
-                if (stateName == "Aim") _body.sprite = _anhNonLaPoses[1];
-                else if (stateName == "Throw") _body.sprite = _anhNonLaPoses[2];
-                else if (stateName == "Hit") _body.sprite = _anhNonLaPoses[3];
-                else if (stateName == "Defeat") _body.sprite = _anhNonLaPoses[4];
-                else _body.sprite = _anhNonLaPoses[0];
-                return;
-            }
-            if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
-            {
-                _body.sprite = _defaultSprites[idx];
+                if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
+                {
+                    _body.sprite = _defaultSprites[idx];
+                }
             }
         }
 
@@ -438,9 +655,14 @@ namespace HitMe.Game
             if (!gameObject.activeSelf) gameObject.SetActive(true);
             transform.position = new Vector3(player.Position.X, player.Position.Y, 0f);
 
+            _sinkOffsetY = -CharacterSinkRatios[characterIndex] * 1.48f;
+            _currentAimDirection = new Vector2(player.Facing.X, player.Facing.Y);
+            if (_currentAimDirection.sqrMagnitude < 0.001f) _currentAimDirection = Vector2.up;
+
             _body.enabled = visible;
             if (_shadow != null) _shadow.enabled = visible;
             if (_footRing != null) _footRing.enabled = visible;
+            if (_footRingFront != null) _footRingFront.enabled = visible;
 
             if (_label != null)
             {
@@ -457,7 +679,7 @@ namespace HitMe.Game
             }
 
             int idx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
-            if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
+            if (_currentState != "Throw" && _defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
             {
                 _body.sprite = _defaultSprites[idx];
             }
@@ -465,37 +687,117 @@ namespace HitMe.Game
             float baseScale = CharacterBodyScales[idx];
             float scale = baseScale * VisualCharacterScale;
             _baseBodyScale = new Vector3(scale, scale, 1f);
-            _body.transform.localScale = _baseBodyScale;
+            if (_currentState != "Spawn" && _currentState != "Win")
+            {
+                _body.transform.localScale = _baseBodyScale;
+            }
+
             if (player.Facing.X < -0.05f) _body.flipX = true;
             else if (player.Facing.X > 0.05f) _body.flipX = false;
+
             if (_shadow != null)
             {
                 float shadowScale = 0.66f * VisualCharacterScale * 0.70f;
                 _shadow.transform.localScale = new Vector3(shadowScale, shadowScale, 1f);
             }
 
-            _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.50f);
-
-            if (_aim != null)
+            if (_currentState != "Defeat" && _currentState != "KO")
             {
-                _aim.enabled = visible && showAim && player.IsAlive;
-                if (_aim.enabled)
+                _body.color = player.IsAlive ? Color.white : new Color(0.35f, 0.35f, 0.35f, 0.50f);
+            }
+
+            EnsureAimComponents();
+
+            // E3 Aim Visual: Aim Cone + 10 Trajectory Dots + Reticle + Weapon Icon
+            bool activeAim = visible && showAim && player.IsAlive;
+            if (_aimConeRenderer != null) _aimConeRenderer.enabled = activeAim;
+            if (_aimConeOutline != null) _aimConeOutline.enabled = activeAim;
+            if (_aimReticle != null) _aimReticle.enabled = activeAim;
+            if (_aimWeaponIcon != null) _aimWeaponIcon.enabled = activeAim;
+            if (_aim != null) _aim.enabled = false;
+
+            if (activeAim)
+            {
+                Vector3 dir = new Vector3(_currentAimDirection.x, _currentAimDirection.y, 0f).normalized;
+                float startDist = touchRadius;
+                float length = Mathf.Clamp(aimPreviewLength + aimLineExtraLength, 0.6f, 3.5f);
+                Vector3 startPos = transform.position + dir * startDist;
+                Vector3 tipPos = transform.position + dir * (startDist + length);
+                Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
+
+                float halfBaseWidth = 0.08f;
+                float halfTipWidth = 0.08f + length * 0.1763f; // 20 deg opening (tan 10 deg ~ 0.1763)
+
+                Vector3 baseLeft = startPos + perp * halfBaseWidth;
+                Vector3 baseRight = startPos - perp * halfBaseWidth;
+                Vector3 tipLeft = tipPos + perp * halfTipWidth;
+                Vector3 tipRight = tipPos - perp * halfTipWidth;
+
+                if (_aimConeMesh == null)
                 {
-                    var direction = new Vector3(player.Facing.X, player.Facing.Y, 0f);
-                    float start = touchRadius;
-                    float length = Mathf.Max(2f, aimPreviewLength + aimLineExtraLength);
-                    Vector3 startPos = transform.position + direction * start;
-                    Vector3 tipPos = transform.position + direction * (start + length);
-                    Vector3 perp = new Vector3(-direction.y, direction.x, 0f);
-                    float arrowSize = 0.35f;
-                    Vector3 wingLeft = tipPos - direction * arrowSize + perp * (arrowSize * 0.45f);
-                    Vector3 wingRight = tipPos - direction * arrowSize - perp * (arrowSize * 0.45f);
-                    if (_aim.positionCount < 5) _aim.positionCount = 5;
-                    _aim.SetPosition(0, startPos);
-                    _aim.SetPosition(1, tipPos);
-                    _aim.SetPosition(2, wingLeft);
-                    _aim.SetPosition(3, tipPos);
-                    _aim.SetPosition(4, wingRight);
+                    _aimConeMesh = new Mesh();
+                    _aimConeMesh.name = "AimConeMesh";
+                    if (_aimConeFilter != null) _aimConeFilter.mesh = _aimConeMesh;
+                }
+                _aimConeMesh.Clear();
+                _aimConeMesh.vertices = new Vector3[] { baseLeft, baseRight, tipLeft, tipRight };
+                Color startCol = new Color(1f, 1f, 1f, 0.10f);
+                Color endCol = new Color(0f, 0.898f, 1f, 0.42f);
+                _aimConeMesh.colors = new Color[] { startCol, startCol, endCol, endCol };
+                _aimConeMesh.triangles = new int[] { 0, 1, 2, 2, 1, 3 };
+                _aimConeMesh.RecalculateBounds();
+
+                if (_aimConeOutline != null)
+                {
+                    if (_aimConeOutline.positionCount < 4) _aimConeOutline.positionCount = 4;
+                    _aimConeOutline.SetPosition(0, baseLeft);
+                    _aimConeOutline.SetPosition(1, tipLeft);
+                    _aimConeOutline.SetPosition(2, tipRight);
+                    _aimConeOutline.SetPosition(3, baseRight);
+                }
+
+                if (_aimDots != null)
+                {
+                    for (int i = 0; i < _aimDots.Length; i++)
+                    {
+                        if (_aimDots[i] == null) continue;
+                        _aimDots[i].enabled = true;
+                        float t = (i + 0.8f) / (_aimDots.Length + 0.5f);
+                        Vector3 dotPos = Vector3.Lerp(startPos, tipPos, t);
+                        dotPos.z = -0.02f;
+                        _aimDots[i].transform.position = dotPos;
+                        float dotScale = Mathf.Lerp(0.045f, 0.09f, t);
+                        _aimDots[i].transform.localScale = new Vector3(dotScale, dotScale, 1f);
+                        _aimDots[i].color = new Color(1f, 1f, 1f, Mathf.Lerp(0.55f, 0.95f, t));
+                    }
+                }
+
+                if (_aimReticle != null)
+                {
+                    float pulse = 1.0f + Mathf.Sin(Time.time * 5.0f) * 0.05f;
+                    float reticleScale = 0.45f * pulse;
+                    _aimReticle.transform.position = tipPos + new Vector3(0f, 0f, -0.03f);
+                    _aimReticle.transform.localScale = new Vector3(reticleScale, reticleScale, 1f);
+                    _aimReticle.color = new Color(0f, 0.898f, 1f, 0.85f);
+                }
+
+                if (_aimWeaponIcon != null)
+                {
+                    _aimWeaponIcon.transform.position = tipPos + new Vector3(0f, 0f, -0.04f);
+                    float rotZ = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    _aimWeaponIcon.transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
+                    _aimWeaponIcon.transform.localScale = new Vector3(0.40f, 0.40f, 1f);
+                    if (_defaultWeaponIcon != null) _aimWeaponIcon.sprite = _defaultWeaponIcon;
+                }
+            }
+            else
+            {
+                if (_aimDots != null)
+                {
+                    for (int i = 0; i < _aimDots.Length; i++)
+                    {
+                        if (_aimDots[i] != null) _aimDots[i].enabled = false;
+                    }
                 }
             }
 
@@ -549,6 +851,102 @@ namespace HitMe.Game
             }
         }
 
+        private void EnsureAimComponents()
+        {
+            if (_aimConeFilter == null)
+            {
+                var cGo = transform.Find("AimCone");
+                if (cGo == null)
+                {
+                    var go = new GameObject("AimCone");
+                    go.transform.SetParent(transform, false);
+                    _aimConeFilter = go.AddComponent<MeshFilter>();
+                    _aimConeRenderer = go.AddComponent<MeshRenderer>();
+                }
+                else
+                {
+                    _aimConeFilter = cGo.GetComponent<MeshFilter>();
+                    _aimConeRenderer = cGo.GetComponent<MeshRenderer>();
+                }
+                if (_aimConeRenderer != null)
+                {
+                    _aimConeRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                    _aimConeRenderer.sortingOrder = 4;
+                }
+            }
+
+            if (_aimConeOutline == null)
+            {
+                _aimConeOutline = CreateLine("AimConeOutline");
+                _aimConeOutline.sortingOrder = 4;
+                _aimConeOutline.startWidth = 0.025f;
+                _aimConeOutline.endWidth = 0.025f;
+                _aimConeOutline.loop = true;
+                _aimConeOutline.startColor = new Color(1f, 1f, 1f, 0.85f);
+                _aimConeOutline.endColor = new Color(1f, 1f, 1f, 0.85f);
+                _aimConeOutline.positionCount = 4;
+            }
+
+            if (_aimDots == null || _aimDots.Length != 10)
+            {
+                _aimDots = new SpriteRenderer[10];
+                for (int i = 0; i < 10; i++)
+                {
+                    string dotName = "AimDot_" + i;
+                    var dTransform = transform.Find(dotName);
+                    if (dTransform == null)
+                    {
+                        var dGo = new GameObject(dotName);
+                        dGo.transform.SetParent(transform, false);
+                        _aimDots[i] = dGo.AddComponent<SpriteRenderer>();
+                    }
+                    else
+                    {
+                        _aimDots[i] = dTransform.GetComponent<SpriteRenderer>();
+                    }
+                    _aimDots[i].sprite = _defaultDot != null ? _defaultDot : _defaultRing;
+                    _aimDots[i].sortingOrder = 4;
+                    _aimDots[i].enabled = false;
+                }
+            }
+
+            if (_aimReticle == null)
+            {
+                var rTransform = transform.Find("AimReticle");
+                if (rTransform == null)
+                {
+                    var rGo = new GameObject("AimReticle");
+                    rGo.transform.SetParent(transform, false);
+                    _aimReticle = rGo.AddComponent<SpriteRenderer>();
+                }
+                else
+                {
+                    _aimReticle = rTransform.GetComponent<SpriteRenderer>();
+                }
+                _aimReticle.sprite = _defaultRingFront != null ? _defaultRingFront : _defaultRing;
+                _aimReticle.sortingOrder = 4;
+                _aimReticle.enabled = false;
+            }
+
+            if (_aimWeaponIcon == null)
+            {
+                var wTransform = transform.Find("AimWeaponIcon");
+                if (wTransform == null)
+                {
+                    var wGo = new GameObject("AimWeaponIcon");
+                    wGo.transform.SetParent(transform, false);
+                    _aimWeaponIcon = wGo.AddComponent<SpriteRenderer>();
+                }
+                else
+                {
+                    _aimWeaponIcon = wTransform.GetComponent<SpriteRenderer>();
+                }
+                _aimWeaponIcon.sprite = _defaultWeaponIcon;
+                _aimWeaponIcon.sortingOrder = 5;
+                _aimWeaponIcon.enabled = false;
+            }
+        }
+
         private static void EnsureStaticResources()
         {
 #if UNITY_EDITOR
@@ -559,6 +957,22 @@ namespace HitMe.Game
             if (_defaultRing == null)
             {
                 _defaultRing = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_foot_ring.png");
+            }
+            if (_defaultRingBack == null)
+            {
+                _defaultRingBack = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_foot_ring_back.png");
+            }
+            if (_defaultRingFront == null)
+            {
+                _defaultRingFront = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/procedural_foot_ring_front.png");
+            }
+            if (_defaultDot == null)
+            {
+                _defaultDot = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/aim_dot.png");
+            }
+            if (_defaultWeaponIcon == null)
+            {
+                _defaultWeaponIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/dep_icon.png");
             }
             if (_defaultFont == null)
             {
@@ -574,6 +988,17 @@ namespace HitMe.Game
                 _defaultSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
                 _defaultSprites[5] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/chu_cho_vang_idle.png");
                 _defaultSprites[6] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/meo_mun_idle.png");
+            }
+            if (_throwSprites == null || _throwSprites.Length < TotalCharacterCount)
+            {
+                _throwSprites = new Sprite[TotalCharacterCount];
+                _throwSprites[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_throw_release.png");
+                _throwSprites[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/co_nang_the_thao_throw_release.png");
+                _throwSprites[2] = null; // Quậy Boy (Sắp ra mắt)
+                _throwSprites[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_throw_release.png");
+                _throwSprites[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_nui_throw_release.png");
+                _throwSprites[5] = null; // Chó Vàng (Sắp ra mắt)
+                _throwSprites[6] = null; // Mèo Mun (Sắp ra mắt)
             }
             if (_namLangPoses == null || _namLangPoses.Length < 5)
             {

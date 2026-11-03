@@ -1,7 +1,7 @@
 # BÁO CÁO HARNESS KIỂM THỬ TỰ ĐỘNG (ROUND 45)
 
-- **Thời gian chạy:** 2026-11-02 21:18:20
-- **Mục tiêu:** http://127.0.0.1:8103
+- **Thời gian chạy:** 2026-11-03 10:54:07
+- **Mục tiêu:** https://hitmegame-iota.vercel.app
 - **Tổng kết:** 11/12 hạng mục PASS (Điểm chất lượng: 93.8/100)
 
 ## Bảng kết quả Backlog (D1 — D12)

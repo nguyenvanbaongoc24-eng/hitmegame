@@ -500,6 +500,22 @@ namespace HitMe.Game
                 State.SetInput(pair.Value.MakeInput(State.FindPlayer(pair.Key), config));
             }
 
+            for (int i = 0; i < State.Players.Count; i++)
+            {
+                var p = State.Players[i];
+                if (_views.TryGetValue(p.Id, out var v) && v != null && p.IsAlive)
+                {
+                    if (State.RoundNumber == 1)
+                    {
+                        v.PlayAnimation("Spawn");
+                    }
+                    else
+                    {
+                        v.PlayAnimation("Idle");
+                    }
+                }
+            }
+
             Present(true);
             SyncProfileMemoryBaseline();
         }
@@ -732,6 +748,22 @@ namespace HitMe.Game
 
             MatchRanking.BuildRankingsAndWinners(State, _rankedBuffer, _winnerIdsBuffer);
 
+            for (int i = 0; i < State.Players.Count; i++)
+            {
+                var p = State.Players[i];
+                if (_views.TryGetValue(p.Id, out var v) && v != null)
+                {
+                    if (_winnerIdsBuffer.Contains(p.Id))
+                    {
+                        v.PlayAnimation("Win");
+                    }
+                    else
+                    {
+                        v.PlayAnimation("Defeat");
+                    }
+                }
+            }
+
             bool isWinner = _winnerIdsBuffer.Contains("player");
             if (AudioManager.Instance != null)
             {
@@ -785,7 +817,9 @@ namespace HitMe.Game
             var view = _playerPool[slotIndex];
             view.gameObject.name = p.Id;
             view.gameObject.SetActive(true);
-            view.Initialise(p.Id, Color.white, characterIndex);
+            bool isSelf = p.Id == "player" || slotIndex == 0;
+            Color ringColor = isSelf ? PlayerView.PlayerRingPalette[0] : PlayerView.PlayerRingPalette[Mathf.Clamp(slotIndex, 1, PlayerView.PlayerRingPalette.Length - 1)];
+            view.Initialise(p.Id, ringColor, characterIndex);
             _views[p.Id] = view;
         }
 

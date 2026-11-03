@@ -124,20 +124,20 @@ namespace HitMe.UI
         public const string LobbyWaitingAllReady = "Đang chờ tất cả người chơi sẵn sàng...";
         public const string LobbyStartingCountdown = "Trận đấu sắp bắt đầu sau {0}s...";
 
-        // Character Descriptions (7 nhân vật)
-        public const string Char1Name = "CẬU BÉ LÀNG";
+        // Character Descriptions (7 nhân vật chuẩn hóa)
+        public const string Char1Name = "Nam Làng";
         public const string Char1Desc = "Nhanh nhẹn, tinh quái, quen thuộc sân đình";
-        public const string Char2Name = "CÔ NÀNG THỂ THAO";
+        public const string Char2Name = "Nữ Năng Động";
         public const string Char2Desc = "Năng động hoạt bát, phản xạ cực nhanh";
-        public const string Char3Name = "ANH NÓN LÁ";
-        public const string Char3Desc = "Vạm vỡ bền bỉ, sức ném mạnh mẽ";
-        public const string Char4Name = "BÉ HOA";
+        public const string Char3Name = "Quậy Boy";
+        public const string Char3Desc = "Nổi loạn cá tính, đường ném hiểm hóc";
+        public const string Char4Name = "Cô Ba";
         public const string Char4Desc = "Duyên dáng khéo léo, ném dép chuẩn xác";
-        public const string Char5Name = "BÁC NÔNG DÂN";
-        public const string Char5Desc = "Phong trần giản dị, dày dạn kinh nghiệm";
-        public const string Char6Name = "CHÚ CHÓ VÀNG";
+        public const string Char5Name = "Anh Teen";
+        public const string Char5Desc = "Trẻ trung nhiệt huyết, vung tay cực mạnh";
+        public const string Char6Name = "Chó Vàng";
         public const string Char6Desc = "Trung thành hiếu động, chạy nhảy cực nhanh";
-        public const string Char7Name = "MÈO MUN";
+        public const string Char7Name = "Mèo Mun";
         public const string Char7Desc = "Bí ẩn ranh mãnh, né tránh tài tình";
 
         public static readonly string[] CharacterNames =
@@ -267,16 +267,16 @@ namespace HitMe.UI
             { LobbyOnePlayerWarning, "Needs at least 2 players. For solo, switch to Bot Practice menu." },
             { LobbyWaitingAllReady, "Waiting for all players to ready..." },
 
-            { Char1Name, "VILLAGE BOY" },
-            { Char1Desc, "Agile, witty, knows every village corner" },
-            { Char2Name, "SPORTY GIRL" },
+            { Char1Name, "NAM LANG" },
+            { Char1Desc, "Agile, witty, master of the village courtyard" },
+            { Char2Name, "ACTIVE GIRL" },
             { Char2Desc, "Energetic, dynamic, lightning reflexes" },
-            { Char3Name, "CONICAL HAT GUY" },
-            { Char3Desc, "Sturdy and resilient, powerful throws" },
-            { Char4Name, "LITTLE HOA" },
-            { Char4Desc, "Graceful and nimble, pinpoint slipper accuracy" },
-            { Char5Name, "UNCLE FARMER" },
-            { Char5Desc, "Weathered and wise, veteran experience" },
+            { Char3Name, "REBEL BOY" },
+            { Char3Desc, "Bold and defiant, unpredictable throw trajectories" },
+            { Char4Name, "AUNT BA" },
+            { Char4Desc, "Graceful and deft, pinpoint slipper accuracy" },
+            { Char5Name, "TEEN GUY" },
+            { Char5Desc, "Youthful enthusiasm, exceptionally powerful throws" },
             { Char6Name, "GOLDEN DOG" },
             { Char6Desc, "Loyal and spirited, blazing sprint speed" },
             { Char7Name, "BLACK CAT" },

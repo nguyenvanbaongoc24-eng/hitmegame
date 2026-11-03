@@ -1,0 +1,579 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 32724)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 5968)
+VBCSCompiler prewarm took 28.12 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Channel LicenseClient-LENOVO doesn't exist
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26300) Core' Language: 'en' Physical Memory: 23868 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-11-03T03:45:38Z
+[Licensing::Module] Successfully launched the LicensingClient (PId: 36716)
+
+COMMAND LINE ARGUMENTS:
+D:\App\UNITY\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:\HITME GAME\unity-client
+-logFile
+D:\HITME GAME\unity-client\Evidence\round46\unity-compile-check.log
+Successfully changed project path to: D:\HITME GAME\unity-client
+D:/HITME GAME/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [34392]  Target information:
+
+Player connection [34392]  * "[IP] 10.0.0.108 [Port] 55504 [Flags] 2 [Guid] 4264687434 [EditorId] 4264687434 [Version] 1048832 [Id] WindowsEditor(7,Ngocngbao) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [34392] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [34392] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-34772" after 0.2 seconds.
+[Licensing::Module] Licensing is not yet initialized.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO" at "2026-11-03T03:45:42.9260003Z"
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 36716, path: "D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              5894f059a9414ebea8980667a9ba4b04
+  Correlation Id:          596f761c9f1b5ac27fe071d516bcb649
+  External correlation Id: 3917622965830651318
+  Machine Id:              YjO8JSUUbljnAfVIutOl66zWR0Y=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-LENOVO" (connect: 4.37s, validation: 0.29s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-LENOVO-notifications" at "2026-11-03T03:45:43.2908895Z"
+[Licensing::Module] Connected to LicensingClient (PId: 36716, launch time: 0.06, total connection time: 4.73s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: 18968517174167-UnityPersXXXX
+  Product: Unity Personal
+  Type: Assigned
+  Expiration: Unlimited
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.01
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 4.83s
+[Licensing::Module] Licensing is initialized (took 2.55s).
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/App/UNITY/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/HITME GAME/unity-clientUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/App/UNITY/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/HITME GAME/unity-client/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        AMD Radeon 780M Graphics (ID=0x1900)
+    Vendor:          ATI
+    VRAM:            11934 MB
+    App VRAM Budget: 11545 MB
+    Driver:          32.0.13032.11
+    Unified Memory Architecture
+Initialize mono
+Mono path[0] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/App/UNITY/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56772
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: D:/App/UNITY/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.930661 seconds.
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  5.498 seconds
+Domain Reload Profiling: 10936ms
+	BeginReloadAssembly (479ms)
+		CreateAndSetChildDomain (19ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (377ms)
+	initialDomainReloadingComplete (1305ms)
+	LoadAllAssembliesAndSetupDomain (3267ms)
+		LoadAssemblies (466ms)
+		TypeCache.Refresh (3092ms)
+			TypeCache.ScanAssembly (2624ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (5500ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (261ms)
+			ProcessInitializeOnLoadAttributes (153ms)
+			ProcessInitializeOnLoadMethodAttributes (3524ms)
+			EditorAssembliesLoaded (3ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 20 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.ide.rider@3.0.38 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.rider@1f60b3138684)
+    com.unity.ide.visualstudio@2.0.26 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ide.visualstudio@a99d56dec63f)
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.animation@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.animation)
+    com.unity.modules.audio@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.imgui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.screencapture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.screencapture)
+    com.unity.modules.ui@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.uielements@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.uielements)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequest)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.unitywebrequesttexture)
+    com.unity.modules.hierarchycore@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.hierarchycore)
+    com.unity.modules.physics@1.0.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.modules.physics)
+    com.unity.test-framework@1.8.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.test-framework@80f691d4262b)
+    com.unity.ext.nunit@2.1.0 (location: D:\HITME GAME\unity-client\Library\PackageCache\com.unity.ext.nunit@0198eae3b53e)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.01 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+DisplayProgressbar: Compiling Scripts
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/2000b0aE.dag.json" "Library/Bee/2000b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 4 Duration: 1s39ms
+Rebuilding DAG because FileSignature timestamp changed: Library/Bee/2000b0aE-inputdata.json
+[296/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[297/349    0s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll (+2 others)
+*** Tundra requires additional run (0.96 seconds), 2 items updated, 295 evaluated
+ExitCode: 0 Duration: 2s807ms
+Starting: D:\App\UNITY\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/2000b0aE.dag" --continue-on-failure --dagfilejson="Library\Bee\2000b0aE.dag.json" --profile="Library/Bee/backend2.traceevents" ScriptAssemblies
+WorkingDir: D:/HITME GAME/unity-client
+ExitCode: 0 Duration: 7s49ms
+Finished compiling graph: 352 nodes, 3816 flattened edges (3428 ToBuild, 36 ToUse), maximum node priority 208
+[249/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.rsp
+[254/349    0s] WriteText Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.rsp
+[297/349    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[334/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Game.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Game.dll, with 124 defines and 268 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[335/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Game.pdb
+[336/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Game.dll
+[337/349    1s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\UI\ProductionUIController.cs(1681,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Scripts\UI\ProductionUIController.cs(1681,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+[338/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp.dll, with 124 defines and 273 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[339/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[340/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+[341/349    4s] Csc Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.dll (+2 others)
+[342/349    3s] Csc Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+[343/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/HitMe.Tests.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/HitMe.Tests.dll, with 122 defines and 305 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[344/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.pdb
+[345/349    0s] CopyFiles Library/ScriptAssemblies/HitMe.Tests.dll
+[346/349    0s] ILPostProcess Library/Bee/artifacts/2000b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/2000b0aE.dag/Assembly-CSharp-Editor.dll, with 122 defines and 314 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[347/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[348/349    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (7.00 seconds), 18 items updated, 349 evaluated
+Assets\Scripts\UI\ProductionUIController.cs(1681,96): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Scripts\UI\ProductionUIController.cs(1681,32): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(21,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(22,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(120,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(26,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(27,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\EntrySceneContractTests.cs(36,29): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\UILintTests.cs(48,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(47,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(147,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\UILintTests.cs(96,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(95,30): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\SpriteSheetAutoSlicer.cs(208,13): warning CS0618: 'TextureImporter.spritesheet' is obsolete: 'Support for accessing sprite meta data through spritesheet has been removed. Please use the UnityEditor.U2D.Sprites.ISpriteEditorDataProvider interface instead.'
+Assets\Editor\UILintTests.cs(144,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(143,34): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\UILintTests.cs(195,46): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\UILintTests.cs(194,28): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,107): warning CS0618: 'FindObjectsSortMode' is obsolete: 'FindObjectsSortMode has been deprecated. Use the FindObjectsByType overloads that do not take a FindObjectsSortMode parameter.'
+Assets\Editor\ProductionEvidenceCapture.cs(456,24): warning CS0618: 'Object.FindObjectsByType<T>(FindObjectsInactive, FindObjectsSortMode)' is obsolete: 'FindObjectsByType with FindObjectsSortMode parameter has been deprecated. Use FindObjectsByType<T>() or FindObjectsByType<T>(FindObjectsInactive) instead. InstanceID will be replaced in the future with EntityId and previous sort order cannot be maintained.'
+Assets\Editor\ProductionUIPolishTests.cs(183,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(226,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(286,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(287,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(362,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(363,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(397,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(434,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(491,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(520,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(521,25): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(551,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(573,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(589,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(640,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(651,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(673,28): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Assets\Editor\ProductionUIPolishTests.cs(687,22): warning CS0618: 'Object.FindFirstObjectByType<T>()' is obsolete: 'FindFirstObjectByType has been deprecated because it relies on instance ID ordering. Use FindAnyObjectByType instead, which does not depend on ordering.'
+Total cache size 267639736
+Total cache size after purge 267639736, took 00:00:00.8730581
+AssetDatabase: script compilation time: 17.550045s
+Begin MonoManager ReloadAssembly
+Importing 'GUID: 11c80686b74882e4387f9fe7782cb396 - Path: Assets/Scripts/Data' with importer (DefaultImporter)
+Imported 'GUID: 11c80686b74882e4387f9fe7782cb396' -> (Import Result ID: '6f1ae61fa2ac3a89dee53b189f78a1dc') in 0.050 seconds [static dependencies only]. Details - ImportResultOutputID=05fa687555ad4a5bfe97037c57963f8b DependenciesID=cd4468b800d69f2f9499b4a9858348f8 StaticDependenciesID=021a6ab6b3518b1828c1550e5be532c8 
+Importing 'GUID: 531ffbf6151cced4bbeb8de195e57311 - Path: Assets/Art/Characters/nu_nang_dong' with importer (DefaultImporter)
+Imported 'GUID: 531ffbf6151cced4bbeb8de195e57311' -> (Import Result ID: 'd4a58275b89789e2212d92a38f351812') in 0.020 seconds [static dependencies only]. Details - ImportResultOutputID=96c4146091ca3974c8df7059065eeda9 DependenciesID=0a1ed200ac248f12623cd99c801c65a6 StaticDependenciesID=d9c08c5d7b84dde09ec3890abd13a9ff 
+Importing 'GUID: b5b2d09fbb572484fb05713a95596f92 - Path: Assets/Art/Characters/cho_vang' with importer (DefaultImporter)
+Imported 'GUID: b5b2d09fbb572484fb05713a95596f92' -> (Import Result ID: 'c5e83645404407696ef305f77cbb442b') in 0.013 seconds [static dependencies only]. Details - ImportResultOutputID=516fdec55f7dd164c0a5752da335069f DependenciesID=e28e32846f4d69d14ddc567b266f97ff StaticDependenciesID=81931852ba9b53995cc4942c7d66a454 
+Importing 'GUID: d7c4080af07b59e4baf353bd3f76a5f8 - Path: Assets/Art/Characters/quay_boy' with importer (DefaultImporter)
+Imported 'GUID: d7c4080af07b59e4baf353bd3f76a5f8' -> (Import Result ID: 'ef0620bc66ac8c5f21d9c92572302c83') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=0d66c5a5b565a9c414d059212dbe0a0e DependenciesID=8d90ce0fb91ff179897aefa46519d927 StaticDependenciesID=5865480f4e7264afb91406f2655a3a2f 
+Importing 'GUID: 487128b1c6c1eab4496bd0706ad2ac25 - Path: Assets/Art/Characters/anh_teen' with importer (DefaultImporter)
+Imported 'GUID: 487128b1c6c1eab4496bd0706ad2ac25' -> (Import Result ID: 'b233a4e3c0b685d9fd618a34c4603c4d') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=afba3a2b8a2320a55129fe0b2dd67dae DependenciesID=045ec49b9a7adeda1cd02f389a9f531d StaticDependenciesID=d65da461ad2727b201fc70ab25b5edd1 
+Importing 'GUID: ab4ecc4f585cc5e4f830ee1f1a9c3eae - Path: Assets/Art/Characters/meo_mun' with importer (DefaultImporter)
+Imported 'GUID: ab4ecc4f585cc5e4f830ee1f1a9c3eae' -> (Import Result ID: '3f9dd39e3ccea94e2ec19ee48939f4fe') in 0.010 seconds [static dependencies only]. Details - ImportResultOutputID=b195fd1d3784ca33ae303f7cec2a2f2b DependenciesID=e7467f6cab081e12fc86782ac0ced273 StaticDependenciesID=cdb3235f04bf0593e731b166556064d0 
+Importing 'GUID: 5e7ba43432251c84397c598cc7cc074a - Path: Assets/Art/Characters/co_ba' with importer (DefaultImporter)
+Imported 'GUID: 5e7ba43432251c84397c598cc7cc074a' -> (Import Result ID: '99ad1ed91df012e3e9599f83fa089f62') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=c9640838f85cec9d8f78bf2e7d29de4c DependenciesID=750cf3fd53ab9e516808a986918b33b6 StaticDependenciesID=150cfc70efc81a69d842a3833de25361 
+Importing 'GUID: a0cc89a1e42fab746a2df3073d6d33ff - Path: Assets/Art/Characters/anh_teen/Menu' with importer (DefaultImporter)
+Imported 'GUID: a0cc89a1e42fab746a2df3073d6d33ff' -> (Import Result ID: 'd2c55c95ee9203b266d8378a8491862e') in 0.010 seconds [static dependencies only]. Details - ImportResultOutputID=a34596d2a691cc80fdaaae7c9c24fb41 DependenciesID=4e48c556a539d3546a5874e50335bb52 StaticDependenciesID=33ee1c961512106612d5604a02712ef6 
+Importing 'GUID: a170dbb3f0bd72141a633adc7544d535 - Path: Assets/Art/Characters/co_ba/Menu' with importer (DefaultImporter)
+Imported 'GUID: a170dbb3f0bd72141a633adc7544d535' -> (Import Result ID: 'f5562644dbaba55cd8272d9335c4cf80') in 0.009 seconds [static dependencies only]. Details - ImportResultOutputID=62d2ce3cb598fdd0ec267e36b248e284 DependenciesID=007ccbeba8461fb5ffaddc339ae1ca45 StaticDependenciesID=31f0796af6133e82cc08d4e3c9e69b2a 
+Importing 'GUID: 12511afe89c6f174e87a57bc3403afbf - Path: Assets/Art/Characters/nam_lang/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: 12511afe89c6f174e87a57bc3403afbf' -> (Import Result ID: '0084982d3b64761c2c196df7af670496') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=f968b5fdbd7f6e31e0e8af4fc92061a6 DependenciesID=254750e575a1bf15e9ee155b80c5eae9 StaticDependenciesID=b3e549aec11c391a7a6c10fb9cfcc4ae 
+Importing 'GUID: 3279f9f2922300347b45886ae9ea8d6d - Path: Assets/Art/Characters/cho_vang/Menu' with importer (DefaultImporter)
+Imported 'GUID: 3279f9f2922300347b45886ae9ea8d6d' -> (Import Result ID: '32fc0942d1a0701726d411a3168b155b') in 0.009 seconds [static dependencies only]. Details - ImportResultOutputID=ced88a397339d43004e861e06add4c54 DependenciesID=d8b79e06a138e5148717d2599eba9fd3 StaticDependenciesID=b7fdc168aaaa7b2a39a8aadb08261054 
+Importing 'GUID: 4290346f5d16e5546b39d3ba92ee5180 - Path: Assets/Art/Characters/anh_teen/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: 4290346f5d16e5546b39d3ba92ee5180' -> (Import Result ID: '37121b108ede9ff762822cf88d7e21b7') in 0.010 seconds [static dependencies only]. Details - ImportResultOutputID=2e7647e3e8b2e8afb0f9bb0e6bcb6be9 DependenciesID=8fca85f717b4c40d6ae636868eafdeb6 StaticDependenciesID=3be3f73e856e04a67b47e6f653a41a54 
+Importing 'GUID: 44fd520661b43e84fa40c289f59a86d4 - Path: Assets/Art/Characters/co_ba/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: 44fd520661b43e84fa40c289f59a86d4' -> (Import Result ID: 'accc94f758216bec5c29f901f6644a1d') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=c49f67a5f2037faa9add9db2f3e1e018 DependenciesID=7d8e9c55793b8caa8f86398f6bb387e3 StaticDependenciesID=793cf7da856e970e6eae4472ea008c8b 
+Importing 'GUID: b7a76afbda6e52e4492c70fc0fbe999a - Path: Assets/Art/Characters/meo_mun/Menu' with importer (DefaultImporter)
+Imported 'GUID: b7a76afbda6e52e4492c70fc0fbe999a' -> (Import Result ID: '287b24cf7dc9ef4752d652c0f9ccbccb') in 0.010 seconds [static dependencies only]. Details - ImportResultOutputID=d45be4cba931aa8cf2561f00c2161e0c DependenciesID=203b4d4751534abdc4d48dca911942c9 StaticDependenciesID=8f06bdd2e6b9ca078e2ef6e95e9661fe 
+Importing 'GUID: 78c2eb287d70cb24185659d615c15e52 - Path: Assets/Art/Characters/quay_boy/Menu' with importer (DefaultImporter)
+Imported 'GUID: 78c2eb287d70cb24185659d615c15e52' -> (Import Result ID: '15c4af4170a333b31131d40476494d1b') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=38d269dbbafbaf4b45eaeb4ff585f772 DependenciesID=31e1c417248610c3cd1cb89e3ce9f4ce StaticDependenciesID=3add0f1a391460b9bf9c7ac189f5000a 
+Importing 'GUID: 4917b98be6384f64eacce6776f33dce3 - Path: Assets/Art/Characters/nu_nang_dong/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: 4917b98be6384f64eacce6776f33dce3' -> (Import Result ID: 'ee3a650f61bfe293e67d1bbef9870e64') in 0.008 seconds [static dependencies only]. Details - ImportResultOutputID=0ac0b97d60fecea6477e30ba283483ea DependenciesID=71da453888f35cd787a379cb47452c1d StaticDependenciesID=2bafb127d1c9d97c59b3fbce27b7d8cd 
+Importing 'GUID: 0b375d8fe98942a4297b162518b89765 - Path: Assets/Art/Characters/nam_lang/Menu' with importer (DefaultImporter)
+Imported 'GUID: 0b375d8fe98942a4297b162518b89765' -> (Import Result ID: 'e16907895adf9a9c67ec1884767dc529') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=19c35e4bb7a799733558262dc1fc3a79 DependenciesID=65f6cadaad58f07c8c2a22dbf54e92a4 StaticDependenciesID=3a20ae78b84638c605efabfac16f2e4f 
+Importing 'GUID: ac91802c55df7a44e8eb1ba42eda92ff - Path: Assets/Art/Characters/nu_nang_dong/Menu' with importer (DefaultImporter)
+Imported 'GUID: ac91802c55df7a44e8eb1ba42eda92ff' -> (Import Result ID: 'c7a333c0732b2014a52e8b16129f7de1') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=2d82b08b38fd5df44d7f3df48fb487af DependenciesID=67b3aea7bafb64ebf029138464b8eed6 StaticDependenciesID=64d3e00167ac5951fc4a3ccc64d66922 
+Importing 'GUID: ac845825b1da1b14d845bb26fb73953d - Path: Assets/Art/Characters/meo_mun/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: ac845825b1da1b14d845bb26fb73953d' -> (Import Result ID: '2b858444f137bffba940931f8fc6ac4d') in 0.013 seconds [static dependencies only]. Details - ImportResultOutputID=91e8d49ddf307f4e303d6b2a78c58d71 DependenciesID=2d267f0fc2f1b94359a959d493e5f173 StaticDependenciesID=d7e19cb97f6b92d675d0f0f211c54bb1 
+Importing 'GUID: 0d9744e74a2522a49bbd60998d6ebb4f - Path: Assets/Art/Characters/quay_boy/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: 0d9744e74a2522a49bbd60998d6ebb4f' -> (Import Result ID: '44c8c5117d8c8e41a1e688969279ef43') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=54b97471f0b21ae2225f4e2ea0fba2c2 DependenciesID=3fb7f003915b3270a4ac849696fb1491 StaticDependenciesID=0c098ba1a92fdf231ff5ceac47309f60 
+Importing 'GUID: deb811da8b8b88b40b1cbad70156da68 - Path: Assets/Art/Characters/cho_vang/Gameplay' with importer (DefaultImporter)
+Imported 'GUID: deb811da8b8b88b40b1cbad70156da68' -> (Import Result ID: 'bae22ed1f07804b6da65836e87d4d5c2') in 0.011 seconds [static dependencies only]. Details - ImportResultOutputID=0a5f6a2729eec82c8f76845ea4ae7342 DependenciesID=448ab6e6e861b225b2ecac1ccdb03e54 StaticDependenciesID=7349f7a1e81bcad2d1535b3854b99c52 
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.849 seconds
+Domain Reload Profiling: 2655ms
+	BeginReloadAssembly (346ms)
+		DisableScriptedObjects (91ms)
+		CreateAndSetChildDomain (60ms)
+	RebuildCommonClasses (11ms)
+	RebuildNativeTypeToScriptingClass (20ms)
+	initialDomainReloadingComplete (53ms)
+	LoadAllAssembliesAndSetupDomain (1374ms)
+		LoadAssemblies (1313ms)
+		TypeCache.Refresh (26ms)
+			TypeCache.ScanAssembly (19ms)
+		AnalyzeDomain (15ms)
+			BuildScriptInfoCaches (11ms)
+	FinalizeReload (851ms)
+		SetupLoadedEditorAssemblies (0ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (119ms)
+			ProcessInitializeOnLoadAttributes (419ms)
+			ProcessInitializeOnLoadMethodAttributes (47ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (40ms)
+Starting new worker id: 0 with log in D:/HITME GAME/unity-client/Logs/AssetImportWorkerHW0.log
+Importing 'GUID: d07fc88b6e17f4f488bb8eaa04e2ce2d - Path: Assets/Art/Characters/meo_mun/Gameplay/gp_meo_mun_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: d07fc88b6e17f4f488bb8eaa04e2ce2d' -> (Import Result ID: '3377899e62bda07564adf494510c67b9') in 0.065 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fb46e8bc09f6f3b1a120ecf665d9ffe4 DependenciesID=605d34b71dc6ef27a0086aee64cf75cb StaticDependenciesID=702b323199203f5c80d3d9cc59f0b297 
+Importing 'GUID: e0bab244f89b1324999b780441ccd474 - Path: Assets/Art/Characters/co_ba/Gameplay/gp_co_ba_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: e0bab244f89b1324999b780441ccd474' -> (Import Result ID: '8886443b2322892895e7baab33718399') in 0.016 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b0e731282a374e3a8b982ae78ae64083 DependenciesID=dbde092e06442f2347fda2f0c5216664 StaticDependenciesID=ae22b882d797ba5a408c86df5566ae99 
+Importing 'GUID: f08301955c62a3a41aa71f7cba0d0623 - Path: Assets/Art/Characters/cho_vang/Menu/menu_cho_vang_portrait.png' with importer (TextureImporter)
+Imported 'GUID: f08301955c62a3a41aa71f7cba0d0623' -> (Import Result ID: '7eed7b26c5858923a01c6de26583a4ac') in 0.016 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9169c42c84230f04eab07de67bb8346d DependenciesID=8cada28ddc39bf86d87d6d2710de0b94 StaticDependenciesID=dbd7c151b84f9cae76f5c212a08a3f20 
+Importing 'GUID: 71ff84f4b85f76d4abe0092ae7eb95ae - Path: Assets/Art/Characters/meo_mun/Menu/menu_meo_mun_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 71ff84f4b85f76d4abe0092ae7eb95ae' -> (Import Result ID: '22820557c256895557f0ef301e934329') in 0.014 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ca7bb9e35d805506770a703588fbd0d0 DependenciesID=bcfadc8e3f8be9e3eeb30fd859597158 StaticDependenciesID=0b03cc851fa0e6dea92ef96cf1fa1ce1 
+Importing 'GUID: c2a5d50909aeb074a9d1e1b962958def - Path: Assets/Sprites/anh_nui_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: c2a5d50909aeb074a9d1e1b962958def' -> (Import Result ID: '4c12aa78529ceb52cfffe65e72fb3132') in 0.024 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=73d30cbec4e7840b82a894ea4adb9495 DependenciesID=7af85f68bf2968e34ace3426900cdb04 StaticDependenciesID=c5c50d9dbf9defab8972f6eb373c1f68 
+Importing 'GUID: 13c4e222733c29d4f84d7752be80b0c7 - Path: Assets/Sprites/procedural_foot_ring_back.png' with importer (TextureImporter)
+Imported 'GUID: 13c4e222733c29d4f84d7752be80b0c7' -> (Import Result ID: '0dbd88e597a0383e2e752a9aeb6fdde2') in 0.016 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=756edc868ba388738af253c7d5124641 DependenciesID=cb258b6d33f1733dcd2e2d1ad5e7f820 StaticDependenciesID=7dd62d1094ec6932a810d4ed5531d0b0 
+Importing 'GUID: 235678bc383b3ac4581f69fb5c8e8dd3 - Path: Assets/Sprites/procedural_foot_ring_front.png' with importer (TextureImporter)
+Imported 'GUID: 235678bc383b3ac4581f69fb5c8e8dd3' -> (Import Result ID: 'efd308188085c5e9cc590f0c9269d5f5') in 0.017 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4228cf11693efefd1a91bfd22c976207 DependenciesID=f9960cc260cca1e86942ee4e51a6b17b StaticDependenciesID=2c4ceda53a70b8ddf40efeea7b415960 
+Importing 'GUID: 14996186ef95b7346a865f2138443486 - Path: Assets/Art/Characters/cho_vang/Gameplay/gp_cho_vang_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 14996186ef95b7346a865f2138443486' -> (Import Result ID: '6dce5f993b562c82e6a9e3b7087f9fd2') in 0.016 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e19a42e0fcb61b0823e9f484cf7772a9 DependenciesID=adf179e4e1887b1cab393c29be657cb2 StaticDependenciesID=c5d3d5efe09a0462cecd71032057284b 
+Importing 'GUID: 152c56b8e1c64084fbfc40ca5e300e13 - Path: Assets/Art/Characters/quay_boy/Menu/menu_quay_boy_head.png' with importer (TextureImporter)
+Imported 'GUID: 152c56b8e1c64084fbfc40ca5e300e13' -> (Import Result ID: 'ca25ecd9183739fde30d33e1148bc9ea') in 0.019 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=befe26bf306ee8225bd47783b1087312 DependenciesID=02a6467680551addbefc28b09634ebc9 StaticDependenciesID=03ce9877460cad0ddbc55981332253b5 
+Importing 'GUID: 75eb0d3e697a9e848a84042e52f128df - Path: Assets/Art/Characters/nam_lang/Menu/menu_nam_lang_head.png' with importer (TextureImporter)
+Imported 'GUID: 75eb0d3e697a9e848a84042e52f128df' -> (Import Result ID: 'c4e414501b9418dcd9bc6d63fe02e924') in 0.022 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d275f0460270406c83c1829cc42ef9eb DependenciesID=766159e5b00ffc0f509c93143bd95b02 StaticDependenciesID=ead87a183b5497cb271cf2eb06e5ff0a 
+Importing 'GUID: c542c6d91e8e4304380c28defa4b5e75 - Path: Assets/Art/Characters/nu_nang_dong/Menu/menu_nu_nang_dong_head.png' with importer (TextureImporter)
+Imported 'GUID: c542c6d91e8e4304380c28defa4b5e75' -> (Import Result ID: 'a5bb31544dc5dce8ff73cc2807eb336f') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0db378773537420054c373b29e2c1159 DependenciesID=1a50c501545c580337ad7f13931f2342 StaticDependenciesID=f9b2be704b3d363465c7220fbb8ccdab 
+Importing 'GUID: 26eb78be2a70da34287b3ddd2ffc80b7 - Path: Assets/Art/Characters/co_ba/Menu/menu_co_ba_head.png' with importer (TextureImporter)
+Imported 'GUID: 26eb78be2a70da34287b3ddd2ffc80b7' -> (Import Result ID: '3c659619db81e136585ef40244652909') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=09e0dffa308b41da7ba5e99d9d69f12e DependenciesID=0d0982c08b677513b98b5c91aa3f6ffa StaticDependenciesID=e76a35e9872656790779c3ee280c0392 
+Importing 'GUID: 46eb8aefd56eb3a4b9dc9af79e6cccb0 - Path: Assets/Sprites/co_nang_the_thao_throw_release.png' with importer (TextureImporter)
+Imported 'GUID: 46eb8aefd56eb3a4b9dc9af79e6cccb0' -> (Import Result ID: '744a44bc4d12f3b85ebae821417bf336') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5118b566a116529f02a6919d8e60e0ff DependenciesID=cfae5ecafd71f0b9e56c5934692d6980 StaticDependenciesID=ebf13cc8da26ae8046106611fcc6b1f2 
+Importing 'GUID: 76f51a4d25ca7d84da4e7a7b1ef810de - Path: Assets/Art/Characters/nam_lang/Menu/menu_nam_lang_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 76f51a4d25ca7d84da4e7a7b1ef810de' -> (Import Result ID: '107cba88510710c407ccb71e536f7a0b') in 0.021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9da9b616ea2d2b19f47b48050c2142de DependenciesID=32923f80b0bc01d793d858cc2ec918c2 StaticDependenciesID=e961cb22ec199852e404feca93c24be5 
+Importing 'GUID: c6e6ef9049a03b54192d8adfba13a571 - Path: Assets/Art/Characters/meo_mun/Menu/menu_meo_mun_head.png' with importer (TextureImporter)
+Imported 'GUID: c6e6ef9049a03b54192d8adfba13a571' -> (Import Result ID: 'db2b89b911ad106bae05dd6e0120406b') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e2e06b5d2b811dce1d2c07df6999705f DependenciesID=a7c53014666ca77691f3e062be959eb9 StaticDependenciesID=d9707c387d3f378dac6324c31cfb4a83 
+Importing 'GUID: 370113fec9530d04dba51cf560da17c1 - Path: Assets/Art/Characters/nam_lang/Gameplay/gp_nam_lang_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 370113fec9530d04dba51cf560da17c1' -> (Import Result ID: 'b7ce07e8c277edc451c240fb765a1e00') in 0.017 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7e52f0809cfbb3aa04329ba7af53af3a DependenciesID=0d5dd089926b577e8e3951c348a79551 StaticDependenciesID=c4be442747ae9f71a674f40b04b0088f 
+Importing 'GUID: 578ed33a539838c4aa0a841ea6ffc16c - Path: Assets/Art/Characters/quay_boy/Gameplay/gp_quay_boy_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 578ed33a539838c4aa0a841ea6ffc16c' -> (Import Result ID: '600904346bd5d9abdebcd5bf8906eb4f') in 0.020 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d70178d71cdddc1b67cb03f652f7ad94 DependenciesID=32073d1b8f30cb1df3dbb425d1559423 StaticDependenciesID=84df009a0b2cb7e64c6b3395cca953c8 
+Importing 'GUID: 6771a1a064d588b499ff130bfe8ab3aa - Path: Assets/Art/Characters/nu_nang_dong/Menu/menu_nu_nang_dong_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 6771a1a064d588b499ff130bfe8ab3aa' -> (Import Result ID: '0cbd2141f78a9fd1bbe7184e6a8bcf12') in 0.021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=03d477e5b00976cce2c40d0946e9c27b DependenciesID=b1344e9362f7158acf3060395d34c091 StaticDependenciesID=a8e13c262204e5e648cf5a9b52cedc96 
+Importing 'GUID: 973a3e469b63f9940afd0c6d305b265e - Path: Assets/Art/Characters/anh_teen/Menu/menu_anh_teen_head.png' with importer (TextureImporter)
+Imported 'GUID: 973a3e469b63f9940afd0c6d305b265e' -> (Import Result ID: '82ffc84e5137fefc0f9dcb4c09b02b71') in 0.023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=661e3ae9987d790cdc2648180dd9bbda DependenciesID=cc60427c8c4065a9694d1285c3f8a77d StaticDependenciesID=f2fe06e22687bc99594dc5068b5714aa 
+Importing 'GUID: 38945aa9e647eb74a961aec091b6aaa7 - Path: Assets/Art/Characters/cho_vang/Menu/menu_cho_vang_head.png' with importer (TextureImporter)
+Imported 'GUID: 38945aa9e647eb74a961aec091b6aaa7' -> (Import Result ID: '29d6a4e72f49d86f8df5974c669d3c85') in 0.019 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=50db6caa8d9d8ecafafd7d3824969dd6 DependenciesID=ec38a565c2dd6054543379a1270496e8 StaticDependenciesID=8b2e23f5e0adc1b1bb4fdc22f5cad95a 
+Importing 'GUID: 886eff95e46ed6f4f89d040afa066c6e - Path: Assets/Art/Characters/quay_boy/Menu/menu_quay_boy_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 886eff95e46ed6f4f89d040afa066c6e' -> (Import Result ID: 'cd13e553ad4827013c16ecac344c1823') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=65352462d5f3ad14b52ea1ed62f58306 DependenciesID=6f887eba1e4fa1e250a8f04dffa9cad5 StaticDependenciesID=47c9cffefe1407d258ff5269ceceb9f8 
+Importing 'GUID: 5af8c634bd80fc6428b9f00488d14e78 - Path: Assets/Sprites/procedural_shadow.png' with importer (TextureImporter)
+Imported 'GUID: 5af8c634bd80fc6428b9f00488d14e78' -> (Import Result ID: '48c9135b845498a177bf0ed12dd43ce8') in 0.006 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=524842b01abe89b18b012a445341ab8c DependenciesID=4c2111dd825f06175b63c7e9dead188c StaticDependenciesID=e070a6563a4fe5dee689dc373ad0024e 
+Importing 'GUID: ecd2e36405a3b1445b52a37be92a1f05 - Path: Assets/Art/Characters/co_ba/Menu/menu_co_ba_portrait.png' with importer (TextureImporter)
+Imported 'GUID: ecd2e36405a3b1445b52a37be92a1f05' -> (Import Result ID: '58f4a6926d5767ad2e9a0c75c60a0cab') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ead6e92ed1e4281ff9c3f7dc837cd5d5 DependenciesID=f24bffc59ad2785e26a1e541f8e04600 StaticDependenciesID=8a060209bb3147e33fa41ca30f8fb859 
+Importing 'GUID: fca6bdec7e8bdf245a7414e99eb9b773 - Path: Assets/Art/Characters/anh_teen/Gameplay/gp_anh_teen_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: fca6bdec7e8bdf245a7414e99eb9b773' -> (Import Result ID: '60ce4b8c8cdc9cb9b40c82e76c9989f4') in 0.015 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=948c32f00aee21b21cabca27db71cfce DependenciesID=a23d962ef50fb81f36aaf49dae4c511e StaticDependenciesID=a821b27d25537adce0e13e556b702c5c 
+Importing 'GUID: 7d2a019354df37b4abe8e95af31d319b - Path: Assets/Art/Characters/anh_teen/Menu/menu_anh_teen_portrait.png' with importer (TextureImporter)
+Imported 'GUID: 7d2a019354df37b4abe8e95af31d319b' -> (Import Result ID: '3514b838ddcd0002c5fe32f074262355') in 0.018 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=431d5d36db5487a822c321f23995cf9a DependenciesID=fdbebbd97ec96639396d7e73c449252e StaticDependenciesID=a51e6c085778363b934d4babbcb0fd8f 
+Importing 'GUID: 1fe4a6d37b3f84a42958bfff6d917e97 - Path: Assets/Art/Characters/nu_nang_dong/Gameplay/gp_nu_nang_dong_placeholder.png' with importer (TextureImporter)
+Imported 'GUID: 1fe4a6d37b3f84a42958bfff6d917e97' -> (Import Result ID: 'a2ecf744bcc0934e1deb508ee4bd1cfe') in 0.017 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=066c31e636df1f52a870ebeb2345e602 DependenciesID=46b7deff31aa32133ce738b2a8c30383 StaticDependenciesID=17a28bba8825b73c248835afed8d38c1 
+Importing 'GUID: cbed18d374c0eda49b41fa2e7d94b0e7 - Path: Assets/Data/GameplayVisualSpec.json' with importer (TextScriptImporter)
+Imported 'GUID: cbed18d374c0eda49b41fa2e7d94b0e7' -> (Import Result ID: '6b9e04240af89bc9edf9940e2a369155') in 0.012 seconds [static dependencies only]. Details - ImportResultOutputID=d4a76359db4825b074aaaf5006ef7f1f DependenciesID=2607fe07b2fde2da48ce2f537880dbc2 StaticDependenciesID=36d63cb2113ef912060241a687438d1b 
+Importing 'GUID: f7660a6045db0f04ca0bc2f64990e3ee - Path: Assets/Prefabs/PlayerView.prefab' with importer (PrefabImporter)
+Imported 'GUID: f7660a6045db0f04ca0bc2f64990e3ee' -> (Import Result ID: 'ee7655371517a17dac9e95a10d91b1dc') in 0.078 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3360c54f46ca18334c8566991d34a452 DependenciesID=0633da7f7866541c982e541ddbe8d3db StaticDependenciesID=4ccab79b31e3c6d0de80d6d79051a250 
+
+Asset Pipeline Refresh (id=7b5085bd52d36994eb08dd7db4a88786): Total: 26.835 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=49 (actual=49, local cache=0, cache server=0)
+		Asset DB Process Time: managed=24 ms, native=7240 ms
+		Asset DB Callback time: managed=113 ms, native=48 ms
+		Scripting: domain reloads=1, domain reload time=1837 ms, compile time=17553 ms, other=18 ms
+		Project Asset Count: scripts=322, non-scripts=482
+		Asset File Changes: new=50, changed=57, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 45.452ms
+	ApplyChangesToAssetFolders: 0.535ms
+	Scan: 331.742ms
+	Collect global state as custom dependencies: 18.463ms
+	OnSourceAssetsModified: 0.984ms
+	CategorizeScriptCompilationAssets: 216.694ms
+	ProcessAssetsWithTransientArtifactChanges: 18.348ms
+	CategorizeAssets: 7.897ms
+	CompileScripts: 17552.770ms
+	ImportOutOfDateAssets: 1794.818ms (854.449ms without children)
+		ImportManagerImport: 915.644ms (8.155ms without children)
+			UpdateCategorizedAssets: 0.504ms
+		UnloadImportedAssets: 2.074ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.182ms
+		ImportSchedulerStart: 22.457ms
+	PostProcessAllAssets: 114.700ms
+		VersionControlSettings.HiddenFilePostprocess 0.451ms
+		ShaderAssetModifiedCallback 0.182ms
+		PostProcessCallbackCreateDeferredMaterials 0.163ms
+		XRBuildSystem.XRAssetImported 0.109ms
+		RaytracingShaderImportPostprocess 0.089ms
+		LocalizationDatabase.AssetDatabasePostprocessCallback 0.079ms
+		SpeedTreeImporter.PostprocessAllAssets 0.070ms
+		ComputeShaderImportPostprocess 0.057ms
+		MonoPostProcessAllAssets: 111.463ms
+			AssetPostprocessor.OnPostprocessAllAssets 42.069ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 25.005ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 10.051ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 7.304ms
+			AssetChangedListener.OnPostprocessAllAssets 3.488ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 3.378ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 2.047ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.629ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.296ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 0.543ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.448ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.399ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.376ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.351ms
+			AssetEvents.OnPostprocessAllAssets 0.321ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.310ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.303ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.262ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.240ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.171ms
+			SyncVS.PostprocessSyncProject 0.144ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.130ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.118ms
+	PostAssetChangesProfiler: 2.901ms
+	UnloadStreamsBegin: 2.237ms
+	PersistCurrentRevisions: 0.370ms
+	GenerateScriptTypeHashes: 0.489ms
+	GenerateScriptTypeSerializationHashes: 1.357ms
+	Untracked: 6697.599ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.05 seconds
+Scanning for USB devices : 1.825ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-HIT ME
+Unloading 25 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 998 unused Assets / (2.0 MB). Loaded Objects now: 1725.
+Memory consumption went from 240.2 MB to 238.2 MB.
+Total: 11.061100 ms (FindLiveObjects: 0.348200 ms CreateObjectMapping: 0.048800 ms MarkObjects: 7.700100 ms  DeleteObjects: 2.589600 ms)
+
+Worker ready: AssetImportWorkerHW0 0
+Batchmode quit successfully invoked - shutting down!
+Curl error 42: Callback aborted
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-LENOVO-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-LENOVO channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

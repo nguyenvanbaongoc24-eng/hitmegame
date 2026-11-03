@@ -17,6 +17,7 @@ namespace HitMe.Gameplay
         public SpriteRenderer characterRenderer;
         public SpriteRenderer shadowRenderer;
         public SpriteRenderer ringRenderer;
+        public SpriteRenderer ringFrontRenderer;
         public LineRenderer aimLine;
         public LineRenderer aimBeam;
         public Transform weaponTip;
@@ -47,6 +48,18 @@ namespace HitMe.Gameplay
             if (ringRenderer != null)
             {
                 ringRenderer.color = ringColor;
+                if (characterRenderer != null)
+                {
+                    ringRenderer.sortingOrder = characterRenderer.sortingOrder - 1;
+                }
+            }
+            if (ringFrontRenderer != null)
+            {
+                ringFrontRenderer.color = ringColor;
+                if (characterRenderer != null)
+                {
+                    ringFrontRenderer.sortingOrder = characterRenderer.sortingOrder + 1;
+                }
             }
         }
 
@@ -135,6 +148,7 @@ namespace HitMe.Gameplay
             if (characterRenderer != null) characterRenderer.enabled = isVisible;
             if (shadowRenderer != null) shadowRenderer.enabled = isVisible;
             if (ringRenderer != null) ringRenderer.enabled = isVisible;
+            if (ringFrontRenderer != null) ringFrontRenderer.enabled = isVisible;
             if (!isVisible) ShowAim(false);
         }
 
