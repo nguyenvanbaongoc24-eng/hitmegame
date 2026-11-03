@@ -1,0 +1,16 @@
+K4 independent image/layout harness library, 2026-11-03, prep/codex
+
+Command: python -m unittest discover -s tools/harness_lib -p 'test_*.py' -v
+Result: Ran 6 tests, OK. Cases include valid/overlapping/undersized/outside-safe-area
+layout, text outside parent, correct/incorrect head fraction, matching/shifted
+images with overlay, and Markdown PASS/FAIL report.
+
+Command: python -m unittest discover -s tools/sprites -p 'test_*.py' -v
+Result: Ran 18 tests, OK.
+
+Command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo --verbosity minimal
+Result: Passed! 159/159, Failed 0, Skipped 0. Nine inherited Core nullability warnings remain.
+
+Library format and call examples: tools/harness_lib/README.md. Uses Pillow and
+NumPy only. This is synthetic-data validation; no Unity UI dump or full-match
+reference image has yet been run through these checks.
