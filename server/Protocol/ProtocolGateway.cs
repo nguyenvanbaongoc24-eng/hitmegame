@@ -262,10 +262,14 @@ public sealed class ProtocolGateway
             return Reply(connectionId, JsonSerializer.Serialize(new { v = Version, type = "quick_match_waiting", quickMatchHintSeconds = QuickMatchHintSeconds }, Json));
         }
 
-        quickMatch.Remove(opponent.Key);
         var room = rooms.Create(opponent.Value.Identity.PlayerId, opponent.Value.Identity.DisplayName, new GameConfig(), out var error);
         if (room is null) return Reply(connectionId, Error(error == "room_limit" ? "server_busy" : error));
-        if (!rooms.Join(room.Code, identity.PlayerId, identity.DisplayName, out _, out error)) return Reply(connectionId, Error(error));
+        if (!rooms.Join(room.Code, identity.PlayerId, identity.DisplayName, out _, out error))
+        {
+            rooms.Leave(room.Code, opponent.Value.Identity.PlayerId, out _, out _);
+            return Reply(connectionId, Error(error));
+        }
+        quickMatch.Remove(opponent.Key);
         var first = new Session(room, opponent.Value.Identity.PlayerId, NewReconnectToken(), opponent.Value.Version);
         var second = new Session(room, identity.PlayerId, NewReconnectToken(), request.V);
         sessions[opponent.Key] = first;

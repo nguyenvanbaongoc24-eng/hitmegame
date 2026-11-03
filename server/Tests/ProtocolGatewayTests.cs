@@ -18,6 +18,21 @@ public sealed class ProtocolGatewayTests
             identity = null!; error = "auth_invalid"; return false;
         }
     }
+    private sealed class SameNameAuthVerifier : IAuthVerifier
+    {
+        public bool TryVerify(string? token, out PlayerIdentity identity, out string error)
+        {
+            if (token?.StartsWith("test:", StringComparison.Ordinal) == true)
+            {
+                identity = new PlayerIdentity(token[5..], "Same Name");
+                error = string.Empty;
+                return true;
+            }
+            identity = null!;
+            error = "auth_invalid";
+            return false;
+        }
+    }
     private static ProtocolGateway Gateway() => new(new RoomDirectory(n => n == 1 ? "HM0001" : "HM0002"), auth: new TestAuthVerifier());
     private static string Request(string type, string playerId = "p1", string name = "One", string? roomCode = null, bool ready = false, bool start = false)
         => JsonSerializer.Serialize(new { v = 1, type, playerId, name, token = "test:" + playerId, roomCode, ready, start });
@@ -432,6 +447,39 @@ public sealed class ProtocolGatewayTests
         clock.Advance(TimeSpan.FromSeconds(2));
 
         Assert.DoesNotContain(gateway.Tick(), message => Json(message.Payload).GetProperty("type").GetString() == "quick_match_hint");
+    }
+
+    [Fact]
+    public void QuickMatchCapacityFailureKeepsWaitingPlayerQueued()
+    {
+        var rooms = new RoomDirectory(n => n == 1 ? "HM0001" : "HM0002", maxRooms: 1);
+        var gateway = new ProtocolGateway(rooms, auth: new TestAuthVerifier());
+        gateway.Handle("occupied", Request("join", "occupied", "Occupied"));
+        Assert.Equal("quick_match_waiting", Json(gateway.Handle("c1", Request("quick_match"))).GetProperty("type").GetString());
+
+        var rejected = Json(gateway.Handle("c2", Request("quick_match", "p2", "Two")));
+        Assert.Equal("server_busy", rejected.GetProperty("code").GetString());
+        Assert.Single(rooms.Snapshot());
+
+        gateway.Handle("occupied", Request("leave"));
+        var paired = gateway.HandleMessages("c3", Request("quick_match", "p3", "Three"));
+        Assert.Equal(2, paired.Count);
+        Assert.Contains(paired, message => message.ConnectionId == "c1" && Json(message.Payload).GetProperty("type").GetString() == "room_state");
+        Assert.Contains(paired, message => message.ConnectionId == "c3" && Json(message.Payload).GetProperty("type").GetString() == "room_state");
+        Assert.Equal(2, Assert.Single(rooms.Snapshot()).Players.Count);
+    }
+
+    [Fact]
+    public void QuickMatchJoinFailureDoesNotLeaveAnOrphanRoomOrLoseQueue()
+    {
+        var rooms = new RoomDirectory(n => "HM0001", maxRooms: 1);
+        var gateway = new ProtocolGateway(rooms, auth: new SameNameAuthVerifier());
+        gateway.Handle("c1", Request("quick_match"));
+
+        var rejected = Json(gateway.Handle("c2", Request("quick_match", "p2", "Two")));
+        Assert.Equal("name_taken_in_room", rejected.GetProperty("code").GetString());
+        Assert.Empty(rooms.Snapshot());
+        Assert.Equal("already_joined", Json(gateway.Handle("c1", Request("quick_match"))).GetProperty("code").GetString());
     }
 
     [Theory]
