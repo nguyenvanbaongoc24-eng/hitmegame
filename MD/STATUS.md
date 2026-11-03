@@ -61,3 +61,5 @@ M4 (2026-11-03): `tools/sprites/slice_sheet.py` slices 4×2 or 4×3 flat-green s
 N1 (2026-11-03): `tools/ui/glyph_coverage.py` audits C#/JSON/Markdown UI text against a TTF/OTF cmap with file:line diagnostics and full Vietnamese character mode. Three synthetic tests passed; actual BeVietnamPro-Medium and HitMeFont scans of four UI/data files find only missing check mark and crown glyphs (not Vietnamese letters). Evidence: `Evidence/round48/N1_glyphs.txt` and JSON reports. Rendering in Unity remains unverified.
 
 N2 (2026-11-03): tools/ui/slice_ui_kit.py extracts named UI elements from alpha or green key, rejects count mismatch with annotated image; nineslice_suggest.py flags patterned centers. Synthetic UI suite 7/7, sprite 24/24, server Passed! 170/170. Evidence: Evidence/round48/N2_ui_kit.txt. Real UI kit and Unity import remain unverified.
+
+N3 (2026-11-03): tools/ui/regression_from_screenshot.py flags large white placeholders and full-width dark top/bottom bands; OCR explicitly unsupported. Synthetic UI suite 10/10, sprite 24/24, server Passed! 170/170. Evidence: Evidence/round48/N3_screenshot.txt. No real iPhone screenshot audited in this task.
