@@ -11,7 +11,7 @@ await db.exec('create schema auth; create table auth.users(id uuid primary key);
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
   '004_match_result_store.sql', '005_reward_and_bans.sql',
-  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql', '009_guest_friends.sql', '010_friend_role_guard.sql', '011_beta_reports.sql']) {
+  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql', '009_guest_friends.sql', '010_friend_role_guard.sql', '011_beta_reports.sql', '012_beta_events.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
@@ -112,7 +112,8 @@ const executablePreview = cleanupPreview.replace(/^--.*$/gm, '');
 assert.doesNotMatch(executablePreview, /\b(delete|update|truncate|drop|alter|insert|execute)\b/i);
 const beforePreview = Number((await sql('select count(*)::int as n from public.guest_profiles')).rows[0].n);
 const preview = (await db.query(cleanupPreview)).rows[0];
-assert.deepEqual(Object.values(preview).map(Number), [0, 0, 0, 0, 0, 0]);
+assert.equal(Object.values(preview).length, 10);
+assert.ok(Object.values(preview).every(value => Number(value) === 0));
 assert.equal(Number((await sql('select count(*)::int as n from public.guest_profiles')).rows[0].n), beforePreview);
 cases++;
 const friendA = 'g_' + 'a'.repeat(32);
@@ -129,5 +130,14 @@ assert.equal((await friendAction('request', friendB, friendA)).rows[0].code, 'al
 cases++;
 assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_friend_requests'::regclass`)).rows[0].relrowsecurity, true);
 cases++;
+for (const name of ['bug_reports', 'beta_events']) {
+  const row = (await sql(`select relrowsecurity from pg_class where oid='public.${name}'::regclass`)).rows[0];
+  assert.equal(row.relrowsecurity, true);
+  const grants = (await sql(`select has_table_privilege('anon', 'public.${name}', 'INSERT') as anon_insert,
+    has_table_privilege('service_role', 'public.${name}', 'INSERT') as service_insert`)).rows[0];
+  assert.equal(grants.anon_insert, false);
+  assert.equal(grants.service_insert, true);
+  cases++;
+}
 console.log(`Passed! ${cases}/${cases} PGlite SQL and approved reward checks`);
 await db.close();

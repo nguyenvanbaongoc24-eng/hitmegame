@@ -145,6 +145,7 @@ public sealed class ProtocolGateway
             var output = new List<GatewayMessage>();
             foreach (var expired in rooms.PruneExpiredLobbies(clock.GetUtcNow(), TimeSpan.FromMinutes(10)))
             {
+                if (!expired.Started) metrics?.RecordCancellation("lobby_expired");
                 foreach (var entry in sessions.Where(pair => ReferenceEquals(pair.Value.Room, expired)).ToArray())
                 {
                     output.Add(new GatewayMessage(entry.Key, Error("room_expired"), "room_expired"));
@@ -160,6 +161,7 @@ public sealed class ProtocolGateway
             {
                 if (!room.Started && room.TryStartCountdownIfDue(clock.GetUtcNow()))
                 {
+                    metrics?.RecordMatchStart();
                     output.AddRange(Target(room, room.RoundSession!.BeginRound(clock)));
                     continue;
                 }
@@ -305,7 +307,10 @@ public sealed class ProtocolGateway
         if (!sessions.Remove(connectionId, out var session)) return Error("not_joined");
         disconnected.Remove(session.ReconnectToken);
         session.Room.RoundSession?.EliminateDisconnected(session.PlayerId);
-        return rooms.Leave(session.Room.Code, session.PlayerId, out var room, out var error) ? RoomState(room!) : Error(error);
+        if (!rooms.Leave(session.Room.Code, session.PlayerId, out var room, out var error)) return Error(error);
+        if (room!.Started && room.Players.Count == 0 && room.RoundSession?.Match.State.Phase != Phase.MatchEnd)
+            metrics?.RecordCancellation("everyone_left");
+        return RoomState(room);
     }
 
     private IReadOnlyList<GatewayMessage> RoomReadyMessages(string connectionId, ClientEnvelope request)
@@ -343,6 +348,7 @@ public sealed class ProtocolGateway
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
         if (session.Room.RoundSession is not null) return Reply(connectionId, Error("wrong_phase"));
         if (!session.Room.TryHostStart(session.PlayerId, out var error)) return Reply(connectionId, Error(error));
+        metrics?.RecordMatchStart();
         return Target(session.Room, session.Room.RoundSession!.BeginRound(clock));
     }
 
@@ -361,6 +367,8 @@ public sealed class ProtocolGateway
     {
         if (metrics is not null && messages.Any(message => message.Payload.Contains("\"type\":\"round_result\"", StringComparison.Ordinal)))
             metrics.RecordRoundResolution(System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+        if (metrics is not null && messages.Any(message => message.Payload.Contains("\"type\":\"match_end\"", StringComparison.Ordinal)))
+            metrics.RecordMatchComplete();
     }
 
     private IReadOnlyList<GatewayMessage> CommitMessages(string connectionId, ClientEnvelope request)
@@ -510,6 +518,7 @@ public sealed class ProtocolGateway
         var session = new Session(detached.Session.Room, detached.Session.PlayerId, NewReconnectToken(), detached.Session.Version)
         { InvalidCommitViolations = detached.Session.InvalidCommitViolations, ViolationRoundId = detached.Session.ViolationRoundId, Disqualified = detached.Session.Disqualified };
         sessions[connectionId] = session;
+        metrics?.RecordReconnect();
         session.Room.RoundSession?.SetConnected(session.PlayerId, true);
         return RoomState(session.Room, session.ReconnectToken);
     }

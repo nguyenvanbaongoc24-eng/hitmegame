@@ -10,6 +10,15 @@ public sealed class ServerMetrics
     private readonly Queue<double> broadcastMilliseconds = new();
     private readonly Queue<double> roundResolutionMilliseconds = new();
     private readonly object gate = new();
+    private long matchesStarted;
+    private long matchesCompleted;
+    private long reconnects;
+    private readonly ConcurrentDictionary<string, long> cancellations = new(StringComparer.Ordinal);
+
+    public void RecordMatchStart() => Interlocked.Increment(ref matchesStarted);
+    public void RecordMatchComplete() => Interlocked.Increment(ref matchesCompleted);
+    public void RecordReconnect() => Interlocked.Increment(ref reconnects);
+    public void RecordCancellation(string reason) => cancellations.AddOrUpdate(reason, 1, (_, count) => count + 1);
 
     public void RecordError(string code) => errors.AddOrUpdate(code, 1, (_, count) => count + 1);
 
@@ -49,6 +58,9 @@ public sealed class ServerMetrics
         return new
         {
             connections, rooms, activeMatches,
+            matchesStarted = Interlocked.Read(ref matchesStarted), matchesCompleted = Interlocked.Read(ref matchesCompleted),
+            reconnects = Interlocked.Read(ref reconnects),
+            cancellationsByReason = cancellations.OrderBy(pair => pair.Key).ToDictionary(pair => pair.Key, pair => pair.Value),
             broadcastP95Ms = Math.Round(p95, 3), broadcastSamples = samples,
             roundResolutionMedianMs = Math.Round(roundMedian, 3), roundResolutionSamples = roundSamples,
             errorsByCode = errors.OrderBy(pair => pair.Key).ToDictionary(pair => pair.Key, pair => pair.Value)

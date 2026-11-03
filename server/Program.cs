@@ -89,6 +89,11 @@ builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerI
     runtime.AllowedOrigins, runtime.MaxConnections));
 builder.Services.AddHostedService<RoundDeadlineService>();
 builder.Services.AddHostedService<ShutdownNotifier>();
+if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
+{
+    builder.Services.AddSingleton(new SupabaseBetaMetricsStore(new Uri(supabaseUrl), supabaseKey));
+    builder.Services.AddHostedService<BetaMetricsReporter>();
+}
 var app = builder.Build();
 app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
