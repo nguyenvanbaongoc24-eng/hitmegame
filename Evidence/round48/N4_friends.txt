@@ -1,0 +1,65 @@
+test_complete_fake_font_passes_json_and_md (test_glyph_coverage.GlyphCoverageTests.test_complete_fake_font_passes_json_and_md) ... ok
+test_missing_glyph_reports_file_and_line (test_glyph_coverage.GlyphCoverageTests.test_missing_glyph_reports_file_and_line) ... ok
+test_vietnamese_set_includes_precomposed_tones (test_glyph_coverage.GlyphCoverageTests.test_vietnamese_set_includes_precomposed_tones) ... ok
+test_clean_image_and_ocr_disclosure (test_regression_from_screenshot.ScreenshotRegressionTests.test_clean_image_and_ocr_disclosure) ... ok
+test_large_white_placeholder (test_regression_from_screenshot.ScreenshotRegressionTests.test_large_white_placeholder) ... ok
+test_solid_edge_bands_require_full_width (test_regression_from_screenshot.ScreenshotRegressionTests.test_solid_edge_bands_require_full_width) ... ok
+test_extracts_named_items_with_true_alpha_and_contact_sheet (test_slice_ui_kit.UiKitTests.test_extracts_named_items_with_true_alpha_and_contact_sheet) ... ok
+test_missing_item_rejects_with_annotated_image (test_slice_ui_kit.UiKitTests.test_missing_item_rejects_with_annotated_image) ... ok
+test_nineslice_warns_on_patterned_center (test_slice_ui_kit.UiKitTests.test_nineslice_warns_on_patterned_center) ... ok
+test_touching_items_rejects_instead_of_guessing (test_slice_ui_kit.UiKitTests.test_touching_items_rejects_instead_of_guessing) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.372s
+
+OK
+test_counts_sprite_curve_only (test_animation_audit.AnimationAuditTests.test_counts_sprite_curve_only) ... ok
+test_reports_missing_clips_and_png_without_editing_source (test_animation_audit.AnimationAuditTests.test_reports_missing_clips_and_png_without_editing_source) ... ok
+test_cut_edge (test_inventory.InventoryTests.test_cut_edge) ... ok
+test_multiple_figures (test_inventory.InventoryTests.test_multiple_figures) ... ok
+test_text_or_ui (test_inventory.InventoryTests.test_text_or_ui) ... ok
+test_unity_bottom_origin_and_meta_inventory (test_inventory.InventoryTests.test_unity_bottom_origin_and_meta_inventory) ... ok
+test_valid_single_figure (test_inventory.InventoryTests.test_valid_single_figure) ... ok
+test_green_fringe_rejected (test_slice_sheet.SliceSheetTests.test_green_fringe_rejected) ... ok
+test_merged_cells_rejected (test_slice_sheet.SliceSheetTests.test_merged_cells_rejected) ... ok
+test_missing_frame_rejected_and_annotated (test_slice_sheet.SliceSheetTests.test_missing_frame_rejected_and_annotated) ... ok
+test_uneven_background_rejected (test_slice_sheet.SliceSheetTests.test_uneven_background_rejected) ... ok
+test_valid_four_by_three (test_slice_sheet.SliceSheetTests.test_valid_four_by_three) ... ok
+test_valid_four_by_two_has_shared_scale_foot_line_and_manifest (test_slice_sheet.SliceSheetTests.test_valid_four_by_two_has_shared_scale_foot_line_and_manifest) ... ok
+test_baked_cyan_ring (test_sprites.SpriteToolTests.test_baked_cyan_ring) ... ok
+test_baked_dark_shadow (test_sprites.SpriteToolTests.test_baked_dark_shadow) ... ok
+test_character_height (test_sprites.SpriteToolTests.test_character_height) ... ok
+test_fake_transparency_or_missing_alpha (test_sprites.SpriteToolTests.test_fake_transparency_or_missing_alpha) ... ok
+test_foot_above_bottom (test_sprites.SpriteToolTests.test_foot_above_bottom) ... ok
+test_foot_off_center (test_sprites.SpriteToolTests.test_foot_off_center) ... ok
+test_invalid_name (test_sprites.SpriteToolTests.test_invalid_name) ... ok
+test_missing_frames_and_duplicate (test_sprites.SpriteToolTests.test_missing_frames_and_duplicate) ... ok
+test_opaque_border (test_sprites.SpriteToolTests.test_opaque_border) ... ok
+test_pack_manifest_is_lossless_and_deterministic (test_sprites.SpriteToolTests.test_pack_manifest_is_lossless_and_deterministic) ... ok
+test_pack_refuses_invalid_set_and_source_output (test_sprites.SpriteToolTests.test_pack_refuses_invalid_set_and_source_output) ... ok
+test_valid_frame_and_foot_pivot (test_sprites.SpriteToolTests.test_valid_frame_and_foot_pivot) ... ok
+test_wrong_dimensions (test_sprites.SpriteToolTests.test_wrong_dimensions) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 1.543s
+
+OK
+Test run for D:\HITME GAME\worktrees\codex-prep\server\Tests\bin\Debug\net8.0\HitMe.Server.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.11.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   173, Skipped:     0, Total:   173, Duration: 2 s - HitMe.Server.Tests.dll (net8.0)
+parsed 001_schema.sql
+parsed 002_rls.sql
+parsed 003_functions.sql
+parsed 004_match_result_store.sql
+parsed 005_reward_and_bans.sql
+parsed 006_guest_economy.sql
+parsed 007_leaderboard_rls.sql
+parsed 008_guest_shop.sql
+parsed 009_guest_friends.sql
+parsed 010_friend_role_guard.sql
+Passed! 24/24 PGlite SQL and approved reward checks
+Passed! 7/7 live Supabase friend checks (transaction rolled back)

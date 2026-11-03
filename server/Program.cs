@@ -25,6 +25,10 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) || !string.IsNullOrWhiteSpace(supaba
     SupabaseServerKeyGuard.Validate(supabaseKey);
 }
 builder.Services.AddSingleton<InMemoryProfileStore>();
+builder.Services.AddSingleton<IFriendStore>(_ => string.IsNullOrWhiteSpace(supabaseUrl)
+    || !string.Equals(Environment.GetEnvironmentVariable("SUPABASE_FRIENDS_ENABLED"), "true", StringComparison.OrdinalIgnoreCase)
+    ? new InMemoryFriendStore()
+    : new SupabaseFriendStore(new Uri(supabaseUrl), supabaseKey!));
 builder.Services.AddSingleton(_ => new ItemCatalog(Path.Combine(AppContext.BaseDirectory, "Data", "Items.json")));
 builder.Services.AddSingleton(provider => RoomLoadoutPolicy.FromEnvironment(
     provider.GetRequiredService<ItemCatalog>(), Environment.GetEnvironmentVariable("ENABLED_CHARACTER_IDS")));
@@ -62,6 +66,7 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     profiles: provider.GetRequiredService<IPlayerProfileReader>(),
     shop: provider.GetRequiredService<IGuestShopService>(),
     loadouts: provider.GetRequiredService<RoomLoadoutPolicy>(),
+    friendStore: provider.GetRequiredService<IFriendStore>(),
     metrics: provider.GetRequiredService<ServerMetrics>(),
     auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
         .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",

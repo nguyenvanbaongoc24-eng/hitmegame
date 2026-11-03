@@ -7,11 +7,11 @@ import { PGlite } from '@electric-sql/pglite';
 const root = resolve(import.meta.dirname, '../..');
 const db = new PGlite();
 const sql = statement => db.query(statement);
-await db.exec('create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql as $$ select null::uuid $$;');
+await db.exec('create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql as $$ select null::uuid $$; create function auth.role() returns text language sql as $$ select current_setting(\'request.jwt.claim.role\', true) $$;');
 await db.exec('create role anon; create role authenticated; create role service_role;');
 for (const filename of ['001_schema.sql', '002_rls.sql', '003_functions.sql',
   '004_match_result_store.sql', '005_reward_and_bans.sql',
-  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql']) {
+  '006_guest_economy.sql', '007_leaderboard_rls.sql', '008_guest_shop.sql', '009_guest_friends.sql', '010_friend_role_guard.sql']) {
   let source = await readFile(resolve(root, 'backend/supabase', filename), 'utf8');
   // PGlite does not ship Supabase's pgcrypto extension; modern PostgreSQL
   // provides gen_random_uuid() natively. The live migration retains the line.
@@ -114,6 +114,20 @@ const beforePreview = Number((await sql('select count(*)::int as n from public.g
 const preview = (await db.query(cleanupPreview)).rows[0];
 assert.deepEqual(Object.values(preview).map(Number), [0, 0, 0, 0, 0, 0]);
 assert.equal(Number((await sql('select count(*)::int as n from public.guest_profiles')).rows[0].n), beforePreview);
+cases++;
+const friendA = 'g_' + 'a'.repeat(32);
+const friendB = 'g_' + 'b'.repeat(32);
+const friendAction = (action, from, to, accepted = 'null') =>
+  sql(`select public.guest_friend_action('${action}','${from}','${to}',${accepted}) as code`);
+await assert.rejects(friendAction('request', friendA, friendB), /server_only/);
+cases++;
+await sql(`select set_config('request.jwt.claim.role','service_role',false)`);
+assert.equal((await friendAction('request', friendA, friendB)).rows[0].code, 'ok');
+assert.equal((await friendAction('request', friendA, friendB)).rows[0].code, 'friend_request_pending');
+assert.equal((await friendAction('reply', friendA, friendB, 'true')).rows[0].code, 'ok');
+assert.equal((await friendAction('request', friendB, friendA)).rows[0].code, 'already_friends');
+cases++;
+assert.equal((await sql(`select relrowsecurity from pg_class where oid='public.guest_friend_requests'::regclass`)).rows[0].relrowsecurity, true);
 cases++;
 console.log(`Passed! ${cases}/${cases} PGlite SQL and approved reward checks`);
 await db.close();

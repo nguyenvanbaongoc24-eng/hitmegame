@@ -31,6 +31,6 @@ Các giá trị dưới đây là ví dụ theo đúng trường mà server hi�
 {"v":2,"type":"friend_reply","playerId":"g_friend","targetPlayerId":"g_example","accepted":true}
 ```
 
-`rank:"unranked"` và `points:0` là placeholder, **không** phải thứ hạng đã lưu. Server chưa phát thông điệp nhiệm vụ ngày hay đăng nhập Google; tính năng kết bạn hiện chỉ ở RAM và mất khi khởi động lại. AG có thể nối màn hồ sơ/số dư, mua/trang bị/đổi tên khi `inventoryStatus:"authoritative"`, nhưng chưa hiển thị rank/nhiệm vụ/kết bạn như dữ liệu bền vững. Không gửi mật khẩu, service key hay refresh token trong WebSocket.
+`rank:"unranked"` và `points:0` là placeholder, **không** phải thứ hạng đã lưu. Server chưa phát thông điệp nhiệm vụ ngày hay đăng nhập Google; kết bạn có adapter Supabase sau migrations 009-010 khi SUPABASE_FRIENDS_ENABLED=true; mặc định vẫn ở RAM. AG có thể nối màn hồ sơ/số dư, mua/trang bị/đổi tên khi `inventoryStatus:"authoritative"`, nhưng chưa hiển thị rank/nhiệm vụ/kết bạn như dữ liệu bền vững. Không gửi mật khẩu, service key hay refresh token trong WebSocket.
 
 Verification: `server/Tests/ProtocolV2Tests.cs` tests chat privacy, limits, friend authorization and versioned room state. `node server/Tools/FakeClient.mjs --local --v2` plays real WebSocket matches with 2, 4 and 6 players. This does not prove Unity WebGL integration or Render deployment.

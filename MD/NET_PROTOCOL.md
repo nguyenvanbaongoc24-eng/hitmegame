@@ -1,6 +1,6 @@
 # HIT ME network protocol v1 and v2
 
-Protocol v2 is additive. A socket selects its version in `join` or `quick_match`; room broadcasts use each recipient's version. v1 clients remain accepted. A v2 client sends `v:2` on every message and verifies `v:2` in every response. Current friends are kept only in one server process; they do not survive restart and are not yet suitable as a persistent friends feature.
+Protocol v2 is additive. A socket selects its version in `join` or `quick_match`; room broadcasts use each recipient's version. v1 clients remain accepted. A v2 client sends `v:2` on every message and verifies `v:2` in every response. Friend requests use a shared IFriendStore. In-memory mode resets on restart; Supabase mode requires migrations 009-010 and SUPABASE_FRIENDS_ENABLED=true.
 
 ## v2 additions
 
@@ -16,7 +16,7 @@ Allowed `chatId` values: `hello`, `good_luck`, `nice_throw`, `well_played`, `oop
 
 On v2 `join`/`quick_match`, and after `match_end`, the server sends the owner-only `profile_state`: `{playerId,name,gold,matchesPlayed,bestRank,rank,points,purchasedItemIds,ownedItemIds,equippedWeaponId,equippedCharacterId,inventoryStatus}`. `gold`, `matchesPlayed`, and `bestRank` come from the server's profile store (Supabase when configured). Rank/points and the catalog-backed inventory are still pending: `rank:"unranked"`, `points:0`, `purchasedItemIds:[]`, `ownedItemIds:["dep_to_ong"]`, `equippedWeaponId:"dep_to_ong"`, `equippedCharacterId:null`, `inventoryStatus:"starter_only"` signal that state. Never treat these placeholder fields as durable ownership. A profile read error yields `error.code:"profile_unavailable"` without blocking the match result.
 
-New v2 errors: `invalid_chat_id`, `chat_rate_limited`, `invalid_friend_target`, `friend_target_unavailable`, `friend_request_pending`, `friend_request_not_found`, `already_friends`. Friend requests have no durable storage yet. Existing match flow, privacy, room limits, and combat rules remain the same.
+New v2 errors: `invalid_chat_id`, `chat_rate_limited`, `invalid_friend_target`, `friend_target_unavailable`, `friend_request_pending`, `friend_request_not_found`, `already_friends`. Friend errors also include friend_request_closed and friend_unavailable. Durable storage is gated by SUPABASE_FRIENDS_ENABLED=true after migrations 009-010. Existing match flow, privacy, room limits, and combat rules remain the same.
 
 The server is authoritative. Use WebSocket `wss://<host>/ws` in production. Every JSON message has `v:1` and `type`. Payloads are limited to 1024 UTF-8 bytes and 20 messages per second per connection. Without `GUEST_TOKEN_SIGNING_KEY`, the server accepts `guest:<name>` for local testing. With that key, obtain a signed guest token from `POST /guest-token` (`{"name":"Nam"}`), then send it in `join.token`; the unsigned form is rejected. This is not yet Supabase Auth. Keep `token` and `reconnectToken` out of logs.
 

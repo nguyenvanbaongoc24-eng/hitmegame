@@ -65,10 +65,9 @@ public sealed class ProtocolGateway
     private readonly Dictionary<string, DisconnectedSession> disconnected = new(StringComparer.Ordinal);
     private readonly Dictionary<string, RateWindow> rateWindows = new(StringComparer.Ordinal);
     private readonly Dictionary<string, DateTimeOffset> lastChat = new(StringComparer.Ordinal);
-    private readonly HashSet<(string From, string To)> friendRequests = new();
-    private readonly HashSet<(string First, string Second)> friends = new();
+    private readonly IFriendStore friendStore;
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
@@ -78,6 +77,7 @@ public sealed class ProtocolGateway
         this.loadouts = loadouts;
         this.metrics = metrics;
         this.auditViolation = auditViolation;
+        this.friendStore = friendStore ?? new InMemoryFriendStore();
     }
 
     public string Handle(string connectionId, string raw)
@@ -428,10 +428,11 @@ public sealed class ProtocolGateway
         var target = sessions.FirstOrDefault(pair => pair.Value.PlayerId == request.TargetPlayerId
             && ReferenceEquals(pair.Value.Room, session.Room) && pair.Value.Version == LatestVersion);
         if (target.Key is null) return Reply(connectionId, Error("friend_target_unavailable"));
-        var pairKey = FriendKey(session.PlayerId, request.TargetPlayerId);
-        if (friends.Contains(pairKey)) return Reply(connectionId, Error("already_friends"));
-        if (!friendRequests.Add((session.PlayerId, request.TargetPlayerId)))
-            return Reply(connectionId, Error("friend_request_pending"));
+        string friendError;
+        try { friendError = friendStore.Request(session.PlayerId, request.TargetPlayerId); }
+        catch (Exception error) when (error is HttpRequestException or TaskCanceledException or JsonException or IOException)
+        { return Reply(connectionId, Error("friend_unavailable")); }
+        if (friendError != "ok") return Reply(connectionId, Error(friendError));
         return new[] { new GatewayMessage(target.Key,
             JsonSerializer.Serialize(new { v = LatestVersion, type = "friend_request", playerId = session.PlayerId }, Json)) };
     }
@@ -439,10 +440,13 @@ public sealed class ProtocolGateway
     private IReadOnlyList<GatewayMessage> FriendReplyMessages(string connectionId, ClientEnvelope request)
     {
         if (!sessions.TryGetValue(connectionId, out var session)) return Reply(connectionId, Error("not_joined"));
-        if (string.IsNullOrWhiteSpace(request.TargetPlayerId)
-            || !friendRequests.Remove((request.TargetPlayerId, session.PlayerId)))
+        if (string.IsNullOrWhiteSpace(request.TargetPlayerId))
             return Reply(connectionId, Error("friend_request_not_found"));
-        if (request.Accepted) friends.Add(FriendKey(session.PlayerId, request.TargetPlayerId));
+        string friendError;
+        try { friendError = friendStore.Reply(request.TargetPlayerId, session.PlayerId, request.Accepted); }
+        catch (Exception error) when (error is HttpRequestException or TaskCanceledException or JsonException or IOException)
+        { return Reply(connectionId, Error("friend_unavailable")); }
+        if (friendError != "ok") return Reply(connectionId, Error(friendError));
         var payload = JsonSerializer.Serialize(new
         { v = LatestVersion, type = "friend_reply", playerId = session.PlayerId,
             targetPlayerId = request.TargetPlayerId, accepted = request.Accepted }, Json);
@@ -451,9 +455,6 @@ public sealed class ProtocolGateway
             replies.Add(new GatewayMessage(source.Key, payload));
         return replies;
     }
-
-    private static (string First, string Second) FriendKey(string a, string b) =>
-        string.CompareOrdinal(a, b) < 0 ? (a, b) : (b, a);
 
     private IReadOnlyList<GatewayMessage> ShopMessages(string connectionId, ClientEnvelope request, string action)
     {
