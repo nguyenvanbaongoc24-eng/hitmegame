@@ -38,7 +38,7 @@ For a new room, omit `roomCode`; for re-entry, include `roomCode` and the privat
 ## Server messages
 
 ```json
-{"v":1,"type":"room_state","protocolVersion":1,"roomCode":"HM4826","hostId":"p1","started":false,"players":[{"id":"p1","name":"Nam","ready":false}],"reconnectToken":"private","config":{"maxPlayers":6,"minPlayersToStart":2,"startHp":3,"placeSeconds":5,"maxRounds":5,"arenaWidth":8,"arenaHeight":12,"playerRadius":0.4}}
+{"v":1,"type":"room_state","protocolVersion":1,"roomCode":"HM4826","hostId":"p1","started":false,"players":[{"id":"p1","name":"Nam","slot":0,"ready":false}],"reconnectToken":"private","config":{"maxPlayers":6,"minPlayersToStart":2,"startHp":3,"placeSeconds":5,"maxRounds":5,"arenaWidth":8,"arenaHeight":12,"playerRadius":0.4}}
 {"v":1,"type":"round_start","roundId":1,"deadline":1790000000000}
 {"v":1,"type":"reveal","roundId":1,"players":[{"id":"p1","position":{"x":1.2,"y":-0.8},"aim":{"x":0,"y":1}}]}
 {"v":1,"type":"round_result","roundId":1,"hits":[{"shooterId":"p1","targetId":"p2","point":{"x":0,"y":0},"distance":2}],"players":[{"id":"p1","hp":3,"eliminated":false}]}
@@ -51,6 +51,8 @@ For a new room, omit `roomCode`; for re-entry, include `roomCode` and the privat
 ```
 
 Examples show shapes, not exact identifiers or final arena numbers. Always read the live `room_state.config`. `reconnectToken` is private to its owner. The original v1 contract promised winners only; the current server also sends additive `matchId` and `rankings` fields, which v1 clients may ignore.
+
+`room_state.players[].slot` is a server-assigned integer from 0 to 5. It stays with that player through reconnect and roster updates. When a player leaves before start, a new player may reuse the lowest free slot; existing players keep theirs. Every client should map the same slot to the same ring/HUD color from one shared client palette. A cyan local-player highlight, if desired, is a visual overlay only and must not replace the common slot identity. The server sends slot IDs, not presentation colors.
 
 ## Match order and privacy
 

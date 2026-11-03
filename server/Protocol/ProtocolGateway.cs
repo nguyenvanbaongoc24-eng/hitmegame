@@ -520,7 +520,7 @@ public sealed class ProtocolGateway
         roomCode = room.Code,
         hostId = room.HostId,
         started = room.Started,
-        players = room.Players.Select(p => new { id = p.Id, name = p.Name, ready = p.Ready }),
+        players = room.Players.Select(p => new { id = p.Id, name = p.Name, slot = p.Slot, ready = p.Ready }),
         reconnectToken,
         config = new { maxPlayers = room.Config.MaxPlayers, minPlayersToStart = RoomAuthority.MinPlayers, startHp = room.Config.StartHp, placeSeconds = room.Config.PlaceSeconds, maxRounds = room.Config.MaxRounds, arenaWidth = room.Config.ArenaWidth, arenaHeight = room.Config.ArenaHeight, playerRadius = room.Config.PlayerRadius }
     }, Json);

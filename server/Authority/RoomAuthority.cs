@@ -5,9 +5,10 @@ namespace HitMe.Server.Authority;
 
 public sealed class RoomPlayer
 {
-    public RoomPlayer(string id, string name) { Id = id; Name = name; }
+    public RoomPlayer(string id, string name, int slot) { Id = id; Name = name; Slot = slot; }
     public string Id { get; }
     public string Name { get; }
+    public int Slot { get; }
     public bool Ready { get; set; }
 }
 
@@ -46,7 +47,8 @@ public sealed class RoomAuthority
         if (string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(name)) { error = "invalid_player"; return false; }
         if (players.Any(p => p.Id == playerId)) { error = "duplicate_player"; return false; }
         if (players.Count >= MaxPlayers) { error = "room_full"; return false; }
-        players.Add(new RoomPlayer(playerId, name));
+        var slot = Enumerable.Range(0, MaxPlayers).First(index => players.All(p => p.Slot != index));
+        players.Add(new RoomPlayer(playerId, name, slot));
         error = string.Empty;
         return true;
     }

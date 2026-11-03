@@ -143,6 +143,49 @@ public sealed class ProtocolGatewayTests
     }
 
     [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void RoomSlotsAreUniqueAndStableAcrossRosterChanges(int count)
+    {
+        var room = new RoomAuthority("HM0001", "p0", new HitMe.Core.GameConfig());
+        for (var i = 0; i < count; i++)
+            Assert.True(room.TryJoin($"p{i}", $"P{i}", out _));
+        Assert.Equal(Enumerable.Range(0, count), room.Players.Select(p => p.Slot));
+
+        if (count < 3) return;
+        Assert.True(room.TryLeave("p1", out _));
+        var survivors = room.Players.ToDictionary(p => p.Id, p => p.Slot);
+        Assert.True(room.TryJoin("replacement", "Replacement", out _));
+        Assert.Equal(1, room.Players.Single(p => p.Id == "replacement").Slot);
+        Assert.All(room.Players.Where(p => p.Id != "replacement"), p => Assert.Equal(survivors[p.Id], p.Slot));
+        Assert.Equal(count, room.Players.Select(p => p.Slot).Distinct().Count());
+    }
+
+    [Fact]
+    public void RoomStateBroadcastGivesSameSlotsToEveryClientAndReconnectPreservesSlot()
+    {
+        var gateway = Gateway();
+        var first = Json(gateway.Handle("c1", Request("join")));
+        var token = first.GetProperty("reconnectToken").GetString();
+        var messages = gateway.HandleMessages("c2", Request("join", "p2", "Two", "HM0001"));
+        var states = messages.Where(m => Json(m.Payload).GetProperty("type").GetString() == "room_state").ToArray();
+        Assert.Equal(2, states.Length);
+        var expected = new Dictionary<string, int> { ["p1"] = 0, ["p2"] = 1 };
+        foreach (var state in states)
+            Assert.Equal(expected, Json(state.Payload).GetProperty("players").EnumerateArray()
+                .ToDictionary(p => p.GetProperty("id").GetString()!, p => p.GetProperty("slot").GetInt32()));
+
+        gateway.Disconnect("c1");
+        var rejoined = Json(gateway.Handle("c1r", JsonSerializer.Serialize(new
+        { v = 1, type = "join", token = "test:p1", reconnectToken = token })));
+        Assert.Equal(expected, rejoined.GetProperty("players").EnumerateArray()
+            .ToDictionary(p => p.GetProperty("id").GetString()!, p => p.GetProperty("slot").GetInt32()));
+    }
+
+    [Theory]
     [InlineData(0)]
     [InlineData(3)]
     public void JoinRejectsOlderOrNewerProtocolWithExplicitMismatch(int clientVersion)

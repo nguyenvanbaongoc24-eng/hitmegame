@@ -1,0 +1,16 @@
+K2 fixed player slots, 2026-11-03, prep/codex
+
+Server assigns unique integer slots 0..5 when a human joins a room. The
+RoomPlayer retains its slot on reconnect. Lobby leave frees only that player's
+slot; a new join uses the lowest free slot and survivors are not renumbered.
+room_state broadcasts include slot with player id/name/ready. No position or
+aim is added to the prelock state.
+
+Targeted command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo --filter "FullyQualifiedName~RoomSlotsAreUniqueAndStableAcrossRosterChanges|FullyQualifiedName~RoomStateBroadcastGivesSameSlotsToEveryClientAndReconnectPreservesSlot" --verbosity minimal
+Result: Passed! 6/6 (room sizes 2 through 6, plus two-client broadcast/reconnect)
+
+Full command: dotnet test server/Tests/HitMe.Server.Tests.csproj --nologo --verbosity minimal
+Result: Passed! 159/159, Failed 0, Skipped 0
+
+Client palette/ring/HUD rendering is not verified here; AG must map slot to
+one common palette and may add a local cyan highlight without changing slot.
