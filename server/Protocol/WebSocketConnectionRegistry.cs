@@ -11,11 +11,13 @@ public sealed class WebSocketConnectionRegistry
     private readonly ConcurrentDictionary<string, Connection> connections = new(StringComparer.Ordinal);
     public int Count => connections.Count;
     private readonly TimeSpan writeTimeout;
+    private readonly TimeSpan closeTimeout;
     private readonly ServerMetrics? metrics;
 
-    public WebSocketConnectionRegistry(TimeSpan? writeTimeout = null, ServerMetrics? metrics = null)
+    public WebSocketConnectionRegistry(TimeSpan? writeTimeout = null, ServerMetrics? metrics = null, TimeSpan? closeTimeout = null)
     {
         this.writeTimeout = writeTimeout ?? TimeSpan.FromSeconds(1);
+        this.closeTimeout = closeTimeout ?? TimeSpan.FromSeconds(1);
         this.metrics = metrics;
     }
 
@@ -32,15 +34,17 @@ public sealed class WebSocketConnectionRegistry
     {
         var timestamp = now ?? DateTimeOffset.UtcNow;
         var closed = new List<string>();
+        var closures = new List<Task>();
         foreach (var item in connections)
         {
             if (timestamp - item.Value.LastActivity < timeout) continue;
             if (connections.TryRemove(item.Key, out var connection))
             {
                 closed.Add(item.Key);
-                await CloseAsync(connection, "idle_timeout");
+                closures.Add(CloseAsync(connection, "idle_timeout"));
             }
         }
+        await Task.WhenAll(closures);
         return closed;
     }
 
@@ -48,22 +52,26 @@ public sealed class WebSocketConnectionRegistry
     {
         var timestamp = now ?? DateTimeOffset.UtcNow;
         var closed = new List<string>();
+        var closures = new List<Task>();
         foreach (var item in connections)
         {
             if (timestamp - item.Value.RegisteredAt < timeout || isJoined(item.Key)) continue;
             if (connections.TryRemove(item.Key, out var connection))
             {
                 closed.Add(item.Key);
-                await CloseAsync(connection, "join_timeout");
+                closures.Add(CloseAsync(connection, "join_timeout"));
             }
         }
+        await Task.WhenAll(closures);
         return closed;
     }
 
     public async Task CloseAllAsync(string reason)
     {
+        var closures = new List<Task>();
         foreach (var item in connections.ToArray())
-            if (connections.TryRemove(item.Key, out var connection)) await CloseAsync(connection, reason);
+            if (connections.TryRemove(item.Key, out var connection)) closures.Add(CloseAsync(connection, reason));
+        await Task.WhenAll(closures);
     }
 
     public async Task NotifyRestartAndCloseAsync()
@@ -137,14 +145,21 @@ public sealed class WebSocketConnectionRegistry
     private async Task CloseSlowConnectionAsync(string connectionId, Connection connection)
     {
         connections.TryRemove(connectionId, out _);
-        try { await connection.Socket.CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "slow client", CancellationToken.None); }
-        catch (WebSocketException) { connection.Socket.Abort(); }
+        await CloseAsync(connection, "slow client");
     }
 
-    private static async Task CloseAsync(Connection connection, string reason)
+    private async Task CloseAsync(Connection connection, string reason)
     {
-        try { await connection.Socket.CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, reason, CancellationToken.None); }
-        catch (WebSocketException) { connection.Socket.Abort(); }
+        try
+        {
+            using var timeout = new CancellationTokenSource(closeTimeout);
+            await connection.Socket.CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, reason, timeout.Token)
+                .WaitAsync(closeTimeout);
+        }
+        catch (Exception error) when (error is WebSocketException or OperationCanceledException or TimeoutException or ObjectDisposedException)
+        {
+            // A peer can stop reading the close frame. Bound shutdown and deadline ticks.
+        }
         finally { connection.Socket.Abort(); }
     }
 

@@ -78,6 +78,22 @@ public sealed class WebSocketConnectionRegistryTests
     }
 
     [Fact]
+    public async Task StalledCloseHandshakeCannotBlockOtherConnections()
+    {
+        var registry = new WebSocketConnectionRegistry(closeTimeout: TimeSpan.FromMilliseconds(30));
+        var stalled = new BlockingCloseWebSocket();
+        var fast = new ImmediateWebSocket();
+        registry.Register("stalled", stalled);
+        registry.Register("fast", fast);
+
+        await registry.CloseAllAsync("server_shutdown").WaitAsync(TimeSpan.FromMilliseconds(250));
+
+        Assert.Equal(WebSocketState.Aborted, stalled.State);
+        Assert.NotEqual(WebSocketState.Open, fast.State);
+        Assert.Equal(0, registry.Count);
+    }
+
+    [Fact]
     public async Task ReplacingOneSessionClosesOnlyItsOldSocket()
     {
         var registry = new WebSocketConnectionRegistry();
@@ -113,5 +129,11 @@ public sealed class WebSocketConnectionRegistryTests
     {
         public override Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken)
             => Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+    }
+
+    private sealed class BlockingCloseWebSocket : ImmediateWebSocket
+    {
+        public override Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string? statusDescription, CancellationToken cancellationToken)
+            => Task.Delay(Timeout.InfiniteTimeSpan);
     }
 }
