@@ -9,9 +9,13 @@ const option = (flag, fallback) => {
 };
 const seconds = option('--seconds', 600);
 const intervalSeconds = option('--interval', 30);
+const chaos = process.argv.includes('--chaos');
 if (!/^wss?:\/\//.test(endpoint ?? '') || !Number.isInteger(seconds) || seconds < 1 ||
     !Number.isInteger(intervalSeconds) || intervalSeconds < 1)
   throw new Error('Usage: RenderLoad.mjs wss://HOST/ws --seconds 600 --interval 30');
+const host = new URL(endpoint).hostname;
+if (!['localhost', '127.0.0.1', '::1'].includes(host) && !process.argv.includes('--render-approved'))
+  throw new Error('Remote load requires explicit --render-approved');
 
 const site = new URL(endpoint);
 site.protocol = site.protocol === 'wss:' ? 'https:' : 'http:';
@@ -31,6 +35,10 @@ let cycles = 0;
 let completed = 0;
 let disconnects = 0;
 let peakConnections = 0;
+let injectedReconnects = 0;
+let injectedInvalidCommits = 0;
+let injectedMissedCommits = 0;
+let injectedLeaves = 0;
 const before = await metrics();
 
 while (Date.now() < ending) {
@@ -60,6 +68,7 @@ const summary = {
   expectedRounds: completed * 5, measuredRounds: samples.length,
   averageRoundMs: Math.round(average), p95RoundMs: percentile(0.95), maxRoundMs: samples.at(-1) ?? 0,
   droppedConnections: disconnects, errors: failures.length, firstErrors: failures.slice(0, 5),
+  injectedReconnects, injectedInvalidCommits, injectedMissedCommits, injectedLeaves,
   peakObservedConnections: peakConnections, before, after,
   cpuAndMemory: 'unavailable from public Render metrics endpoint'
 };
@@ -68,20 +77,27 @@ if (failures.length || completed !== cycles * 3 || samples.length !== completed 
 
 async function playRoom(count, cycle) {
   const clients = [];
+  const tokens = [];
+  const reconnectTokens = [];
   let roomCode = 'not_created';
   let stage = 'connect';
   try {
     for (let i = 0; i < count; i++) clients.push(await connect());
-    const roomTag = `load_${started}_${count}_${cycle}`;
+    const roomTag = `l${cycle}n${count}`;
     stage = 'create_room';
-    clients[0].send({ type: 'join', token: `guest:${roomTag}_0` });
+    tokens[0] = `guest:${roomTag}p0`;
+    clients[0].send({ type: 'join', token: tokens[0] });
     const room = await clients[0].take('room_state');
+    reconnectTokens[0] = room.reconnectToken;
     roomCode = room.roomCode;
     assert.equal(room.players.length, 1);
     for (let i = 1; i < count; i++) {
       stage = `join_${i}`;
-      clients[i].send({ type: 'join', token: `guest:${roomTag}_${i}`, roomCode: room.roomCode });
-      assert.equal((await clients[i].take('room_state')).players.length, i + 1);
+      tokens[i] = `guest:${roomTag}p${i}`;
+      clients[i].send({ type: 'join', token: tokens[i], roomCode: room.roomCode });
+      const joined = await clients[i].take('room_state');
+      reconnectTokens[i] = joined.reconnectToken;
+      assert.equal(joined.players.length, i + 1);
     }
     stage = 'start';
     clients[0].send({ type: 'start' });
@@ -90,11 +106,37 @@ async function playRoom(count, cycle) {
       stage = `round_${round}_start`;
       const begins = await Promise.all(clients.map(client => client.take('round_start')));
       assert.ok(begins.every(begin => begin.roundId === round));
+      if (chaos && round === 2) {
+        const index = clients.length - 1;
+        clients[index].close();
+        await delay(100);
+        clients[index] = await connect();
+        clients[index].send({ type: 'join', token: tokens[index], reconnectToken: reconnectTokens[index] });
+        const resumed = await clients[index].take('room_state');
+        assert.equal(resumed.roomCode, roomCode);
+        reconnectTokens[index] = resumed.reconnectToken;
+        assert.equal((await clients[index].take('round_start')).roundId, round);
+        injectedReconnects++;
+      }
+      if (chaos && round === 3 && count === 6) {
+        clients.at(-1).send({ type: 'leave' });
+        await clients.at(-1).take('room_state');
+        clients.pop().close();
+        injectedLeaves++;
+      }
       stage = `round_${round}_commit`;
-      for (let i = 0; i < count; i++) clients[i].send({
+      if (chaos && round === 1) {
+        clients[0].send({ type: 'commit', roundId: round, positionX: 'bad' });
+        assert.equal((await clients[0].take('error')).code, 'bad_message');
+        injectedInvalidCommits++;
+      }
+      for (let i = 0; i < clients.length; i++) {
+        if (chaos && round === 1 && i === clients.length - 1) { injectedMissedCommits++; continue; }
+        clients[i].send({
         type: 'commit', roundId: round, positionX: -3 + i * 1.2, positionY: 0,
         hasAim: true, aimX: 0, aimY: 1
       });
+      }
       // The server processes each socket's commit before its subsequent lock_ready.
       const lockAt = Date.now();
       clients.forEach(client => client.send({ type: 'lock_ready', ready: true }));
@@ -131,7 +173,7 @@ async function connect() {
     if (!waiter) { queue.push(packet); return; }
     waiters.splice(waiters.indexOf(waiter), 1);
     clearTimeout(waiter.timer);
-    packet.type === 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
+    packet.type === 'error' && waiter.type !== 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
   });
   socket.addEventListener('close', () => {
     if (!expectedClose) disconnects++;
@@ -151,7 +193,7 @@ async function connect() {
       const index = queue.findIndex(item => item.type === type || item.type === 'error');
       if (index >= 0) {
         const item = queue.splice(index, 1)[0];
-        return item.type === 'error' ? Promise.reject(new Error(item.code)) : Promise.resolve(item);
+        return item.type === 'error' && type !== 'error' ? Promise.reject(new Error(item.code)) : Promise.resolve(item);
       }
       return new Promise((resolve, reject) => {
         const waiter = { type, resolve, reject };
