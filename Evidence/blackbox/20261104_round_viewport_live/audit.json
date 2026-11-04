@@ -1,0 +1,3344 @@
+{
+  "iphone15pro_safari": {
+    "profile": {
+      "width": 393,
+      "height": 695,
+      "dpr": 3
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 393,
+      "innerHeight": 695,
+      "width": 393,
+      "height": 695,
+      "offsetTop": 0,
+      "dpr": 3
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 48.1622636238168,
+          "y": 530.9840152507821,
+          "w": 127.68545957547845,
+          "h": 32.67094496890508
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 317.351437449334,
+          "y": 252.4684116727875,
+          "w": 25.537101675753433,
+          "h": 25.54274722539377
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 140.0808482669741,
+          "y": 189.70229417737252,
+          "w": 112.8382912652296,
+          "h": 130.68377987562033
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 50.111442573679305,
+          "y": 252.4684116727875,
+          "w": 25.537089474931253,
+          "h": 25.54274722539377
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 48.1622636238168,
+          "y": 382.1903101456865,
+          "w": 127.68545957547845,
+          "h": 31.18589868754046
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 154.9279921755786,
+          "y": 650.4357246425265,
+          "w": 83.14401564884282,
+          "h": 20.790599125026972
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 350.87007297892296,
+          "y": 23.446133770520174,
+          "w": 21.379891132653547,
+          "h": 21.384568823495037
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 65.84512872395172,
+          "y": 597.0414707548188,
+          "w": 261.30974255209657,
+          "h": 29.700852406175834
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 217.1522584994715,
+          "y": 382.1903101456865,
+          "w": 127.68545957547845,
+          "h": 31.18589868754046
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 217.1522584994715,
+          "y": 530.9840152507821,
+          "w": 127.68545957547845,
+          "h": 32.67094496890508
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 33.62213815434903,
+          "y": 23.446133770520174,
+          "w": 74.23573174384458,
+          "h": 21.384568823495037
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 65.84512872395172,
+          "y": 459.30039558366747,
+          "w": 261.30974255209657,
+          "h": 40.09613976516987
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 69.40843984578657,
+          "y": 650.4357246425265,
+          "w": 83.14401564884282,
+          "h": 20.790599125026972
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 86.58668504095999,
+          "y": 398.3475746356714,
+          "w": 71.26629564163038,
+          "h": 10.09826589920167
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 240.44755670619278,
+          "y": 650.4357246425265,
+          "w": 83.14401564884282,
+          "h": 20.790599125026972
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084009",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 393,
+        "cssH": 695,
+        "backingW": 983,
+        "backingH": 1738,
+        "dpr": 3
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 65.84512872395172,
+          "y": 459.30039558366747,
+          "w": 261.30974255209657,
+          "h": 40.09613976516987
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.52,
+        "coloredFraction": 0.328,
+        "yellowFraction": 0.317,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.1,
+          211.0,
+          188.6
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 48.1622636238168,
+          "y": 530.9840152507821,
+          "w": 127.68545957547845,
+          "h": 32.67094496890508
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.058,
+        "coloredFraction": 0.881,
+        "yellowFraction": 0.867,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          221.7,
+          171.0,
+          122.6
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 217.1522584994715,
+          "y": 530.9840152507821,
+          "w": 127.68545957547845,
+          "h": 32.67094496890508
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.065,
+        "coloredFraction": 0.877,
+        "yellowFraction": 0.856,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.6,
+          175.6,
+          123.3
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 65.84512872395172,
+          "y": 597.0414707548188,
+          "w": 261.30974255209657,
+          "h": 29.700852406175834
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.006,
+        "coloredFraction": 0.727,
+        "yellowFraction": 0.318,
+        "blueFraction": 0.0,
+        "greenFraction": 0.203,
+        "meanRgb": [
+          146.2,
+          130.5,
+          74.9
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 48.1622636238168,
+          "y": 382.1903101456865,
+          "w": 127.68545957547845,
+          "h": 31.18589868754046
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.031,
+        "coloredFraction": 0.838,
+        "yellowFraction": 0.763,
+        "blueFraction": 0.009,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          222.6,
+          171.2,
+          121.5
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 217.1522584994715,
+          "y": 382.1903101456865,
+          "w": 127.68545957547845,
+          "h": 31.18589868754046
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.032,
+        "coloredFraction": 0.861,
+        "yellowFraction": 0.827,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.0,
+          174.0,
+          120.9
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 350.87007297892296,
+          "y": 23.446133770520174,
+          "w": 21.379891132653547,
+          "h": 21.384568823495037
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.112,
+        "coloredFraction": 0.494,
+        "yellowFraction": 0.14,
+        "blueFraction": 0.098,
+        "greenFraction": 0.226,
+        "meanRgb": [
+          139.2,
+          132.5,
+          123.0
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 33.62213815434903,
+          "y": 23.446133770520174,
+          "w": 74.23573174384458,
+          "h": 21.384568823495037
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.06,
+        "coloredFraction": 0.31,
+        "yellowFraction": 0.048,
+        "blueFraction": 0.677,
+        "greenFraction": 0.067,
+        "meanRgb": [
+          68.2,
+          102.6,
+          109.9
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.43,
+      "coloredFraction": 0.03,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.487,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        134.5,
+        142.4,
+        151.7
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.633,
+      "coloredFraction": 0.197,
+      "yellowFraction": 0.198,
+      "blueFraction": 0.0,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        229.3,
+        217.8,
+        205.6
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters",
+      "bot_back_clipped_top",
+      "bot_start_clipped_bottom",
+      "CharCard_0_white_placeholder",
+      "CharCard_4_white_placeholder"
+    ],
+    "afterBotTap": {
+      "state": {
+        "build": "Release_20261104_084009",
+        "version": "1.0.0",
+        "screen": "select",
+        "selectedCharacterId": "nam_lang",
+        "selectedWeaponId": "dep_to_ong",
+        "roster": [
+          {
+            "id": "nam_lang",
+            "name": "Nam Làng",
+            "enabled": true
+          },
+          {
+            "id": "nu_nang_dong",
+            "name": "Nữ Năng Động",
+            "enabled": true
+          },
+          {
+            "id": "co_ba",
+            "name": "Cô Ba",
+            "enabled": true
+          },
+          {
+            "id": "anh_teen",
+            "name": "Anh Teen",
+            "enabled": true
+          },
+          {
+            "id": "quay_boy",
+            "name": "Quậy Boy",
+            "enabled": false
+          },
+          {
+            "id": "cho_vang",
+            "name": "Chó Vàng",
+            "enabled": false
+          },
+          {
+            "id": "meo_mun",
+            "name": "Mèo Mun",
+            "enabled": false
+          }
+        ],
+        "weapons": [
+          {
+            "id": "dep_to_ong",
+            "name": "Dép Tổ Ong",
+            "enabled": true
+          },
+          {
+            "id": "chao",
+            "name": "Chảo",
+            "enabled": true
+          },
+          {
+            "id": "vot",
+            "name": "Vợt",
+            "enabled": true
+          }
+        ],
+        "canvas": {
+          "cssW": 393,
+          "cssH": 695,
+          "backingW": 983,
+          "backingH": 1738,
+          "dpr": 3
+        },
+        "match": {
+          "round": 1,
+          "phase": "placing",
+          "timeLeft": 5,
+          "playableRect": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "players": [],
+          "events": []
+        }
+      },
+      "dump": [
+        {
+          "name": "BtnInc",
+          "text": "+",
+          "spriteName": "ui_btn_circle_back",
+          "rect": {
+            "x": 273.9426934522627,
+            "y": 501.9766400406358,
+            "w": 23.75544001442491,
+            "h": 23.76069168775622
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "BtnBack",
+          "text": "",
+          "spriteName": "ui_btn_circle_back",
+          "rect": {
+            "x": -12.228582100853673,
+            "y": -84.13911738247538,
+            "w": 28.50651947673437,
+            "h": 28.51279097404524
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "BtnStartBot",
+          "text": "BẮT ĐẦU (VÀO SÂN)",
+          "spriteName": "btn_primary_yellow_normal",
+          "rect": {
+            "x": 65.84512872395172,
+            "y": 681.8885875214642,
+            "w": 261.30974255209657,
+            "h": 40.09615196868932
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_1",
+          "text": "Nữ Năng Động",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 131.1131707596027,
+            "y": 141.5027368192157,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_3",
+          "text": "Anh Teen",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 267.9444520471055,
+            "y": 141.5027368192157,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_2",
+          "text": "Cô Ba",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 199.52882970458737,
+            "y": 141.5027368192157,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_6",
+          "text": "Mèo Mun",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 233.73664087584643,
+            "y": 177.0249364784864,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_4",
+          "text": "Quậy Boy",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 96.90534738752146,
+            "y": 177.0249364784864,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_0",
+          "text": "Nam Làng",
+          "spriteName": "ui_card_char_selected",
+          "rect": {
+            "x": 62.697524015440216,
+            "y": 141.5027368192157,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "BtnDec",
+          "text": "−",
+          "spriteName": "ui_btn_circle_back",
+          "rect": {
+            "x": 95.30187263372349,
+            "y": 501.9766400406358,
+            "w": 23.75543391401382,
+            "h": 23.76069168775622
+          },
+          "interactable": true,
+          "visible": true
+        },
+        {
+          "name": "CharCard_5",
+          "text": "Chó Vàng",
+          "spriteName": "ui_card_char_normal",
+          "rect": {
+            "x": 165.32099413168393,
+            "y": 177.0249364784864,
+            "w": 62.35801173663212,
+            "h": 34.15599125026971
+          },
+          "interactable": true,
+          "visible": true
+        }
+      ]
+    },
+    "selectCardSamples": {
+      "CharCard_0": {
+        "valid": true,
+        "brightNeutralFraction": 0.452,
+        "coloredFraction": 0.104,
+        "yellowFraction": 0.0,
+        "blueFraction": 0.47,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          138.9,
+          154.6,
+          164.2
+        ]
+      },
+      "CharCard_4": {
+        "valid": true,
+        "brightNeutralFraction": 0.771,
+        "coloredFraction": 0.014,
+        "yellowFraction": 0.0,
+        "blueFraction": 0.157,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          205.2,
+          205.5,
+          206.4
+        ]
+      }
+    },
+    "afterStartTap": {
+      "build": "Release_20261104_084009",
+      "version": "1.0.0",
+      "screen": "match",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 393,
+        "cssH": 695,
+        "backingW": 983,
+        "backingH": 1738,
+        "dpr": 3
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 3.9149997234344482,
+        "playableRect": {
+          "x": 64.53305230669427,
+          "y": 218.1977073397269,
+          "w": 263.9338953866115,
+          "h": 355.58131701927056
+        },
+        "players": [
+          {
+            "id": "player",
+            "name": "Nam Làng",
+            "characterId": "nam_lang",
+            "slot": 0,
+            "hp": 3,
+            "alive": true,
+            "isLocal": true,
+            "rect": {
+              "x": 269.2914228157983,
+              "y": 260.32342662745435,
+              "w": 65.96642929806714,
+              "h": 89.9741081703107
+            }
+          },
+          {
+            "id": "bot-1",
+            "name": "Cô Ba",
+            "characterId": "nu_nang_dong",
+            "slot": 1,
+            "hp": 3,
+            "alive": true,
+            "isLocal": false,
+            "rect": {
+              "x": 264.7967619328387,
+              "y": 389.34137728463935,
+              "w": 65.96642929806714,
+              "h": 89.9741081703107
+            }
+          },
+          {
+            "id": "bot-2",
+            "name": "Anh Teen",
+            "characterId": "co_ba",
+            "slot": 2,
+            "hp": 3,
+            "alive": true,
+            "isLocal": false,
+            "rect": {
+              "x": 186.50845389691156,
+              "y": 331.2192603002621,
+              "w": 65.96642929806714,
+              "h": 89.9741081703107
+            }
+          },
+          {
+            "id": "bot-3",
+            "name": "Nữ Năng Động",
+            "characterId": "anh_teen",
+            "slot": 3,
+            "hp": 3,
+            "alive": true,
+            "isLocal": false,
+            "rect": {
+              "x": 96.26007030405566,
+              "y": 378.15182386251263,
+              "w": 65.96642929806714,
+              "h": 89.9741081703107
+            }
+          }
+        ],
+        "events": []
+      }
+    },
+    "pageErrors": []
+  },
+  "iphone15pro_safari_collapsed": {
+    "profile": {
+      "width": 393,
+      "height": 780,
+      "dpr": 3
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 393,
+      "innerHeight": 780,
+      "width": 393,
+      "height": 780,
+      "offsetTop": 0,
+      "dpr": 3
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 40.37478994716827,
+          "y": 595.924462890625,
+          "w": 143.2604191295977,
+          "h": 36.6666748046875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 315.79395369474423,
+          "y": 283.345849609375,
+          "w": 28.652069184932923,
+          "h": 28.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 133.1988891104837,
+          "y": 212.903271484375,
+          "w": 126.60222177903262,
+          "h": 146.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 48.55395881908956,
+          "y": 283.345849609375,
+          "w": 28.652081385755103,
+          "h": 28.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 40.37478994716827,
+          "y": 428.9330078125,
+          "w": 143.2604191295977,
+          "h": 35
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 149.8570742602266,
+          "y": 729.9854492187501,
+          "w": 93.285863680369,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 349.5661223092375,
+          "y": 26.313574218750002,
+          "w": 23.987792472024417,
+          "h": 24
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 49.90793896012486,
+          "y": 670.0609375,
+          "w": 293.1840976781059,
+          "h": 33.333325195312504
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 209.36479092323404,
+          "y": 428.9330078125,
+          "w": 143.26039472795333,
+          "h": 35
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 209.36479092323404,
+          "y": 595.924462890625,
+          "w": 143.26039472795333,
+          "h": 36.6666748046875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 29.094541151914083,
+          "y": 26.313574218750002,
+          "w": 83.29093794953666,
+          "h": 24
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 49.90793896012486,
+          "y": 515.4738281250001,
+          "w": 293.1840976781059,
+          "h": 45
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 53.90590437212892,
+          "y": 729.9854492187501,
+          "w": 93.28585147954682,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 83.48617550606403,
+          "y": 447.06630859375,
+          "w": 79.95930824008138,
+          "h": 11.333349609375
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 245.80823194750207,
+          "y": 729.9854492187501,
+          "w": 93.28587588119119,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084017",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 393,
+        "cssH": 780,
+        "backingW": 983,
+        "backingH": 1950,
+        "dpr": 3
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 49.90793896012486,
+          "y": 515.4738281250001,
+          "w": 293.1840976781059,
+          "h": 45
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.52,
+        "coloredFraction": 0.332,
+        "yellowFraction": 0.326,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.3,
+          210.9,
+          188.3
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 40.37478994716827,
+          "y": 595.924462890625,
+          "w": 143.2604191295977,
+          "h": 36.6666748046875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.06,
+        "coloredFraction": 0.885,
+        "yellowFraction": 0.868,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          221.1,
+          170.5,
+          121.8
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 209.36479092323404,
+          "y": 595.924462890625,
+          "w": 143.26039472795333,
+          "h": 36.6666748046875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.066,
+        "coloredFraction": 0.886,
+        "yellowFraction": 0.861,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.0,
+          175.1,
+          122.6
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 49.90793896012486,
+          "y": 670.0609375,
+          "w": 293.1840976781059,
+          "h": 33.333325195312504
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.006,
+        "coloredFraction": 0.72,
+        "yellowFraction": 0.305,
+        "blueFraction": 0.0,
+        "greenFraction": 0.222,
+        "meanRgb": [
+          141.9,
+          127.6,
+          72.0
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 40.37478994716827,
+          "y": 428.9330078125,
+          "w": 143.2604191295977,
+          "h": 35
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.034,
+        "coloredFraction": 0.841,
+        "yellowFraction": 0.78,
+        "blueFraction": 0.009,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          222.3,
+          169.8,
+          120.2
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 209.36479092323404,
+          "y": 428.9330078125,
+          "w": 143.26039472795333,
+          "h": 35
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.034,
+        "coloredFraction": 0.864,
+        "yellowFraction": 0.829,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          226.6,
+          172.8,
+          119.9
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 349.5661223092375,
+          "y": 26.313574218750002,
+          "w": 23.987792472024417,
+          "h": 24
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.112,
+        "coloredFraction": 0.468,
+        "yellowFraction": 0.12,
+        "blueFraction": 0.088,
+        "greenFraction": 0.314,
+        "meanRgb": [
+          130.8,
+          134.5,
+          122.1
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 29.094541151914083,
+          "y": 26.313574218750002,
+          "w": 83.29093794953666,
+          "h": 24
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.06,
+        "coloredFraction": 0.293,
+        "yellowFraction": 0.048,
+        "blueFraction": 0.678,
+        "greenFraction": 0.065,
+        "meanRgb": [
+          68.1,
+          102.4,
+          109.7
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.414,
+      "coloredFraction": 0.009,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.471,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        132.1,
+        140.1,
+        149.6
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.632,
+      "coloredFraction": 0.204,
+      "yellowFraction": 0.204,
+      "blueFraction": 0.0,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        229.5,
+        217.7,
+        205.3
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters"
+    ],
+    "pageErrors": []
+  },
+  "iphone15pro_standalone": {
+    "profile": {
+      "width": 393,
+      "height": 852,
+      "dpr": 3
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 393,
+      "innerHeight": 852,
+      "width": 393,
+      "height": 852,
+      "offsetTop": 0,
+      "dpr": 3
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 33.76889269373788,
+          "y": 650.93447265625,
+          "w": 156.4722014356363,
+          "h": 40.04814453125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 314.4727754641404,
+          "y": 309.502099609375,
+          "w": 31.294425646140642,
+          "h": 31.310351562500003
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 127.36111291864033,
+          "y": 232.56215820312502,
+          "w": 138.27777416271937,
+          "h": 160.192578125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 47.23277753828016,
+          "y": 309.502099609375,
+          "w": 31.294446997579456,
+          "h": 31.310351562500003
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 33.76889269373788,
+          "y": 468.5283203125,
+          "w": 156.4722014356363,
+          "h": 38.227783203125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 145.5555645932016,
+          "y": 797.369677734375,
+          "w": 101.88887081359677,
+          "h": 25.4851806640625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 348.4599957703816,
+          "y": 28.74365234375,
+          "w": 26.199996746447418,
+          "h": 26.213330078125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 36.3888911483004,
+          "y": 731.9141601562501,
+          "w": 320.2221933017548,
+          "h": 36.407403564453126
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 202.7588753685704,
+          "y": 468.5283203125,
+          "w": 156.47222583728063,
+          "h": 38.227783203125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 202.7588753685704,
+          "y": 650.93447265625,
+          "w": 156.47222583728063,
+          "h": 40.04814453125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 25.253902291717996,
+          "y": 28.74365234375,
+          "w": 90.97222787075101,
+          "h": 26.213330078125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 36.3888911483004,
+          "y": 563.05791015625,
+          "w": 320.2221933017548,
+          "h": 49.150000000000006
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 40.75555930617867,
+          "y": 797.369677734375,
+          "w": 101.88888911483004,
+          "h": 25.4851806640625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 80.85610527279175,
+          "y": 488.33388671875,
+          "w": 87.33333875592096,
+          "h": 12.378515625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 250.35555157899128,
+          "y": 797.369677734375,
+          "w": 101.88887081359677,
+          "h": 25.4851806640625
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084022",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 393,
+        "cssH": 852,
+        "backingW": 983,
+        "backingH": 2130,
+        "dpr": 3
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 36.3888911483004,
+          "y": 563.05791015625,
+          "w": 320.2221933017548,
+          "h": 49.150000000000006
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.52,
+        "coloredFraction": 0.335,
+        "yellowFraction": 0.319,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.3,
+          210.8,
+          188.2
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 33.76889269373788,
+          "y": 650.93447265625,
+          "w": 156.4722014356363,
+          "h": 40.04814453125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.059,
+        "coloredFraction": 0.887,
+        "yellowFraction": 0.87,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          221.3,
+          170.8,
+          122.0
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 202.7588753685704,
+          "y": 650.93447265625,
+          "w": 156.47222583728063,
+          "h": 40.04814453125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.066,
+        "coloredFraction": 0.884,
+        "yellowFraction": 0.864,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.1,
+          175.3,
+          122.6
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 36.3888911483004,
+          "y": 731.9141601562501,
+          "w": 320.2221933017548,
+          "h": 36.407403564453126
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.006,
+        "coloredFraction": 0.725,
+        "yellowFraction": 0.303,
+        "blueFraction": 0.0,
+        "greenFraction": 0.206,
+        "meanRgb": [
+          143.5,
+          125.3,
+          71.7
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 33.76889269373788,
+          "y": 468.5283203125,
+          "w": 156.4722014356363,
+          "h": 38.227783203125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.04,
+        "coloredFraction": 0.841,
+        "yellowFraction": 0.768,
+        "blueFraction": 0.009,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          222.7,
+          169.6,
+          120.2
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 202.7588753685704,
+          "y": 468.5283203125,
+          "w": 156.47222583728063,
+          "h": 38.227783203125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.041,
+        "coloredFraction": 0.864,
+        "yellowFraction": 0.826,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.1,
+          172.7,
+          119.9
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 348.4599957703816,
+          "y": 28.74365234375,
+          "w": 26.199996746447418,
+          "h": 26.213330078125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.115,
+        "coloredFraction": 0.491,
+        "yellowFraction": 0.078,
+        "blueFraction": 0.109,
+        "greenFraction": 0.353,
+        "meanRgb": [
+          124.6,
+          133.9,
+          121.9
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 25.253902291717996,
+          "y": 28.74365234375,
+          "w": 90.97222787075101,
+          "h": 26.213330078125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.063,
+        "coloredFraction": 0.293,
+        "yellowFraction": 0.051,
+        "blueFraction": 0.682,
+        "greenFraction": 0.058,
+        "meanRgb": [
+          69.9,
+          102.4,
+          109.7
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.438,
+      "coloredFraction": 0.022,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.47,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        138.1,
+        145.7,
+        154.8
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.619,
+      "coloredFraction": 0.219,
+      "yellowFraction": 0.222,
+      "blueFraction": 0.0,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        228.9,
+        216.4,
+        203.3
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters"
+    ],
+    "pageErrors": []
+  },
+  "iphonese_safari": {
+    "profile": {
+      "width": 375,
+      "height": 553,
+      "dpr": 2
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 375,
+      "innerHeight": 553,
+      "width": 375,
+      "height": 553,
+      "offsetTop": 0,
+      "dpr": 2
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 56.06516647338867,
+          "y": 422.49517822265625,
+          "w": 101.61965942382812,
+          "h": 25.9957275390625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 304.8380432128906,
+          "y": 200.88491821289062,
+          "w": 20.32391357421875,
+          "h": 20.32391357421875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 142.59829711914062,
+          "y": 150.94293212890625,
+          "w": 89.80340576171875,
+          "h": 103.98291015625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 49.838035583496094,
+          "y": 200.88491821289062,
+          "w": 20.323928833007812,
+          "h": 20.32391357421875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 56.06516647338867,
+          "y": 304.10247802734375,
+          "w": 101.61965942382812,
+          "h": 24.814117431640625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 154.41452026367188,
+          "y": 517.5409545898438,
+          "w": 66.17095947265625,
+          "h": 16.54273796081543
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 336.4923095703125,
+          "y": 18.6556396484375,
+          "w": 17.015380859375,
+          "h": 17.015380859375
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 83.51708984375,
+          "y": 475.0560302734375,
+          "w": 207.9658203125,
+          "h": 23.632476806640625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 217.31517028808594,
+          "y": 304.10247802734375,
+          "w": 101.61967468261719,
+          "h": 24.814117431640625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 217.31517028808594,
+          "y": 422.49517822265625,
+          "w": 101.61967468261719,
+          "h": 25.9957275390625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 37.95940017700195,
+          "y": 18.6556396484375,
+          "w": 59.08120346069336,
+          "h": 17.015380859375
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 83.51708984375,
+          "y": 365.45770263671875,
+          "w": 207.9658203125,
+          "h": 31.903839111328125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 86.35298156738281,
+          "y": 517.5409545898438,
+          "w": 66.17094421386719,
+          "h": 16.54273796081543
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 86.64559173583984,
+          "y": 316.95855712890625,
+          "w": 56.71794891357422,
+          "h": 8.0350341796875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 222.47607421875,
+          "y": 517.5409545898438,
+          "w": 66.17095947265625,
+          "h": 16.54273796081543
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084029",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 375,
+        "cssH": 553,
+        "backingW": 750,
+        "backingH": 1106,
+        "dpr": 2
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 83.51708984375,
+          "y": 365.45770263671875,
+          "w": 207.9658203125,
+          "h": 31.903839111328125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.516,
+        "coloredFraction": 0.337,
+        "yellowFraction": 0.335,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.0,
+          210.5,
+          187.7
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 56.06516647338867,
+          "y": 422.49517822265625,
+          "w": 101.61965942382812,
+          "h": 25.9957275390625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.057,
+        "coloredFraction": 0.897,
+        "yellowFraction": 0.885,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          220.9,
+          170.1,
+          121.9
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 217.31517028808594,
+          "y": 422.49517822265625,
+          "w": 101.61967468261719,
+          "h": 25.9957275390625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.065,
+        "coloredFraction": 0.893,
+        "yellowFraction": 0.874,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          226.9,
+          174.8,
+          122.4
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 83.51708984375,
+          "y": 475.0560302734375,
+          "w": 207.9658203125,
+          "h": 23.632476806640625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.007,
+        "coloredFraction": 0.718,
+        "yellowFraction": 0.345,
+        "blueFraction": 0.0,
+        "greenFraction": 0.132,
+        "meanRgb": [
+          153.6,
+          132.3,
+          81.0
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 56.06516647338867,
+          "y": 304.10247802734375,
+          "w": 101.61965942382812,
+          "h": 24.814117431640625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.056,
+        "coloredFraction": 0.848,
+        "yellowFraction": 0.777,
+        "blueFraction": 0.008,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          223.6,
+          173.2,
+          123.0
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 217.31517028808594,
+          "y": 304.10247802734375,
+          "w": 101.61967468261719,
+          "h": 24.814117431640625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.054,
+        "coloredFraction": 0.871,
+        "yellowFraction": 0.837,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.9,
+          176.4,
+          122.8
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 336.4923095703125,
+          "y": 18.6556396484375,
+          "w": 17.015380859375,
+          "h": 17.015380859375
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.118,
+        "coloredFraction": 0.544,
+        "yellowFraction": 0.176,
+        "blueFraction": 0.121,
+        "greenFraction": 0.184,
+        "meanRgb": [
+          143.5,
+          136.9,
+          121.6
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 37.95940017700195,
+          "y": 18.6556396484375,
+          "w": 59.08120346069336,
+          "h": 17.015380859375
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.072,
+        "coloredFraction": 0.258,
+        "yellowFraction": 0.045,
+        "blueFraction": 0.658,
+        "greenFraction": 0.082,
+        "meanRgb": [
+          69.9,
+          104.3,
+          111.3
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.465,
+      "coloredFraction": 0.0,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.48,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        134.3,
+        142.3,
+        151.8
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.566,
+      "coloredFraction": 0.223,
+      "yellowFraction": 0.223,
+      "blueFraction": 0.0,
+      "greenFraction": 0.001,
+      "meanRgb": [
+        224.7,
+        211.4,
+        197.0
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters"
+    ],
+    "pageErrors": []
+  },
+  "android_chrome": {
+    "profile": {
+      "width": 360,
+      "height": 640,
+      "dpr": 3
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 360,
+      "innerHeight": 640,
+      "width": 360,
+      "height": 640,
+      "offsetTop": 0,
+      "dpr": 3
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 43.796582031250004,
+          "y": 488.96367187500005,
+          "w": 117.60683593750001,
+          "h": 30.0854736328125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 290.639306640625,
+          "y": 232.48891601562502,
+          "w": 23.52138671875,
+          "h": 23.52138671875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 128.0341796875,
+          "y": 174.689892578125,
+          "w": 103.931640625,
+          "h": 120.34187011718751
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 45.83930358886719,
+          "y": 232.48891601562502,
+          "w": 23.521365356445315,
+          "h": 23.52138671875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 43.796582031250004,
+          "y": 351.94501953125,
+          "w": 117.60683593750001,
+          "h": 28.71796875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 141.70939941406252,
+          "y": 598.96240234375,
+          "w": 76.58120117187501,
+          "h": 19.145300292968752
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 321.3538818359375,
+          "y": 21.590673828125002,
+          "w": 19.69228515625,
+          "h": 19.69228515625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 59.658117675781256,
+          "y": 549.793603515625,
+          "w": 240.6837890625,
+          "h": 27.35042724609375
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 198.59658203125002,
+          "y": 351.94501953125,
+          "w": 117.60683593750001,
+          "h": 28.71796875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 198.59658203125002,
+          "y": 488.96367187500005,
+          "w": 117.60683593750001,
+          "h": 30.0854736328125
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 30.611953735351562,
+          "y": 21.590673828125002,
+          "w": 68.37607421875,
+          "h": 19.69228515625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 59.658117675781256,
+          "y": 422.952880859375,
+          "w": 240.6837890625,
+          "h": 36.9230712890625
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 62.94016723632813,
+          "y": 598.96240234375,
+          "w": 76.58119506835938,
+          "h": 19.145300292968752
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 79.18803100585939,
+          "y": 366.823681640625,
+          "w": 65.64102172851562,
+          "h": 9.299121093750001
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 220.4786376953125,
+          "y": 598.96240234375,
+          "w": 76.58120117187501,
+          "h": 19.145300292968752
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084033",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 360,
+        "cssH": 640,
+        "backingW": 900,
+        "backingH": 1600,
+        "dpr": 3
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 59.658117675781256,
+          "y": 422.952880859375,
+          "w": 240.6837890625,
+          "h": 36.9230712890625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.517,
+        "coloredFraction": 0.333,
+        "yellowFraction": 0.317,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.1,
+          210.7,
+          188.2
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 43.796582031250004,
+          "y": 488.96367187500005,
+          "w": 117.60683593750001,
+          "h": 30.0854736328125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.057,
+        "coloredFraction": 0.894,
+        "yellowFraction": 0.878,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          221.3,
+          170.5,
+          122.1
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 198.59658203125002,
+          "y": 488.96367187500005,
+          "w": 117.60683593750001,
+          "h": 30.0854736328125
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.064,
+        "coloredFraction": 0.891,
+        "yellowFraction": 0.867,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.2,
+          175.1,
+          122.7
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 59.658117675781256,
+          "y": 549.793603515625,
+          "w": 240.6837890625,
+          "h": 27.35042724609375
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.006,
+        "coloredFraction": 0.728,
+        "yellowFraction": 0.317,
+        "blueFraction": 0.0,
+        "greenFraction": 0.205,
+        "meanRgb": [
+          146.1,
+          130.7,
+          75.1
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 43.796582031250004,
+          "y": 351.94501953125,
+          "w": 117.60683593750001,
+          "h": 28.71796875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.022,
+        "coloredFraction": 0.839,
+        "yellowFraction": 0.766,
+        "blueFraction": 0.009,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          222.3,
+          171.0,
+          121.3
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 198.59658203125002,
+          "y": 351.94501953125,
+          "w": 117.60683593750001,
+          "h": 28.71796875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.023,
+        "coloredFraction": 0.861,
+        "yellowFraction": 0.829,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          226.7,
+          173.8,
+          120.7
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 321.3538818359375,
+          "y": 21.590673828125002,
+          "w": 19.69228515625,
+          "h": 19.69228515625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.109,
+        "coloredFraction": 0.494,
+        "yellowFraction": 0.134,
+        "blueFraction": 0.095,
+        "greenFraction": 0.235,
+        "meanRgb": [
+          138.7,
+          132.0,
+          122.1
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 30.611953735351562,
+          "y": 21.590673828125002,
+          "w": 68.37607421875,
+          "h": 19.69228515625
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.06,
+        "coloredFraction": 0.302,
+        "yellowFraction": 0.052,
+        "blueFraction": 0.665,
+        "greenFraction": 0.067,
+        "meanRgb": [
+          68.3,
+          101.6,
+          108.6
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.393,
+      "coloredFraction": 0.009,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.469,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        132.1,
+        140.2,
+        149.8
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.635,
+      "coloredFraction": 0.195,
+      "yellowFraction": 0.196,
+      "blueFraction": 0.0,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        229.5,
+        218.1,
+        205.8
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters"
+    ],
+    "pageErrors": []
+  },
+  "android_chrome_tall": {
+    "profile": {
+      "width": 412,
+      "height": 780,
+      "dpr": 2.6
+    },
+    "url": "https://hitmegame-iota.vercel.app/?e2e=1",
+    "status": "MEASURED",
+    "bridge": "available",
+    "visualViewport": {
+      "innerWidth": 412,
+      "innerHeight": 780,
+      "width": 412,
+      "height": 780,
+      "offsetTop": 0,
+      "dpr": 2.5999999046325684
+    },
+    "dump": [
+      {
+        "name": "BtnCreateRoom",
+        "text": "TẠO PHÒNG",
+        "spriteName": "btn_blue_normal",
+        "rect": {
+          "x": 45.7533447265625,
+          "y": 595.924462890625,
+          "w": 143.3333251953125,
+          "h": 36.6666748046875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroNext",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 331.7466552734375,
+          "y": 283.345849609375,
+          "w": 28.666650390625,
+          "h": 28.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "HeroCharacter",
+        "text": "",
+        "spriteName": "cau_be_lang_idle",
+        "rect": {
+          "x": 142.66667480468752,
+          "y": 212.903271484375,
+          "w": 126.66665039062501,
+          "h": 146.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHeroPrev",
+        "text": "",
+        "spriteName": "btn_circle_gold",
+        "rect": {
+          "x": 51.58667602539063,
+          "y": 283.345849609375,
+          "w": 28.666662597656252,
+          "h": 28.66669921875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharCard",
+        "text": "NHÂN VẬT",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 45.7533447265625,
+          "y": 428.9330078125,
+          "w": 143.3333251953125,
+          "h": 35
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabRank",
+        "text": "Xếp hạng",
+        "spriteName": "",
+        "rect": {
+          "x": 159.33333740234377,
+          "y": 729.9854492187501,
+          "w": 93.33333740234376,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeSettings",
+        "text": "",
+        "spriteName": "btn_circle_navy",
+        "rect": {
+          "x": 367.039990234375,
+          "y": 26.313574218750002,
+          "w": 24,
+          "h": 24
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnBotTraining",
+        "text": "LUYỆN VỚI BOT",
+        "spriteName": "btn_navy_normal",
+        "rect": {
+          "x": 59.33333740234375,
+          "y": 670.0609375,
+          "w": 293.33330078125,
+          "h": 33.333325195312504
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "WeaponCard",
+        "text": "VŨ KHÍ",
+        "spriteName": "panel_card_dark_gold",
+        "rect": {
+          "x": 222.913330078125,
+          "y": 428.9330078125,
+          "w": 143.33330078125002,
+          "h": 35
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnJoinRoom",
+        "text": "VÀO PHÒNG",
+        "spriteName": "btn_green_normal",
+        "rect": {
+          "x": 222.913330078125,
+          "y": 595.924462890625,
+          "w": 143.33330078125002,
+          "h": 36.6666748046875
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnHomeProfileHeader",
+        "text": "Khách_4826",
+        "spriteName": "ui_card_char_selected",
+        "rect": {
+          "x": 32.49334411621094,
+          "y": 26.313574218750002,
+          "w": 83.33332519531251,
+          "h": 24
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnQuickMatch",
+        "text": "CHƠI NHANH",
+        "spriteName": "btn_primary_yellow_normal",
+        "rect": {
+          "x": 59.33333740234375,
+          "y": 515.4738281250001,
+          "w": 293.33330078125,
+          "h": 45
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabHome",
+        "text": "Trang chủ",
+        "spriteName": "",
+        "rect": {
+          "x": 63.33333740234375,
+          "y": 729.9854492187501,
+          "w": 93.33332519531251,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "CharName",
+        "text": "Nam Làng",
+        "spriteName": "",
+        "rect": {
+          "x": 88.88666992187501,
+          "y": 447.06630859375,
+          "w": 80,
+          "h": 11.333349609375
+        },
+        "interactable": true,
+        "visible": true
+      },
+      {
+        "name": "BtnTabQuest",
+        "text": "Nhiệm vụ",
+        "spriteName": "",
+        "rect": {
+          "x": 255.3333251953125,
+          "y": 729.9854492187501,
+          "w": 93.333349609375,
+          "h": 23.333331298828128
+        },
+        "interactable": true,
+        "visible": true
+      }
+    ],
+    "state": {
+      "build": "Release_20261104_084038",
+      "version": "1.0.0",
+      "screen": "home",
+      "selectedCharacterId": "nam_lang",
+      "selectedWeaponId": "dep_to_ong",
+      "roster": [
+        {
+          "id": "nam_lang",
+          "name": "Nam Làng",
+          "enabled": true
+        },
+        {
+          "id": "nu_nang_dong",
+          "name": "Nữ Năng Động",
+          "enabled": true
+        },
+        {
+          "id": "co_ba",
+          "name": "Cô Ba",
+          "enabled": true
+        },
+        {
+          "id": "anh_teen",
+          "name": "Anh Teen",
+          "enabled": true
+        },
+        {
+          "id": "quay_boy",
+          "name": "Quậy Boy",
+          "enabled": false
+        },
+        {
+          "id": "cho_vang",
+          "name": "Chó Vàng",
+          "enabled": false
+        },
+        {
+          "id": "meo_mun",
+          "name": "Mèo Mun",
+          "enabled": false
+        }
+      ],
+      "weapons": [
+        {
+          "id": "dep_to_ong",
+          "name": "Dép Tổ Ong",
+          "enabled": true
+        },
+        {
+          "id": "chao",
+          "name": "Chảo",
+          "enabled": true
+        },
+        {
+          "id": "vot",
+          "name": "Vợt",
+          "enabled": true
+        }
+      ],
+      "canvas": {
+        "cssW": 412,
+        "cssH": 780,
+        "backingW": 1030,
+        "backingH": 1950,
+        "dpr": 2.5999999046325684
+      },
+      "match": {
+        "round": 1,
+        "phase": "placing",
+        "timeLeft": 5,
+        "playableRect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "players": [],
+        "events": []
+      }
+    },
+    "samples": {
+      "BtnQuickMatch": {
+        "rect": {
+          "x": 59.33333740234375,
+          "y": 515.4738281250001,
+          "w": 293.33330078125,
+          "h": 45
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.522,
+        "coloredFraction": 0.333,
+        "yellowFraction": 0.324,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          232.2,
+          210.8,
+          188.2
+        ]
+      },
+      "BtnCreateRoom": {
+        "rect": {
+          "x": 45.7533447265625,
+          "y": 595.924462890625,
+          "w": 143.3333251953125,
+          "h": 36.6666748046875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.059,
+        "coloredFraction": 0.887,
+        "yellowFraction": 0.871,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          221.4,
+          170.6,
+          122.0
+        ]
+      },
+      "BtnJoinRoom": {
+        "rect": {
+          "x": 222.913330078125,
+          "y": 595.924462890625,
+          "w": 143.33330078125002,
+          "h": 36.6666748046875
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.066,
+        "coloredFraction": 0.894,
+        "yellowFraction": 0.864,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          227.3,
+          175.2,
+          122.8
+        ]
+      },
+      "BtnBotTraining": {
+        "rect": {
+          "x": 59.33333740234375,
+          "y": 670.0609375,
+          "w": 293.33330078125,
+          "h": 33.333325195312504
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.006,
+        "coloredFraction": 0.727,
+        "yellowFraction": 0.312,
+        "blueFraction": 0.0,
+        "greenFraction": 0.219,
+        "meanRgb": [
+          143.7,
+          129.0,
+          73.0
+        ]
+      },
+      "CharCard": {
+        "rect": {
+          "x": 45.7533447265625,
+          "y": 428.9330078125,
+          "w": 143.3333251953125,
+          "h": 35
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.032,
+        "coloredFraction": 0.84,
+        "yellowFraction": 0.772,
+        "blueFraction": 0.009,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          222.3,
+          170.1,
+          120.5
+        ]
+      },
+      "WeaponCard": {
+        "rect": {
+          "x": 222.913330078125,
+          "y": 428.9330078125,
+          "w": 143.33330078125002,
+          "h": 35
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.035,
+        "coloredFraction": 0.865,
+        "yellowFraction": 0.826,
+        "blueFraction": 0.0,
+        "greenFraction": 0.0,
+        "meanRgb": [
+          226.6,
+          173.1,
+          120.1
+        ]
+      },
+      "BtnHomeSettings": {
+        "rect": {
+          "x": 367.039990234375,
+          "y": 26.313574218750002,
+          "w": 24,
+          "h": 24
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.108,
+        "coloredFraction": 0.498,
+        "yellowFraction": 0.136,
+        "blueFraction": 0.095,
+        "greenFraction": 0.283,
+        "meanRgb": [
+          135.2,
+          134.0,
+          122.5
+        ]
+      },
+      "BtnHomeProfileHeader": {
+        "rect": {
+          "x": 32.49334411621094,
+          "y": 26.313574218750002,
+          "w": 83.33332519531251,
+          "h": 24
+        },
+        "valid": true,
+        "brightNeutralFraction": 0.061,
+        "coloredFraction": 0.298,
+        "yellowFraction": 0.045,
+        "blueFraction": 0.676,
+        "greenFraction": 0.07,
+        "meanRgb": [
+          69.2,
+          103.2,
+          110.5
+        ]
+      }
+    },
+    "outOfViewport": [],
+    "avatarSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.412,
+      "coloredFraction": 0.009,
+      "yellowFraction": 0.0,
+      "blueFraction": 0.459,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        135.7,
+        143.4,
+        152.7
+      ]
+    },
+    "logoSample": {
+      "valid": true,
+      "brightNeutralFraction": 0.641,
+      "coloredFraction": 0.197,
+      "yellowFraction": 0.197,
+      "blueFraction": 0.0,
+      "greenFraction": 0.0,
+      "meanRgb": [
+        229.9,
+        218.5,
+        206.4
+      ]
+    },
+    "findings": [
+      "avatar_monochrome_placeholder",
+      "white_primary_button",
+      "BtnCreateRoom_missing_blue_fill",
+      "BtnJoinRoom_missing_green_fill",
+      "BtnBotTraining_missing_blue_fill",
+      "BtnQuickMatch_undersized",
+      "BtnCreateRoom_undersized",
+      "BtnJoinRoom_undersized",
+      "BtnBotTraining_undersized",
+      "logo_ghost_white_letters"
+    ],
+    "pageErrors": []
+  }
+}
