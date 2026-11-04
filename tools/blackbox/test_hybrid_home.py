@@ -76,6 +76,9 @@ def run(url: str, output: Path) -> dict:
                 for upper, lower in zip(order, order[1:]):
                     if boxes[upper]["y"]+boxes[upper]["h"] > boxes[lower]["y"]+1:
                         failures.append(f"vertical overlap {upper}/{lower}")
+                gap = boxes["tabs"]["y"] - (boxes["practice"]["y"] + boxes["practice"]["h"])
+                if gap < 12:
+                    failures.append(f"practice/tab gap {gap:.1f}px < 12px")
                 page.locator('[data-action="next"]').click()
                 selected = page.evaluate("window.__hitmeState?.selectedCharacterId")
                 if selected != "nu_nang_dong": failures.append(f"next character selected {selected}")

@@ -12,8 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "web-ui"
 DEST = SOURCE / "dist"
-FILES = ("index.html", "style.css", "app.js", "preview.js", "bridge.js",
-         "mock-unity.js", "audio.js", "i18n.json", "home_layout.json")
+FILES = ("index.html", "style.css", "app.js", "prototype.js", "bridge.js",
+         "mock-unity.js", "audio.js", "i18n.json", "home_layout.json", "catalog.json")
 
 
 def main() -> None:
