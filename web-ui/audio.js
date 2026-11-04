@@ -30,6 +30,50 @@ class HitMeAudio {
     this.sfxVolume = this.readVolume(SFX_VOLUME_KEY, 0.8);
     this.musicVolume = this.readVolume(MUSIC_VOLUME_KEY, 0.6);
     this.silentAudio = null;
+    this.manifest = null;
+    this.encoded = new Map();
+    this.decoded = new Map();
+    this.decoding = new Set();
+    void this.prepare();
+  }
+
+  async prepare() {
+    try {
+      const response = await fetch('./assets/audio/manifest.json');
+      if (!response.ok) return;
+      this.manifest = await response.json();
+      await Promise.all(Object.entries(this.manifest.tracks).filter(([,track]) => track.preload)
+        .map(([id]) => this.fetchTrack(id)));
+      if (this.context) this.decodeHome();
+    } catch { /* Missing pack: synth fallback stays available. */ }
+  }
+
+  async fetchTrack(id) {
+    const track = this.manifest?.tracks?.[id];
+    if (!track || this.encoded.has(id)) return;
+    try {
+      const response = await fetch(`./assets/audio/${track.file}`);
+      if (response.ok) this.encoded.set(id, await response.arrayBuffer());
+    } catch { /* Missing file: synth fallback. */ }
+  }
+
+  decodeHome() {
+    if (!this.manifest) return;
+    for (const [id,track] of Object.entries(this.manifest.tracks)) if (track.preload) void this.decode(id);
+  }
+
+  async decode(id) {
+    if (!this.context || this.decoded.has(id) || this.decoding.has(id)) return;
+    this.decoding.add(id);
+    try {
+      if (!this.encoded.has(id)) await this.fetchTrack(id);
+      const data = this.encoded.get(id);
+      if (data) {
+        this.decoded.set(id, await this.context.decodeAudioData(data.slice(0)));
+        if (this.music?.id === id && this.music.synthetic) this.playMusic(id, 'play', true);
+      }
+    } catch { /* Decode failure: synth fallback. */ }
+    finally { this.decoding.delete(id); }
   }
 
   readVolume(key, fallback) {
@@ -54,6 +98,7 @@ class HitMeAudio {
       else this.ensureSilentAudio();
     } catch { this.ensureSilentAudio(); }
     void this.context.resume();
+    this.decodeHome();
     return true;
   }
 
@@ -89,23 +134,27 @@ class HitMeAudio {
     this.lastPlayed.set(id, nowMs);
     const [baseFrequency,duration] = notes[id];
     const ctx = this.context;
-    const oscillator = ctx.createOscillator();
     const envelope = ctx.createGain();
     const panner = typeof ctx.createStereoPanner === 'function' ? ctx.createStereoPanner() : null;
-    oscillator.type = id.includes('denied') || id.includes('error') || id.startsWith('hit_') ? 'triangle' : 'sine';
-    oscillator.frequency.value = baseFrequency * (0.95 + Math.random() * 0.1);
+    const buffer = this.decoded.get(id);
+    if (!buffer) void this.decode(id);
+    const source = buffer ? ctx.createBufferSource() : ctx.createOscillator();
+    if (buffer) {source.buffer = buffer; source.playbackRate.value = 0.95 + Math.random() * 0.1;}
+    else {source.type = id.includes('denied') || id.includes('error') || id.startsWith('hit_') ? 'triangle' : 'sine';
+      source.frequency.value = baseFrequency * (0.95 + Math.random() * 0.1);}
     const start = ctx.currentTime;
+    const length = buffer ? Math.min(buffer.duration, 1.2) : duration;
     envelope.gain.setValueAtTime(0.0001,start);
     envelope.gain.exponentialRampToValueAtTime(Math.max(0.0001,clamp(volume) * 0.23),start + 0.008);
-    envelope.gain.exponentialRampToValueAtTime(0.0001,start + duration);
-    oscillator.connect(envelope);
+    envelope.gain.exponentialRampToValueAtTime(0.0001,start + length);
+    source.connect(envelope);
     if (panner) { panner.pan.value = Math.max(-1,Math.min(1,Number(pan)||0)); envelope.connect(panner); panner.connect(this.sfxBus); }
     else envelope.connect(this.sfxBus);
     this.activeSfx++;
-    oscillator.onended = () => { this.activeSfx--; oscillator.disconnect(); envelope.disconnect(); panner?.disconnect(); };
-    oscillator.start(start);
-    oscillator.stop(start + duration + 0.01);
-    if (log) log.push({t:nowMs,id});
+    source.onended = () => { this.activeSfx--; source.disconnect(); envelope.disconnect(); panner?.disconnect(); };
+    source.start(start);
+    source.stop(start + length + 0.01);
+    if (log) log.push({t:nowMs,id,source:buffer?'file':'synth'});
     if (['win','lose','ko'].includes(id)) this.duckMusic();
     return true;
   }
@@ -120,24 +169,27 @@ class HitMeAudio {
     gain.linearRampToValueAtTime(this.musicVolume,now + 0.44);
   }
 
-  playMusic(id, action = 'play') {
+  playMusic(id, action = 'play', upgrade = false) {
     if (action === 'stop') { this.stopMusic(); return; }
-    if (!['bgm_menu','bgm_match'].includes(id) || !this.unlock() || this.music?.id === id) return;
+    if (!['bgm_menu','bgm_match'].includes(id) || !this.unlock() || (this.music?.id === id && !upgrade)) return;
     const ctx = this.context;
     const old = this.music;
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.0001,ctx.currentTime);
     gain.gain.linearRampToValueAtTime(0.15,ctx.currentTime + 0.6);
     gain.connect(this.musicBus);
-    const roots = id === 'bgm_menu' ? [220,277.18,329.63] : [196,246.94,293.66];
-    const voices = roots.map(frequency => {
-      const oscillator = ctx.createOscillator(); oscillator.type = 'sine';
-      oscillator.frequency.value = frequency;
-      oscillator.connect(gain); oscillator.start(); return oscillator;
-    });
-    this.music = {id,gain,voices};
+    const buffer = this.decoded.get(id);
+    if (!buffer) void this.decode(id);
+    const voices = buffer ? [ctx.createBufferSource()] :
+      (id === 'bgm_menu' ? [220,277.18,329.63] : [196,246.94,293.66]).map(frequency => {
+        const oscillator = ctx.createOscillator(); oscillator.type = 'sine';
+        oscillator.frequency.value = frequency; return oscillator;
+      });
+    if (buffer) voices[0].buffer = buffer;
+    voices.forEach(voice => {voice.loop = true;voice.connect(gain);voice.start();});
+    this.music = {id,gain,voices,synthetic:!buffer};
     if (old) this.fadeOut(old);
-    if (log) log.push({t:performance.now(),id});
+    if (log) log.push({t:performance.now(),id,source:buffer?'file':'synth'});
   }
 
   fadeOut(track) {

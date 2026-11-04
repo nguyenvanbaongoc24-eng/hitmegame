@@ -1,0 +1,292 @@
+{
+  "checked": 11,
+  "total": 68,
+  "passed": 11,
+  "failed": [],
+  "ids": {
+    "BTN-01": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\home_smoke\\results.json",
+      "note": "10 simulated viewports; minimum 48 CSS px"
+    },
+    "BTN-02": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\compare_home\\metrics.json",
+      "note": "Four Home button interior color samples"
+    },
+    "BTN-03": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\button_home\\results.json",
+      "note": "Pressed 3px and released transform; locked grayscale/opacity"
+    },
+    "BTN-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "BTN-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "BTN-06": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\button_home\\results.json",
+      "note": "Visible Home buttons have opaque color or gradient; no square glyph"
+    },
+    "BTN-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "BTN-08": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\home_smoke\\results.json",
+      "note": "Center and four points at 80% area; simulated touch engines"
+    },
+    "BTN-09": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\home_smoke\\results.json",
+      "note": "Locked character tapped; selection unchanged. Audio checked only where AudioContext exists"
+    },
+    "BTN-10": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\button_home\\results.json",
+      "note": "Vietnamese and English at phone widths; CTA, cards and tabs not clipped"
+    },
+    "HOME-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-03": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\compare_home\\metrics.json",
+      "note": "Logo width 75.0%, yellow pixels 19.5%"
+    },
+    "HOME-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-07": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\button_home\\results.json",
+      "note": "Both tabs open Coming Soon and have a back button"
+    },
+    "HOME-08": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\button_home\\results.json",
+      "note": "Interactive mark under 1s; Play without Unity shows loading"
+    },
+    "HOME-09": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-10": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HOME-11": {
+      "status": "PASS",
+      "evidence": "D:\\HITME GAME\\worktrees\\codex-prep\\web-ui\\evidence\\compare_home\\metrics.json",
+      "note": "10/13 geometry, 4/4 colors; old target has smaller arrows/logo"
+    },
+    "SEL-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SEL-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-08": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-09": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-10": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "HUD-11": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "ARENA-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "ARENA-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "ARENA-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "ARENA-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-08": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-09": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-10": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "EMO-11": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "SET-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-01": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-02": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-03": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-04": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-05": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-06": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    },
+    "AUD-07": {
+      "status": "NOT_TESTED",
+      "evidence": null
+    }
+  },
+  "limits": "WebKit headless has no AudioContext; real iPhone audio and Unity match UI remain unverified"
+}

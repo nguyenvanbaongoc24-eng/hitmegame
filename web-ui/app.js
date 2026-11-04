@@ -6,6 +6,7 @@ const copy = await (await fetch('./i18n.json')).json();
 const t = key => copy[document.documentElement.lang === 'en' ? 'en' : 'vi'][key];
 
 const params = new URLSearchParams(location.search);
+if (params.get('lang') === 'en') document.documentElement.lang = 'en';
 const legacy = params.get('ui') === 'unity';
 const mock = params.get('mock') === '1';
 const root = document.getElementById('ui-root');
@@ -34,7 +35,7 @@ const icons = {
 const icon = (name, extra='') => `<svg class="icon ${extra}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[name]}</svg>`;
 const safeText = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const assetId = id => /^[a-z0-9_]+$/.test(id || '') ? id : 'nam_lang';
-const state = {screen:'home',roster:[],weapons:[],characterId:'nam_lang',weaponId:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0};
+const state = {screen:'home',roster:[],weapons:[],characterId:'nam_lang',weaponId:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:''};
 const current = () => state.roster.find(c => c.id === state.characterId) || {id:'nam_lang',name:'Nam Làng',enabled:true};
 const characterImage = kind => `./assets/${assetId(state.characterId)}_${kind}.png`;
 
@@ -50,7 +51,7 @@ function home() {
     <button class="settings icon-round" data-name="settings" data-action="settings" aria-label="${t('settings')}">${icon('gear')}</button>
     <div class="logo" data-name="logo" aria-label="HIT ME"><img class="logo-image" src="./assets/logo_hit_me.png" alt="HIT ME"></div>
     <div class="pedestal" aria-hidden="true"></div>
-    <img class="hero" data-name="hero" src="${characterImage('portrait')}" alt="${safeText(character.name)}">
+    <img class="hero ${state.slideDirection ? `slide-${state.slideDirection}` : ''}" data-name="hero" src="${characterImage('portrait')}" alt="${safeText(character.name)}">
     <button class="hero-arrow left icon-round" data-name="arrow-left" data-action="previous" aria-label="Nhân vật trước">${icon('chevron')}</button>
     <button class="hero-arrow right icon-round" data-name="arrow-right" data-action="next" aria-label="Nhân vật tiếp theo">${icon('chevron')}</button>
     <button class="selection-card character-card" data-name="character-card" data-action="character"><img src="${characterImage('head')}" alt=""><span><small>${t('character')}</small><b>${safeText(character.name)}</b></span>${icon('chevron')}</button>
@@ -71,11 +72,13 @@ function modal() {
   const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon'),loading:t('loadingGame')}[state.overlay] || 'HIT ME';
   const list = state.overlay === 'character' ? `<div class="choice-grid">${state.roster.map(item => `<button data-action="${item.enabled?'select-character':'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="./assets/${assetId(item.id)}_head.png" alt=""><span>${safeText(item.name)}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
-  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}</section></div>`;
+  const back = ['rank','quests'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
+  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
 function render() {
   if (legacy) return;
   root.innerHTML = home() + modal();
+  if (!performance.getEntriesByName('hitme-home-interactive').length) performance.mark('hitme-home-interactive');
   root.classList.toggle('reduced-motion',state.reducedMotion);
   if (params.get('e2e') === '1') {
     window.__hitmeState = {build:state.build,version:state.version,screen:state.screen,selectedCharacterId:state.characterId,selectedWeaponId:state.weaponId,roster:state.roster,weapons:state.weapons};
@@ -87,15 +90,22 @@ function changeCharacter(direction) {
   if (!enabled.length) return;
   const at = Math.max(0,enabled.findIndex(c=>c.id===state.characterId));
   const chosen = enabled[(at+direction+enabled.length)%enabled.length];
-  state.characterId=chosen.id; send('SetCharacter',{id:chosen.id}); render();
+  state.characterId=chosen.id;state.slideDirection=direction>0?'next':'previous';
+  send('SetCharacter',{id:chosen.id}); render();
+  setTimeout(()=>{state.slideDirection='';root.querySelector('.hero')?.classList.remove('slide-next','slide-previous');},250);
 }
 const confirmActions = new Set(['quick','create','join-submit','practice']);
 const backActions = new Set(['close','previous']);
 function playButton(action) {
+  if (!audio.music) audio.playMusic('bgm_menu');
   const id = action === 'locked' ? 'ui_denied' :
-    action === 'next' || action === 'previous' || action === 'select-character' ? 'ui_select_char' :
+    ['next','previous','select-character'].includes(action) ? 'ui_select_char' :
+    action === 'weapon' ? 'ui_select_weapon' :
+    ['rank','quests','home'].includes(action) ? 'ui_tab' :
     backActions.has(action) ? 'ui_back' : confirmActions.has(action) ? 'ui_confirm' : 'ui_tap';
   audio.playSfx(id);
+  if (['character','weapon','settings','profile','rank','quests','join','shop'].includes(action)) audio.playSfx('ui_sheet_open');
+  if (['close','select-character'].includes(action)) audio.playSfx('ui_sheet_close');
   if (navigator.vibrate) navigator.vibrate(10);
 }
 root.addEventListener('click', event => {

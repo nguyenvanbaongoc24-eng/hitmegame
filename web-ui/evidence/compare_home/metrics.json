@@ -1,5 +1,5 @@
 {
-  "url": "http://127.0.0.1:8765/?mock=1",
+  "url": "http://127.0.0.1:8765/?mock=1&e2e=1",
   "viewport": [
     393,
     852
@@ -8,13 +8,13 @@
     "profile": {
       "status": "PASS",
       "verticalCenterError": 0.003,
-      "normalizedCenterError": 0.0067,
-      "widthError": 0.0233,
+      "normalizedCenterError": 0.0212,
+      "widthError": 0.0581,
       "heightError": 0.0335,
       "actual": {
         "x": 11.78125,
         "y": 59.625,
-        "w": 330.109375,
+        "w": 318.328125,
         "h": 49.40625
       },
       "expected": {
@@ -27,13 +27,13 @@
     "settings": {
       "status": "PASS",
       "verticalCenterError": 0.0025,
-      "normalizedCenterError": 0.0206,
-      "widthError": 0.0592,
+      "normalizedCenterError": 0.007,
+      "widthError": 0.0264,
       "heightError": 0.05,
       "actual": {
-        "x": 345.828125,
+        "x": 333.21875,
         "y": 59.625,
-        "w": 44,
+        "w": 48,
         "h": 48.5625
       },
       "expected": {
@@ -44,15 +44,15 @@
       }
     },
     "logo": {
-      "status": "PASS",
+      "status": "FAIL",
       "verticalCenterError": 0.001,
       "normalizedCenterError": 0.0018,
-      "widthError": 0.0112,
+      "widthError": 0.1962,
       "heightError": 0.0317,
       "actual": {
-        "x": 74.65625,
+        "x": 49.125,
         "y": 110.75,
-        "w": 243.65625,
+        "w": 294.75,
         "h": 110.75
       },
       "expected": {
@@ -64,13 +64,13 @@
     },
     "hero": {
       "status": "PASS",
-      "verticalCenterError": 0.0022,
+      "verticalCenterError": 0.0021,
       "normalizedCenterError": 0.0029,
       "widthError": 0.0,
       "heightError": 0.0442,
       "actual": {
         "x": 110.03125,
-        "y": 278.3123474121094,
+        "y": 278.30133056640625,
         "w": 171.34375,
         "h": 221.515625
       },
@@ -82,16 +82,16 @@
       }
     },
     "arrow-left": {
-      "status": "PASS",
-      "verticalCenterError": 0.0045,
-      "normalizedCenterError": 0.0049,
-      "widthError": 0.0765,
-      "heightError": 0.0187,
+      "status": "FAIL",
+      "verticalCenterError": 0.0033,
+      "normalizedCenterError": 0.0045,
+      "widthError": 0.1744,
+      "heightError": 0.063,
       "actual": {
         "x": 62.875,
         "y": 374.875,
-        "w": 44,
-        "h": 46
+        "w": 48,
+        "h": 48
       },
       "expected": {
         "x": 65.238,
@@ -101,16 +101,16 @@
       }
     },
     "arrow-right": {
-      "status": "PASS",
-      "verticalCenterError": 0.0045,
-      "normalizedCenterError": 0.0054,
-      "widthError": 0.0765,
-      "heightError": 0.0187,
+      "status": "FAIL",
+      "verticalCenterError": 0.0033,
+      "normalizedCenterError": 0.0087,
+      "widthError": 0.1744,
+      "heightError": 0.063,
       "actual": {
-        "x": 286.125,
+        "x": 282.125,
         "y": 374.875,
-        "w": 44,
-        "h": 46
+        "w": 48,
+        "h": 48
       },
       "expected": {
         "x": 288.855,
@@ -216,15 +216,15 @@
     },
     "practice": {
       "status": "PASS",
-      "verticalCenterError": 0.001,
-      "normalizedCenterError": 0.001,
+      "verticalCenterError": 0.0008,
+      "normalizedCenterError": 0.0008,
       "widthError": 0.0026,
-      "heightError": 0.0368,
+      "heightError": 0.0433,
       "actual": {
         "x": 47.15625,
         "y": 709.703125,
         "w": 298.671875,
-        "h": 47.703125
+        "h": 48
       },
       "expected": {
         "x": 47.553,
@@ -256,16 +256,16 @@
   "buttonColors": {
     "quick-play": {
       "actualRGB": [
-        255,
-        170,
-        34
+        249,
+        178,
+        37
       ],
       "targetRGB": [
         254,
         179,
         30
       ],
-      "deltaE76": 6.07,
+      "deltaE76": 3.03,
       "status": "PASS"
     },
     "create-room": {
@@ -285,15 +285,15 @@
     "join-room": {
       "actualRGB": [
         0,
-        120,
-        90
+        124,
+        96
       ],
       "targetRGB": [
         2,
         107,
         78
       ],
-      "deltaE76": 5.41,
+      "deltaE76": 7.04,
       "status": "PASS"
     },
     "practice": {
@@ -311,7 +311,7 @@
       "status": "PASS"
     }
   },
-  "passedLayout": 13,
+  "passedLayout": 10,
   "totalLayout": 13,
   "passedColors": 4,
   "totalColors": 4

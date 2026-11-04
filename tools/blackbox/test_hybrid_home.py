@@ -50,14 +50,22 @@ def run(url: str, output: Path) -> dict:
                     }).map(e=>({action:e.dataset.action,w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height}));
                     const clipped=controls.filter(e=>e.textContent.trim() && (e.scrollWidth>e.clientWidth+2 || e.scrollHeight>e.clientHeight+2)).map(e=>e.dataset.action);
                     const point=document.elementFromPoint(innerWidth/2,innerHeight*.42);
+                    const blocked=controls.flatMap(e=>{
+                      const r=e.getBoundingClientRect();
+                      return [[.5,.5],[.1,.5],[.9,.5],[.5,.1],[.5,.9]].filter(([fx,fy])=>{
+                        const target=document.elementFromPoint(r.x+r.width*fx,r.y+r.height*fy);
+                        return target?.closest('button')!==e;
+                      }).map(([fx,fy])=>({action:e.dataset.action,point:[fx,fy]}));
+                    });
                     return {boxes,undersized,clipped,canvasTarget:point?.id==='unity-canvas',
-                      wrongTab:document.querySelector('.tabs')?.textContent.includes('ĐĂNG NHẬP'),
+                      blocked,wrongTab:document.querySelector('.tabs')?.textContent.includes('ĐĂNG NHẬP'),
                       glyphSquare:document.querySelector('.stage')?.textContent.includes('□')};
                 }""", KEYS)
                 failures = []
                 if errors: failures.append(f"JS errors: {errors}")
                 if geometry["undersized"]: failures.append(f"tap targets <48: {geometry['undersized']}")
                 if geometry["clipped"]: failures.append(f"clipped text: {geometry['clipped']}")
+                if geometry["blocked"]: failures.append(f"button hit points blocked: {geometry['blocked']}")
                 if not geometry["canvasTarget"]: failures.append("middle arena touch blocked")
                 if geometry["wrongTab"] or geometry["glyphSquare"]: failures.append("bad Home label or square glyph")
                 boxes=geometry["boxes"]
@@ -76,7 +84,9 @@ def run(url: str, output: Path) -> dict:
                 if not page.locator('[role="dialog"]').is_visible(): failures.append("character dialog hidden")
                 if not page.locator('[data-id="quay_boy"]').is_disabled(): failures.append("locked character enabled")
                 before = page.evaluate("window.__hitmeState?.selectedCharacterId")
-                page.evaluate("document.querySelector('[data-id=quay_boy]').click()")
+                locked_box = page.locator('[data-id="quay_boy"]').bounding_box()
+                page.touchscreen.tap(locked_box["x"] + locked_box["width"]/2,
+                                     locked_box["y"] + locked_box["height"]/2)
                 after = page.evaluate("window.__hitmeState?.selectedCharacterId")
                 if before != after: failures.append("locked character changed selection")
                 if audio_available and not any(entry["id"] == "ui_denied" for entry in page.evaluate("window.__hitmeAudioLog || []")):
