@@ -77,6 +77,15 @@ namespace HitMe.UI
             public bool reducedMotion = false;
         }
 
+        [Serializable]
+        private class LayoutDto
+        {
+            public float top;
+            public float bottom;
+            public float safeTop;
+            public float safeBottom;
+        }
+
         private void Awake()
         {
             if (Instance == null)
@@ -98,7 +107,11 @@ namespace HitMe.UI
         private void OnEnable()
         {
             MatchController.OnMatchE2EEvent += HandleMatchE2EEvent;
-            if (matchController != null) matchController.OnPhaseChanged += HandlePhaseChanged;
+            if (matchController != null)
+            {
+                matchController.OnPhaseChanged += HandlePhaseChanged;
+                matchController.OnMatchEnded += HandleMatchEnded;
+            }
             HitMe.Audio.AudioManager.OnSfxRequested += HandleSfxRequested;
             HitMe.Audio.AudioManager.OnMusicRequested += HandleMusicRequested;
             MatchController.OnEmoteTriggered += EmitEmote;
@@ -107,7 +120,11 @@ namespace HitMe.UI
         private void OnDisable()
         {
             MatchController.OnMatchE2EEvent -= HandleMatchE2EEvent;
-            if (matchController != null) matchController.OnPhaseChanged -= HandlePhaseChanged;
+            if (matchController != null)
+            {
+                matchController.OnPhaseChanged -= HandlePhaseChanged;
+                matchController.OnMatchEnded -= HandleMatchEnded;
+            }
             HitMe.Audio.AudioManager.OnSfxRequested -= HandleSfxRequested;
             HitMe.Audio.AudioManager.OnMusicRequested -= HandleMusicRequested;
             MatchController.OnEmoteTriggered -= EmitEmote;
@@ -115,9 +132,87 @@ namespace HitMe.UI
 
         private void Start()
         {
+            if (HitMeWebBridge.IsWebUiMode() == 1)
+            {
+                if (uiController != null) uiController.HideAllUGUIForWebMode();
+            }
+
             EmitReady();
             EmitScreen("home");
+
+            CheckAutostart();
         }
+
+        private void CheckAutostart()
+        {
+            string url = Application.absoluteURL;
+            if (string.IsNullOrEmpty(url)) return;
+
+            if (url.IndexOf("autostart=practice", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                string charId = GetUrlParam(url, "char");
+                string weaponId = GetUrlParam(url, "weapon");
+                int bots = 3;
+                string botsStr = GetUrlParam(url, "bots");
+                if (!string.IsNullOrEmpty(botsStr) && int.TryParse(botsStr, out int bVal)) bots = bVal;
+
+                var startDto = new StartPracticeDto
+                {
+                    characterId = string.IsNullOrEmpty(charId) ? "nam_lang" : charId,
+                    weaponId = string.IsNullOrEmpty(weaponId) ? "dep_to_ong" : weaponId,
+                    botCount = bots
+                };
+                StartPractice(JsonUtility.ToJson(startDto));
+            }
+        }
+
+        private static string GetUrlParam(string url, string paramName)
+        {
+            if (string.IsNullOrEmpty(url)) return "";
+            int qIdx = url.IndexOf('?');
+            if (qIdx < 0) return "";
+            string query = url.Substring(qIdx + 1);
+            string[] pairs = query.Split('&');
+            foreach (var p in pairs)
+            {
+                string[] kv = p.Split('=');
+                if (kv.Length >= 2 && string.Equals(kv[0], paramName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Uri.UnescapeDataString(kv[1]);
+                }
+            }
+            return "";
+        }
+
+        private void HandleMatchEnded(List<PlayerState> ranked, List<string> winners)
+        {
+            _sb.Clear();
+            _sb.Append("{\"type\":\"result\",\"round\":").Append(matchController != null && matchController.State != null ? matchController.State.RoundNumber : 1).Append(",\"rankings\":[");
+            if (ranked != null)
+            {
+                for (int i = 0; i < ranked.Count; i++)
+                {
+                    if (i > 0) _sb.Append(",");
+                    var p = ranked[i];
+                    bool survived = p.IsAlive;
+                    int rank = i + 1;
+                    _sb.Append("{\"id\":\"").Append(p.Id)
+                       .Append("\",\"name\":\"").Append(p.Name)
+                       .Append("\",\"rank\":").Append(rank)
+                       .Append(",\"survived\":").Append(survived ? "true" : "false")
+                       .Append("}");
+                }
+            }
+            _sb.Append("]}");
+            HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
+            EmitScreen("result");
+        }
+        public void EmitError(string code, string message)
+        {
+            string json = "{\"type\":\"error\",\"code\":\"" + code + "\",\"message\":\"" + message + "\"}";
+            HitMeWebBridge.EmitUnityToWebJson(json);
+        }
+
 
         private void Update()
         {
@@ -139,6 +234,7 @@ namespace HitMe.UI
         {
             int botCount = 3;
             int charIdx = 0;
+            string weaponId = "dep_to_ong";
             if (!string.IsNullOrEmpty(json))
             {
                 try
@@ -149,7 +245,22 @@ namespace HitMe.UI
                         if (dto.botCount > 0) botCount = dto.botCount;
                         if (!string.IsNullOrEmpty(dto.characterId))
                         {
+                            var charDef = CharacterRegistry.GetById(dto.characterId);
+                            if (!charDef.enabled)
+                            {
+                                EmitError("character_locked", "Nhân vật sắp ra mắt");
+                                return;
+                            }
                             charIdx = GetCharacterIndex(dto.characterId);
+                        }
+                        if (!string.IsNullOrEmpty(dto.weaponId))
+                        {
+                            weaponId = dto.weaponId;
+                            if (weaponId != "dep" && weaponId != "dep_to_ong")
+                            {
+                                EmitError("weapon_locked", "Vũ khí chưa sẵn sàng trong trận này.");
+                                return;
+                            }
                         }
                     }
                 }
@@ -159,13 +270,17 @@ namespace HitMe.UI
                 }
             }
 
+            if (matchController != null)
+            {
+                matchController.localCharacterIndex = charIdx;
+            }
+
             if (uiController != null)
             {
                 uiController.StartPracticeWithBots(botCount, charIdx);
             }
             else if (matchController != null)
             {
-                matchController.localCharacterIndex = charIdx;
                 matchController.StartMatch();
             }
             EmitScreen("match");
@@ -245,9 +360,18 @@ namespace HitMe.UI
                 var dto = JsonUtility.FromJson<IdDto>(json);
                 if (dto != null && !string.IsNullOrEmpty(dto.id))
                 {
+                    var charDef = CharacterRegistry.GetById(dto.id);
+                    if (!charDef.enabled)
+                    {
+                        EmitError("character_locked", "Nhân vật sắp ra mắt");
+                        return;
+                    }
                     int idx = GetCharacterIndex(dto.id);
                     if (matchController != null) matchController.localCharacterIndex = idx;
                     if (uiController != null) uiController.SetSelectedPracticeCharacter(idx);
+
+                    string selectionJson = "{\"type\":\"selection\",\"characterId\":\"" + charDef.id + "\"}";
+                    HitMeWebBridge.EmitUnityToWebJson(selectionJson);
                 }
             }
             catch (Exception e)
@@ -258,7 +382,84 @@ namespace HitMe.UI
 
         public void SetWeapon(string json)
         {
-            // Currently sandal (dep_to_ong) is default canonical weapon
+            if (string.IsNullOrEmpty(json)) return;
+            try
+            {
+                var dto = JsonUtility.FromJson<IdDto>(json);
+                if (dto != null && !string.IsNullOrEmpty(dto.id))
+                {
+                    if (dto.id != "dep" && dto.id != "dep_to_ong")
+                    {
+                        EmitError("weapon_locked", "Vũ khí chưa sẵn sàng trong trận này.");
+                        return;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[WebBridge] SetWeapon parse: " + e.Message);
+            }
+        }
+
+        public void SetLayout(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return;
+            try
+            {
+                var dto = JsonUtility.FromJson<LayoutDto>(json);
+                if (dto != null)
+                {
+                    ApplyLayout(dto.top, dto.bottom);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[WebBridge] SetLayout parse error: " + e.Message);
+            }
+        }
+
+        public void ApplyLayout(float topCss, float bottomCss)
+        {
+            var cam = _mainCamera != null ? _mainCamera : Camera.main;
+            if (cam == null) return;
+
+            float aspect = cam.aspect > 0.01f ? cam.aspect : (393f / 695f);
+            float targetOrtho = 3.4133f / Mathf.Max(0.01f, aspect);
+            cam.orthographicSize = targetOrtho;
+
+            float worldOffsetY = ((bottomCss - topCss) * 0.5f / 695f) * (2f * targetOrtho);
+            var cam25D = cam.GetComponent<HitMe.Gameplay.CameraController25D>();
+            if (cam25D != null)
+            {
+                cam25D.arenaCenter = new Vector3(0f, worldOffsetY, 0f);
+            }
+            else
+            {
+                cam.transform.position = new Vector3(0f, worldOffsetY, -10f);
+            }
+
+            EmitLayoutEvent(cam);
+        }
+
+        public void EmitLayoutEvent(Camera cam)
+        {
+            if (cam == null) return;
+            Vector3 minScreen = cam.WorldToScreenPoint(new Vector3(-2.5f, -3.8f, 0f));
+            Vector3 maxScreen = cam.WorldToScreenPoint(new Vector3(2.5f, 3.8f, 0f));
+
+            float cssScaleX = 393f / Mathf.Max(1f, Screen.width);
+            float cssScaleY = 695f / Mathf.Max(1f, Screen.height);
+            float x_css = Mathf.Min(minScreen.x, maxScreen.x) * cssScaleX;
+            float y_css = (Screen.height - Mathf.Max(minScreen.y, maxScreen.y)) * cssScaleY;
+            float w_css = Mathf.Abs(maxScreen.x - minScreen.x) * cssScaleX;
+            float h_css = Mathf.Abs(maxScreen.y - minScreen.y) * cssScaleY;
+
+            string layoutJson = "{\"type\":\"layout\",\"playableRect\":{\"x\":" 
+                + x_css.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + ",\"y\":"
+                + y_css.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + ",\"w\":"
+                + w_css.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + ",\"h\":"
+                + h_css.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) + "}}";
+            HitMeWebBridge.EmitUnityToWebJson(layoutJson);
         }
 
         public void SetSettings(string json)
@@ -376,7 +577,7 @@ namespace HitMe.UI
         public void EmitReady()
         {
             _sb.Clear();
-            _sb.Append("{\"type\":\"ready\",\"build\":\"unity-prod\",\"version\":\"1.2\",");
+            _sb.Append("{\"type\":\"ready\",\"build\":\"unity-prod\",\"version\":\"1.2\",\"catalogVersion\":1,");
             _sb.Append("\"roster\":[");
             var roster = CharacterRegistry.CanonicalCharacters;
             for (int i = 0; i < roster.Length; i++)

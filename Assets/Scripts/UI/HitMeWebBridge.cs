@@ -14,6 +14,9 @@ namespace HitMe.UI
         public static extern int IsE2EEnabled();
 
         [DllImport("__Internal")]
+        public static extern int IsWebUiMode();
+
+        [DllImport("__Internal")]
         public static extern void UpdateHitMeStateJson(string json);
 
         [DllImport("__Internal")]
@@ -30,6 +33,16 @@ namespace HitMe.UI
         public static int IsE2EEnabled()
         {
             return 1; // Allow testing in Editor if needed
+        }
+
+        public static int IsWebUiMode()
+        {
+            if (Application.absoluteURL != null)
+            {
+                if (Application.absoluteURL.IndexOf("ui=unity", StringComparison.OrdinalIgnoreCase) >= 0) return 0;
+                if (Application.absoluteURL.IndexOf("ui=web", StringComparison.OrdinalIgnoreCase) >= 0) return 1;
+            }
+            return 0;
         }
 
         public static void UpdateHitMeStateJson(string json)

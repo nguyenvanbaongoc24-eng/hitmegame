@@ -16,6 +16,16 @@ mergeInto(LibraryManager.library, {
     }
     return 0;
   },
+  IsWebUiMode: function () {
+    if (typeof window !== "undefined" && window.location && window.location.search) {
+      if (window.location.search.indexOf("ui=unity") !== -1) return 0;
+      if (window.location.search.indexOf("ui=web") !== -1) return 1;
+    }
+    if (typeof window !== "undefined" && window.__hitmeConfig && window.__hitmeConfig.ui === "web") {
+      return 1;
+    }
+    return 0;
+  },
   EmitUnityToWebJson: function (jsonStrPtr) {
     if (typeof window !== "undefined" && window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {
       try {

@@ -1703,6 +1703,21 @@ namespace HitMe.UI
 
 
 
+                public void HideAllUGUIForWebMode()
+        {
+            if (HitMeWebBridge.IsWebUiMode() == 1)
+            {
+                var canvases = FindObjectsOfType<Canvas>(true);
+                for (int i = 0; i < canvases.Length; i++)
+                {
+                    if (canvases[i] != null) canvases[i].enabled = false;
+                }
+                if (dialogTutorial != null) dialogTutorial.SetActive(false);
+                PlayerPrefs.SetString(UiStrings.PrefKeyTutorialCompleted, "1");
+                Debug.Log("[ProductionUIController] Web UI mode detected: All uGUI Canvases disabled.");
+            }
+        }
+
         private void Start()
 
 
@@ -1710,6 +1725,8 @@ namespace HitMe.UI
         {
 
 
+
+            if (HitMeWebBridge.IsWebUiMode() == 1) HideAllUGUIForWebMode();
 
             ParseAndApplyUrlScales();
 

@@ -102,6 +102,32 @@ def main():
     if not (ui_preview_dist / "index.html").exists():
         raise FileNotFoundError(f"Expected index.html in {ui_preview_dist}")
 
+    # Copy canonical catalog assets to ui-preview/assets
+    catalog_dir = DEPLOY_WEB_DIR / "catalog"
+    if catalog_dir.exists():
+        assets_preview = ui_preview_dist / "assets"
+        assets_preview.mkdir(parents=True, exist_ok=True)
+        for f in catalog_dir.iterdir():
+            shutil.copy2(f, assets_preview / f.name)
+        print(f"[+] Synced catalog assets to {assets_preview}")
+
+    # Prepare next/ directory (Hybrid Web UI + Unity WebGL)
+    next_dist = DIST_DIR / "next"
+    next_dist.mkdir(parents=True, exist_ok=True)
+    for item in ui_preview_dist.iterdir():
+        if item.name == "index.html":
+            continue
+        dst = next_dist / item.name
+        if item.is_dir():
+            shutil.copytree(item, dst, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, dst)
+    print(f"[+] Synced assets & scripts from ui-preview to {next_dist}")
+
+    gen_next_script = SCRIPT_DIR.parent / "generate_next_index.py"
+    if gen_next_script.exists():
+        run_cmd([sys.executable, str(gen_next_script)])
+
     print("\n=== [2/4] Preparing orphan staging repo ===")
     STAGING_DIR.mkdir(parents=True, exist_ok=True)
     git_dir = STAGING_DIR / ".git"

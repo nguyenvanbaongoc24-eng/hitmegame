@@ -24,7 +24,7 @@ namespace HitMe.Gameplay
         [Header("Arena Overview Mode")]
         [Tooltip("Khóa camera nhìn toàn cảnh sân đình (chuẩn mobile battle 1 màn hình)")]
         [SerializeField] private bool lockToArenaOverview = true;
-        [SerializeField] private Vector3 arenaCenter = new Vector3(0f, 0.15f, 0f);
+        [SerializeField] public Vector3 arenaCenter = new Vector3(0f, 0.15f, 0f);
 
         [Header("2.5D Angle & Offset Configuration")]
         [Tooltip("Góc nghiêng từ trên xuống (0 độ cho 2D sprite arena)")]
