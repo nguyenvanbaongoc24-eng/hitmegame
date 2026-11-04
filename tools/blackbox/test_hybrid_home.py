@@ -12,9 +12,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-VIEWPORTS = {"iphone15": (393, 852), "iphone_se": (375, 667),
-             "android360": (360, 800), "android412": (412, 915),
-             "ipad": (768, 1024)}
+VIEWPORTS = json.loads(Path(__file__).with_name("profiles.json").read_text(encoding="utf-8"))
 KEYS = ["profile", "settings", "logo", "hero", "character-card", "weapon-card",
         "quick-play", "create-room", "join-room", "practice", "tabs"]
 
@@ -26,9 +24,10 @@ def run(url: str, output: Path) -> dict:
         for engine_name in ("webkit", "chromium"):
             engine = getattr(playwright, engine_name)
             browser = engine.launch(headless=True, channel="msedge" if engine_name == "chromium" else None)
-            for device_name, (width, height) in VIEWPORTS.items():
+            for device_name, profile in VIEWPORTS.items():
+                width, height = profile["width"], profile["height"]
                 context = browser.new_context(viewport={"width": width, "height": height},
-                                              device_scale_factor=3 if engine_name == "webkit" else 2,
+                                              device_scale_factor=profile["dpr"],
                                               is_mobile=True, has_touch=True)
                 page = context.new_page()
                 errors = []
@@ -44,6 +43,7 @@ def run(url: str, output: Path) -> dict:
                       return [k,r?{x:r.x,y:r.y,w:r.width,h:r.height}:null];
                     }));
                     const controls=[...document.querySelectorAll('.stage button')].filter(e=>e.offsetParent!==null);
+                    const vv=window.visualViewport;
                     const undersized=controls.filter(e=>{
                       const r=e.getBoundingClientRect();
                       return r.width<48 || r.height<48;
@@ -58,6 +58,7 @@ def run(url: str, output: Path) -> dict:
                       }).map(([fx,fy])=>({action:e.dataset.action,point:[fx,fy]}));
                     });
                     return {boxes,undersized,clipped,canvasTarget:point?.id==='unity-canvas',
+                      viewport:{height:vv?.height,width:vv?.width,stage:document.querySelector('.stage')?.getBoundingClientRect().height},
                       blocked,wrongTab:document.querySelector('.tabs')?.textContent.includes('ĐĂNG NHẬP'),
                       glyphSquare:document.querySelector('.stage')?.textContent.includes('□')};
                 }""", KEYS)
@@ -68,6 +69,8 @@ def run(url: str, output: Path) -> dict:
                 if geometry["blocked"]: failures.append(f"button hit points blocked: {geometry['blocked']}")
                 if not geometry["canvasTarget"]: failures.append("middle arena touch blocked")
                 if geometry["wrongTab"] or geometry["glyphSquare"]: failures.append("bad Home label or square glyph")
+                if abs(geometry["viewport"]["stage"] - geometry["viewport"]["height"]) > 1:
+                    failures.append("stage does not match visualViewport")
                 boxes=geometry["boxes"]
                 order=("character-card", "quick-play", "create-room", "practice", "tabs")
                 for upper, lower in zip(order, order[1:]):

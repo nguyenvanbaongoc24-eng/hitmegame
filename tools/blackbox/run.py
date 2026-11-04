@@ -51,7 +51,7 @@ def probe(url: str, output: Path, device: str = "iPhone 15 Pro", load_timeout_ms
         browser = playwright.webkit.launch(headless=True)
         profile = dict(playwright.devices[device])
         if device == "iPhone 15 Pro":
-            profile["viewport"] = {"width": 393, "height": 852}
+            profile["viewport"] = {"width": 393, "height": 695}
         context = browser.new_context(**profile)
         page = context.new_page()
         errors = []
@@ -98,7 +98,8 @@ def probe(url: str, output: Path, device: str = "iPhone 15 Pro", load_timeout_ms
                     results[name] = {"status": "SKIP", "reason": "Unity loader, startup error, or uniform blank canvas"}
             elif results["bridge"] == "available":
                 items = visible_items(dump)
-                layout = check_layout({"safeArea": [0, 0, 393, 852], "elements": [
+                visible = page.evaluate("() => ({width:visualViewport?.width||innerWidth,height:visualViewport?.height||innerHeight})")
+                layout = check_layout({"safeArea": [0, 0, visible["width"], visible["height"]], "elements": [
                     {"name": item.get("name", "?"), "rect": rect(item), "clickable": item.get("interactable", False)}
                     for item in items], "minTouchCssPx": 44})
                 bad_text = [item.get("name") for item in items if "?" in (item.get("text") or "") or "□" in (item.get("text") or "")]

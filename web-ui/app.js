@@ -1,6 +1,7 @@
 import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
 import {audio} from './audio.js';
+import {previewScene} from './preview.js';
 
 const copy = await (await fetch('./i18n.json')).json();
 const t = key => copy[document.documentElement.lang === 'en' ? 'en' : 'vi'][key];
@@ -12,6 +13,35 @@ const mock = params.get('mock') === '1';
 const root = document.getElementById('ui-root');
 const canvas = document.getElementById('unity-canvas');
 if (legacy) root.hidden = true;
+
+function syncViewport() {
+  const viewport = window.visualViewport;
+  const height = viewport?.height || window.innerHeight;
+  const width = viewport?.width || window.innerWidth;
+  document.documentElement.style.setProperty('--viewport-height', `${height}px`);
+  document.documentElement.style.setProperty('--viewport-width', `${width}px`);
+  document.documentElement.style.setProperty('--viewport-top', `${viewport?.offsetTop || 0}px`);
+  document.documentElement.style.setProperty('--ui-scale', String(Math.min(1, Math.max(.77, height / 695))));
+  if (params.get('debug') === 'viewport') updateViewportDebug();
+}
+function updateViewportDebug() {
+  let panel = document.getElementById('viewport-debug');
+  if (!panel) {
+    panel = document.createElement('output');
+    panel.id = 'viewport-debug';
+    document.body.append(panel);
+  }
+  const inset = document.createElement('div');
+  inset.style.cssText = 'position:fixed;top:env(safe-area-inset-top);bottom:env(safe-area-inset-bottom);visibility:hidden';
+  document.body.append(inset);
+  const r = canvas.getBoundingClientRect();
+  panel.textContent = `inner ${innerWidth}×${innerHeight} | visual ${Math.round(visualViewport?.width || innerWidth)}×${Math.round(visualViewport?.height || innerHeight)} top ${Math.round(visualViewport?.offsetTop || 0)} | DPR ${devicePixelRatio} | canvas ${Math.round(r.width)}×${Math.round(r.height)} / ${canvas.width}×${canvas.height} | safe top ${Math.round(inset.getBoundingClientRect().top)} bottom ${Math.round(innerHeight-inset.getBoundingClientRect().bottom)}`;
+  inset.remove();
+}
+syncViewport();
+window.addEventListener('resize', syncViewport);
+window.visualViewport?.addEventListener('resize', syncViewport);
+window.visualViewport?.addEventListener('scroll', syncViewport);
 
 const icons = {
   play:'<path d="M8 4.5 21 12 8 19.5Z"/>',
@@ -77,7 +107,8 @@ function modal() {
 }
 function render() {
   if (legacy) return;
-  root.innerHTML = home() + modal();
+  const preview = mock && params.get('scene') && params.get('scene') !== 'home';
+  root.innerHTML = preview ? previewScene(params.get('scene')) : home() + modal();
   if (!performance.getEntriesByName('hitme-home-interactive').length) performance.mark('hitme-home-interactive');
   root.classList.toggle('reduced-motion',state.reducedMotion);
   if (params.get('e2e') === '1') {
