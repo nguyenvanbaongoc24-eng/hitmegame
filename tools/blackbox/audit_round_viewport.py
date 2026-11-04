@@ -50,8 +50,30 @@ def rect_for(dump: list, name: str) -> dict | None:
     return None
 
 
-def run(url: str, output: Path) -> dict:
+def match_edge_metrics(image: Image.Image) -> dict:
+    pixels = np.asarray(image.convert("RGB"), dtype=np.float32)
+    height, width = pixels.shape[:2]
+    left = pixels[int(.37 * height):int(.72 * height), :max(4, int(.03 * width))]
+    right = pixels[int(.37 * height):int(.72 * height), width - max(4, int(.03 * width)):]
+    bottom = pixels[int(.94 * height):height - 4, int(.10 * width):int(.28 * width)]
+    horizontal = float(np.abs(np.diff(bottom, axis=1)).mean())
+    vertical = float(np.abs(np.diff(bottom, axis=0)).mean())
+    return {"leftMean": round(float(left.mean()), 2), "leftStd": round(float(left.std()), 2),
+            "rightMean": round(float(right.mean()), 2), "rightStd": round(float(right.std()), 2),
+            "bottomHorizontalGradient": round(horizontal, 2),
+            "bottomVerticalGradient": round(vertical, 2)}
+
+
+def overlap_fraction(a: dict, b: dict) -> float:
+    width = max(0.0, min(a["x"] + a["w"], b["x"] + b["w"]) - max(a["x"], b["x"]))
+    height = max(0.0, min(a["y"] + a["h"], b["y"] + b["h"]) - max(a["y"], b["y"]))
+    return width * height / max(1.0, min(a["w"] * a["h"], b["w"] * b["h"]))
+
+
+def run(url: str, output: Path, selected_profile: str | None = None) -> dict:
     profiles = json.loads(PROFILES.read_text(encoding="utf-8"))
+    if selected_profile:
+        profiles = {selected_profile: profiles[selected_profile]}
     output.mkdir(parents=True, exist_ok=True)
     result = {}
     with sync_playwright() as playwright:
@@ -158,7 +180,53 @@ def run(url: str, output: Path) -> dict:
                                                          min(profile["height"] - 3, start["y"] + 5))
                                     page.wait_for_timeout(1200)
                                     row["afterStartTap"] = page.evaluate("() => window.__hitmeState || null")
+                                    row["afterStartTapDump"] = page.evaluate("() => typeof __hitmeUiDump === 'function' ? __hitmeUiDump() : null")
                                     page.screenshot(path=str(output / "iphone15pro_safari_after_start_tap.png"), scale="device")
+                                    skip = rect_for(row["afterStartTapDump"] or [], "BtnSkip")
+                                    if skip:
+                                        page.touchscreen.tap(skip["x"] + skip["w"] / 2, skip["y"] + skip["h"] / 2)
+                                        page.wait_for_timeout(400)
+                                        match_path = output / "iphone15pro_safari_match_placing.png"
+                                        page.screenshot(path=str(match_path), scale="device")
+                                        match_image = Image.open(match_path)
+                                        match_dump = page.evaluate("() => typeof __hitmeUiDump === 'function' ? __hitmeUiDump() : null")
+                                        row["afterTutorialSkip"] = {"state": page.evaluate("() => window.__hitmeState || null"),
+                                                                    "dump": match_dump}
+                                        edge = match_edge_metrics(match_image)
+                                        row["matchEdgeMetrics"] = edge
+                                        if edge["leftMean"] < 55 and edge["leftStd"] < 18 and edge["rightMean"] < 55 and edge["rightStd"] < 18:
+                                            findings.append("arena_dark_side_bands")
+                                        if edge["bottomVerticalGradient"] < .6 and edge["bottomHorizontalGradient"] > 1.2:
+                                            findings.append("arena_stretched_bottom_streaks")
+                                        emote = rect_for(match_dump or [], "BtnInGameEmote")
+                                        if emote:
+                                            sample = colored_fraction(match_image, emote, profile["dpr"])
+                                            row["matchEmoteSample"] = sample
+                                            center = {"x": emote["x"] + emote["w"] * .25,
+                                                      "y": emote["y"] + emote["h"] * .25,
+                                                      "w": emote["w"] * .5, "h": emote["h"] * .5}
+                                            row["matchEmoteCenterSample"] = colored_fraction(match_image, center, profile["dpr"])
+                                            if row["matchEmoteCenterSample"]["brightNeutralFraction"] > .55:
+                                                findings.append("match_emote_white_placeholder")
+                                        for _ in range(20):
+                                            page.wait_for_timeout(500)
+                                            phase_state = page.evaluate("() => window.__hitmeState || null")
+                                            phase = (phase_state or {}).get("match", {}).get("phase")
+                                            if phase not in ("reveal", "throwing"):
+                                                continue
+                                            row["firstPublicPhase"] = phase_state
+                                            page.screenshot(path=str(output / f"iphone15pro_safari_match_{phase}.png"), scale="device")
+                                            alive = [player for player in phase_state["match"]["players"] if player.get("alive") and isinstance(player.get("rect"), dict)]
+                                            collisions = []
+                                            for i, first in enumerate(alive):
+                                                for second in alive[i + 1:]:
+                                                    ratio = overlap_fraction(first["rect"], second["rect"])
+                                                    if ratio > .2:
+                                                        collisions.append({"first": first["id"], "second": second["id"], "fraction": round(ratio, 3)})
+                                            row["visualSpriteOverlaps"] = collisions
+                                            if collisions:
+                                                findings.append("revealed_characters_overlap")
+                                            break
                 row["status"] = "MEASURED"
             except Exception as error:
                 row["error"] = str(error)
@@ -177,8 +245,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--url", default="https://hitmegame-iota.vercel.app/?e2e=1")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--profile", choices=json.loads(PROFILES.read_text(encoding="utf-8")).keys())
     args = parser.parse_args()
-    result = run(args.url, args.output)
+    result = run(args.url, args.output, args.profile)
     if not all(row["status"] == "MEASURED" for row in result.values()):
         raise SystemExit(1)
     raise SystemExit(2 if any(row.get("findings") for row in result.values()) else 0)
