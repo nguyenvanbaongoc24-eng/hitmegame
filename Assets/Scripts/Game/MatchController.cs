@@ -121,6 +121,34 @@ namespace HitMe.Game
         private readonly List<HitFx> _hitFxPool = new List<HitFx>(MaxPoolSize);
 
         private readonly Dictionary<string, PlayerView> _views = new Dictionary<string, PlayerView>(MaxPoolSize);
+        private readonly Dictionary<string, (string kind, string id)> _pendingEmotes = new Dictionary<string, (string kind, string id)>();
+        public bool IsPaused { get; private set; }
+        private float _botEmoteTimer;
+        private const float BotEmoteInterval = 18f;
+        private int _lastAimTickStep = -1;
+
+        public void SetPaused(bool paused)
+        {
+            if (_bots.Count == 0) return; // Only pause for practice / bot mode per SET-05
+            IsPaused = paused;
+        }
+
+        public void HandlePlayerEmote(string kind, string id, string playerId = "player")
+        {
+            if (State == null) return;
+            if (State.Phase == Phase.Placing)
+            {
+                // Secret in placing phase (EMO-07): do not show on field yet!
+                _pendingEmotes[playerId] = (kind, id);
+            }
+            else
+            {
+                if (_views.TryGetValue(playerId, out var view) && view != null)
+                {
+                    view.ShowEmote(kind, id);
+                }
+            }
+        }
 
         private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>(MaxPoolSize);
 
@@ -266,6 +294,7 @@ namespace HitMe.Game
 
 
         public static event System.Action<string, string, string> OnMatchE2EEvent;
+        public static event System.Action<string, string, string> OnEmoteTriggered;
 
         public static void EmitE2EEvent(string eventType, string sourceId = null, string targetId = null)
         {
@@ -979,6 +1008,28 @@ namespace HitMe.Game
 
             if (State == null || State.Phase == Phase.MatchEnd) return;
 
+            if (!IsPaused && _bots.Count > 0)
+            {
+                _botEmoteTimer += Time.deltaTime;
+                if (_botEmoteTimer >= BotEmoteInterval)
+                {
+                    _botEmoteTimer = 0f;
+                    var aliveBots = new System.Collections.Generic.List<string>();
+                    foreach (var p in State.Players)
+                    {
+                        if (p.Id != "player" && p.IsAlive) aliveBots.Add(p.Id);
+                    }
+                    if (aliveBots.Count > 0)
+                    {
+                        string chosenBotId = aliveBots[UnityEngine.Random.Range(0, aliveBots.Count)];
+                        string[] phraseIds = { "phrase_01", "phrase_02", "phrase_03", "phrase_04", "phrase_05", "phrase_06" };
+                        string chosenPhrase = phraseIds[UnityEngine.Random.Range(0, phraseIds.Length)];
+                        HandlePlayerEmote("phrase", chosenPhrase, chosenBotId);
+                        OnEmoteTriggered?.Invoke("phrase", chosenPhrase, chosenBotId);
+                    }
+                }
+            }
+
             var config = State.Config;
 
             State.StartRound();
@@ -1002,6 +1053,8 @@ namespace HitMe.Game
             OnPhaseChanged?.Invoke(Phase.Placing);
 
             OnTimerTick?.Invoke(SecondsRemaining);
+
+            AudioManager.Instance?.PlayRoundStart();
 
 
 
@@ -1169,7 +1222,7 @@ namespace HitMe.Game
 
                 {
 
-                    if (!WebGLPointerDiagnostics.IsRequested())
+                    if (!WebGLPointerDiagnostics.IsRequested() && !IsPaused)
 
                     {
 
@@ -1246,6 +1299,18 @@ namespace HitMe.Game
                 State.LockRound();
 
                 OnPhaseChanged?.Invoke(State.Phase);
+
+                if (_pendingEmotes.Count > 0)
+                {
+                    foreach (var kvp in _pendingEmotes)
+                    {
+                        if (_views.TryGetValue(kvp.Key, out var view) && view != null)
+                        {
+                            view.ShowEmote(kvp.Value.kind, kvp.Value.id);
+                        }
+                    }
+                    _pendingEmotes.Clear();
+                }
 
 
 
@@ -1671,6 +1736,21 @@ namespace HitMe.Game
 
                 player.Facing = snap.Facing;
 
+                if (snap.AimActive && snap.Facing.LengthSquared > 0.01f)
+                {
+                    float angle = Mathf.Atan2(snap.Facing.Y, snap.Facing.X) * Mathf.Rad2Deg;
+                    if (angle < 0f) angle += 360f;
+                    int step = Mathf.FloorToInt(angle / 15f);
+                    if (_lastAimTickStep != -1 && step != _lastAimTickStep)
+                    {
+                        AudioManager.Instance?.PlayAimTick();
+                    }
+                    _lastAimTickStep = step;
+                }
+                else
+                {
+                    _lastAimTickStep = -1;
+                }
             }
 
             Present(true);
@@ -1746,6 +1826,8 @@ namespace HitMe.Game
         {
 
             ClearWeapons();
+
+            AudioManager.Instance?.PlayThrow("dep_to_ong");
 
             float duration = _fastAutoPlayTimings ? 0.04f : 0.75f;
 

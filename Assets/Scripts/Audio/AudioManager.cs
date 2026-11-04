@@ -6,6 +6,9 @@ namespace HitMe.Audio
     {
         public static AudioManager Instance { get; private set; }
 
+        public static System.Action<string, float, float> OnSfxRequested;
+        public static System.Action<string, string> OnMusicRequested;
+
         [Header("Audio Sources")]
         public AudioSource bgmSource;
         public AudioSource sfxSource;
@@ -88,8 +91,22 @@ namespace HitMe.Audio
             sfxSource.volume = _sfxVolume;
         }
 
-        public void PlayBgm(AudioClip clip)
+        public static bool ShouldPlayUnityAudio()
         {
+#if UNITY_EDITOR
+            return true;
+#else
+            return PlayerPrefs.GetInt("HitMe_AudioUnity", 0) == 1;
+#endif
+        }
+
+        public void PlayBgm(AudioClip clip, string musicId = null)
+        {
+            if (!string.IsNullOrEmpty(musicId))
+            {
+                OnMusicRequested?.Invoke(musicId, "play");
+            }
+            if (!ShouldPlayUnityAudio()) return;
             if (clip == null || bgmSource == null) return;
             if (bgmSource.clip == clip && bgmSource.isPlaying) return;
 
@@ -104,8 +121,17 @@ namespace HitMe.Audio
             }
         }
 
-        public void PlayMenuBgm() => TransitionBgm(bgmMenu);
-        public void PlayMatchBgm() => TransitionBgm(bgmMatch);
+        public void PlayMenuBgm()
+        {
+            OnMusicRequested?.Invoke("bgm_menu", "play");
+            if (ShouldPlayUnityAudio()) TransitionBgm(bgmMenu);
+        }
+
+        public void PlayMatchBgm()
+        {
+            OnMusicRequested?.Invoke("bgm_match", "play");
+            if (ShouldPlayUnityAudio()) TransitionBgm(bgmMatch);
+        }
 
         private Coroutine _fadeRoutine;
 
@@ -170,13 +196,18 @@ namespace HitMe.Audio
             }
         }
 
-        public void PlaySfx(AudioClip clip)
+        public void PlaySfx(AudioClip clip, string sfxId = null, float vol = 1f, float pan = 0f)
         {
+            if (!string.IsNullOrEmpty(sfxId))
+            {
+                OnSfxRequested?.Invoke(sfxId, vol, pan);
+            }
+            if (!ShouldPlayUnityAudio()) return;
             if (clip != null && sfxSource != null)
             {
                 try
                 {
-                    sfxSource.PlayOneShot(clip);
+                    sfxSource.PlayOneShot(clip, vol);
                 }
                 catch (System.Exception ex)
                 {
@@ -185,23 +216,52 @@ namespace HitMe.Audio
             }
         }
 
-        public void PlayClick() => PlaySfx(sfxClick);
-        public void PlayPlace() => PlaySfx(sfxPlace);
-        public void PlayReady() => PlaySfx(sfxReady);
-        public void PlayReveal() => PlaySfx(sfxReveal);
-        public void PlayThrow() => PlaySfx(sfxThrow);
-        public void PlayHit() => PlaySfx(sfxHit);
-        public void PlayDeath() => PlaySfx(sfxDeath);
-        public void PlayTick() => PlaySfx(sfxCountdownTick);
+        public void PlayClick() => PlaySfx(sfxClick, "ui_tap");
+        public void PlayPlace() => PlaySfx(sfxPlace, "place_pop");
+        public void PlayReady() => PlaySfx(sfxReady, "ready_lock");
+        public void PlayReveal() => PlaySfx(sfxReveal, "reveal");
+        public void PlayThrow(string weaponId = "dep_to_ong")
+        {
+            string sfxId = "throw_dep";
+            if (!string.IsNullOrEmpty(weaponId))
+            {
+                if (weaponId.IndexOf("chao", System.StringComparison.OrdinalIgnoreCase) >= 0) sfxId = "throw_chao";
+                else if (weaponId.IndexOf("vot", System.StringComparison.OrdinalIgnoreCase) >= 0) sfxId = "throw_vot";
+            }
+            PlaySfx(sfxThrow, sfxId);
+        }
+        public void PlayHit(string weaponId = "dep_to_ong")
+        {
+            string sfxId = "hit_dep";
+            if (!string.IsNullOrEmpty(weaponId))
+            {
+                if (weaponId.IndexOf("chao", System.StringComparison.OrdinalIgnoreCase) >= 0) sfxId = "hit_chao";
+                else if (weaponId.IndexOf("vot", System.StringComparison.OrdinalIgnoreCase) >= 0) sfxId = "hit_vot";
+            }
+            PlaySfx(sfxHit, sfxId);
+        }
+        public void PlayDeath() => PlaySfx(sfxDeath, "ko");
+        public void PlayTick() => PlaySfx(sfxCountdownTick, "timer_tick");
         public void PlayCountdownTick() => PlayTick();
-        public void PlayCountdownLast() => PlaySfx(sfxCountdownLast != null ? sfxCountdownLast : sfxCountdownTick);
-        public void PlayWin() => PlaySfx(sfxWin);
-        public void PlayLose() => PlaySfx(sfxLose);
-        public void PlayWallThud() => PlaySfx(sfxWallThud);
-        public void PlayError() => PlaySfx(sfxError);
-        public void PlayCoin() => PlaySfx(sfxCoin);
-        public void PlayPurchase() => PlaySfx(sfxPurchase);
-        public void PlayChatPop() => PlaySfx(sfxChatPop);
+        public void PlayCountdownLast() => PlaySfx(sfxCountdownLast != null ? sfxCountdownLast : sfxCountdownTick, "timer_end");
+        public void PlayWin()
+        {
+            OnMusicRequested?.Invoke("jingle_win", "play");
+            PlaySfx(sfxWin, "win");
+        }
+        public void PlayLose()
+        {
+            OnMusicRequested?.Invoke("jingle_lose", "play");
+            PlaySfx(sfxLose, "lose");
+        }
+        public void PlayRoundStart() => PlaySfx(sfxReveal, "round_start");
+        public void PlayRoundResult() => PlaySfx(sfxReady, "round_result");
+        public void PlayAimTick() => PlaySfx(sfxClick, "aim_tick", 0.35f);
+        public void PlayWallThud() => PlaySfx(sfxWallThud, "ui_back");
+        public void PlayError() => PlaySfx(sfxError, "ui_error");
+        public void PlayCoin() => PlaySfx(sfxCoin, "ui_confirm");
+        public void PlayPurchase() => PlaySfx(sfxPurchase, "ui_confirm");
+        public void PlayChatPop() => PlaySfx(sfxChatPop, "emo_pop");
 
         /// <summary>
         /// Slipper flight SFX. Asset QA confirmed missing "dép bay": uses silent placeholder.

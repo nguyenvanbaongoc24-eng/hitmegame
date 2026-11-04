@@ -62,6 +62,13 @@ namespace HitMe.UI
         }
 
         [Serializable]
+        private class EmoteDto
+        {
+            public string kind = "phrase";
+            public string id = "phrase_01";
+        }
+
+        [Serializable]
         private class SettingsDto
         {
             public float music = 1f;
@@ -92,12 +99,18 @@ namespace HitMe.UI
         {
             MatchController.OnMatchE2EEvent += HandleMatchE2EEvent;
             if (matchController != null) matchController.OnPhaseChanged += HandlePhaseChanged;
+            HitMe.Audio.AudioManager.OnSfxRequested += HandleSfxRequested;
+            HitMe.Audio.AudioManager.OnMusicRequested += HandleMusicRequested;
+            MatchController.OnEmoteTriggered += EmitEmote;
         }
 
         private void OnDisable()
         {
             MatchController.OnMatchE2EEvent -= HandleMatchE2EEvent;
             if (matchController != null) matchController.OnPhaseChanged -= HandlePhaseChanged;
+            HitMe.Audio.AudioManager.OnSfxRequested -= HandleSfxRequested;
+            HitMe.Audio.AudioManager.OnMusicRequested -= HandleMusicRequested;
+            MatchController.OnEmoteTriggered -= EmitEmote;
         }
 
         private void Start()
@@ -265,9 +278,20 @@ namespace HitMe.UI
             }
         }
 
+        public void Pause(string json = null)
+        {
+            if (matchController != null)
+            {
+                matchController.SetPaused(true);
+            }
+        }
+
         public void Resume(string json = null)
         {
-            // Resume / dismiss settings modal
+            if (matchController != null)
+            {
+                matchController.SetPaused(false);
+            }
         }
 
         public void ExitMatch(string json = null)
@@ -285,7 +309,64 @@ namespace HitMe.UI
 
         public void SendEmote(string json)
         {
-            // Display emote above local player
+            string kind = "phrase";
+            string id = "phrase_01";
+            if (!string.IsNullOrEmpty(json))
+            {
+                try
+                {
+                    var dto = JsonUtility.FromJson<EmoteDto>(json);
+                    if (dto != null)
+                    {
+                        if (!string.IsNullOrEmpty(dto.kind)) kind = dto.kind;
+                        if (!string.IsNullOrEmpty(dto.id)) id = dto.id;
+                    }
+                }
+                catch
+                {
+                    if (json.StartsWith("phrase_") || json.StartsWith("Chào") || json.StartsWith("Né")) { kind = "phrase"; id = json; }
+                    else if (json.StartsWith("sticker_")) { kind = "sticker"; id = json; }
+                }
+            }
+
+            if (matchController != null)
+            {
+                matchController.HandlePlayerEmote(kind, id, "player");
+            }
+            EmitEmote(kind, id, "player");
+        }
+
+        public void EmitEmote(string kind, string id, string playerId)
+        {
+            float screenX = 0.5f, screenY = 0.5f;
+            var cam = _mainCamera != null ? _mainCamera : Camera.main;
+            if (cam != null && matchController != null && matchController.State != null)
+            {
+                var p = matchController.State.FindPlayer(playerId);
+                if (p != null)
+                {
+                    Vector3 sp = cam.WorldToScreenPoint(new Vector3(p.Position.X, p.Position.Y + 1.45f, 0f));
+                    screenX = Mathf.Clamp01(sp.x / Mathf.Max(1f, Screen.width));
+                    screenY = Mathf.Clamp01(1f - (sp.y / Mathf.Max(1f, Screen.height)));
+                }
+            }
+
+            string json = "{\"type\":\"emote\",\"kind\":\"" + kind + "\",\"id\":\"" + id + "\",\"playerId\":\"" + playerId + "\",\"screen\":{\"x\":"
+                + screenX.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + ",\"y\":"
+                + screenY.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + "}}";
+            HitMeWebBridge.EmitUnityToWebJson(json);
+        }
+
+        private void HandleSfxRequested(string sfxId, float vol, float pan)
+        {
+            string json = "{\"type\":\"sfx\",\"id\":\"" + sfxId + "\",\"vol\":" + vol.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + "}";
+            HitMeWebBridge.EmitUnityToWebJson(json);
+        }
+
+        private void HandleMusicRequested(string musicId, string action)
+        {
+            string json = "{\"type\":\"music\",\"id\":\"" + musicId + "\",\"action\":\"" + action + "\"}";
+            HitMeWebBridge.EmitUnityToWebJson(json);
         }
 
         // ====================================================================

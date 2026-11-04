@@ -267,6 +267,14 @@ namespace HitMe.Game
         private static Sprite _nuNangDongThrowRelease;
         private static Sprite _heartSprite;
 
+        private GameObject _emoteBubbleObj;
+        private SpriteRenderer _emoteBubbleBg;
+        private SpriteRenderer _emoteStickerSr;
+        private TextMeshPro _emoteTextTmp;
+        private float _emoteTimer;
+        private const float EmoteDuration = 2.5f;
+        private static Sprite _emoteBgSprite;
+
         private float _spawnTimer;
 
         private float _throwTimer;
@@ -560,6 +568,52 @@ namespace HitMe.Game
                 if (_floatingDamageTimer <= 0f && _floatingDamageObj != null)
                 {
                     _floatingDamageObj.SetActive(false);
+                }
+            }
+
+            if (_emoteTimer > 0f && _emoteBubbleObj != null)
+            {
+                _emoteTimer -= Time.deltaTime;
+                float elapsed = EmoteDuration - _emoteTimer;
+                float scale = 1f;
+                if (elapsed < 0.15f)
+                {
+                    float t = elapsed / 0.15f;
+                    scale = Mathf.Sin(t * Mathf.PI * 0.5f) * 1.15f;
+                }
+                else if (elapsed < 0.25f)
+                {
+                    float t = (elapsed - 0.15f) / 0.10f;
+                    scale = Mathf.Lerp(1.15f, 1.0f, t);
+                }
+
+                float alpha = 1f;
+                if (_emoteTimer < 0.30f)
+                {
+                    alpha = Mathf.Clamp01(_emoteTimer / 0.30f);
+                }
+
+                _emoteBubbleObj.transform.localScale = new Vector3(scale, scale, 1f);
+                if (_emoteBubbleBg != null)
+                {
+                    Color c = _emoteBubbleBg.color;
+                    c.a = alpha * 0.92f;
+                    _emoteBubbleBg.color = c;
+                }
+                if (_emoteTextTmp != null)
+                {
+                    _emoteTextTmp.alpha = alpha;
+                }
+                if (_emoteStickerSr != null)
+                {
+                    Color c = _emoteStickerSr.color;
+                    c.a = alpha;
+                    _emoteStickerSr.color = c;
+                }
+
+                if (_emoteTimer <= 0f)
+                {
+                    _emoteBubbleObj.SetActive(false);
                 }
             }
 
@@ -1212,6 +1266,90 @@ namespace HitMe.Game
 
                 _floatingDamageObj = fdGo;
             }
+        }
+
+        private void EnsureEmoteBubble()
+        {
+            if (_emoteBubbleObj == null)
+            {
+                var bubbleGo = new GameObject("EmoteBubble");
+                bubbleGo.transform.SetParent(transform, false);
+                bubbleGo.transform.localPosition = new Vector3(0f, 1.45f, 0f);
+
+                if (_emoteBgSprite == null)
+                {
+#if UNITY_EDITOR
+                    _emoteBgSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_input_box_cyan.png")
+                        ?? UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_panel_dark_gold.png");
+#endif
+                }
+
+                _emoteBubbleBg = bubbleGo.AddComponent<SpriteRenderer>();
+                _emoteBubbleBg.sprite = _emoteBgSprite;
+                _emoteBubbleBg.sortingOrder = 25;
+                _emoteBubbleBg.color = new Color(0.12f, 0.16f, 0.24f, 0.92f);
+                bubbleGo.transform.localScale = new Vector3(1.2f, 0.65f, 1f);
+
+                var txtGo = new GameObject("EmoteText");
+                txtGo.transform.SetParent(bubbleGo.transform, false);
+                txtGo.transform.localPosition = new Vector3(0f, 0f, 0f);
+                _emoteTextTmp = txtGo.AddComponent<TextMeshPro>();
+                _emoteTextTmp.fontSize = 2.4f;
+                _emoteTextTmp.alignment = TextAlignmentOptions.Center;
+                _emoteTextTmp.color = Color.white;
+                _emoteTextTmp.fontStyle = FontStyles.Bold;
+                _emoteTextTmp.sortingOrder = 26;
+                if (_defaultFont != null) _emoteTextTmp.font = _defaultFont;
+
+                var stickerGo = new GameObject("EmoteSticker");
+                stickerGo.transform.SetParent(bubbleGo.transform, false);
+                stickerGo.transform.localPosition = Vector3.zero;
+                _emoteStickerSr = stickerGo.AddComponent<SpriteRenderer>();
+                _emoteStickerSr.sortingOrder = 26;
+
+                _emoteBubbleObj = bubbleGo;
+                _emoteBubbleObj.SetActive(false);
+            }
+        }
+
+        public void ShowEmote(string kind, string id)
+        {
+            EnsureEmoteBubble();
+            if (_emoteBubbleObj == null) return;
+
+            string text = "";
+            if (string.Equals(kind, "phrase", System.StringComparison.OrdinalIgnoreCase))
+            {
+                switch (id)
+                {
+                    case "phrase_01": text = "Chào cả nhà!"; break;
+                    case "phrase_02": text = "Né được không?"; break;
+                    case "phrase_03": text = "Giỏi lắm!"; break;
+                    case "phrase_04": text = "Chơi lại nhé!"; break;
+                    case "phrase_05": text = "Ối!"; break;
+                    case "phrase_06": text = "GG"; break;
+                    default: text = id ?? ""; break;
+                }
+                if (_emoteTextTmp != null)
+                {
+                    _emoteTextTmp.text = text;
+                    _emoteTextTmp.gameObject.SetActive(true);
+                }
+                if (_emoteStickerSr != null) _emoteStickerSr.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (_emoteTextTmp != null)
+                {
+                    _emoteTextTmp.text = id != null ? id.Replace("sticker_", "Sticker ") : "Sticker";
+                    _emoteTextTmp.gameObject.SetActive(true);
+                }
+                if (_emoteStickerSr != null) _emoteStickerSr.gameObject.SetActive(false);
+            }
+
+            _emoteTimer = EmoteDuration;
+            _emoteBubbleObj.transform.localScale = Vector3.zero;
+            _emoteBubbleObj.SetActive(true);
         }
 
         private void ApplyThrowSprite(int idx, bool isRelease)
