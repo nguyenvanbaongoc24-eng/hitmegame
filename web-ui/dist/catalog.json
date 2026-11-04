@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "sample": true,
+  "note": "Preview-only catalog pending Unity CharacterRegistry export; enabled weapons here demonstrate UI, not combat readiness.",
+  "characters": [
+    {"id":"nam_lang","name":{"vi":"Nam Làng","en":"Nam Lang"},"desc":{"vi":"Cậu bé làng quê nhanh nhẹn","en":"Village kid"},"enabled":true,"weaponIds":["dep_to_ong","chao_chong_dinh","vot_pickleball"],"assets":{"portrait":"./assets/nam_lang_portrait.png","head":"./assets/nam_lang_head.png"}},
+    {"id":"nu_nang_dong","name":{"vi":"Nữ Năng Động","en":"Energetic Girl"},"desc":{"vi":"Nhanh nhẹn và vui vẻ","en":"Energetic and cheerful"},"enabled":true,"weaponIds":["dep_to_ong","chao_chong_dinh","vot_pickleball"],"assets":{"portrait":"./assets/nu_nang_dong_portrait.png","head":"./assets/nu_nang_dong_head.png"}},
+    {"id":"co_ba","name":{"vi":"Cô Ba","en":"Co Ba"},"desc":{"vi":"Duyên dáng và quyết đoán","en":"Graceful and determined"},"enabled":true,"weaponIds":["dep_to_ong","chao_chong_dinh","vot_pickleball"],"assets":{"portrait":"./assets/co_ba_portrait.png","head":"./assets/co_ba_head.png"}},
+    {"id":"anh_teen","name":{"vi":"Anh Teen","en":"Teen Boy"},"desc":{"vi":"Tinh nghịch và gan dạ","en":"Playful and brave"},"enabled":true,"weaponIds":["dep_to_ong","chao_chong_dinh","vot_pickleball"],"assets":{"portrait":"./assets/anh_teen_portrait.png","head":"./assets/anh_teen_head.png"}},
+    {"id":"quay_boy","name":{"vi":"Quậy Boy","en":"Quay Boy"},"desc":{"vi":"Sắp ra mắt","en":"Coming soon"},"enabled":false,"weaponIds":[],"assets":{"portrait":"./assets/quay_boy_portrait.png","head":"./assets/quay_boy_head.png"}},
+    {"id":"cho_vang","name":{"vi":"Chó Vàng","en":"Yellow Dog"},"desc":{"vi":"Sắp ra mắt","en":"Coming soon"},"enabled":false,"weaponIds":[],"assets":{"portrait":"./assets/cho_vang_portrait.png","head":"./assets/cho_vang_head.png"}},
+    {"id":"meo_mun","name":{"vi":"Mèo Mun","en":"Black Cat"},"desc":{"vi":"Sắp ra mắt","en":"Coming soon"},"enabled":false,"weaponIds":[],"assets":{"portrait":"./assets/meo_mun_portrait.png","head":"./assets/meo_mun_head.png"}}
+  ],
+  "weapons": [
+    {"id":"dep_to_ong","name":{"vi":"Dép Tổ Ong","en":"Sandal"},"enabled":true,"icon":"./assets/dep_to_ong_icon.png"},
+    {"id":"chao_chong_dinh","name":{"vi":"Chảo","en":"Pan"},"enabled":true,"icon":"./assets/chao_chong_dinh_icon.png"},
+    {"id":"vot_pickleball","name":{"vi":"Vợt","en":"Racket"},"enabled":true,"icon":"./assets/vot_pickleball_icon.png"}
+  ]
+}
