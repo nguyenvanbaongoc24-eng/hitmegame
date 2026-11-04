@@ -18,6 +18,9 @@ namespace HitMe.UI
 
         [DllImport("__Internal")]
         public static extern void UpdateHitMeUiDumpJson(string json);
+
+        [DllImport("__Internal")]
+        public static extern void EmitUnityToWebJson(string json);
 #else
         public static void MarkHomeShown()
         {
@@ -35,6 +38,11 @@ namespace HitMe.UI
         }
 
         public static void UpdateHitMeUiDumpJson(string json)
+        {
+            // Editor / standalone fallback
+        }
+
+        public static void EmitUnityToWebJson(string json)
         {
             // Editor / standalone fallback
         }

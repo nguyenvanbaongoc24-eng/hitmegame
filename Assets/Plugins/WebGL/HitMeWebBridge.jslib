@@ -16,6 +16,17 @@ mergeInto(LibraryManager.library, {
     }
     return 0;
   },
+  EmitUnityToWebJson: function (jsonStrPtr) {
+    if (typeof window !== "undefined" && window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {
+      try {
+        var str = UTF8ToString(jsonStrPtr);
+        var evt = JSON.parse(str);
+        window.hitmeUi.onUnity(evt);
+      } catch (e) {
+        console.error("[HITME WebBridge] EmitUnityToWebJson error:", e);
+      }
+    }
+  },
   UpdateHitMeStateJson: function (jsonStrPtr) {
     if (typeof window !== "undefined" && window.location && window.location.search && window.location.search.indexOf("e2e=1") !== -1) {
       try {

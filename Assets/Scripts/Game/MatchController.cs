@@ -1006,11 +1006,13 @@ namespace HitMe.Game
 
 
             foreach (var pair in _bots)
-
             {
-
-                State.SetInput(pair.Value.MakeInput(State.FindPlayer(pair.Key), config));
-
+                var rawInput = pair.Value.MakeInput(State.FindPlayer(pair.Key), config);
+                // B1: Constrain bot placement strictly within playable court boundary
+                float clampedX = Mathf.Clamp(rawInput.Placement.X, ArenaCoordinateMapper.PlayMinX + 0.35f, ArenaCoordinateMapper.PlayMaxX - 0.35f);
+                float clampedY = Mathf.Clamp(rawInput.Placement.Y, ArenaCoordinateMapper.PlayMinY + 0.40f, ArenaCoordinateMapper.PlayMaxY - 0.40f);
+                rawInput.Placement = new Vec2(clampedX, clampedY);
+                State.SetInput(rawInput);
             }
 
 
@@ -1348,6 +1350,19 @@ namespace HitMe.Game
                 OnPhaseChanged?.Invoke(State.Phase);
 
                 Present(false);
+
+                // B3: Synchronized throw animation for all alive characters
+                for (int i = 0; i < State.Players.Count; i++)
+                {
+                    var p = State.Players[i];
+                    if (p.IsAlive && _views.TryGetValue(p.Id, out var v) && v != null)
+                    {
+                        v.PlayAnimation("Throw");
+                    }
+                }
+
+                // Wait 0.15s for windup before launching weapon at release frame
+                yield return new WaitForSeconds(0.15f);
 
                 SpawnWeapons();
                 for (int i = 0; i < State.Players.Count; i++)

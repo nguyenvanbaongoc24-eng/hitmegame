@@ -43,23 +43,14 @@ namespace HitMe.Game
 
 
         private static readonly float[] CharacterBodyScales =
-
         {
-
-            0.7235f, // 0: Nam Làng (311px @ 150 PPU = 2.073u -> 1.50u)
-
-            1.2016f, // 1: Nữ Năng Động (181px @ 150 PPU = 1.207u -> 1.45u)
-
-            0.7740f, // 2: Cô Ba (281px @ 150 PPU = 1.873u -> 1.45u)
-
-            0.7985f, // 3: Anh Teen (278px @ 150 PPU = 1.853u -> 1.48u)
-
-            0.8638f, // 4: Quậy Boy (257px @ 150 PPU = 1.713u -> 1.48u)
-
-            1.1820f, // 5: Chó Vàng (138px @ 150 PPU = 0.920u -> 1.0875u, 72.5% human)
-
-            1.0660f  // 6: Mèo Mun (153px @ 150 PPU = 1.020u -> 1.0875u, 72.5% human)
-
+            0.7140f, // 0: Nam Làng (311px content @ 150 PPU = 2.073u -> 1.480u)
+            0.7900f, // 1: Nữ Năng Động (281px content @ 150 PPU = 1.873u -> 1.480u)
+            0.8310f, // 2: Cô Ba (267px content @ 150 PPU = 1.780u -> 1.480u)
+            0.8640f, // 3: Anh Teen (257px content @ 150 PPU = 1.713u -> 1.480u)
+            0.8640f, // 4: Quậy Boy (257px content @ 150 PPU = 1.713u -> 1.480u)
+            1.2250f, // 5: Chó Vàng (131px content @ 150 PPU = 0.873u -> 1.070u, 72.3% human)
+            1.0490f  // 6: Mèo Mun (153px content @ 150 PPU = 1.020u -> 1.070u, 72.3% human)
         };
 
 
@@ -271,6 +262,10 @@ namespace HitMe.Game
         private Vector2 _hitRecoilDir = Vector2.down;
         private GameObject _floatingDamageObj;
         private TextMeshPro _floatingDamageText;
+        private SpriteRenderer _floatingDamageHeart;
+        private static Sprite _anhNuiThrowRelease;
+        private static Sprite _nuNangDongThrowRelease;
+        private static Sprite _heartSprite;
 
         private float _spawnTimer;
 
@@ -387,45 +382,50 @@ namespace HitMe.Game
             }
 
             else if (_currentState == "Throw")
-
             {
-
                 if (_throwTimer > 0f)
-
                 {
-
                     _throwTimer -= Time.deltaTime;
+                    float elapsed = 0.35f - _throwTimer;
 
-                    if (!reducedMotion)
-
+                    if (_body != null)
                     {
+                        if (_currentAimDirection.x < -0.1f) _body.flipX = true;
+                        else if (_currentAimDirection.x > 0.1f) _body.flipX = false;
+                    }
 
-                        float p = Mathf.Clamp01(1f - (_throwTimer / 0.35f));
-
-                        float lunge = Mathf.Sin(p * Mathf.PI);
-
-                        _body.transform.localPosition = new Vector3(_currentAimDirection.x * 0.08f * lunge, _sinkOffsetY + _currentAimDirection.y * 0.06f * lunge, 0f);
-
+                    int charIdx = Mathf.Clamp(characterIndex, 0, TotalCharacterCount - 1);
+                    if (elapsed < 0.15f)
+                    {
+                        // Phase 1: Windup
+                        ApplyThrowSprite(charIdx, false);
+                        if (!reducedMotion)
+                        {
+                            float pullBack = Mathf.Sin((elapsed / 0.15f) * Mathf.PI * 0.5f) * 0.08f;
+                            _body.transform.localPosition = new Vector3(-_currentAimDirection.x * pullBack, _sinkOffsetY - _currentAimDirection.y * pullBack, 0f);
+                        }
+                    }
+                    else
+                    {
+                        // Phase 2: Release
+                        ApplyThrowSprite(charIdx, true);
+                        if (!reducedMotion)
+                        {
+                            float lungeProgress = Mathf.Clamp01((elapsed - 0.15f) / 0.20f);
+                            float lunge = Mathf.Sin(lungeProgress * Mathf.PI) * 0.14f;
+                            _body.transform.localPosition = new Vector3(_currentAimDirection.x * lunge, _sinkOffsetY + _currentAimDirection.y * lunge, 0f);
+                        }
                     }
 
                     if (_throwTimer <= 0f)
-
                     {
-
                         _currentState = "Idle";
-
                         _body.transform.localRotation = Quaternion.identity;
-
                         _body.transform.localPosition = new Vector3(0f, _sinkOffsetY, 0f);
-
                         _body.transform.localScale = _baseBodyScale;
-
                         ApplyCharacterVisual(characterIndex);
-
                     }
-
                 }
-
             }
 
             else if (_currentState == "Hit")
@@ -550,7 +550,12 @@ namespace HitMe.Game
                 {
                     float floatY = 1.30f + (fdProgress * 0.70f);
                     _floatingDamageObj.transform.localPosition = new Vector3(0f, floatY, 0f);
-                    _floatingDamageText.alpha = Mathf.Clamp01(1f - (fdProgress * fdProgress));
+                    float alpha = Mathf.Clamp01(1f - (fdProgress * fdProgress));
+                    _floatingDamageText.alpha = alpha;
+                    if (_floatingDamageHeart != null)
+                    {
+                        _floatingDamageHeart.color = new Color(1f, 1f, 1f, alpha);
+                    }
                 }
                 if (_floatingDamageTimer <= 0f && _floatingDamageObj != null)
                 {
@@ -633,12 +638,12 @@ namespace HitMe.Game
             }
 
             if (configAsset.sandalProjectileSprite != null)
-
             {
-
                 _defaultWeaponIcon = configAsset.sandalProjectileSprite;
-
             }
+            if (configAsset.anhNuiThrowReleaseSprite != null) _anhNuiThrowRelease = configAsset.anhNuiThrowReleaseSprite;
+            if (configAsset.nuNangDongThrowReleaseSprite != null) _nuNangDongThrowRelease = configAsset.nuNangDongThrowReleaseSprite;
+            if (configAsset.heartFullSprite != null) _heartSprite = configAsset.heartFullSprite;
 
         }
 
@@ -1185,13 +1190,72 @@ namespace HitMe.Game
                 var fdGo = new GameObject("FloatingDamage");
                 fdGo.transform.SetParent(transform, false);
                 fdGo.transform.localPosition = new Vector3(0f, 1.30f, 0f);
-                _floatingDamageText = fdGo.AddComponent<TextMeshPro>();
-                _floatingDamageText.alignment = TextAlignmentOptions.Center;
+                
+                var textGo = new GameObject("DamageText");
+                textGo.transform.SetParent(fdGo.transform, false);
+                textGo.transform.localPosition = new Vector3(-0.16f, 0f, 0f);
+                _floatingDamageText = textGo.AddComponent<TextMeshPro>();
+                _floatingDamageText.alignment = TextAlignmentOptions.MidlineRight;
                 _floatingDamageText.fontSize = 2.4f;
                 _floatingDamageText.fontStyle = FontStyles.Bold;
                 _floatingDamageText.sortingOrder = 15;
                 if (_defaultFont != null) _floatingDamageText.font = _defaultFont;
+
+                var heartGo = new GameObject("HeartIcon");
+                heartGo.transform.SetParent(fdGo.transform, false);
+                heartGo.transform.localPosition = new Vector3(0.18f, 0.04f, 0f);
+                heartGo.transform.localScale = new Vector3(0.32f, 0.32f, 1f);
+                var heartSr = heartGo.AddComponent<SpriteRenderer>();
+                heartSr.sortingOrder = 16;
+                if (_heartSprite != null) heartSr.sprite = _heartSprite;
+                _floatingDamageHeart = heartSr;
+
                 _floatingDamageObj = fdGo;
+            }
+        }
+
+        private void ApplyThrowSprite(int idx, bool isRelease)
+        {
+            if (_body == null) return;
+            if (idx == 0) // Nam Làng
+            {
+                if (isRelease)
+                {
+                    if (_namLangPoses != null && _namLangPoses.Length > 2 && _namLangPoses[2] != null)
+                        _body.sprite = _namLangPoses[2];
+                }
+                else
+                {
+                    if (_namLangPoses != null && _namLangPoses.Length > 1 && _namLangPoses[1] != null)
+                        _body.sprite = _namLangPoses[1];
+                }
+            }
+            else if (idx == 2) // Cô Ba
+            {
+                if (isRelease)
+                {
+                    if (_anhNonLaPoses != null && _anhNonLaPoses.Length > 2 && _anhNonLaPoses[2] != null)
+                        _body.sprite = _anhNonLaPoses[2];
+                }
+                else
+                {
+                    if (_anhNonLaPoses != null && _anhNonLaPoses.Length > 1 && _anhNonLaPoses[1] != null)
+                        _body.sprite = _anhNonLaPoses[1];
+                }
+            }
+            else if (idx == 3 || idx == 4) // Anh Teen / Quậy Boy
+            {
+                if (isRelease && _anhNuiThrowRelease != null)
+                    _body.sprite = _anhNuiThrowRelease;
+                else if (_defaultSprites != null && idx < _defaultSprites.Length)
+                    _body.sprite = _defaultSprites[idx];
+            }
+            else if (idx == 1) // Nữ Năng Động
+            {
+                if (isRelease && _nuNangDongThrowRelease != null)
+                    _body.sprite = _nuNangDongThrowRelease;
+                else if (_defaultSprites != null && idx < _defaultSprites.Length)
+                    _body.sprite = _defaultSprites[idx];
             }
         }
 
@@ -1220,8 +1284,13 @@ namespace HitMe.Game
                     _floatingDamageObj.transform.localPosition = new Vector3(0f, 1.30f, 0f);
                     if (_floatingDamageText != null)
                     {
-                        _floatingDamageText.text = "<color=#FF2222>-1</color> <color=#FF3344>❤</color>";
+                        _floatingDamageText.text = "<color=#FF2222>-1</color>";
                         _floatingDamageText.alpha = 1f;
+                    }
+                    if (_floatingDamageHeart != null)
+                    {
+                        if (_heartSprite != null) _floatingDamageHeart.sprite = _heartSprite;
+                        _floatingDamageHeart.color = Color.white;
                     }
                 }
 
@@ -1279,21 +1348,10 @@ namespace HitMe.Game
             }
 
             else if (stateName == "Throw")
-
             {
-
                 _throwTimer = 0.35f;
-
-                if (_defaultSprites != null && idx < _defaultSprites.Length && _defaultSprites[idx] != null)
-
-                {
-
-                    _body.sprite = _defaultSprites[idx];
-
-                }
-
+                ApplyThrowSprite(idx, false);
                 return;
-
             }
 
             else if (stateName == "Aim")
@@ -1346,7 +1404,9 @@ namespace HitMe.Game
 
             if (!gameObject.activeSelf) gameObject.SetActive(true);
 
-            transform.position = new Vector3(player.Position.X, player.Position.Y, 0f);
+            float clampedX = Mathf.Clamp(player.Position.X, HitMe.Core.ArenaCoordinateMapper.PlayMinX + 0.35f, HitMe.Core.ArenaCoordinateMapper.PlayMaxX - 0.35f);
+            float clampedY = Mathf.Clamp(player.Position.Y, HitMe.Core.ArenaCoordinateMapper.PlayMinY + 0.40f, HitMe.Core.ArenaCoordinateMapper.PlayMaxY - 0.40f);
+            transform.position = new Vector3(clampedX, clampedY, 0f);
 
 
 
@@ -2055,40 +2115,29 @@ namespace HitMe.Game
             }
 
             if (_namLangPoses == null || _namLangPoses.Length < 5)
-
             {
-
                 _namLangPoses = new Sprite[5];
-
                 _namLangPoses[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
-
-                _namLangPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_aim.png");
-
-                _namLangPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_throw_release.png");
-
+                _namLangPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_throw_windup.png") ?? UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
+                _namLangPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_throw_release.png") ?? UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_idle.png");
                 _namLangPoses[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_hit.png");
-
                 _namLangPoses[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/cau_be_lang_defeat.png");
-
             }
-
             if (_anhNonLaPoses == null || _anhNonLaPoses.Length < 5)
-
             {
-
                 _anhNonLaPoses = new Sprite[5];
-
                 _anhNonLaPoses[0] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
-
-                _anhNonLaPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_aim.png");
-
-                _anhNonLaPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_throw_release.png");
-
+                _anhNonLaPoses[1] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_throw_windup.png") ?? UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
+                _anhNonLaPoses[2] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_throw_release.png") ?? UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_idle.png");
                 _anhNonLaPoses[3] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_hit.png");
-
                 _anhNonLaPoses[4] = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_non_la_defeat.png");
-
             }
+            if (_anhNuiThrowRelease == null)
+                _anhNuiThrowRelease = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/anh_nui_throw_release.png");
+            if (_nuNangDongThrowRelease == null)
+                _nuNangDongThrowRelease = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/co_nang_the_thao_throw_release.png");
+            if (_heartSprite == null)
+                _heartSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Art/UI/Kit/ui_icon_heart_full.png");
 
 #endif
 

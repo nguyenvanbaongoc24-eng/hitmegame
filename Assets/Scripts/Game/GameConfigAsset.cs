@@ -47,6 +47,9 @@ namespace HitMe.Game
         public Sprite[] namLangPoseSprites;
         public Sprite[] anhNonLaPoseSprites;
         public Sprite sandalProjectileSprite;
+        public Sprite anhNuiThrowReleaseSprite;
+        public Sprite nuNangDongThrowReleaseSprite;
+        public Sprite heartFullSprite;
         public Sprite[] hitFxFrames;
 
         public GameConfig ToCore()

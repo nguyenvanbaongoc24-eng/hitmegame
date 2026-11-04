@@ -40,7 +40,7 @@ namespace HitMe.Editor
             var spriteRowLeaderboard = LoadSprite(KitPath + "ui_row_leaderboard.png");
             var spriteRowMe = LoadSprite(KitPath + "ui_row_leaderboard_me.png");
             var spriteCircleBack = LoadSprite(KitPath + "ui_btn_circle_back.png");
-            var spriteArena = LoadSprite(SpritesPath + "ARENA.png");
+            var spriteArena = LoadSprite(SpritesPath + "ARENA_SEAMLESS.png") ?? LoadSprite(SpritesPath + "ARENA.png");
             var spriteTimerGold = LoadSprite(KitPath + "ui_timer_circle_gold.png");
             var spriteTimerPulse = LoadSprite(KitPath + "ui_aim_pulse_gold.png");
             var spriteHeartFull = LoadSprite(KitPath + "ui_icon_heart_full.png");
@@ -108,24 +108,19 @@ namespace HitMe.Editor
                 var bgObj = GameObject.Find("ArenaBackground");
                 if (bgObj == null) bgObj = new GameObject("ArenaBackground");
                 bgObj.transform.SetParent(arenaGo.transform);
-                bgObj.transform.position = Vector3.zero;
-                bgObj.transform.localScale = new Vector3(1.05f, 1.05f, 1f);
+                bgObj.transform.position = new Vector3(0f, 0.40f, 0f);
+                bgObj.transform.localScale = Vector3.one;
                 var sr = bgObj.GetComponent<SpriteRenderer>();
                 if (sr == null) sr = bgObj.AddComponent<SpriteRenderer>();
                 sr.sprite = spriteArena;
                 sr.sortingOrder = -2;
 
-                // A2: Fullscreen Village Court Backdrop (covers full camera frustum so no blank/solid bands above or below the gate)
+                // B1: Remove ArenaBackdrop to prevent doubled temple gates and repeated seams
                 var backdropObj = GameObject.Find("ArenaBackdrop");
-                if (backdropObj == null) backdropObj = new GameObject("ArenaBackdrop");
-                backdropObj.transform.SetParent(arenaGo.transform);
-                backdropObj.transform.position = new Vector3(0f, 0.40f, 0f);
-                backdropObj.transform.localScale = new Vector3(1.35f, 1.35f, 1f);
-                var bsr = backdropObj.GetComponent<SpriteRenderer>();
-                if (bsr == null) bsr = backdropObj.AddComponent<SpriteRenderer>();
-                bsr.sprite = spriteArena; // M1: Extend using arena texture itself
-                bsr.sortingOrder = -8;
-                bsr.color = new Color(0.88f, 0.88f, 0.90f, 1f);
+                if (backdropObj != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(backdropObj);
+                }
             }
             var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
             if (configAsset != null)
@@ -1170,6 +1165,15 @@ namespace HitMe.Editor
                 EditorUtility.SetDirty(matchCtrl);
             }
 
+            // 7b. Setup WebBridge in Scene (B0)
+            var webBridgeGo = GameObject.Find("WebBridge");
+            if (webBridgeGo == null) webBridgeGo = new GameObject("WebBridge");
+            var webBridge = webBridgeGo.GetComponent<HitMe.UI.WebBridge>();
+            if (webBridge == null) webBridge = webBridgeGo.AddComponent<HitMe.UI.WebBridge>();
+            webBridge.matchController = matchCtrl;
+            webBridge.uiController = uiCtrl;
+            EditorUtility.SetDirty(webBridgeGo);
+
             // 8. Configure Build Scenes (Graybox is sole production scene, MainMatch kept intact)
             var scenes = new List<EditorBuildSettingsScene>
             {
@@ -1396,20 +1400,23 @@ namespace HitMe.Editor
             configAsset.namLangPoseSprites = new Sprite[]
             {
                 LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
-                LoadSprite("Assets/Sprites/cau_be_lang_idle.png"), // Keep cute idle chibi in Aim pose
-                LoadSprite("Assets/Sprites/cau_be_lang_idle.png"), // Keep cute idle chibi in Throw pose
+                LoadSprite("Assets/Sprites/cau_be_lang_throw_windup.png") ?? LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
+                LoadSprite("Assets/Sprites/cau_be_lang_throw_release.png") ?? LoadSprite("Assets/Sprites/cau_be_lang_idle.png"),
                 LoadSprite("Assets/Sprites/cau_be_lang_hit.png"),
                 LoadSprite("Assets/Sprites/cau_be_lang_defeat.png")
             };
             configAsset.anhNonLaPoseSprites = new Sprite[]
             {
                 LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
-                LoadSprite("Assets/Sprites/anh_non_la_aim.png"),
-                LoadSprite("Assets/Sprites/anh_non_la_throw_release.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_throw_windup.png") ?? LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
+                LoadSprite("Assets/Sprites/anh_non_la_throw_release.png") ?? LoadSprite("Assets/Sprites/anh_non_la_idle.png"),
                 LoadSprite("Assets/Sprites/anh_non_la_hit.png"),
                 LoadSprite("Assets/Sprites/anh_non_la_defeat.png")
             };
             configAsset.sandalProjectileSprite = LoadSprite("Assets/Sprites/dep_projectile.png") ?? LoadSprite("Assets/Sprites/dep_icon.png");
+            configAsset.anhNuiThrowReleaseSprite = LoadSprite("Assets/Sprites/anh_nui_throw_release.png");
+            configAsset.nuNangDongThrowReleaseSprite = LoadSprite("Assets/Sprites/co_nang_the_thao_throw_release.png");
+            configAsset.heartFullSprite = LoadSprite("Assets/Art/UI/Kit/ui_icon_heart_full.png") ?? LoadSprite(KitPath + "ui_icon_heart_full.png");
             configAsset.hitFxFrames = new Sprite[]
             {
                 LoadSprite("Assets/Art/VFX/Hit_Impact/01_Hit_Impact_F01.png"),
