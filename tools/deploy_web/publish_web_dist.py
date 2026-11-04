@@ -7,6 +7,8 @@ import os
 import sys
 import shutil
 import subprocess
+import io
+import tarfile
 from datetime import datetime
 from pathlib import Path
 
@@ -29,6 +31,60 @@ def run_cmd(cmd, cwd=None, check=True):
         raise RuntimeError(f"Command failed with exit code {res.returncode}: {' '.join(str(c) for c in cmd)}")
     return res
 
+def extract_webui_dist(target_dir: Path, repo_root: Path):
+    """
+    Extracts web-ui/dist from prep/codex branch into target_dir (read-only).
+    Does NOT merge branches or commit to prep/codex.
+    """
+    print(f"\n[*] Extracting web-ui/dist from prep/codex into {target_dir}...")
+    try:
+        run_cmd(["git", "fetch", "origin", "prep/codex"], cwd=repo_root, check=False)
+    except Exception as e:
+        print(f"[!] Optional fetch notice: {e}")
+
+    tar_bytes = None
+    used_ref = None
+    for ref in ["origin/prep/codex", "prep/codex"]:
+        try:
+            res = subprocess.run(
+                ["git", "archive", "--format=tar", ref, "web-ui/dist"],
+                cwd=str(repo_root),
+                capture_output=True,
+                check=True
+            )
+            if res.stdout and len(res.stdout) > 0:
+                tar_bytes = res.stdout
+                used_ref = ref
+                break
+        except Exception as e:
+            print(f"[-] Could not archive from {ref}: {e}")
+
+    if not tar_bytes:
+        raise RuntimeError("Failed to archive web-ui/dist from prep/codex branch!")
+
+    if target_dir.exists():
+        shutil.rmtree(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    extracted_count = 0
+    with tarfile.open(fileobj=io.BytesIO(tar_bytes)) as tf:
+        for member in tf.getmembers():
+            if not member.name.startswith("web-ui/dist/"):
+                continue
+            rel_name = member.name[len("web-ui/dist/"):]
+            if not rel_name:
+                continue
+            dest_path = target_dir / rel_name
+            if member.isdir():
+                dest_path.mkdir(parents=True, exist_ok=True)
+            elif member.isfile():
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                with tf.extractfile(member) as src, open(dest_path, "wb") as dst:
+                    shutil.copyfileobj(src, dst)
+                extracted_count += 1
+
+    print(f"[+] Successfully extracted {extracted_count} files from {used_ref}:web-ui/dist into {target_dir}")
+
 def main():
     print("=== [1/4] Running package_deploy.py ===")
     run_cmd([sys.executable, str(PACKAGE_SCRIPT)])
@@ -39,6 +95,12 @@ def main():
         raise FileNotFoundError(f"Expected vercel.json in {DIST_DIR}")
     if not (DIST_DIR / "Build").exists():
         raise FileNotFoundError(f"Expected Build folder in {DIST_DIR}")
+
+    # Extract web-ui/dist from prep/codex into dist/ui-preview
+    ui_preview_dist = DIST_DIR / "ui-preview"
+    extract_webui_dist(ui_preview_dist, REPO_ROOT)
+    if not (ui_preview_dist / "index.html").exists():
+        raise FileNotFoundError(f"Expected index.html in {ui_preview_dist}")
 
     print("\n=== [2/4] Preparing orphan staging repo ===")
     STAGING_DIR.mkdir(parents=True, exist_ok=True)
@@ -78,7 +140,7 @@ def main():
     if not status_res.stdout.strip():
         print("[!] No changes to commit in web-dist.")
     else:
-        commit_msg = f"deploy(web-dist): WebGL Release bundle for Vercel ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
+        commit_msg = f"deploy(web-dist): WebGL Release bundle + web-ui preview ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})"
         run_cmd(["git", "commit", "-m", commit_msg], cwd=STAGING_DIR)
 
     print("\n=== [4/4] Pushing web-dist to GitHub origin ===")
