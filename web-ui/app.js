@@ -1,6 +1,9 @@
 import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
 
+const copy = await (await fetch('./i18n.json')).json();
+const t = key => copy.vi[key];
+
 const params = new URLSearchParams(location.search);
 const legacy = params.get('ui') === 'unity';
 const mock = params.get('mock') === '1';
@@ -39,35 +42,35 @@ function home() {
   return `<main class="stage home" data-screen="home">
     <div class="backdrop" aria-hidden="true"></div>
     <header class="profile" data-name="profile">
-      <button class="avatar round" data-action="profile" aria-label="Hồ sơ"><img src="${characterImage('head')}" alt=""></button>
-      <button class="profile-name" data-action="profile"><strong>${safeText(character.name)}</strong><span>Hồ sơ ${icon('edit')}</span></button>
+      <button class="avatar round" data-action="profile" aria-label="${t('profile')}"><img src="${characterImage('head')}" alt=""></button>
+      <button class="profile-name" data-action="profile"><strong>${safeText(character.name)}</strong><span>${t('profile')} ${icon('edit')}</span></button>
       ${state.balance !== null ? `<button class="gold" data-action="shop" aria-label="Vàng ${state.balance}">${icon('coin')}<b>${Number(state.balance).toLocaleString('vi-VN')}</b><span class="add">${icon('plus')}</span></button>` : ''}
     </header>
-    <button class="settings icon-round" data-name="settings" data-action="settings" aria-label="Cài đặt">${icon('gear')}</button>
-    <div class="logo" data-name="logo" aria-label="HIT ME"><span class="logo-leaf leaf-left"></span><span class="logo-board"><span class="logo-shoe"><img src="./assets/dep_to_ong_icon.png" alt=""></span><span class="logo-word">HIT ME</span></span><span class="logo-leaf leaf-right"></span></div>
+    <button class="settings icon-round" data-name="settings" data-action="settings" aria-label="${t('settings')}">${icon('gear')}</button>
+    <div class="logo" data-name="logo" aria-label="HIT ME"><img class="logo-image" src="./assets/logo_hit_me.png" alt="HIT ME"></div>
     <div class="pedestal" aria-hidden="true"></div>
     <img class="hero" data-name="hero" src="${characterImage('portrait')}" alt="${safeText(character.name)}">
     <button class="hero-arrow left icon-round" data-name="arrow-left" data-action="previous" aria-label="Nhân vật trước">${icon('chevron')}</button>
     <button class="hero-arrow right icon-round" data-name="arrow-right" data-action="next" aria-label="Nhân vật tiếp theo">${icon('chevron')}</button>
-    <button class="selection-card character-card" data-name="character-card" data-action="character"><img src="${characterImage('head')}" alt=""><span><small>NHÂN VẬT</small><b>${safeText(character.name)}</b></span>${icon('chevron')}</button>
-    <button class="selection-card weapon-card" data-name="weapon-card" data-action="weapon">${icon('chevron','reverse')}<img src="./assets/dep_to_ong_icon.png" alt=""><span><small>VŨ KHÍ</small><b>Dép</b></span>${icon('chevron')}</button>
-    <button class="cta quick" data-name="quick-play" data-action="quick">${icon('play')}<span><strong>CHƠI NHANH</strong><small>Online • Tối đa 6 người</small></span></button>
-    <button class="cta blue" data-name="create-room" data-action="create">${icon('people')}<strong>TẠO PHÒNG</strong></button>
-    <button class="cta green" data-name="join-room" data-action="join">${icon('people')}<strong>VÀO PHÒNG</strong></button>
-    <button class="cta navy practice" data-name="practice" data-action="practice">${icon('robot')}<strong>LUYỆN VỚI BOT</strong>${icon('chevron')}</button>
+    <button class="selection-card character-card" data-name="character-card" data-action="character"><img src="${characterImage('head')}" alt=""><span><small>${t('character')}</small><b>${safeText(character.name)}</b></span>${icon('chevron')}</button>
+    <button class="selection-card weapon-card" data-name="weapon-card" data-action="weapon">${icon('chevron','reverse')}<img src="./assets/dep_icon.png" alt=""><span><small>${t('weapon')}</small><b>Dép</b></span>${icon('chevron')}</button>
+    <button class="cta quick" data-name="quick-play" data-action="quick">${icon('play')}<span><strong>${t('quickPlay')}</strong><small>${t('quickPlayDetail')}</small></span></button>
+    <button class="cta blue" data-name="create-room" data-action="create">${icon('people')}<strong>${t('createRoom')}</strong></button>
+    <button class="cta green" data-name="join-room" data-action="join">${icon('people')}<strong>${t('joinRoom')}</strong></button>
+    <button class="cta navy practice" data-name="practice" data-action="practice">${icon('robot')}<strong>${t('practice')}</strong>${icon('chevron')}</button>
     <nav class="tabs" data-name="tabs" aria-label="Điều hướng chính">
-      <button class="active" data-action="home">${icon('home')}<span>Trang chủ</span></button>
-      <button data-action="rank">${icon('trophy')}<span>Xếp hạng</span></button>
-      <button data-action="quests">${icon('gift')}<span>Nhiệm vụ</span></button>
+      <button class="active" data-action="home">${icon('home')}<span>${t('home')}</span></button>
+      <button data-action="rank">${icon('trophy')}<span>${t('ranking')}</span></button>
+      <button data-action="quests">${icon('gift')}<span>${t('quests')}</span></button>
     </nav>
   </main>`;
 }
 function modal() {
   if (!state.overlay) return '';
-  const title = {character:'Chọn nhân vật',weapon:'Chọn vũ khí',settings:'Cài đặt',profile:'Hồ sơ',rank:'Sắp ra mắt',quests:'Sắp ra mắt',join:'Vào phòng',shop:'Sắp ra mắt'}[state.overlay] || 'HIT ME';
+  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon')}[state.overlay] || 'HIT ME';
   const list = state.overlay === 'character' ? `<div class="choice-grid">${state.roster.map(item => `<button data-action="select-character" data-id="${safeText(item.id)}" ${item.enabled?'':'disabled'}><img src="./assets/${assetId(item.id)}_head.png" alt=""><span>${safeText(item.name)}</span>${item.enabled?'':icon('lock')}</button>`).join('')}</div>` : '';
-  const join = state.overlay === 'join' ? `<label>Mã phòng <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">VÀO PHÒNG</button>` : '';
-  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="Đóng">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':'<p>Đang chuẩn bị cho bản thử.</p>'}</section></div>`;
+  const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
+  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':`<p>${t('preparing')}</p>`}</section></div>`;
 }
 function render() {
   if (legacy) return;

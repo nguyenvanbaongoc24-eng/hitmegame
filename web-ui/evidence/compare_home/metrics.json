@@ -1,0 +1,318 @@
+{
+  "url": "http://127.0.0.1:8765/?mock=1",
+  "viewport": [
+    393,
+    852
+  ],
+  "layout": {
+    "profile": {
+      "status": "PASS",
+      "verticalCenterError": 0.003,
+      "normalizedCenterError": 0.0067,
+      "widthError": 0.0233,
+      "heightError": 0.0335,
+      "actual": {
+        "x": 11.78125,
+        "y": 59.625,
+        "w": 330.109375,
+        "h": 49.40625
+      },
+      "expected": {
+        "x": 10.218,
+        "y": 56.232,
+        "w": 337.98,
+        "h": 51.12
+      }
+    },
+    "settings": {
+      "status": "PASS",
+      "verticalCenterError": 0.0025,
+      "normalizedCenterError": 0.0206,
+      "widthError": 0.0592,
+      "heightError": 0.05,
+      "actual": {
+        "x": 345.828125,
+        "y": 59.625,
+        "w": 44,
+        "h": 48.5625
+      },
+      "expected": {
+        "x": 336.408,
+        "y": 56.232,
+        "w": 46.766999999999996,
+        "h": 51.12
+      }
+    },
+    "logo": {
+      "status": "PASS",
+      "verticalCenterError": 0.001,
+      "normalizedCenterError": 0.0018,
+      "widthError": 0.0112,
+      "heightError": 0.0317,
+      "actual": {
+        "x": 74.65625,
+        "y": 110.75,
+        "w": 243.65625,
+        "h": 110.75
+      },
+      "expected": {
+        "x": 73.884,
+        "y": 111.61200000000001,
+        "w": 246.411,
+        "h": 107.352
+      }
+    },
+    "hero": {
+      "status": "PASS",
+      "verticalCenterError": 0.0022,
+      "normalizedCenterError": 0.0029,
+      "widthError": 0.0,
+      "heightError": 0.0442,
+      "actual": {
+        "x": 110.03125,
+        "y": 278.3123474121094,
+        "w": 171.34375,
+        "h": 221.515625
+      },
+      "expected": {
+        "x": 109.254,
+        "y": 281.16,
+        "w": 171.348,
+        "h": 212.148
+      }
+    },
+    "arrow-left": {
+      "status": "PASS",
+      "verticalCenterError": 0.0045,
+      "normalizedCenterError": 0.0049,
+      "widthError": 0.0765,
+      "heightError": 0.0187,
+      "actual": {
+        "x": 62.875,
+        "y": 374.875,
+        "w": 44,
+        "h": 46
+      },
+      "expected": {
+        "x": 65.238,
+        "y": 379.14,
+        "w": 40.872,
+        "h": 45.156
+      }
+    },
+    "arrow-right": {
+      "status": "PASS",
+      "verticalCenterError": 0.0045,
+      "normalizedCenterError": 0.0054,
+      "widthError": 0.0765,
+      "heightError": 0.0187,
+      "actual": {
+        "x": 286.125,
+        "y": 374.875,
+        "w": 44,
+        "h": 46
+      },
+      "expected": {
+        "x": 288.855,
+        "y": 379.14,
+        "w": 40.872,
+        "h": 45.156
+      }
+    },
+    "character-card": {
+      "status": "PASS",
+      "verticalCenterError": 0.003,
+      "normalizedCenterError": 0.0032,
+      "widthError": 0.0089,
+      "heightError": 0.0268,
+      "actual": {
+        "x": 17.671875,
+        "y": 498.40625,
+        "w": 176.84375,
+        "h": 62.1875
+      },
+      "expected": {
+        "x": 18.864,
+        "y": 495.01199999999994,
+        "w": 175.278,
+        "h": 63.9
+      }
+    },
+    "weapon-card": {
+      "status": "PASS",
+      "verticalCenterError": 0.003,
+      "normalizedCenterError": 0.0032,
+      "widthError": 0.0089,
+      "heightError": 0.0268,
+      "actual": {
+        "x": 198.484375,
+        "y": 498.40625,
+        "w": 176.84375,
+        "h": 62.1875
+      },
+      "expected": {
+        "x": 198.858,
+        "y": 495.01199999999994,
+        "w": 175.278,
+        "h": 63.9
+      }
+    },
+    "quick-play": {
+      "status": "PASS",
+      "verticalCenterError": 0.0,
+      "normalizedCenterError": 0.0,
+      "widthError": 0.007,
+      "heightError": 0.0001,
+      "actual": {
+        "x": 27.5,
+        "y": 570.828125,
+        "w": 337.96875,
+        "h": 68.15625
+      },
+      "expected": {
+        "x": 28.688999999999997,
+        "y": 570.84,
+        "w": 335.622,
+        "h": 68.16
+      }
+    },
+    "create-room": {
+      "status": "PASS",
+      "verticalCenterError": 0.0005,
+      "normalizedCenterError": 0.0005,
+      "widthError": 0.0045,
+      "heightError": 0.0152,
+      "actual": {
+        "x": 19.640625,
+        "y": 645.8125,
+        "w": 172.90625,
+        "h": 55.375
+      },
+      "expected": {
+        "x": 20.043,
+        "y": 644.964,
+        "w": 172.134,
+        "h": 56.232
+      }
+    },
+    "join-room": {
+      "status": "PASS",
+      "verticalCenterError": 0.0005,
+      "normalizedCenterError": 0.0005,
+      "widthError": 0.0045,
+      "heightError": 0.0152,
+      "actual": {
+        "x": 200.453125,
+        "y": 645.8125,
+        "w": 172.90625,
+        "h": 55.375
+      },
+      "expected": {
+        "x": 200.823,
+        "y": 644.964,
+        "w": 172.134,
+        "h": 56.232
+      }
+    },
+    "practice": {
+      "status": "PASS",
+      "verticalCenterError": 0.001,
+      "normalizedCenterError": 0.001,
+      "widthError": 0.0026,
+      "heightError": 0.0368,
+      "actual": {
+        "x": 47.15625,
+        "y": 709.703125,
+        "w": 298.671875,
+        "h": 47.703125
+      },
+      "expected": {
+        "x": 47.553,
+        "y": 711.42,
+        "w": 297.894,
+        "h": 46.008
+      }
+    },
+    "tabs": {
+      "status": "PASS",
+      "verticalCenterError": 0.0,
+      "normalizedCenterError": 0.0,
+      "widthError": 0.0,
+      "heightError": 0.0,
+      "actual": {
+        "x": 0,
+        "y": 772.765625,
+        "w": 393,
+        "h": 79.234375
+      },
+      "expected": {
+        "x": 0.0,
+        "y": 772.764,
+        "w": 393.0,
+        "h": 79.236
+      }
+    }
+  },
+  "buttonColors": {
+    "quick-play": {
+      "actualRGB": [
+        255,
+        170,
+        34
+      ],
+      "targetRGB": [
+        254,
+        179,
+        30
+      ],
+      "deltaE76": 6.07,
+      "status": "PASS"
+    },
+    "create-room": {
+      "actualRGB": [
+        1,
+        99,
+        197
+      ],
+      "targetRGB": [
+        1,
+        80,
+        175
+      ],
+      "deltaE76": 8.06,
+      "status": "PASS"
+    },
+    "join-room": {
+      "actualRGB": [
+        0,
+        120,
+        90
+      ],
+      "targetRGB": [
+        2,
+        107,
+        78
+      ],
+      "deltaE76": 5.41,
+      "status": "PASS"
+    },
+    "practice": {
+      "actualRGB": [
+        39,
+        60,
+        84
+      ],
+      "targetRGB": [
+        39,
+        56,
+        79
+      ],
+      "deltaE76": 2.03,
+      "status": "PASS"
+    }
+  },
+  "passedLayout": 13,
+  "totalLayout": 13,
+  "passedColors": 4,
+  "totalColors": 4
+}

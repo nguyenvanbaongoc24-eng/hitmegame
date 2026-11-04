@@ -20,3 +20,13 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 @media(max-height:720px){.logo{top:12%;height:11%}.hero{top:31%;height:25%}.pedestal{top:52%}.hero-arrow{top:42%}.selection-card{top:56%}.quick{top:65%}.blue,.green{top:74%}.practice{top:82%}}
 @media(min-width:700px){.stage{box-shadow:0 0 0 1px #47606f,0 0 50px #000a}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}.reduced-motion *, .reduced-motion *:before,.reduced-motion *:after{animation:none!important;transition:none!important}
+.backdrop{background:url('./assets/arena_background.png') center bottom/100% 80% no-repeat}
+.backdrop:before{content:"";position:absolute;left:0;right:0;top:0;height:25%;background:url('./assets/sky_reference.png') center top/100% 100% no-repeat;-webkit-mask-image:linear-gradient(#000 0%,#000 75%,transparent 100%);mask-image:linear-gradient(#000 0%,#000 75%,transparent 100%)}
+.logo-shoe{top:-28%;left:43%;width:33%;height:50%}
+.hero{left:28%;width:43.6%}
+.green{background:linear-gradient(#04c797,#007e5e 72%,#005745)}
+.navy{background:linear-gradient(#35516e,#2a4058 74%,#182b42)}
+.logo-image{width:100%;height:100%;object-fit:contain}
+.profile-name{flex:1;height:100%;min-height:44px;overflow:hidden}.profile-name strong{max-width:100%}
+.gold{flex:none;height:max(44px,70%)}
+.blue,.green,.practice{min-height:44px}
