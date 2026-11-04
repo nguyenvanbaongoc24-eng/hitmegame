@@ -46,7 +46,7 @@ def run(url: str, output: Path) -> dict:
                     const controls=[...document.querySelectorAll('.stage button')].filter(e=>e.offsetParent!==null);
                     const undersized=controls.filter(e=>{
                       const r=e.getBoundingClientRect();
-                      return r.width<44 || r.height<44;
+                      return r.width<48 || r.height<48;
                     }).map(e=>({action:e.dataset.action,w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height}));
                     const clipped=controls.filter(e=>e.textContent.trim() && (e.scrollWidth>e.clientWidth+2 || e.scrollHeight>e.clientHeight+2)).map(e=>e.dataset.action);
                     const point=document.elementFromPoint(innerWidth/2,innerHeight*.42);
@@ -56,7 +56,7 @@ def run(url: str, output: Path) -> dict:
                 }""", KEYS)
                 failures = []
                 if errors: failures.append(f"JS errors: {errors}")
-                if geometry["undersized"]: failures.append(f"tap targets <44: {geometry['undersized']}")
+                if geometry["undersized"]: failures.append(f"tap targets <48: {geometry['undersized']}")
                 if geometry["clipped"]: failures.append(f"clipped text: {geometry['clipped']}")
                 if not geometry["canvasTarget"]: failures.append("middle arena touch blocked")
                 if geometry["wrongTab"] or geometry["glyphSquare"]: failures.append("bad Home label or square glyph")
@@ -68,12 +68,23 @@ def run(url: str, output: Path) -> dict:
                 page.locator('[data-action="next"]').click()
                 selected = page.evaluate("window.__hitmeState?.selectedCharacterId")
                 if selected != "nu_nang_dong": failures.append(f"next character selected {selected}")
+                audio_available = page.evaluate("Boolean(window.AudioContext || window.webkitAudioContext)")
+                audio_log = page.evaluate("window.__hitmeAudioLog || []")
+                if audio_available and not any(entry["id"] == "ui_select_char" for entry in audio_log):
+                    failures.append("character button emitted no audio event")
                 page.locator('[data-action="character"]').click()
                 if not page.locator('[role="dialog"]').is_visible(): failures.append("character dialog hidden")
                 if not page.locator('[data-id="quay_boy"]').is_disabled(): failures.append("locked character enabled")
+                before = page.evaluate("window.__hitmeState?.selectedCharacterId")
+                page.evaluate("document.querySelector('[data-id=quay_boy]').click()")
+                after = page.evaluate("window.__hitmeState?.selectedCharacterId")
+                if before != after: failures.append("locked character changed selection")
+                if audio_available and not any(entry["id"] == "ui_denied" for entry in page.evaluate("window.__hitmeAudioLog || []")):
+                    failures.append("locked character emitted no denied audio event")
                 page.locator('[data-action="close"]').click()
                 results[f"{engine_name}/{device_name}"] = {"status":"PASS" if not failures else "FAIL",
-                    "failures":failures,"geometry":geometry,"selectedAfterNext":selected}
+                    "failures":failures,"geometry":geometry,"selectedAfterNext":selected,
+                    "audioAvailable":audio_available,"audioCheck":"CHECKED" if audio_available else "UNAVAILABLE_IN_HEADLESS_ENGINE"}
                 context.close()
             browser.close()
     (output/"results.json").write_text(json.dumps(results,ensure_ascii=False,indent=2),encoding="utf-8")

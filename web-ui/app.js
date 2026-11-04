@@ -1,8 +1,9 @@
 import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
+import {audio} from './audio.js';
 
 const copy = await (await fetch('./i18n.json')).json();
-const t = key => copy.vi[key];
+const t = key => copy[document.documentElement.lang === 'en' ? 'en' : 'vi'][key];
 
 const params = new URLSearchParams(location.search);
 const legacy = params.get('ui') === 'unity';
@@ -33,7 +34,7 @@ const icons = {
 const icon = (name, extra='') => `<svg class="icon ${extra}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[name]}</svg>`;
 const safeText = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const assetId = id => /^[a-z0-9_]+$/.test(id || '') ? id : 'nam_lang';
-const state = {screen:'home',roster:[],weapons:[],characterId:'nam_lang',weaponId:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false};
+const state = {screen:'home',roster:[],weapons:[],characterId:'nam_lang',weaponId:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0};
 const current = () => state.roster.find(c => c.id === state.characterId) || {id:'nam_lang',name:'Nam Làng',enabled:true};
 const characterImage = kind => `./assets/${assetId(state.characterId)}_${kind}.png`;
 
@@ -67,10 +68,10 @@ function home() {
 }
 function modal() {
   if (!state.overlay) return '';
-  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon')}[state.overlay] || 'HIT ME';
-  const list = state.overlay === 'character' ? `<div class="choice-grid">${state.roster.map(item => `<button data-action="select-character" data-id="${safeText(item.id)}" ${item.enabled?'':'disabled'}><img src="./assets/${assetId(item.id)}_head.png" alt=""><span>${safeText(item.name)}</span>${item.enabled?'':icon('lock')}</button>`).join('')}</div>` : '';
+  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon'),loading:t('loadingGame')}[state.overlay] || 'HIT ME';
+  const list = state.overlay === 'character' ? `<div class="choice-grid">${state.roster.map(item => `<button data-action="${item.enabled?'select-character':'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="./assets/${assetId(item.id)}_head.png" alt=""><span>${safeText(item.name)}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
-  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':`<p>${t('preparing')}</p>`}</section></div>`;
+  return `<div class="modal-shade"><section class="modal" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${state.overlay==='character'?'':state.overlay==='join'?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}</section></div>`;
 }
 function render() {
   if (legacy) return;
@@ -88,20 +89,35 @@ function changeCharacter(direction) {
   const chosen = enabled[(at+direction+enabled.length)%enabled.length];
   state.characterId=chosen.id; send('SetCharacter',{id:chosen.id}); render();
 }
+const confirmActions = new Set(['quick','create','join-submit','practice']);
+const backActions = new Set(['close','previous']);
+function playButton(action) {
+  const id = action === 'locked' ? 'ui_denied' :
+    action === 'next' || action === 'previous' || action === 'select-character' ? 'ui_select_char' :
+    backActions.has(action) ? 'ui_back' : confirmActions.has(action) ? 'ui_confirm' : 'ui_tap';
+  audio.playSfx(id);
+  if (navigator.vibrate) navigator.vibrate(10);
+}
 root.addEventListener('click', event => {
   const button=event.target.closest('[data-action]'); if (!button) return;
   const action=button.dataset.action;
+  playButton(action);
+  if (action==='locked') return;
   if (action==='previous'||action==='next') return changeCharacter(action==='next'?1:-1);
   if (action==='select-character') {state.characterId=button.dataset.id;send('SetCharacter',{id:state.characterId});state.overlay=null;return render();}
   if (action==='close') {state.overlay=null;return render();}
   if (['character','weapon','settings','profile','rank','quests','join','shop'].includes(action)) {state.overlay=action;return render();}
+  if (['quick','create','practice'].includes(action) && !state.ready) {state.overlay='loading';return render();}
   if (action==='quick') send('QuickPlay',{characterId:state.characterId,weaponId:state.weaponId});
   if (action==='create') send('CreateRoom',{characterId:state.characterId,weaponId:state.weaponId});
   if (action==='practice') send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:5});
   if (action==='join-submit') send('JoinRoom',{code:document.getElementById('room-code').value.trim().toUpperCase(),characterId:state.characterId,weaponId:state.weaponId});
 });
 onUnity(event => {
-  if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';}
+  if (event.type==='sfx') {audio.playSfx(event.id,event.vol ?? 1,event.pan ?? 0);return;}
+  if (event.type==='music') {audio.playMusic(event.id,event.action);return;}
+  if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';state.ready=true;if(state.overlay==='loading')state.overlay=null;}
+  if (event.type==='loading') {state.loadingPercent=Math.max(0,Math.min(100,Number(event.percent)||0));}
   if (event.type==='screen') state.screen=event.name;
   if (event.type==='selection' && event.characterId) state.characterId=assetId(event.characterId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;

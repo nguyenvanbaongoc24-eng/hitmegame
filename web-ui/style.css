@@ -30,3 +30,24 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 .profile-name{flex:1;height:100%;min-height:44px;overflow:hidden}.profile-name strong{max-width:100%}
 .gold{flex:none;height:max(44px,70%)}
 .blue,.green,.practice{min-height:44px}
+
+/* BTN-01…09: shared touch, pressed and locked states. */
+.stage button,.modal button{min-width:48px;min-height:48px;transition:transform 140ms cubic-bezier(.2,1.35,.35,1),filter 80ms ease,box-shadow 80ms ease}
+.stage button:active,.modal button:active{transform:translateY(3px);filter:brightness(.92);box-shadow:0 1px 0 #28180c,0 2px 3px #0007}
+.stage button:disabled,.modal button:disabled,.modal button.locked{filter:grayscale(1);opacity:.7}
+.stage button .icon,.modal button .icon{width:24px;height:24px}
+.profile{width:81%}.profile-name{min-height:48px}.gold{min-height:48px;height:70%}
+.settings{left:auto;right:3%;min-width:48px;min-height:48px}
+.hero-arrow{min-width:48px;min-height:48px}
+.blue,.green,.practice{min-height:48px}
+.quick{min-height:56px;border-width:3px;border-color:#8a4a0f;border-radius:999px;background:linear-gradient(#ffe04a,#f7a51b);color:#431906}
+.blue{background:linear-gradient(#3b82f6,#1d4ed8);border-color:#0f2a6b;border-radius:14px}
+.green{background:linear-gradient(#22c58b,#0e8a5c);border-color:#07503a;border-radius:14px}
+.navy{background:linear-gradient(#1d2a48,#141c33);border-color:#4a5c86;border-radius:14px}
+.cta{gap:10px;line-height:1.2;padding-top:4px;padding-bottom:4px}
+.cta strong,.selection-card small{line-height:1.2}
+.logo{left:12.5%;width:75%}
+.choice-grid button.locked{cursor:pointer}
+.choice-grid button.locked small{font-size:10px;line-height:1.2;text-transform:uppercase}
+.modal header button{background:#182b3c;border:2px solid #b9a574;border-radius:50%;display:grid;place-items:center}
+@media (prefers-reduced-motion:reduce){.stage button,.modal button{transition:none}}
