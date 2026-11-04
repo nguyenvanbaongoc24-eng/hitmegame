@@ -47,7 +47,7 @@ namespace HitMe.Editor
             var spriteHeartBreak = LoadSprite(KitPath + "ui_icon_heart_break.png");
             var spriteCardSelected = LoadSprite(KitPath + "ui_card_char_selected.png");
             var spriteWeaponDep = LoadSprite("Assets/Art/Weapons/dep_to_ong_icon.png") ?? LoadSprite("Assets/Sprites/weapon_dep_full.png");
-            var spriteBgHome = LoadSprite("Assets/Art/UI/ui_bg_home_village.png");
+            var spriteBgHome = LoadSprite("Assets/Art/UI/ui_bg_home_temple.png") ?? LoadSprite("Assets/Art/UI/ui_bg_home_village.png");
             var spriteSliderTrack = LoadSprite(KitPath + "ui_slider_track.png");
             var spriteSliderKnob = LoadSprite(KitPath + "ui_slider_knob.png");
             var spriteToggleOn = LoadSprite(KitPath + "ui_toggle_on.png");
@@ -192,8 +192,8 @@ namespace HitMe.Editor
                 var bgObj = CreateImage(homePanel.transform, "HomeBgVillage", spriteBgHome, Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero);
                 var bgRt = bgObj.GetComponent<RectTransform>();
                 // Expand to cover outside safe area notch/home bar
-                bgRt.offsetMin = new Vector2(-150f, -300f);
-                bgRt.offsetMax = new Vector2(150f, 300f);
+                bgRt.offsetMin = new Vector2(-200f, -450f);
+                bgRt.offsetMax = new Vector2(200f, 450f);
                 var bgImg = bgObj.GetComponent<Image>();
                 bgImg.preserveAspect = false;
                 bgImg.color = Color.white;
@@ -221,18 +221,13 @@ namespace HitMe.Editor
                 var iconGo = CreateImage(goldPill.transform, "CoinIcon", spriteIconCoin, new Vector2(0.18f, 0.5f), new Vector2(0.18f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(36f, 36f));
                 iconGo.GetComponent<Image>().preserveAspect = true;
             }
-            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "1.250 +", 20, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.60f, 0.50f), new Vector2(110f, 40f), wrap: false);
+            var txtGold = CreateTMP(goldPill.transform, "Text", fontAsset, "500 G +", 22, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.60f, 0.50f), new Vector2(110f, 40f), wrap: false);
             uiCtrl.txtHomeGold = txtGold;
 
             // Hidden or compact gem pill
+            // HOME-02: No gem pill and no language button on Home screen
             var gemPill = CreateImage(homePanel.transform, "GemPill", spriteBannerWood, new Vector2(0.76f, 0.960f), new Vector2(0.76f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(110f, 56f));
-            if (spriteIconGem != null)
-            {
-                var iconGemGo = CreateImage(gemPill.transform, "GemIcon", spriteIconGem, new Vector2(0.24f, 0.5f), new Vector2(0.24f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(32f, 32f));
-                iconGemGo.GetComponent<Image>().preserveAspect = true;
-            }
-            var txtGem = CreateTMP(gemPill.transform, "Text", fontAsset, "50", 18, new Color(0.40f, 0.85f, 1f), TextAlignmentOptions.Center, new Vector2(0.65f, 0.50f), new Vector2(60f, 40f), wrap: false);
-            uiCtrl.txtHomeGems = txtGem;
+            gemPill.SetActive(false);
 
             // Settings button on Home Screen (Top Right)
             var btnHomeSettings = CreateButton(homePanel.transform, "BtnHomeSettings", spriteCircleNavy, new Vector2(0.92f, 0.960f), new Vector2(0.92f, 0.960f), new Vector2(0.50f, 0.50f), new Vector2(72f, 72f));
@@ -245,28 +240,28 @@ namespace HitMe.Editor
 
             // Home Header & 3D Logo (Centered below top bar, Y = 0.835f)
             var headerSprite = spriteLogoHitMe != null ? spriteLogoHitMe : spriteBannerWood;
-            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", headerSprite, new Vector2(0.5f, 0.835f), new Vector2(0.5f, 0.835f), new Vector2(0.5f, 0.5f), new Vector2(620f, 294f));
+            var homeHeader = CreateImage(homePanel.transform, "HomeBanner", headerSprite, new Vector2(0.5f, 0.815f), new Vector2(0.5f, 0.815f), new Vector2(0.5f, 0.5f), new Vector2(750f, 355f));
             homeHeader.GetComponent<Image>().preserveAspect = true;
             var logoTxt = CreateTMP(homeHeader.transform, "LogoTxt", fontAsset, spriteLogoHitMe != null ? "" : UiStrings.GameTitle, 68, colorGoldSub, TextAlignmentOptions.Center);
             logoTxt.fontStyle = FontStyles.Bold;
             FillRect(logoTxt.rectTransform, new Vector2(20f, 10f), new Vector2(-20f, -10f));
             uiCtrl.txtHomeLogo = logoTxt;
 
-            // Hero Pedestal & Character Display (Y = 0.52f - 0.76f)
+            // Hero Pedestal & Character Display (HOME-04: Lotus pedestal + Gold circular arrows)
             var spritePedestal = LoadSprite("Assets/Art/Arena/arena_center_lotus_decal.png") ?? spriteBannerWood;
-            var pedestalObj = CreateImage(homePanel.transform, "HeroPedestal", spritePedestal, new Vector2(0.5f, 0.535f), new Vector2(0.5f, 0.535f), new Vector2(0.5f, 0.5f), new Vector2(360f, 90f));
-            pedestalObj.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.85f);
+            var pedestalObj = CreateImage(homePanel.transform, "HeroPedestal", spritePedestal, new Vector2(0.5f, 0.525f), new Vector2(0.5f, 0.525f), new Vector2(0.5f, 0.5f), new Vector2(440f, 110f));
+            pedestalObj.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.90f);
 
-            var heroObj = CreateImage(homePanel.transform, "HeroCharacter", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.5f, 0.640f), new Vector2(0.5f, 0.640f), new Vector2(0.5f, 0.5f), new Vector2(340f, 400f));
+            var heroObj = CreateImage(homePanel.transform, "HeroCharacter", configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.5f, 0.635f), new Vector2(0.5f, 0.635f), new Vector2(0.5f, 0.5f), new Vector2(380f, 440f));
             var heroImg = heroObj.GetComponent<Image>();
             heroImg.preserveAspect = true;
             uiCtrl.imgHomeCharPortrait = heroImg;
 
-            // Hero Navigation Arrows (3D Navy Circles + Chevron Icons)
-            var btnPrevHero = CreateButton(homePanel.transform, "BtnHeroPrev", spriteCircleNavy, new Vector2(0.18f, 0.620f), new Vector2(0.18f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(76f, 76f));
+            // Hero Navigation Arrows (HOME-04: Large Gold 3D Circles 86x86 + Chevron Icons)
+            var btnPrevHero = CreateButton(homePanel.transform, "BtnHeroPrev", spriteCircleGold, new Vector2(0.16f, 0.620f), new Vector2(0.16f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(86f, 86f));
             if (spriteIconChevronLeft != null)
             {
-                var iconPrev = CreateImage(btnPrevHero.transform, "Icon", spriteIconChevronLeft, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(40f, 40f));
+                var iconPrev = CreateImage(btnPrevHero.transform, "Icon", spriteIconChevronLeft, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
                 iconPrev.GetComponent<Image>().preserveAspect = true;
             }
             btnPrevHero.GetComponent<Button>().onClick.AddListener(() => {
@@ -274,10 +269,10 @@ namespace HitMe.Editor
                 uiCtrl.ChangePracticeCharacter(-1);
             });
 
-            var btnNextHero = CreateButton(homePanel.transform, "BtnHeroNext", spriteCircleNavy, new Vector2(0.82f, 0.620f), new Vector2(0.82f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(76f, 76f));
+            var btnNextHero = CreateButton(homePanel.transform, "BtnHeroNext", spriteCircleGold, new Vector2(0.84f, 0.620f), new Vector2(0.84f, 0.620f), new Vector2(0.5f, 0.5f), new Vector2(86f, 86f));
             if (spriteIconChevronRight != null)
             {
-                var iconNext = CreateImage(btnNextHero.transform, "Icon", spriteIconChevronRight, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(40f, 40f));
+                var iconNext = CreateImage(btnNextHero.transform, "Icon", spriteIconChevronRight, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
                 iconNext.GetComponent<Image>().preserveAspect = true;
             }
             btnNextHero.GetComponent<Button>().onClick.AddListener(() => {
@@ -285,84 +280,106 @@ namespace HitMe.Editor
                 uiCtrl.ChangePracticeCharacter(1);
             });
 
-            // 2 Loadout Selector Cards side by side (Y = 0.420f)
+            // 2 Loadout Selector Cards side by side (HOME-05: Dark gold panels Y = 0.425f, 430x105)
             // Left Card: Character Selector
-            var charCard = CreatePanel(homePanel.transform, "CharCard", new Vector2(0.285f, 0.420f), new Vector2(0.285f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 100f), spritePanelCardDarkGold, Color.white);
+            var charCard = CreatePanel(homePanel.transform, "CharCard", new Vector2(0.285f, 0.425f), new Vector2(0.285f, 0.425f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f), spritePanelCardDarkGold, Color.white);
             var charCardBtn = charCard.AddComponent<Button>();
             charCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); uiCtrl.ChangePracticeCharacter(1); });
-            var charIcon = CreateImage(charCard.transform, "Icon", spritePortraitNamLang ?? configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(68f, 68f));
+            var charIcon = CreateImage(charCard.transform, "Icon", spritePortraitNamLang ?? configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
             charIcon.GetComponent<Image>().preserveAspect = true;
-            CreateTMP(charCard.transform, "Title", fontAsset, "NHÂN VẬT", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
-            var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam Làng", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
+            CreateTMP(charCard.transform, "Title", fontAsset, "NHÂN VẬT", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.58f, 0.70f), new Vector2(240f, 26f));
+            var charNameTxt = CreateTMP(charCard.transform, "CharName", fontAsset, "Nam Làng", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.58f, 0.32f), new Vector2(240f, 34f));
             charNameTxt.fontStyle = FontStyles.Bold;
             uiCtrl.txtHomeCharName = charNameTxt;
             uiCtrl.imgHomeCharCardIcon = charIcon.GetComponent<Image>();
+            if (spriteIconChevronRight != null)
+            {
+                var chevR = CreateImage(charCard.transform, "Chev", spriteIconChevronRight, new Vector2(0.92f, 0.5f), new Vector2(0.92f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(28f, 28f));
+                chevR.GetComponent<Image>().preserveAspect = true;
+            }
 
             // Right Card: Weapon Selector
-            var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.420f), new Vector2(0.715f, 0.420f), new Vector2(0.5f, 0.5f), new Vector2(430f, 100f), spritePanelCardDarkGold, Color.white);
-            var weaponIconHome = CreateImage(weaponCard.transform, "Icon", spriteIconWeaponDep, new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(68f, 68f));
+            var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.425f), new Vector2(0.715f, 0.425f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f), spritePanelCardDarkGold, Color.white);
+            var weaponCardBtn = weaponCard.AddComponent<Button>();
+            weaponCardBtn.onClick.AddListener(() => {
+                AudioManager.Instance?.PlayClick();
+                uiCtrl.ShowToast("Vũ khí: Dép Tổ Ong (Bán kính 0.52m • Sát thương 1 HP)");
+            });
+            var weaponIconHome = CreateImage(weaponCard.transform, "Icon", spriteIconWeaponDep, new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
             weaponIconHome.GetComponent<Image>().preserveAspect = true;
-            CreateTMP(weaponCard.transform, "Title", fontAsset, "VŨ KHÍ", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.60f, 0.68f), new Vector2(250f, 26f));
-            var weaponTxtHome = CreateTMP(weaponCard.transform, "Text", fontAsset, "Dép Tổ Ong", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.60f, 0.32f), new Vector2(250f, 34f));
+            CreateTMP(weaponCard.transform, "Title", fontAsset, "VŨ KHÍ", 18, colorGoldSub, TextAlignmentOptions.Left, new Vector2(0.58f, 0.70f), new Vector2(240f, 26f));
+            var weaponTxtHome = CreateTMP(weaponCard.transform, "Text", fontAsset, "Dép Tổ Ong", 26, colorCream, TextAlignmentOptions.Left, new Vector2(0.58f, 0.32f), new Vector2(240f, 34f));
             weaponTxtHome.fontStyle = FontStyles.Bold;
+            if (spriteIconChevronRight != null)
+            {
+                var chevR2 = CreateImage(weaponCard.transform, "Chev", spriteIconChevronRight, new Vector2(0.92f, 0.5f), new Vector2(0.92f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(28f, 28f));
+                chevR2.GetComponent<Image>().preserveAspect = true;
+            }
 
-            // Action Buttons
-            // 1. CHƠI NHANH (Primary CTA Vàng 3D - Y = 0.305f)
-            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
+            // Action Buttons (HOME-06 / BTN-01..06: Standardized 3D tactile buttons matching mockup)
+            // 1. CHƠI NHANH (Primary CTA Vàng 3D - Y = 0.305f, 880x135)
+            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.5f), new Vector2(880f, 135f));
             if (spriteIconPlay != null)
             {
-                var iconPlay = CreateImage(btnQuick.transform, "PlayIcon", spriteIconPlay, new Vector2(0.12f, 0.50f), new Vector2(0.12f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(52f, 52f));
+                var iconPlay = CreateImage(btnQuick.transform, "PlayIcon", spriteIconPlay, new Vector2(0.13f, 0.50f), new Vector2(0.13f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f));
                 iconPlay.GetComponent<Image>().preserveAspect = true;
             }
-            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, "CHƠI NHANH", 42, new Color(0.24f, 0.12f, 0.02f), TextAlignmentOptions.Center, new Vector2(0.54f, 0.62f), new Vector2(740f, 50f));
+            var btnQuickTxt = CreateTMP(btnQuick.transform, "Label", fontAsset, "CHƠI NHANH", 42, new Color(0.24f, 0.12f, 0.02f), TextAlignmentOptions.Center, new Vector2(0.54f, 0.62f), new Vector2(720f, 50f));
             btnQuickTxt.fontStyle = FontStyles.Bold;
-            var btnQuickSub = CreateTMP(btnQuick.transform, "Sub", fontAsset, "Online • Tối đa 6 người", 20, new Color(0.38f, 0.22f, 0.05f), TextAlignmentOptions.Center, new Vector2(0.54f, 0.28f), new Vector2(740f, 32f));
+            var btnQuickSub = CreateTMP(btnQuick.transform, "Sub", fontAsset, "Online • Tối đa 6 người", 22, new Color(0.38f, 0.22f, 0.05f), TextAlignmentOptions.Center, new Vector2(0.54f, 0.26f), new Vector2(720f, 32f));
             uiCtrl.btnQuickMatch = btnQuick.GetComponent<Button>();
 
-            // 2. TẠO PHÒNG (3D Blue) + VÀO PHÒNG (3D Green) - Row Y = 0.205f
-            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue3D, new Vector2(0.285f, 0.205f), new Vector2(0.285f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f));
+            // 2. TẠO PHÒNG (3D Blue) + VÀO PHÒNG (3D Green) - Row Y = 0.205f, 430x110
+            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue3D, new Vector2(0.285f, 0.205f), new Vector2(0.285f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 110f));
             if (spriteIconPersonAdd != null)
             {
-                var iconCreate = CreateImage(btnCreate.transform, "Icon", spriteIconPersonAdd, new Vector2(0.16f, 0.50f), new Vector2(0.16f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(44f, 44f));
+                var iconCreate = CreateImage(btnCreate.transform, "Icon", spriteIconPersonAdd, new Vector2(0.17f, 0.50f), new Vector2(0.17f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
                 iconCreate.GetComponent<Image>().preserveAspect = true;
             }
             var btnCreateTxt = CreateTMP(btnCreate.transform, "Label", fontAsset, "TẠO PHÒNG", 32, Color.white, TextAlignmentOptions.Center, new Vector2(0.58f, 0.50f), new Vector2(270f, 50f), wrap: false);
             btnCreateTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
-            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen3D, new Vector2(0.715f, 0.205f), new Vector2(0.715f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f));
+            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen3D, new Vector2(0.715f, 0.205f), new Vector2(0.715f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 110f));
             if (spriteIconPeople != null)
             {
-                var iconJoin = CreateImage(btnJoin.transform, "Icon", spriteIconPeople, new Vector2(0.16f, 0.50f), new Vector2(0.16f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(44f, 44f));
+                var iconJoin = CreateImage(btnJoin.transform, "Icon", spriteIconPeople, new Vector2(0.17f, 0.50f), new Vector2(0.17f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
                 iconJoin.GetComponent<Image>().preserveAspect = true;
             }
             var btnJoinTxt = CreateTMP(btnJoin.transform, "Label", fontAsset, "VÀO PHÒNG", 32, Color.white, TextAlignmentOptions.Center, new Vector2(0.58f, 0.50f), new Vector2(270f, 50f), wrap: false);
             btnJoinTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
 
-            // 3. LUYỆN VỚI BOT (3D Navy Button - Y = 0.110f)
-            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBtnNavy3D, new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.5f), new Vector2(880f, 90f));
+            // 3. LUYỆN VỚI BOT (3D Navy Button - Y = 0.110f, 880x100)
+            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBtnNavy3D, new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.5f), new Vector2(880f, 100f));
             if (spriteIconBot != null)
             {
-                var iconBot = CreateImage(btnBot.transform, "Icon", spriteIconBot, new Vector2(0.14f, 0.50f), new Vector2(0.14f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(44f, 44f));
+                var iconBot = CreateImage(btnBot.transform, "Icon", spriteIconBot, new Vector2(0.14f, 0.50f), new Vector2(0.14f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(48f, 48f));
                 iconBot.GetComponent<Image>().preserveAspect = true;
             }
-            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, "LUYỆN VỚI BOT", 32, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.54f, 0.50f), new Vector2(740f, 45f), wrap: false);
+            var btnBotTxt = CreateTMP(btnBot.transform, "Label", fontAsset, "LUYỆN VỚI BOT", 34, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.52f, 0.50f), new Vector2(680f, 45f), wrap: false);
             btnBotTxt.fontStyle = FontStyles.Bold;
+            if (spriteIconChevronRight != null)
+            {
+                var chevBot = CreateImage(btnBot.transform, "Chevron", spriteIconChevronRight, new Vector2(0.92f, 0.50f), new Vector2(0.92f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(32f, 32f));
+                chevBot.GetComponent<Image>().preserveAspect = true;
+            }
             uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
 
-            // Bottom Dock Navigation (3D dock_bg with 3 tabs: Trang chủ, Xếp hạng, Nhiệm vụ)
-            var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.5f), new Vector2(960f, 100f), spriteDockBg, Color.white);
+            // Bottom Dock Navigation (HOME-07: dock_bg 960x105 with 3 tabs, Trang chủ active)
+            var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.5f), new Vector2(960f, 105f), spriteDockBg, Color.white);
             
             // Tab 1: Trang chủ (Active / Cyan)
             var btnHomeTab = CreateButton(navBarBg.transform, "BtnTabHome", null, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(280f, 70f));
             if (spriteIconHome != null)
             {
-                var iconTabHome = CreateImage(btnHomeTab.transform, "Icon", spriteIconHome, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(34f, 34f));
+                var iconTabHome = CreateImage(btnHomeTab.transform, "Icon", spriteIconHome, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(36f, 36f));
                 iconTabHome.GetComponent<Image>().preserveAspect = true;
             }
             var txtHomeTab = CreateTMP(btnHomeTab.transform, "Label", fontAsset, "Trang chủ", 24, new Color(0.00f, 0.898f, 1f), TextAlignmentOptions.Center, new Vector2(0.62f, 0.50f), new Vector2(170f, 40f), wrap: false);
             txtHomeTab.fontStyle = FontStyles.Bold;
+            // Cyan underline for active tab
+            var tabUnderline = CreatePanel(btnHomeTab.transform, "Underline", new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.5f), new Vector2(120f, 4f), null, new Color(0.00f, 0.898f, 1f));
             uiCtrl.btnHomeLogin = btnHomeTab.GetComponent<Button>();
 
             // Tab 2: Xếp hạng
@@ -478,6 +495,9 @@ namespace HitMe.Editor
 
             // ==================== E. BOT TRAINING PANEL ====================
             var botPanel = CreatePanel(rootTr, "BotTrainingPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.06f, 0.10f, 0.98f));
+            var botPanelRt = botPanel.GetComponent<RectTransform>();
+            botPanelRt.offsetMin = new Vector2(-200f, -450f);
+            botPanelRt.offsetMax = new Vector2(200f, 450f);
             botPanel.SetActive(false);
             uiCtrl.botTrainingPanel = botPanel;
 
@@ -495,7 +515,7 @@ namespace HitMe.Editor
             CreateTMP(botPanel.transform, "Subtitle", fontAsset, UiStrings.BotTrainingSubtitle, 22, colorCream, TextAlignmentOptions.Center, new Vector2(0.5f, 0.865f), new Vector2(940f, 50f));
 
             // Section: Choose Character (7 Characters)
-            CreateTMP(botPanel.transform, "CharSelectHeader", fontAsset, "CHỌN NHÂN VẬT (7 NHÂN VẬT LÀNG)", 26, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.5f, 0.815f), new Vector2(900f, 40f));
+            CreateTMP(botPanel.transform, "CharSelectHeader", fontAsset, "CHỌN NHÂN VẬT (4 SẴN SÀNG)", 26, colorGoldSub, TextAlignmentOptions.Center, new Vector2(0.5f, 0.815f), new Vector2(900f, 40f));
 
             // 7 Character Cards Container
             var charGrid = CreatePanel(botPanel.transform, "CharGrid", new Vector2(0.5f, 0.68f), new Vector2(0.5f, 0.68f), new Vector2(0.5f, 0.5f), new Vector2(960f, 260f), spritePanelDarkGold, Color.white);
@@ -516,15 +536,32 @@ namespace HitMe.Editor
                 var cardImg = cardObj.GetComponent<Image>();
                 var cardBtn = cardObj.AddComponent<Button>();
 
-                // Character Sprite inside
-                Sprite spr = (idleSprites != null && c < idleSprites.Length) ? idleSprites[c] : null;
+                // Character Sprite inside (SEL-02 / SEL-03)
+                bool isEnabledChar = c < 4;
+                Sprite spr = null;
+                if (c == 0 && spritePortraitNamLang != null) spr = spritePortraitNamLang;
+                else if (idleSprites != null && c < idleSprites.Length)
+                {
+                    // SEL-02: Quay Boy (c=4) must not show Mai Hong orange hair avatar
+                    if (c == 4) spr = null;
+                    else spr = idleSprites[c];
+                }
+
                 var charSprObj = CreateImage(cardObj.transform, "CharSpr", spr, new Vector2(0.24f, 0.5f), new Vector2(0.24f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(70f, 95f));
                 charSprObj.GetComponent<Image>().preserveAspect = true;
 
                 // Character Name inside card
                 string cShortName = c < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[c] : $"NV {c + 1}";
-                var cLabel = CreateTMP(cardObj.transform, "Name", fontAsset, cShortName, 20, colorCream, TextAlignmentOptions.MidlineLeft, new Vector2(0.66f, 0.5f), new Vector2(110f, 80f), wrap: true);
+                var cLabel = CreateTMP(cardObj.transform, "Name", fontAsset, cShortName, 20, isEnabledChar ? colorCream : new Color(0.7f, 0.7f, 0.7f, 0.8f), TextAlignmentOptions.MidlineLeft, new Vector2(0.66f, 0.5f), new Vector2(110f, 80f), wrap: true);
                 cLabel.fontStyle = FontStyles.Bold;
+
+                if (!isEnabledChar)
+                {
+                    cardImg.color = new Color(0.55f, 0.55f, 0.55f, 0.75f);
+                    // "SẮP CÓ" badge
+                    var badge = CreateTMP(cardObj.transform, "Badge", fontAsset, "SẮP CÓ", 14, new Color(1f, 0.85f, 0.3f), TextAlignmentOptions.Center, new Vector2(0.66f, 0.20f), new Vector2(90f, 22f));
+                    badge.fontStyle = FontStyles.Bold;
+                }
 
                 uiCtrl.botCharCardFrames.Add(cardImg);
                 uiCtrl.botCharCardButtons.Add(cardBtn);
@@ -556,7 +593,7 @@ namespace HitMe.Editor
             uiCtrl.btnIncreaseBots = btnInc.GetComponent<Button>();
 
             // Start Bot Training CTA Yellow Button
-            var btnStartBot = CreateButton(botPanel.transform, "BtnStartBot", spriteBtnYellow, new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.15f), new Vector2(0.5f, 0.5f), new Vector2(880f, 130f));
+            var btnStartBot = CreateButton(botPanel.transform, "BtnStartBot", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.5f), new Vector2(880f, 135f));
             var startBotTxt = CreateTMP(btnStartBot.transform, "Label", fontAsset, UiStrings.BtnStart + " (VÀO SÂN)", 44, new Color(0.22f, 0.11f, 0.02f), TextAlignmentOptions.Center);
             startBotTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnStartBotTraining = btnStartBot.GetComponent<Button>();

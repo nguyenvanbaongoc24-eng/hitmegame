@@ -878,7 +878,8 @@ namespace HitMe.UI
 
             EnsureAndRefreshFpsOverlay();
 
-            EnsureHomeLanguageToggle();
+            // EnsureHomeLanguageToggle(); -- HOME-02: No language button on Home
+SyncHomeCharacterDisplay();
 
             EnforceFontAcrossAllTexts();
 
@@ -2550,7 +2551,7 @@ namespace HitMe.UI
 
                 });
 
-                EnsureHomeCharArrows();
+                // EnsureHomeCharArrows(); -- HOME-04: Use 3D gold circle buttons from setup
 
             }
 
@@ -3288,7 +3289,12 @@ namespace HitMe.UI
 
                 UpdateBtnText(btnHomeLeaderboard, UiStrings.Get("BẢNG XẾP HẠNG"));
 
-                UpdateBtnText(btnHomeLogin, UiStrings.Get(UiStrings.LoginTitle));
+                // HOME-07: Tab 1 must remain "Trang chủ"
+                if (btnHomeLogin != null)
+                {
+                    var tmp = btnHomeLogin.GetComponentInChildren<TextMeshProUGUI>();
+                    if (tmp != null) tmp.text = "Trang chủ";
+                }
 
                 // btnHomeSettings is a gear icon button, do not overwrite with text
 
@@ -3484,101 +3490,7 @@ namespace HitMe.UI
 
 
 
-        public void EnsureHomeLanguageToggle()
-
-        {
-
-            try
-
-            {
-
-                if (homePanel == null || _btnHomeLangToggle != null) return;
-
-
-
-                var toggleObj = new GameObject("BtnHomeLangToggle", typeof(RectTransform));
-
-                toggleObj.transform.SetParent(homePanel.transform, false);
-
-                var rt = toggleObj.GetComponent<RectTransform>();
-
-                rt.anchorMin = new Vector2(0.73f, 0.965f);
-
-                rt.anchorMax = new Vector2(0.73f, 0.965f);
-
-                rt.pivot = new Vector2(0.5f, 0.5f);
-
-                rt.sizeDelta = new Vector2(140f, 58f);
-
-
-
-                var img = toggleObj.AddComponent<Image>();
-
-                img.color = new Color(0.15f, 0.22f, 0.35f, 0.95f);
-
-                var outline = toggleObj.AddComponent<Outline>();
-
-                outline.effectColor = new Color(0.85f, 0.65f, 0.15f, 0.90f);
-
-                outline.effectDistance = new Vector2(2f, -2f);
-
-                _btnHomeLangToggle = toggleObj.AddComponent<Button>();
-
-                _btnHomeLangToggle.targetGraphic = img;
-
-                _btnHomeLangToggle.onClick.AddListener(() =>
-
-                {
-
-                    AudioManager.Instance?.PlayClick();
-
-                    SetLanguageFromSettings(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? AppLanguage.English : AppLanguage.Vietnamese);
-
-                    ShowToast(UiStrings.CurrentLanguage == AppLanguage.Vietnamese ? "Đã chuyển sang Tiếng Việt" : "Switched to English");
-
-                });
-
-
-
-                var textObj = new GameObject("Text", typeof(RectTransform));
-
-                textObj.transform.SetParent(toggleObj.transform, false);
-
-                var textRt = textObj.GetComponent<RectTransform>();
-
-                textRt.anchorMin = Vector2.zero;
-
-                textRt.anchorMax = Vector2.one;
-
-                textRt.sizeDelta = Vector2.zero;
-
-
-
-                _txtHomeLangToggle = textObj.AddComponent<TextMeshProUGUI>();
-
-                _txtHomeLangToggle.font = GetDefaultFont();
-
-                _txtHomeLangToggle.fontSize = 18f;
-
-                _txtHomeLangToggle.fontStyle = FontStyles.Bold;
-
-                _txtHomeLangToggle.alignment = TextAlignmentOptions.Center;
-
-                _txtHomeLangToggle.color = new Color(1f, 0.88f, 0.2f);
-
-                RefreshHomeLangToggleVisual();
-
-            }
-
-            catch (Exception ex)
-
-            {
-
-                Debug.LogWarning($"[ProductionUIController] EnsureHomeLanguageToggle caught: {ex.Message}");
-
-            }
-
-        }
+        public void EnsureHomeLanguageToggle() { /* HOME compliance: disabled */ }
 
 
 
@@ -3638,149 +3550,7 @@ namespace HitMe.UI
 
 
 
-        public void EnsureHomeCharArrows()
-
-        {
-
-            try
-
-            {
-
-                if (imgHomeCharPortrait == null || imgHomeCharPortrait.transform.parent == null) return;
-
-                var parent = imgHomeCharPortrait.transform.parent;
-
-                if (parent.Find("BtnCharPrev") != null) return;
-
-
-
-                // Left Arrow (<)
-
-                var leftGo = new GameObject("BtnCharPrev", typeof(RectTransform));
-
-                leftGo.transform.SetParent(parent, false);
-
-                var leftRt = leftGo.GetComponent<RectTransform>();
-
-                leftRt.anchorMin = new Vector2(0.02f, 0.40f);
-
-                leftRt.anchorMax = new Vector2(0.18f, 0.60f);
-
-                leftRt.sizeDelta = Vector2.zero;
-
-                var leftBtn = leftGo.AddComponent<Button>();
-
-                var leftTxtGo = new GameObject("Text", typeof(RectTransform));
-
-                leftTxtGo.transform.SetParent(leftGo.transform, false);
-
-                var leftTxtRt = leftTxtGo.GetComponent<RectTransform>();
-
-                leftTxtRt.anchorMin = Vector2.zero;
-
-                leftTxtRt.anchorMax = Vector2.one;
-
-                leftTxtRt.sizeDelta = Vector2.zero;
-
-                var leftTxt = leftTxtGo.AddComponent<TextMeshProUGUI>();
-
-                leftTxt.font = GetDefaultFont();
-
-                leftTxt.text = "<";
-
-                leftTxt.fontSize = 28f;
-
-                leftTxt.fontStyle = FontStyles.Bold;
-
-                leftTxt.alignment = TextAlignmentOptions.Center;
-
-                leftTxt.color = new Color(1f, 0.88f, 0.25f, 0.85f);
-
-                leftBtn.targetGraphic = leftTxt;
-
-                leftBtn.onClick.AddListener(() =>
-
-                {
-
-                    AudioManager.Instance?.PlayClick();
-
-                    _selectedPracticeCharIndex = (_selectedPracticeCharIndex + 6) % 7;
-
-                    RefreshBotTrainingDisplay();
-
-                    var names = UiStrings.GetLocalizedCharacterNames();
-
-                    if (_selectedPracticeCharIndex < names.Length) ShowToast(names[_selectedPracticeCharIndex]);
-
-                });
-
-
-
-                // Right Arrow (>)
-
-                var rightGo = new GameObject("BtnCharNext", typeof(RectTransform));
-
-                rightGo.transform.SetParent(parent, false);
-
-                var rightRt = rightGo.GetComponent<RectTransform>();
-
-                rightRt.anchorMin = new Vector2(0.82f, 0.40f);
-
-                rightRt.anchorMax = new Vector2(0.98f, 0.60f);
-
-                rightRt.sizeDelta = Vector2.zero;
-
-                var rightBtn = rightGo.AddComponent<Button>();
-
-                var rightTxtGo = new GameObject("Text", typeof(RectTransform));
-
-                rightTxtGo.transform.SetParent(rightGo.transform, false);
-
-                var rightTxtRt = rightTxtGo.GetComponent<RectTransform>();
-
-                rightTxtRt.anchorMin = Vector2.zero;
-
-                rightTxtRt.anchorMax = Vector2.one;
-
-                rightTxtRt.sizeDelta = Vector2.zero;
-
-                var rightTxt = rightTxtGo.AddComponent<TextMeshProUGUI>();
-
-                rightTxt.font = GetDefaultFont();
-
-                rightTxt.text = ">";
-
-                rightTxt.fontSize = 28f;
-
-                rightTxt.fontStyle = FontStyles.Bold;
-
-                rightTxt.alignment = TextAlignmentOptions.Center;
-
-                rightTxt.color = new Color(1f, 0.88f, 0.25f, 0.85f);
-
-                rightBtn.targetGraphic = rightTxt;
-
-                rightBtn.onClick.AddListener(() =>
-
-                {
-
-                    AudioManager.Instance?.PlayClick();
-
-                    CycleHomeCharacter();
-
-                });
-
-            }
-
-            catch (Exception ex)
-
-            {
-
-                Debug.LogWarning($"[ProductionUIController] EnsureHomeCharArrows caught: {ex.Message}");
-
-            }
-
-        }
+        public void EnsureHomeCharArrows() { /* HOME compliance: disabled */ }
 
 
 
@@ -7550,6 +7320,37 @@ namespace HitMe.UI
 
 
 
+        
+        public void SyncHomeCharacterDisplay()
+        {
+            if (matchController != null)
+            {
+                matchController.localCharacterIndex = _selectedPracticeCharIndex;
+                if (matchController.configAsset != null)
+                {
+                    var idleSprites = matchController.configAsset.characterIdleSprites;
+                    if (idleSprites != null && _selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < idleSprites.Length)
+                    {
+                        if (imgHomeCharPortrait != null && idleSprites[_selectedPracticeCharIndex] != null)
+                        {
+                            imgHomeCharPortrait.sprite = idleSprites[_selectedPracticeCharIndex];
+                        }
+                        if (imgHomeCharCardIcon != null && idleSprites[_selectedPracticeCharIndex] != null)
+                        {
+                            imgHomeCharCardIcon.sprite = idleSprites[_selectedPracticeCharIndex];
+                        }
+                    }
+                }
+            }
+            if (_selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < UiStrings.CharacterNames.Length)
+            {
+                if (txtHomeCharName != null)
+                {
+                    txtHomeCharName.text = UiStrings.CharacterNames[_selectedPracticeCharIndex];
+                }
+            }
+        }
+
         public void ChangePracticeCharacter(int delta)
 
         {
@@ -7587,6 +7388,8 @@ namespace HitMe.UI
             }
 
             RefreshBotTrainingDisplay();
+            SyncHomeCharacterDisplay();
+            SyncHomeCharacterDisplay();
 
         }
 
@@ -7761,6 +7564,10 @@ namespace HitMe.UI
         public void StartGameplayMatch()
 
         {
+            if (matchController != null)
+            {
+                matchController.localCharacterIndex = _selectedPracticeCharIndex;
+            }
 
             if (_lobbyCountdownCoroutine != null) StopCoroutine(_lobbyCountdownCoroutine);
 
