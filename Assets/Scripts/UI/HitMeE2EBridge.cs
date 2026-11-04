@@ -237,10 +237,10 @@ namespace HitMe.UI
                     Vector3 minScreen = _mainCam.WorldToScreenPoint(minWorld);
                     Vector3 maxScreen = _mainCam.WorldToScreenPoint(maxWorld);
 
-                    float leftCss = Mathf.Min(minScreen.x, maxScreen.x) / dpr;
-                    float rightCss = Mathf.Max(minScreen.x, maxScreen.x) / dpr;
-                    float topCss = (screenH - Mathf.Max(minScreen.y, maxScreen.y)) / dpr;
-                    float bottomCss = (screenH - Mathf.Min(minScreen.y, maxScreen.y)) / dpr;
+                    float leftCss = Mathf.Min(minScreen.x, maxScreen.x);
+                    float rightCss = Mathf.Max(minScreen.x, maxScreen.x);
+                    float topCss = screenH - Mathf.Max(minScreen.y, maxScreen.y);
+                    float bottomCss = screenH - Mathf.Min(minScreen.y, maxScreen.y);
 
                     _root.match.playableRect.x = leftCss;
                     _root.match.playableRect.y = topCss;
@@ -267,10 +267,10 @@ namespace HitMe.UI
                     {
                         Vector3 pWorld = new Vector3(p.Position.X, p.Position.Y, 0f);
                         Vector3 pScreen = _mainCam.WorldToScreenPoint(pWorld);
-                        float halfW = (0.55f * 150f) / dpr;
-                        float halfH = (0.75f * 150f) / dpr;
-                        ep.rect.x = (pScreen.x / dpr) - halfW;
-                        ep.rect.y = ((screenH - pScreen.y) / dpr) - halfH;
+                        float halfW = 0.55f * 150f;
+                        float halfH = 0.75f * 150f;
+                        ep.rect.x = pScreen.x - halfW;
+                        ep.rect.y = (screenH - pScreen.y) - halfH;
                         ep.rect.w = halfW * 2f;
                         ep.rect.h = halfH * 2f;
                     }
@@ -312,10 +312,11 @@ namespace HitMe.UI
                     if (sPoint.y > maxY) maxY = sPoint.y;
                 }
 
-                float cssX = minX / dpr;
-                float cssY = (screenH - maxY) / dpr;
-                float cssW = (maxX - minX) / dpr;
-                float cssH = (maxY - minY) / dpr;
+                // Pass raw screen pixels; WebBridge.jslib applies (cssW / canvas.width) accurately
+                float cssX = minX;
+                float cssY = screenH - maxY;
+                float cssW = maxX - minX;
+                float cssH = maxY - minY;
 
                 var textComp = sel.GetComponentInChildren<TMP_Text>(true);
                 string text = textComp != null ? textComp.text : "";

@@ -138,7 +138,9 @@ namespace HitMe.Gameplay
             if (Application.isPlaying && useOrthographic && cam != null && lockToArenaOverview)
             {
                 float aspect = cam.aspect > 0.01f ? cam.aspect : ((float)Screen.width / Mathf.Max(1, Screen.height));
-                float targetOrtho = Mathf.Clamp(3.45f / Mathf.Max(0.01f, aspect), orthographicSize, 7.2f);
+                // ARENA.png width = 1024px @ 150 PPU = 6.8267 world units (half width = 3.4133f)
+                // Fit 100% of horizontal arena width with zero black bars
+                float targetOrtho = 3.4133f / Mathf.Max(0.01f, aspect);
                 cam.orthographicSize = targetOrtho;
             }
 

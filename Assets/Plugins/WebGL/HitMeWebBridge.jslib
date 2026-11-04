@@ -33,13 +33,16 @@ mergeInto(LibraryManager.library, {
         var str = UTF8ToString(jsonStrPtr);
         var state = JSON.parse(str);
         var canvas = document.querySelector("#unity-canvas");
-        var sx = canvas && canvas.width ? (window.innerWidth / canvas.width) : 1;
-        var sy = canvas && canvas.height ? (window.innerHeight / canvas.height) : 1;
+        var vv = window.visualViewport;
+        var viewW = vv ? vv.width : window.innerWidth;
+        var viewH = vv ? vv.height : window.innerHeight;
+        var sx = canvas && canvas.width ? (viewW / canvas.width) : 1;
+        var sy = canvas && canvas.height ? (viewH / canvas.height) : 1;
         if (state && state.canvas) {
-          state.canvas.cssW = window.innerWidth;
-          state.canvas.cssH = window.innerHeight;
-          state.canvas.backingW = canvas ? canvas.width : window.innerWidth;
-          state.canvas.backingH = canvas ? canvas.height : window.innerHeight;
+          state.canvas.cssW = viewW;
+          state.canvas.cssH = viewH;
+          state.canvas.backingW = canvas ? canvas.width : viewW;
+          state.canvas.backingH = canvas ? canvas.height : viewH;
           state.canvas.dpr = window.devicePixelRatio || 1;
         }
         if (state && state.match && state.match.playableRect) {
@@ -70,8 +73,11 @@ mergeInto(LibraryManager.library, {
         var str = UTF8ToString(jsonStrPtr);
         var dump = JSON.parse(str);
         var canvas = document.querySelector("#unity-canvas");
-        var sx = canvas && canvas.width ? (window.innerWidth / canvas.width) : 1;
-        var sy = canvas && canvas.height ? (window.innerHeight / canvas.height) : 1;
+        var vv = window.visualViewport;
+        var viewW = vv ? vv.width : window.innerWidth;
+        var viewH = vv ? vv.height : window.innerHeight;
+        var sx = canvas && canvas.width ? (viewW / canvas.width) : 1;
+        var sy = canvas && canvas.height ? (viewH / canvas.height) : 1;
         if (Array.isArray(dump)) {
           for (var i = 0; i < dump.length; i++) {
             if (dump[i].rect) {

@@ -40,14 +40,14 @@ namespace HitMe.Editor
             var spriteRowLeaderboard = LoadSprite(KitPath + "ui_row_leaderboard.png");
             var spriteRowMe = LoadSprite(KitPath + "ui_row_leaderboard_me.png");
             var spriteCircleBack = LoadSprite(KitPath + "ui_btn_circle_back.png");
-            var spriteArena = LoadSprite(SpritesPath + "ARENA_SEAMLESS.png") ?? LoadSprite(SpritesPath + "ARENA.png");
+            var spriteArena = LoadSprite(SpritesPath + "ARENA.png");
             var spriteTimerGold = LoadSprite(KitPath + "ui_timer_circle_gold.png");
             var spriteTimerPulse = LoadSprite(KitPath + "ui_aim_pulse_gold.png");
             var spriteHeartFull = LoadSprite(KitPath + "ui_icon_heart_full.png");
             var spriteHeartBreak = LoadSprite(KitPath + "ui_icon_heart_break.png");
             var spriteCardSelected = LoadSprite(KitPath + "ui_card_char_selected.png");
             var spriteWeaponDep = LoadSprite("Assets/Art/Weapons/dep_to_ong_icon.png") ?? LoadSprite("Assets/Sprites/weapon_dep_full.png");
-            var spriteBgHome = LoadSprite("Assets/Art/UI/ui_bg_home_temple.png") ?? LoadSprite("Assets/Art/UI/ui_bg_home_village.png");
+            var spriteBgHome = LoadSprite("Assets/Art/UI/ui_bg_home_village.png");
             var spriteSliderTrack = LoadSprite(KitPath + "ui_slider_track.png");
             var spriteSliderKnob = LoadSprite(KitPath + "ui_slider_knob.png");
             var spriteToggleOn = LoadSprite(KitPath + "ui_toggle_on.png");
@@ -59,10 +59,23 @@ namespace HitMe.Editor
             var spriteIconCheck = LoadSprite(KitPath + "ui_icon_check.png");
 
             // 3D Visual UI Kit & Badges
+                        // 7 Chibi Character Heads (M2)
+            var sprHeadNamLang = LoadSprite("Assets/Art/Characters/nam_lang/Menu/menu_nam_lang_head.png");
+            var sprHeadNuNangDong = LoadSprite("Assets/Art/Characters/nu_nang_dong/Menu/menu_nu_nang_dong_head.png");
+            var sprHeadCoBa = LoadSprite("Assets/Art/Characters/co_ba/Menu/menu_co_ba_head.png");
+            var sprHeadAnhTeen = LoadSprite("Assets/Art/Characters/anh_teen/Menu/menu_anh_teen_head.png");
+            var sprHeadQuayBoy = LoadSprite("Assets/Art/Characters/quay_boy/Menu/menu_quay_boy_head.png");
+            var sprHeadChoVang = LoadSprite("Assets/Art/Characters/cho_vang/Menu/menu_cho_vang_head.png");
+            var sprHeadMeoMun = LoadSprite("Assets/Art/Characters/meo_mun/Menu/menu_meo_mun_head.png");
+            var charHeadSprites = new Sprite[] {
+                sprHeadNamLang, sprHeadNuNangDong, sprHeadCoBa, sprHeadAnhTeen, sprHeadQuayBoy, sprHeadChoVang, sprHeadMeoMun
+            };
+
+            var spriteSpeechBubble = LoadSprite(KitPath + "ui_speech_bubble.png");
             var spriteLogoHitMe = LoadSprite(KitPath + "logo_hit_me.png");
-            var spriteBtnPrimaryYellow = LoadSprite(KitPath + "btn_primary_yellow_normal.png") ?? spriteBtnYellow;
-            var spriteBtnBlue3D = LoadSprite(KitPath + "btn_blue_normal.png") ?? spriteBtnBlue;
-            var spriteBtnGreen3D = LoadSprite(KitPath + "btn_green_normal.png") ?? spriteBtnGreen;
+            var spriteBtnPrimaryYellow = LoadSprite(KitPath + "btn_primary_yellow_normal.png");
+            var spriteBtnBlue3D = LoadSprite(KitPath + "btn_blue_normal.png");
+            var spriteBtnGreen3D = LoadSprite(KitPath + "btn_green_normal.png");
             var spriteBtnNavy3D = LoadSprite(KitPath + "btn_navy_normal.png") ?? spriteBannerWood;
             var spriteDockBg = LoadSprite(KitPath + "dock_bg.png");
             var spritePanelCardDarkGold = LoadSprite(KitPath + "panel_card_dark_gold.png") ?? spritePanelDarkGold;
@@ -93,7 +106,8 @@ namespace HitMe.Editor
             var cam = camGo.GetComponent<Camera>();
             if (cam == null) cam = camGo.AddComponent<Camera>();
             cam.orthographic = true;
-            cam.orthographicSize = 6.45f;
+            // Safari 393x695 (aspect 0.5655): arena width 6.8267 fits 100% with orthographicSize 6.036f
+            cam.orthographicSize = 6.036f;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(36f / 255f, 24f / 255f, 16f / 255f, 1f); // Z6: #241810
             camGo.transform.position = new Vector3(0f, 0.40f, -10f);
@@ -175,7 +189,7 @@ namespace HitMe.Editor
             var rootTr = safeAreaGo.transform;
 
             // ==================== A. TOAST OBJECT ====================
-            var toastObj = CreatePanel(rootTr, "ToastContainer", new Vector2(0.5f, 0.72f), new Vector2(0.5f, 0.72f), new Vector2(0.5f, 0.5f), new Vector2(800f, 100f), spritePanelDarkGold, new Color(0.1f, 0.12f, 0.16f, 0.95f));
+            var toastObj = CreatePanel(rootTr, "ToastContainer", new Vector2(0.5f, 0.885f), new Vector2(0.5f, 0.885f), new Vector2(0.5f, 0.5f), new Vector2(800f, 90f), spritePanelDarkGold, new Color(0.1f, 0.12f, 0.16f, 0.95f));
             var toastTxt = CreateTMP(toastObj.transform, "ToastText", fontAsset, "Tự ném theo hướng cuối", 36, new Color(1f, 0.9f, 0.3f), TextAlignmentOptions.Center);
             FillRect(toastTxt.rectTransform, new Vector2(20f, 10f), new Vector2(-20f, -10f));
             toastObj.SetActive(false);
@@ -282,7 +296,7 @@ namespace HitMe.Editor
 
             // 2 Loadout Selector Cards side by side (HOME-05: Dark gold panels Y = 0.425f, 430x105)
             // Left Card: Character Selector
-            var charCard = CreatePanel(homePanel.transform, "CharCard", new Vector2(0.285f, 0.425f), new Vector2(0.285f, 0.425f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f), spritePanelCardDarkGold, Color.white);
+            var charCard = CreatePanel(homePanel.transform, "CharCard", new Vector2(0.285f, 0.445f), new Vector2(0.285f, 0.445f), new Vector2(0.5f, 0.5f), new Vector2(430f, 125f), spritePanelCardDarkGold, Color.white);
             var charCardBtn = charCard.AddComponent<Button>();
             charCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); uiCtrl.ChangePracticeCharacter(1); });
             var charIcon = CreateImage(charCard.transform, "Icon", spritePortraitNamLang ?? configAsset?.characterIdleSprites?[0] ?? LoadSprite(SpritesPath + "cau_be_lang_idle.png"), new Vector2(0.16f, 0.5f), new Vector2(0.16f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(72f, 72f));
@@ -299,7 +313,7 @@ namespace HitMe.Editor
             }
 
             // Right Card: Weapon Selector
-            var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.425f), new Vector2(0.715f, 0.425f), new Vector2(0.5f, 0.5f), new Vector2(430f, 105f), spritePanelCardDarkGold, Color.white);
+            var weaponCard = CreatePanel(homePanel.transform, "WeaponCard", new Vector2(0.715f, 0.445f), new Vector2(0.715f, 0.445f), new Vector2(0.5f, 0.5f), new Vector2(430f, 125f), spritePanelCardDarkGold, Color.white);
             var weaponCardBtn = weaponCard.AddComponent<Button>();
             weaponCardBtn.onClick.AddListener(() => {
                 AudioManager.Instance?.PlayClick();
@@ -318,7 +332,7 @@ namespace HitMe.Editor
 
             // Action Buttons (HOME-06 / BTN-01..06: Standardized 3D tactile buttons matching mockup)
             // 1. CHƠI NHANH (Primary CTA Vàng 3D - Y = 0.305f, 880x135)
-            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.305f), new Vector2(0.5f, 0.5f), new Vector2(880f, 135f));
+            var btnQuick = CreateButton(homePanel.transform, "BtnQuickMatch", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.347f), new Vector2(0.5f, 0.347f), new Vector2(0.5f, 0.5f), new Vector2(880f, 195f));
             if (spriteIconPlay != null)
             {
                 var iconPlay = CreateImage(btnQuick.transform, "PlayIcon", spriteIconPlay, new Vector2(0.13f, 0.50f), new Vector2(0.13f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(56f, 56f));
@@ -330,7 +344,7 @@ namespace HitMe.Editor
             uiCtrl.btnQuickMatch = btnQuick.GetComponent<Button>();
 
             // 2. TẠO PHÒNG (3D Blue) + VÀO PHÒNG (3D Green) - Row Y = 0.205f, 430x110
-            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue3D, new Vector2(0.285f, 0.205f), new Vector2(0.285f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 110f));
+            var btnCreate = CreateButton(homePanel.transform, "BtnCreateRoom", spriteBtnBlue3D, new Vector2(0.285f, 0.252f), new Vector2(0.285f, 0.252f), new Vector2(0.5f, 0.5f), new Vector2(430f, 155f));
             if (spriteIconPersonAdd != null)
             {
                 var iconCreate = CreateImage(btnCreate.transform, "Icon", spriteIconPersonAdd, new Vector2(0.17f, 0.50f), new Vector2(0.17f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
@@ -340,7 +354,7 @@ namespace HitMe.Editor
             btnCreateTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnCreateRoom = btnCreate.GetComponent<Button>();
 
-            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen3D, new Vector2(0.715f, 0.205f), new Vector2(0.715f, 0.205f), new Vector2(0.5f, 0.5f), new Vector2(430f, 110f));
+            var btnJoin = CreateButton(homePanel.transform, "BtnJoinRoom", spriteBtnGreen3D, new Vector2(0.715f, 0.252f), new Vector2(0.715f, 0.252f), new Vector2(0.5f, 0.5f), new Vector2(430f, 155f));
             if (spriteIconPeople != null)
             {
                 var iconJoin = CreateImage(btnJoin.transform, "Icon", spriteIconPeople, new Vector2(0.17f, 0.50f), new Vector2(0.17f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(46f, 46f));
@@ -351,7 +365,7 @@ namespace HitMe.Editor
             uiCtrl.btnJoinRoom = btnJoin.GetComponent<Button>();
 
             // 3. LUYỆN VỚI BOT (3D Navy Button - Y = 0.110f, 880x100)
-            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBtnNavy3D, new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.110f), new Vector2(0.5f, 0.5f), new Vector2(880f, 100f));
+            var btnBot = CreateButton(homePanel.transform, "BtnBotTraining", spriteBtnNavy3D, new Vector2(0.5f, 0.170f), new Vector2(0.5f, 0.170f), new Vector2(0.5f, 0.5f), new Vector2(880f, 150f));
             if (spriteIconBot != null)
             {
                 var iconBot = CreateImage(btnBot.transform, "Icon", spriteIconBot, new Vector2(0.14f, 0.50f), new Vector2(0.14f, 0.50f), new Vector2(0.5f, 0.5f), new Vector2(48f, 48f));
@@ -367,7 +381,7 @@ namespace HitMe.Editor
             uiCtrl.btnBotTraining = btnBot.GetComponent<Button>();
 
             // Bottom Dock Navigation (HOME-07: dock_bg 960x105 with 3 tabs, Trang chủ active)
-            var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.038f), new Vector2(0.5f, 0.5f), new Vector2(960f, 105f), spriteDockBg, Color.white);
+            var navBarBg = CreatePanel(homePanel.transform, "BottomNavBar", new Vector2(0.5f, 0.057f), new Vector2(0.5f, 0.057f), new Vector2(0.5f, 0.5f), new Vector2(960f, 125f), spriteDockBg, Color.white);
             
             // Tab 1: Trang chủ (Active / Cyan)
             var btnHomeTab = CreateButton(navBarBg.transform, "BtnTabHome", null, new Vector2(0.20f, 0.50f), new Vector2(0.20f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(280f, 70f));
@@ -494,10 +508,14 @@ namespace HitMe.Editor
             uiCtrl.btnSubmitJoinRoom = btnSubmitJoin.GetComponent<Button>();
 
             // ==================== E. BOT TRAINING PANEL ====================
-            var botPanel = CreatePanel(rootTr, "BotTrainingPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.06f, 0.10f, 0.98f));
+            var botPanel = CreatePanel(rootTr, "BotTrainingPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, Color.clear);
             var botPanelRt = botPanel.GetComponent<RectTransform>();
-            botPanelRt.offsetMin = new Vector2(-200f, -450f);
-            botPanelRt.offsetMax = new Vector2(200f, 450f);
+            botPanelRt.offsetMin = Vector2.zero;
+            botPanelRt.offsetMax = Vector2.zero;
+            var botBg = CreatePanel(botPanel.transform, "BotBg", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, new Color(0.04f, 0.06f, 0.10f, 0.98f));
+            var botBgRt = botBg.GetComponent<RectTransform>();
+            botBgRt.offsetMin = new Vector2(-200f, -450f);
+            botBgRt.offsetMax = new Vector2(200f, 450f);
             botPanel.SetActive(false);
             uiCtrl.botTrainingPanel = botPanel;
 
@@ -536,18 +554,11 @@ namespace HitMe.Editor
                 var cardImg = cardObj.GetComponent<Image>();
                 var cardBtn = cardObj.AddComponent<Button>();
 
-                // Character Sprite inside (SEL-02 / SEL-03)
+                // Character Head inside (M2: 7 full-color chibi avatars)
                 bool isEnabledChar = c < 4;
-                Sprite spr = null;
-                if (c == 0 && spritePortraitNamLang != null) spr = spritePortraitNamLang;
-                else if (idleSprites != null && c < idleSprites.Length)
-                {
-                    // SEL-02: Quay Boy (c=4) must not show Mai Hong orange hair avatar
-                    if (c == 4) spr = null;
-                    else spr = idleSprites[c];
-                }
+                Sprite spr = (charHeadSprites != null && c < charHeadSprites.Length) ? charHeadSprites[c] : null;
 
-                var charSprObj = CreateImage(cardObj.transform, "CharSpr", spr, new Vector2(0.24f, 0.5f), new Vector2(0.24f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(70f, 95f));
+                var charSprObj = CreateImage(cardObj.transform, "CharSpr", spr, new Vector2(0.24f, 0.5f), new Vector2(0.24f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(78f, 78f));
                 charSprObj.GetComponent<Image>().preserveAspect = true;
 
                 // Character Name inside card
@@ -592,8 +603,9 @@ namespace HitMe.Editor
             CreateTMP(btnInc.transform, "Label", fontAsset, "+", 48, Color.white, TextAlignmentOptions.Center);
             uiCtrl.btnIncreaseBots = btnInc.GetComponent<Button>();
 
-            // Start Bot Training CTA Yellow Button
-            var btnStartBot = CreateButton(botPanel.transform, "BtnStartBot", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.125f), new Vector2(0.5f, 0.5f), new Vector2(880f, 135f));
+            // Start Bot Training CTA Yellow Button (Anchored to bottom at Y = 85px to fit 393x695)
+            var btnStartBot = CreateButton(botPanel.transform, "BtnStartBot", spriteBtnPrimaryYellow, new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.0f), new Vector2(0.5f, 0.5f), new Vector2(880f, 155f));
+            btnStartBot.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 130f);
             var startBotTxt = CreateTMP(btnStartBot.transform, "Label", fontAsset, UiStrings.BtnStart + " (VÀO SÂN)", 44, new Color(0.22f, 0.11f, 0.02f), TextAlignmentOptions.Center);
             startBotTxt.fontStyle = FontStyles.Bold;
             uiCtrl.btnStartBotTraining = btnStartBot.GetComponent<Button>();
@@ -699,6 +711,15 @@ namespace HitMe.Editor
             var hudPanel = CreatePanel(rootTr, "GameplayHudPanel", Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, null, Color.clear);
             hudPanel.SetActive(false);
             uiCtrl.gameplayHudPanel = hudPanel;
+
+            // M3: Solid themed mahogany boards covering vertical excess above & below arena (100% full width)
+            var topHudBoard = CreatePanel(hudPanel.transform, "TopHudBoard", new Vector2(0f, 0.860f), new Vector2(1f, 1.0f), new Vector2(0.5f, 0.5f), Vector2.zero, spritePanelDarkGold, new Color(0.12f, 0.08f, 0.05f, 0.98f));
+            topHudBoard.GetComponent<RectTransform>().offsetMin = new Vector2(-150f, 0f);
+            topHudBoard.GetComponent<RectTransform>().offsetMax = new Vector2(150f, 150f);
+
+            var bottomHudBoard = CreatePanel(hudPanel.transform, "BottomHudBoard", new Vector2(0f, 0.0f), new Vector2(1f, 0.130f), new Vector2(0.5f, 0.5f), Vector2.zero, spritePanelDarkGold, new Color(0.12f, 0.08f, 0.05f, 0.98f));
+            bottomHudBoard.GetComponent<RectTransform>().offsetMin = new Vector2(-150f, -150f);
+            bottomHudBoard.GetComponent<RectTransform>().offsetMax = new Vector2(150f, 0f);
 
             // P3: TopPlacingBar (Round, Timer, and Sẵn sàng in the same horizontal safe-area row; only shown in Placing)
             var topPlacingBar = CreatePanel(hudPanel.transform, "TopPlacingBar", new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.968f), new Vector2(0.5f, 0.5f), new Vector2(1020f, 76f), null, Color.clear);
@@ -807,6 +828,16 @@ namespace HitMe.Editor
             weaponTxt.fontStyle = FontStyles.Bold;
             uiCtrl.weaponPillObj = weaponPill;
             uiCtrl.txtWeaponIndicator = weaponTxt;
+
+            // In-Game Emote Button (M3: Bottom right of BottomHudBoard with speech bubble icon)
+            var btnEmote = CreateButton(hudPanel.transform, "BtnInGameEmote", spriteCircleBack, new Vector2(0.92f, 0.062f), new Vector2(0.92f, 0.062f), new Vector2(0.5f, 0.5f), new Vector2(80f, 80f));
+            if (spriteSpeechBubble != null)
+            {
+                var emoteIcon = CreateImage(btnEmote.transform, "ChatIcon", spriteSpeechBubble, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(48f, 48f));
+                emoteIcon.GetComponent<Image>().preserveAspect = true;
+                emoteIcon.GetComponent<Image>().color = new Color(1.0f, 0.85f, 0.25f, 1.0f);
+            }
+            uiCtrl.btnInGameEmote = btnEmote.GetComponent<Button>();
 
             // Round Result Overlay (in Gameplay HUD during Resolve / RoundEnd)
             var roundResultObj = CreatePanel(hudPanel.transform, "RoundResultOverlay", new Vector2(0.5f, 0.60f), new Vector2(0.5f, 0.60f), new Vector2(0.5f, 0.5f), new Vector2(880f, 220f), spritePanelDarkGold, new Color(0.08f, 0.10f, 0.14f, 0.94f));
@@ -1230,7 +1261,17 @@ namespace HitMe.Editor
 
         private static Sprite LoadSprite(string path)
         {
-            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            var spr = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            if (spr != null) return spr;
+            var allAssets = AssetDatabase.LoadAllAssetsAtPath(path);
+            if (allAssets != null)
+            {
+                for (int i = 0; i < allAssets.Length; i++)
+                {
+                    if (allAssets[i] is Sprite s) return s;
+                }
+            }
+            return null;
         }
 
         private static GameObject CreatePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Sprite sprite, Color color, bool raycastTarget = false)
@@ -1265,10 +1306,20 @@ namespace HitMe.Editor
             return CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, Color.white, raycastTarget);
         }
 
-        private static GameObject CreateButton(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size)
+        private static GameObject CreateButton(Transform parent, string name, Sprite sprite, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 size, Color? explicitColor = null)
         {
-            Color color = sprite != null ? Color.white : Color.clear;
+            Color color = explicitColor ?? (sprite != null ? Color.white : Color.clear);
             var go = CreatePanel(parent, name, anchorMin, anchorMax, pivot, size, sprite, color, raycastTarget: true);
+            var img = go.GetComponent<Image>();
+            if (img != null)
+            {
+                img.color = color;
+                if (sprite != null)
+                {
+                    img.sprite = sprite;
+                    img.type = Image.Type.Sliced;
+                }
+            }
             go.AddComponent<Button>();
             return go;
         }

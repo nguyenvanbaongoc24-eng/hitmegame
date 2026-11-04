@@ -155,10 +155,40 @@
         max-width: 380px;
         color: #ecf0f1;
       }
+          #viewport-debug-overlay {
+        display: none;
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        background: rgba(10, 16, 26, 0.92);
+        border: 1.5px solid #00f0ff;
+        border-radius: 8px;
+        color: #00f0ff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.35;
+        padding: 8px 10px;
+        z-index: 999999;
+        pointer-events: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      }
+      #safe-area-helper {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
+        visibility: hidden;
+        pointer-events: none;
+      }
     </style>
   </head>
   <body>
-    <div id="unity-container">
+        <div id="unity-container">
+      <div id="viewport-debug-overlay"></div>
+      <div id="safe-area-helper"></div>
       <div id="unity-fullscreen-container">
         <canvas id="unity-canvas" tabindex="-1"></canvas>
       </div>
@@ -431,9 +461,9 @@
 
       const config = {
         arguments: [],
-        dataUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.data.br"),
-        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.framework.js.br"),
-        codeUrl: versioned(buildUrl + "/WebGL_Release_20261104_1952734.wasm.br"),
+        dataUrl: versioned(buildUrl + "/WebGL_Release_20261104_0af64ab_205022.data.br"),
+        frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261104_0af64ab_205022.framework.js.br"),
+        codeUrl: versioned(buildUrl + "/WebGL_Release_20261104_0af64ab_205022.wasm.br"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "HitMeStudio",
         productName: "HIT ME",
@@ -444,16 +474,64 @@
       };
 
       // Retina display support
-      function updateCanvasResolution() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-        canvas.width = Math.round(window.innerWidth * dpr);
-        canvas.height = Math.round(window.innerHeight * dpr);
+      function getSafeAreaInsets() {
+        const helper = document.querySelector("#safe-area-helper");
+        if (!helper) return { top: 0, bottom: 0, left: 0, right: 0 };
+        const cs = window.getComputedStyle(helper);
+        return {
+          top: parseInt(cs.paddingTop) || 0,
+          bottom: parseInt(cs.paddingBottom) || 0,
+          left: parseInt(cs.paddingLeft) || 0,
+          right: parseInt(cs.paddingRight) || 0
+        };
       }
-      updateCanvasResolution();
+
+      function updateCanvasResolution() {
+        const vv = window.visualViewport;
+        const cssW = vv ? Math.round(vv.width) : window.innerWidth;
+        const cssH = vv ? Math.round(vv.height) : window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 3.0);
+
+        canvas.style.width = cssW + "px";
+        canvas.style.height = cssH + "px";
+        canvas.width = Math.round(cssW * dpr);
+        canvas.height = Math.round(cssH * dpr);
+
+        const container = document.querySelector("#unity-container");
+        if (container && vv) {
+          container.style.width = cssW + "px";
+          container.style.height = cssH + "px";
+          container.style.top = (vv.offsetTop || 0) + "px";
+          container.style.left = (vv.offsetLeft || 0) + "px";
+        }
+
+        const overlay = document.querySelector("#viewport-debug-overlay");
+        const isDebugViewport = urlParams.get("debug") === "viewport" || urlParams.get("debug") === "1";
+        if (overlay && isDebugViewport) {
+          overlay.style.display = "block";
+          const insets = getSafeAreaInsets();
+          overlay.innerHTML = `
+            <div style="font-weight:bold;color:#ffdf33;margin-bottom:2px;">[HIT ME VIEWPORT DEBUG]</div>
+            <div>window.inner: ${window.innerWidth} x ${window.innerHeight}</div>
+            <div>visualViewport: ${vv ? Math.round(vv.width) : "N/A"} x ${vv ? Math.round(vv.height) : "N/A"} (offset: ${vv ? Math.round(vv.offsetTop) : 0})</div>
+            <div>devicePixelRatio: ${window.devicePixelRatio || 1} (used: ${dpr.toFixed(1)})</div>
+            <div>canvas CSS: ${cssW} x ${cssH}</div>
+            <div>canvas buffer: ${canvas.width} x ${canvas.height}</div>
+            <div>safeAreaInsets: top=${insets.top} bottom=${insets.bottom} left=${insets.left} right=${insets.right}</div>
+          `;
+        }
+      }
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", updateCanvasResolution);
+        window.visualViewport.addEventListener("scroll", updateCanvasResolution);
+      }
       window.addEventListener("resize", updateCanvasResolution);
+      window.addEventListener("orientationchange", updateCanvasResolution);
+      updateCanvasResolution();
 
       const script = document.createElement("script");
-      script.src = versioned(buildUrl + "/WebGL_Release_20261104_1952734.loader.js");
+      script.src = versioned(buildUrl + "/WebGL_Release_20261104_0af64ab_205022.loader.js");
       const totalMB = 9.8;
       const isVi = !(urlParams.get("lang") === "en" || (!urlParams.has("lang") && navigator.language && navigator.language.startsWith("en")));
       const slowTimer = setTimeout(() => {
