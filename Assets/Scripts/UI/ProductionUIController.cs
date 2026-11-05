@@ -913,6 +913,10 @@ namespace HitMe.UI
 
         public Button btnHomeLeaderboard;
 
+        public Button btnHomeTab;
+
+        public Button btnHomeQuests;
+
 
 
         public Button btnHomeLogin;
@@ -4829,6 +4833,10 @@ SyncHomeCharacterDisplay();
 
 
             if (btnHomeLeaderboard != null) btnHomeLeaderboard.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowLeaderboardDialog(); });
+
+            if (btnHomeTab != null) btnHomeTab.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowScreen(ProductionScreen.Home); });
+
+            if (btnHomeQuests != null) btnHomeQuests.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowToast("Nhiệm vụ ngày sắp ra mắt!"); });
 
 
 

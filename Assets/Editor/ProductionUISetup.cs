@@ -394,7 +394,7 @@ namespace HitMe.Editor
             txtHomeTab.fontStyle = FontStyles.Bold;
             // Cyan underline for active tab
             var tabUnderline = CreatePanel(btnHomeTab.transform, "Underline", new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.05f), new Vector2(0.5f, 0.5f), new Vector2(120f, 4f), null, new Color(0.00f, 0.898f, 1f));
-            uiCtrl.btnHomeLogin = btnHomeTab.GetComponent<Button>();
+            uiCtrl.btnHomeTab = btnHomeTab.GetComponent<Button>();
 
             // Tab 2: Xếp hạng
             var btnRankTab = CreateButton(navBarBg.transform, "BtnTabRank", null, new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(280f, 70f));
@@ -404,10 +404,7 @@ namespace HitMe.Editor
                 iconTabRank.GetComponent<Image>().preserveAspect = true;
             }
             var txtRankTab = CreateTMP(btnRankTab.transform, "Label", fontAsset, "Xếp hạng", 22, colorCream, TextAlignmentOptions.Center, new Vector2(0.62f, 0.50f), new Vector2(170f, 40f), wrap: false);
-            btnRankTab.GetComponent<Button>().onClick.AddListener(() => {
-                AudioManager.Instance?.PlayClick();
-                uiCtrl.ShowToast("Tính năng Xếp hạng sắp ra mắt!");
-            });
+            uiCtrl.btnHomeLeaderboard = btnRankTab.GetComponent<Button>();
 
             // Tab 3: Nhiệm vụ
             var btnQuestTab = CreateButton(navBarBg.transform, "BtnTabQuest", null, new Vector2(0.80f, 0.50f), new Vector2(0.80f, 0.50f), new Vector2(0.50f, 0.50f), new Vector2(280f, 70f));
@@ -417,16 +414,9 @@ namespace HitMe.Editor
                 iconTabQuest.GetComponent<Image>().preserveAspect = true;
             }
             var txtQuestTab = CreateTMP(btnQuestTab.transform, "Label", fontAsset, "Nhiệm vụ", 22, colorCream, TextAlignmentOptions.Center, new Vector2(0.62f, 0.50f), new Vector2(170f, 40f), wrap: false);
-            btnQuestTab.GetComponent<Button>().onClick.AddListener(() => {
-                AudioManager.Instance?.PlayClick();
-                uiCtrl.ShowToast("Nhiệm vụ ngày sắp ra mắt!");
-            });
+            uiCtrl.btnHomeQuests = btnQuestTab.GetComponent<Button>();
 
-            // Beta 0.1: Postponed tabs (Xếp hạng, Nhiệm vụ, Túi đồ) are cleanly hidden without invisible hit targets
-            var btnLbBottom = CreateButton(navBarBg.transform, "BtnBottomLb", null, new Vector2(-20f, -20f), new Vector2(-20f, -20f), new Vector2(0.5f, 0.5f), Vector2.one);
-            uiCtrl.btnHomeLeaderboard = btnLbBottom.GetComponent<Button>();
-            btnLbBottom.gameObject.SetActive(false);
-
+            // Shop and inventory remain hidden until their Home entry points are designed.
             var btnShopBottom = CreateButton(navBarBg.transform, "BtnBottomShop", null, new Vector2(-20f, -20f), new Vector2(-20f, -20f), new Vector2(0.5f, 0.5f), Vector2.one);
             uiCtrl.btnHomeShop = btnShopBottom.GetComponent<Button>();
             btnShopBottom.gameObject.SetActive(false);
@@ -1096,6 +1086,10 @@ namespace HitMe.Editor
             var btnRename = CreateButton(profileCard.transform, "BtnRename", spriteBtnYellow, new Vector2(0.50f, 0.28f), new Vector2(0.50f, 0.28f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
             CreateTMP(btnRename.transform, "Label", fontAsset, UiStrings.BtnRename, 32, new Color(0.20f, 0.10f, 0f), TextAlignmentOptions.Center, wrap: false);
             uiCtrl.btnProfileRename = btnRename.GetComponent<Button>();
+
+            var btnLoginFromProfile = CreateButton(profileCard.transform, "BtnLogin", spriteBtnNavy3D, new Vector2(0.50f, 0.195f), new Vector2(0.50f, 0.195f), new Vector2(0.50f, 0.50f), new Vector2(400f, 55f));
+            CreateTMP(btnLoginFromProfile.transform, "Label", fontAsset, "ĐĂNG NHẬP", 24, colorCream, TextAlignmentOptions.Center, wrap: false);
+            uiCtrl.btnHomeLogin = btnLoginFromProfile.GetComponent<Button>();
 
             var btnCloseProf = CreateButton(profileCard.transform, "BtnClose", spriteBtnGreen, new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.12f), new Vector2(0.50f, 0.50f), new Vector2(400f, 85f));
             CreateTMP(btnCloseProf.transform, "Label", fontAsset, UiStrings.SettingsBtnClose, 32, Color.white, TextAlignmentOptions.Center, wrap: false);
