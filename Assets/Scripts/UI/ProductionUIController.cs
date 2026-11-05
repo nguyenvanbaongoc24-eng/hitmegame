@@ -8951,11 +8951,8 @@ SyncHomeCharacterDisplay();
 
 
 
-                bool isOnlinePending = IsOnlineActiveMode && !_isOnlineAccountLoaded;
-
-
-
-                var mockRanks = RankService.GetMockLeaderboard();
+                // Live leaderboard data is not wired into this Unity screen yet.
+                // Never display the development fixture as real player rankings.
 
 
 
@@ -8979,11 +8976,11 @@ SyncHomeCharacterDisplay();
 
 
 
-                        child.gameObject.SetActive(_currentLeaderboardTab == 0);
+                        child.gameObject.SetActive(_currentLeaderboardTab == 0 && child.name == "Row0");
 
 
 
-                        if (_currentLeaderboardTab == 0 && int.TryParse(child.name.Substring(3), out int rowIdx))
+                        if (_currentLeaderboardTab == 0 && child.name == "Row0")
 
 
 
@@ -9003,55 +9000,9 @@ SyncHomeCharacterDisplay();
 
 
 
-                            if (txtRank != null) txtRank.text = "#" + (rowIdx + 1);
-
-
-
-
-
-
-
-                            if (isOnlinePending)
-
-
-
-                            {
-
-
-
-                                if (txtName != null) txtName.text = UiStrings.Get(UiStrings.NoData);
-
-
-
-                                if (txtScore != null) txtScore.text = "-";
-
-
-
-                            }
-
-
-
-                            else if (rowIdx < mockRanks.Count)
-
-
-
-                            {
-
-
-
-                                var entry = mockRanks[rowIdx];
-
-
-
-                                if (txtName != null) txtName.text = $"{entry.name} [{entry.tier}]";
-
-
-
-                                if (txtScore != null) txtScore.text = entry.points + " Đ";
-
-
-
-                            }
+                            if (txtRank != null) txtRank.text = "-";
+                            if (txtName != null) txtName.text = "Chưa có dữ liệu xếp hạng";
+                            if (txtScore != null) txtScore.text = "-";
 
 
 
