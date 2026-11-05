@@ -435,6 +435,13 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
     (function() {{
       let _realHitmeUi = null;
       let _lastMatchSig = "";
+      let _tutorialHoldUntil = 0;
+      document.addEventListener("click", function(e) {{
+        const btn = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+        const act = btn ? btn.dataset.action : "";
+        if (act === "tutorial-reopen") _tutorialHoldUntil = Date.now() + 8000;
+        else if (act === "tutorial-skip") _tutorialHoldUntil = 0;
+      }}, true);
       Object.defineProperty(window, "hitmeUi", {{
         configurable: true,
         enumerable: true,
@@ -448,7 +455,12 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
               if (evt && typeof evt === "object") {{
                 if (evt.type === "screen" || evt.type === "result") {{
                   _lastMatchSig = "";
+                  _tutorialHoldUntil = 0;
                 }} else if (evt.type === "match") {{
+                  if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {{
+                    evt = Object.assign({{}}, evt, {{ phase: "placing", timeLeft: Math.max(2, Number(evt.timeLeft) || 2) }});
+                    event = evt;
+                  }}
                   const playersSig = Array.isArray(evt.players)
                     ? evt.players.map(p => `${{p.id}}:${{p.characterId}}:${{p.hp}}:${{p.alive}}`).join(",")
                     : "";
