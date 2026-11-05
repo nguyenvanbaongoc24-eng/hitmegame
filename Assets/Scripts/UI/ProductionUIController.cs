@@ -4614,6 +4614,10 @@ SyncHomeCharacterDisplay();
 
                 });
 
+                // Preview once after a drag, at the volume the player just chose.
+                if (sliderSfxVolume.GetComponent<SfxSliderPreview>() == null)
+                    sliderSfxVolume.gameObject.AddComponent<SfxSliderPreview>();
+
 
 
             }
@@ -5497,7 +5501,7 @@ SyncHomeCharacterDisplay();
 
 
 
-            if (audioSvc != null)
+            if (audioSvc != null || AudioManager.Instance != null)
 
 
 
@@ -5505,19 +5509,21 @@ SyncHomeCharacterDisplay();
 
 
 
-                if (sliderMusicVolume != null) sliderMusicVolume.value = audioSvc.MusicVolume;
+                if (sliderMusicVolume != null)
+                    sliderMusicVolume.SetValueWithoutNotify(AudioManager.Instance != null ? AudioManager.Instance.MusicVolume : audioSvc.MusicVolume);
 
 
 
-                if (sliderSfxVolume != null) sliderSfxVolume.value = audioSvc.SfxVolume;
+                if (sliderSfxVolume != null)
+                    sliderSfxVolume.SetValueWithoutNotify(AudioManager.Instance != null ? AudioManager.Instance.SfxVolume : audioSvc.SfxVolume);
 
 
 
-                if (toggleMusic != null) toggleMusic.isOn = !audioSvc.MusicMuted;
+                if (toggleMusic != null && audioSvc != null) toggleMusic.isOn = !audioSvc.MusicMuted;
 
 
 
-                if (toggleSfx != null) toggleSfx.isOn = !audioSvc.SfxMuted;
+                if (toggleSfx != null && audioSvc != null) toggleSfx.isOn = !audioSvc.SfxMuted;
 
 
 
