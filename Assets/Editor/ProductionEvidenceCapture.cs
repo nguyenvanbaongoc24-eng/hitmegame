@@ -32,14 +32,9 @@ namespace HitMe.Editor
             string dateTag = DateTime.Now.ToString("yyyyMMdd");
             string buildId = $"WebGL_{dateTag}_{commitShort}";
 
+            ProductionUISetup.BuildProductionUI();
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             var canvasObj = GameObject.Find("ProductionCanvas");
-            if (canvasObj == null)
-            {
-                ProductionUISetup.BuildProductionUI();
-                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-                canvasObj = GameObject.Find("ProductionCanvas");
-            }
 
             var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
             if (configAsset != null)
@@ -522,12 +517,12 @@ namespace HitMe.Editor
         {
             Vec2[] positions =
             {
-                new Vec2(1.8f, -3.1f),
-                new Vec2(-2.1f, -2.8f),
-                new Vec2(1.1f, -1.2f),
-                new Vec2(-1.8f, 1.5f),
-                new Vec2(-2.1f, -1.7f),
-                new Vec2(2.0f, 1.8f)
+                new Vec2(1.8f, -2.9f),
+                new Vec2(-2.0f, -2.8f),
+                new Vec2(1.7f, 0.2f),
+                new Vec2(-1.8f, 1.8f),
+                new Vec2(-1.9f, -0.3f),
+                new Vec2(2.0f, 1.9f)
             };
             Vec2[] aims =
             {
@@ -707,14 +702,9 @@ namespace HitMe.Editor
             const int shotW = 1170;
             const int shotH = 2532;
 
+            ProductionUISetup.BuildProductionUI();
             var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             var canvasObj = GameObject.Find("ProductionCanvas");
-            if (canvasObj == null)
-            {
-                ProductionUISetup.BuildProductionUI();
-                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-                canvasObj = GameObject.Find("ProductionCanvas");
-            }
 
             var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
             if (configAsset != null)
@@ -868,6 +858,220 @@ namespace HitMe.Editor
                 }
 
                 Debug.Log("[EvidenceCapture] Successfully captured Round 34 Lots 3 & 4 evidence to " + r34Dir);
+            }
+            finally
+            {
+                foreach (var kvp in views)
+                {
+                    if (kvp.Value != null) UnityEngine.Object.DestroyImmediate(kvp.Value.gameObject);
+                }
+                canvas.renderMode = originalRenderMode;
+                EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            }
+        }
+
+        [MenuItem("Tools/HIT ME/Capture Reform V7 All 10 Screens + Viewports")]
+        public static void CaptureReformV7Evidence()
+        {
+            const string v7Dir = "Evidence/reform_v7";
+            Directory.CreateDirectory(v7Dir);
+
+            string commitShort = WebBuildPipeline.GetGitShortCommit();
+            string dateTag = DateTime.Now.ToString("yyyyMMdd");
+            string buildId = $"WebGL_{dateTag}_{commitShort}";
+
+            ProductionUISetup.BuildProductionUI();
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var canvasObj = GameObject.Find("ProductionCanvas");
+
+            var configAsset = AssetDatabase.LoadAssetAtPath<GameConfigAsset>("Assets/ScriptableObjects/GameConfig_Phase1.asset");
+            if (configAsset != null)
+            {
+                PlayerView.ConfigureSharedResources(configAsset);
+                WeaponFlightView.ConfigureSharedResources(configAsset);
+            }
+
+            var cam = Camera.main;
+            if (cam == null) cam = UnityEngine.Object.FindAnyObjectByType<Camera>();
+            cam.orthographic = true;
+            cam.orthographicSize = 7.8f;
+            cam.transform.position = new Vector3(0f, 0.80f, -10f);
+
+            var canvas = canvasObj.GetComponent<Canvas>();
+            var ui = canvasObj.GetComponent<ProductionUIController>();
+            var scaler = canvasObj.GetComponent<CanvasScaler>();
+            var fitter = canvasObj.GetComponentInChildren<SafeAreaFitter>(true);
+
+            ui.ResolveHudElementContainers();
+            ui.EnsureAndRefreshBuildFingerprint();
+            ui.EnsureLobbyMapSelector();
+            ui.EnsureRoomCodeKeypad();
+            ui.EnsureSettingsReportBugAndBuildVersion();
+            ui.EnsureBotTrainingPanel();
+            ui.RefreshBotTrainingDisplay();
+            ui.RefreshProfileUI();
+
+            var originalRenderMode = canvas.renderMode;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            canvas.worldCamera = cam;
+            canvas.planeDistance = 1.0f;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(ShotWidth, ShotHeight);
+            scaler.matchWidthOrHeight = 0.5f;
+
+            if (fitter != null)
+            {
+                fitter.ApplyForScreen(ShotWidth, ShotHeight, new Rect(0f, 0f, ShotWidth, ShotHeight), false);
+            }
+
+            int[] matchRosterIndices = { 0, 4, 3, 5, 1, 6 };
+            var players = CreateMockPlayers(matchRosterIndices);
+            var views = CreatePlayerViews(players, matchRosterIndices);
+
+            try
+            {
+                // 2. MAIN MENU (1080x2340)
+                SetPlayersVisible(views, false);
+                ui.ShowScreen(ProductionScreen.Home);
+                if (ui.dialogSettings != null) ui.dialogSettings.SetActive(false);
+                if (ui.dialogProfile != null) ui.dialogProfile.SetActive(false);
+                if (ui.quickMatchOverlay != null) ui.quickMatchOverlay.SetActive(false);
+                ui.RefreshBotTrainingDisplay();
+                RenderAndSave(cam, Path.Combine(v7Dir, "02_main_menu_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 3. SETTINGS MODAL (1080x2340)
+                ui.ShowScreen(ProductionScreen.Home);
+                if (ui.dialogSettings != null) ui.dialogSettings.SetActive(true);
+                ui.EnsureSettingsReportBugAndBuildVersion();
+                RenderAndSave(cam, Path.Combine(v7Dir, "03_settings_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                if (ui.dialogSettings != null) ui.dialogSettings.SetActive(false);
+
+                // 4. CREATE ROOM (1080x2340)
+                ui.ShowScreen(ProductionScreen.CreateRoom);
+                RenderAndSave(cam, Path.Combine(v7Dir, "04_create_room_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 5. ROOM LOBBY (1080x2340)
+                ui.ShowScreen(ProductionScreen.Lobby);
+                ui.EnsureLobbyMapSelector();
+                ui.UpdateLobbyRoster(4, "Phòng Chiến Hữu", "HM8888");
+                RenderAndSave(cam, Path.Combine(v7Dir, "05_room_lobby_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 6. JOIN ROOM (1080x2340)
+                ui.ShowScreen(ProductionScreen.JoinRoom);
+                ui.EnsureRoomCodeKeypad();
+                if (ui.inputRoomCode != null) ui.inputRoomCode.text = "";
+                if (ui.roomFoundCard != null) ui.roomFoundCard.SetActive(false);
+                RenderAndSave(cam, Path.Combine(v7Dir, "06_join_room_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 7A. GAMEPLAY HUD - PLACING (1080x2340)
+                ui.ShowScreen(ProductionScreen.Gameplay);
+                ui.ConfigureHpCardsLayout(6);
+                ui.txtRound.text = "VÒNG 2/5";
+                ui.txtTimer.text = "4.2s";
+                ui.txtTimer.color = Color.white;
+                ui.ApplyPhaseState(Phase.Placing);
+                UpdateHudHp(ui, players, isPlacing: true);
+                foreach (var kvp in views)
+                {
+                    bool isLocal = kvp.Key == "player";
+                    kvp.Value.gameObject.SetActive(isLocal);
+                    if (isLocal)
+                    {
+                        var p = players.Find(x => x.Id == kvp.Key);
+                        kvp.Value.Present(p, true, true, true, 1.2f, 1.5f, 2.0f);
+                    }
+                }
+                RenderAndSave(cam, Path.Combine(v7Dir, "07_gameplay_placing_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 7B. GAMEPLAY HUD - REVEAL (1080x2340)
+                ui.ApplyPhaseState(Phase.Reveal);
+                UpdateHudHp(ui, players, isPlacing: false);
+                foreach (var kvp in views)
+                {
+                    var p = players.Find(x => x.Id == kvp.Key);
+                    kvp.Value.gameObject.SetActive(p.IsAlive);
+                    if (p.IsAlive)
+                    {
+                        kvp.Value.Present(p, true, true, false, 1.2f, 1.5f, 0f);
+                    }
+                }
+                RenderAndSave(cam, Path.Combine(v7Dir, "07b_gameplay_reveal_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 8. MATCHMAKING OVERLAY (1080x2340)
+                SetPlayersVisible(views, false);
+                ui.ShowScreen(ProductionScreen.Home);
+                if (ui.quickMatchOverlay != null) ui.quickMatchOverlay.SetActive(true);
+                if (ui.txtQuickMatchStatus != null) ui.txtQuickMatchStatus.text = "Đang tìm đối thủ xứng tầm (2/6)...";
+                RenderAndSave(cam, Path.Combine(v7Dir, "08_matchmaking_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                if (ui.quickMatchOverlay != null) ui.quickMatchOverlay.SetActive(false);
+
+                // 9. PROFILE MODAL (1080x2340)
+                ui.ShowScreen(ProductionScreen.Home);
+                if (ui.dialogProfile != null) ui.dialogProfile.SetActive(true);
+                ui.RefreshProfileUI();
+                RenderAndSave(cam, Path.Combine(v7Dir, "09_profile_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+                if (ui.dialogProfile != null) ui.dialogProfile.SetActive(false);
+
+                // 10. BOT TRAINING (1080x2340)
+                ui.ShowScreen(ProductionScreen.BotTraining);
+                ui.RefreshBotTrainingDisplay();
+                RenderAndSave(cam, Path.Combine(v7Dir, "10_bot_training_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // 11. RESULT SCREEN (1080x2340)
+                SetPlayersVisible(views, false);
+                var ranked = new List<PlayerState>(players);
+                ranked.Sort(MatchRanking.DisplayOrderComparison);
+                var winners = new List<string>(MatchRanking.Winners(players));
+                ui.ApplyPhaseState(Phase.MatchEnd);
+                ui.PopulateResultBoard(ranked, winners);
+                RenderAndSave(cam, Path.Combine(v7Dir, "11_result_1080x2340.png"), commitShort, buildId, ShotWidth, ShotHeight);
+
+                // MULTI-VIEWPORT MATRIX (393x852, 390x844, 360x800, 412x915)
+                (int w, int h, string tag)[] v7Viewports = new[]
+                {
+                    (393, 852, "393x852"),
+                    (390, 844, "390x844"),
+                    (360, 800, "360x800"),
+                    (412, 915, "412x915")
+                };
+
+                foreach (var vp in v7Viewports)
+                {
+                    if (fitter != null)
+                    {
+                        fitter.ApplyForScreen(vp.w, vp.h, new Rect(0f, 0f, vp.w, vp.h), true);
+                    }
+
+                    // Main Menu
+                    SetPlayersVisible(views, false);
+                    ui.ShowScreen(ProductionScreen.Home);
+                    ui.RefreshBotTrainingDisplay();
+                    RenderAndSave(cam, Path.Combine(v7Dir, $"vp_{vp.tag}_main_menu.png"), commitShort, buildId, vp.w, vp.h);
+
+                    // Create Room
+                    ui.ShowScreen(ProductionScreen.CreateRoom);
+                    RenderAndSave(cam, Path.Combine(v7Dir, $"vp_{vp.tag}_create_room.png"), commitShort, buildId, vp.w, vp.h);
+
+                    // Room Lobby
+                    ui.ShowScreen(ProductionScreen.Lobby);
+                    ui.UpdateLobbyRoster(4, "Phòng Chiến Hữu", "HM8888");
+                    RenderAndSave(cam, Path.Combine(v7Dir, $"vp_{vp.tag}_room_lobby.png"), commitShort, buildId, vp.w, vp.h);
+
+                    // Gameplay
+                    ui.ShowScreen(ProductionScreen.Gameplay);
+                    ui.ConfigureHpCardsLayout(6);
+                    ui.ApplyPhaseState(Phase.Reveal);
+                    UpdateHudHp(ui, players, isPlacing: false);
+                    foreach (var kvp in views)
+                    {
+                        var p = players.Find(x => x.Id == kvp.Key);
+                        kvp.Value.gameObject.SetActive(p.IsAlive);
+                        if (p.IsAlive) kvp.Value.Present(p, true, true, false, 1.2f, 1.5f, 0f);
+                    }
+                    RenderAndSave(cam, Path.Combine(v7Dir, $"vp_{vp.tag}_gameplay.png"), commitShort, buildId, vp.w, vp.h);
+                }
+
+                Debug.Log("[EvidenceCapture] Successfully captured Reform V7 evidence to " + v7Dir);
             }
             finally
             {

@@ -4812,7 +4812,8 @@ SyncHomeCharacterDisplay();
 
                     if (AudioManager.Instance != null) AudioManager.Instance.MusicVolume = v;
 
-
+                    var mVal = dialogSettings?.transform.Find("SettingsCard/MusicValue")?.GetComponent<TextMeshProUGUI>();
+                    if (mVal != null) mVal.text = Mathf.RoundToInt(v * 100f) + "%";
 
                 });
 
@@ -4848,7 +4849,8 @@ SyncHomeCharacterDisplay();
 
                     if (AudioManager.Instance != null) AudioManager.Instance.SfxVolume = v;
 
-
+                    var sVal = dialogSettings?.transform.Find("SettingsCard/SfxValue")?.GetComponent<TextMeshProUGUI>();
+                    if (sVal != null) sVal.text = Mathf.RoundToInt(v * 100f) + "%";
 
                 });
 
@@ -5130,6 +5132,56 @@ SyncHomeCharacterDisplay();
 
 
 
+            }
+
+            if (homePanel != null)
+            {
+                var btnPrev = homePanel.transform.Find("BtnHeroPrev")?.GetComponent<Button>();
+                if (btnPrev != null)
+                {
+                    btnPrev.onClick.RemoveAllListeners();
+                    btnPrev.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ChangePracticeCharacter(-1); });
+                }
+                var btnNext = homePanel.transform.Find("BtnHeroNext")?.GetComponent<Button>();
+                if (btnNext != null)
+                {
+                    btnNext.onClick.RemoveAllListeners();
+                    btnNext.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ChangePracticeCharacter(1); });
+                }
+                var charCardBtn = homePanel.transform.Find("CharCard")?.GetComponent<Button>();
+                if (charCardBtn != null)
+                {
+                    charCardBtn.onClick.RemoveAllListeners();
+                    charCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ChangePracticeCharacter(1); });
+                }
+                var weaponCardBtn = homePanel.transform.Find("WeaponCard")?.GetComponent<Button>();
+                if (weaponCardBtn != null)
+                {
+                    weaponCardBtn.onClick.RemoveAllListeners();
+                    weaponCardBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowToast("Vũ khí: Dép Tổ Ong (Bán kính 0.52m • Sát thương 1 HP)"); });
+                }
+                var rankTabBtn = homePanel.transform.Find("BottomNavBar/BtnTabRank")?.GetComponent<Button>();
+                if (rankTabBtn != null)
+                {
+                    rankTabBtn.onClick.RemoveAllListeners();
+                    rankTabBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowToast("Tính năng Xếp hạng sắp ra mắt!"); });
+                }
+                var questTabBtn = homePanel.transform.Find("BottomNavBar/BtnTabQuest")?.GetComponent<Button>();
+                if (questTabBtn != null)
+                {
+                    questTabBtn.onClick.RemoveAllListeners();
+                    questTabBtn.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowToast("Nhiệm vụ ngày sắp ra mắt!"); });
+                }
+            }
+
+            if (lobbyPanel != null)
+            {
+                var btnBackLobby = lobbyPanel.transform.Find("BtnBack")?.GetComponent<Button>();
+                if (btnBackLobby != null)
+                {
+                    btnBackLobby.onClick.RemoveAllListeners();
+                    btnBackLobby.onClick.AddListener(() => { AudioManager.Instance?.PlayClick(); ShowScreen(ProductionScreen.Home); });
+                }
             }
 
 
@@ -6050,11 +6102,11 @@ SyncHomeCharacterDisplay();
 
 
 
-                rt.anchorMin = new Vector2(0.5f, 0.21f);
+                rt.anchorMin = new Vector2(0.28f, 0.15f);
 
 
 
-                rt.anchorMax = new Vector2(0.5f, 0.21f);
+                rt.anchorMax = new Vector2(0.28f, 0.15f);
 
 
 
@@ -6062,7 +6114,7 @@ SyncHomeCharacterDisplay();
 
 
 
-                rt.sizeDelta = new Vector2(440f, 75f);
+                rt.sizeDelta = new Vector2(360f, 84f);
 
 
 
@@ -6170,11 +6222,11 @@ SyncHomeCharacterDisplay();
 
 
 
-                rtClose.anchorMin = new Vector2(0.5f, 0.125f);
+                rtClose.anchorMin = new Vector2(0.72f, 0.15f);
 
 
 
-                rtClose.anchorMax = new Vector2(0.5f, 0.125f);
+                rtClose.anchorMax = new Vector2(0.72f, 0.15f);
 
 
 
@@ -6182,10 +6234,34 @@ SyncHomeCharacterDisplay();
 
 
 
-                rtClose.sizeDelta = new Vector2(440f, 75f);
+                rtClose.sizeDelta = new Vector2(360f, 84f);
 
 
 
+            }
+
+            // Wire top-right X close button identically to btnCloseSettings
+            var topX = card.Find("BtnCloseSettingsTopX")?.GetComponent<Button>();
+            if (topX != null)
+            {
+                topX.onClick.RemoveAllListeners();
+                topX.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    HideSettingsDialog();
+                });
+            }
+
+            // Update live Music/SFX percentage labels
+            var musicValTxt = card.Find("MusicValue")?.GetComponent<TextMeshProUGUI>();
+            if (musicValTxt != null && sliderMusicVolume != null)
+            {
+                musicValTxt.text = Mathf.RoundToInt(sliderMusicVolume.value * 100f) + "%";
+            }
+            var sfxValTxt = card.Find("SfxValue")?.GetComponent<TextMeshProUGUI>();
+            if (sfxValTxt != null && sliderSfxVolume != null)
+            {
+                sfxValTxt.text = Mathf.RoundToInt(sliderSfxVolume.value * 100f) + "%";
             }
 
 
@@ -7820,6 +7896,39 @@ SyncHomeCharacterDisplay();
 
 
 
+            }
+
+            if (dialogProfile != null)
+            {
+                var pCard = dialogProfile.transform.Find("ProfileCard");
+                if (pCard != null)
+                {
+                    var topX = pCard.Find("BtnCloseProfileTopX")?.GetComponent<Button>();
+                    if (topX != null)
+                    {
+                        topX.onClick.RemoveAllListeners();
+                        topX.onClick.AddListener(() =>
+                        {
+                            AudioManager.Instance?.PlayClick();
+                            HideProfileDialog();
+                        });
+                    }
+
+                    // Keep AvatarPortrait synced with current selected character
+                    var avPortrait = pCard.Find("Avatar/AvatarPortrait")?.GetComponent<Image>();
+                    if (avPortrait != null && imgHomeCharCardIcon != null && imgHomeCharCardIcon.sprite != null)
+                    {
+                        avPortrait.sprite = imgHomeCharCardIcon.sprite;
+                    }
+
+                    var statMatchesVal = pCard.Find("StatCardMatches/Value")?.GetComponent<TextMeshProUGUI>();
+                    if (statMatchesVal != null)
+                    {
+                        statMatchesVal.text = (IsOnlineActiveMode && !_isOnlineAccountLoaded)
+                            ? UiStrings.Get(UiStrings.LoadingData)
+                            : $"{acc.MatchesPlayed} Trận • {tierName}";
+                    }
+                }
             }
 
 
@@ -10557,25 +10666,13 @@ SyncHomeCharacterDisplay();
 
 
             if (txtLobbyHeader != null)
-
-
-
             {
-
-
-
+                txtLobbyHeader.enableAutoSizing = true;
+                txtLobbyHeader.fontSizeMin = 18f;
+                txtLobbyHeader.fontSizeMax = 28f;
                 txtLobbyHeader.text = string.IsNullOrEmpty(roomName)
-
-
-
                     ? $"{UiStrings.LobbyTitle} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT)"
-
-
-
-                    : $"{roomName.ToUpperInvariant()} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT) • SÂN LÀNG";
-
-
-
+                    : $"{roomName.ToUpperInvariant()} ({_currentLobbyHumanCount}/6 NGƯỜI THẬT)";
             }
 
 
@@ -10789,157 +10886,64 @@ SyncHomeCharacterDisplay();
 
 
                 if (i < _currentLobbyHumanCount)
-
-
-
                 {
-
-
-
-                    if (slot.txtName != null)
-
-
-
+                    if (slot.root != null)
                     {
-
-
-
-                        slot.txtName.text = i == 0 ? "[CHỦ PHÒNG] Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
-
-
-
+                        var avTr = slot.root.transform.Find("SlotAvatar");
+                        if (avTr != null)
+                        {
+                            var avImg = avTr.GetComponent<Image>();
+                            if (avImg != null) { avImg.enabled = true; avImg.color = Color.white; }
+                        }
                     }
 
-
+                    if (slot.txtName != null)
+                    {
+                        slot.txtName.text = i == 0 ? "[CHỦ PHÒNG] Nam Làng (Bạn)" : (i < PlayerView.CharacterNames.Length ? PlayerView.CharacterNames[i] : $"Người chơi #{i + 1}");
+                    }
 
                     if (i == 0)
-
-
-
                     {
-
-
-
                         slot.isReady = false;
-
-
-
                         if (slot.txtStatus != null)
-
-
-
                         {
-
-
-
                             slot.txtStatus.text = "CHƯA SẴN SÀNG";
-
-
-
                             slot.txtStatus.color = theme != null ? theme.subtitleGold : new Color(1f, 0.7f, 0.2f);
-
-
-
                         }
-
-
-
                     }
-
-
-
                     else
-
-
-
                     {
-
-
-
                         slot.isReady = true;
-
-
-
                         if (slot.txtStatus != null)
-
-
-
                         {
-
-
-
                             slot.txtStatus.text = "ĐÃ SẴN SÀNG";
-
-
-
                             slot.txtStatus.color = theme != null ? theme.actionGreen : new Color(0.2f, 1f, 0.4f);
-
-
-
                         }
-
-
-
                     }
-
-
-
                 }
-
-
-
                 else
-
-
-
                 {
-
-
-
-                    // Empty slot: Mockup "Vào phòng" 6 chỗ, chỗ trống ghi "Đang chờ…"
-
-
-
+                    // Empty slot: hide character avatar so empty slot looks unmistakably empty
                     slot.isReady = false;
-
-
+                    if (slot.root != null)
+                    {
+                        var avTr = slot.root.transform.Find("SlotAvatar");
+                        if (avTr != null)
+                        {
+                            var avImg = avTr.GetComponent<Image>();
+                            if (avImg != null) avImg.enabled = false;
+                        }
+                    }
 
                     if (slot.txtName != null)
-
-
-
                     {
-
-
-
                         slot.txtName.text = $"Chỗ trống #{i + 1}";
-
-
-
                     }
-
-
-
                     if (slot.txtStatus != null)
-
-
-
                     {
-
-
-
                         slot.txtStatus.text = UiStrings.WaitingPlayerSlot;
-
-
-
                         slot.txtStatus.color = new Color(0.65f, 0.72f, 0.80f);
-
-
-
                     }
-
-
-
                 }
 
 
@@ -12008,11 +12012,11 @@ SyncHomeCharacterDisplay();
 
 
 
-                    rt.anchorMin = new Vector2(0.12f, 0.20f);
+                    rt.anchorMin = new Vector2(0.08f, 0.785f);
 
 
 
-                    rt.anchorMax = new Vector2(0.88f, 0.25f);
+                    rt.anchorMax = new Vector2(0.92f, 0.822f);
 
 
 
@@ -12129,6 +12133,18 @@ SyncHomeCharacterDisplay();
 
 
             {
+
+                var rtMap = _btnLobbyMapSelector.GetComponent<RectTransform>();
+                if (rtMap != null)
+                {
+                    rtMap.anchorMin = new Vector2(0.08f, 0.785f);
+                    rtMap.anchorMax = new Vector2(0.92f, 0.822f);
+                    rtMap.sizeDelta = Vector2.zero;
+                }
+                if (_txtLobbyMapSelector != null)
+                {
+                    _txtLobbyMapSelector.fontSize = 20f;
+                }
 
 
 
@@ -13370,37 +13386,31 @@ SyncHomeCharacterDisplay();
 
             if (joinRoomPanel == null) return;
 
-
-
-            if (_keypadContainer != null) return;
-
-
-
-
-
-
-
+            // V7.0 Phase I: Do NOT spawn the 32-key in-game virtual keypad that crowds the screen and pushes CTA down.
+            // Use the mobile OS native keyboard via TMP_InputField and keep the clear/paste helper buttons wired cleanly.
             var existing = joinRoomPanel.transform.Find("KeypadContainer");
-
-
-
             if (existing != null)
-
-
-
             {
-
-
-
-                _keypadContainer = existing.gameObject;
-
-
-
-                return;
-
-
-
+                existing.gameObject.SetActive(false);
             }
+
+            if (btnScanQr != null)
+            {
+                btnScanQr.onClick.RemoveAllListeners();
+                btnScanQr.onClick.AddListener(() =>
+                {
+                    AudioManager.Instance?.PlayClick();
+                    if (inputRoomCode != null) inputRoomCode.text = "";
+                    if (roomFoundCard != null) roomFoundCard.SetActive(false);
+                });
+            }
+            return;
+        }
+
+        private void EnsureRoomCodeKeypadLegacyUnused()
+        {
+            if (joinRoomPanel == null) return;
+            if (_keypadContainer != null) return;
 
 
 
@@ -17503,405 +17513,126 @@ SyncHomeCharacterDisplay();
 
 
                 if (row.txtRankBadge != null)
-
-
-
                 {
-
-
-
                     row.txtRankBadge.text = $"HẠNG {i + 1} [TẠM]";
-
-
-
+                    row.txtRankBadge.gameObject.SetActive(false);
                 }
-
-
 
                 if (row.txtName != null)
-
-
-
                 {
-
-
-
                     row.txtName.text = isMe ? (p.Name + " (Bạn)") : p.Name;
-
-
-
                 }
-
-
 
                 if (row.txtHp != null)
-
-
-
                 {
-
-
-
                     int hpClamped = Mathf.Clamp(p.Hp, 0, 3);
-
-
-
                     row.txtHp.text = "HP: " + hpClamped + "/3 • HIT: " + p.HitsLanded;
-
-
-
                     row.txtHp.color = p.IsAlive ? new Color(0.85f, 0.95f, 1f) : new Color(0.75f, 0.54f, 0.54f);
-
-
-
                 }
-
-
-
-
-
-
 
                 if (row.txtStatus != null)
-
-
-
                 {
-
-
-
+                    row.txtStatus.gameObject.SetActive(isMe);
                     if (won)
-
-
-
                     {
-
-
-
                         row.txtStatus.text = isTie ? "ĐỒNG HẠNG 1" : "CHIẾN THẮNG";
-
-
-
                         row.txtStatus.color = new Color(1f, 0.92f, 0.25f);
-
-
-
                     }
-
-
-
                     else
-
-
-
                     {
-
-
-
                         row.txtStatus.text = p.IsAlive ? "Còn sống" : "Đã loại";
-
-
-
                         row.txtStatus.color = p.IsAlive ? Color.white : new Color(1f, 0.44f, 0.44f);
-
-
-
                     }
-
-
-
                 }
-
-
-
-
-
-
 
                 if (row.imgBg != null)
-
-
-
                 {
-
-
-
                     row.imgBg.color = isMe ? new Color(1f, 1f, 1f, 1f) : new Color(0.92f, 0.95f, 1f, 0.92f);
-
-
-
                 }
-
-
-
-
-
-
 
                 // A5: Friend request button after match
-
-
-
                 EnsureRowFriendButton(row, p.Id, p.Name, isMe);
-
-
-
             }
-
-
-
         }
-
-
-
-
-
-
 
         private GameObject _victoryHaloObj;
-
-
-
         private Coroutine _haloRotateCoroutine;
 
-
-
-
-
-
-
         private void EnsureVictoryHalo(bool isVisible)
-
-
-
         {
-
-
-
             try
-
-
-
             {
-
-
-
                 if (resultPanel == null) return;
-
-
-
                 if (!isVisible)
-
-
-
                 {
-
-
-
                     if (_victoryHaloObj != null) _victoryHaloObj.SetActive(false);
-
-
-
                     return;
-
-
-
                 }
 
-
-
-
-
-
+                Sprite haloSpr = timerPulseRing != null ? timerPulseRing.sprite : null;
+                if (haloSpr == null)
+                {
+                    if (_victoryHaloObj != null) _victoryHaloObj.SetActive(false);
+                    return;
+                }
 
                 if (_victoryHaloObj == null)
-
-
-
                 {
-
-
-
                     var haloGo = new GameObject("VictoryHaloGlow", typeof(RectTransform));
-
-
-
                     haloGo.transform.SetParent(resultPanel.transform, false);
-
-
-
                     haloGo.transform.SetAsFirstSibling();
-
-
-
                     var rt = haloGo.GetComponent<RectTransform>();
-
-
-
-                    rt.anchorMin = new Vector2(0.5f, 0.82f);
-
-
-
-                    rt.anchorMax = new Vector2(0.5f, 0.82f);
-
-
-
-                    rt.sizeDelta = new Vector2(280f, 280f);
-
-
-
+                    rt.anchorMin = new Vector2(0.5f, 0.92f);
+                    rt.anchorMax = new Vector2(0.5f, 0.92f);
+                    rt.sizeDelta = new Vector2(220f, 220f);
                     var img = haloGo.AddComponent<Image>();
-
-
-
-                    img.color = new Color(1f, 0.85f, 0.20f, 0.35f);
-
-
-
+                    img.sprite = haloSpr;
+                    img.color = new Color(1f, 0.85f, 0.20f, 0.22f);
                     img.raycastTarget = false;
-
-
-
                     _victoryHaloObj = haloGo;
-
-
-
                 }
 
-
-
-
-
-
-
                 _victoryHaloObj.SetActive(true);
-
-
-
-                if (_haloRotateCoroutine != null) StopCoroutine(_haloRotateCoroutine);
-
-
-
-                _haloRotateCoroutine = StartCoroutine(RotateHaloRoutine(_victoryHaloObj.transform));
-
-
-
+                if (Application.isPlaying)
+                {
+                    if (_haloRotateCoroutine != null) StopCoroutine(_haloRotateCoroutine);
+                    _haloRotateCoroutine = StartCoroutine(RotateHaloRoutine(_victoryHaloObj.transform));
+                }
             }
-
-
-
             catch (Exception ex)
-
-
-
             {
-
-
-
                 Debug.LogWarning($"[ProductionUIController] EnsureVictoryHalo caught: {ex.Message}");
-
-
-
             }
-
-
-
         }
-
-
-
-
-
-
 
         private IEnumerator RotateHaloRoutine(Transform target)
-
-
-
         {
-
-
-
             while (target != null && target.gameObject.activeInHierarchy)
-
-
-
             {
-
-
-
                 target.Rotate(0f, 0f, -35f * Time.unscaledDeltaTime);
-
-
-
                 yield return null;
-
-
-
             }
-
-
-
         }
 
-
-
-
-
-
-
         private IEnumerator FadeInResultPanel(CanvasGroup cg)
-
-
-
         {
-
-
-
             if (cg == null) yield break;
-
-
-
-            cg.alpha = 0f;
-
-
-
-            float duration = 0.25f;
-
-
-
-            float elapsed = 0f;
-
-
-
-            while (elapsed < duration)
-
-
-
+            if (!Application.isPlaying)
             {
-
-
-
-                elapsed += Time.unscaledDeltaTime;
-
-
-
-                cg.alpha = Mathf.Clamp01(elapsed / duration);
-
-
-
-                yield return null;
-
-
-
+                cg.alpha = 1f;
+                yield break;
             }
 
-
-
+            cg.alpha = 0f;
+            float duration = 0.25f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                cg.alpha = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
             cg.alpha = 1f;
-
-
-
         }
 
 

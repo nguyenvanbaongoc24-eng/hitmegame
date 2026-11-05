@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace HitMe.UI
@@ -6,18 +7,33 @@ namespace HitMe.UI
     [CreateAssetMenu(fileName = "UiTheme", menuName = "HIT ME/UI Theme", order = 1)]
     public class UiTheme : ScriptableObject
     {
-        [Header("Bảng Màu Chủ Đạo (Trích xuất từ ASSET HITME FINAL)")]
-        public Color primaryYellow = new Color(0.97f, 0.73f, 0.13f, 1f);     // #F8B920 Vàng Nắng Làng Quê (CTA)
-        public Color alertRed = new Color(0.80f, 0.17f, 0.17f, 1f);          // #CD2B2B Đỏ Cờ Truyền Thống
-        public Color actionGreen = new Color(0.04f, 0.64f, 0.447f, 1f);      // #09A372 Xanh Lá Tre Đồng Quê
-        public Color actionBlue = new Color(0.16f, 0.38f, 0.89f, 1f);        // #2861E3 Xanh Dương Sông Nước
-        public Color woodBannerBrown = new Color(0.42f, 0.20f, 0.07f, 1f);   // #6C3313 Nâu Gỗ Mái Đình
-        public Color goldBorder = new Color(0.87f, 0.70f, 0.27f, 1f);        // #DFB244 Vàng Kim Cổ Điển
-        public Color darkSlateBg = new Color(0.06f, 0.09f, 0.16f, 0.95f);    // #0F172A Nền Tối Xanh Chàm
-        public Color creamText = new Color(1.0f, 0.97f, 0.86f, 1f);          // #FFF8DC Chữ Kem Dịu Mắt
-        public Color subtitleGold = new Color(1.0f, 0.91f, 0.51f, 1f);       // #FFE882 Chữ Phụ Vàng Nắng
-        public Color lockedButtonMuted = new Color(0.35f, 0.40f, 0.48f, 0.85f); // Trạng thái ĐÃ KHÓA
-        public Color watermarkYellow = new Color(1.0f, 0.90f, 0.0f, 0.95f);  // #FFE600 Watermark góc dưới-trái
+        // =====================================================================
+        // V7.0 Static Color Tokens (Dark Navy, Deep Navy, Golden Yellow, Cyan, Coral, Emerald, Cream)
+        // =====================================================================
+        public static readonly Color BgOverlay = new Color(0.03f, 0.06f, 0.10f, 0.82f);       // Deepest backdrop
+        public static readonly Color PanelBg = new Color(0.067f, 0.106f, 0.173f, 0.97f);      // Dark Navy #111B2C
+        public static readonly Color CardBg = new Color(0.043f, 0.078f, 0.129f, 0.96f);       // Deep Navy #0B1421
+        public static readonly Color CardBgAlt = new Color(0.094f, 0.149f, 0.243f, 0.96f);    // Elevated Navy #18263E
+        public static readonly Color PrimaryCta = new Color(1.000f, 0.804f, 0.220f, 1.0f);    // Golden Yellow #FFCD38
+        public static readonly Color SecondaryCta = new Color(0.098f, 0.835f, 0.847f, 1.0f);  // Cyan #19D5D8
+        public static readonly Color PositiveGreen = new Color(0.090f, 0.725f, 0.529f, 1.0f); // Emerald Green #17B987
+        public static readonly Color DangerRed = new Color(0.965f, 0.416f, 0.365f, 1.0f);     // Coral Red #F66A5D
+        public static readonly Color TextPrimary = new Color(1.000f, 0.973f, 0.910f, 1.0f);   // Cream White #FFF8E8
+        public static readonly Color TextSecondary = new Color(0.722f, 0.780f, 0.878f, 1.0f); // Soft Slate #B8C7E0
+        public static readonly Color TextDark = new Color(0.137f, 0.094f, 0.043f, 1.0f);      // Dark Ink on Gold CTA
+
+        [Header("Bảng Màu Chủ Đạo (REFORM V7.0 Design System)")]
+        public Color primaryYellow = new Color(1.000f, 0.804f, 0.220f, 1f);    // #FFCD38 Golden Yellow
+        public Color alertRed = new Color(0.965f, 0.416f, 0.365f, 1f);         // #F66A5D Coral Red
+        public Color actionGreen = new Color(0.090f, 0.725f, 0.529f, 1f);      // #17B987 Emerald Green
+        public Color actionBlue = new Color(0.098f, 0.835f, 0.847f, 1f);       // #19D5D8 Cyan
+        public Color woodBannerBrown = new Color(0.067f, 0.106f, 0.173f, 1f);  // #111B2C Dark Navy
+        public Color goldBorder = new Color(1.000f, 0.804f, 0.220f, 1f);       // #FFCD38 Golden Border
+        public Color darkSlateBg = new Color(0.043f, 0.078f, 0.129f, 0.96f);   // #0B1421 Deep Navy
+        public Color creamText = new Color(1.000f, 0.973f, 0.910f, 1f);        // #FFF8E8 Cream White
+        public Color subtitleGold = new Color(1.000f, 0.804f, 0.220f, 1f);     // #FFCD38 Golden Subtitle
+        public Color lockedButtonMuted = new Color(0.35f, 0.40f, 0.48f, 0.85f);
+        public Color watermarkYellow = new Color(1.0f, 0.90f, 0.0f, 0.95f);
 
         [Header("Phông Chữ Tiếng Việt (TMP_FontAsset)")]
         public TMP_FontAsset defaultFont;
@@ -27,8 +43,8 @@ namespace HitMe.UI
         public float fontTitle = 32f;
         public float fontSubtitle = 24f;
         public float fontButton = 28f;
-        public float fontBody = 20f;
-        public float fontSmall = 16f;
+        public float fontBody = 22f;
+        public float fontSmall = 18f;
 
         [Header("Khoảng Cách Chuẩn (Padding & Spacing)")]
         public float spacingXs = 8f;

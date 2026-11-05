@@ -26,6 +26,11 @@ namespace HitMe.UI
         private Camera _mainCamera;
         private readonly StringBuilder _sb = new StringBuilder(2048);
 
+        private int _lastBotCount = 3;
+        private int _lastCharIdx = 0;
+        private string _currentToast = "";
+        private float _toastExpiryTime = 0f;
+
         [Serializable]
         private class StartPracticeDto
         {
@@ -111,6 +116,7 @@ namespace HitMe.UI
             {
                 matchController.OnPhaseChanged += HandlePhaseChanged;
                 matchController.OnMatchEnded += HandleMatchEnded;
+                matchController.OnToastRequested += HandleToastRequested;
             }
             HitMe.Audio.AudioManager.OnSfxRequested += HandleSfxRequested;
             HitMe.Audio.AudioManager.OnMusicRequested += HandleMusicRequested;
@@ -124,6 +130,7 @@ namespace HitMe.UI
             {
                 matchController.OnPhaseChanged -= HandlePhaseChanged;
                 matchController.OnMatchEnded -= HandleMatchEnded;
+                matchController.OnToastRequested -= HandleToastRequested;
             }
             HitMe.Audio.AudioManager.OnSfxRequested -= HandleSfxRequested;
             HitMe.Audio.AudioManager.OnMusicRequested -= HandleMusicRequested;
@@ -135,6 +142,12 @@ namespace HitMe.UI
             if (HitMeWebBridge.IsWebUiMode() == 1)
             {
                 if (uiController != null) uiController.HideAllUGUIForWebMode();
+            }
+
+            string currentUrl = Application.absoluteURL;
+            if (!string.IsNullOrEmpty(currentUrl) && currentUrl.IndexOf("audio=unity", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                PlayerPrefs.SetInt("HitMe_AudioUnity", 1);
             }
 
             EmitReady();
@@ -199,11 +212,20 @@ namespace HitMe.UI
                     _sb.Append("{\"id\":\"").Append(p.Id)
                        .Append("\",\"name\":\"").Append(p.Name)
                        .Append("\",\"rank\":").Append(rank)
+                       .Append(",\"hits\":").Append(p.HitsLanded)
                        .Append(",\"survived\":").Append(survived ? "true" : "false")
                        .Append("}");
                 }
             }
-            _sb.Append("]}");
+            int localHits = 0;
+            if (ranked != null)
+            {
+                for (int h = 0; h < ranked.Count; h++)
+                {
+                    if (ranked[h].Id == "player") { localHits = ranked[h].HitsLanded; break; }
+                }
+            }
+            _sb.Append("],\"hits\":").Append(localHits).Append("}");
             HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
             EmitScreen("result");
         }
@@ -270,6 +292,8 @@ namespace HitMe.UI
                 }
             }
 
+            _lastBotCount = botCount;
+            _lastCharIdx = charIdx;
             if (matchController != null)
             {
                 matchController.localCharacterIndex = charIdx;
@@ -495,6 +519,26 @@ namespace HitMe.UI
             }
         }
 
+        public void Rematch(string json = null)
+        {
+            int botCount = _lastBotCount > 0 ? _lastBotCount : 3;
+            int charIdx = _lastCharIdx >= 0 ? _lastCharIdx : 0;
+            if (matchController != null)
+            {
+                matchController.StopAndCleanupMatch();
+                matchController.localCharacterIndex = charIdx;
+            }
+            if (uiController != null)
+            {
+                uiController.StartPracticeWithBots(botCount, charIdx);
+            }
+            else if (matchController != null)
+            {
+                matchController.StartMatch();
+            }
+            EmitScreen("match");
+        }
+
         public void ExitMatch(string json = null)
         {
             if (matchController != null)
@@ -574,6 +618,18 @@ namespace HitMe.UI
         // UNITY -> WEB (HitMeWebBridge.EmitUnityToWebJson)
         // ====================================================================
 
+        private void HandleToastRequested(string msg)
+        {
+            _currentToast = msg ?? "";
+            _toastExpiryTime = Time.unscaledTime + 2.5f;
+        }
+
+        private static string EscapeJson(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return "";
+            return str.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
+        }
+
         public void EmitReady()
         {
             _sb.Clear();
@@ -595,6 +651,9 @@ namespace HitMe.UI
             _sb.Append("]}");
 
             HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
+
+            // Emit initial profile balance for Home gold chip
+            HitMeWebBridge.EmitUnityToWebJson("{\"type\":\"profile\",\"balance\":500}");
         }
 
         public void EmitScreen(string screenName)
@@ -605,8 +664,34 @@ namespace HitMe.UI
 
         public void EmitEvent(string kind, string sourceId, string targetId)
         {
-            string json = "{\"type\":\"event\",\"kind\":\"" + kind + "\",\"sourceId\":\"" + (sourceId ?? "") + "\",\"targetId\":\"" + (targetId ?? "") + "\"}";
-            HitMeWebBridge.EmitUnityToWebJson(json);
+            var cam = _mainCamera != null ? _mainCamera : Camera.main;
+            float screenX = 0.5f, screenY = 0.5f;
+            bool hasScreen = false;
+            string target = !string.IsNullOrEmpty(targetId) ? targetId : sourceId;
+            if (matchController != null && matchController.State != null && cam != null && !string.IsNullOrEmpty(target))
+            {
+                var p = matchController.State.FindPlayer(target);
+                if (p != null)
+                {
+                    Vector3 sp = cam.WorldToScreenPoint(new Vector3(p.Position.X, p.Position.Y + 0.8f, 0f));
+                    screenX = Mathf.Clamp01(sp.x / Mathf.Max(1f, Screen.width));
+                    screenY = Mathf.Clamp01(1f - (sp.y / Mathf.Max(1f, Screen.height)));
+                    hasScreen = true;
+                }
+            }
+
+            _sb.Clear();
+            _sb.Append("{\"type\":\"event\",\"kind\":\"").Append(kind ?? "")
+               .Append("\",\"sourceId\":\"").Append(sourceId ?? "")
+               .Append("\",\"targetId\":\"").Append(targetId ?? "")
+               .Append("\"");
+            if (hasScreen)
+            {
+                _sb.Append(",\"screen\":{\"x\":").Append(screenX.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
+                   .Append(",\"y\":").Append(screenY.ToString("F4", System.Globalization.CultureInfo.InvariantCulture)).Append("}");
+            }
+            _sb.Append("}");
+            HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
         }
 
         private void HandleMatchE2EEvent(string kind, string sourceId, string targetId)
@@ -632,6 +717,8 @@ namespace HitMe.UI
             _sb.Append("\"phase\":\"").Append(state.Phase.ToString().ToLowerInvariant()).Append("\",");
             _sb.Append("\"timeLeft\":").Append(matchController.SecondsRemaining.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)).Append(",");
             _sb.Append("\"weaponName\":\"Dép Tổ Ong\",");
+            string currentToast = (Time.unscaledTime < _toastExpiryTime) ? _currentToast : "";
+            _sb.Append("\"toast\":\"").Append(EscapeJson(currentToast)).Append("\",");
 
             // PlayableRect in screen / CSS normalized coordinates
             float leftNorm = 0.08f, rightNorm = 0.92f, topNorm = 0.22f, bottomNorm = 0.88f;
