@@ -9001,7 +9001,7 @@ SyncHomeCharacterDisplay();
 
 
                             if (txtRank != null) txtRank.text = "-";
-                            if (txtName != null) txtName.text = "Chưa có dữ liệu xếp hạng";
+                            if (txtName != null) txtName.text = UiStrings.Get(UiStrings.NoData);
                             if (txtScore != null) txtScore.text = "-";
 
 

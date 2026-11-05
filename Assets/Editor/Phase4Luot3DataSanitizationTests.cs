@@ -95,7 +95,8 @@ namespace HitMe.Tests
         [Test]
         public void Test_L1_OnlineMode_HidesMockLeaderboardAndFakeGold()
         {
-            // 1. Offline / Practice mode: Shows real local gold and mock rankings
+            // Practice mode may show local gold, but rankings must not claim
+            // fabricated players are real competitors.
             NetConfig.Enabled = false;
             _controller.IsOnlineAccountLoaded = false;
             _controller.RefreshAccountDisplay();
@@ -103,7 +104,7 @@ namespace HitMe.Tests
 
             _controller.RefreshLeaderboardUI();
             var row0Name = _controller.dialogLeaderboard.transform.GetChild(0).Find("Row0/Name").GetComponent<TextMeshProUGUI>();
-            Assert.That(row0Name.text, Does.Contain("Nguyễn_Vô_Địch"), "In offline mode, mock leaderboard is permitted");
+            Assert.That(row0Name.text, Is.EqualTo(UiStrings.Get(UiStrings.NoData)));
 
             // 2. Online Mode with pending server data: MUST show Loading / No Data, never fake numbers
             NetConfig.Enabled = true;
@@ -118,6 +119,11 @@ namespace HitMe.Tests
             Assert.That(row0Name.text, Is.EqualTo(UiStrings.Get(UiStrings.NoData)));
             var row0Score = _controller.dialogLeaderboard.transform.GetChild(0).Find("Row0/Score").GetComponent<TextMeshProUGUI>();
             Assert.That(row0Score.text, Is.EqualTo("-"));
+            // Loading the online account does not imply that a leaderboard
+            // payload arrived. The old code exposed its mock rows here.
+            _controller.IsOnlineAccountLoaded = true;
+            _controller.RefreshLeaderboardUI();
+            Assert.That(row0Name.text, Is.EqualTo(UiStrings.Get(UiStrings.NoData)));
         }
 
         [Test]
