@@ -68,6 +68,7 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 .modal{max-height:calc(var(--viewport-height,100dvh) - 24px)}
 .settings-shade{place-items:end center}.settings-sheet{width:min(100vw,430px);border-radius:20px 20px 0 0;padding:20px 24px max(24px,env(safe-area-inset-bottom))}.settings-sheet .sheet-setting{display:block;font-size:17px;font-weight:800}.settings-sheet input[type=range]{height:44px;padding:0;accent-color:var(--cyan)}
 #viewport-debug{position:fixed;left:4px;right:4px;top:calc(var(--viewport-top,0px) + 4px);z-index:100;display:block;padding:6px;border:2px solid #ffe157;border-radius:8px;background:#101923f2;color:#fff;font:11px/1.4 monospace;pointer-events:none}
+.contract-debug{position:absolute;z-index:90;left:4px;right:4px;bottom:5px;background:#6b0e18ef;border:1px solid #fff;padding:5px;color:#fff;font:11px monospace;pointer-events:none}
 
 /* Home uses the existing gate art only above the floor; the arena's court and
    giant lotus are excluded. The pedestal supplies the sole lotus. */
@@ -97,6 +98,21 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 
 /* Isolated static preview routes used only by ?mock=1&scene=... */
 #ui-root a{pointer-events:auto}
+.home .coming-soon{filter:saturate(.45)}
+.home .coming-soon small{font-weight:900}
+/* Only HUD and controls take pointer events; the middle of the court belongs to Unity. */
+.live-match{background:transparent;pointer-events:none;box-shadow:none}
+.live-match button,.live-match .live-tutorial,.live-match .modal-shade{pointer-events:auto}
+.live-top{position:absolute;z-index:5;left:0;right:0;top:0;min-height:var(--live-top);padding:max(7px,env(safe-area-inset-top)) 8px 4px;background:linear-gradient(#0c1729f7,#0b1b2bc9 75%,transparent);display:flex;flex-direction:column;gap:5px}
+.live-summary{display:flex;justify-content:space-between;align-items:center;gap:6px;color:#ffe258;font-weight:900;font-size:13px}.live-summary strong{font-size:15px;text-align:center}.live-summary button{border:1px solid #e7b941;border-radius:50%;background:#142c40;width:48px;height:48px;font-size:22px}
+.live-cards{display:flex;gap:3px;width:100%;min-height:58px}.live-card{flex:1;min-width:0;padding:3px 2px;background:#102031ed;border:1px solid #bd9b41;border-radius:8px;display:flex;flex-direction:column;align-items:center;text-align:center;font-size:9px;line-height:1.05}.live-card.local{border:2px solid #00e3eb}.live-card.out{opacity:.5}.live-card img{width:25px;height:25px;object-fit:contain}.live-card div{max-width:100%;overflow:hidden}.live-card b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.live-hearts{color:#ff4a5e;font-size:11px;white-space:nowrap}.live-hearts span{color:#9aa5b6}.live-phase{background:#0b1628d9;text-align:center;border:1px solid #e7b941;border-radius:7px;color:#ffdf55;font-weight:900;font-size:12px}
+.live-arena{position:absolute;top:var(--live-top);bottom:var(--live-bottom);left:0;right:0;pointer-events:none}
+.live-bottom{position:absolute;z-index:5;left:0;right:0;bottom:0;min-height:var(--live-bottom);padding:7px 8px max(10px,env(safe-area-inset-bottom));background:linear-gradient(transparent,#0b182beb 20%,#0b182b);display:flex;align-items:flex-end;justify-content:space-between;gap:5px;font-size:11px;font-weight:900}.live-bottom button{min-width:48px;min-height:48px;border:1px solid #d8ae3c;border-radius:10px;background:#173047}.live-bottom span{align-self:center}
+.live-toast{position:absolute;z-index:7;left:15%;right:15%;top:calc(var(--live-top) + 8px);padding:7px;background:#1c304aef;border:1px solid #ecd05c;border-radius:10px;text-align:center;font-size:13px;pointer-events:none}
+.live-tutorial{position:absolute;z-index:8;left:6%;right:6%;bottom:calc(var(--live-bottom) + 8px);background:#102336f5;border:2px solid #ffe35e;border-radius:14px;padding:10px;text-align:center;box-shadow:0 5px 15px #0008}.live-tutorial p{font-size:14px;margin:4px 0 9px}.live-tutorial div{display:flex;justify-content:space-between;gap:8px}.live-tutorial button,.live-secondary,.live-primary{min-height:48px;border-radius:10px;padding:8px 14px;font-weight:900}.live-tutorial button,.live-secondary{background:#193954;border:1px solid #56b8dc}.live-primary{background:linear-gradient(#ffe95b,#ff9d1b);border:2px solid #7d431a;color:#30160b}
+.live-emotes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.live-emotes button{font-size:25px;background:#1a3853;border:1px solid #75c5dd;border-radius:10px;min-height:55px}
+.settings-sheet .live-secondary{width:100%;margin-top:10px}
+.live-result{background:linear-gradient(#1d3a4cd8,#0b1726ed);display:grid;place-items:center;padding:12px}.live-result-panel{width:100%;max-height:96%;display:flex;flex-direction:column;gap:10px;border:2px solid #f6ca45;border-radius:18px;padding:12px;background:#13293de8;text-align:center;overflow:auto}.live-result h1{font-size:clamp(22px,7vw,32px);color:#ffe34f;margin:0}.live-result p{margin:0;font-size:12px}.live-ranks{display:flex;flex-direction:column;gap:4px;overflow:auto;min-height:0}.live-rank{display:flex;align-items:center;gap:7px;min-height:50px;padding:3px 6px;background:#0c1d2d;border:1px solid #567f91;border-radius:9px;text-align:left}.live-rank>b{color:#ffe34f;width:18px}.live-rank img{width:38px;height:38px;object-fit:contain}.live-rank span{flex:1;font-size:13px;font-weight:800}.live-rank small{font-size:10px;white-space:nowrap}.live-result-panel>button{width:100%}
 .preview{background:linear-gradient(#17293a,#0a1523);color:#fff}
 .preview-header{position:absolute;top:0;left:0;right:0;height:58px;display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:2px solid #d8ad3d;background:#142336;z-index:3}
 .preview-header a{width:44px;height:44px;display:grid;place-items:center;color:#fff;text-decoration:none;font-size:38px;border:2px solid #d8ad3d;border-radius:50%;background:#0b1a2b}

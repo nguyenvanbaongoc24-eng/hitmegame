@@ -2,6 +2,7 @@ import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
 import {audio} from './audio.js';
 import {prototype, title as catalogTitle} from './prototype.js';
+import {renderLiveMatch,renderLiveResult,validateLiveEvent} from './live.js';
 
 const copy = await (await fetch('./i18n.json')).json();
 const catalog = await (await fetch('./catalog.json')).json();
@@ -23,6 +24,7 @@ function syncViewport() {
   document.documentElement.style.setProperty('--viewport-width', `${width}px`);
   document.documentElement.style.setProperty('--viewport-top', `${viewport?.offsetTop || 0}px`);
   document.documentElement.style.setProperty('--ui-scale', String(Math.min(1, Math.max(.77, height / 695))));
+  if (!mock && state?.ready) sendLayout();
   if (params.get('debug') === 'viewport') updateViewportDebug();
 }
 function updateViewportDebug() {
@@ -39,7 +41,6 @@ function updateViewportDebug() {
   panel.textContent = `inner ${innerWidth}×${innerHeight} | visual ${Math.round(visualViewport?.width || innerWidth)}×${Math.round(visualViewport?.height || innerHeight)} top ${Math.round(visualViewport?.offsetTop || 0)} | DPR ${devicePixelRatio} | canvas ${Math.round(r.width)}×${Math.round(r.height)} / ${canvas.width}×${canvas.height} | safe top ${Math.round(inset.getBoundingClientRect().top)} bottom ${Math.round(innerHeight-inset.getBoundingClientRect().bottom)}`;
   inset.remove();
 }
-syncViewport();
 window.addEventListener('resize', syncViewport);
 window.visualViewport?.addEventListener('resize', syncViewport);
 window.visualViewport?.addEventListener('scroll', syncViewport);
@@ -71,6 +72,34 @@ const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* p
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
 const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
+state.layout=null;state.toasts=[];state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
+let tutorialPointer=null;
+canvas.addEventListener('pointerdown', event => {
+  if (!mock && state.screen==='match' && state.match?.phase?.toLowerCase()==='placing' && state.tutorialStep>=0)
+    tutorialPointer={id:event.pointerId,x:event.clientX,y:event.clientY};
+});
+canvas.addEventListener('pointerup', event => {
+  if (!tutorialPointer || tutorialPointer.id!==event.pointerId) return;
+  const dragged=Math.hypot(event.clientX-tutorialPointer.x,event.clientY-tutorialPointer.y)>15;
+  tutorialPointer=null;
+  if (state.tutorialStep===0 || (state.tutorialStep===1 && dragged)) {state.tutorialStep++;render();}
+});
+canvas.addEventListener('pointercancel', () => {tutorialPointer=null;});
+syncViewport();
+const onlineEnabled = mock || catalog.features?.online === true;
+function contractError(code) { console.error(`[HITME_CONTRACT:${code}]`); state.contractErrors.push(code); if(state.contractErrors.length>10)state.contractErrors.shift();render(); }
+window.addEventListener('hitme-contract-error',event=>contractError(event.detail));
+let lastLayout='';
+function sendLayout() {
+  const height=window.visualViewport?.height||innerHeight;
+  const top=Math.round(Math.max(92,Math.min(175,height*.2)));
+  const bottom=Math.round(Math.max(85,Math.min(145,height*.16)));
+  const probe=document.createElement('div');probe.style.cssText='position:fixed;top:env(safe-area-inset-top);bottom:env(safe-area-inset-bottom);visibility:hidden';document.body.append(probe);
+  const bounds=probe.getBoundingClientRect();const safeTop=Math.max(0,Math.round(bounds.top));const safeBottom=Math.max(0,Math.round(innerHeight-bounds.bottom));probe.remove();
+  const payload={top,bottom,safeTop,safeBottom};
+  const key=JSON.stringify(payload);
+  if(key!==lastLayout){lastLayout=key;send('SetLayout',payload);}
+}
 const current = () => catalog.characters.find(c => c.id === state.characterId) || catalog.characters[0];
 const currentWeapon = () => catalog.weapons.find(w=>w.id===state.weaponId) || catalog.weapons[0];
 const characterImage = kind => current().assets[kind];
@@ -95,9 +124,9 @@ function home() {
     <button class="hero-arrow right icon-round" data-name="arrow-right" data-action="next" aria-label="Nhân vật tiếp theo">${icon('chevron')}</button>
     <button class="selection-card character-card" data-name="character-card" data-action="character"><img src="${characterImage('head')}" alt=""><span><small>${t('character')}</small><b>${safeText(catalogTitle(character))}</b></span>${icon('chevron')}</button>
     <button class="selection-card weapon-card" data-name="weapon-card" data-action="weapon">${icon('chevron','reverse')}<img src="${safeText(currentWeapon().icon)}" alt=""><span><small>${t('weapon')}</small><b>${safeText(catalogTitle(currentWeapon()))}</b></span>${icon('chevron')}</button>
-    <button class="cta quick" data-name="quick-play" data-action="quick">${icon('play')}<span><strong>${t('quickPlay')}</strong><small>${t('quickPlayDetail')}</small></span></button>
-    <button class="cta blue" data-name="create-room" data-action="create">${icon('people')}<strong>${t('createRoom')}</strong></button>
-    <button class="cta green" data-name="join-room" data-action="join">${icon('people')}<strong>${t('joinRoom')}</strong></button>
+    <button class="cta quick ${onlineEnabled?'':'coming-soon'}" data-name="quick-play" data-action="${onlineEnabled?'quick':'online-locked'}">${onlineEnabled?icon('play'):icon('lock')}<span><strong>${t('quickPlay')}</strong><small>${onlineEnabled?t('quickPlayDetail'):t('comingSoon')}</small></span></button>
+    <button class="cta blue ${onlineEnabled?'':'coming-soon'}" data-name="create-room" data-action="${onlineEnabled?'create':'online-locked'}">${onlineEnabled?icon('people'):icon('lock')}<strong>${t('createRoom')} ${onlineEnabled?'':`· ${t('comingSoon')}`}</strong></button>
+    <button class="cta green ${onlineEnabled?'':'coming-soon'}" data-name="join-room" data-action="${onlineEnabled?'join':'online-locked'}">${onlineEnabled?icon('people'):icon('lock')}<strong>${t('joinRoom')} ${onlineEnabled?'':`· ${t('comingSoon')}`}</strong></button>
     <button class="cta navy practice" data-name="practice" data-action="practice">${icon('robot')}<strong>${t('practice')}</strong>${icon('chevron')}</button>
     <nav class="tabs" data-name="tabs" aria-label="Điều hướng chính">
       <button class="active" data-action="home">${icon('home')}<span>${t('home')}</span></button>
@@ -108,21 +137,24 @@ function home() {
 }
 function modal() {
   if (!state.overlay) return '';
-  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon'),loading:t('loadingGame')}[state.overlay] || 'HIT ME';
+  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon'),loading:t('loadingGame'),emote:'Biểu cảm','exit-confirm':'Thoát trận'}[state.overlay] || 'HIT ME';
   const choices = state.overlay === 'character' ? catalog.characters : state.overlay === 'weapon' ? catalog.weapons : [];
   const list = choices.length ? `<div class="choice-grid">${choices.map(item => `<button data-action="${item.enabled?`select-${state.overlay}`:'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="${safeText(state.overlay==='character'?item.assets.head:item.icon)}" alt=""><span>${safeText(catalogTitle(item))}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
-  const settings = state.overlay === 'settings' ? `<label class="sheet-setting">Nhạc nền <input type="range" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}"></label><label class="sheet-setting">Hiệu ứng <input type="range" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}"></label>` : '';
+  const settings = state.overlay === 'settings' ? `<label class="sheet-setting">Nhạc nền <input type="range" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}"></label><label class="sheet-setting">Hiệu ứng <input type="range" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}"></label>${!mock&&state.screen==='match'?`<button class="live-secondary" data-action="${state.paused?'resume':'pause'}">${state.paused?'TIẾP TỤC':'TẠM DỪNG'}</button><button class="live-secondary" data-action="exit-confirm">THOÁT TRẬN</button>`:''}<button class="live-secondary" data-action="tutorial-reopen">XEM LẠI HƯỚNG DẪN</button>` : '';
+  const confirmation = state.overlay==='exit-confirm' ? `<p>Thoát trận luyện với bot?</p><button class="live-primary" data-action="exit-match">THOÁT TRẬN</button><button class="live-secondary" data-action="close">Ở LẠI</button>` : '';
+  const emotes = state.overlay==='emote' ? `<div class="live-emotes">${['😀','😂','😮','👍','💪','❤️'].map((face,i)=>`<button data-action="send-live-emote" data-id="sticker_0${i+1}">${face}</button>`).join('')}</div>` : '';
   const back = ['rank','quests'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
-  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${['character','weapon','join','settings'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
+  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${confirmation}${emotes}${['character','weapon','join','settings','exit-confirm','emote'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
 function render() {
   if (legacy) return;
-  root.innerHTML = mock && state.screen !== 'home' ? prototype(state.screen,state,catalog) + modal() : home() + modal();
+  root.innerHTML = state.screen==='home' ? home()+modal() : mock ? prototype(state.screen,state,catalog)+modal() : state.screen==='bot' ? prototype('bot',state,catalog)+modal() : state.screen==='match' ? renderLiveMatch(state,catalog)+modal() : state.screen==='result' ? renderLiveResult(state,catalog)+modal() : home()+modal();
+  if(params.has('debug')&&state.contractErrors.length)root.insertAdjacentHTML('beforeend',`<output class="contract-debug">BRIDGE: ${state.contractErrors.map(safeText).join(', ')}</output>`);
   if (!performance.getEntriesByName('hitme-home-interactive').length) performance.mark('hitme-home-interactive');
   root.classList.toggle('reduced-motion',state.reducedMotion);
   if (params.get('e2e') === '1') {
-    window.__hitmeState = {build:state.build,version:state.version,screen:state.screen,selectedCharacterId:state.characterId,selectedWeaponId:state.weaponId,botCount:state.botCount,mockPhase:state.mockPhase,roster:state.roster,weapons:state.weapons};
+    window.__hitmeState = {build:state.build,version:state.version,screen:state.screen,selectedCharacterId:state.characterId,selectedWeaponId:state.weaponId,botCount:state.botCount,phase:state.match?.phase,round:state.match?.round,sessionMatches:state.sessionMatches,contractErrors:state.contractErrors,roster:state.roster,weapons:state.weapons};
     window.__hitmeUiDump = () => [...root.querySelectorAll('[data-name]')].map(el => {const r=el.getBoundingClientRect();return {name:el.dataset.name,text:el.textContent.trim(),rect:{x:r.x,y:r.y,w:r.width,h:r.height},interactable:el.tagName==='BUTTON',visible:r.width>0&&r.height>0};});
   }
 }
@@ -165,6 +197,18 @@ root.addEventListener('click', event => {
   const button=event.target.closest('[data-action]'); if (!button) return;
   const action=button.dataset.action;
   playButton(action);
+  if(action==='online-locked'){state.toasts=[{message:t('comingSoon')}];render();return;}
+  if(action==='tutorial-next'||action==='tutorial-skip') {state.tutorialStep=action==='tutorial-skip'||state.tutorialStep>=2?-1:state.tutorialStep+1;if(state.tutorialStep<0)remember('hitme.tutorialSeen','1');return render();}
+  if(action==='tutorial-reopen'){state.tutorialStep=0;state.overlay=null;return render();}
+  if(!mock&&action==='pause'){send('Pause');state.paused=true;return render();}
+  if(!mock&&action==='resume'){send('Resume');state.paused=false;state.overlay=null;return render();}
+  if(!mock&&action==='exit-confirm'){state.overlay='exit-confirm';return render();}
+  if(!mock&&action==='exit-match'){send('ExitMatch');state.overlay=null;state.screen='home';state.paused=false;return render();}
+  if(!mock&&action==='rematch'){send('Rematch');state.result=null;state.screen='match';state.tutorialStep=-1;return render();}
+  if(!mock&&action==='emote'){state.overlay='emote';return render();}
+  if(!mock&&action==='send-live-emote'){send('SendEmote',{kind:'sticker',id:button.dataset.id});state.overlay=null;return render();}
+  if(!mock&&action==='practice'){state.screen='bot';return render();}
+  if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
   if (action==='locked') {navigator.vibrate?.(30);return;}
   if (action.startsWith('go-')) return go(action.slice(3));
   if (action==='settings-done') return go(state.previousScreen);
@@ -198,19 +242,29 @@ root.addEventListener('input', event => {
   const value = Math.max(0,Math.min(1,Number(event.target.value)/100));
   if (setting==='music') state.musicVolume=value; else state.sfxVolume=value;
   audio.setVolumes({music:state.musicVolume,sfx:state.sfxVolume});
+  if(!mock)send('SetSettings',{musicVolume:state.musicVolume,sfxVolume:state.sfxVolume,reducedMotion:state.reducedMotion});
 });
 onUnity(event => {
+  const invalid=validateLiveEvent(event);if(invalid){contractError(invalid);return;}
   if (event.type==='sfx') {audio.playSfx(event.id,event.vol ?? 1,event.pan ?? 0);return;}
   if (event.type==='music') {audio.playMusic(event.id,event.action);return;}
-  if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';state.ready=true;if(state.overlay==='loading')state.overlay=null;}
+  if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';state.ready=true;if(state.overlay==='loading')state.overlay=null;if(!mock)sendLayout();}
   if (event.type==='loading') {state.loadingPercent=Math.max(0,Math.min(100,Number(event.percent)||0));}
-  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) state.screen=event.name;
+  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) {state.screen=event.name;if(!mock&&event.name==='result')state.sessionMatches++;}
   if (event.type==='selection' && event.characterId) state.characterId=assetId(event.characterId);
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') state.lobby=event;
-  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}}
-  if (event.type==='result') state.result=event;
+  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else if(event.toast){state.toasts=[{message:event.toast}];}}
+  if (event.type==='result') {
+    state.result=event;
+    const local=event.rankings.find(player=>player.id==='player');
+    audio.playSfx(local?.rank===1?'win':'lose');
+  }
+  if(event.type==='layout')state.layout=event;
+  if(event.type==='error'){state.toasts=[{message:event.message||event.code||'Lỗi'}];audio.playSfx('ui_error');}
+  if(event.type==='emote'&&!mock){state.toasts=[{message:event.id||'☺'}];audio.playSfx('emo_pop');}
+  if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!',throw:'Đang ném'};state.toasts=[{message:names[event.kind]||event.kind}];audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep'}[event.kind]||'ui_tap');}
   if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
   render();
 });

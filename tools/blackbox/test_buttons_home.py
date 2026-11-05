@@ -63,10 +63,12 @@ def run() -> dict:
                 pressed = quick.evaluate("el=>getComputedStyle(el).transform")
                 page.mouse.up()
                 page.wait_for_timeout(160)
-                released = quick.evaluate("el=>getComputedStyle(el).transform")
+                # A real click navigates away from Home; the original button may be gone.
+                released = quick.evaluate("el=>getComputedStyle(el).transform") if quick.count() else "navigated"
                 match = re.search(r"matrix\(1, 0, 0, 1, 0, ([\d.]+)\)", pressed)
-                if not match or not 2.8 <= float(match.group(1)) <= 3.2 or released != "none":
+                if not match or not 2.8 <= float(match.group(1)) <= 3.2 or released not in ("none", "navigated"):
                     failures.append(f"pressed/released transform {pressed}/{released}")
+                if released == "navigated": page.goto(f"{URL}?mock=1&e2e=1&lang={lang}", wait_until="networkidle")
                 page.locator('[data-action="character"]').click()
                 locked = page.locator('[data-id="quay_boy"]')
                 locked_style = locked.evaluate("el=>({opacity:getComputedStyle(el).opacity,filter:getComputedStyle(el).filter})")
@@ -96,9 +98,10 @@ def run() -> dict:
             # No Unity: the Home still paints and shows a loading state when Play is tapped.
             page = browser.new_page(viewport={"width":393,"height":852},is_mobile=True,has_touch=True)
             page.goto(f"{URL}?e2e=1",wait_until="domcontentloaded")
-            page.wait_for_selector('[data-action="quick"]')
+            page.wait_for_selector('[data-action="practice"]')
             interactive = page.evaluate("performance.getEntriesByName('hitme-home-interactive')[0]?.startTime")
-            page.locator('[data-action="quick"]').click()
+            page.locator('[data-action="practice"]').click()
+            page.locator('[data-action="start-practice"]').click()
             loading = page.locator('[role="dialog"]').inner_text()
             failures=[]
             if interactive is None or interactive > 1000: failures.append(f"Home interactive at {interactive} ms")
