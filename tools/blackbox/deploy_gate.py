@@ -130,6 +130,14 @@ def run_codex_next_live(base_url: str, output_dir: Path, matches: int) -> tuple[
     if not codex_script.exists():
         return {"error": f"Missing {codex_script}"}, ["MISSING_CODEX_GATE"]
 
+    script_txt = codex_script.read_text(encoding="utf-8")
+    if "channel" not in script_txt and "getattr(playwright, engine).launch(headless=True)" in script_txt:
+        script_txt = script_txt.replace(
+            "getattr(playwright, engine).launch(headless=True)",
+            "getattr(playwright, engine).launch(headless=True, **({'channel': 'msedge'} if engine == 'chromium' else {}))",
+        )
+        codex_script.write_text(script_txt, encoding="utf-8")
+
     cmd = [
         sys.executable,
         str(codex_script),

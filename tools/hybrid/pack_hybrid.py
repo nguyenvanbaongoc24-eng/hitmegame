@@ -24,11 +24,154 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEPLOY_WEB_DIR = REPO_ROOT / "tools" / "deploy_web"
+CATALOG_SRC_DIR = DEPLOY_WEB_DIR / "catalog"
+HOME_BG_WEB_DIR = DEPLOY_WEB_DIR / "web_assets" / "bg_home"
 DIST_DIR = DEPLOY_WEB_DIR / "dist"
 BUILDS_DIR = REPO_ROOT / "Builds"
 HOME_BG_DIR = REPO_ROOT / "Assets" / "Art" / "UI" / "HomeBg"
 STAGING_DEPLOY_DIR = REPO_ROOT.parent / "_web_dist_deploy"
 TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
+
+
+HOME_VISUAL_PATCH_HTML = """
+  <link rel="preload" as="image" href="./assets/bg_home_1170.webp">
+  <link rel="preload" as="image" href="./assets/nam_lang_portrait.png">
+  <link rel="preload" as="image" href="./assets/nu_nang_dong_portrait.png">
+  <link rel="preload" as="image" href="./assets/co_ba_portrait.png">
+  <link rel="preload" as="image" href="./assets/anh_teen_portrait.png">
+  <style id="hitme-home-bg-patch">
+    /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
+    .home .backdrop {
+      background-color: #d89658 !important;
+      background-image: url('./assets/bg_home_1170.webp'), url('./assets/bg_home_lqip.webp') !important;
+      background-image: -webkit-image-set(
+        url('./assets/bg_home_750.webp') 1x,
+        url('./assets/bg_home_1170.webp') 2x,
+        url('./assets/bg_home_1536.webp') 3x
+      ), url('./assets/bg_home_lqip.webp') !important;
+      background-image: image-set(
+        url('./assets/bg_home_750.webp') 1x,
+        url('./assets/bg_home_1170.webp') 2x,
+        url('./assets/bg_home_1536.webp') 3x
+      ), url('./assets/bg_home_lqip.webp') !important;
+      background-position: 50% 48% !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+    .home .backdrop:before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      height: 100% !important;
+      background: linear-gradient(180deg, rgba(8, 15, 26, 0.45) 0%, rgba(8, 15, 26, 0.14) 14%, rgba(0, 0, 0, 0) 26%) !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+      pointer-events: none !important;
+    }
+    .home .backdrop:after {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      height: 100% !important;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 53%, rgba(10, 18, 30, 0.25) 78%, rgba(8, 14, 24, 0.60) 100%) !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+      pointer-events: none !important;
+    }
+    /* Remove duplicate CSS-drawn lotus pedestal and bottom arena strip */
+    .home .pedestal,
+    .home .pedestal:before,
+    .home .home-bottom-art {
+      display: none !important;
+    }
+    /* Ground character feet onto the baked stone lotus pedestal at (fx=0.5, fy=0.4844) */
+    .home .hero {
+      top: calc(var(--pedestal-feet-y, 48.44%) - var(--hero-stand-h, 28%)) !important;
+      height: var(--hero-stand-h, 28%) !important;
+      left: 28% !important;
+      width: 44% !important;
+      object-fit: contain !important;
+      object-position: center bottom !important;
+      filter: drop-shadow(0 7px 6px rgba(28, 15, 6, 0.58)) !important;
+    }
+    /* Clean framing for character head avatars and weapon icons */
+    .home .avatar {
+      background: radial-gradient(circle at 50% 42%, #1e3a5f 0%, #0d1b2a 100%) !important;
+      display: grid !important;
+      place-items: center !important;
+      padding: 2px !important;
+    }
+    .home .avatar img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+    }
+    .selection-card img,
+    .choice-grid img,
+    .live-card img,
+    .live-rank img,
+    .preview-character img {
+      object-fit: contain !important;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
+    }
+    @media (max-height: 660px) {
+      .home .logo { top: 9.5% !important; height: 11.5% !important; }
+      .home .selection-card { top: 53.5% !important; height: 8.2% !important; min-height: 44px !important; }
+      .home .quick { top: 62.8% !important; height: 9.2% !important; min-height: 48px !important; }
+      .home .blue, .home .green { top: 73.2% !important; height: 8.0% !important; min-height: 44px !important; }
+      .home .practice { top: 82.2% !important; height: 7.4% !important; min-height: 44px !important; }
+    }
+  </style>
+  <script>
+    (function() {
+      // Preload character portraits, heads, and weapon icons so switching is instant
+      const preloadAssets = [
+        "./assets/bg_home_750.webp",
+        "./assets/bg_home_1170.webp",
+        "./assets/nam_lang_portrait.png",
+        "./assets/nu_nang_dong_portrait.png",
+        "./assets/co_ba_portrait.png",
+        "./assets/anh_teen_portrait.png",
+        "./assets/nam_lang_head.png",
+        "./assets/nu_nang_dong_head.png",
+        "./assets/co_ba_head.png",
+        "./assets/anh_teen_head.png",
+        "./assets/quay_boy_head.png",
+        "./assets/cho_vang_head.png",
+        "./assets/meo_mun_head.png",
+        "./assets/dep_to_ong_icon.png",
+        "./assets/chao_chong_dinh_icon.png",
+        "./assets/vot_pickleball_icon.png"
+      ];
+      preloadAssets.forEach(src => { const img = new Image(); img.src = src; });
+
+      // Dynamic pedestal anchor alignment (B-4 formula from bg_home_meta.json)
+      function syncPedestalAnchor() {
+        const vv = window.visualViewport;
+        const vw = vv ? vv.width : window.innerWidth;
+        const vh = vv ? vv.height : window.innerHeight;
+        const stageW = Math.min(vw, 430);
+        const stageH = vh;
+        const origW = 941, origH = 1672;
+        const fy = 0.4844, posY = 0.48;
+        const scale = Math.max(stageW / origW, stageH / origH);
+        const renderH = origH * scale;
+        const dy = (stageH - renderH) * posY;
+        const feetY = Math.round(dy + fy * renderH);
+        const heroH = Math.round(Math.max(110, Math.min(220, stageH * 0.278)));
+        document.documentElement.style.setProperty("--pedestal-feet-y", feetY + "px");
+        document.documentElement.style.setProperty("--hero-stand-h", heroH + "px");
+      }
+      window.addEventListener("resize", syncPedestalAnchor);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncPedestalAnchor);
+        window.visualViewport.addEventListener("scroll", syncPedestalAnchor);
+      }
+      syncPedestalAnchor();
+    })();
+  </script>
+"""
 
 
 def git_rev_short(ref: str, cwd: Path = REPO_ROOT) -> str:
@@ -96,13 +239,18 @@ def preserve_stable_root() -> None:
     (DIST_DIR / "release.json").write_text(json.dumps(root_release, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def sync_home_bg(assets_dir: Path) -> None:
-    if not HOME_BG_DIR.exists():
-        return
+def sync_visual_assets(assets_dir: Path) -> None:
+    """Copies cleaned catalog character/weapon PNGs and bg_home_* WebP/JSON files into assets_dir."""
     assets_dir.mkdir(parents=True, exist_ok=True)
-    for f in HOME_BG_DIR.iterdir():
-        if f.is_file() and not f.name.endswith(".meta") and (f.name.startswith("bg_home_") or f.name == "bg_home_meta.json"):
-            shutil.copy2(f, assets_dir / f.name)
+    for bg_dir in (HOME_BG_WEB_DIR, HOME_BG_DIR):
+        if bg_dir.exists():
+            for f in bg_dir.iterdir():
+                if f.is_file() and not f.name.endswith(".meta") and (f.name.startswith("bg_home_") or f.name == "bg_home_meta.json"):
+                    shutil.copy2(f, assets_dir / f.name)
+    if CATALOG_SRC_DIR.exists():
+        for f in CATALOG_SRC_DIR.iterdir():
+            if f.is_file() and f.suffix.lower() == ".png":
+                shutil.copy2(f, assets_dir / f.name)
 
 
 def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity_commit: str, webui_commit: str,
@@ -149,7 +297,7 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
   <title>HIT ME — Web UI + Unity Hybrid ({version})</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css">{HOME_VISUAL_PATCH_HTML}
   <style>
     * {{ box-sizing: border-box; }}
     html, body {{
@@ -482,7 +630,7 @@ def main() -> int:
     gate_passed = (len(failed_ids) == 0) and (args.channel == "next")
 
     version_file = DEPLOY_WEB_DIR / "VERSION"
-    version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.2"
+    version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.3"
     unity_commit = git_rev_short("HEAD")
     webui_commit = git_rev_short(args.codex_ref)
     build_id = f"{unity_commit}-{webui_commit}"
@@ -502,6 +650,10 @@ def main() -> int:
     if not (codex_webui_dist / "app.js").exists():
         raise FileNotFoundError(f"Missing app.js in extracted {codex_webui_dist}")
 
+    # Sync cleaned catalog avatars/portraits/icons into extracted web-ui/dist/assets
+    sync_visual_assets(codex_webui_dist / "assets")
+    sync_visual_assets(TEMP_EXTRACT_DIR / "web-ui" / "assets")
+
     catalog_data = json.loads((codex_webui_dist / "catalog.json").read_text(encoding="utf-8"))
     catalog_version = int(catalog_data.get("version", 1))
 
@@ -513,10 +665,11 @@ def main() -> int:
     ui_prev_index = ui_preview_dir / "index.html"
     if ui_prev_index.exists():
         uhtml = ui_prev_index.read_text(encoding="utf-8")
+        uhtml = uhtml.replace('<link rel="stylesheet" href="./style.css">', '<link rel="stylesheet" href="./style.css">' + HOME_VISUAL_PATCH_HTML)
         mock_boot = '<script>if(!new URLSearchParams(location.search).has("mock")){const u=new URL(location.href);u.searchParams.set("mock","1");history.replaceState(null,"",u);}</script>\n  <script type="module" src="./app.js"></script>'
         uhtml = uhtml.replace('<script type="module" src="./app.js"></script>', mock_boot)
         ui_prev_index.write_text(uhtml, encoding="utf-8")
-    sync_home_bg(ui_preview_dir / "assets")
+    sync_visual_assets(ui_preview_dir / "assets")
     write_release_metadata(
         ui_preview_dir, version, build_id, unity_commit, webui_commit,
         catalog_version, gate_passed, failed_ids, args.notes
@@ -524,12 +677,11 @@ def main() -> int:
     print(f"[+] Packaged /ui-preview/ ({ui_preview_dir})")
 
     # 4. Populate target channel (/next/ or /rc/)
-    # If switching to rc, remove stale next or vice versa as needed
     channel_dir = DIST_DIR / args.channel
     if channel_dir.exists():
         shutil.rmtree(channel_dir)
     shutil.copytree(codex_webui_dist, channel_dir)
-    sync_home_bg(channel_dir / "assets")
+    sync_visual_assets(channel_dir / "assets")
 
     # Copy latest Unity WebGL Release build into shared DIST_DIR/Build/ (preserving root / files alongside it)
     latest_build = find_latest_release_build()
