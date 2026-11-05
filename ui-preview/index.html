@@ -7,6 +7,142 @@
   <title>HIT ME</title>
   <link rel="icon" href="./assets/logo_hit_me.png">
   <link rel="stylesheet" href="./style.css">
+  <style id="hitme-home-bg-patch">
+    /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
+    .home .backdrop {
+      background-color: #d89658 !important;
+      background-image: url('./assets/bg_home_1170.webp'), url('./assets/bg_home_lqip.webp') !important;
+      background-image: -webkit-image-set(
+        url('./assets/bg_home_750.webp') 1x,
+        url('./assets/bg_home_1170.webp') 2x,
+        url('./assets/bg_home_1536.webp') 3x
+      ), url('./assets/bg_home_lqip.webp') !important;
+      background-image: image-set(
+        url('./assets/bg_home_750.webp') 1x,
+        url('./assets/bg_home_1170.webp') 2x,
+        url('./assets/bg_home_1536.webp') 3x
+      ), url('./assets/bg_home_lqip.webp') !important;
+      background-position: 50% 48% !important;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+    }
+    .home .backdrop:before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      height: 100% !important;
+      background: linear-gradient(180deg, rgba(8, 15, 26, 0.45) 0%, rgba(8, 15, 26, 0.14) 14%, rgba(0, 0, 0, 0) 26%) !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+      pointer-events: none !important;
+    }
+    .home .backdrop:after {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      height: 100% !important;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0) 53%, rgba(10, 18, 30, 0.25) 78%, rgba(8, 14, 24, 0.60) 100%) !important;
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
+      pointer-events: none !important;
+    }
+    /* Remove duplicate CSS-drawn lotus pedestal and bottom arena strip */
+    .home .pedestal,
+    .home .pedestal:before,
+    .home .home-bottom-art {
+      display: none !important;
+    }
+    /* Ground character feet onto the baked stone lotus pedestal at (fx=0.5, fy=0.4844) */
+    .home .hero {
+      top: calc(var(--pedestal-feet-y, 48.44%) - var(--hero-stand-h, 28%)) !important;
+      height: var(--hero-stand-h, 28%) !important;
+      left: 28% !important;
+      width: 44% !important;
+      object-fit: contain !important;
+      object-position: center bottom !important;
+      filter: drop-shadow(0 7px 6px rgba(28, 15, 6, 0.58)) !important;
+    }
+    /* Clean framing for character head avatars and weapon icons */
+    .home .avatar {
+      background: radial-gradient(circle at 50% 42%, #1e3a5f 0%, #0d1b2a 100%) !important;
+      display: grid !important;
+      place-items: center !important;
+      padding: 2px !important;
+    }
+    .home .avatar img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+      object-position: center center !important;
+    }
+    .selection-card img,
+    .choice-grid img,
+    .live-card img,
+    .live-rank img,
+    .preview-character img {
+      object-fit: contain !important;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
+    }
+    @media (max-height: 660px) {
+      .home .logo { top: 9.5% !important; height: 11.5% !important; }
+      .home .selection-card { top: 53.5% !important; height: 8.2% !important; min-height: 44px !important; }
+      .home .quick { top: 62.8% !important; height: 9.2% !important; min-height: 48px !important; }
+      .home .blue, .home .green { top: 73.2% !important; height: 8.0% !important; min-height: 44px !important; }
+      .home .practice { top: 82.2% !important; height: 7.4% !important; min-height: 44px !important; }
+    }
+  </style>
+  <script>
+    window.addEventListener("load", function() {
+      setTimeout(function() {
+        const preloadAssets = [
+          "./assets/bg_home_750.webp",
+          "./assets/bg_home_1170.webp",
+          "./assets/nam_lang_portrait.png",
+          "./assets/nu_nang_dong_portrait.png",
+          "./assets/co_ba_portrait.png",
+          "./assets/anh_teen_portrait.png",
+          "./assets/nam_lang_head.png",
+          "./assets/nu_nang_dong_head.png",
+          "./assets/co_ba_head.png",
+          "./assets/anh_teen_head.png",
+          "./assets/quay_boy_head.png",
+          "./assets/cho_vang_head.png",
+          "./assets/meo_mun_head.png",
+          "./assets/dep_to_ong_icon.png",
+          "./assets/chao_chong_dinh_icon.png",
+          "./assets/vot_pickleball_icon.png"
+        ];
+        preloadAssets.forEach(src => { const img = new Image(); img.src = src; });
+      }, 600);
+    });
+    (function() {
+
+      // Dynamic pedestal anchor alignment (B-4 formula from bg_home_meta.json)
+      function syncPedestalAnchor() {
+        const vv = window.visualViewport;
+        const vw = vv ? vv.width : window.innerWidth;
+        const vh = vv ? vv.height : window.innerHeight;
+        const stageW = Math.min(vw, 430);
+        const stageH = vh;
+        const origW = 941, origH = 1672;
+        const fy = 0.4844, posY = 0.48;
+        const scale = Math.max(stageW / origW, stageH / origH);
+        const renderH = origH * scale;
+        const dy = (stageH - renderH) * posY;
+        const feetY = Math.round(dy + fy * renderH);
+        const heroH = Math.round(Math.max(110, Math.min(220, stageH * 0.278)));
+        document.documentElement.style.setProperty("--pedestal-feet-y", feetY + "px");
+        document.documentElement.style.setProperty("--hero-stand-h", heroH + "px");
+      }
+      window.addEventListener("resize", syncPedestalAnchor);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncPedestalAnchor);
+        window.visualViewport.addEventListener("scroll", syncPedestalAnchor);
+      }
+      syncPedestalAnchor();
+    })();
+  </script>
+
 </head>
 <body>
   <canvas id="unity-canvas" aria-label="Sân chơi HIT ME"></canvas>

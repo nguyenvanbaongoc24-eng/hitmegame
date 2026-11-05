@@ -1,0 +1,184 @@
+{
+  "source_file": "u4_background.png",
+  "original_resolution": {
+    "width": 941,
+    "height": 1672,
+    "aspect_ratio": 0.5628,
+    "color_mode": "RGB",
+    "has_alpha": false
+  },
+  "pedestal": {
+    "center": {
+      "cx": 0.5,
+      "cy": 0.474
+    },
+    "radii": {
+      "rx": 0.3613,
+      "ry": 0.0733
+    },
+    "anchor_feet": {
+      "fx": 0.5,
+      "fy": 0.4844
+    },
+    "description": "Oval carved lotus stone pedestal. Character feet contact point at (fx, fy)."
+  },
+  "focal_point": {
+    "x": 0.5,
+    "y": 0.485,
+    "css_object_position": "50% 48%",
+    "formula": {
+      "scale": "max(viewport_w / image_w, viewport_h / image_h)",
+      "dx": "(viewport_w - image_w * scale) * 0.50",
+      "dy": "(viewport_h - image_h * scale) * 0.48",
+      "screen_feet_x": "dx + fx * image_w * scale",
+      "screen_feet_y": "dy + fy * image_h * scale"
+    }
+  },
+  "safe_areas": {
+    "top_bar": [
+      0.02,
+      0.05,
+      0.96,
+      0.07
+    ],
+    "logo_area": [
+      0.15,
+      0.12,
+      0.7,
+      0.13
+    ],
+    "hero_stand": [
+      0.22,
+      0.26,
+      0.56,
+      0.23
+    ],
+    "cards_row": [
+      0.05,
+      0.56,
+      0.9,
+      0.09
+    ],
+    "character_card": [
+      0.05,
+      0.56,
+      0.43,
+      0.08
+    ],
+    "weapon_card": [
+      0.52,
+      0.56,
+      0.43,
+      0.08
+    ],
+    "quick_play_cta": [
+      0.07,
+      0.66,
+      0.86,
+      0.08
+    ],
+    "action_buttons_row": [
+      0.05,
+      0.75,
+      0.9,
+      0.07
+    ],
+    "create_room_btn": [
+      0.05,
+      0.75,
+      0.43,
+      0.07
+    ],
+    "join_room_btn": [
+      0.52,
+      0.75,
+      0.43,
+      0.07
+    ],
+    "practice_btn": [
+      0.12,
+      0.83,
+      0.76,
+      0.06
+    ],
+    "bottom_tabs": [
+      0.0,
+      0.91,
+      1.0,
+      0.09
+    ]
+  },
+  "regional_photometrics": {
+    "top_bar": {
+      "luminance_mean": 138.1,
+      "luminance_std": 63.4,
+      "clutter_edge_mean": 28.9
+    },
+    "logo_area": {
+      "luminance_mean": 115.7,
+      "luminance_std": 60.6,
+      "clutter_edge_mean": 35.0
+    },
+    "hero_stand": {
+      "luminance_mean": 179.4,
+      "luminance_std": 47.6,
+      "clutter_edge_mean": 19.4
+    },
+    "cards_row": {
+      "luminance_mean": 201.7,
+      "luminance_std": 10.6,
+      "clutter_edge_mean": 4.8
+    },
+    "character_card": {
+      "luminance_mean": 203.8,
+      "luminance_std": 8.6,
+      "clutter_edge_mean": 5.0
+    },
+    "weapon_card": {
+      "luminance_mean": 200.3,
+      "luminance_std": 11.5,
+      "clutter_edge_mean": 5.1
+    },
+    "quick_play_cta": {
+      "luminance_mean": 197.4,
+      "luminance_std": 11.2,
+      "clutter_edge_mean": 4.5
+    },
+    "action_buttons_row": {
+      "luminance_mean": 189.5,
+      "luminance_std": 17.1,
+      "clutter_edge_mean": 5.9
+    },
+    "create_room_btn": {
+      "luminance_mean": 198.5,
+      "luminance_std": 5.3,
+      "clutter_edge_mean": 6.1
+    },
+    "join_room_btn": {
+      "luminance_mean": 179.6,
+      "luminance_std": 20.0,
+      "clutter_edge_mean": 5.9
+    },
+    "practice_btn": {
+      "luminance_mean": 174.3,
+      "luminance_std": 57.1,
+      "clutter_edge_mean": 25.3
+    },
+    "bottom_tabs": {
+      "luminance_mean": 113.2,
+      "luminance_std": 62.9,
+      "clutter_edge_mean": 28.3
+    }
+  },
+  "recommended_darkening_overlays": {
+    "top_gradient": "linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 15%)",
+    "bottom_vignette": "linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.60) 100%)",
+    "tab_bar_backdrop": "rgba(15, 23, 42, 0.75)"
+  },
+  "responsive_assets": {
+    "lqip": "bg_home_lqip.webp (32x56 px, ~226 bytes)",
+    "w750": "bg_home_750.webp (750x1332 px, ~170 KB, budget <=180 KB)",
+    "w1170": "bg_home_1170.webp (1170x2078 px, ~294 KB, budget <=350 KB)",
+    "w1536": "bg_home_1536.webp (1536x2729 px, ~500 KB, high-DPI desktop/tablet)"
+  }
+}
