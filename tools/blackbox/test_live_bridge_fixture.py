@@ -49,6 +49,11 @@ def run() -> int:
                 if not ok: checks.append(label)
             check(page.locator('[data-screen="home"]').is_visible(), 'home visible')
             check(page.locator('[data-action="online-locked"]').count() == 3, 'online gated')
+            page.wait_for_function("() => document.querySelector('.hero')?.naturalWidth > 0")
+            check(page.locator('.hero').is_visible(), 'hero image visible')
+            for button in ('.home .blue', '.home .green'):
+                check(page.locator(button).evaluate('e => e.scrollWidth <= e.clientWidth'),
+                      f'{button} label fits')
             page.evaluate("hitmeUi.onUnity({type:'ready',version:'1.2',roster:[],weapons:[]})")
             check(any(x['m']=='SetLayout' for x in page.evaluate('window.__sent')), 'SetLayout sent')
             page.locator('[data-action="practice"]').click()

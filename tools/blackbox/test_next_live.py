@@ -59,14 +59,20 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
             try:
                 page.goto(base + '?e2e=1', wait_until='domcontentloaded', timeout=45000)
                 page.wait_for_function("() => window.__hitmeState?.build && document.querySelector('[data-screen=home]')", timeout=90000)
+                page.wait_for_function("() => document.querySelector('.hero')?.naturalWidth > 0", timeout=20000)
                 row['build'] = page.evaluate('window.__hitmeState.build')
                 row['onlineLocked'] = page.locator('[data-action="online-locked"]').count()
                 row['canvasRect'] = page.locator('#unity-canvas').bounding_box()
                 row['homeVisible'] = page.locator('[data-screen="home"]').is_visible()
+                row['heroLoaded'] = page.locator('.hero').evaluate('e => e.complete && e.naturalWidth > 0')
+                row['buttonOverflow'] = {kind: page.locator(f'.home .{kind}').evaluate(
+                    'e => Math.max(0, e.scrollWidth - e.clientWidth)') for kind in ('blue', 'green')}
                 row['checks']['HOME-01'] = row['homeVisible']
+                row['checks']['HOME-HERO'] = row['heroLoaded']
+                row['checks']['BTN-LABEL'] = all(value == 0 for value in row['buttonOverflow'].values())
                 row['checks']['BTN-09'] = row['onlineLocked'] == 3
                 row['checks']['VIEW-01'] = bool(row['canvasRect'] and row['canvasRect']['width'] >= width - 2)
-                row['status'] = 'PASS' if synced and row['homeVisible'] and row['onlineLocked'] == 3 and not errors else 'FAIL'
+                row['status'] = 'PASS' if synced and all(row['checks'].values()) and not errors else 'FAIL'
                 page.screenshot(path=str(output / f'{name}_home.png'))
                 if gameplay and synced and row['status'] == 'PASS' and name == 'iphone15_safari':
                     page.locator('[data-action="character"]').click()
@@ -135,7 +141,7 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                 page.screenshot(path=str(output / f'{name}_failure.png'))
             results['profiles'][name] = row
             context.close(); browser.close()
-    required = ('HOME-01','BTN-09','VIEW-01','SEL-LOCK','HUD-01','F1-MATCHES',
+    required = ('HOME-01','HOME-HERO','BTN-LABEL','BTN-09','VIEW-01','SEL-LOCK','HUD-01','F1-MATCHES',
                 'F2-ROSTER','F7-TUTORIAL','F7-REOPEN','SET-PAUSE','SET-RESUME',
                 'SET-VOLUME','EMO-OPEN','EMO-SEND','ARENA-TOUCH')
     observed = results['profiles'].get('iphone15_safari', {}).get('checks', {})

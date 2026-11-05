@@ -1,7 +1,7 @@
 {
   "url": "https://hitmegame-iota.vercel.app/next/",
-  "utc": "2026-11-05T03:03:39.472544+00:00",
-  "localAppSha256": "647b7d6bb14ba24a0df9e56865d5504f5a3df631685b416677c4bfae311d03ea",
+  "utc": "2026-11-05T03:30:31.341362+00:00",
+  "localAppSha256": "6ccc9d73e49d4fc8a7dc3b64abf205da1c6c5afb018084cd756888194f27c52e",
   "remoteAppSha256": "84697d77e2663c891a877fcbbdec2f838c96b4f6cccc707091fe1d898408be90",
   "deploymentSynced": false,
   "fetchError": null,
@@ -12,10 +12,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030342",
+      "build": "Release_20261105_033035",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -23,7 +25,12 @@
         "width": 393,
         "height": 695
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 29,
+        "green": 30
+      }
     },
     "iphonese_safari": {
       "status": "FAIL",
@@ -31,10 +38,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030347",
+      "build": "Release_20261105_033040",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -42,7 +51,12 @@
         "width": 375,
         "height": 667
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 29,
+        "green": 29
+      }
     },
     "android_chrome": {
       "status": "FAIL",
@@ -50,10 +64,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030354",
+      "build": "Release_20261105_033043",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -61,7 +77,12 @@
         "width": 393,
         "height": 873
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 29,
+        "green": 30
+      }
     },
     "android_tall": {
       "status": "FAIL",
@@ -69,10 +90,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030401",
+      "build": "Release_20261105_033047",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -80,7 +103,12 @@
         "width": 360,
         "height": 800
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 29,
+        "green": 29
+      }
     },
     "ipad_safari": {
       "status": "FAIL",
@@ -88,10 +116,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030407",
+      "build": "Release_20261105_033052",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -99,7 +129,12 @@
         "width": 768,
         "height": 1024
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 54,
+        "green": 55
+      }
     },
     "landscape_chrome": {
       "status": "FAIL",
@@ -107,10 +142,12 @@
       "matches": [],
       "checks": {
         "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": false,
         "BTN-09": true,
         "VIEW-01": true
       },
-      "build": "Release_20261105_030413",
+      "build": "Release_20261105_033057",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -118,11 +155,18 @@
         "width": 852,
         "height": 393
       },
-      "homeVisible": true
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 54,
+        "green": 55
+      }
     }
   },
   "coverage": {
     "HOME-01": "BLOCKED_DEPLOY",
+    "HOME-HERO": "BLOCKED_DEPLOY",
+    "BTN-LABEL": "BLOCKED_DEPLOY",
     "BTN-09": "BLOCKED_DEPLOY",
     "VIEW-01": "BLOCKED_DEPLOY",
     "SEL-LOCK": "BLOCKED_DEPLOY",

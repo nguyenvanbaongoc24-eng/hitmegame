@@ -7,3 +7,9 @@
 3. **Trung bình – bố cục:** `SetLayout` gửi `safeTop/safeBottom`; Unity hiện chỉ dùng `top/bottom`, và `EmitLayoutEvent` tính theo khung cố định 393×695. Kiểm iPhone notch, Safari thanh địa chỉ co, Android 20:9, xoay ngang.
 4. **Trung bình – cài đặt:** Unity `SetSettings` chỉ xử lý `reducedMotion`; mức âm thanh do Web xử lý. Cần xác nhận Unity AudioSource không phát chồng ở bản Web.
 5. **Thấp – sự kiện:** `event` chưa có tọa độ khi đã công bố, Web chỉ hiện toast và âm. Nếu muốn VFX web bám nhân vật, phát tọa độ sau công bố.
+
+## Bản `/next/` đang phát hành, kiểm ngày 05-11-2026
+
+- `app.js` tại Vercel có SHA-256 bắt đầu `84697d77e2663c89`; `web-ui/dist/app.js` ở nhánh `prep/codex` mới hơn. Kiểm thử gameplay hybrid bị chặn bằng `deploymentSynced=false`, không tính là đạt.
+- Ảnh Home đầu tiên bị thiếu nhân vật do chụp trước khi `.hero` tải xong. Kiểm lại sau khi `naturalWidth > 0` thấy nhân vật; đây là lỗi của công cụ chụp.
+- Bản đang phát hành thực sự tràn nhãn TẠO PHÒNG/VÀO PHÒNG 29–30 px trên iPhone 393×695. Bản web mới đã tách nhãn và trạng thái “Sắp ra mắt” thành hai dòng; `test_home_geometry.py` kiểm 6 kích thước. AG cần lấy `web-ui/dist` từ `prep/codex` mới nhất, deploy lại `/next/`, rồi Codex chạy lại kiểm thử hybrid có gameplay thật.
