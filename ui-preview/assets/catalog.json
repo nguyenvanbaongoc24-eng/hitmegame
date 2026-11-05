@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "canonical": true,
   "characters": [
     {
       "id": "nam_lang",
@@ -16,8 +17,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "nam_lang_portrait.png",
-        "head": "nam_lang_head.png"
+        "portrait": "./assets/nam_lang_portrait.png",
+        "head": "./assets/nam_lang_head.png"
       }
     },
     {
@@ -35,8 +36,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "nu_nang_dong_portrait.png",
-        "head": "nu_nang_dong_head.png"
+        "portrait": "./assets/nu_nang_dong_portrait.png",
+        "head": "./assets/nu_nang_dong_head.png"
       }
     },
     {
@@ -54,8 +55,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "co_ba_portrait.png",
-        "head": "co_ba_head.png"
+        "portrait": "./assets/co_ba_portrait.png",
+        "head": "./assets/co_ba_head.png"
       }
     },
     {
@@ -73,8 +74,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "anh_teen_portrait.png",
-        "head": "anh_teen_head.png"
+        "portrait": "./assets/anh_teen_portrait.png",
+        "head": "./assets/anh_teen_head.png"
       }
     },
     {
@@ -92,8 +93,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "quay_boy_portrait.png",
-        "head": "quay_boy_head.png"
+        "portrait": "./assets/quay_boy_portrait.png",
+        "head": "./assets/quay_boy_head.png"
       }
     },
     {
@@ -111,8 +112,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "cho_vang_portrait.png",
-        "head": "cho_vang_head.png"
+        "portrait": "./assets/cho_vang_portrait.png",
+        "head": "./assets/cho_vang_head.png"
       }
     },
     {
@@ -130,8 +131,8 @@
         "dep_to_ong"
       ],
       "assets": {
-        "portrait": "meo_mun_portrait.png",
-        "head": "meo_mun_head.png"
+        "portrait": "./assets/meo_mun_portrait.png",
+        "head": "./assets/meo_mun_head.png"
       }
     }
   ],
@@ -143,7 +144,7 @@
         "en": "Honeycomb Sandal"
       },
       "enabled": true,
-      "icon": "dep_to_ong_icon.png"
+      "icon": "./assets/dep_to_ong_icon.png"
     },
     {
       "id": "chao_chong_dinh",
@@ -152,7 +153,7 @@
         "en": "Frying Pan"
       },
       "enabled": false,
-      "icon": "chao_chong_dinh_icon.png"
+      "icon": "./assets/chao_chong_dinh_icon.png"
     },
     {
       "id": "vot_pickleball",
@@ -161,7 +162,7 @@
         "en": "Pickleball Paddle"
       },
       "enabled": false,
-      "icon": "vot_pickleball_icon.png"
+      "icon": "./assets/vot_pickleball_icon.png"
     }
   ]
 }

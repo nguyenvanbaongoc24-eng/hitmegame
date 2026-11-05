@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "canonical": true,
+  "characters": [
+    {
+      "id": "nam_lang",
+      "name": {
+        "vi": "Nam Làng",
+        "en": "Nam Lang"
+      },
+      "desc": {
+        "vi": "Nhanh nhẹn, tinh quái, quen thuộc sân đình",
+        "en": "Agile and cunning village boy"
+      },
+      "enabled": true,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/nam_lang_portrait.png",
+        "head": "./assets/nam_lang_head.png"
+      }
+    },
+    {
+      "id": "nu_nang_dong",
+      "name": {
+        "vi": "Nữ Năng Động",
+        "en": "Active Girl"
+      },
+      "desc": {
+        "vi": "Khỏe khoắn, phản xạ nhanh, di chuyển lắt léo",
+        "en": "Athletic and quick reflexes"
+      },
+      "enabled": true,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/nu_nang_dong_portrait.png",
+        "head": "./assets/nu_nang_dong_head.png"
+      }
+    },
+    {
+      "id": "co_ba",
+      "name": {
+        "vi": "Cô Ba",
+        "en": "Aunt Ba"
+      },
+      "desc": {
+        "vi": "Bình tĩnh, ném chuẩn xác từng góc sân",
+        "en": "Calm and precise thrower"
+      },
+      "enabled": true,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/co_ba_portrait.png",
+        "head": "./assets/co_ba_head.png"
+      }
+    },
+    {
+      "id": "anh_teen",
+      "name": {
+        "vi": "Anh Teen",
+        "en": "Teen Guy"
+      },
+      "desc": {
+        "vi": "Nhiệt huyết, thích thử thách và thi đấu",
+        "en": "Enthusiastic and competitive"
+      },
+      "enabled": true,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/anh_teen_portrait.png",
+        "head": "./assets/anh_teen_head.png"
+      }
+    },
+    {
+      "id": "quay_boy",
+      "name": {
+        "vi": "Quậy Boy",
+        "en": "Rebel Boy"
+      },
+      "desc": {
+        "vi": "Nghịch ngợm, phá cách (Sắp ra mắt)",
+        "en": "Rebellious (Coming soon)"
+      },
+      "enabled": false,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/quay_boy_portrait.png",
+        "head": "./assets/quay_boy_head.png"
+      }
+    },
+    {
+      "id": "cho_vang",
+      "name": {
+        "vi": "Chó Vàng",
+        "en": "Golden Dog"
+      },
+      "desc": {
+        "vi": "Trung thành, lanh lợi (Sắp ra mắt)",
+        "en": "Loyal and clever (Coming soon)"
+      },
+      "enabled": false,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/cho_vang_portrait.png",
+        "head": "./assets/cho_vang_head.png"
+      }
+    },
+    {
+      "id": "meo_mun",
+      "name": {
+        "vi": "Mèo Mun",
+        "en": "Black Cat"
+      },
+      "desc": {
+        "vi": "Bí ẩn, thoăn thoắt (Sắp ra mắt)",
+        "en": "Mysterious and agile (Coming soon)"
+      },
+      "enabled": false,
+      "weaponIds": [
+        "dep_to_ong"
+      ],
+      "assets": {
+        "portrait": "./assets/meo_mun_portrait.png",
+        "head": "./assets/meo_mun_head.png"
+      }
+    }
+  ],
+  "weapons": [
+    {
+      "id": "dep_to_ong",
+      "name": {
+        "vi": "Dép Tổ Ong",
+        "en": "Honeycomb Sandal"
+      },
+      "enabled": true,
+      "icon": "./assets/dep_to_ong_icon.png"
+    },
+    {
+      "id": "chao_chong_dinh",
+      "name": {
+        "vi": "Chảo Chống Dính",
+        "en": "Frying Pan"
+      },
+      "enabled": false,
+      "icon": "./assets/chao_chong_dinh_icon.png"
+    },
+    {
+      "id": "vot_pickleball",
+      "name": {
+        "vi": "Vợt Pickleball",
+        "en": "Pickleball Paddle"
+      },
+      "enabled": false,
+      "icon": "./assets/vot_pickleball_icon.png"
+    }
+  ]
+}
