@@ -1201,6 +1201,8 @@ namespace HitMe.UI
 
         private IGameClient _onlineClient;
         private bool _roomRequestPending;
+        private bool _quickMatchPending;
+        private bool _suppressRoomState;
         private Coroutine _roomRequestTimeout;
 
 
@@ -3947,10 +3949,10 @@ SyncHomeCharacterDisplay();
                     }
                     if (_roomRequestPending) return;
                     EnsureOnlineClient();
+                    _suppressRoomState = false;
                     _roomRequestPending = true;
                     ShowToast("Đang tạo phòng trực tuyến...", 2.0f);
-                    StartRoomRequestTimeout();
-                    _onlineClient.CreateRoom(ClientAuthService.GetOrCreateGuestToken());
+                    StartCoroutine(SubmitRoomRequest(null));
                 });
 
             if (btnBackFromCreate != null)
@@ -3973,6 +3975,12 @@ SyncHomeCharacterDisplay();
 
 
 
+                    if (_roomRequestPending)
+                    {
+                        _suppressRoomState = true;
+                        _onlineClient?.LeaveRoom();
+                    }
+                    CancelRoomRequest();
                     ShowScreen(ProductionScreen.Home);
 
 
@@ -4027,11 +4035,11 @@ SyncHomeCharacterDisplay();
                     }
                     if (_roomRequestPending) return;
                     EnsureOnlineClient();
+                    _suppressRoomState = false;
                     _roomRequestPending = true;
                     if (inputRoomCode != null) inputRoomCode.SetTextWithoutNotify(code);
                     ShowToast($"Đang kết nối vào phòng {code}...", 2.0f);
-                    StartRoomRequestTimeout();
-                    _onlineClient.JoinRoom(code, ClientAuthService.GetOrCreateGuestToken());
+                    StartCoroutine(SubmitRoomRequest(code));
                 });
 
             if (btnBackFromJoin != null)
@@ -4054,6 +4062,11 @@ SyncHomeCharacterDisplay();
 
 
 
+                    if (_roomRequestPending)
+                    {
+                        _suppressRoomState = true;
+                        _onlineClient?.LeaveRoom();
+                    }
                     CancelRoomRequest();
                     ShowScreen(ProductionScreen.Home);
 
@@ -10730,61 +10743,37 @@ SyncHomeCharacterDisplay();
 
 
         {
-
-
-
-            if (quickMatchOverlay != null)
-
-
-
+            if (!NetConfig.IsOnlineActive)
             {
-
-
-
-                quickMatchOverlay.SetActive(true);
-
-
-
-                if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingSearching;
-
-
-
-                if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(false);
-
-
-
-                if (_quickMatchCoroutine != null) StopCoroutine(_quickMatchCoroutine);
-
-
-
-                _quickMatchCoroutine = StartCoroutine(QuickMatchTimeoutCoroutine(30f));
-
-
-
+                ShowErrorToast("Ghép nhanh cần kết nối máy chủ.");
+                return;
             }
+            if (_quickMatchPending) return;
+            EnsureOnlineClient();
+            _suppressRoomState = false;
+            _quickMatchPending = true;
+            if (quickMatchOverlay != null) quickMatchOverlay.SetActive(true);
+            if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = "Đang kết nối máy chủ...";
+            if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(false);
+            StartCoroutine(SubmitQuickMatch());
+        }
 
-
-
-            else
-
-
-
+        private IEnumerator SubmitQuickMatch()
+        {
+            string token = null;
+            string error = null;
+            yield return ClientAuthService.GetVerifiedGuestToken(
+                value => token = value, value => error = value);
+            if (!_quickMatchPending) yield break;
+            if (string.IsNullOrEmpty(token))
             {
-
-
-
-                _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
-
-
-
-                EnterLobbyWithAutoFill("Phòng Chơi Nhanh", _activeRoomCode);
-
-
-
+                _quickMatchPending = false;
+                if (quickMatchOverlay != null) quickMatchOverlay.SetActive(false);
+                ShowErrorToast(error ?? "Không thể xác thực phiên khách.");
+                yield break;
             }
-
-
-
+            _onlineClient.QuickMatch(token);
+            if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingSearching;
         }
 
 
@@ -10798,45 +10787,24 @@ SyncHomeCharacterDisplay();
 
 
         {
+            bool wasSearching = _quickMatchPending;
+            CompleteQuickMatchSearch();
+            if (wasSearching)
+            {
+                _suppressRoomState = true;
+                _onlineClient?.LeaveRoom();
+            }
+        }
 
-
-
+        private void CompleteQuickMatchSearch()
+        {
+            _quickMatchPending = false;
             if (_quickMatchCoroutine != null)
-
-
-
             {
-
-
-
                 StopCoroutine(_quickMatchCoroutine);
-
-
-
                 _quickMatchCoroutine = null;
-
-
-
             }
-
-
-
-            if (quickMatchOverlay != null)
-
-
-
-            {
-
-
-
-                quickMatchOverlay.SetActive(false);
-
-
-
-            }
-
-
-
+            if (quickMatchOverlay != null) quickMatchOverlay.SetActive(false);
         }
 
 
@@ -11201,6 +11169,24 @@ SyncHomeCharacterDisplay();
 
 
 
+        private IEnumerator SubmitRoomRequest(string roomCode)
+        {
+            string token = null;
+            string error = null;
+            yield return ClientAuthService.GetVerifiedGuestToken(
+                value => token = value, value => error = value);
+            if (!_roomRequestPending) yield break;
+            if (string.IsNullOrEmpty(token))
+            {
+                CancelRoomRequest();
+                ShowErrorToast(error ?? "Không thể xác thực phiên khách.");
+                yield break;
+            }
+            StartRoomRequestTimeout();
+            if (string.IsNullOrEmpty(roomCode)) _onlineClient.CreateRoom(token);
+            else _onlineClient.JoinRoom(roomCode, token);
+        }
+
         private void StartRoomRequestTimeout()
         {
             if (_roomRequestTimeout != null) StopCoroutine(_roomRequestTimeout);
@@ -11249,6 +11235,8 @@ SyncHomeCharacterDisplay();
 
 
             client.OnDisconnected += HandleOnlineDisconnected;
+            client.OnQuickMatchWaiting += HandleQuickMatchWaiting;
+            client.OnQuickMatchHint += HandleQuickMatchHint;
 
 
 
@@ -11256,6 +11244,19 @@ SyncHomeCharacterDisplay();
 
 
 
+        }
+
+        private void HandleQuickMatchWaiting(string status)
+        {
+            if (!_quickMatchPending) return;
+            if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = status;
+        }
+
+        private void HandleQuickMatchHint()
+        {
+            if (!_quickMatchPending) return;
+            if (txtQuickMatchStatus != null) txtQuickMatchStatus.text = UiStrings.MatchmakingTimeoutSuggest;
+            if (btnQuickMatchToBots != null) btnQuickMatchToBots.gameObject.SetActive(true);
         }
 
 
@@ -11273,6 +11274,12 @@ SyncHomeCharacterDisplay();
 
 
             if (room == null) return;
+            if (_suppressRoomState)
+            {
+                _onlineClient?.LeaveRoom();
+                return;
+            }
+            if (_quickMatchPending) CompleteQuickMatchSearch();
             CancelRoomRequest();
 
 
@@ -11374,6 +11381,7 @@ SyncHomeCharacterDisplay();
 
 
         {
+            if (_quickMatchPending) CompleteQuickMatchSearch();
 
 
 
@@ -11411,6 +11419,7 @@ SyncHomeCharacterDisplay();
 
 
         {
+            if (_quickMatchPending) CompleteQuickMatchSearch();
             bool wasJoining = _roomRequestPending;
             CancelRoomRequest();
             if (wasJoining) ShowScreen(ProductionScreen.Home);

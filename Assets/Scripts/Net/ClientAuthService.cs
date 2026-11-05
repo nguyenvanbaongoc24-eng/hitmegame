@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace HitMe.NetClientV1
 {
@@ -12,10 +15,69 @@ namespace HitMe.NetClientV1
         private const string PrefKeyGuestToken = "HitMe_GuestToken";
         private const string PrefKeyGuestName = "HitMe_GuestName";
         private const string PrefKeyServerUrl = "HitMe_ServerUrl";
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private const string DefaultServerUrl = "wss://hitmegame.onrender.com/ws";
+#else
         private const string DefaultServerUrl = "ws://127.0.0.1:8080/ws";
+#endif
 
         private static string _cachedGuestToken = null;
         private static string _cachedServerUrl = null;
+
+        [Serializable]
+        private sealed class GuestTokenResponse { public string token; }
+
+        [Serializable]
+        private sealed class GuestTokenRequest { public string name; }
+
+        // Online rooms require a server-issued token. Never submit a locally
+        // constructed guest:<name> token to a production server.
+        public static IEnumerator GetVerifiedGuestToken(Action<string> onSuccess, Action<string> onError)
+        {
+            string existing = GetOrCreateGuestToken();
+            if (existing.StartsWith("guest1.", StringComparison.Ordinal))
+            {
+                onSuccess?.Invoke(existing);
+                yield break;
+            }
+
+            string endpoint = GetServerUrl();
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri wsUri) ||
+                (wsUri.Scheme != "ws" && wsUri.Scheme != "wss"))
+            {
+                onError?.Invoke("Địa chỉ máy chủ không hợp lệ.");
+                yield break;
+            }
+            var httpUri = new UriBuilder(wsUri)
+            {
+                Scheme = wsUri.Scheme == "wss" ? "https" : "http",
+                Path = "/guest-token",
+                Query = ""
+            }.Uri;
+            byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new GuestTokenRequest { name = GetGuestName() }));
+            using (var request = new UnityWebRequest(httpUri.ToString(), "POST"))
+            {
+                request.uploadHandler = new UploadHandlerRaw(body);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.timeout = 15;
+                yield return request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    onError?.Invoke("Không lấy được phiên khách từ máy chủ. Vui lòng thử lại.");
+                    yield break;
+                }
+                var response = JsonUtility.FromJson<GuestTokenResponse>(request.downloadHandler.text);
+                if (response == null || string.IsNullOrEmpty(response.token) ||
+                    !response.token.StartsWith("guest1.", StringComparison.Ordinal))
+                {
+                    onError?.Invoke("Máy chủ trả phiên khách không hợp lệ.");
+                    yield break;
+                }
+                SaveGuestToken(response.token);
+                onSuccess?.Invoke(response.token);
+            }
+        }
 
         /// <summary>
         /// Retrieves or creates a persistent Guest Token.

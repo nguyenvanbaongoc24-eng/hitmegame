@@ -9,6 +9,10 @@ namespace HitMe.NetClientV1
             get
             {
                 if (Enabled) return true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                // The shipped WebGL client uses the live room service by default.
+                return true;
+#else
                 if (UnityEngine.Application.absoluteURL != null)
                 {
                     string u = UnityEngine.Application.absoluteURL;
@@ -20,6 +24,7 @@ namespace HitMe.NetClientV1
                     }
                 }
                 return false;
+#endif
             }
         }
     }
