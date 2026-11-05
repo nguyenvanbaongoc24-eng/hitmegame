@@ -78,6 +78,8 @@ namespace HitMe.UI
         {
             public float music = 1f;
             public float sfx = 1f;
+            public float musicVolume = 1f;
+            public float sfxVolume = 1f;
             public string language = "vi";
             public bool reducedMotion = false;
         }
@@ -109,15 +111,25 @@ namespace HitMe.UI
             _mainCamera = Camera.main;
         }
 
+        private void EnsureMatchSubscribed()
+        {
+            if (matchController == null) matchController = FindAnyObjectByType<MatchController>();
+            if (uiController == null) uiController = FindAnyObjectByType<ProductionUIController>();
+            if (matchController != null)
+            {
+                matchController.OnPhaseChanged -= HandlePhaseChanged;
+                matchController.OnPhaseChanged += HandlePhaseChanged;
+                matchController.OnMatchEnded -= HandleMatchEnded;
+                matchController.OnMatchEnded += HandleMatchEnded;
+                matchController.OnToastRequested -= HandleToastRequested;
+                matchController.OnToastRequested += HandleToastRequested;
+            }
+        }
+
         private void OnEnable()
         {
             MatchController.OnMatchE2EEvent += HandleMatchE2EEvent;
-            if (matchController != null)
-            {
-                matchController.OnPhaseChanged += HandlePhaseChanged;
-                matchController.OnMatchEnded += HandleMatchEnded;
-                matchController.OnToastRequested += HandleToastRequested;
-            }
+            EnsureMatchSubscribed();
             HitMe.Audio.AudioManager.OnSfxRequested += HandleSfxRequested;
             HitMe.Audio.AudioManager.OnMusicRequested += HandleMusicRequested;
             MatchController.OnEmoteTriggered += EmitEmote;
@@ -139,6 +151,7 @@ namespace HitMe.UI
 
         private void Start()
         {
+            EnsureMatchSubscribed();
             if (HitMeWebBridge.IsWebUiMode() == 1)
             {
                 if (uiController != null) uiController.HideAllUGUIForWebMode();
@@ -148,6 +161,10 @@ namespace HitMe.UI
             if (!string.IsNullOrEmpty(currentUrl) && currentUrl.IndexOf("audio=unity", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 PlayerPrefs.SetInt("HitMe_AudioUnity", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("HitMe_AudioUnity", 0);
             }
 
             EmitReady();
@@ -199,8 +216,9 @@ namespace HitMe.UI
 
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winners)
         {
+            int currentRound = matchController != null && matchController.State != null ? matchController.State.RoundNumber : 1;
             _sb.Clear();
-            _sb.Append("{\"type\":\"result\",\"round\":").Append(matchController != null && matchController.State != null ? matchController.State.RoundNumber : 1).Append(",\"rankings\":[");
+            _sb.Append("{\"type\":\"result\",\"round\":").Append(currentRound).Append(",\"rankings\":[");
             if (ranked != null)
             {
                 for (int i = 0; i < ranked.Count; i++)
@@ -209,10 +227,14 @@ namespace HitMe.UI
                     var p = ranked[i];
                     bool survived = p.IsAlive;
                     int rank = i + 1;
+                    string charId = matchController != null ? matchController.GetPlayerCharacterId(p.Id) : "nam_lang";
+                    int roundSurvived = survived ? currentRound : (p.EliminatedAtRound > 0 ? p.EliminatedAtRound : currentRound);
                     _sb.Append("{\"id\":\"").Append(p.Id)
-                       .Append("\",\"name\":\"").Append(p.Name)
+                       .Append("\",\"name\":\"").Append(EscapeJson(p.Name))
+                       .Append("\",\"characterId\":\"").Append(charId)
                        .Append("\",\"rank\":").Append(rank)
                        .Append(",\"hits\":").Append(p.HitsLanded)
+                       .Append(",\"roundSurvived\":").Append(roundSurvived)
                        .Append(",\"survived\":").Append(survived ? "true" : "false")
                        .Append("}");
                 }
@@ -229,12 +251,12 @@ namespace HitMe.UI
             HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
             EmitScreen("result");
         }
+
         public void EmitError(string code, string message)
         {
-            string json = "{\"type\":\"error\",\"code\":\"" + code + "\",\"message\":\"" + message + "\"}";
+            string json = "{\"type\":\"error\",\"code\":\"" + code + "\",\"message\":\"" + EscapeJson(message) + "\"}";
             HitMeWebBridge.EmitUnityToWebJson(json);
         }
-
 
         private void Update()
         {
@@ -254,8 +276,9 @@ namespace HitMe.UI
 
         public void StartPractice(string json)
         {
+            EnsureMatchSubscribed();
             int botCount = 3;
-            int charIdx = 0;
+            int charIdx = _lastCharIdx >= 0 ? _lastCharIdx : 0;
             string weaponId = "dep_to_ong";
             if (!string.IsNullOrEmpty(json))
             {
@@ -307,6 +330,9 @@ namespace HitMe.UI
             {
                 matchController.StartMatch();
             }
+            string chosenCharId = CharacterRegistry.GetByIndex(charIdx).id;
+            HitMeWebBridge.EmitUnityToWebJson("{\"type\":\"selection\",\"characterId\":\"" + chosenCharId + "\"}");
+            EmitMatchState();
             EmitScreen("match");
         }
 
@@ -357,19 +383,6 @@ namespace HitMe.UI
 
         public void Ready(string json)
         {
-            bool ready = true;
-            if (!string.IsNullOrEmpty(json))
-            {
-                try
-                {
-                    var dto = JsonUtility.FromJson<ReadyDto>(json);
-                    if (dto != null) ready = dto.ready;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning("[WebBridge] Ready parse: " + e.Message);
-                }
-            }
             if (matchController != null)
             {
                 matchController.RequestReady();
@@ -391,6 +404,7 @@ namespace HitMe.UI
                         return;
                     }
                     int idx = GetCharacterIndex(dto.id);
+                    _lastCharIdx = idx;
                     if (matchController != null) matchController.localCharacterIndex = idx;
                     if (uiController != null) uiController.SetSelectedPracticeCharacter(idx);
 
@@ -433,7 +447,7 @@ namespace HitMe.UI
                 var dto = JsonUtility.FromJson<LayoutDto>(json);
                 if (dto != null)
                 {
-                    ApplyLayout(dto.top, dto.bottom);
+                    ApplyLayout(Mathf.Max(dto.top, dto.safeTop), Mathf.Max(dto.bottom, dto.safeBottom));
                 }
             }
             catch (Exception e)
@@ -521,6 +535,7 @@ namespace HitMe.UI
 
         public void Rematch(string json = null)
         {
+            EnsureMatchSubscribed();
             int botCount = _lastBotCount > 0 ? _lastBotCount : 3;
             int charIdx = _lastCharIdx >= 0 ? _lastCharIdx : 0;
             if (matchController != null)
@@ -536,6 +551,7 @@ namespace HitMe.UI
             {
                 matchController.StartMatch();
             }
+            EmitMatchState();
             EmitScreen("match");
         }
 
@@ -584,8 +600,9 @@ namespace HitMe.UI
         public void EmitEmote(string kind, string id, string playerId)
         {
             float screenX = 0.5f, screenY = 0.5f;
+            bool includeScreen = (playerId == "player") || (matchController != null && matchController.State != null && matchController.State.Phase != Phase.Placing);
             var cam = _mainCamera != null ? _mainCamera : Camera.main;
-            if (cam != null && matchController != null && matchController.State != null)
+            if (includeScreen && cam != null && matchController != null && matchController.State != null)
             {
                 var p = matchController.State.FindPlayer(playerId);
                 if (p != null)
@@ -596,10 +613,15 @@ namespace HitMe.UI
                 }
             }
 
-            string json = "{\"type\":\"emote\",\"kind\":\"" + kind + "\",\"id\":\"" + id + "\",\"playerId\":\"" + playerId + "\",\"screen\":{\"x\":"
-                + screenX.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + ",\"y\":"
-                + screenY.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + "}}";
-            HitMeWebBridge.EmitUnityToWebJson(json);
+            _sb.Clear();
+            _sb.Append("{\"type\":\"emote\",\"kind\":\"").Append(kind).Append("\",\"id\":\"").Append(id).Append("\",\"playerId\":\"").Append(playerId).Append("\"");
+            if (includeScreen)
+            {
+                _sb.Append(",\"screen\":{\"x\":").Append(screenX.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
+                   .Append(",\"y\":").Append(screenY.ToString("F4", System.Globalization.CultureInfo.InvariantCulture)).Append("}");
+            }
+            _sb.Append("}");
+            HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
         }
 
         private void HandleSfxRequested(string sfxId, float vol, float pan)
@@ -668,7 +690,7 @@ namespace HitMe.UI
             float screenX = 0.5f, screenY = 0.5f;
             bool hasScreen = false;
             string target = !string.IsNullOrEmpty(targetId) ? targetId : sourceId;
-            if (matchController != null && matchController.State != null && cam != null && !string.IsNullOrEmpty(target))
+            if (matchController != null && matchController.State != null && matchController.State.Phase != Phase.Placing && cam != null && !string.IsNullOrEmpty(target))
             {
                 var p = matchController.State.FindPlayer(target);
                 if (p != null)
@@ -744,28 +766,27 @@ namespace HitMe.UI
                 if (i > 0) _sb.Append(",");
                 var p = state.Players[i];
                 bool isLocal = p.Id == "player";
-                string charId = "nam_lang";
-                if (i < CharacterRegistry.CanonicalCharacters.Length) charId = CharacterRegistry.CanonicalCharacters[i].id;
-
-                float px = 0.5f, py = 0.5f;
-                if (cam != null)
-                {
-                    Vector3 sp = cam.WorldToScreenPoint(new Vector3(p.Position.X, p.Position.Y, 0f));
-                    px = Mathf.Clamp01(sp.x / Mathf.Max(1f, Screen.width));
-                    py = Mathf.Clamp01(1f - (sp.y / Mathf.Max(1f, Screen.height)));
-                }
+                string charId = matchController.GetPlayerCharacterId(p.Id);
+                bool canRevealPos = isLocal || state.Phase != Phase.Placing;
 
                 _sb.Append("{\"id\":\"").Append(p.Id)
-                   .Append("\",\"name\":\"").Append(p.Name)
+                   .Append("\",\"name\":\"").Append(EscapeJson(p.Name))
                    .Append("\",\"characterId\":\"").Append(charId)
                    .Append("\",\"slot\":").Append(i)
                    .Append(",\"hp\":").Append(p.Hp)
                    .Append(",\"maxHp\":").Append(state.Config.StartHp)
                    .Append(",\"alive\":").Append(p.IsAlive ? "true" : "false")
-                   .Append(",\"isLocal\":").Append(isLocal ? "true" : "false")
-                   .Append(",\"x\":").Append(px.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
-                   .Append(",\"y\":").Append(py.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
-                   .Append("}");
+                   .Append(",\"isLocal\":").Append(isLocal ? "true" : "false");
+
+                if (canRevealPos && cam != null)
+                {
+                    Vector3 sp = cam.WorldToScreenPoint(new Vector3(p.Position.X, p.Position.Y, 0f));
+                    float px = Mathf.Clamp01(sp.x / Mathf.Max(1f, Screen.width));
+                    float py = Mathf.Clamp01(1f - (sp.y / Mathf.Max(1f, Screen.height)));
+                    _sb.Append(",\"x\":").Append(px.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
+                       .Append(",\"y\":").Append(py.ToString("F4", System.Globalization.CultureInfo.InvariantCulture));
+                }
+                _sb.Append("}");
             }
             _sb.Append("]}");
 

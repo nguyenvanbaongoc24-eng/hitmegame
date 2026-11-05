@@ -1,0 +1,510 @@
+#!/usr/bin/env python3
+"""
+pack_hybrid.py — R2 Channel Packager for HIT ME Hybrid Web UI + Unity WebGL Release.
+Channels:
+  /             Stable channel (preserved unchanged unless --promote is explicitly passed)
+  /next/        Candidate hybrid channel (Web UI from prep/codex + latest Unity WebGL Release)
+  /ui-preview/  Web UI preview channel (web-ui/dist from prep/codex)
+  /rc/          Unverified candidate channel (used only if deploy gate fails, with visible RC warning badge)
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import io
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tarfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DEPLOY_WEB_DIR = REPO_ROOT / "tools" / "deploy_web"
+DIST_DIR = DEPLOY_WEB_DIR / "dist"
+BUILDS_DIR = REPO_ROOT / "Builds"
+HOME_BG_DIR = REPO_ROOT / "Assets" / "Art" / "UI" / "HomeBg"
+STAGING_DEPLOY_DIR = REPO_ROOT.parent / "_web_dist_deploy"
+TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
+
+
+def git_rev_short(ref: str, cwd: Path = REPO_ROOT) -> str:
+    res = subprocess.run(["git", "rev-parse", "--short=7", ref], cwd=cwd, capture_output=True, text=True, check=True)
+    return res.stdout.strip()
+
+
+def find_latest_release_build() -> Path:
+    candidates = []
+    if BUILDS_DIR.exists():
+        for d in BUILDS_DIR.iterdir():
+            if d.is_dir() and d.name.startswith("WebGL_Release_"):
+                candidates.append(d)
+    if not candidates:
+        raise FileNotFoundError(f"No WebGL_Release_* builds found in {BUILDS_DIR}")
+    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    return candidates[0]
+
+
+def extract_from_codex(ref: str, paths: list[str], dest_root: Path) -> None:
+    if dest_root.exists():
+        shutil.rmtree(dest_root)
+    dest_root.mkdir(parents=True, exist_ok=True)
+    cmd = ["git", "archive", "--format=tar", ref] + paths
+    res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, check=True)
+    with tarfile.open(fileobj=io.BytesIO(res.stdout)) as tf:
+        tf.extractall(path=dest_root)
+
+
+def preserve_stable_root() -> None:
+    """Ensures / (root index.html, config.json, version.json, and Build/) matches the deployed stable root."""
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
+    if STAGING_DEPLOY_DIR.exists() and (STAGING_DEPLOY_DIR / "index.html").exists():
+        for name in ("index.html", "config.json", "version.json"):
+            src = STAGING_DEPLOY_DIR / name
+            if src.exists():
+                shutil.copy2(src, DIST_DIR / name)
+        src_build = STAGING_DEPLOY_DIR / "Build"
+        dst_build = DIST_DIR / "Build"
+        if src_build.exists():
+            if dst_build.exists():
+                shutil.rmtree(dst_build)
+            shutil.copytree(src_build, dst_build)
+
+    # Write release.json for stable root / without changing root index.html or Build/
+    root_ver = "0.1.0-beta.1"
+    root_build = "1f1cdfa"
+    if (DIST_DIR / "version.json").exists():
+        try:
+            vdata = json.loads((DIST_DIR / "version.json").read_text(encoding="utf-8"))
+            root_ver = vdata.get("version", root_ver)
+            root_build = vdata.get("build", root_build)
+        except Exception:
+            pass
+    root_release = {
+        "version": root_ver,
+        "buildId": root_build,
+        "createdAt": "2026-11-05T02:10:37Z",
+        "unityCommit": root_build,
+        "webUiCommit": "none",
+        "catalogVersion": 1,
+        "gate": {"passed": True, "failedIds": []},
+        "notes": "Stable root channel (preserved unchanged)"
+    }
+    (DIST_DIR / "release.json").write_text(json.dumps(root_release, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def sync_home_bg(assets_dir: Path) -> None:
+    if not HOME_BG_DIR.exists():
+        return
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    for f in HOME_BG_DIR.iterdir():
+        if f.is_file() and not f.name.endswith(".meta") and (f.name.startswith("bg_home_") or f.name == "bg_home_meta.json"):
+            shutil.copy2(f, assets_dir / f.name)
+
+
+def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity_commit: str, webui_commit: str,
+                           catalog_version: int, gate_passed: bool, failed_ids: list[str], notes: str) -> None:
+    now_iso = datetime.now(timezone.utc).isoformat()
+    release_data = {
+        "version": version,
+        "buildId": build_id,
+        "createdAt": now_iso,
+        "unityCommit": unity_commit,
+        "webUiCommit": webui_commit,
+        "catalogVersion": catalog_version,
+        "gate": {
+            "passed": gate_passed,
+            "failedIds": failed_ids
+        },
+        "notes": notes
+    }
+    (channel_dir / "release.json").write_text(json.dumps(release_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    version_data = {
+        "version": version,
+        "build": build_id,
+        "unityCommit": unity_commit,
+        "webUiCommit": webui_commit,
+        "timestamp": now_iso
+    }
+    (channel_dir / "version.json").write_text(json.dumps(version_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_files: dict[str, str],
+                               version: str, build_id: str, is_rc: bool, failed_ids: list[str]) -> None:
+    rc_banner = ""
+    if is_rc:
+        failed_str = ", ".join(failed_ids) if failed_ids else "chưa qua cổng"
+        rc_banner = f"""
+  <div id="rc-warning-badge" data-name="rc-badge" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff8e8;font-size:12px;font-weight:800;text-align:center;padding:4px 8px;pointer-events:none;">
+    RC - chưa qua kiểm thử ({failed_str})
+  </div>"""
+
+    html = f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#101b28">
+  <title>HIT ME — Web UI + Unity Hybrid ({version})</title>
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    * {{ box-sizing: border-box; }}
+    html, body {{
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #101b28;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }}
+    #unity-container {{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }}
+    #unity-canvas {{
+      width: 100% !important;
+      height: 100% !important;
+      outline: none;
+      display: block;
+      touch-action: none;
+    }}
+    #ui-root {{
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      pointer-events: none;
+    }}
+    #ui-root > * {{
+      pointer-events: auto;
+    }}
+    #ui-root [data-screen="match"] {{
+      pointer-events: none;
+    }}
+    #ui-root [data-screen="match"] .live-top,
+    #ui-root [data-screen="match"] .live-bottom,
+    #ui-root [data-screen="match"] .live-tutorial,
+    #ui-root [data-screen="match"] .modal-shade,
+    #ui-root [data-screen="match"] .modal,
+    #ui-root [data-screen="match"] button {{
+      pointer-events: auto;
+    }}
+    #unity-loading {{
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #141b2d 0%, #060709 100%);
+      color: #ffe882;
+      z-index: 100;
+      padding: 24px;
+      text-align: center;
+    }}
+    .loading-brand {{
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #f5c518;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(245,197,24,0.3);
+    }}
+    .loading-tagline {{
+      font-size: 14px;
+      color: #b0c4de;
+      margin-bottom: 28px;
+      letter-spacing: 1px;
+    }}
+    .progress-container {{
+      width: 240px;
+      max-width: 80vw;
+      height: 10px;
+      background: #1a2234;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }}
+    .progress-fill {{
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff9800, #ffeb3b);
+      transition: width 0.15s ease-out;
+    }}
+    .loading-status {{
+      margin-top: 14px;
+      font-size: 13px;
+      color: #90caf9;
+      letter-spacing: 0.5px;
+    }}
+  </style>
+</head>
+<body>{rc_banner}
+  <div id="unity-container">
+    <canvas id="unity-canvas" aria-label="Sân chơi HIT ME"></canvas>
+  </div>
+  <div id="ui-root"></div>
+
+  <div id="unity-loading">
+    <div class="loading-brand">HIT ME</div>
+    <div class="loading-tagline">Đang nạp sân chơi &amp; Web UI...</div>
+    <div class="progress-container">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="loading-status" id="loading-status">Đang tải dữ liệu trò chơi… 0%</div>
+  </div>
+
+  <script>
+    window.__hitmeConfig = {{ ui: "web" }};
+    window.__hitmeReleaseInfo = {{ version: "{version}", buildId: "{build_id}" }};
+
+    // Inject version + short buildId into Web Settings sheet (R2) without altering fingerprinted app.js
+    const uiRootEl = document.getElementById("ui-root");
+    if (uiRootEl && typeof MutationObserver !== "undefined") {{
+      const obs = new MutationObserver(() => {{
+        const sheet = uiRootEl.querySelector(".settings-sheet");
+        if (sheet && !sheet.querySelector(".release-version-badge")) {{
+          const badge = document.createElement("small");
+          badge.className = "release-version-badge";
+          badge.dataset.name = "release-version";
+          badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
+          badge.textContent = "Phiên bản: {version} ({build_id})";
+          sheet.appendChild(badge);
+        }}
+      }});
+      obs.observe(uiRootEl, {{ childList: true, subtree: true }});
+    }}
+
+    const canvas = document.querySelector("#unity-canvas");
+    const loading = document.querySelector("#unity-loading");
+    const progressFill = document.querySelector("#progress-fill");
+    const loadingStatus = document.querySelector("#loading-status");
+
+    function updateCanvasResolution() {{
+      const vv = window.visualViewport;
+      const cssW = vv ? Math.round(vv.width) : window.innerWidth;
+      const cssH = vv ? Math.round(vv.height) : window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+
+      const container = document.querySelector("#unity-container");
+      if (container && vv) {{
+        container.style.width = cssW + "px";
+        container.style.height = cssH + "px";
+        container.style.top = (vv.offsetTop || 0) + "px";
+        container.style.left = (vv.offsetLeft || 0) + "px";
+      }}
+    }}
+
+    if (window.visualViewport) {{
+      window.visualViewport.addEventListener("resize", updateCanvasResolution);
+      window.visualViewport.addEventListener("scroll", updateCanvasResolution);
+    }}
+    window.addEventListener("resize", updateCanvasResolution);
+    window.addEventListener("orientationchange", updateCanvasResolution);
+    updateCanvasResolution();
+
+    const buildUrl = "{build_rel_url}";
+    const urlParams = new URLSearchParams(window.location.search);
+    const buildVersion = urlParams.get("v") || "{build_id}";
+    const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
+
+    const config = {{
+      arguments: [],
+      dataUrl: versioned(buildUrl + "/{build_files['data']}"),
+      frameworkUrl: versioned(buildUrl + "/{build_files['framework']}"),
+      codeUrl: versioned(buildUrl + "/{build_files['wasm']}"),
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "HitMeStudio",
+      productName: "HIT ME",
+      productVersion: "{version}",
+      matchWebGLToCanvasSize: false,
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
+    }};
+
+    const script = document.createElement("script");
+    script.src = versioned(buildUrl + "/{build_files['loader']}");
+    script.onload = () => {{
+      createUnityInstance(canvas, config, (progress) => {{
+        const pct = Math.round(progress * 100);
+        if (progressFill) progressFill.style.width = pct + "%";
+        if (loadingStatus) loadingStatus.textContent = `Đang tải dữ liệu trò chơi… ${{pct}}%`;
+      }}).then(instance => {{
+        window.unityInstance = instance;
+        if (loading) loading.style.display = "none";
+        canvas.focus();
+      }}).catch(error => {{
+        console.error("[Hybrid] Unity WebGL load error:", error);
+        if (loadingStatus) loadingStatus.textContent = "Lỗi nạp trò chơi: " + error;
+      }});
+    }};
+    document.body.appendChild(script);
+  </script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
+"""
+    (channel_dir / "index.html").write_text(html, encoding="utf-8")
+
+
+def promote_next_to_root() -> None:
+    next_dir = DIST_DIR / "next"
+    if not next_dir.exists() or not (next_dir / "index.html").exists():
+        raise FileNotFoundError("Cannot promote: dist/next/ does not exist")
+    prev_dir = DIST_DIR / "previous"
+    if prev_dir.exists():
+        shutil.rmtree(prev_dir)
+    prev_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("index.html", "version.json", "release.json", "config.json"):
+        if (DIST_DIR / name).exists():
+            shutil.copy2(DIST_DIR / name, prev_dir / name)
+    if (DIST_DIR / "Build").exists():
+        shutil.copytree(DIST_DIR / "Build", prev_dir / "Build")
+    print(f"[+] Backed up current root / to {prev_dir}")
+
+    # Copy next/Build to root Build/ and next files to root
+    if (next_dir / "Build").exists():
+        if (DIST_DIR / "Build").exists():
+            shutil.rmtree(DIST_DIR / "Build")
+        shutil.copytree(next_dir / "Build", DIST_DIR / "Build")
+    for item in next_dir.iterdir():
+        if item.name == "Build":
+            continue
+        dst = DIST_DIR / item.name
+        if item.is_dir():
+            if dst.exists():
+                shutil.rmtree(dst)
+            shutil.copytree(item, dst)
+        else:
+            shutil.copy2(item, dst)
+    print("[+] Promoted /next/ to root /")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--channel", choices=["next", "rc"], default="next")
+    parser.add_argument("--codex-ref", default="origin/prep/codex")
+    parser.add_argument("--gate-passed", action="store_true", default=True)
+    parser.add_argument("--gate-failed-ids", default="")
+    parser.add_argument("--promote", action="store_true")
+    parser.add_argument("--notes", default="Hybrid Web UI (prep/codex) + Unity WebGL Release (feature/ui-ux-production)")
+    args = parser.parse_args()
+
+    if args.promote:
+        promote_next_to_root()
+        return 0
+
+    failed_ids = [x.strip() for x in args.gate_failed_ids.split(",") if x.strip()]
+    gate_passed = (len(failed_ids) == 0) and (args.channel == "next")
+
+    version_file = DEPLOY_WEB_DIR / "VERSION"
+    version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.2"
+    unity_commit = git_rev_short("HEAD")
+    webui_commit = git_rev_short(args.codex_ref)
+    build_id = f"{unity_commit}-{webui_commit}"
+
+    print(f"[*] Packaging version={version}, buildId={build_id}, channel=/{args.channel}/")
+
+    # 1. Preserve root / unchanged
+    preserve_stable_root()
+
+    # 2. Extract web-ui/dist and tools from prep/codex into temporary folder _codex_extract
+    extract_from_codex(
+        args.codex_ref,
+        ["web-ui", "tools/blackbox", "tools/ui", "tools/webui_assets", "tools/supabase"],
+        TEMP_EXTRACT_DIR
+    )
+    codex_webui_dist = TEMP_EXTRACT_DIR / "web-ui" / "dist"
+    if not (codex_webui_dist / "app.js").exists():
+        raise FileNotFoundError(f"Missing app.js in extracted {codex_webui_dist}")
+
+    catalog_data = json.loads((codex_webui_dist / "catalog.json").read_text(encoding="utf-8"))
+    catalog_version = int(catalog_data.get("version", 1))
+
+    # 3. Populate /ui-preview/
+    ui_preview_dir = DIST_DIR / "ui-preview"
+    if ui_preview_dir.exists():
+        shutil.rmtree(ui_preview_dir)
+    shutil.copytree(codex_webui_dist, ui_preview_dir)
+    sync_home_bg(ui_preview_dir / "assets")
+    write_release_metadata(
+        ui_preview_dir, version, build_id, unity_commit, webui_commit,
+        catalog_version, gate_passed, failed_ids, args.notes
+    )
+    print(f"[+] Packaged /ui-preview/ ({ui_preview_dir})")
+
+    # 4. Populate target channel (/next/ or /rc/)
+    # If switching to rc, remove stale next or vice versa as needed
+    channel_dir = DIST_DIR / args.channel
+    if channel_dir.exists():
+        shutil.rmtree(channel_dir)
+    shutil.copytree(codex_webui_dist, channel_dir)
+    sync_home_bg(channel_dir / "assets")
+
+    # Copy latest Unity WebGL Release build into channel_dir/Build/ so root / Build/ stays untouched
+    latest_build = find_latest_release_build()
+    src_build = latest_build / "Build"
+    dst_build = channel_dir / "Build"
+    shutil.copytree(src_build, dst_build, dirs_exist_ok=True)
+
+    build_files = {}
+    for f in dst_build.iterdir():
+        if f.name.endswith(".data.br"):
+            build_files["data"] = f.name
+        elif f.name.endswith(".framework.js.br"):
+            build_files["framework"] = f.name
+        elif f.name.endswith(".wasm.br"):
+            build_files["wasm"] = f.name
+        elif f.name.endswith(".loader.js"):
+            build_files["loader"] = f.name
+
+    if len(build_files) != 4:
+        raise RuntimeError(f"Expected 4 WebGL build files in {dst_build}, found: {build_files}")
+
+    generate_hybrid_index_html(
+        channel_dir, "./Build", build_files, version, build_id,
+        is_rc=(args.channel == "rc"), failed_ids=failed_ids
+    )
+    write_release_metadata(
+        channel_dir, version, build_id, unity_commit, webui_commit,
+        catalog_version, gate_passed, failed_ids, args.notes
+    )
+
+    # 5. Copy vercel.json to DIST_DIR
+    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+
+    print(f"[SUCCESS] Packaged /{args.channel}/ and /ui-preview/ with buildId={build_id} (root / preserved unchanged)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

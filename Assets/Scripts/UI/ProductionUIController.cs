@@ -1835,6 +1835,7 @@ SyncHomeCharacterDisplay();
 
 
                 ShowScreen(ProductionScreen.Gameplay);
+            if (HitMeWebBridge.IsWebUiMode() == 1) HideAllUGUIForWebMode();
 
 
 
@@ -2059,6 +2060,7 @@ SyncHomeCharacterDisplay();
 
 
                 ShowScreen(ProductionScreen.Gameplay);
+            if (HitMeWebBridge.IsWebUiMode() == 1) HideAllUGUIForWebMode();
 
 
 
@@ -15128,6 +15130,8 @@ SyncHomeCharacterDisplay();
 
 
 
+                _selectedBotCount = botCount;
+                _selectedPracticeCharIndex = characterIndex;
                 matchController.localCharacterIndex = characterIndex;
 
 
@@ -15193,6 +15197,7 @@ SyncHomeCharacterDisplay();
 
 
             ShowScreen(ProductionScreen.Gameplay);
+            if (HitMeWebBridge.IsWebUiMode() == 1) HideAllUGUIForWebMode();
 
 
 

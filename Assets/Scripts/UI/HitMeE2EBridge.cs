@@ -256,7 +256,7 @@ namespace HitMe.UI
                     {
                         id = p.Id,
                         name = p.Name,
-                        characterId = CharacterRegistry.GetByIndex(i).id,
+                        characterId = _match.GetPlayerCharacterId(p.Id),
                         slot = i,
                         hp = p.Hp,
                         alive = p.IsAlive,

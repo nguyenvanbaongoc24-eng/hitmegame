@@ -303,6 +303,20 @@ namespace HitMe.Game
 
 
         private readonly Dictionary<string, Phase1BotBrain> _bots = new Dictionary<string, Phase1BotBrain>(MaxPoolSize);
+        private readonly Dictionary<string, int> _playerCharIndices = new Dictionary<string, int>(MaxPoolSize);
+
+        public string GetPlayerCharacterId(string playerId)
+        {
+            if (!string.IsNullOrEmpty(playerId) && _playerCharIndices.TryGetValue(playerId, out int idx))
+            {
+                return HitMe.Data.CharacterRegistry.GetByIndex(idx).id;
+            }
+            if (playerId == "player")
+            {
+                return HitMe.Data.CharacterRegistry.GetByIndex(localCharacterIndex).id;
+            }
+            return "nam_lang";
+        }
 
 
 
@@ -1936,6 +1950,7 @@ namespace HitMe.Game
 
 
 
+                _playerCharIndices[id] = charIdx;
                 BindPooledView(p, i, charIdx);
 
 

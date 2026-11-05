@@ -71,7 +71,14 @@ mergeInto(LibraryManager.library, {
             }
           }
         }
-        window.__hitmeState = state;
+        var isWebUi = (window.__hitmeConfig && window.__hitmeConfig.ui === "web" && window.location.search.indexOf("ui=unity") === -1) || (window.location.search.indexOf("ui=web") !== -1);
+        if (isWebUi && window.__hitmeState) {
+          window.__hitmeState.canvas = state.canvas;
+          window.__hitmeState.match = state.match;
+          if (!window.__hitmeState.build && state.build) window.__hitmeState.build = state.build;
+        } else {
+          window.__hitmeState = state;
+        }
       } catch (e) {
         console.error("[HITME] UpdateHitMeStateJson error:", e);
       }
@@ -79,6 +86,8 @@ mergeInto(LibraryManager.library, {
   },
   UpdateHitMeUiDumpJson: function (jsonStrPtr) {
     if (typeof window !== "undefined" && window.location && window.location.search && window.location.search.indexOf("e2e=1") !== -1) {
+      var isWebUi = (window.__hitmeConfig && window.__hitmeConfig.ui === "web" && window.location.search.indexOf("ui=unity") === -1) || (window.location.search.indexOf("ui=web") !== -1);
+      if (isWebUi) return;
       try {
         var str = UTF8ToString(jsonStrPtr);
         var dump = JSON.parse(str);
