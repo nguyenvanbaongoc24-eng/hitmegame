@@ -933,6 +933,8 @@ namespace HitMe.UI
 
         public GameObject dialogProfile;
 
+        public Image imgProfileAvatarHead;
+
 
 
         public TextMeshProUGUI txtProfileTitle;
@@ -6391,7 +6393,7 @@ SyncHomeCharacterDisplay();
 
                     var tmp = btnHomeLogin.GetComponentInChildren<TextMeshProUGUI>();
 
-                    if (tmp != null) tmp.text = "Trang chủ";
+                    if (tmp != null) tmp.text = UiStrings.Get(UiStrings.LoginTitle);
 
                 }
 
@@ -7490,6 +7492,13 @@ SyncHomeCharacterDisplay();
 
 
             if (acc == null) return;
+
+            if (imgProfileAvatarHead != null && charHeadSprites != null &&
+                _selectedPracticeCharIndex >= 0 && _selectedPracticeCharIndex < charHeadSprites.Length &&
+                charHeadSprites[_selectedPracticeCharIndex] != null)
+            {
+                imgProfileAvatarHead.sprite = charHeadSprites[_selectedPracticeCharIndex];
+            }
 
 
 

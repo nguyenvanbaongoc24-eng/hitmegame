@@ -175,6 +175,7 @@ namespace HitMe.Editor
             scaler.matchWidthOrHeight = 1.0f; // Portrait height match
 
             var uiCtrl = canvasGo.AddComponent<ProductionUIController>();
+            uiCtrl.charHeadSprites = charHeadSprites;
 
             // SafeAreaRoot (P2: constrains HUD to portrait 1080x2340 column and applies iPhone safe area)
             var safeAreaGo = new GameObject("SafeAreaRoot", typeof(RectTransform), typeof(SafeAreaFitter));
@@ -1069,6 +1070,9 @@ namespace HitMe.Editor
             uiCtrl.txtProfileTitle = profTitle;
 
             var profAvatar = CreateImage(profileCard.transform, "Avatar", spriteCardSelected, new Vector2(0.50f, 0.76f), new Vector2(0.50f, 0.76f), new Vector2(0.50f, 0.50f), new Vector2(160f, 160f));
+            var profAvatarHead = CreateImage(profAvatar.transform, "AvatarHead", sprHeadNamLang ?? spritePortraitNamLang, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(138f, 138f));
+            profAvatarHead.GetComponent<Image>().preserveAspect = true;
+            uiCtrl.imgProfileAvatarHead = profAvatarHead.GetComponent<Image>();
             var profName = CreateTMP(profileCard.transform, "PlayerName", fontAsset, "Khách_4826", 36, colorCream, TextAlignmentOptions.Center, new Vector2(0.50f, 0.63f), new Vector2(600f, 45f));
             profName.fontStyle = FontStyles.Bold;
             uiCtrl.txtProfilePlayerName = profName;

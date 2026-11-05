@@ -1,5 +1,6 @@
 using HitMe.UI;
 using NUnit.Framework;
+using TMPro;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -24,6 +25,12 @@ namespace HitMe.Editor
             Assert.That(ui.btnHomeLogin, Is.Not.Null);
             Assert.That(ui.btnHomeLogin.name, Is.EqualTo("BtnLogin"));
             Assert.That(ui.btnHomeLogin, Is.Not.SameAs(ui.btnHomeTab));
+            ui.RefreshAllScreenTexts();
+            Assert.That(ui.btnHomeLogin.GetComponentInChildren<TextMeshProUGUI>().text,
+                Is.EqualTo(UiStrings.Get(UiStrings.LoginTitle)));
+            Assert.That(ui.imgProfileAvatarHead, Is.Not.Null);
+            Assert.That(ui.imgProfileAvatarHead.sprite, Is.Not.Null);
+            Assert.That(ui.charHeadSprites, Has.Length.EqualTo(7));
         }
     }
 }
