@@ -159,3 +159,4 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 @media(min-height:761px){.home .quick{top:66.2%}}
 @media(max-height:760px){.home .blue,.home .green{top:calc(488px * var(--ui-scale))}.home .practice{top:calc(556px * var(--ui-scale))}}
 @media(max-height:660px){.home .hero{top:calc(140px * var(--ui-scale));height:calc(170px * var(--ui-scale))}.home .pedestal{top:calc(275px * var(--ui-scale))}.home .selection-card{top:calc(311px * var(--ui-scale))}.home .quick{top:calc(389px * var(--ui-scale))}.home .blue,.home .green{top:calc(469px * var(--ui-scale))}.home .practice{top:calc(544px * var(--ui-scale))}}
+.live-round-events{display:flex;gap:4px;overflow:hidden;justify-content:center}.live-round-events span{max-width:32%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 5px;border-radius:7px;background:#14374bdc;border:1px solid #69b8d1;color:#fff;font-size:10px;font-weight:800}

@@ -72,7 +72,7 @@ const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* p
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
 const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
-state.layout=null;state.toasts=[];state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
+state.layout=null;state.toasts=[];state.roundEvents=[];state.currentRound=0;state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
 let tutorialPointer=null;
 canvas.addEventListener('pointerdown', event => {
   if (!mock && state.screen==='match' && state.match?.phase?.toLowerCase()==='placing' && state.tutorialStep>=0)
@@ -90,6 +90,20 @@ const onlineEnabled = mock || catalog.features?.online === true;
 function contractError(code) { console.error(`[HITME_CONTRACT:${code}]`); state.contractErrors.push(code); if(state.contractErrors.length>10)state.contractErrors.shift();render(); }
 window.addEventListener('hitme-contract-error',event=>contractError(event.detail));
 let lastLayout='';
+let toastTimer=null;
+const toastSeen=new Map();
+function queueToast(message) {
+  if (!message) return;
+  const now=performance.now();
+  if (now-(toastSeen.get(message) ?? -Infinity)<2200) return;
+  toastSeen.set(message,now);
+  if (state.toasts.length<4) state.toasts.push({message});
+  if (!toastTimer) {
+    const next=()=>{state.toasts.shift();render();toastTimer=state.toasts.length?setTimeout(next,2200):null;};
+    toastTimer=setTimeout(next,2200);
+  }
+  render();
+}
 function sendLayout() {
   const height=window.visualViewport?.height||innerHeight;
   const top=Math.round(Math.max(92,Math.min(175,height*.2)));
@@ -250,21 +264,21 @@ onUnity(event => {
   if (event.type==='music') {audio.playMusic(event.id,event.action);return;}
   if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';state.ready=true;if(state.overlay==='loading')state.overlay=null;if(!mock)sendLayout();}
   if (event.type==='loading') {state.loadingPercent=Math.max(0,Math.min(100,Number(event.percent)||0));}
-  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) {state.screen=event.name;if(!mock&&event.name==='result')state.sessionMatches++;}
+  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) {state.screen=event.name;if(!mock&&event.name==='result')state.sessionMatches++;if(!mock&&event.name==='match'){state.roundEvents=[];state.currentRound=0;}}
   if (event.type==='selection' && event.characterId) state.characterId=assetId(event.characterId);
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') state.lobby=event;
-  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else if(event.toast){state.toasts=[{message:event.toast}];}}
+  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];}if(event.toast)queueToast(event.toast);}}
   if (event.type==='result') {
     state.result=event;
     const local=event.rankings.find(player=>player.id==='player');
     audio.playSfx(local?.rank===1?'win':'lose');
   }
   if(event.type==='layout')state.layout=event;
-  if(event.type==='error'){state.toasts=[{message:event.message||event.code||'Lỗi'}];audio.playSfx('ui_error');}
-  if(event.type==='emote'&&!mock){state.toasts=[{message:event.id||'☺'}];audio.playSfx('emo_pop');}
-  if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!',throw:'Đang ném'};state.toasts=[{message:names[event.kind]||event.kind}];audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep'}[event.kind]||'ui_tap');}
+  if(event.type==='error'){queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
+  if(event.type==='emote'&&!mock){queueToast(event.id||'☺');audio.playSfx('emo_pop');}
+  if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!',throw:'Đang ném',round_result:'Kết quả vòng'};const message=names[event.kind]||event.kind;queueToast(message);if(['hit','ko','round_result'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
   if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
   render();
 });
