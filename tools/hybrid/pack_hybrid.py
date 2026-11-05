@@ -34,11 +34,6 @@ TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
 
 
 HOME_VISUAL_PATCH_HTML = """
-  <link rel="preload" as="image" href="./assets/bg_home_1170.webp">
-  <link rel="preload" as="image" href="./assets/nam_lang_portrait.png">
-  <link rel="preload" as="image" href="./assets/nu_nang_dong_portrait.png">
-  <link rel="preload" as="image" href="./assets/co_ba_portrait.png">
-  <link rel="preload" as="image" href="./assets/anh_teen_portrait.png">
   <style id="hitme-home-bg-patch">
     /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
     .home .backdrop {
@@ -124,27 +119,30 @@ HOME_VISUAL_PATCH_HTML = """
     }
   </style>
   <script>
+    window.addEventListener("load", function() {
+      setTimeout(function() {
+        const preloadAssets = [
+          "./assets/bg_home_750.webp",
+          "./assets/bg_home_1170.webp",
+          "./assets/nam_lang_portrait.png",
+          "./assets/nu_nang_dong_portrait.png",
+          "./assets/co_ba_portrait.png",
+          "./assets/anh_teen_portrait.png",
+          "./assets/nam_lang_head.png",
+          "./assets/nu_nang_dong_head.png",
+          "./assets/co_ba_head.png",
+          "./assets/anh_teen_head.png",
+          "./assets/quay_boy_head.png",
+          "./assets/cho_vang_head.png",
+          "./assets/meo_mun_head.png",
+          "./assets/dep_to_ong_icon.png",
+          "./assets/chao_chong_dinh_icon.png",
+          "./assets/vot_pickleball_icon.png"
+        ];
+        preloadAssets.forEach(src => { const img = new Image(); img.src = src; });
+      }, 600);
+    });
     (function() {
-      // Preload character portraits, heads, and weapon icons so switching is instant
-      const preloadAssets = [
-        "./assets/bg_home_750.webp",
-        "./assets/bg_home_1170.webp",
-        "./assets/nam_lang_portrait.png",
-        "./assets/nu_nang_dong_portrait.png",
-        "./assets/co_ba_portrait.png",
-        "./assets/anh_teen_portrait.png",
-        "./assets/nam_lang_head.png",
-        "./assets/nu_nang_dong_head.png",
-        "./assets/co_ba_head.png",
-        "./assets/anh_teen_head.png",
-        "./assets/quay_boy_head.png",
-        "./assets/cho_vang_head.png",
-        "./assets/meo_mun_head.png",
-        "./assets/dep_to_ong_icon.png",
-        "./assets/chao_chong_dinh_icon.png",
-        "./assets/vot_pickleball_icon.png"
-      ];
-      preloadAssets.forEach(src => { const img = new Image(); img.src = src; });
 
       // Dynamic pedestal anchor alignment (B-4 formula from bg_home_meta.json)
       function syncPedestalAnchor() {
@@ -431,17 +429,37 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
     window.__hitmeConfig = {{ ui: "web" }};
     window.__hitmeReleaseInfo = {{ version: "{version}", buildId: "{build_id}" }};
 
-    // Deduplicate 10 Hz Unity match ticks so app.js innerHTML does not detach DOM buttons mid-click
+    // Deduplicate 10 Hz Unity match ticks and guard active UI pointer interactions so app.js innerHTML never detaches buttons mid-click
     (function() {{
       let _realHitmeUi = null;
       let _lastMatchSig = "";
       let _tutorialHoldUntil = 0;
+      let _interactHoldUntil = 0;
+      let _deferredMatchEvt = null;
+      let _flushTimer = null;
+
+      function bumpInteractHold(ms) {{
+        const until = Date.now() + ms;
+        if (until > _interactHoldUntil) _interactHoldUntil = until;
+      }}
+
+      ["pointerdown", "pointerover", "mousedown", "touchstart"].forEach(function(evName) {{
+        document.addEventListener(evName, function(e) {{
+          const t = e.target;
+          if (t && t.closest && t.closest("#ui-root button, #ui-root input, #ui-root .modal")) {{
+            bumpInteractHold(550);
+          }}
+        }}, true);
+      }});
+
       document.addEventListener("click", function(e) {{
         const btn = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
         const act = btn ? btn.dataset.action : "";
+        if (act) bumpInteractHold(450);
         if (act === "tutorial-reopen") _tutorialHoldUntil = Date.now() + 8000;
         else if (act === "tutorial-skip") _tutorialHoldUntil = 0;
       }}, true);
+
       Object.defineProperty(window, "hitmeUi", {{
         configurable: true,
         enumerable: true,
@@ -449,6 +467,17 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
         set(val) {{
           if (val && typeof val.onUnity === "function") {{
             const origOnUnity = val.onUnity.bind(val);
+            function flushDeferred() {{
+              _flushTimer = null;
+              if (!_deferredMatchEvt) return;
+              if (Date.now() < _interactHoldUntil) {{
+                _flushTimer = setTimeout(flushDeferred, 120);
+                return;
+              }}
+              const pending = _deferredMatchEvt;
+              _deferredMatchEvt = null;
+              origOnUnity(pending);
+            }}
             val.onUnity = function(event) {{
               let evt = event;
               try {{ if (typeof event === "string") evt = JSON.parse(event); }} catch (e) {{}}
@@ -456,6 +485,9 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
                 if (evt.type === "screen" || evt.type === "result") {{
                   _lastMatchSig = "";
                   _tutorialHoldUntil = 0;
+                  _interactHoldUntil = 0;
+                  _deferredMatchEvt = null;
+                  if (_flushTimer) {{ clearTimeout(_flushTimer); _flushTimer = null; }}
                 }} else if (evt.type === "match") {{
                   if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {{
                     evt = Object.assign({{}}, evt, {{ phase: "placing", timeLeft: Math.max(2, Number(evt.timeLeft) || 2) }});
@@ -466,7 +498,14 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
                     : "";
                   const sig = `${{evt.round}}|${{evt.phase}}|${{Math.ceil(Number(evt.timeLeft) || 0)}}|${{evt.toast || ""}}|${{playersSig}}`;
                   if (sig === _lastMatchSig) return;
+                  if (_lastMatchSig !== "" && Date.now() < _interactHoldUntil) {{
+                    _deferredMatchEvt = event;
+                    if (!_flushTimer) _flushTimer = setTimeout(flushDeferred, 120);
+                    return;
+                  }}
                   _lastMatchSig = sig;
+                }} else if (evt.type === "event" && Date.now() < _interactHoldUntil) {{
+                  return;
                 }}
               }}
               return origOnUnity(event);
