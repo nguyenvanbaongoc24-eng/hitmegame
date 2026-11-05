@@ -504,14 +504,15 @@ def main() -> int:
     shutil.copytree(codex_webui_dist, channel_dir)
     sync_home_bg(channel_dir / "assets")
 
-    # Copy latest Unity WebGL Release build into channel_dir/Build/ so root / Build/ stays untouched
+    # Copy latest Unity WebGL Release build into shared DIST_DIR/Build/ (preserving root / files alongside it)
     latest_build = find_latest_release_build()
     src_build = latest_build / "Build"
-    dst_build = channel_dir / "Build"
-    shutil.copytree(src_build, dst_build, dirs_exist_ok=True)
+    shared_build = DIST_DIR / "Build"
+    shared_build.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(src_build, shared_build, dirs_exist_ok=True)
 
     build_files = {}
-    for f in dst_build.iterdir():
+    for f in src_build.iterdir():
         if f.name.endswith(".data.br"):
             build_files["data"] = f.name
         elif f.name.endswith(".framework.js.br"):
@@ -522,10 +523,10 @@ def main() -> int:
             build_files["loader"] = f.name
 
     if len(build_files) != 4:
-        raise RuntimeError(f"Expected 4 WebGL build files in {dst_build}, found: {build_files}")
+        raise RuntimeError(f"Expected 4 WebGL build files in {src_build}, found: {build_files}")
 
     generate_hybrid_index_html(
-        channel_dir, "./Build", build_files, version, build_id,
+        channel_dir, "../Build", build_files, version, build_id,
         is_rc=(args.channel == "rc"), failed_ids=failed_ids
     )
     write_release_metadata(

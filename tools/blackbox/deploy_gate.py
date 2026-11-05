@@ -29,7 +29,7 @@ from playwright.sync_api import sync_playwright
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
-EVIDENCE_DIR = REPO_ROOT / "Evidence" / "deploy_gate"
+EVIDENCE_DIR = REPO_ROOT.parent / "Evidence" / "deploy_gate"
 
 R3_VIEWPORTS = {
     "vp_393x695_dpr3": ("webkit", 393, 695, 3),

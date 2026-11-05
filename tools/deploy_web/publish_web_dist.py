@@ -49,6 +49,11 @@ def sync_dist_to_staging(dist_dir: Path, staging_dir: Path, keep_root_untouched:
         for rel in ("vercel.json", "release.json"):
             if (dist_dir / rel).exists():
                 shutil.copy2(dist_dir / rel, staging_dir / rel)
+        if (dist_dir / "Build").exists():
+            (staging_dir / "Build").mkdir(parents=True, exist_ok=True)
+            for bf in (dist_dir / "Build").iterdir():
+                if bf.is_file():
+                    shutil.copy2(bf, staging_dir / "Build" / bf.name)
         for folder in ("ui-preview", "next", "rc"):
             src = dist_dir / folder
             dst = staging_dir / folder
@@ -124,7 +129,7 @@ def main() -> int:
             cwd=REPO_ROOT,
             check=False,
         )
-        gate_json = REPO_ROOT / "Evidence" / "deploy_gate" / "gate_results.json"
+        gate_json = REPO_ROOT.parent / "Evidence" / "deploy_gate" / "gate_results.json"
         if gate_json.exists():
             gdata = json.loads(gate_json.read_text(encoding="utf-8"))
             gate_passed = bool(gdata.get("passed", False))
@@ -167,6 +172,9 @@ def main() -> int:
     print(f"[*] Rollback point on web-dist: {prev_head}")
 
     sync_dist_to_staging(DIST_DIR, STAGING_DIR, keep_root_untouched=True)
+    # Restore tracked tools/deploy_web/dist so Unity working tree remains 100% clean
+    run_cmd(["git", "checkout", "--", "tools/deploy_web/dist"], cwd=REPO_ROOT, check=False)
+    run_cmd(["git", "clean", "-fd", "tools/deploy_web/dist"], cwd=REPO_ROOT, check=False)
     run_cmd(["git", "add", "-A"], cwd=STAGING_DIR)
     status_res = run_cmd(["git", "status", "--porcelain"], cwd=STAGING_DIR)
     if status_res.stdout.strip():
