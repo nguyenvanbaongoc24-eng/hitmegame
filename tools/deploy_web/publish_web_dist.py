@@ -108,11 +108,17 @@ def main() -> int:
 
     if args.promote:
         run_cmd([sys.executable, str(PACK_HYBRID_SCRIPT), "--promote"])
+        release_meta = json.loads((DIST_DIR / "release.json").read_text(encoding="utf-8"))
+        version = release_meta["version"]
+        build_id = release_meta["buildId"]
         sync_dist_to_staging(DIST_DIR, STAGING_DIR, keep_root_untouched=False)
+        run_cmd(["git", "checkout", "--", "tools/deploy_web/dist"], cwd=REPO_ROOT, check=False)
+        run_cmd(["git", "clean", "-fd", "tools/deploy_web/dist"], cwd=REPO_ROOT, check=False)
         if not args.no_push:
             run_cmd(["git", "add", "-A"], cwd=STAGING_DIR)
-            run_cmd(["git", "commit", "-m", "release(promote): promote /next/ to root /"], cwd=STAGING_DIR, check=False)
+            run_cmd(["git", "commit", "-m", f"release(promote): promote /next/ ({version} {build_id}) to root /"], cwd=STAGING_DIR, check=False)
             run_cmd(["git", "push", "-u", "origin", "web-dist"], cwd=STAGING_DIR)
+            poll_live_release("", build_id, timeout_sec=600)
         return 0
 
     # Step 1: Package candidate into /next/ and /ui-preview/

@@ -633,23 +633,32 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
 def promote_next_to_root() -> None:
     next_dir = DIST_DIR / "next"
     if not next_dir.exists() or not (next_dir / "index.html").exists():
-        raise FileNotFoundError("Cannot promote: dist/next/ does not exist")
+        if (STAGING_DEPLOY_DIR / "next" / "index.html").exists():
+            if next_dir.exists():
+                shutil.rmtree(next_dir)
+            shutil.copytree(STAGING_DEPLOY_DIR / "next", next_dir)
+        else:
+            raise FileNotFoundError("Cannot promote: dist/next/ does not exist")
     prev_dir = DIST_DIR / "previous"
     if prev_dir.exists():
         shutil.rmtree(prev_dir)
     prev_dir.mkdir(parents=True, exist_ok=True)
     for name in ("index.html", "version.json", "release.json", "config.json"):
-        if (DIST_DIR / name).exists():
-            shutil.copy2(DIST_DIR / name, prev_dir / name)
-    if (DIST_DIR / "Build").exists():
-        shutil.copytree(DIST_DIR / "Build", prev_dir / "Build")
+        src_root_file = STAGING_DEPLOY_DIR / name if (STAGING_DEPLOY_DIR / name).exists() else DIST_DIR / name
+        if src_root_file.exists():
+            shutil.copy2(src_root_file, prev_dir / name)
+    if (prev_dir / "index.html").exists():
+        phtml = (prev_dir / "index.html").read_text(encoding="utf-8")
+        phtml = phtml.replace('const buildUrl = "Build";', 'const buildUrl = "../Build";')
+        (prev_dir / "index.html").write_text(phtml, encoding="utf-8")
     print(f"[+] Backed up current root / to {prev_dir}")
 
-    # Copy next/Build to root Build/ and next files to root
-    if (next_dir / "Build").exists():
-        if (DIST_DIR / "Build").exists():
-            shutil.rmtree(DIST_DIR / "Build")
-        shutil.copytree(next_dir / "Build", DIST_DIR / "Build")
+    # Copy shared Build/ and ui-preview/ from STAGING_DEPLOY_DIR if missing in DIST_DIR
+    for shared_folder in ("Build", "ui-preview"):
+        if not (DIST_DIR / shared_folder).exists() and (STAGING_DEPLOY_DIR / shared_folder).exists():
+            shutil.copytree(STAGING_DEPLOY_DIR / shared_folder, DIST_DIR / shared_folder)
+    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+
     for item in next_dir.iterdir():
         if item.name == "Build":
             continue
@@ -660,6 +669,10 @@ def promote_next_to_root() -> None:
             shutil.copytree(item, dst)
         else:
             shutil.copy2(item, dst)
+    if (DIST_DIR / "index.html").exists():
+        rhtml = (DIST_DIR / "index.html").read_text(encoding="utf-8")
+        rhtml = rhtml.replace('const buildUrl = "../Build";', 'const buildUrl = "./Build";')
+        (DIST_DIR / "index.html").write_text(rhtml, encoding="utf-8")
     print("[+] Promoted /next/ to root /")
 
 
