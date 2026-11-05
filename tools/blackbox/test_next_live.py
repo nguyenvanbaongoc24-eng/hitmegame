@@ -55,7 +55,7 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
             page = context.new_page()
             errors: list[str] = []
             page.on('pageerror', lambda error: errors.append(str(error)))
-            row: dict = {'status': 'UNKNOWN', 'errors': errors, 'matches': []}
+            row: dict = {'status': 'UNKNOWN', 'errors': errors, 'matches': [], 'checks': {}}
             try:
                 page.goto(base + '?e2e=1', wait_until='domcontentloaded', timeout=45000)
                 page.wait_for_function("() => window.__hitmeState?.build && document.querySelector('[data-screen=home]')", timeout=90000)
@@ -63,13 +63,43 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                 row['onlineLocked'] = page.locator('[data-action="online-locked"]').count()
                 row['canvasRect'] = page.locator('#unity-canvas').bounding_box()
                 row['homeVisible'] = page.locator('[data-screen="home"]').is_visible()
+                row['checks']['HOME-01'] = row['homeVisible']
+                row['checks']['BTN-09'] = row['onlineLocked'] == 3
+                row['checks']['VIEW-01'] = bool(row['canvasRect'] and row['canvasRect']['width'] >= width - 2)
                 row['status'] = 'PASS' if synced and row['homeVisible'] and row['onlineLocked'] == 3 and not errors else 'FAIL'
                 page.screenshot(path=str(output / f'{name}_home.png'))
                 if gameplay and synced and row['status'] == 'PASS' and name == 'iphone15_safari':
+                    page.locator('[data-action="character"]').click()
+                    row['checks']['SEL-LOCK'] = page.locator('[data-action="locked"]').count() == 3
+                    page.locator('[data-action="close"]').click()
                     for run_no in range(matches):
-                        page.locator('[data-action="practice"]').click()
-                        page.locator('[data-action="start-practice"]').click()
-                        page.wait_for_function("() => window.__hitmeState?.screen === 'match'", timeout=15000)
+                        if run_no == 0:
+                            page.locator('[data-action="practice"]').click()
+                            page.locator('[data-action="start-practice"]').click()
+                            page.wait_for_function("() => window.__hitmeState?.screen === 'match'", timeout=15000)
+                            row['checks']['HUD-01'] = page.locator('.live-card').count() >= 2
+                            row['checks']['F7-TUTORIAL'] = page.locator('.live-tutorial').count() == 1
+                            if row['checks']['F7-TUTORIAL']:
+                                page.locator('[data-action="tutorial-skip"]').click()
+                            page.locator('.live-summary [data-action="settings"]').click()
+                            row['checks']['SET-PAUSE'] = page.locator('[data-action="pause"]').count() == 1
+                            page.locator('[data-action="pause"]').click()
+                            row['checks']['SET-RESUME'] = page.locator('[data-action="resume"]').count() == 1
+                            page.locator('[data-action="resume"]').click()
+                            page.locator('.live-summary [data-action="settings"]').click()
+                            page.locator('[data-setting="sfx"]').evaluate("el=>{el.value='35';el.dispatchEvent(new Event('input',{bubbles:true}))}")
+                            row['checks']['SET-VOLUME'] = page.evaluate("localStorage.getItem('hitme.sfxVolume')") == '0.35'
+                            page.locator('[data-action="tutorial-reopen"]').click()
+                            row['checks']['F7-REOPEN'] = page.locator('.live-tutorial').count() == 1
+                            page.locator('[data-action="tutorial-skip"]').click()
+                            page.locator('.live-bottom [data-action="emote"]').click()
+                            row['checks']['EMO-OPEN'] = page.locator('[data-action="send-live-emote"]').count() >= 3
+                            page.locator('[data-action="send-live-emote"]').first.click()
+                            row['checks']['EMO-SEND'] = page.locator('[data-action="send-live-emote"]').count() == 0
+                            row['checks']['ARENA-TOUCH'] = page.evaluate("""() => {
+                                const c=document.querySelector('#unity-canvas');const r=c.getBoundingClientRect();
+                                return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===c;
+                            }""")
                         page.wait_for_function("() => window.__hitmeState?.screen === 'result'", timeout=180000)
                         ranking_count = page.locator('.live-rank').count()
                         row['matches'].append({'run': run_no + 1, 'rankings': ranking_count})
@@ -83,12 +113,35 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                         else:
                             page.locator('[data-action="exit-match"]').click()
                             page.wait_for_function("() => window.__hitmeState?.screen === 'home'", timeout=15000)
+                    row['checks']['F1-MATCHES'] = len(row['matches']) == matches and all(m['rankings'] >= 2 for m in row['matches'])
+                    character_checks = []
+                    for character_id in ('nam_lang', 'nu_nang_dong', 'co_ba', 'anh_teen'):
+                        page.locator('[data-action="character"]').click()
+                        page.locator(f'[data-action="select-character"][data-id="{character_id}"]').click()
+                        page.locator('[data-action="practice"]').click()
+                        page.locator('[data-action="start-practice"]').click()
+                        page.wait_for_function("() => window.__hitmeState?.screen === 'match'", timeout=15000)
+                        card_src = page.locator('.live-card.local img').get_attribute('src') or ''
+                        character_checks.append(character_id in card_src)
+                        page.locator('.live-summary [data-action="settings"]').click()
+                        page.locator('[data-action="exit-confirm"]').click()
+                        page.locator('[data-action="exit-match"]').click()
+                        page.wait_for_function("() => window.__hitmeState?.screen === 'home'", timeout=15000)
+                    row['checks']['F2-ROSTER'] = all(character_checks)
+                    if not all(row['checks'].values()): row['status'] = 'FAIL'
             except Exception as exc:
                 row['status'] = 'FAIL'
                 row['failure'] = f'{type(exc).__name__}: {str(exc)[:240]}'
                 page.screenshot(path=str(output / f'{name}_failure.png'))
             results['profiles'][name] = row
             context.close(); browser.close()
+    required = ('HOME-01','BTN-09','VIEW-01','SEL-LOCK','HUD-01','F1-MATCHES',
+                'F2-ROSTER','F7-TUTORIAL','F7-REOPEN','SET-PAUSE','SET-RESUME',
+                'SET-VOLUME','EMO-OPEN','EMO-SEND','ARENA-TOUCH')
+    observed = results['profiles'].get('iphone15_safari', {}).get('checks', {})
+    results['coverage'] = {key: ('BLOCKED_DEPLOY' if not synced else
+                                 'NOT_RUN' if key not in observed else
+                                 'PASS' if observed[key] else 'FAIL') for key in required}
     (output / 'results.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     passed = sum(row['status'] == 'PASS' for row in results['profiles'].values())
     print(f"deploymentSynced={synced}; Passed! {passed}/{len(PROFILES)}")

@@ -1,6 +1,6 @@
 {
   "url": "https://hitmegame-iota.vercel.app/next/",
-  "utc": "2026-11-05T02:57:25.085090+00:00",
+  "utc": "2026-11-05T03:03:39.472544+00:00",
   "localAppSha256": "647b7d6bb14ba24a0df9e56865d5504f5a3df631685b416677c4bfae311d03ea",
   "remoteAppSha256": "84697d77e2663c891a877fcbbdec2f838c96b4f6cccc707091fe1d898408be90",
   "deploymentSynced": false,
@@ -10,7 +10,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025730",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030342",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -24,7 +29,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025736",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030347",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -38,7 +48,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025741",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030354",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -52,7 +67,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025747",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030401",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -66,7 +86,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025752",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030407",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -80,7 +105,12 @@
       "status": "FAIL",
       "errors": [],
       "matches": [],
-      "build": "Release_20261105_025800",
+      "checks": {
+        "HOME-01": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "Release_20261105_030413",
       "onlineLocked": 3,
       "canvasRect": {
         "x": 0,
@@ -90,5 +120,22 @@
       },
       "homeVisible": true
     }
+  },
+  "coverage": {
+    "HOME-01": "BLOCKED_DEPLOY",
+    "BTN-09": "BLOCKED_DEPLOY",
+    "VIEW-01": "BLOCKED_DEPLOY",
+    "SEL-LOCK": "BLOCKED_DEPLOY",
+    "HUD-01": "BLOCKED_DEPLOY",
+    "F1-MATCHES": "BLOCKED_DEPLOY",
+    "F2-ROSTER": "BLOCKED_DEPLOY",
+    "F7-TUTORIAL": "BLOCKED_DEPLOY",
+    "F7-REOPEN": "BLOCKED_DEPLOY",
+    "SET-PAUSE": "BLOCKED_DEPLOY",
+    "SET-RESUME": "BLOCKED_DEPLOY",
+    "SET-VOLUME": "BLOCKED_DEPLOY",
+    "EMO-OPEN": "BLOCKED_DEPLOY",
+    "EMO-SEND": "BLOCKED_DEPLOY",
+    "ARENA-TOUCH": "BLOCKED_DEPLOY"
   }
 }
