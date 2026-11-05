@@ -38,6 +38,8 @@ namespace HitMe.NetClientV1
 
             _session.MessageReceived += HandleServerMessage;
             _session.Closed += HandleSessionClosed;
+            if (_transport is WebGLWebSocketTransport webTransport)
+                webTransport.Opened += HandleTransportOpened;
         }
 
         public void Connect(string serverUrl = null)
@@ -47,8 +49,10 @@ namespace HitMe.NetClientV1
                 ClientAuthService.SetServerUrl(serverUrl);
             }
             _session.Connect();
-            OnConnected?.Invoke(ClientAuthService.GetServerUrl());
+            if (_transport.IsConnected) HandleTransportOpened();
         }
+
+        private void HandleTransportOpened() => OnConnected?.Invoke(ClientAuthService.GetServerUrl());
 
         public void Disconnect()
         {
@@ -235,6 +239,8 @@ namespace HitMe.NetClientV1
             _isDisposed = true;
             _session.MessageReceived -= HandleServerMessage;
             _session.Closed -= HandleSessionClosed;
+            if (_transport is WebGLWebSocketTransport webTransport)
+                webTransport.Opened -= HandleTransportOpened;
             _transport.Dispose();
         }
     }

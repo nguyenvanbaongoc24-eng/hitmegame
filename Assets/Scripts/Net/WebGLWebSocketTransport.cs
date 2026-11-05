@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -12,12 +13,14 @@ namespace HitMe.NetClientV1
     {
         public event Action<ServerMessage> Received;
         public event Action<string> Closed;
+        public event Action Opened;
         public bool IsConnected { get; private set; }
 
         private readonly IProtocolJson _codec;
         private readonly string _endpoint;
         private int _handle = 0;
         private WebGLSocketReceiver _receiver;
+        private readonly Queue<string> _pendingPayloads = new Queue<string>();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")]
@@ -42,6 +45,9 @@ namespace HitMe.NetClientV1
         public void Connect()
         {
             if (IsConnected) return;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (_handle > 0) return; // A connection is already opening.
+#endif
 
             // Ensure receiver GameObject exists for jslib SendMessage callbacks
             var receiverObj = GameObject.Find("HitMeWsReceiver");
@@ -75,10 +81,13 @@ namespace HitMe.NetClientV1
             if (message == null) return;
             string payload = _codec.ToJson(message);
 #if UNITY_WEBGL && !UNITY_EDITOR
-            if (_handle > 0)
+            if (_handle <= 0) return;
+            if (!IsConnected || HitMeWsIsOpen(_handle) == 0)
             {
-                HitMeWsSend(_handle, payload);
+                _pendingPayloads.Enqueue(payload);
+                return;
             }
+            if (HitMeWsSend(_handle, payload) == 0) Closed?.Invoke("send_failed");
 #endif
         }
 
@@ -102,6 +111,18 @@ namespace HitMe.NetClientV1
         public void OnSocketOpen()
         {
             IsConnected = true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            while (_pendingPayloads.Count > 0)
+            {
+                if (HitMeWsSend(_handle, _pendingPayloads.Peek()) == 0)
+                {
+                    Closed?.Invoke("send_failed");
+                    return;
+                }
+                _pendingPayloads.Dequeue();
+            }
+#endif
+            Opened?.Invoke();
         }
 
         public void OnSocketMessage(string message)
@@ -111,18 +132,22 @@ namespace HitMe.NetClientV1
 
         public void OnSocketError(string error)
         {
+            _pendingPayloads.Clear();
             Closed?.Invoke(error);
         }
 
         public void OnSocketClose(string reason)
         {
             IsConnected = false;
+            _handle = 0;
+            _pendingPayloads.Clear();
             Closed?.Invoke(reason);
         }
 
         public void Dispose()
         {
             IsConnected = false;
+            _pendingPayloads.Clear();
 #if UNITY_WEBGL && !UNITY_EDITOR
             if (_handle > 0)
             {
@@ -132,6 +157,7 @@ namespace HitMe.NetClientV1
 #endif
             Received = null;
             Closed = null;
+            Opened = null;
         }
     }
 

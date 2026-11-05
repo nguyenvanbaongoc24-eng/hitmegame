@@ -1187,7 +1187,7 @@ namespace HitMe.UI
 
 
 
-        private string _activeRoomCode = "HM4826";
+        private string _activeRoomCode = string.Empty;
 
 
 
@@ -1200,6 +1200,8 @@ namespace HitMe.UI
 
 
         private IGameClient _onlineClient;
+        private bool _roomRequestPending;
+        private Coroutine _roomRequestTimeout;
 
 
 
@@ -2443,76 +2445,11 @@ SyncHomeCharacterDisplay();
 
 
         private System.Collections.IEnumerator AutoJoinRoomCoroutine(string roomCode)
-
-
-
         {
-
-
-
             yield return new WaitForSeconds(0.4f);
-
-
-
-            if (string.IsNullOrEmpty(roomCode)) yield break;
-
-
-
-            Debug.Log($"[ProductionUI] Auto-joining room from URL: {roomCode}");
-
-
-
             if (inputRoomCode != null) inputRoomCode.text = roomCode;
-
-
-
-            if (NetConfig.IsOnlineActive)
-
-
-
-            {
-
-
-
-                EnsureOnlineClient();
-
-
-
-                ShowToast($"Đang kết nối vào phòng {roomCode}...", 2.0f);
-
-
-
-                _onlineClient.JoinRoom(roomCode, ClientAuthService.GetOrCreateGuestToken());
-
-
-
-            }
-
-
-
-            else
-
-
-
-            {
-
-
-
-                EnterLobbyWithAutoFill("Phòng Chiến Hữu", roomCode);
-
-
-
-            }
-
-
-
+            if (btnSubmitJoinRoom != null) btnSubmitJoinRoom.onClick.Invoke();
         }
-
-
-
-
-
-
 
         private System.Collections.IEnumerator AutoReadyCoroutine()
 
@@ -3359,6 +3296,7 @@ SyncHomeCharacterDisplay();
 
 
         {
+            ConfigureRoomCodeInput();
 
 
 
@@ -3999,92 +3937,21 @@ SyncHomeCharacterDisplay();
 
 
             if (btnSubmitCreateRoom != null)
-
-
-
-            {
-
-
-
                 btnSubmitCreateRoom.onClick.AddListener(() =>
-
-
-
                 {
-
-
-
                     AudioManager.Instance?.PlayClick();
-
-
-
-                    string roomName = inputRoomName != null && !string.IsNullOrEmpty(inputRoomName.text)
-
-
-
-                        ? inputRoomName.text
-
-
-
-                        : "Phòng Chiến Hữu";
-
-
-
-                    if (NetConfig.IsOnlineActive)
-
-
-
+                    if (!NetConfig.IsOnlineActive)
                     {
-
-
-
-                        EnsureOnlineClient();
-
-
-
-                        ShowToast("Đang kết nối tạo phòng trực tuyến...", 2.0f);
-
-
-
-                        _onlineClient.CreateRoom(ClientAuthService.GetOrCreateGuestToken());
-
-
-
+                        ShowErrorToast("Chưa kết nối máy chủ. Vui lòng mở bản trực tuyến.");
+                        return;
                     }
-
-
-
-                    else
-
-
-
-                    {
-
-
-
-                        _activeRoomCode = "HM" + UnityEngine.Random.Range(1000, 9999);
-
-
-
-                        EnterLobbyWithAutoFill(roomName, _activeRoomCode);
-
-
-
-                    }
-
-
-
+                    if (_roomRequestPending) return;
+                    EnsureOnlineClient();
+                    _roomRequestPending = true;
+                    ShowToast("Đang tạo phòng trực tuyến...", 2.0f);
+                    StartRoomRequestTimeout();
+                    _onlineClient.CreateRoom(ClientAuthService.GetOrCreateGuestToken());
                 });
-
-
-
-            }
-
-
-
-
-
-
 
             if (btnBackFromCreate != null)
 
@@ -4123,168 +3990,49 @@ SyncHomeCharacterDisplay();
 
 
             if (btnPasteCode != null)
-
-
-
-            {
-
-
-
                 btnPasteCode.onClick.AddListener(() =>
-
-
-
                 {
-
-
-
                     AudioManager.Instance?.PlayClick();
-
-
-
-                    if (inputRoomCode != null) inputRoomCode.text = "HM4826";
-
-
-
-                    UpdateJoinRoomSearchStatus("HM4826");
-
-
-
+                    string clipboard = GUIUtility.systemCopyBuffer;
+                    if (inputRoomCode != null && !string.IsNullOrWhiteSpace(clipboard))
+                        inputRoomCode.text = clipboard.Trim();
+                    else
+                    {
+                        ShowToast("Giữ ô mã phòng để dán mã đã sao chép.", 2.5f);
+                        inputRoomCode?.ActivateInputField();
+                    }
                 });
-
-
-
-            }
-
-
-
-
-
-
 
             if (btnScanQr != null)
-
-
-
-            {
-
-
-
                 btnScanQr.onClick.AddListener(() =>
-
-
-
                 {
-
-
-
                     AudioManager.Instance?.PlayClick();
-
-
-
-                    if (inputRoomCode != null) inputRoomCode.text = "HM4826";
-
-
-
-                    UpdateJoinRoomSearchStatus("HM4826");
-
-
-
+                    ShowToast("Quét QR chưa khả dụng. Hãy nhập mã phòng.", 2.5f);
+                    inputRoomCode?.ActivateInputField();
                 });
-
-
-
-            }
-
-
-
-
-
-
 
             if (btnSubmitJoinRoom != null)
-
-
-
-            {
-
-
-
                 btnSubmitJoinRoom.onClick.AddListener(() =>
-
-
-
                 {
-
-
-
                     AudioManager.Instance?.PlayClick();
-
-
-
-                    string code = inputRoomCode != null && !string.IsNullOrEmpty(inputRoomCode.text)
-
-
-
-                        ? inputRoomCode.text.ToUpperInvariant()
-
-
-
-                        : "HM4826";
-
-
-
-                    if (NetConfig.IsOnlineActive)
-
-
-
+                    if (!RoomCode.TryNormalize(inputRoomCode != null ? inputRoomCode.text : null, out string code))
                     {
-
-
-
-                        EnsureOnlineClient();
-
-
-
-                        ShowToast($"Đang kết nối vào phòng {code}...", 2.0f);
-
-
-
-                        _onlineClient.JoinRoom(code, ClientAuthService.GetOrCreateGuestToken());
-
-
-
+                        ShowErrorToast("Mã phòng phải có 6 ký tự hợp lệ.");
+                        return;
                     }
-
-
-
-                    else
-
-
-
+                    if (!NetConfig.IsOnlineActive)
                     {
-
-
-
-                        EnterLobbyWithAutoFill("Phòng Chiến Hữu", code);
-
-
-
+                        ShowErrorToast("Chưa kết nối máy chủ. Vui lòng mở bản trực tuyến.");
+                        return;
                     }
-
-
-
+                    if (_roomRequestPending) return;
+                    EnsureOnlineClient();
+                    _roomRequestPending = true;
+                    if (inputRoomCode != null) inputRoomCode.SetTextWithoutNotify(code);
+                    ShowToast($"Đang kết nối vào phòng {code}...", 2.0f);
+                    StartRoomRequestTimeout();
+                    _onlineClient.JoinRoom(code, ClientAuthService.GetOrCreateGuestToken());
                 });
-
-
-
-            }
-
-
-
-
-
-
 
             if (btnBackFromJoin != null)
 
@@ -4306,6 +4054,7 @@ SyncHomeCharacterDisplay();
 
 
 
+                    CancelRoomRequest();
                     ShowScreen(ProductionScreen.Home);
 
 
@@ -5366,7 +5115,12 @@ SyncHomeCharacterDisplay();
 
 
 
-                if (screen == ProductionScreen.JoinRoom) EnsureRoomCodeKeypad();
+                if (screen == ProductionScreen.JoinRoom)
+                {
+                    var legacyKeypad = joinRoomPanel.transform.Find("KeypadContainer");
+                    if (legacyKeypad != null) legacyKeypad.gameObject.SetActive(false);
+                    UpdateJoinRoomSearchStatus(inputRoomCode != null ? inputRoomCode.text : string.Empty);
+                }
 
 
 
@@ -10460,57 +10214,28 @@ SyncHomeCharacterDisplay();
 
 
 
-        public void UpdateJoinRoomSearchStatus(string code)
-
-
-
+        private void ConfigureRoomCodeInput()
         {
-
-
-
-            if (roomFoundCard != null)
-
-
-
-            {
-
-
-
-                bool found = code.Length >= 6;
-
-
-
-                roomFoundCard.SetActive(found);
-
-
-
-                if (txtFoundRoomInfo != null && found)
-
-
-
-                {
-
-
-
-                    txtFoundRoomInfo.text = "Đã tìm thấy: Phòng Chiến Hữu\nChủ phòng: Nam Làng • 4/6 người • Sân Làng";
-
-
-
-                }
-
-
-
-            }
-
-
-
+            if (inputRoomCode == null) return;
+            inputRoomCode.characterLimit = RoomCode.Length;
+            inputRoomCode.lineType = TMP_InputField.LineType.SingleLine;
+            inputRoomCode.contentType = TMP_InputField.ContentType.Alphanumeric;
+            inputRoomCode.onValueChanged.AddListener(OnRoomCodeChanged);
         }
 
+        private void OnRoomCodeChanged(string raw)
+        {
+            if (inputRoomCode == null) return;
+            string code = string.IsNullOrEmpty(raw) ? string.Empty : raw.ToUpperInvariant();
+            if (code != raw) inputRoomCode.SetTextWithoutNotify(code);
+            UpdateJoinRoomSearchStatus(code);
+        }
 
-
-
-
-
+        public void UpdateJoinRoomSearchStatus(string code)
+        {
+            // Only a server room_state proves a room exists. Never show a fabricated room card.
+            if (roomFoundCard != null) roomFoundCard.SetActive(false);
+        }
 
         private void EnterLobbyWithAutoFill(string roomName, string code)
 
@@ -10532,7 +10257,7 @@ SyncHomeCharacterDisplay();
 
 
 
-        public void UpdateLobbyRoster(int humanCount, string roomName = "Phòng Chiến Hữu", string code = "HM4826")
+        public void UpdateLobbyRoster(int humanCount, string roomName = "Phòng Chiến Hữu", string code = "")
 
 
 
@@ -11476,6 +11201,29 @@ SyncHomeCharacterDisplay();
 
 
 
+        private void StartRoomRequestTimeout()
+        {
+            if (_roomRequestTimeout != null) StopCoroutine(_roomRequestTimeout);
+            _roomRequestTimeout = StartCoroutine(RoomRequestTimeoutRoutine());
+        }
+
+        private IEnumerator RoomRequestTimeoutRoutine()
+        {
+            yield return new WaitForSecondsRealtime(20f);
+            _roomRequestTimeout = null;
+            if (!_roomRequestPending) yield break;
+            _roomRequestPending = false;
+            ShowErrorToast("Máy chủ chưa phản hồi. Vui lòng thử lại.");
+        }
+
+        private void CancelRoomRequest()
+        {
+            _roomRequestPending = false;
+            if (_roomRequestTimeout == null) return;
+            StopCoroutine(_roomRequestTimeout);
+            _roomRequestTimeout = null;
+        }
+
         public void EnsureOnlineClient()
 
 
@@ -11525,6 +11273,7 @@ SyncHomeCharacterDisplay();
 
 
             if (room == null) return;
+            CancelRoomRequest();
 
 
 
@@ -11628,6 +11377,7 @@ SyncHomeCharacterDisplay();
 
 
 
+            CancelRoomRequest();
             ShowErrorToast(viMsg);
 
 
@@ -11661,6 +11411,9 @@ SyncHomeCharacterDisplay();
 
 
         {
+            bool wasJoining = _roomRequestPending;
+            CancelRoomRequest();
+            if (wasJoining) ShowScreen(ProductionScreen.Home);
 
 
 
@@ -13301,822 +13054,6 @@ SyncHomeCharacterDisplay();
 
 
         #region N3: In-Game Room Code Keypad & Reconnect Overlay
-
-
-
-
-
-
-
-        private GameObject _keypadContainer;
-
-
-
-        private string _keypadEnteredCode = "HM4826";
-
-
-
-        private readonly List<TextMeshProUGUI> _keypadCodeSlots = new List<TextMeshProUGUI>();
-
-
-
-
-
-
-
-        private static readonly char[] InGameKeypadChars = new char[]
-
-
-
-        {
-
-
-
-            '2', '3', '4', '5', '6', '7', '8',
-
-
-
-            '9', 'A', 'B', 'C', 'D', 'E', 'F',
-
-
-
-            'G', 'H', 'J', 'K', 'M', 'N', 'P',
-
-
-
-            'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-
-
-
-            'X', 'Y', 'Z'
-
-
-
-        };
-
-
-
-
-
-
-
-        public void EnsureRoomCodeKeypad()
-
-
-
-        {
-
-
-
-            if (joinRoomPanel == null) return;
-
-
-
-            if (_keypadContainer != null) return;
-
-
-
-
-
-
-
-            var existing = joinRoomPanel.transform.Find("KeypadContainer");
-
-
-
-            if (existing != null)
-
-
-
-            {
-
-
-
-                _keypadContainer = existing.gameObject;
-
-
-
-                return;
-
-
-
-            }
-
-
-
-
-
-
-
-            var containerObj = new GameObject("KeypadContainer", typeof(RectTransform));
-
-
-
-            containerObj.transform.SetParent(joinRoomPanel.transform, false);
-
-
-
-            var rt = containerObj.GetComponent<RectTransform>();
-
-
-
-            rt.anchorMin = new Vector2(0.04f, 0.04f);
-
-
-
-            rt.anchorMax = new Vector2(0.96f, 0.45f);
-
-
-
-            rt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-            var bgImg = containerObj.AddComponent<Image>();
-
-
-
-            bgImg.color = new Color(0.08f, 0.12f, 0.18f, 0.90f);
-
-
-
-
-
-
-
-            TMP_FontAsset font = txtLobbyHeader != null ? txtLobbyHeader.font : null;
-
-
-
-
-
-
-
-            var slotsRow = new GameObject("CodeSlotsRow", typeof(RectTransform));
-
-
-
-            slotsRow.transform.SetParent(containerObj.transform, false);
-
-
-
-            var slotsRt = slotsRow.GetComponent<RectTransform>();
-
-
-
-            slotsRt.anchorMin = new Vector2(0.05f, 0.82f);
-
-
-
-            slotsRt.anchorMax = new Vector2(0.95f, 0.98f);
-
-
-
-            slotsRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-            _keypadCodeSlots.Clear();
-
-
-
-            for (int i = 0; i < 6; i++)
-
-
-
-            {
-
-
-
-                var slotObj = new GameObject($"Slot_{i}", typeof(RectTransform));
-
-
-
-                slotObj.transform.SetParent(slotsRow.transform, false);
-
-
-
-                var slotRt = slotObj.GetComponent<RectTransform>();
-
-
-
-                float slotWidth = 1f / 6f;
-
-
-
-                slotRt.anchorMin = new Vector2(i * slotWidth + 0.02f, 0.05f);
-
-
-
-                slotRt.anchorMax = new Vector2((i + 1) * slotWidth - 0.02f, 0.95f);
-
-
-
-                slotRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-                var slotBg = slotObj.AddComponent<Image>();
-
-
-
-                slotBg.color = new Color(0.12f, 0.18f, 0.28f, 0.95f);
-
-
-
-
-
-
-
-                var txtObj = new GameObject("Text", typeof(RectTransform));
-
-
-
-                txtObj.transform.SetParent(slotObj.transform, false);
-
-
-
-                var txtRt = txtObj.GetComponent<RectTransform>();
-
-
-
-                txtRt.anchorMin = Vector2.zero;
-
-
-
-                txtRt.anchorMax = Vector2.one;
-
-
-
-                txtRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-                var txtSlot = txtObj.AddComponent<TextMeshProUGUI>();
-
-
-
-                if (font != null) txtSlot.font = font;
-
-
-
-                txtSlot.fontSize = 22f;
-
-
-
-                txtSlot.fontStyle = FontStyles.Bold;
-
-
-
-                txtSlot.alignment = TextAlignmentOptions.Center;
-
-
-
-                txtSlot.color = new Color(1f, 0.85f, 0.2f);
-
-
-
-                txtSlot.text = i < _keypadEnteredCode.Length ? _keypadEnteredCode[i].ToString() : "_";
-
-
-
-                _keypadCodeSlots.Add(txtSlot);
-
-
-
-            }
-
-
-
-
-
-
-
-            var gridObj = new GameObject("KeypadGrid", typeof(RectTransform));
-
-
-
-            gridObj.transform.SetParent(containerObj.transform, false);
-
-
-
-            var gridRt = gridObj.GetComponent<RectTransform>();
-
-
-
-            gridRt.anchorMin = new Vector2(0.02f, 0.02f);
-
-
-
-            gridRt.anchorMax = new Vector2(0.98f, 0.80f);
-
-
-
-            gridRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-            int charIdx = 0;
-
-
-
-            for (int r = 0; r < 5; r++)
-
-
-
-            {
-
-
-
-                float rowMinY = (4 - r) * 0.20f + 0.01f;
-
-
-
-                float rowMaxY = (5 - r) * 0.20f - 0.01f;
-
-
-
-
-
-
-
-                int cols = (r < 4) ? 7 : 5;
-
-
-
-                for (int c = 0; c < cols; c++)
-
-
-
-                {
-
-
-
-                    var btnObj = new GameObject($"Key_r{r}_c{c}", typeof(RectTransform));
-
-
-
-                    btnObj.transform.SetParent(gridObj.transform, false);
-
-
-
-                    var btnRt = btnObj.GetComponent<RectTransform>();
-
-
-
-
-
-
-
-                    float colMinX, colMaxX;
-
-
-
-                    string keyLabel;
-
-
-
-                    Action keyAction;
-
-
-
-
-
-
-
-                    if (r < 4)
-
-
-
-                    {
-
-
-
-                        colMinX = c * (1f / 7f) + 0.005f;
-
-
-
-                        colMaxX = (c + 1) * (1f / 7f) - 0.005f;
-
-
-
-                        char ch = charIdx < InGameKeypadChars.Length ? InGameKeypadChars[charIdx++] : '?';
-
-
-
-                        keyLabel = ch.ToString();
-
-
-
-                        keyAction = () => OnKeypadKeyPressed(ch);
-
-
-
-                    }
-
-
-
-                    else if (c < 3)
-
-
-
-                    {
-
-
-
-                        colMinX = c * 0.14f + 0.005f;
-
-
-
-                        colMaxX = (c + 1) * 0.14f - 0.005f;
-
-
-
-                        char ch = charIdx < InGameKeypadChars.Length ? InGameKeypadChars[charIdx++] : '?';
-
-
-
-                        keyLabel = ch.ToString();
-
-
-
-                        keyAction = () => OnKeypadKeyPressed(ch);
-
-
-
-                    }
-
-
-
-                    else if (c == 3)
-
-
-
-                    {
-
-
-
-                        colMinX = 3 * 0.14f + 0.005f;
-
-
-
-                        colMaxX = 3 * 0.14f + 0.28f - 0.005f;
-
-
-
-                        keyLabel = "XÓA";
-
-
-
-                        keyAction = OnKeypadBackspacePressed;
-
-
-
-                    }
-
-
-
-                    else
-
-
-
-                    {
-
-
-
-                        colMinX = 3 * 0.14f + 0.28f + 0.005f;
-
-
-
-                        colMaxX = 0.995f;
-
-
-
-                        keyLabel = "XÓA HẾT";
-
-
-
-                        keyAction = OnKeypadClearPressed;
-
-
-
-                    }
-
-
-
-
-
-
-
-                    btnRt.anchorMin = new Vector2(colMinX, rowMinY);
-
-
-
-                    btnRt.anchorMax = new Vector2(colMaxX, rowMaxY);
-
-
-
-                    btnRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-                    var btnImg = btnObj.AddComponent<Image>();
-
-
-
-                    btnImg.color = (r == 4 && c >= 3)
-
-
-
-                        ? new Color(0.40f, 0.15f, 0.15f, 0.95f)
-
-
-
-                        : new Color(0.20f, 0.28f, 0.40f, 0.95f);
-
-
-
-
-
-
-
-                    var btnComp = btnObj.AddComponent<Button>();
-
-
-
-                    btnComp.onClick.AddListener(() => keyAction());
-
-
-
-
-
-
-
-                    var txtObj = new GameObject("Text", typeof(RectTransform));
-
-
-
-                    txtObj.transform.SetParent(btnObj.transform, false);
-
-
-
-                    var txtRt = txtObj.GetComponent<RectTransform>();
-
-
-
-                    txtRt.anchorMin = Vector2.zero;
-
-
-
-                    txtRt.anchorMax = Vector2.one;
-
-
-
-                    txtRt.sizeDelta = Vector2.zero;
-
-
-
-
-
-
-
-                    var txt = txtObj.AddComponent<TextMeshProUGUI>();
-
-
-
-                    if (font != null) txt.font = font;
-
-
-
-                    txt.fontSize = (r == 4 && c >= 3) ? 14f : 18f;
-
-
-
-                    txt.fontStyle = FontStyles.Bold;
-
-
-
-                    txt.alignment = TextAlignmentOptions.Center;
-
-
-
-                    txt.color = Color.white;
-
-
-
-                    txt.text = keyLabel;
-
-
-
-                }
-
-
-
-            }
-
-
-
-            _keypadContainer = containerObj;
-
-
-
-        }
-
-
-
-
-
-
-
-        private void OnKeypadKeyPressed(char ch)
-
-
-
-        {
-
-
-
-            AudioManager.Instance?.PlayClick();
-
-
-
-            if (_keypadEnteredCode.Length < 6)
-
-
-
-            {
-
-
-
-                _keypadEnteredCode += ch;
-
-
-
-                RefreshKeypadDisplay();
-
-
-
-            }
-
-
-
-        }
-
-
-
-
-
-
-
-        private void OnKeypadBackspacePressed()
-
-
-
-        {
-
-
-
-            AudioManager.Instance?.PlayClick();
-
-
-
-            if (_keypadEnteredCode.Length > 0)
-
-
-
-            {
-
-
-
-                _keypadEnteredCode = _keypadEnteredCode.Substring(0, _keypadEnteredCode.Length - 1);
-
-
-
-                RefreshKeypadDisplay();
-
-
-
-            }
-
-
-
-        }
-
-
-
-
-
-
-
-        private void OnKeypadClearPressed()
-
-
-
-        {
-
-
-
-            AudioManager.Instance?.PlayClick();
-
-
-
-            _keypadEnteredCode = "";
-
-
-
-            RefreshKeypadDisplay();
-
-
-
-        }
-
-
-
-
-
-
-
-        private void RefreshKeypadDisplay()
-
-
-
-        {
-
-
-
-            if (inputRoomCode != null)
-
-
-
-            {
-
-
-
-                inputRoomCode.text = _keypadEnteredCode;
-
-
-
-            }
-
-
-
-            for (int i = 0; i < _keypadCodeSlots.Count; i++)
-
-
-
-            {
-
-
-
-                if (_keypadCodeSlots[i] != null)
-
-
-
-                {
-
-
-
-                    _keypadCodeSlots[i].text = i < _keypadEnteredCode.Length ? _keypadEnteredCode[i].ToString() : "_";
-
-
-
-                }
-
-
-
-            }
-
-
-
-            UpdateJoinRoomSearchStatus(_keypadEnteredCode);
-
-
-
-        }
 
 
 

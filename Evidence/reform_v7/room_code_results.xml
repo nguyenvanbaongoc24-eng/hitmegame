@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.0820845">
+  <test-suite type="TestSuite" id="1000" name="HIT ME" fullname="HIT ME" runstate="Runnable" testcasecount="199" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.082085" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1232" name="HitMe.Tests.dll" fullname="D:/HITME GAME/worktrees/codex-reform-v7/Library/ScriptAssemblies/HitMe.Tests.dll" runstate="Runnable" testcasecount="128" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.063626" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="31608" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1233" name="HitMe" fullname="HitMe" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.057679" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1234" name="Tests" fullname="HitMe.Tests" runstate="Runnable" testcasecount="122" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.052591" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1212" name="RoomCodeTests" fullname="HitMe.Tests.RoomCodeTests" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.048682" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1215" name="AcceptsGeneratedAlphabetAndNormalizes" fullname="HitMe.Tests.RoomCodeTests.AcceptsGeneratedAlphabetAndNormalizes" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.038550" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1213" name="AcceptsGeneratedAlphabetAndNormalizes(&quot; hm4826 &quot;,&quot;HM4826&quot;)" fullname="HitMe.Tests.RoomCodeTests.AcceptsGeneratedAlphabetAndNormalizes(&quot; hm4826 &quot;,&quot;HM4826&quot;)" methodname="AcceptsGeneratedAlphabetAndNormalizes" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="394249150" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.020918" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1214" name="AcceptsGeneratedAlphabetAndNormalizes(&quot;aB2c3d&quot;,&quot;AB2C3D&quot;)" fullname="HitMe.Tests.RoomCodeTests.AcceptsGeneratedAlphabetAndNormalizes(&quot;aB2c3d&quot;,&quot;AB2C3D&quot;)" methodname="AcceptsGeneratedAlphabetAndNormalizes" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="82507683" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000275" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1222" name="RejectsIncompleteOrAmbiguousCode" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.003082" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1216" name="RejectsIncompleteOrAmbiguousCode(&quot;&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="906232253" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000668" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1217" name="RejectsIncompleteOrAmbiguousCode(&quot;HM482&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;HM482&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="699557535" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000078" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1218" name="RejectsIncompleteOrAmbiguousCode(&quot;HM48267&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;HM48267&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="945624666" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000056" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1219" name="RejectsIncompleteOrAmbiguousCode(&quot;HM0001&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;HM0001&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="1132910577" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000046" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1220" name="RejectsIncompleteOrAmbiguousCode(&quot;HM 826&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;HM 826&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="2106077783" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1221" name="RejectsIncompleteOrAmbiguousCode(&quot;HMI826&quot;)" fullname="HitMe.Tests.RoomCodeTests.RejectsIncompleteOrAmbiguousCode(&quot;HMI826&quot;)" methodname="RejectsIncompleteOrAmbiguousCode" classname="HitMe.Tests.RoomCodeTests" runstate="Runnable" seed="1320644563" result="Passed" start-time="2026-11-05 07:19:58Z" end-time="2026-11-05 07:19:58Z" duration="0.000051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: D:\HITME GAME\worktrees\codex-reform-v7\Evidence\reform_v7\room_code_results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
