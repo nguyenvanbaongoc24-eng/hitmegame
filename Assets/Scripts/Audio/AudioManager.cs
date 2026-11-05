@@ -93,11 +93,18 @@ namespace HitMe.Audio
 
         public static bool ShouldPlayUnityAudio()
         {
-#if UNITY_EDITOR
-            return true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // The embedded web UI owns audio only when it is actually present.
+            // Standalone Unity WebGL has no hitmeUi.onUnity receiver.
+            return ShouldPlayUnityAudioForMode(HitMe.UI.HitMeWebBridge.IsWebUiMode() == 1);
 #else
-            return PlayerPrefs.GetInt("HitMe_AudioUnity", 0) == 1;
+            return ShouldPlayUnityAudioForMode(false);
 #endif
+        }
+
+        public static bool ShouldPlayUnityAudioForMode(bool isWebUiMode)
+        {
+            return !isWebUiMode;
         }
 
         public void PlayBgm(AudioClip clip, string musicId = null)
