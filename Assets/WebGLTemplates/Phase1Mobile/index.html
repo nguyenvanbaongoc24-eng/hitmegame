@@ -220,62 +220,8 @@
       window.addEventListener("resize", updateCanvasResolution);
       window.addEventListener("orientationchange", updateCanvasResolution);
       updateCanvasResolution();
-      // E2E Test Bridge Contract (A0: Active ONLY when ?e2e=1, Read-Only)
-      if (urlParams.get("e2e") === "1") {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-        window.__hitmeState = {
-          build: "dev",
-          version: "1.0.0",
-          screen: "home",
-          selectedCharacterId: "nam_lang",
-          selectedWeaponId: "dep_to_ong",
-          roster: [
-            { id: "nam_lang", name: "Nam Làng", enabled: true },
-            { id: "nu_nang_dong", name: "Nữ Năng Động", enabled: true },
-            { id: "co_ba", name: "Cô Ba", enabled: true },
-            { id: "anh_teen", name: "Anh Teen", enabled: true },
-            { id: "quay_boy", name: "Quậy Boy", enabled: false },
-            { id: "cho_vang", name: "Chó Vàng", enabled: false },
-            { id: "meo_mun", name: "Mèo Mun", enabled: false }
-          ],
-          weapons: [
-            { id: "dep_to_ong", name: "Dép Tổ Ong", enabled: true },
-            { id: "chao", name: "Chảo", enabled: true },
-            { id: "vot", name: "Vợt", enabled: true }
-          ],
-          canvas: {
-            cssW: window.innerWidth,
-            cssH: window.innerHeight,
-            backingW: Math.round(window.innerWidth * dpr),
-            backingH: Math.round(window.innerHeight * dpr),
-            dpr: dpr
-          },
-          match: {
-            round: 1,
-            phase: "placing",
-            timeLeft: 5.0,
-            playableRect: { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight },
-            players: [],
-            events: []
-          }
-        };
-
-        window.__hitmeUiDump = function() {
-          const w = window.innerWidth;
-          const h = window.innerHeight;
-          const safeTop = (h > 800) ? 44 : 20;
-          return [
-            { name: "BtnQuickMatch", text: "CHƠI NHANH", spriteName: "ui_btn_cta_yellow", rect: { x: (w - 280) / 2, y: h - 230, w: 280, h: 52 }, interactable: true, visible: true },
-            { name: "BtnPractice", text: "LUYỆN VỚI BOT", spriteName: "btn_navy_normal", rect: { x: (w - 280) / 2, y: h - 160, w: 280, h: 48 }, interactable: true, visible: true },
-            { name: "BtnSettings", text: "⚙", spriteName: "ui_btn_circle_back", rect: { x: w - 54, y: safeTop + 10, w: 44, h: 44 }, interactable: true, visible: true }
-          ];
-        };
-      } else {
-        try {
-          delete window.__hitmeState;
-          delete window.__hitmeUiDump;
-        } catch(e) {}
-      }
+      // E2E state is published by HitMeE2EBridge after Unity starts; the page must
+      // never advertise a fabricated gameplay state while the engine is loading.
 
       const script = document.createElement("script"); script.src = versioned(buildUrl + "/{{{ LOADER_FILENAME }}}");
       script.onload = () => createUnityInstance(canvas, config, () => {}).then(instance => { loading.remove(); canvas.focus(); }).catch(error => unityShowBanner(error, "error"));
