@@ -17,6 +17,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
 UNITY = ROOT.parents[1] / "unity-client" / "Assets" / "Art"
+AG_EXPORT = ROOT.parents[1] / "unity-client" / "tools" / "deploy_web" / "catalog"
 OUTPUT = ROOT / "web-ui" / "assets"
 
 
@@ -48,6 +49,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--catalog", type=Path, default=ROOT / "web-ui" / "catalog.json")
     parser.add_argument("--unity-art", type=Path, default=UNITY)
+    parser.add_argument("--ag-export", type=Path, default=AG_EXPORT,
+                        help="Read the Unity-owned catalog image export without changing Unity")
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
     catalog = json.loads(args.catalog.read_text(encoding="utf-8"))
@@ -60,7 +63,8 @@ def main() -> int:
             # The current Quậy Boy head file cuts through his face; derive a
             # provisional head from that same character's menu portrait.
             source_kind = "portrait" if ident == "quay_boy" and kind == "head" else kind
-            sources.append((ident, kind, args.unity_art / "Characters" / ident / "Menu" / f"menu_{ident}_{source_kind}.png"))
+            source = args.ag_export / f"{ident}_{kind}.png" if args.ag_export.is_dir() else args.unity_art / "Characters" / ident / "Menu" / f"menu_{ident}_{source_kind}.png"
+            sources.append((ident, kind, source))
     for item in catalog["weapons"]:
         ident = item["id"]
         if not ident.replace("_", "").isalnum():
@@ -68,7 +72,7 @@ def main() -> int:
         # Art/Weapons has mislabeled sandal placeholders for these two icons.
         # Their actual named icon sprites live in Assets/Sprites.
         alternate = {"chao_chong_dinh": "chao_icon.png", "vot_pickleball": "pickleball_icon.png"}
-        source = (args.unity_art.parent / "Sprites" / alternate[ident]) if ident in alternate else (args.unity_art / "Weapons" / f"{ident}_icon.png")
+        source = args.ag_export / f"{ident}_icon.png" if args.ag_export.is_dir() else ((args.unity_art.parent / "Sprites" / alternate[ident]) if ident in alternate else (args.unity_art / "Weapons" / f"{ident}_icon.png"))
         sources.append((ident, "icon", source))
     missing = [str(path) for _, _, path in sources if not path.is_file()]
     if missing:
@@ -76,7 +80,7 @@ def main() -> int:
     prepared = []
     for ident, kind, source in sources:
         with Image.open(source) as image:
-            if ident == "quay_boy" and kind == "head":
+            if ident == "quay_boy" and kind == "head" and not args.ag_export.is_dir():
                 image = image.crop((0, 0, image.width, round(image.height * .49)))
             validate(image, kind, source)
             prepared.append((ident, kind, source, fit(image, kind)))
@@ -86,7 +90,7 @@ def main() -> int:
         target = args.output / f"{ident}_{kind}.png"
         image.save(target, optimize=True)
         manifest["assets"][f"{ident}_{kind}"] = {
-            "file": target.name, "source": str(source.relative_to(args.unity_art.parent)).replace("\\", "/"),
+            "file": target.name, "source": str(source.relative_to(args.ag_export if args.ag_export.is_dir() else args.unity_art.parent)).replace("\\", "/"),
             "sourceSha256": hashlib.sha256(source.read_bytes()).hexdigest(), "size": list(image.size),
         }
         if ident == "quay_boy" and kind == "head":
