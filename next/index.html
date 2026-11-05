@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
-  <title>HIT ME — Web UI + Unity Hybrid</title>
+  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.2)</title>
   <link rel="stylesheet" href="./style.css">
   <style>
     * { box-sizing: border-box; }
@@ -57,15 +57,15 @@
     #ui-root > * {
       pointer-events: auto;
     }
-    #ui-root.in-gameplay {
+    #ui-root [data-screen="match"] {
       pointer-events: none;
     }
-    #ui-root.in-gameplay .hud-top,
-    #ui-root.in-gameplay .hud-bottom,
-    #ui-root.in-gameplay header,
-    #ui-root.in-gameplay nav,
-    #ui-root.in-gameplay .modal,
-    #ui-root.in-gameplay button {
+    #ui-root [data-screen="match"] .live-top,
+    #ui-root [data-screen="match"] .live-bottom,
+    #ui-root [data-screen="match"] .live-tutorial,
+    #ui-root [data-screen="match"] .modal-shade,
+    #ui-root [data-screen="match"] .modal,
+    #ui-root [data-screen="match"] button {
       pointer-events: auto;
     }
     #unity-loading {
@@ -136,8 +136,59 @@
   </div>
 
   <script>
-    // Hybrid Mode Configuration: Web UI handles interface, Unity handles 2.5D gameplay
     window.__hitmeConfig = { ui: "web" };
+    window.__hitmeReleaseInfo = { version: "0.1.0-beta.2", buildId: "49200d8-3d96cd7" };
+
+    // Deduplicate 10 Hz Unity match ticks so app.js innerHTML does not detach DOM buttons mid-click
+    (function() {
+      let _realHitmeUi = null;
+      let _lastMatchSig = "";
+      Object.defineProperty(window, "hitmeUi", {
+        configurable: true,
+        enumerable: true,
+        get() { return _realHitmeUi; },
+        set(val) {
+          if (val && typeof val.onUnity === "function") {
+            const origOnUnity = val.onUnity.bind(val);
+            val.onUnity = function(event) {
+              let evt = event;
+              try { if (typeof event === "string") evt = JSON.parse(event); } catch (e) {}
+              if (evt && typeof evt === "object") {
+                if (evt.type === "screen" || evt.type === "result") {
+                  _lastMatchSig = "";
+                } else if (evt.type === "match") {
+                  const playersSig = Array.isArray(evt.players)
+                    ? evt.players.map(p => `${p.id}:${p.characterId}:${p.hp}:${p.alive}`).join(",")
+                    : "";
+                  const sig = `${evt.round}|${evt.phase}|${Math.ceil(Number(evt.timeLeft) || 0)}|${evt.toast || ""}|${playersSig}`;
+                  if (sig === _lastMatchSig) return;
+                  _lastMatchSig = sig;
+                }
+              }
+              return origOnUnity(event);
+            };
+          }
+          _realHitmeUi = val;
+        }
+      });
+    })();
+
+    // Inject version + short buildId into Web Settings sheet (R2) without altering fingerprinted app.js
+    const uiRootEl = document.getElementById("ui-root");
+    if (uiRootEl && typeof MutationObserver !== "undefined") {
+      const obs = new MutationObserver(() => {
+        const sheet = uiRootEl.querySelector(".settings-sheet");
+        if (sheet && !sheet.querySelector(".release-version-badge")) {
+          const badge = document.createElement("small");
+          badge.className = "release-version-badge";
+          badge.dataset.name = "release-version";
+          badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
+          badge.textContent = "Phiên bản: 0.1.0-beta.2 (49200d8-3d96cd7)";
+          sheet.appendChild(badge);
+        }
+      });
+      obs.observe(uiRootEl, { childList: true, subtree: true });
+    }
 
     const canvas = document.querySelector("#unity-canvas");
     const loading = document.querySelector("#unity-loading");
@@ -172,26 +223,26 @@
     window.addEventListener("orientationchange", updateCanvasResolution);
     updateCanvasResolution();
 
-    const buildUrl = "../Build";
+    const buildUrl = "./Build";
     const urlParams = new URLSearchParams(window.location.search);
-    const buildVersion = urlParams.get("v") || "1f1cdfa";
+    const buildVersion = urlParams.get("v") || "49200d8-3d96cd7";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
       arguments: [],
-      dataUrl: versioned(buildUrl + "/WebGL_Release_20261104_1f1cdfa.data.br"),
-      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261104_1f1cdfa.framework.js.br"),
-      codeUrl: versioned(buildUrl + "/WebGL_Release_20261104_1f1cdfa.wasm.br"),
-      streamingAssetsUrl: "../StreamingAssets",
+      dataUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.data.br"),
+      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.framework.js.br"),
+      codeUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.wasm.br"),
+      streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
-      productVersion: "1.0.0",
+      productVersion: "0.1.0-beta.2",
       matchWebGLToCanvasSize: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
     };
 
     const script = document.createElement("script");
-    script.src = versioned(buildUrl + "/WebGL_Release_20261104_1f1cdfa.loader.js");
+    script.src = versioned(buildUrl + "/WebGL_Release_20261105_b86353b.loader.js");
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
         const pct = Math.round(progress * 100);
@@ -201,9 +252,8 @@
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
-        console.log("[Next] Unity WebGL loaded successfully in Web UI mode.");
       }).catch(error => {
-        console.error("[Next] Unity WebGL load error:", error);
+        console.error("[Hybrid] Unity WebGL load error:", error);
         if (loadingStatus) loadingStatus.textContent = "Lỗi nạp trò chơi: " + error;
       });
     };
