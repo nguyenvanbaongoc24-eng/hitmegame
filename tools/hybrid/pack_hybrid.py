@@ -283,6 +283,40 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
     window.__hitmeConfig = {{ ui: "web" }};
     window.__hitmeReleaseInfo = {{ version: "{version}", buildId: "{build_id}" }};
 
+    // Deduplicate 10 Hz Unity match ticks so app.js innerHTML does not detach DOM buttons mid-click
+    (function() {{
+      let _realHitmeUi = null;
+      let _lastMatchSig = "";
+      Object.defineProperty(window, "hitmeUi", {{
+        configurable: true,
+        enumerable: true,
+        get() {{ return _realHitmeUi; }},
+        set(val) {{
+          if (val && typeof val.onUnity === "function") {{
+            const origOnUnity = val.onUnity.bind(val);
+            val.onUnity = function(event) {{
+              let evt = event;
+              try {{ if (typeof event === "string") evt = JSON.parse(event); }} catch (e) {{}}
+              if (evt && typeof evt === "object") {{
+                if (evt.type === "screen" || evt.type === "result") {{
+                  _lastMatchSig = "";
+                }} else if (evt.type === "match") {{
+                  const playersSig = Array.isArray(evt.players)
+                    ? evt.players.map(p => `${{p.id}}:${{p.characterId}}:${{p.hp}}:${{p.alive}}`).join(",")
+                    : "";
+                  const sig = `${{evt.round}}|${{evt.phase}}|${{Math.ceil(Number(evt.timeLeft) || 0)}}|${{evt.toast || ""}}|${{playersSig}}`;
+                  if (sig === _lastMatchSig) return;
+                  _lastMatchSig = sig;
+                }}
+              }}
+              return origOnUnity(event);
+            }};
+          }}
+          _realHitmeUi = val;
+        }}
+      }});
+    }})();
+
     // Inject version + short buildId into Web Settings sheet (R2) without altering fingerprinted app.js
     const uiRootEl = document.getElementById("ui-root");
     if (uiRootEl && typeof MutationObserver !== "undefined") {{

@@ -45,6 +45,17 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def launch_browser(p, engine: str):
+    if engine == "chromium":
+        for ch in ("msedge", "chrome", None):
+            try:
+                return p.chromium.launch(headless=True, channel=ch) if ch else p.chromium.launch(headless=True)
+            except Exception:
+                continue
+        return p.webkit.launch(headless=True)
+    return getattr(p, engine).launch(headless=True)
+
+
 def run_r3_viewports(base_url: str, output_dir: Path) -> tuple[dict, list[str]]:
     output_dir.mkdir(parents=True, exist_ok=True)
     base = base_url.rstrip("/") + "/"
@@ -53,7 +64,7 @@ def run_r3_viewports(base_url: str, output_dir: Path) -> tuple[dict, list[str]]:
 
     with sync_playwright() as p:
         for vp_name, (engine, w, h, dpr) in R3_VIEWPORTS.items():
-            browser = getattr(p, engine).launch(headless=True)
+            browser = launch_browser(p, engine)
             context = browser.new_context(
                 viewport={"width": w, "height": h},
                 device_scale_factor=dpr,
