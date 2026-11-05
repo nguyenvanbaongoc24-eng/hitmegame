@@ -369,6 +369,15 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
 
     const buildUrl = "{build_rel_url}";
     const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("e2e") === "1" && typeof WebAssembly !== "undefined" && WebAssembly.Memory) {{
+      const OrigMem = WebAssembly.Memory;
+      WebAssembly.Memory = function(desc) {{
+        const mem = new OrigMem(desc);
+        window.__hitmeWasmMemory = mem;
+        return mem;
+      }};
+      WebAssembly.Memory.prototype = OrigMem.prototype;
+    }}
     const buildVersion = urlParams.get("v") || "{build_id}";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
@@ -396,6 +405,18 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
+        if (urlParams.get("autostart") === "practice") {{
+          const autoChar = urlParams.get("char") || "nam_lang";
+          const autoWeapon = urlParams.get("weapon") || "dep_to_ong";
+          const autoBots = parseInt(urlParams.get("bots") || "3", 10) || 3;
+          setTimeout(() => {{
+            instance.SendMessage("WebBridge", "StartPractice", JSON.stringify({{
+              characterId: autoChar,
+              weaponId: autoWeapon === "dep" ? "dep_to_ong" : autoWeapon,
+              botCount: autoBots
+            }}));
+          }}, 120);
+        }}
       }}).catch(error => {{
         console.error("[Hybrid] Unity WebGL load error:", error);
         if (loadingStatus) loadingStatus.textContent = "Lỗi nạp trò chơi: " + error;
@@ -489,6 +510,12 @@ def main() -> int:
     if ui_preview_dir.exists():
         shutil.rmtree(ui_preview_dir)
     shutil.copytree(codex_webui_dist, ui_preview_dir)
+    ui_prev_index = ui_preview_dir / "index.html"
+    if ui_prev_index.exists():
+        uhtml = ui_prev_index.read_text(encoding="utf-8")
+        mock_boot = '<script>if(!new URLSearchParams(location.search).has("mock")){const u=new URL(location.href);u.searchParams.set("mock","1");history.replaceState(null,"",u);}</script>\n  <script type="module" src="./app.js"></script>'
+        uhtml = uhtml.replace('<script type="module" src="./app.js"></script>', mock_boot)
+        ui_prev_index.write_text(uhtml, encoding="utf-8")
     sync_home_bg(ui_preview_dir / "assets")
     write_release_metadata(
         ui_preview_dir, version, build_id, unity_commit, webui_commit,
