@@ -482,11 +482,14 @@ namespace HitMe.Editor
 
             var codeInputObj = CreatePanel(joinCard.transform, "InputCodeBox", new Vector2(0.5f, 0.65f), new Vector2(0.5f, 0.65f), new Vector2(0.5f, 0.5f), new Vector2(800f, 100f), spriteInputCyan, Color.white);
             var codeInputField = codeInputObj.AddComponent<TMP_InputField>();
-            var codeInputText = CreateTMP(codeInputObj.transform, "Text", fontAsset, "HM4826", 48, Color.yellow, TextAlignmentOptions.Center);
+            var codeInputText = CreateTMP(codeInputObj.transform, "Text", fontAsset, "", 48, Color.yellow, TextAlignmentOptions.Center);
             codeInputText.fontStyle = FontStyles.Bold;
             FillRect(codeInputText.rectTransform, new Vector2(20f, 5f), new Vector2(-20f, -5f));
             codeInputField.textComponent = codeInputText;
-            codeInputField.text = "HM4826";
+            var codePlaceholder = CreateTMP(codeInputObj.transform, "Placeholder", fontAsset, "Nhập mã phòng", 40, new Color(0.65f, 0.7f, 0.74f), TextAlignmentOptions.Center);
+            FillRect(codePlaceholder.rectTransform, new Vector2(20f, 5f), new Vector2(-20f, -5f));
+            codeInputField.placeholder = codePlaceholder;
+            codeInputField.text = "";
             uiCtrl.inputRoomCode = codeInputField;
 
             var btnPaste = CreateButton(joinCard.transform, "BtnPaste", spriteBtnYellow, new Vector2(0.32f, 0.38f), new Vector2(0.32f, 0.38f), new Vector2(0.5f, 0.5f), new Vector2(340f, 90f));

@@ -10230,6 +10230,9 @@ SyncHomeCharacterDisplay();
         private void ConfigureRoomCodeInput()
         {
             if (inputRoomCode == null) return;
+            // Older serialized scenes contained an example room code as actual input.
+            // Clear it even when the scene has not yet been regenerated.
+            inputRoomCode.SetTextWithoutNotify(string.Empty);
             inputRoomCode.characterLimit = RoomCode.Length;
             inputRoomCode.lineType = TMP_InputField.LineType.SingleLine;
             inputRoomCode.contentType = TMP_InputField.ContentType.Alphanumeric;
