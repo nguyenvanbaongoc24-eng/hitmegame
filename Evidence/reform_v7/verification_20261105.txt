@@ -1,0 +1,12 @@
+Branch: feature/codex-reform-v7
+Source commit in WebGL fingerprint: 4ce207e
+Unity: 6000.6.4f1
+EditMode: Evidence/reform_v7/editmode_results_nav.xml => total=202 passed=202 failed=0 skipped=0
+Build log: Evidence/reform_v7/webgl_build_nav.log line 3583 => Release WebGL Build succeeded, 12817441 bytes
+Build directory: Builds/WebGL_Release_20261105_4ce207e
+Build assets checked: index.html, Build/*.data.br, *.framework.js.br, *.loader.js, *.wasm.br
+Browser: http://127.0.0.1:8803/ => Home visible; leaderboard dialog visible and says “Chưa có dữ liệu”; close returns Home.
+Browser: Quest footer interaction inconclusive; one attempt opened Quick Match dialog. Do not mark PASS.
+Render GET https://hitmegame.onrender.com/healthz => HTTP 200.
+Render POST https://hitmegame.onrender.com/guest-token with {} => HTTP 503.
+No production deployment or iPhone audio/touch validation for this build.
