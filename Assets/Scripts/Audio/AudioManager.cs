@@ -1,9 +1,16 @@
 using UnityEngine;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
 
 namespace HitMe.Audio
 {
     public class AudioManager : MonoBehaviour
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")]
+        private static extern int IsWebUiMode();
+#endif
         public static AudioManager Instance { get; private set; }
 
         public static System.Action<string, float, float> OnSfxRequested;
@@ -96,7 +103,7 @@ namespace HitMe.Audio
 #if UNITY_WEBGL && !UNITY_EDITOR
             // The embedded web UI owns audio only when it is actually present.
             // Standalone Unity WebGL has no hitmeUi.onUnity receiver.
-            return ShouldPlayUnityAudioForMode(HitMe.UI.HitMeWebBridge.IsWebUiMode() == 1);
+            return ShouldPlayUnityAudioForMode(IsWebUiMode() == 1);
 #else
             return ShouldPlayUnityAudioForMode(false);
 #endif
