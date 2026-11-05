@@ -137,7 +137,7 @@
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = { version: "0.1.0-beta.2", buildId: "5ceddb2-3d96cd7" };
+    window.__hitmeReleaseInfo = { version: "0.1.0-beta.2", buildId: "759f498-3d96cd7" };
 
     // Deduplicate 10 Hz Unity match ticks so app.js innerHTML does not detach DOM buttons mid-click
     (function() {
@@ -183,7 +183,7 @@
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.2 (5ceddb2-3d96cd7)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.2 (759f498-3d96cd7)";
           sheet.appendChild(badge);
         }
       });
@@ -225,7 +225,16 @@
 
     const buildUrl = "../Build";
     const urlParams = new URLSearchParams(window.location.search);
-    const buildVersion = urlParams.get("v") || "5ceddb2-3d96cd7";
+    if (urlParams.get("e2e") === "1" && typeof WebAssembly !== "undefined" && WebAssembly.Memory) {
+      const OrigMem = WebAssembly.Memory;
+      WebAssembly.Memory = function(desc) {
+        const mem = new OrigMem(desc);
+        window.__hitmeWasmMemory = mem;
+        return mem;
+      };
+      WebAssembly.Memory.prototype = OrigMem.prototype;
+    }
+    const buildVersion = urlParams.get("v") || "759f498-3d96cd7";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
@@ -252,6 +261,18 @@
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
+        if (urlParams.get("autostart") === "practice") {
+          const autoChar = urlParams.get("char") || "nam_lang";
+          const autoWeapon = urlParams.get("weapon") || "dep_to_ong";
+          const autoBots = parseInt(urlParams.get("bots") || "3", 10) || 3;
+          setTimeout(() => {
+            instance.SendMessage("WebBridge", "StartPractice", JSON.stringify({
+              characterId: autoChar,
+              weaponId: autoWeapon === "dep" ? "dep_to_ong" : autoWeapon,
+              botCount: autoBots
+            }));
+          }, 120);
+        }
       }).catch(error => {
         console.error("[Hybrid] Unity WebGL load error:", error);
         if (loadingStatus) loadingStatus.textContent = "Lỗi nạp trò chơi: " + error;

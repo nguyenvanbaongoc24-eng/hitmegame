@@ -11,6 +11,7 @@
 <body>
   <canvas id="unity-canvas" aria-label="Sân chơi HIT ME"></canvas>
   <div id="ui-root"></div>
+  <script>if(!new URLSearchParams(location.search).has("mock")){const u=new URL(location.href);u.searchParams.set("mock","1");history.replaceState(null,"",u);}</script>
   <script type="module" src="./app.js"></script>
 </body>
 </html>
