@@ -60,7 +60,9 @@ namespace HitMe.NetClientV1
                 request.uploadHandler = new UploadHandlerRaw(body);
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.SetRequestHeader("Content-Type", "application/json");
-                request.timeout = 15;
+                // Render's free instance can take roughly a minute to wake.
+                // Keep the real request pending instead of reporting a false failure.
+                request.timeout = 75;
                 yield return request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success)
                 {
