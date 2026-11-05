@@ -105,6 +105,8 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 .home .blue>span,.home .green>span{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
 .home .blue strong,.home .green strong{font-size:clamp(11px,3.35vw,16px);white-space:nowrap}
 .home .blue small,.home .green small{font-size:clamp(9px,2.6vw,12px);white-space:nowrap}
+.home .weapon-card b{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.05;max-height:2.2em}
+@media(max-height:500px){.home .weapon-card{padding-top:0;padding-bottom:0}.home .weapon-card small{font-size:12px}.home .weapon-card b{font-size:14px;line-height:1}}
 /* Only HUD and controls take pointer events; the middle of the court belongs to Unity. */
 .live-match{background:transparent;pointer-events:none;box-shadow:none}
 .live-match button,.live-match .live-tutorial,.live-match .modal-shade{pointer-events:auto}

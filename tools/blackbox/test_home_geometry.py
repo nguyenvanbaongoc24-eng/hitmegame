@@ -42,11 +42,21 @@ def run() -> int:
                     buttons = {key: page.locator(f'.home .{key}').evaluate(
                         'e => Math.max(0, e.scrollWidth - e.clientWidth)')
                         for key in ('blue', 'green', 'quick')}
+                    weapon_name = page.locator('.weapon-card b').evaluate(
+                        '''e => {const range=document.createRange();range.selectNodeContents(e);
+                          const text=range.getBoundingClientRect();
+                          const card=e.closest('.weapon-card').getBoundingClientRect();
+                          return {fits:text.left>=card.left && text.right<=card.right &&
+                            text.top>=card.top && text.bottom<=card.bottom,
+                            text:e.textContent,
+                            lines:Math.round(e.getBoundingClientRect().height /
+                              parseFloat(getComputedStyle(e).lineHeight))};}''')
                     hero = page.locator('.hero').is_visible()
                     page.screenshot(path=str(OUT / f'{name}.png'))
-                    results[name] = {'status': 'PASS' if hero and not errors and
+                    results[name] = {'status': 'PASS' if hero and weapon_name['fits'] and not errors and
                                      all(value == 0 for value in buttons.values()) else 'FAIL',
-                                     'heroLoaded': hero, 'overflowPx': buttons, 'errors': errors}
+                                     'heroLoaded': hero, 'weaponName': weapon_name,
+                                     'overflowPx': buttons, 'errors': errors}
                 except Exception as exc:
                     results[name] = {'status': 'FAIL', 'error': f'{type(exc).__name__}: {exc}'[:240]}
                 context.close()
@@ -59,7 +69,7 @@ def run() -> int:
     print(f'Passed! {passed}/{len(results)}')
     for name, row in results.items():
         if row['status'] != 'PASS':
-            print(name, row)
+            print(name, json.dumps(row, ensure_ascii=True))
     return 0 if passed == len(results) else 1
 
 
