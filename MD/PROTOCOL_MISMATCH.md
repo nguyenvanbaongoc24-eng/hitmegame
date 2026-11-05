@@ -10,6 +10,6 @@
 
 ## Bản `/next/` đang phát hành, kiểm ngày 05-11-2026
 
-- `app.js` tại Vercel có SHA-256 bắt đầu `84697d77e2663c89`; `web-ui/dist/app.js` ở nhánh `prep/codex` mới hơn. Kiểm thử gameplay hybrid bị chặn bằng `deploymentSynced=false`, không tính là đạt.
+- `app.js` tại Vercel có SHA-256 bắt đầu `84697d77e2663c89`; `web-ui/dist/app.js` ở nhánh `prep/codex` mới hơn. Cổng triển khai nay so 6 tệp (`app.js`, `style.css`, `catalog.json`, `live.js`, `audio.js`, `bridge.js`); 4 tệp đầu chưa khớp. Kiểm thử gameplay hybrid bị chặn bằng `deploymentSynced=false`, không tính là đạt.
 - Ảnh Home đầu tiên bị thiếu nhân vật do chụp trước khi `.hero` tải xong. Kiểm lại sau khi `naturalWidth > 0` thấy nhân vật; đây là lỗi của công cụ chụp.
 - Bản đang phát hành thực sự tràn nhãn TẠO PHÒNG/VÀO PHÒNG 29–30 px trên iPhone 393×695. Bản web mới đã tách nhãn và trạng thái “Sắp ra mắt” thành hai dòng; `test_home_geometry.py` kiểm 6 kích thước. AG cần lấy `web-ui/dist` từ `prep/codex` mới nhất, deploy lại `/next/`, rồi Codex chạy lại kiểm thử hybrid có gameplay thật.

@@ -34,19 +34,21 @@ def sha(data: bytes) -> str:
 def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
     output.mkdir(parents=True, exist_ok=True)
     base = url.rstrip('/') + '/'
-    local_hash = sha((ROOT / 'web-ui' / 'dist' / 'app.js').read_bytes())
-    try:
-        with urlopen(base + 'app.js', timeout=20) as response:
-            remote_hash = sha(response.read()) if response.status == 200 else None
-    except Exception as exc:
-        remote_hash = None
-        fetch_error = type(exc).__name__
-    else:
-        fetch_error = None
-    synced = local_hash == remote_hash
+    fingerprints = {}
+    for name in ('app.js', 'style.css', 'catalog.json', 'live.js', 'audio.js', 'bridge.js'):
+        local_hash = sha((ROOT / 'web-ui' / 'dist' / name).read_bytes())
+        try:
+            with urlopen(base + name, timeout=20) as response:
+                remote_hash = sha(response.read()) if response.status == 200 else None
+            fetch_error = None
+        except Exception as exc:
+            remote_hash = None
+            fetch_error = type(exc).__name__
+        fingerprints[name] = {'localSha256': local_hash, 'remoteSha256': remote_hash,
+                              'synced': local_hash == remote_hash, 'fetchError': fetch_error}
+    synced = all(item['synced'] for item in fingerprints.values())
     results: dict = {'url': base, 'utc': datetime.now(timezone.utc).isoformat(),
-                     'localAppSha256': local_hash, 'remoteAppSha256': remote_hash,
-                     'deploymentSynced': synced, 'fetchError': fetch_error, 'profiles': {}}
+                     'fingerprints': fingerprints, 'deploymentSynced': synced, 'profiles': {}}
     with sync_playwright() as playwright:
         for name, (engine, width, height, dpr) in PROFILES.items():
             browser = getattr(playwright, engine).launch(headless=True, **({'channel': 'msedge'} if engine == 'chromium' else {}))
