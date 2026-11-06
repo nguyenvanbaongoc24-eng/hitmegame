@@ -15,7 +15,7 @@ def read(path):
 
 
 def main():
-    live = read(EVIDENCE / 'next_local_web2' / 'results.json')
+    live = read(EVIDENCE / 'next_local_web2_final' / 'results.json')
     home = read(EVIDENCE / 'home_spacing_web2' / 'results.json')
     hud = read(EVIDENCE / 'match_hud_web2' / 'results.json')
     preview = read(ROOT / 'web-ui' / 'evidence' / 'preview_flow' / 'results.json')
