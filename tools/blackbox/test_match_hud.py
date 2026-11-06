@@ -69,6 +69,11 @@ def main():
                 page.locator('.live-emotes.phrase button').first.click()
                 checks['EMO-07_card_bubble'] = page.locator('.live-card[data-player="player"] .live-card-bubble').is_visible()
                 checks['EMO-07_bridge_send'] = any(x['m'] == 'SendEmote' for x in page.evaluate('window.__sent'))
+                page.locator('.live-summary [data-action="settings"]').click()
+                page.locator('[data-action="exit-confirm"]').click()
+                checks['RESULT-01_confirm_was_open'] = page.locator('.modal-shade').count() == 1
+                page.evaluate("hitmeUi.onUnity({type:'screen',name:'result'})")
+                checks['RESULT-01_clears_match_overlay'] = page.locator('.modal-shade').count() == 0 and page.locator('[data-action="exit-match"]').count() == 1
                 checks['no_js_error'] = not errors
                 results[name] = {'checks': checks, 'errors': errors}
                 context.close()

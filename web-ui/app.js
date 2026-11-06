@@ -301,7 +301,7 @@ onUnity(event => {
   if (event.type==='music') {audio.playMusic(event.id,event.action);return;}
   if (event.type==='ready') {state.roster=event.roster||[];state.weapons=event.weapons||[];state.version=event.version||'';state.build=event.build||'';state.ready=true;if(state.overlay==='loading')state.overlay=null;if(!mock)sendLayout();}
   if (event.type==='loading') {state.loadingPercent=Math.max(0,Math.min(100,Number(event.percent)||0));}
-  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) {state.screen=event.name;if(!mock&&event.name==='result')state.sessionMatches++;if(!mock&&event.name==='match'){state.roundEvents=[];state.currentRound=0;}}
+  if (event.type==='screen' && !(mock && params.get('scene') && event.name==='home' && state.screen===params.get('scene'))) {state.screen=event.name;if(!mock&&event.name==='result'){state.sessionMatches++;state.overlay=null;state.tutorialStep=-1;clearPhaseToasts();}if(!mock&&event.name==='match'){state.roundEvents=[];state.currentRound=0;}}
   if (event.type==='selection' && event.characterId) state.characterId=assetId(event.characterId);
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
