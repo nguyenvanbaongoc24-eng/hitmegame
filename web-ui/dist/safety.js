@@ -61,3 +61,4 @@ document.addEventListener('webglcontextlost', event => {
   event.preventDefault();
   window.__hitmeFatal();
 }, true);
+if (window.__hitmePendingFatal) window.__hitmeFatal();

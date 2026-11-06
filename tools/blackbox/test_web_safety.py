@@ -12,8 +12,13 @@ from playwright.sync_api import sync_playwright
 DIST = Path(__file__).resolve().parents[2] / 'web-ui' / 'dist'
 
 
+class Handler(SimpleHTTPRequestHandler):
+    def log_message(self, *_args):
+        pass
+
+
 def run() -> int:
-    server = ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, directory=str(DIST)))
+    server = ThreadingHTTPServer(('127.0.0.1', 0), partial(Handler, directory=str(DIST)))
     threading.Thread(target=server.serve_forever, daemon=True).start()
     results = {}
     try:
@@ -50,6 +55,21 @@ def run() -> int:
                 }
                 context.close()
                 browser.close()
+            for marker in ('Zalo', 'FBAN', 'FBAV', 'FB_IAB', 'Messenger', 'Instagram', 'Line', 'TikTok'):
+                browser = playwright.webkit.launch(headless=True)
+                context = browser.new_context(user_agent=f'Mozilla/5.0 iPhone {marker} Mobile')
+                page = context.new_page()
+                page.goto(f'http://127.0.0.1:{server.server_port}/?mock=1', wait_until='domcontentloaded')
+                page.wait_for_selector('.hitme-browser-tip')
+                results[f'ua_{marker}'] = {'tip_visible': page.locator('.hitme-browser-tip').count() == 1}
+                context.close(); browser.close()
+            browser = playwright.webkit.launch(headless=True)
+            context = browser.new_context(user_agent='Mozilla/5.0 iPhone Safari Mobile')
+            page = context.new_page()
+            page.goto(f'http://127.0.0.1:{server.server_port}/?mock=1', wait_until='domcontentloaded')
+            page.wait_for_selector('.home')
+            results['ua_safari'] = {'tip_hidden': page.locator('.hitme-browser-tip').count() == 0}
+            context.close(); browser.close()
     finally:
         server.shutdown()
     passed = sum(all(row.values()) for row in results.values())
