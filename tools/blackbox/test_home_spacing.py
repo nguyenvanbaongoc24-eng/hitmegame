@@ -36,7 +36,11 @@ def main():
                 context = browser.new_context(viewport={"width":width,"height":height}, device_scale_factor=dpr,
                                               is_mobile=True, has_touch=True)
                 page = context.new_page()
-                page.route("**/Build/**", lambda route: route.abort())
+                # Keep Unity pending in mock mode. Aborting its loader opens the
+                # fatal error dialog, which obscures the visual evidence.
+                page.route("**/*.loader.js*", lambda route: route.fulfill(
+                    status=200, content_type="text/javascript",
+                    body="window.createUnityInstance=()=>new Promise(()=>{});"))
                 page.goto(f"http://127.0.0.1:{server.server_port}/next/?mock=1&e2e=1", wait_until="networkidle")
                 page.wait_for_selector(".home .hero")
                 # Unity is intentionally absent in mock mode; remove its loading veil for visual QA.
