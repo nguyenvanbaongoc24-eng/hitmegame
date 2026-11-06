@@ -125,12 +125,12 @@
         const stageW = Math.min(vw, 430);
         const stageH = vh;
         const origW = 941, origH = 1672;
-        const fy = 0.4844, posY = 0.48;
+        const fy = 0.4844, posY = stageH < 600 ? 0.90 : 0.48;
         const scale = Math.max(stageW / origW, stageH / origH);
         const renderH = origH * scale;
         const dy = (stageH - renderH) * posY;
         const feetY = Math.round(dy + fy * renderH);
-        const heroH = Math.round(Math.max(110, Math.min(220, stageH * 0.278)));
+        const heroH = Math.round(Math.max(110, Math.min(180, stageH * 0.205)));
         document.documentElement.style.setProperty("--pedestal-feet-y", feetY + "px");
         document.documentElement.style.setProperty("--hero-stand-h", heroH + "px");
       }

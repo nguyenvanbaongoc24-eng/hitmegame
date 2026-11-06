@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
-  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.3)</title>
+  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.3+web.1)</title>
   <link rel="stylesheet" href="./style.css">
   <style id="hitme-home-bg-patch">
     /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
@@ -84,10 +84,6 @@
     }
     @media (max-height: 660px) {
       .home .logo { top: 9.5% !important; height: 11.5% !important; }
-      .home .selection-card { top: 53.5% !important; height: 8.2% !important; min-height: 44px !important; }
-      .home .quick { top: 62.8% !important; height: 9.2% !important; min-height: 48px !important; }
-      .home .blue, .home .green { top: 73.2% !important; height: 8.0% !important; min-height: 44px !important; }
-      .home .practice { top: 82.2% !important; height: 7.4% !important; min-height: 44px !important; }
     }
   </style>
   <script>
@@ -124,12 +120,12 @@
         const stageW = Math.min(vw, 430);
         const stageH = vh;
         const origW = 941, origH = 1672;
-        const fy = 0.4844, posY = 0.48;
+        const fy = 0.4844, posY = stageH < 600 ? 0.90 : 0.48;
         const scale = Math.max(stageW / origW, stageH / origH);
         const renderH = origH * scale;
         const dy = (stageH - renderH) * posY;
         const feetY = Math.round(dy + fy * renderH);
-        const heroH = Math.round(Math.max(110, Math.min(220, stageH * 0.278)));
+        const heroH = Math.round(stageH < 600 ? 94 : Math.max(110, Math.min(180, stageH * 0.205)));
         document.documentElement.style.setProperty("--pedestal-feet-y", feetY + "px");
         document.documentElement.style.setProperty("--hero-stand-h", heroH + "px");
       }
@@ -273,7 +269,7 @@
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = { version: "0.1.0-beta.3", buildId: "5e27d8f-3d96cd7" };
+    window.__hitmeReleaseInfo = { version: "0.1.0-beta.3+web.1", buildId: "5e27d8f-1010bde" };
 
     // Deduplicate 10 Hz Unity match ticks and guard active UI pointer interactions so app.js innerHTML never detaches buttons mid-click
     (function() {
@@ -372,7 +368,7 @@
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.3 (5e27d8f-3d96cd7)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.3+web.1 (5e27d8f-1010bde)";
           sheet.appendChild(badge);
         }
       });
@@ -423,7 +419,7 @@
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "5e27d8f-3d96cd7";
+    const buildVersion = urlParams.get("v") || "5e27d8f-1010bde";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
@@ -434,7 +430,7 @@
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
-      productVersion: "0.1.0-beta.3",
+      productVersion: "0.1.0-beta.3+web.1",
       matchWebGLToCanvasSize: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
     };
@@ -455,17 +451,29 @@
           const autoWeapon = urlParams.get("weapon") || "dep_to_ong";
           const autoBots = parseInt(urlParams.get("bots") || "3", 10) || 3;
           setTimeout(() => {
-            instance.SendMessage("WebBridge", "StartPractice", JSON.stringify({
-              characterId: autoChar,
-              weaponId: autoWeapon === "dep" ? "dep_to_ong" : autoWeapon,
-              botCount: autoBots
-            }));
+            try {
+              instance.SendMessage("WebBridge", "StartPractice", JSON.stringify({
+                characterId: autoChar,
+                weaponId: autoWeapon === "dep" ? "dep_to_ong" : autoWeapon,
+                botCount: autoBots
+              }));
+            } catch {
+              window.dispatchEvent(new CustomEvent("hitme-bridge-error", {detail:"StartPractice"}));
+            }
           }, 120);
         }
-      }).catch(error => {
-        console.error("[Hybrid] Unity WebGL load error:", error);
-        if (loadingStatus) loadingStatus.textContent = "Lỗi nạp trò chơi: " + error;
+      }).catch(() => {
+        console.error("[Hybrid] Unity WebGL load error");
+        if (loadingStatus) loadingStatus.textContent = "Không tải được trò chơi";
+        window.__hitmePendingFatal = true;
+        window.__hitmeFatal?.();
       });
+    };
+    script.onerror = () => {
+      console.error("[Hybrid] Unity WebGL loader unavailable");
+      if (loadingStatus) loadingStatus.textContent = "Không tải được trò chơi";
+      window.__hitmePendingFatal = true;
+      window.__hitmeFatal?.();
     };
     document.body.appendChild(script);
   </script>
