@@ -1,3 +1,4 @@
+import './safety.js';
 import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
 import {audio} from './audio.js';
