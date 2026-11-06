@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import urlopen
@@ -19,11 +20,11 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[2]
 PROFILES = {
     'iphone15_safari': ('webkit', 393, 695, 3),
-    'iphonese_safari': ('webkit', 375, 667, 2),
-    'android_chrome': ('chromium', 393, 873, 3),
-    'android_tall': ('chromium', 360, 800, 3),
-    'ipad_safari': ('webkit', 768, 1024, 2),
-    'landscape_chrome': ('chromium', 852, 393, 2),
+    'iphone15_collapsed': ('webkit', 393, 780, 3),
+    'iphone15_standalone': ('webkit', 393, 852, 3),
+    'iphonese_safari': ('webkit', 375, 553, 2),
+    'android_chrome': ('chromium', 360, 640, 3),
+    'android_tall': ('chromium', 412, 780, 2.6),
 }
 
 
@@ -34,9 +35,15 @@ def sha(data: bytes) -> str:
 def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
     output.mkdir(parents=True, exist_ok=True)
     base = url.rstrip('/') + '/'
+    with urlopen(base + 'release.json', timeout=20) as response:
+        release = json.load(response)
+    source_commit = release['webUiCommit']
     fingerprints = {}
     for name in ('app.js', 'style.css', 'catalog.json', 'live.js', 'audio.js', 'bridge.js'):
-        local_hash = sha((ROOT / 'web-ui' / 'dist' / name).read_bytes())
+        # Compare the deployed bytes with the release commit, not Windows checkout
+        # bytes: core.autocrlf changes JSON line endings without changing the build.
+        source = subprocess.check_output(['git', 'show', f'{source_commit}:web-ui/dist/{name}'], cwd=ROOT)
+        local_hash = sha(source)
         try:
             with urlopen(base + name, timeout=20) as response:
                 remote_hash = sha(response.read()) if response.status == 200 else None
@@ -48,6 +55,7 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                               'synced': local_hash == remote_hash, 'fetchError': fetch_error}
     synced = all(item['synced'] for item in fingerprints.values())
     results: dict = {'url': base, 'utc': datetime.now(timezone.utc).isoformat(),
+                     'release': release,
                      'fingerprints': fingerprints, 'deploymentSynced': synced, 'profiles': {}}
     with sync_playwright() as playwright:
         for name, (engine, width, height, dpr) in PROFILES.items():
