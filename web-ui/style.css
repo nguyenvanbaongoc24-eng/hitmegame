@@ -177,3 +177,12 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 .live-card{position:relative}.live-card-bubble{position:absolute;z-index:9;bottom:-27px;left:0;max-width:150px;padding:4px 7px;background:#10243cf4;border:1px solid #ffe06a;border-radius:9px;color:#fff;font-size:11px;white-space:nowrap;animation:emote-pop 2.5s both}.live-card.emoting{animation:emote-shake .8s ease-in-out}
 @keyframes emote-pop{0%{opacity:0;transform:scale(.6)}6%{opacity:1;transform:scale(1.1)}12%,88%{opacity:1;transform:scale(1)}100%{opacity:0}}@keyframes emote-shake{20%,60%{transform:rotate(2deg)}40%,80%{transform:rotate(-2deg)}}
 .live-emote-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.live-emote-tabs button{height:48px;background:#1b3a51;border:1px solid #6caaba;border-radius:10px}.live-emote-tabs button.active{background:#0b6571;border-color:#f9df66}.live-emotes.phrase button{font-size:12px;font-weight:800}.live-emotes.sticker button{display:grid;place-items:center;font-size:12px}.live-emotes small{font-size:9px;color:#f9d86b}
+
+/* W3: size art before reducing the minimum gaps between Home controls. */
+.home .selection-card{top:calc(100% - max(9.1%, 60px) - 264px);height:56px;min-height:56px}
+.home .quick{top:calc(100% - max(9.1%, 60px) - 192px);height:56px;min-height:56px}
+.home .blue,.home .green{top:calc(100% - max(9.1%, 60px) - 124px);height:48px;min-height:48px}
+.home .practice{top:calc(100% - max(9.1%, 60px) - 60px);height:48px;min-height:48px}
+.home .tabs{height:max(9.1%, 60px)}
+@media(max-height:720px){.home .logo{top:9.5%;height:11.5%}.home .hero{top:23%;height:20.5%}}
+@media(max-height:600px){.home .hero{top:23%;height:17%}.home .logo{top:9.5%;height:11.5%}}
