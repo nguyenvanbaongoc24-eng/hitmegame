@@ -107,8 +107,8 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['SET-PAUSE'] = page.locator('[data-action="pause"]').count() == 1
                             page.locator('[data-action="pause"]').click()
                             row['checks']['SET-RESUME'] = page.locator('[data-action="resume"]').count() == 1
-                            page.locator('[data-action="resume"]').click()
-                            page.locator('.live-summary [data-action="settings"]').click()
+                            # Keep Unity paused while exercising overlays. Otherwise the
+                            # fifth round can replace the tutorial with MatchEnd mid-click.
                             page.locator('[data-setting="sfx"]').evaluate("el=>{el.value='35';el.dispatchEvent(new Event('input',{bubbles:true}))}")
                             row['checks']['SET-VOLUME'] = page.evaluate("localStorage.getItem('hitme.sfxVolume')") == '0.35'
                             page.locator('[data-action="tutorial-reopen"]').click()
@@ -118,6 +118,8 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['EMO-OPEN'] = page.locator('[data-action="send-live-emote"]').count() >= 3
                             page.locator('[data-action="send-live-emote"]').first.click()
                             row['checks']['EMO-SEND'] = page.locator('[data-action="send-live-emote"]').count() == 0
+                            page.locator('.live-summary [data-action="settings"]').click()
+                            page.locator('[data-action="resume"]').click()
                         page.wait_for_function("() => window.__hitmeState?.screen === 'result'", timeout=180000)
                         ranking_count = page.locator('.live-rank').count()
                         row['matches'].append({'run': run_no + 1, 'rankings': ranking_count})
