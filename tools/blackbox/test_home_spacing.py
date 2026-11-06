@@ -44,11 +44,12 @@ def main():
                 page.screenshot(path=str(args.output / f"{name}.png"))
                 boxes = page.evaluate("""() => Object.fromEntries(['logo','hero','character-card','weapon-card','quick','blue','green','practice','tabs'].map(k=>{const r=document.querySelector('.home .'+k).getBoundingClientRect();return [k,{x:r.x,y:r.y,right:r.right,bottom:r.bottom,w:r.width,h:r.height}]}))""")
                 gaps = {"logoHero":boxes["hero"]["y"]-boxes["logo"]["bottom"],
+                        "cardsSideBySide":boxes["weapon-card"]["x"]-boxes["character-card"]["right"],
                         "cardsQuick":boxes["quick"]["y"]-max(boxes[k]["bottom"] for k in ("character-card","weapon-card")),
                         "quickRooms":min(boxes[k]["y"] for k in ("blue","green"))-boxes["quick"]["bottom"],
                         "roomsPractice":boxes["practice"]["y"]-max(boxes[k]["bottom"] for k in ("blue","green")),
                         "practiceTabs":boxes["tabs"]["y"]-boxes["practice"]["bottom"]}
-                limits={"logoHero":8,"cardsQuick":16,"quickRooms":12,"roomsPractice":16,"practiceTabs":12}
+                limits={"logoHero":8,"cardsSideBySide":12,"cardsQuick":16,"quickRooms":12,"roomsPractice":16,"practiceTabs":12}
                 failures=[f"{k} {gaps[k]:.1f} < {minimum}" for k,minimum in limits.items() if gaps[k]<minimum-0.5]
                 results[name]={"gaps":gaps,"boxes":boxes,"failures":failures}
                 context.close(); browser.close()

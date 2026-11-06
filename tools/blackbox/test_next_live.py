@@ -97,6 +97,12 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['F7-TUTORIAL'] = page.locator('.live-tutorial').count() == 1
                             if row['checks']['F7-TUTORIAL']:
                                 page.locator('[data-action="tutorial-skip"]').click()
+                            # Measure input hit target while the match is still live. A fast
+                            # bot match may finish during settings/emote checks below.
+                            row['checks']['ARENA-TOUCH'] = page.evaluate("""() => {
+                                const c=document.querySelector('#unity-canvas');const r=c.getBoundingClientRect();
+                                return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===c;
+                            }""")
                             page.locator('.live-summary [data-action="settings"]').click()
                             row['checks']['SET-PAUSE'] = page.locator('[data-action="pause"]').count() == 1
                             page.locator('[data-action="pause"]').click()
@@ -112,10 +118,6 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['EMO-OPEN'] = page.locator('[data-action="send-live-emote"]').count() >= 3
                             page.locator('[data-action="send-live-emote"]').first.click()
                             row['checks']['EMO-SEND'] = page.locator('[data-action="send-live-emote"]').count() == 0
-                            row['checks']['ARENA-TOUCH'] = page.evaluate("""() => {
-                                const c=document.querySelector('#unity-canvas');const r=c.getBoundingClientRect();
-                                return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===c;
-                            }""")
                         page.wait_for_function("() => window.__hitmeState?.screen === 'result'", timeout=180000)
                         ranking_count = page.locator('.live-rank').count()
                         row['matches'].append({'run': run_no + 1, 'rankings': ranking_count})

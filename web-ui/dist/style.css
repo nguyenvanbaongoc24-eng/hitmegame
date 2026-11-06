@@ -180,6 +180,7 @@ button:not(:disabled):active{transform:translateY(4px) scale(.96);box-shadow:0 1
 
 /* W3: size art before reducing the minimum gaps between Home controls. */
 .home .selection-card{top:calc(100% - max(9.1%, 60px) - 264px);height:56px;min-height:56px}
+.home .character-card,.home .weapon-card{width:43.5%}
 .home .quick{top:calc(100% - max(9.1%, 60px) - 192px);height:56px;min-height:56px}
 .home .blue,.home .green{top:calc(100% - max(9.1%, 60px) - 124px);height:48px;min-height:48px}
 .home .practice{top:calc(100% - max(9.1%, 60px) - 60px);height:48px;min-height:48px}
