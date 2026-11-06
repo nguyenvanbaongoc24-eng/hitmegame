@@ -96,7 +96,7 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['HUD-01'] = page.locator('.live-card').count() >= 2
                             row['checks']['F7-TUTORIAL'] = page.locator('.live-tutorial').count() == 1
                             if row['checks']['F7-TUTORIAL']:
-                                page.locator('[data-action="tutorial-skip"]').click()
+                                page.locator('[data-action="tutorial-skip"]').evaluate('el => el.click()')
                             # Measure input hit target while the match is still live. A fast
                             # bot match may finish during settings/emote checks below.
                             row['checks']['ARENA-TOUCH'] = page.evaluate("""() => {
@@ -113,7 +113,7 @@ def run(url: str, output: Path, matches: int, gameplay: bool) -> int:
                             row['checks']['SET-VOLUME'] = page.evaluate("localStorage.getItem('hitme.sfxVolume')") == '0.35'
                             page.locator('[data-action="tutorial-reopen"]').click()
                             row['checks']['F7-REOPEN'] = page.locator('.live-tutorial').count() == 1
-                            page.locator('[data-action="tutorial-skip"]').click()
+                            page.locator('[data-action="tutorial-skip"]').evaluate('el => el.click()')
                             page.locator('.live-bottom [data-action="emote"]').click()
                             row['checks']['EMO-OPEN'] = page.locator('[data-action="send-live-emote"]').count() >= 3
                             page.locator('[data-action="send-live-emote"]').first.click()
