@@ -55,6 +55,11 @@ def main():
                 checks['HUD-16_ready_button'] = page.locator('.live-ready').is_visible()
                 page.locator('.live-ready').click()
                 checks['HUD-16_ready_sends'] = any(x['m'] == 'Ready' for x in page.evaluate('window.__sent'))
+                page.evaluate("hitmeUi.onUnity({type:'event',kind:'throw'})")
+                page.evaluate("hitmeUi.onUnity({type:'match',round:2,maxRounds:5,phase:'round_result',timeLeft:0,players:[{id:'player',name:'Bạn',characterId:'nam_lang',hp:3,maxHp:3,alive:true,isLocal:true}]})")
+                page.evaluate("hitmeUi.onUnity({type:'event',kind:'round_result'})")
+                checks['HUD-13_no_stale_phase_toast'] = ('Đang ném' not in page.locator('.live-top').inner_text()
+                                                    and page.locator('.live-phase').count() == 1)
                 page.locator('.live-emote-trigger').click()
                 checks['EMO-07_two_tabs'] = page.locator('.live-emote-tabs button').count() == 2
                 page.locator('[data-action="emote-tab"][data-tab="phrase"]').click()

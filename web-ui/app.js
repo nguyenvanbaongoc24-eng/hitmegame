@@ -296,7 +296,7 @@ onUnity(event => {
   if(event.type==='layout')state.layout=event;
   if(event.type==='error'){queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
   if(event.type==='emote'&&!mock){const phrases=document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];showEmoteBubble(event.playerId||'player',event.kind==='phrase'?(phrases[Number(String(event.id).slice(-2))-1]||'GG'):'Sticker');audio.playSfx('emo_pop');}
-  if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!',throw:'Đang ném',round_result:'Kết quả vòng'};const message=names[event.kind]||event.kind;queueToast(message);if(['hit','ko','round_result'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
+  if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!'};const message=names[event.kind];if(message){queueToast(message);if(['hit','ko'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
   if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
   render();
 });
