@@ -118,6 +118,11 @@ function queueToast(message) {
   }
   render();
 }
+function clearPhaseToasts() {
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer=null;
+  state.toasts=[];
+}
 function showEmoteBubble(playerId, label) {
   state.emoteBubbles[playerId]=label;
   render();
@@ -301,7 +306,7 @@ onUnity(event => {
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') {state.lobby=event;state.lobbyReady=!!event.players?.find(p=>p.id==='local')?.ready;}
-  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast)queueToast(event.toast);}}
+  if (event.type==='match') {if(!mock && state.match?.phase!==event.phase && ['round_result','match_end'].includes(String(event.phase).toLowerCase()))clearPhaseToasts();state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast)queueToast(event.toast);}}
   if (event.type==='result') {
     state.result=event;
     const local=event.rankings.find(player=>player.id==='player');
