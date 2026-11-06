@@ -72,7 +72,7 @@ const remembered = key => {try{return localStorage.getItem(key)}catch{return nul
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
-const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
+const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,emoteTab:'sticker',emoteBubbles:{},emoteCooldownUntil:0,readyLocked:false,practiceActive:false,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
 state.layout=null;state.toasts=[];state.roundEvents=[];state.currentRound=0;state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
 let tutorialPointer=null;
 canvas.addEventListener('pointerdown', event => {
@@ -105,6 +105,19 @@ function queueToast(message) {
   }
   render();
 }
+function showEmoteBubble(playerId, label) {
+  state.emoteBubbles[playerId]=label;
+  render();
+  setTimeout(()=>{delete state.emoteBubbles[playerId];render();},2500);
+}
+// Practice-only ambient emotes. Never derive a bot's position from this UI.
+setInterval(()=>{
+  if(mock||!state.practiceActive||state.screen!=='match'||!state.match?.players?.length)return;
+  const bots=state.match.players.filter(player=>player.id!=='player'&&player.alive!==false);
+  if(!bots.length)return;
+  const bot=bots[Math.floor(Math.random()*bots.length)];
+  showEmoteBubble(bot.id,['GG','Chào!','Ối!'][Math.floor(Math.random()*3)]);
+},20000);
 function sendLayout() {
   const height=window.visualViewport?.height||innerHeight;
   const top=Math.round(Math.max(92,Math.min(175,height*.2)));
@@ -158,7 +171,9 @@ function modal() {
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
   const settings = state.overlay === 'settings' ? `<label class="sheet-setting">Nhạc nền <input type="range" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}"></label><label class="sheet-setting">Hiệu ứng <input type="range" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}"></label>${!mock&&state.screen==='match'?`<button class="live-secondary" data-action="${state.paused?'resume':'pause'}">${state.paused?'TIẾP TỤC':'TẠM DỪNG'}</button><button class="live-secondary" data-action="exit-confirm">THOÁT TRẬN</button>`:''}<button class="live-secondary" data-action="tutorial-reopen">XEM LẠI HƯỚNG DẪN</button>` : '';
   const confirmation = state.overlay==='exit-confirm' ? `<p>Thoát trận luyện với bot?</p><button class="live-primary" data-action="exit-match">THOÁT TRẬN</button><button class="live-secondary" data-action="close">Ở LẠI</button>` : '';
-  const emotes = state.overlay==='emote' ? `<div class="live-emotes">${['😀','😂','😮','👍','💪','❤️'].map((face,i)=>`<button data-action="send-live-emote" data-id="sticker_0${i+1}">${face}</button>`).join('')}</div>` : '';
+  const emotePhrases = document.documentElement.lang==='en' ? ['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG'] : ['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];
+  const stickerIcon='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg>';
+  const emotes = state.overlay==='emote' ? `<div class="live-emote-tabs"><button data-action="emote-tab" data-tab="sticker" class="${state.emoteTab==='sticker'?'active':''}">Sticker</button><button data-action="emote-tab" data-tab="phrase" class="${state.emoteTab==='phrase'?'active':''}">${document.documentElement.lang==='en'?'Quick phrases':'Câu nhanh'}</button></div><div class="live-emotes ${state.emoteTab}">${state.emoteTab==='sticker'?Array.from({length:6},(_,i)=>`<button data-action="send-live-emote" data-kind="sticker" data-id="sticker_0${i+1}" aria-label="Sticker ${i+1}">${stickerIcon}<small>sticker tạm</small></button>`).join(''):emotePhrases.map((text,i)=>`<button data-action="send-live-emote" data-kind="phrase" data-id="phrase_0${i+1}">${safeText(text)}</button>`).join('')}</div>` : '';
   const back = ['rank','quests'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
   return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${confirmation}${emotes}${['character','weapon','join','settings','exit-confirm','emote'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
@@ -218,12 +233,14 @@ root.addEventListener('click', event => {
   if(!mock&&action==='pause'){send('Pause');state.paused=true;return render();}
   if(!mock&&action==='resume'){send('Resume');state.paused=false;state.overlay=null;return render();}
   if(!mock&&action==='exit-confirm'){state.overlay='exit-confirm';return render();}
-  if(!mock&&action==='exit-match'){send('ExitMatch');state.overlay=null;state.screen='home';state.paused=false;return render();}
+  if(!mock&&action==='exit-match'){send('ExitMatch');state.overlay=null;state.screen='home';state.paused=false;state.practiceActive=false;return render();}
   if(!mock&&action==='rematch'){send('Rematch');state.result=null;state.screen='match';state.tutorialStep=-1;return render();}
-  if(!mock&&action==='emote'){state.overlay='emote';return render();}
-  if(!mock&&action==='send-live-emote'){send('SendEmote',{kind:'sticker',id:button.dataset.id});state.overlay=null;return render();}
+  if(!mock&&action==='ready'){if(state.match?.phase?.toLowerCase()==='placing'&&!state.readyLocked){state.readyLocked=send('Ready');render();}return;}
+  if(!mock&&action==='emote'){if(Date.now()<state.emoteCooldownUntil)return;state.overlay='emote';return render();}
+  if(!mock&&action==='emote-tab'){state.emoteTab=button.dataset.tab;return render();}
+  if(!mock&&action==='send-live-emote'){if(Date.now()<state.emoteCooldownUntil)return;const id=button.dataset.id,kind=button.dataset.kind;state.emoteCooldownUntil=Date.now()+3000;showEmoteBubble('player',kind==='phrase'?(document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'])[Number(id.slice(-2))-1]:'Sticker');send('SendEmote',{kind,id});state.overlay=null;return render();}
   if(!mock&&action==='practice'){state.screen='bot';return render();}
-  if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
+  if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
   if (action==='locked') {navigator.vibrate?.(30);return;}
   if (action.startsWith('go-')) return go(action.slice(3));
   if (action==='settings-done') return go(state.previousScreen);
@@ -270,7 +287,7 @@ onUnity(event => {
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') state.lobby=event;
-  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];}if(event.toast)queueToast(event.toast);}}
+  if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast)queueToast(event.toast);}}
   if (event.type==='result') {
     state.result=event;
     const local=event.rankings.find(player=>player.id==='player');
@@ -278,7 +295,7 @@ onUnity(event => {
   }
   if(event.type==='layout')state.layout=event;
   if(event.type==='error'){queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
-  if(event.type==='emote'&&!mock){queueToast(event.id||'☺');audio.playSfx('emo_pop');}
+  if(event.type==='emote'&&!mock){const phrases=document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];showEmoteBubble(event.playerId||'player',event.kind==='phrase'?(phrases[Number(String(event.id).slice(-2))-1]||'GG'):'Sticker');audio.playSfx('emo_pop');}
   if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!',throw:'Đang ném',round_result:'Kết quả vòng'};const message=names[event.kind]||event.kind;queueToast(message);if(['hit','ko','round_result'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
   if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
   render();
