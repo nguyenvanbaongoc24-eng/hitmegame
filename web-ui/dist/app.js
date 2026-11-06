@@ -72,7 +72,7 @@ const remembered = key => {try{return localStorage.getItem(key)}catch{return nul
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
-const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,match:null,result:null,overlay:null,emoteTab:'sticker',emoteBubbles:{},emoteCooldownUntil:0,readyLocked:false,practiceActive:false,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
+const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,serverHealth:'waking',match:null,result:null,overlay:null,emoteTab:'sticker',emoteBubbles:{},emoteCooldownUntil:0,readyLocked:false,practiceActive:false,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
 state.layout=null;state.toasts=[];state.roundEvents=[];state.currentRound=0;state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
 let tutorialPointer=null;
 canvas.addEventListener('pointerdown', event => {
@@ -88,6 +88,19 @@ canvas.addEventListener('pointerup', event => {
 canvas.addEventListener('pointercancel', () => {tutorialPointer=null;});
 syncViewport();
 const onlineEnabled = mock || catalog.features?.online === true;
+const healthText = {ready:'Máy chủ sẵn sàng',waking:'Đang đánh thức máy chủ',offline:'Không kết nối'};
+async function checkServerHealth() {
+  if(document.visibilityState==='hidden')return;
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),8000);
+  let status='waking';
+  try {
+    const response=await fetch('https://hitmegame.onrender.com/healthz',{signal:controller.signal,cache:'no-store',mode:'no-cors'});
+    status=response.type==='opaque'?'waking':response.ok&&(await response.json()).status==='ok'?'ready':response.status===503?'waking':'offline';
+  } catch {status=navigator.onLine===false?'offline':'waking';} // Render lacks CORS; opaque means reachable but not proven ready.
+  finally {clearTimeout(timer);}
+  if(state.serverHealth!==status){state.serverHealth=status;render();}
+}
+checkServerHealth();setInterval(checkServerHealth,30000);
 function contractError(code) { console.error(`[HITME_CONTRACT:${code}]`); state.contractErrors.push(code); if(state.contractErrors.length>10)state.contractErrors.shift();render(); }
 window.addEventListener('hitme-contract-error',event=>contractError(event.detail));
 let lastLayout='';
@@ -152,7 +165,7 @@ function home() {
     <button class="hero-arrow right icon-round" data-name="arrow-right" data-action="next" aria-label="Nhân vật tiếp theo">${icon('chevron')}</button>
     <button class="selection-card character-card" data-name="character-card" data-action="character"><img src="${characterImage('head')}" alt=""><span><small>${t('character')}</small><b>${safeText(catalogTitle(character))}</b></span>${icon('chevron')}</button>
     <button class="selection-card weapon-card" data-name="weapon-card" data-action="weapon">${icon('chevron','reverse')}<img src="${safeText(currentWeapon().icon)}" alt=""><span><small>${t('weapon')}</small><b>${safeText(catalogTitle(currentWeapon()))}</b></span>${icon('chevron')}</button>
-    <button class="cta quick ${onlineEnabled?'':'coming-soon'}" data-name="quick-play" data-action="${onlineEnabled?'quick':'online-locked'}">${onlineEnabled?icon('play'):icon('lock')}<span><strong>${t('quickPlay')}</strong><small>${onlineEnabled?t('quickPlayDetail'):t('comingSoon')}</small></span></button>
+    <button class="cta quick ${onlineEnabled?'':'coming-soon'}" data-name="quick-play" data-action="${onlineEnabled?'quick':'online-locked'}">${onlineEnabled?icon('play'):icon('lock')}<span><strong>${t('quickPlay')}</strong><small>${onlineEnabled?t('quickPlayDetail'):t('comingSoon')} ${!onlineEnabled?`<i class="server-dot ${state.serverHealth}" role="status" aria-label="${healthText[state.serverHealth]}" title="${healthText[state.serverHealth]}"></i>`:''}</small></span></button>
     <button class="cta blue ${onlineEnabled?'':'coming-soon'}" data-name="create-room" data-action="${onlineEnabled?'create':'online-locked'}">${onlineEnabled?icon('people'):icon('lock')}<span><strong>${t('createRoom')}</strong>${onlineEnabled?'':`<small>${t('comingSoon')}</small>`}</span></button>
     <button class="cta green ${onlineEnabled?'':'coming-soon'}" data-name="join-room" data-action="${onlineEnabled?'join':'online-locked'}">${onlineEnabled?icon('people'):icon('lock')}<span><strong>${t('joinRoom')}</strong>${onlineEnabled?'':`<small>${t('comingSoon')}</small>`}</span></button>
     <button class="cta navy practice" data-name="practice" data-action="practice">${icon('robot')}<strong>${t('practice')}</strong>${icon('chevron')}</button>
@@ -242,10 +255,11 @@ root.addEventListener('click', event => {
   if(!mock&&action==='practice'){state.screen='bot';return render();}
   if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
   if (action==='locked') {navigator.vibrate?.(30);return;}
-  if (action.startsWith('go-')) return go(action.slice(3));
+  if (action.startsWith('go-')) {if(mock&&state.screen==='lobby'&&action==='go-home')send('LeaveRoom',{});return go(action.slice(3));}
   if (action==='settings-done') return go(state.previousScreen);
   if (action==='bot-minus'||action==='bot-plus') {state.botCount=Math.min(5,Math.max(1,state.botCount+(action==='bot-plus'?1:-1)));return render();}
   if (action==='lobby-ready') {state.lobbyReady=!state.lobbyReady;send('Ready',{ready:state.lobbyReady});return render();}
+  if (mock&&(action==='lobby-add'||action==='lobby-remove')) {window.__hitmeMock?.setLobbySize((state.lobby?.players?.length||1)+(action==='lobby-add'?1:-1));return;}
   if (action==='lobby-practice') return go('bot');
   if (action==='mock-ready') {state.mockEvent='Đã khóa hướng ngắm';return render();}
   if (action==='send-emote') {state.mockEvent=button.dataset.id;go('match');return;}
@@ -257,10 +271,10 @@ root.addEventListener('click', event => {
   if (mock && action==='settings' && state.screen!=='home') {state.overlay='settings';return render();}
   if (mock && action==='emote') return go('emote');
   if (mock && action==='practice') return go('bot');
-  if (mock && action==='quick') {go('search');setTimeout(()=>{if(state.screen==='search'){send('CreateRoom',{characterId:state.characterId,weaponId:state.weaponId});go('lobby')}},650);return;}
-  if (mock && action==='create') {send('CreateRoom',{characterId:state.characterId,weaponId:state.weaponId});return go('lobby');}
+  if (mock && action==='quick') {go('search');setTimeout(()=>{if(state.screen==='search')send('QuickPlay',{characterId:state.characterId,weaponId:state.weaponId})},650);return;}
+  if (mock && action==='create') {send('CreateRoom',{characterId:state.characterId,weaponId:state.weaponId});return;}
   if (mock && action==='join') {state.overlay='join';return render();}
-  if (mock && action==='join-submit') {const code=document.getElementById('room-code')?.value.trim().toUpperCase();if(!/^HM[A-Z0-9]{4}$/.test(code||'')){state.overlay=null;return go('error')}send('JoinRoom',{code,characterId:state.characterId,weaponId:state.weaponId});return go('lobby');}
+  if (mock && action==='join-submit') {const code=document.getElementById('room-code')?.value.trim().toUpperCase();if(!/^HM[A-Z0-9]{4}$/.test(code||'')){state.overlay=null;return go('error')}state.overlay=null;send('JoinRoom',{code,characterId:state.characterId,weaponId:state.weaponId});return;}
   if (['character','weapon','settings','profile','rank','quests','join','shop'].includes(action)) {state.overlay=action;return render();}
   if (['quick','create','practice'].includes(action) && !state.ready) {state.overlay='loading';return render();}
   if (action==='quick') send('QuickPlay',{characterId:state.characterId,weaponId:state.weaponId});
@@ -286,7 +300,7 @@ onUnity(event => {
   if (event.type==='selection' && event.characterId) state.characterId=assetId(event.characterId);
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
-  if (event.type==='lobby') state.lobby=event;
+  if (event.type==='lobby') {state.lobby=event;state.lobbyReady=!!event.players?.find(p=>p.id==='local')?.ready;}
   if (event.type==='match') {state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast)queueToast(event.toast);}}
   if (event.type==='result') {
     state.result=event;
@@ -294,7 +308,7 @@ onUnity(event => {
     audio.playSfx(local?.rank===1?'win':'lose');
   }
   if(event.type==='layout')state.layout=event;
-  if(event.type==='error'){queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
+  if(event.type==='error'){if(mock){state.screen='error';state.lobbyError=event.message||event.code||'Không thể vào phòng';}queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
   if(event.type==='emote'&&!mock){const phrases=document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];showEmoteBubble(event.playerId||'player',event.kind==='phrase'?(phrases[Number(String(event.id).slice(-2))-1]||'GG'):'Sticker');audio.playSfx('emo_pop');}
   if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!'};const message=names[event.kind];if(message){queueToast(message);if(['hit','ko'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
   if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
