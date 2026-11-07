@@ -72,7 +72,7 @@ namespace HitMe.Editor
 
             PlayerSettings.productName = "HIT ME";
             PlayerSettings.companyName = "HitMeStudio";
-            PlayerSettings.bundleVersion = "1.0.0";
+            PlayerSettings.bundleVersion = "0.1.0-beta.5";
             PlayerSettings.defaultWebScreenWidth = 1080;
             PlayerSettings.defaultWebScreenHeight = 2340;
 
@@ -140,7 +140,7 @@ namespace HitMe.Editor
 
             PlayerSettings.productName = "HIT ME";
             PlayerSettings.companyName = "HitMeStudio";
-            PlayerSettings.bundleVersion = "1.0.0";
+            PlayerSettings.bundleVersion = "0.1.0-beta.5";
             PlayerSettings.defaultWebScreenWidth = 1080;
             PlayerSettings.defaultWebScreenHeight = 2340;
 

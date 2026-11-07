@@ -29,7 +29,7 @@ HOME_BG_WEB_DIR = DEPLOY_WEB_DIR / "web_assets" / "bg_home"
 DIST_DIR = DEPLOY_WEB_DIR / "dist"
 BUILDS_DIR = REPO_ROOT / "Builds"
 HOME_BG_DIR = REPO_ROOT / "Assets" / "Art" / "UI" / "HomeBg"
-STAGING_DEPLOY_DIR = REPO_ROOT.parent / "_web_dist_deploy"
+STAGING_DEPLOY_DIR = Path(os.environ.get("HITME_WEB_DIST_STAGING", str(REPO_ROOT.parent / "_web_dist_deploy")))
 TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
 
 
