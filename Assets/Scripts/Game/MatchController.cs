@@ -2117,6 +2117,9 @@ namespace HitMe.Game
 
             State.StartRound();
 
+            if (State.IsTiebreak) TriggerToast("HIỆP PHỤ!");
+            else if (State.NormalRoundNumber == config.SuddenDeathRound) TriggerToast("CHẾT NGAY!");
+
 
 
             var localPlayer = State.FindPlayer("player");

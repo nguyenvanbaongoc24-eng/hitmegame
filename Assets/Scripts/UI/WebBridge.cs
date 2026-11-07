@@ -216,28 +216,42 @@ namespace HitMe.UI
 
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winners)
         {
-            int currentRound = matchController != null && matchController.State != null ? matchController.State.RoundNumber : 1;
+            var state = matchController != null ? matchController.State : null;
+            int currentRound = state != null ? state.RoundNumber : 1;
+            var finalRanks = state != null ? state.GetRankings() : Array.Empty<RankedPlayer>();
             _sb.Clear();
-            _sb.Append("{\"type\":\"result\",\"round\":").Append(currentRound).Append(",\"rankings\":[");
-            if (ranked != null)
+            _sb.Append("{\"type\":\"result\",\"round\":").Append(currentRound)
+               .Append(",\"roundLabel\":\"").Append(EscapeJson(state != null ? state.RoundLabel : "VÒNG 1"))
+               .Append("\",\"tiebreakCount\":").Append(state != null ? state.TiebreakCount : 0)
+               .Append(",\"winnerIds\":[");
+            if (winners != null)
             {
-                for (int i = 0; i < ranked.Count; i++)
+                for (int i = 0; i < winners.Count; i++)
                 {
                     if (i > 0) _sb.Append(",");
-                    var p = ranked[i];
+                    _sb.Append('"').Append(EscapeJson(winners[i])).Append('"');
+                }
+            }
+            _sb.Append("],\"rankings\":[");
+            for (int i = 0; i < finalRanks.Length; i++)
+            {
+                    if (i > 0) _sb.Append(",");
+                    var row = finalRanks[i];
+                    var p = row.Player;
                     bool survived = p.IsAlive;
-                    int rank = i + 1;
                     string charId = matchController != null ? matchController.GetPlayerCharacterId(p.Id) : "nam_lang";
                     int roundSurvived = survived ? currentRound : (p.EliminatedAtRound > 0 ? p.EliminatedAtRound : currentRound);
-                    _sb.Append("{\"id\":\"").Append(p.Id)
+                    _sb.Append("{\"id\":\"").Append(EscapeJson(p.Id))
                        .Append("\",\"name\":\"").Append(EscapeJson(p.Name))
                        .Append("\",\"characterId\":\"").Append(charId)
-                       .Append("\",\"rank\":").Append(rank)
+                       .Append("\",\"rank\":").Append(row.Rank)
                        .Append(",\"hits\":").Append(p.HitsLanded)
+                       .Append(",\"throws\":").Append(p.Throws)
+                       .Append(",\"accuracy\":").Append(row.Accuracy.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
+                       .Append(",\"eliminatedRound\":").Append(p.EliminatedAtRound)
                        .Append(",\"roundSurvived\":").Append(roundSurvived)
                        .Append(",\"survived\":").Append(survived ? "true" : "false")
                        .Append("}");
-                }
             }
             int localHits = 0;
             if (ranked != null)
@@ -736,6 +750,12 @@ namespace HitMe.UI
             _sb.Append("{\"type\":\"match\",");
             _sb.Append("\"round\":").Append(state.RoundNumber).Append(",");
             _sb.Append("\"maxRounds\":").Append(state.Config.MaxRounds).Append(",");
+            _sb.Append("\"roundLabel\":\"").Append(EscapeJson(state.RoundLabel)).Append("\",");
+            _sb.Append("\"tiebreak\":").Append(state.IsTiebreak ? "true" : "false").Append(",");
+            _sb.Append("\"tiebreakCount\":").Append(state.TiebreakCount).Append(",");
+            int aliveCount = 0;
+            for (int i = 0; i < state.Players.Count; i++) if (state.Players[i].IsAlive) aliveCount++;
+            _sb.Append("\"aliveCount\":").Append(aliveCount).Append(",");
             _sb.Append("\"phase\":\"").Append(state.Phase.ToString().ToLowerInvariant()).Append("\",");
             _sb.Append("\"timeLeft\":").Append(matchController.SecondsRemaining.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)).Append(",");
             _sb.Append("\"weaponName\":\"Dép Tổ Ong\",");
