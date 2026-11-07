@@ -27,6 +27,7 @@ namespace HitMe.UI
         private readonly StringBuilder _sb = new StringBuilder(2048);
 
         private int _lastBotCount = 3;
+        private bool _startingScenario;
         private int _lastCharIdx = 0;
         private string _currentToast = "";
         private float _toastExpiryTime = 0f;
@@ -37,6 +38,12 @@ namespace HitMe.UI
             public string characterId;
             public string weaponId;
             public int botCount = 3;
+        }
+
+        [Serializable]
+        private class StartScenarioDto
+        {
+            public string name;
         }
 
         [Serializable]
@@ -180,6 +187,12 @@ namespace HitMe.UI
 
             if (url.IndexOf("autostart=practice", StringComparison.OrdinalIgnoreCase) >= 0)
             {
+                string scenario = GetUrlParam(url, "scenario");
+                if (IsScenarioEnabled() && DevScenario.IsKnown(scenario))
+                {
+                    StartScenario(JsonUtility.ToJson(new StartScenarioDto { name = scenario }));
+                    return;
+                }
                 string charId = GetUrlParam(url, "char");
                 string weaponId = GetUrlParam(url, "weapon");
                 int bots = 3;
@@ -212,6 +225,34 @@ namespace HitMe.UI
                 }
             }
             return "";
+        }
+
+        private static bool IsScenarioEnabled()
+        {
+            string url = Application.absoluteURL;
+            return GetUrlParam(url, "dev") == "1" || GetUrlParam(url, "e2e") == "1";
+        }
+
+        public void StartScenario(string json)
+        {
+            if (!IsScenarioEnabled()) return;
+            StartScenarioDto dto;
+            try { dto = JsonUtility.FromJson<StartScenarioDto>(json); }
+            catch { EmitError("scenario_invalid", "Kịch bản thử không hợp lệ"); return; }
+            if (dto == null || !DevScenario.IsKnown(dto.name))
+            { EmitError("scenario_invalid", "Kịch bản thử không hợp lệ"); return; }
+            if (matchController == null)
+            { EmitError("scenario_unavailable", "Trận đấu chưa sẵn sàng"); return; }
+            matchController.ConfigureScenario(dto.name);
+            int bots = dto.name == "ranking_ties" ? 5
+                : dto.name == "tiebreak3" || dto.name == "tiebreak_draw" || dto.name == "hardcap" ? 2 : 1;
+            _startingScenario = true;
+            try
+            {
+                StartPractice(JsonUtility.ToJson(new StartPracticeDto
+                { characterId = "nam_lang", weaponId = "dep_to_ong", botCount = bots }));
+            }
+            finally { _startingScenario = false; }
         }
 
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winners)
@@ -291,6 +332,7 @@ namespace HitMe.UI
         public void StartPractice(string json)
         {
             EnsureMatchSubscribed();
+            if (!_startingScenario && matchController != null) matchController.ConfigureScenario(null);
             int botCount = 3;
             int charIdx = _lastCharIdx >= 0 ? _lastCharIdx : 0;
             string weaponId = "dep_to_ong";
