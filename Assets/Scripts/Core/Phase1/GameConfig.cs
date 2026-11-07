@@ -24,7 +24,12 @@ namespace HitMe.Core
         public int MaxPlayers = 6;
         public int StartHp = 3;
         public float PlaceSeconds = 5f;
-        public int MaxRounds = 5;
+        // Zero disables the legacy round limit. v1.3 uses HardCapRound instead.
+        public int MaxRounds = 0;
+        public int TiebreakMax = 3;
+        public int TiebreakHp = 1;
+        public int SuddenDeathRound = 10;
+        public int HardCapRound = 25;
         public RoundLimitTiebreakPolicy RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
         public float ArenaWidth = 9.0f;
         public float ArenaHeight = 11.4f;

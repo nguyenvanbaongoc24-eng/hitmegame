@@ -4,7 +4,8 @@ using HitMe.Core;
 
 namespace HitMe.Server.Authority;
 
-public sealed record MatchPlayerResult(string PlayerId, int Rank, int Hp, int HitsLanded, bool RewardEligible = true);
+public sealed record MatchPlayerResult(string PlayerId, int Rank, int Hp, int HitsLanded, bool RewardEligible = true,
+    int Throws = 0, float Accuracy = 0f, int EliminatedRound = 0);
 public sealed record MatchResult(Guid MatchId, DateTimeOffset EndedAt,
     ImmutableArray<MatchPlayerResult> Players, int ProtocolVersion, string ConfigVersion);
 
@@ -30,17 +31,14 @@ public static class MatchResultFactory
     public static MatchResult Create(Guid matchId, DateTimeOffset endedAt, MatchState match,
         IReadOnlySet<string>? ineligiblePlayers = null)
     {
-        var ordered = match.Players.OrderByDescending(player => player.Hp)
-            .ThenByDescending(player => player.HitsLanded)
-            .ThenBy(player => player.Id, StringComparer.Ordinal).ToArray();
+        var ordered = match.GetRankings();
         var players = ImmutableArray.CreateBuilder<MatchPlayerResult>(ordered.Length);
-        var rank = 0;
         for (var i = 0; i < ordered.Length; i++)
         {
-            if (i == 0 || ordered[i].Hp != ordered[i - 1].Hp || ordered[i].HitsLanded != ordered[i - 1].HitsLanded)
-                rank = i + 1;
-            players.Add(new MatchPlayerResult(ordered[i].Id, rank, ordered[i].Hp,
-                ordered[i].HitsLanded, ineligiblePlayers?.Contains(ordered[i].Id) != true));
+            var ranked = ordered[i];
+            players.Add(new MatchPlayerResult(ranked.PlayerId, ranked.Rank, ranked.Hp,
+                ranked.Hits, ineligiblePlayers?.Contains(ranked.PlayerId) != true,
+                ranked.Throws, ranked.Accuracy, ranked.EliminatedRound));
         }
         return new MatchResult(matchId, endedAt, players.MoveToImmutable(), 1, ConfigVersion);
     }

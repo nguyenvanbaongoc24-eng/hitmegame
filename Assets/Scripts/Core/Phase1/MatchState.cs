@@ -7,9 +7,16 @@ namespace HitMe.Core
     {
         private readonly Dictionary<string, RoundInput> _inputs = new Dictionary<string, RoundInput>();
         private readonly List<string> _winnerIds = new List<string>();
+        private readonly List<string> _pendingTiebreak = new List<string>();
         public GameConfig Config { get; private set; }
         public List<PlayerState> Players { get; private set; }
         public int RoundNumber { get; private set; }
+        public int NormalRoundNumber { get; private set; }
+        public int TiebreakCount { get; private set; }
+        public bool IsTiebreak { get; private set; }
+        public bool TiebreakPending { get { return _pendingTiebreak.Count > 0; } }
+        public string RoundLabel { get { return IsTiebreak ? "HIỆP PHỤ " + TiebreakCount : "VÒNG " + NormalRoundNumber; } }
+        public RankedPlayer[] GetRankings() { return MatchRanking.Rank(Players, _winnerIds); }
         public Phase Phase { get; private set; }
         public IReadOnlyList<string> WinnerIds { get { return _winnerIds; } }
         public RoundResolution LastResolution { get; private set; }
@@ -19,6 +26,7 @@ namespace HitMe.Core
             Config = config.Clone();
             Players = new List<PlayerState>(players);
             RoundNumber = 0;
+            NormalRoundNumber = 0;
             Phase = Phase.RoundEnd;
         }
 
@@ -26,6 +34,28 @@ namespace HitMe.Core
         {
             if (Phase == Phase.MatchEnd) return;
             RoundNumber++;
+            if (_pendingTiebreak.Count > 0)
+            {
+                TiebreakCount++;
+                IsTiebreak = true;
+                for (int i = 0; i < _pendingTiebreak.Count; i++)
+                {
+                    var player = FindPlayer(_pendingTiebreak[i]);
+                    player.Hp = Config.TiebreakHp;
+                    player.EliminatedAtRound = 0;
+                    player.LastAim = null;
+                }
+                ResetTiebreakPositions();
+                _pendingTiebreak.Clear();
+            }
+            else
+            {
+                IsTiebreak = false;
+                NormalRoundNumber++;
+                if (NormalRoundNumber == Config.SuddenDeathRound)
+                    for (int i = 0; i < Players.Count; i++)
+                        if (Players[i].IsAlive) Players[i].Hp = 1;
+            }
             _inputs.Clear();
             LastResolution = null;
             Phase = Phase.Placing;
@@ -131,6 +161,9 @@ namespace HitMe.Core
             var aliveBefore = new List<string>();
             for (int i = 0; i < Players.Count; i++) if (Players[i].IsAlive) aliveBefore.Add(Players[i].Id);
             LastResolution = RoundResolver.Resolve(Players, _inputs, Config);
+            for (int i = 0; i < Players.Count; i++)
+                if (!Players[i].IsAlive && aliveBefore.Contains(Players[i].Id) && Players[i].EliminatedAtRound == 0)
+                    Players[i].EliminatedAtRound = RoundNumber;
             EvaluateEnd(aliveBefore);
             return LastResolution;
         }
@@ -145,12 +178,49 @@ namespace HitMe.Core
             }
             if (alive.Count == 0)
             {
-                _winnerIds.Clear();
-                for (int i = 0; i < aliveBefore.Count; i++) _winnerIds.Add(aliveBefore[i]);
-                Phase = Phase.MatchEnd; return;
+                if (TiebreakCount < Config.TiebreakMax)
+                {
+                    _pendingTiebreak.Clear();
+                    _pendingTiebreak.AddRange(aliveBefore);
+                    Phase = Phase.RoundEnd;
+                }
+                else
+                {
+                    _winnerIds.Clear();
+                    _winnerIds.AddRange(aliveBefore);
+                    Phase = Phase.MatchEnd;
+                }
+                return;
+            }
+            if (!IsTiebreak && Config.MaxRounds == 0 && NormalRoundNumber >= Config.HardCapRound)
+            {
+                int bestHp = -1, bestHits = -1;
+                var leaders = new List<string>();
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    var player = Players[i];
+                    if (!player.IsAlive) continue;
+                    player.HardCapHp = player.Hp;
+                    if (player.Hp > bestHp || (player.Hp == bestHp && player.HitsLanded > bestHits))
+                    { bestHp = player.Hp; bestHits = player.HitsLanded; leaders.Clear(); leaders.Add(player.Id); }
+                    else if (player.Hp == bestHp && player.HitsLanded == bestHits) leaders.Add(player.Id);
+                }
+                if (leaders.Count == 1)
+                {
+                    _winnerIds.Clear(); _winnerIds.Add(leaders[0]); Phase = Phase.MatchEnd;
+                }
+                else
+                {
+                    _pendingTiebreak.Clear(); _pendingTiebreak.AddRange(leaders);
+                    for (int i = 0; i < Players.Count; i++)
+                        if (Players[i].IsAlive && !leaders.Contains(Players[i].Id))
+                        { Players[i].Hp = 0; Players[i].EliminatedAtRound = RoundNumber; }
+                    Phase = Phase.RoundEnd;
+                }
+                return;
             }
 
-            if (Config.RoundLimitTiebreak != RoundLimitTiebreakPolicy.ContinueUntilElimination && RoundNumber >= Config.MaxRounds)
+            if (!IsTiebreak && Config.MaxRounds > 0 && Config.RoundLimitTiebreak != RoundLimitTiebreakPolicy.ContinueUntilElimination && NormalRoundNumber >= Config.MaxRounds)
             {
                 _winnerIds.Clear();
                 if (Config.RoundLimitTiebreak == RoundLimitTiebreakPolicy.SharedWin)
@@ -199,6 +269,26 @@ namespace HitMe.Core
         {
             for (int i = 0; i < Players.Count; i++) if (Players[i].Id == id) return Players[i];
             return null;
+        }
+
+        private void ResetTiebreakPositions()
+        {
+            var random = new SeededRandom(Config.Seed + (uint)TiebreakCount * 2654435761u);
+            for (int i = 0; i < _pendingTiebreak.Count; i++)
+            {
+                var player = FindPlayer(_pendingTiebreak[i]);
+                for (int attempt = 0; attempt < 128; attempt++)
+                {
+                    var point = new Vec2(random.Range(Config.MinX, Config.MaxX), random.Range(Config.MinY, Config.MaxY));
+                    bool clear = true;
+                    for (int previous = 0; previous < i; previous++)
+                        if ((FindPlayer(_pendingTiebreak[previous]).Position - point).Length < Config.MinSpawnDistance)
+                        { clear = false; break; }
+                    if (!clear) continue;
+                    player.Position = point;
+                    break;
+                }
+            }
         }
     }
 }
