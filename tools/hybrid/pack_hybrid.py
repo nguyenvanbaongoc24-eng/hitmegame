@@ -695,7 +695,11 @@ def main() -> int:
 
     version_file = DEPLOY_WEB_DIR / "VERSION"
     version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.3"
-    unity_commit = git_rev_short("HEAD")
+    # The packager can change after Unity finishes building. Record the commit
+    # embedded in the selected build directory, not the current packaging HEAD.
+    latest_build = find_latest_release_build()
+    unity_commit = latest_build.name.rsplit("_", 1)[-1]
+    subprocess.run(["git", "cat-file", "-e", f"{unity_commit}^{{commit}}"], cwd=REPO_ROOT, check=True)
     webui_commit = git_rev_short(args.codex_ref)
     build_id = f"{unity_commit}-{webui_commit}"
 
