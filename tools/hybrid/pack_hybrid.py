@@ -784,8 +784,11 @@ def main() -> int:
         catalog_version, gate_passed, failed_ids, args.notes
     )
 
-    # 5. Copy vercel.json to DIST_DIR
-    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+    # 5. Copy vercel.json to DIST_DIR only if its content changed.
+    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
+    vercel_dest = DIST_DIR / "vercel.json"
+    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
+        shutil.copy2(vercel_source, vercel_dest)
 
     print(f"[SUCCESS] Packaged /{args.channel}/ and /ui-preview/ with buildId={build_id} (root / preserved unchanged)")
     return 0
