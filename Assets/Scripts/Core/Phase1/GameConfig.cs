@@ -28,7 +28,12 @@ namespace HitMe.Core
         public float ThrowSeconds = 1.35f;
         public float ResolveSeconds = 1.2f;
         public float TotalResolutionSeconds => RevealSeconds + ThrowSeconds + ResolveSeconds;
-        public int MaxRounds = 5;
+        // Zero disables the legacy five-round limit; v1.3 uses HardCapRound.
+        public int MaxRounds = 0;
+        public int TiebreakMax = 3;
+        public int TiebreakHp = 1;
+        public int SuddenDeathRound = 10;
+        public int HardCapRound = 25;
         public RoundLimitTiebreakPolicy RoundLimitTiebreak = RoundLimitTiebreakPolicy.HighestHp;
         public float ArenaWidth = 9.0f;
         public float ArenaHeight = 11.4f;

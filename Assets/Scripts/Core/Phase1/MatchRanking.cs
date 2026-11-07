@@ -12,6 +12,8 @@ namespace HitMe.Core
         public bool IsAlive { get { return Player.IsAlive; } }
         public int Hp { get { return Player.Hp; } }
         public int HitsLanded { get { return Player.HitsLanded; } }
+        public int Throws { get { return Player.Throws; } }
+        public float Accuracy { get { return Player.Throws == 0 ? 0f : (float)Player.HitsLanded / Player.Throws; } }
         public int EliminatedAtRound { get { return Player.EliminatedAtRound; } }
         public int Rank { get; internal set; }
         public int DisplayIndex { get; internal set; }
@@ -54,6 +56,67 @@ namespace HitMe.Core
     public static class MatchRanking
     {
         public static readonly Comparison<PlayerState> DisplayOrderComparison = CompareDisplayOrder;
+
+        // v1.3 ranking is selected only for the new uncapped rule set. The
+        // legacy ranking API remains available for archived v1.2 vectors.
+        public static RankedPlayer[] RankV13(IReadOnlyList<PlayerState> players, IReadOnlyList<string> winners)
+        {
+            var sorted = new List<PlayerState>(players);
+            sorted.Sort((a, b) => CompareV13(a, b, winners));
+            var ranked = new RankedPlayer[sorted.Count];
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                int rank = i + 1;
+                if (i > 0 && SameV13Rank(sorted[i - 1], sorted[i], winners)) rank = ranked[i - 1].Rank;
+                bool shared = (i > 0 && SameV13Rank(sorted[i - 1], sorted[i], winners))
+                    || (i + 1 < sorted.Count && SameV13Rank(sorted[i], sorted[i + 1], winners));
+                ranked[i] = new RankedPlayer(sorted[i], rank, i, shared, ContainsWinner(winners, sorted[i].Id));
+            }
+            return ranked;
+        }
+
+        private static bool ContainsWinner(IReadOnlyList<string> winners, string id)
+        {
+            for (int i = 0; i < winners.Count; i++) if (winners[i] == id) return true;
+            return false;
+        }
+
+        private static int CompareV13(PlayerState a, PlayerState b, IReadOnlyList<string> winners)
+        {
+            bool aw = ContainsWinner(winners, a.Id), bw = ContainsWinner(winners, b.Id);
+            if (aw != bw) return aw ? -1 : 1;
+            if (a.IsAlive != b.IsAlive) return a.IsAlive ? -1 : 1;
+            if (a.IsAlive)
+            {
+                int hp = b.Hp.CompareTo(a.Hp);
+                if (hp != 0) return hp;
+                int hits = b.HitsLanded.CompareTo(a.HitsLanded);
+                if (hits != 0) return hits;
+            }
+            else
+            {
+                int round = b.EliminatedAtRound.CompareTo(a.EliminatedAtRound);
+                if (round != 0) return round;
+                int hardCapHp = b.HardCapHp.CompareTo(a.HardCapHp);
+                if (hardCapHp != 0) return hardCapHp;
+                if (a.HardCapHp > 0)
+                {
+                    int hits = b.HitsLanded.CompareTo(a.HitsLanded);
+                    if (hits != 0) return hits;
+                }
+            }
+            return string.Compare(a.Id, b.Id, StringComparison.Ordinal);
+        }
+
+        private static bool SameV13Rank(PlayerState a, PlayerState b, IReadOnlyList<string> winners)
+        {
+            bool aw = ContainsWinner(winners, a.Id), bw = ContainsWinner(winners, b.Id);
+            if (aw || bw) return aw && bw;
+            if (a.IsAlive != b.IsAlive) return false;
+            if (a.IsAlive) return a.Hp == b.Hp && a.HitsLanded == b.HitsLanded;
+            if (a.EliminatedAtRound != b.EliminatedAtRound || a.HardCapHp != b.HardCapHp) return false;
+            return a.HardCapHp == 0 || a.HitsLanded == b.HitsLanded;
+        }
 
         public static int CompareCompetitive(PlayerState a, PlayerState b)
         {
@@ -242,7 +305,13 @@ namespace HitMe.Core
                 {
                     outRanked.Add(state.Players[i]);
                 }
-                outRanked.Sort(DisplayOrderComparison);
+                if (state.Config.MaxRounds == 0)
+                {
+                    var v13 = RankV13(state.Players, state.WinnerIds);
+                    outRanked.Clear();
+                    for (int i = 0; i < v13.Length; i++) outRanked.Add(v13[i].Player);
+                }
+                else outRanked.Sort(DisplayOrderComparison);
             }
 
             if (outWinnerIds != null)
@@ -254,7 +323,7 @@ namespace HitMe.Core
                         outWinnerIds.Add(state.WinnerIds[i]);
                     }
                 }
-                else
+                else if (state.Config.MaxRounds != 0)
                 {
                     FillWinners(state.Players, state.Config.RoundLimitTiebreak, outWinnerIds);
                 }

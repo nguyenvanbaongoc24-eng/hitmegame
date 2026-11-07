@@ -15,6 +15,10 @@ namespace HitMe.Game
         public float throwSeconds = Defaults.ThrowSeconds;
         public float resolveSeconds = Defaults.ResolveSeconds;
         public int maxRounds = Defaults.MaxRounds;
+        public int tiebreakMax = Defaults.TiebreakMax;
+        public int tiebreakHp = Defaults.TiebreakHp;
+        public int suddenDeathRound = Defaults.SuddenDeathRound;
+        public int hardCapRound = Defaults.HardCapRound;
         [Tooltip("Prepared for a future approved round cap. Phase 1 currently continues until elimination.")]
         public RoundLimitTiebreakPolicy roundLimitTiebreak = Defaults.RoundLimitTiebreak;
         public float arenaWidth = Defaults.ArenaWidth;
@@ -63,6 +67,10 @@ namespace HitMe.Game
                 ThrowSeconds = throwSeconds,
                 ResolveSeconds = resolveSeconds,
                 MaxRounds = maxRounds,
+                TiebreakMax = tiebreakMax,
+                TiebreakHp = tiebreakHp,
+                SuddenDeathRound = suddenDeathRound,
+                HardCapRound = hardCapRound,
                 RoundLimitTiebreak = roundLimitTiebreak,
                 ArenaWidth = arenaWidth,
                 ArenaHeight = arenaHeight,

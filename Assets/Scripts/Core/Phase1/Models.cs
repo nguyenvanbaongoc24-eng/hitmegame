@@ -16,7 +16,9 @@ namespace HitMe.Core
         public Vec2 Facing;
         [NonSerialized] public Vec2? LastAim;
         public int HitsLanded;
+        public int Throws;
         public int EliminatedAtRound;
+        public int HardCapHp;
 
         public bool IsAlive { get { return Hp > 0; } }
 

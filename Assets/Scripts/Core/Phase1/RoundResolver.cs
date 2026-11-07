@@ -14,6 +14,7 @@ namespace HitMe.Core
                 var shooter = players[i];
                 RoundInput input;
                 if (!shooter.IsAlive || !inputs.TryGetValue(shooter.Id, out input) || !input.HasAim) continue;
+                shooter.Throws++;
                 HitCalculator.CalculateHits(shooter, players, input.AimDirection, config, SharedHitsBuffer);
                 for (int h = 0; h < SharedHitsBuffer.Count; h++)
                 {
