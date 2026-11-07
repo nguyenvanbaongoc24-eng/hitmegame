@@ -13,7 +13,11 @@ public sealed class GameplayRuleContractTests
         Assert.Equal(6, config.MaxPlayers);
         Assert.Equal(3, config.StartHp);
         Assert.Equal(5f, config.PlaceSeconds);
-        Assert.Equal(5, config.MaxRounds);
+        Assert.Equal(0, config.MaxRounds);
+        Assert.Equal(3, config.TiebreakMax);
+        Assert.Equal(1, config.TiebreakHp);
+        Assert.Equal(10, config.SuddenDeathRound);
+        Assert.Equal(25, config.HardCapRound);
         Assert.Equal(1, config.DamagePerHit);
         Assert.Equal(1, config.MaxHitsPerThrow);
         Assert.Equal(NoAimPolicy.ThrowFacing, config.NoAimRule);

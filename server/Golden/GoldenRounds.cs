@@ -37,7 +37,9 @@ public sealed class GoldenGameConfig
         StartHp = StartHp, ArenaWidth = ArenaWidth, ArenaHeight = ArenaHeight,
         PlayerRadius = PlayerRadius, DamagePerHit = DamagePerHit,
         MaxHitsPerThrow = MaxHitsPerThrow, MaxRounds = MaxRounds,
-        MinSpawnDistance = MinSpawnDistance
+        MinSpawnDistance = MinSpawnDistance,
+        // The archived v1.2 vectors intentionally assert their original shared-death result.
+        TiebreakMax = 0
     };
 }
 

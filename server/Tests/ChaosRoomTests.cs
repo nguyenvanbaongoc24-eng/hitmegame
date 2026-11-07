@@ -66,7 +66,8 @@ public sealed class ChaosRoomTests
                 Assert.Equal(code, resumed.GetProperty("roomCode").GetString());
                 reconnects++;
             }
-            for (var step = 0; step < 5 && room.RoundSession!.Match.State.Phase != Phase.MatchEnd; step++)
+            var limit = room.RoundSession!.Match.State.Config.HardCapRound + room.RoundSession.Match.State.Config.TiebreakMax;
+            for (var step = 0; step < limit && room.RoundSession.Match.State.Phase != Phase.MatchEnd; step++)
             {
                 var round = room.RoundSession.ActiveRound.RoundId;
                 var invalid = Parse(gateway.Handle(connections[0], "{\"v\":1,\"type\":\"commit\",\"junk\":7}"));
@@ -86,9 +87,11 @@ public sealed class ChaosRoomTests
                 }
                 if (room.RoundSession.Match.State.Phase != Phase.MatchEnd && room.RoundSession.ActiveRound.RoundId == round)
                 { clock.Advance(TimeSpan.FromSeconds(5)); gateway.Tick(); }
+                // Each simulated placement window consumes wall time even when everyone locks early.
+                clock.Advance(TimeSpan.FromSeconds(1));
             }
             Assert.Equal(Phase.MatchEnd, room.RoundSession!.Match.State.Phase);
-            Assert.InRange(room.RoundSession.Match.State.RoundNumber, 1, 5);
+            Assert.InRange(room.RoundSession.Match.State.RoundNumber, 1, limit);
             Assert.True(store.TryGet(room.RoundSession.MatchId, out var result));
             Assert.Equal(count, result.Players.Length);
             Assert.All(result.Players, player => Assert.InRange(player.Rank, 1, count));

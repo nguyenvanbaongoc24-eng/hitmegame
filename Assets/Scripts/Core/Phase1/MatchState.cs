@@ -178,6 +178,9 @@ namespace HitMe.Core
             }
             if (alive.Count == 0)
             {
+                // Administrative elimination (AFK/disconnect) before combat leaves no finalists.
+                if (aliveBefore.Count == 0)
+                { _winnerIds.Clear(); Phase = Phase.MatchEnd; return; }
                 if (TiebreakCount < Config.TiebreakMax)
                 {
                     _pendingTiebreak.Clear();
@@ -188,6 +191,22 @@ namespace HitMe.Core
                 {
                     _winnerIds.Clear();
                     _winnerIds.AddRange(aliveBefore);
+                    Phase = Phase.MatchEnd;
+                }
+                return;
+            }
+            if (IsTiebreak)
+            {
+                if (TiebreakCount < Config.TiebreakMax)
+                {
+                    _pendingTiebreak.Clear();
+                    _pendingTiebreak.AddRange(alive);
+                    Phase = Phase.RoundEnd;
+                }
+                else
+                {
+                    _winnerIds.Clear();
+                    _winnerIds.AddRange(alive);
                     Phase = Phase.MatchEnd;
                 }
                 return;

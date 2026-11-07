@@ -94,7 +94,7 @@ public sealed class WebSocketEndToEndTests
     {
         var port = ReservePort();
         await using var host = await RunningServer.StartAsync(port);
-        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(12));
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(120));
         var samples = new List<double>();
 
         // A legacy client cannot silently enter a room without an identity token.
@@ -133,10 +133,13 @@ public sealed class WebSocketEndToEndTests
 
                 var ids = clients.Select(client => client.PlayerId).ToArray();
                 var direct = new ServerMatch(new GameConfig(), ids);
-                for (var round = 1; round <= 5; round++)
+                for (var round = 1; round <= direct.State.Config.HardCapRound + direct.State.Config.TiebreakMax; round++)
                 {
                     var directRound = direct.BeginRound();
-                    for (var index = 0; index < clients.Count; index++)
+                    var activeIndexes = Enumerable.Range(0, clients.Count)
+                        .Where(index => direct.State.FindPlayer(ids[index])?.IsAlive == true)
+                        .ToArray();
+                    foreach (var index in activeIndexes)
                     {
                         // Injects a schema-invalid JSON value, and every second round leaves
                         // one player uncommitted; both must remain safe and deterministic.
@@ -156,7 +159,7 @@ public sealed class WebSocketEndToEndTests
                     }
 
                     var lockStart = Stopwatch.GetTimestamp();
-                    for (var index = 0; index < clients.Count - 1; index++)
+                    foreach (var index in activeIndexes.Take(activeIndexes.Length - 1))
                     {
                         Assert.True(directRound.TryMarkReady(ids[index], out var directReadyError), directReadyError);
                         await clients[index].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
@@ -170,8 +173,9 @@ public sealed class WebSocketEndToEndTests
                         Assert.Equal(round, reveal.GetProperty("roundId").GetInt32());
                         return await client.ReceiveTypeAsync("round_result", cancellation.Token, host.Diagnostics);
                     }).ToArray();
-                    Assert.True(directRound.TryMarkReady(ids[^1], out var finalReadyError), finalReadyError);
-                    await clients[^1].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
+                    var finalIndex = activeIndexes[^1];
+                    Assert.True(directRound.TryMarkReady(ids[finalIndex], out var finalReadyError), finalReadyError);
+                    await clients[finalIndex].SendAsync(new { v = 1, type = "lock_ready", ready = true }, cancellation.Token);
                     var expected = direct.ResolveLockedRound();
                     foreach (var result in await Task.WhenAll(resultTasks)) AssertRoundMatchesCore(result, expected, direct);
                     samples.Add(Stopwatch.GetElapsedTime(lockStart).TotalMilliseconds);
@@ -191,6 +195,8 @@ public sealed class WebSocketEndToEndTests
                         var start = await client.ReceiveTypeAsync("round_start", cancellation.Token, host.Diagnostics);
                         Assert.Equal(round + 1, start.GetProperty("roundId").GetInt32());
                     }
+                    // Keep the twenty-match stress run within the production 20 messages/second gate.
+                    await Task.Delay(110, cancellation.Token);
 
                     // One genuine disconnect/reconnect occurs while a game is live.
                     if (matchNumber == 3 && round == 1)
@@ -218,8 +224,8 @@ public sealed class WebSocketEndToEndTests
             }
         }
 
-        Assert.Equal(100, samples.Count);
-        output.WriteLine($"Z1 20 matches x 5 rounds: average {samples.Average():F2} ms, max {samples.Max():F2} ms per lock/broadcast.");
+        Assert.InRange(samples.Count, 100, 560);
+        output.WriteLine($"Z1 20 matches, {samples.Count} rounds: average {samples.Average():F2} ms, max {samples.Max():F2} ms per lock/broadcast.");
     }
 
     private static void AssertRoundMatchesCore(JsonElement result, RoundResolution expected, ServerMatch direct)
