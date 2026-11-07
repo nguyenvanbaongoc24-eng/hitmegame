@@ -657,7 +657,10 @@ def promote_next_to_root() -> None:
     for shared_folder in ("Build", "ui-preview"):
         if not (DIST_DIR / shared_folder).exists() and (STAGING_DEPLOY_DIR / shared_folder).exists():
             shutil.copytree(STAGING_DEPLOY_DIR / shared_folder, DIST_DIR / shared_folder)
-    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
+    vercel_dest = DIST_DIR / "vercel.json"
+    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
+        shutil.copy2(vercel_source, vercel_dest)
 
     for item in next_dir.iterdir():
         if item.name == "Build":
