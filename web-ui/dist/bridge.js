@@ -4,6 +4,8 @@ const listeners = new Set();
 export const onUnity = callback => { listeners.add(callback); return () => listeners.delete(callback); };
 export function send(method, payload = {}) {
   const allowed = new Set(['StartPractice','QuickPlay','CreateRoom','JoinRoom','LeaveRoom','Ready','SetCharacter','SetWeapon','SetLayout','SetSettings','Pause','Resume','Rematch','ExitMatch','SendEmote']);
+  const query = new URLSearchParams(location.search);
+  if (method === 'StartScenario' && (query.get('dev') === '1' || query.get('e2e') === '1')) allowed.add('StartScenario');
   if (!allowed.has(method)) throw new Error(`Unknown bridge method: ${method}`);
   if (!window.unityInstance?.SendMessage) return false;
   try {

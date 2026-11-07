@@ -21,14 +21,15 @@ export function validateLiveEvent(event) {
 export function renderLiveMatch(state, catalog) {
   const match = state.match || {};
   const players = Array.isArray(match.players) ? match.players : [];
+  const shownPlayers = match.tiebreak ? players.filter(player=>player.alive!==false) : players;
   const phase = String(match.phase || '').toLowerCase();
   const top = Math.max(84, Math.min(195, Number(state.layout?.playableRect?.y) || 132));
   const bottom = Math.max(100, Math.min(195, (window.visualViewport?.height || innerHeight) - ((Number(state.layout?.playableRect?.y) || 132) + (Number(state.layout?.playableRect?.h) || 400))));
-  const cards = players.map(player => {
+  const cards = shownPlayers.map(player => {
     const local = player.isLocal || player.id === 'player';
     const character = catalog.characters.find(x => x.id === player.characterId);
     const bubble = state.emoteBubbles?.[player.id];
-    return `<div class="live-card ${local?'local':''} ${player.alive===false?'out':''} ${bubble?'emoting':''}" data-player="${escape(player.id)}"><img src="${escape(head(catalog, player.characterId))}" alt=""><div><b>${escape(local?phrase('BẠN','YOU'):(player.name || title(character) || `BOT ${Number(player.slot || 0)}`))}</b>${hearts(Number(player.hp),Number(player.maxHp)||3)}</div>${bubble?`<output class="live-card-bubble">${escape(bubble)}</output>`:''}</div>`;
+    return `<div class="live-card ${local?'local':''} ${player.alive===false?'out':''} ${bubble?'emoting':''}" data-player="${escape(player.id)}"><img src="${escape(head(catalog, player.characterId))}" alt=""><div><b>${escape(local?phrase('BẠN','YOU'):(player.name || title(character) || `BOT ${Number(player.slot || 0)}`))}</b>${hearts(Number(player.hp),match.tiebreak?1:(Number(player.maxHp)||3))}</div>${bubble?`<output class="live-card-bubble">${escape(bubble)}</output>`:''}</div>`;
   }).join('');
   const seconds = Math.max(0, Number(match.timeLeft) || 0);
   const toast = state.toasts?.[0];
@@ -45,6 +46,7 @@ export function renderLiveResult(state, catalog) {
   const rankings = Array.isArray(result.rankings) ? result.rankings : [];
   const me = rankings.find(x => x.id === 'player');
   const won = me && me.rank === 1;
+  const sharedWinners = Array.isArray(result.winnerIds) && result.winnerIds.length > 1;
   const rows = rankings.map(player => `<div class="live-rank"><b>${escape(player.rank ?? '—')}</b><img src="${escape(head(catalog, player.characterId || (player.id==='player'?state.characterId:'nam_lang')))}" alt=""><span>${escape(player.name || player.id)}</span><small>${phrase('TRÚNG','HITS')} ${Number.isFinite(Number(player.hits))?escape(player.hits):'—'}<br>${phrase('VÒNG SỐNG','ROUNDS')} ${Number.isFinite(Number(player.roundSurvived))?escape(player.roundSurvived):'—'}</small></div>`).join('');
-  return `<main class="stage live-result" data-screen="result"><div class="live-result-panel"><h1>${won?phrase('CHIẾN THẮNG!','VICTORY!'):phrase('KẾT QUẢ TRẬN','MATCH RESULT')}</h1><p>${phrase('Vòng','Round')} ${escape(result.round || state.match?.round || '—')} · ${phrase('Đã chơi','Played')} ${escape(state.sessionMatches || 1)} ${phrase('trận','matches')}</p><div class="live-ranks">${rows || `<p>${phrase('Đang nhận bảng xếp hạng…','Waiting for rankings…')}</p>`}</div><button class="live-primary" data-action="rematch">${phrase('CHƠI LẠI','REMATCH')}</button><button class="live-secondary" data-action="exit-match">${phrase('VỀ TRANG CHỦ','BACK HOME')}</button></div></main>`;
+  return `<main class="stage live-result" data-screen="result"><div class="live-result-panel"><h1>${sharedWinners?phrase('ĐỒNG VÔ ĐỊCH','CO-CHAMPIONS'):won?phrase('CHIẾN THẮNG!','VICTORY!'):phrase('KẾT QUẢ TRẬN','MATCH RESULT')}</h1><p>${phrase('Vòng','Round')} ${escape(result.round || state.match?.round || '—')} · ${phrase('Đã chơi','Played')} ${escape(state.sessionMatches || 1)} ${phrase('trận','matches')}</p><div class="live-ranks">${rows || `<p>${phrase('Đang nhận bảng xếp hạng…','Waiting for rankings…')}</p>`}</div><button class="live-primary" data-action="rematch">${phrase('CHƠI LẠI','REMATCH')}</button><button class="live-secondary" data-action="exit-match">${phrase('VỀ TRANG CHỦ','BACK HOME')}</button></div></main>`;
 }
