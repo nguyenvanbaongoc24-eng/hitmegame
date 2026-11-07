@@ -1,0 +1,15 @@
+HIT ME v1.3 - Stage 1 validation (2026-11-07)
+Candidate: 0.1.0-beta.5, buildId 876f0c8-a2a7163
+Public candidate: https://hitmegame-iota.vercel.app/next/
+Stable / release.json buildId 1f1cdfa (unchanged)
+
+Server: dotnet test server\Tests\HitMe.Server.Tests.csproj --verbosity quiet
+Passed! Failed: 0, Passed: 213, Skipped: 0, Total: 213. Rerun on 2026-11-07.
+Unity EditMode: 195/195 passed; see stage1_unity_editmode.xml.
+Web UI bridge fixture: python tools\blackbox\test_live_bridge_fixture.py; Passed! 2/2.
+Unity Release WebGL: Build succeeded, 11763737 bytes; local log D:\HITME GAME\_backups\v13-beta5-clean-build.log.
+Local gate: http://127.0.0.1:8104/next/; passed=true, failedIds=[], 6/6 viewports, 5/5 WebKit emulated matches; see stage1_local_gate.json.
+Public Vercel gate: passed=true, failedIds=[], hygienePassed=true, deploymentSynced=true, 6/6 viewports, 1/1 WebKit emulated match; see stage1_live_gate.json and stage1_live_matches.json.
+Public result screenshot: stage1_live_result.png (WebKit iPhone 15 emulation, real game result at round 12; not a physical iPhone).
+
+Limits: The public browser run did not force or visually capture a tiebreak. Core/server/Unity automated tests cover tiebreak. No physical-device test was performed for this candidate. Online gameplay remains locked pending matching server/client protocol deployment. This closes Stage 1 candidate validation only; Stages 2-4 remain open.
