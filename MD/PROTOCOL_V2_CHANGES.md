@@ -1,5 +1,9 @@
 # HIT ME protocol v2 handoff to Antigravity
 
+## v3 handoff for gameplay v1.3
+
+Stage 1 requires the Unity client to send `v:3`, parse `roundLabel` and tiebreak fields from `round_start`/`round_result`, and parse `winnerIds`, `tiebreakCount` plus ranking statistics from `match_end`. Send older clients `client_outdated` by setting `MIN_PROTOCOL_VERSION=3` only on a dedicated v1.3 backend. `MD/NET_PROTOCOL.md` lists the fields. This does not authorize a change to the stable `/` deployment.
+
 Beta 0.1: consume the first WebSocket `hello` before sending/awaiting room messages. It carries `serverVersion` and `minClientVersion`. Include `clientVersion` in `join`/`quick_match`. On `client_outdated`, show an update/reload action and return Home. The server defaults its minimum to `0.0.0` until a tested Unity build is deployed.
 
 Server branch: `prep/codex`. v1 remains accepted. Unity should send `v:2` with all messages after switching, and expect `v:2` in responses. The server selects the response version for each connection, including mixed v1/v2 rooms. Combat, placement, deadlines and room size are unchanged. See `MD/NET_PROTOCOL.md` for the full wire contract.

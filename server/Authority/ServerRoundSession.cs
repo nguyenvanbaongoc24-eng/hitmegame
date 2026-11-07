@@ -54,6 +54,9 @@ public sealed class ServerRoundSession
             v = 1,
             type = "round_start",
             roundId = active.RoundId,
+            roundLabel = match.State.RoundLabel,
+            tiebreak = new { active = match.State.IsTiebreak, index = match.State.TiebreakCount },
+            aliveCount = match.State.Players.Count(player => player.IsAlive),
             deadline = active.Deadline.ToUnixTimeMilliseconds()
         });
     }
@@ -148,6 +151,11 @@ public sealed class ServerRoundSession
             v = 1,
             type = "round_result",
             roundId = active.RoundId,
+            roundLabel = match.State.RoundLabel,
+            tiebreak = new { active = match.State.IsTiebreak, index = match.State.TiebreakCount,
+                pending = match.State.TiebreakPending },
+            eliminatedIds = match.State.Players.Where(player => player.EliminatedAtRound == active.RoundId)
+                .Select(player => player.Id),
             hits = resolution.Hits.Select(hit => new
             {
                 shooterId = hit.ShooterId,
@@ -175,12 +183,18 @@ public sealed class ServerRoundSession
                 type = "match_end",
                 matchId,
                 winners = match.State.WinnerIds,
+                winnerIds = match.State.WinnerIds,
+                tiebreakCount = match.State.TiebreakCount,
                 rankings = finalResult.Players.Select(player => new
                 {
                     playerId = player.PlayerId,
                     rank = player.Rank,
                     hp = player.Hp,
                     hitsLanded = player.HitsLanded,
+                    hits = player.HitsLanded,
+                    throws = player.Throws,
+                    accuracy = player.Accuracy,
+                    eliminatedRound = player.EliminatedRound,
                     goldReward = player.RewardEligible ? rewards.GoldFor(player) : 0
                 })
             }));

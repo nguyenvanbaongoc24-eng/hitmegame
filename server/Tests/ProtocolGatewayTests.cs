@@ -202,7 +202,7 @@ public sealed class ProtocolGatewayTests
 
     [Theory]
     [InlineData(0)]
-    [InlineData(3)]
+    [InlineData(4)]
     public void JoinRejectsOlderOrNewerProtocolWithExplicitMismatch(int clientVersion)
     {
         var gateway = Gateway();

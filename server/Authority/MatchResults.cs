@@ -40,7 +40,8 @@ public static class MatchResultFactory
                 ranked.Hits, ineligiblePlayers?.Contains(ranked.PlayerId) != true,
                 ranked.Throws, ranked.Accuracy, ranked.EliminatedRound));
         }
-        return new MatchResult(matchId, endedAt, players.MoveToImmutable(), 1, ConfigVersion);
+        return new MatchResult(matchId, endedAt, players.MoveToImmutable(),
+            match.Config.MaxRounds == 0 ? 3 : 1, ConfigVersion);
     }
 }
 

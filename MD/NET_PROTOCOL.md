@@ -1,4 +1,12 @@
-# HIT ME network protocol v1 and v2
+# HIT ME network protocol v1, v2 and v3
+
+## v3, gameplay rules v1.3
+
+Use `v:3` for a v1.3 match. A dedicated v1.3 server should set `MIN_PROTOCOL_VERSION=3`; older clients then receive `error.code=client_outdated`. Do not set this on a backend shared with stable clients. The older examples below document legacy messages.
+
+`round_start` adds `roundLabel` (`VÒNG 1` or `HIỆP PHỤ 1`), `tiebreak`, `tiebreakIndex` and `aliveCount`. `round_result` adds `roundLabel`, `tiebreak` (`active`, `index`, `pending`) and `eliminatedIds`. `match_end` adds `winnerIds`, `tiebreakCount`; each ranking adds `rank`, `hits`, `throws`, `accuracy`, `eliminatedRound`. Existing HP and hit fields remain. The server does not reveal opponent placement or aim before round lock.
+
+Example: `{"v":3,"type":"match_end","winnerIds":["p1","p2"],"tiebreakCount":3,"rankings":[{"playerId":"p1","rank":1,"hits":2,"throws":4,"accuracy":0.5,"eliminatedRound":0}]}`. See server tests for full payloads.
 
 Beta 0.1 handshake: the first WebSocket packet is `{"v":2,"type":"hello","serverVersion":"0.1.0-beta.1","minClientVersion":"0.0.0"}`. Send `clientVersion` with `join` or `quick_match`. A version below `MIN_CLIENT_VERSION` receives `error.code=client_outdated`, then a graceful socket close. `SERVER_VERSION` and `MIN_CLIENT_VERSION` are configurable server environment variables. The default minimum `0.0.0` accepts legacy clients until the updated Unity client is verified.
 

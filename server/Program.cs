@@ -77,6 +77,9 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
     metrics: provider.GetRequiredService<ServerMetrics>(),
     versions: provider.GetRequiredService<ClientVersionPolicy>(),
     names: provider.GetRequiredService<DisplayNamePolicy>(),
+    minimumAcceptedVersion: int.TryParse(Environment.GetEnvironmentVariable("MIN_PROTOCOL_VERSION"), out var minimumProtocol)
+        ? Math.Clamp(minimumProtocol, ProtocolGateway.Version, ProtocolGateway.V13Version)
+        : ProtocolGateway.Version,
     auditViolation: entry => provider.GetRequiredService<ILoggerFactory>().CreateLogger("HitMe.ProtocolAudit")
         .LogWarning("Invalid commit roomId={RoomId} matchId={MatchId} code={Code} count={Count}",
             entry.RoomId, entry.MatchId, entry.Code, entry.Count)));
@@ -97,8 +100,8 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supaba
 var app = builder.Build();
 app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
-app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = 1 }));
-app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = 1 }));
+app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = ProtocolGateway.V13Version }));
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = ProtocolGateway.V13Version }));
 app.MapMethods("/report", new[] { "OPTIONS" }, (HttpContext context, ConnectionAdmission admission) =>
 {
     var origin = context.Request.Headers.Origin.ToString();

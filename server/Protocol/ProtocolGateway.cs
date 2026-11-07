@@ -43,6 +43,7 @@ public sealed class ProtocolGateway
 {
     public const int Version = 1;
     public const int LatestVersion = 2;
+    public const int V13Version = 3;
     public const int MaxMessageBytes = 1024;
     public const int MaxMessagesPerSecond = 20;
     public const int QuickMatchHintSeconds = 30;
@@ -69,8 +70,9 @@ public sealed class ProtocolGateway
     private readonly IFriendStore friendStore;
     private readonly ClientVersionPolicy versions;
     private readonly DisplayNamePolicy names;
+    private readonly int minimumAcceptedVersion;
 
-    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null, ClientVersionPolicy? versions = null, DisplayNamePolicy? names = null)
+    public ProtocolGateway(RoomDirectory rooms, TimeProvider? clock = null, IAuthVerifier? auth = null, IPlayerProfileReader? profiles = null, IGuestShopService? shop = null, ServerMetrics? metrics = null, Action<ProtocolViolationAudit>? auditViolation = null, RoomLoadoutPolicy? loadouts = null, IFriendStore? friendStore = null, ClientVersionPolicy? versions = null, DisplayNamePolicy? names = null, int minimumAcceptedVersion = Version)
     {
         this.rooms = rooms;
         this.clock = clock ?? TimeProvider.System;
@@ -83,6 +85,7 @@ public sealed class ProtocolGateway
         this.friendStore = friendStore ?? new InMemoryFriendStore();
         this.versions = versions ?? ClientVersionPolicy.FromEnvironment(_ => null);
         this.names = names ?? new DisplayNamePolicy();
+        this.minimumAcceptedVersion = minimumAcceptedVersion;
     }
 
     public string Handle(string connectionId, string raw)
@@ -110,7 +113,8 @@ public sealed class ProtocolGateway
             catch (Exception exception) when (exception is JsonException or FormatException or OverflowException)
             { return Reply(connectionId, Error("bad_message")); }
             if (request is null || string.IsNullOrWhiteSpace(request.Type)) return Reply(connectionId, Error("invalid_envelope"));
-            if (request.V is not (Version or LatestVersion)) return Reply(connectionId, Error("protocol_mismatch"));
+            if (request.V is not (Version or LatestVersion or V13Version)) return Reply(connectionId, Error("protocol_mismatch"));
+            if (request.V < minimumAcceptedVersion) return Reply(connectionId, Error("client_outdated"));
             if (request.Type is ("join" or "quick_match") && !versions.IsSupported(request.ClientVersion))
                 return new[] { new GatewayMessage(connectionId, Error("client_outdated"), "client_outdated") };
 
@@ -123,12 +127,12 @@ public sealed class ProtocolGateway
                 "start" => HostStartMessages(connectionId),
                 "lock_ready" => LockReadyMessages(connectionId, request),
                 "emote" => EmoteMessages(connectionId, request),
-                "chat" when request.V == LatestVersion => ChatMessages(connectionId, request),
-                "friend_request" when request.V == LatestVersion => FriendRequestMessages(connectionId, request),
-                "friend_reply" when request.V == LatestVersion => FriendReplyMessages(connectionId, request),
-                "buy_item" when request.V == LatestVersion => ShopMessages(connectionId, request, "buy"),
-                "equip_item" when request.V == LatestVersion => ShopMessages(connectionId, request, "equip"),
-                "rename_player" when request.V == LatestVersion => ShopMessages(connectionId, request, "rename"),
+                "chat" when request.V >= LatestVersion => ChatMessages(connectionId, request),
+                "friend_request" when request.V >= LatestVersion => FriendRequestMessages(connectionId, request),
+                "friend_reply" when request.V >= LatestVersion => FriendReplyMessages(connectionId, request),
+                "buy_item" when request.V >= LatestVersion => ShopMessages(connectionId, request, "buy"),
+                "equip_item" when request.V >= LatestVersion => ShopMessages(connectionId, request, "equip"),
+                "rename_player" when request.V >= LatestVersion => ShopMessages(connectionId, request, "rename"),
                 "ready" => Reply(connectionId, Error("legacy_ready_use_room_ready_or_lock_ready")),
                 "commit" => CommitMessages(connectionId, request),
                 _ => Reply(connectionId, Error("unknown_type"))
@@ -221,7 +225,7 @@ public sealed class ProtocolGateway
         // Every connected member must learn the new roster. RoomState contains
         // no private placement coordinates or aims, including during reconnect.
         var messages = RoomStateBroadcast(session.Room).ToList();
-        if (session.Version == LatestVersion)
+        if (session.Version >= LatestVersion)
             messages.Add(new GatewayMessage(connectionId, ProfileMessage(session)));
         if (replacedConnection is not null)
             messages.Add(new GatewayMessage(replacedConnection, Error("session_replaced"), "session_replaced"));
@@ -281,8 +285,8 @@ public sealed class ProtocolGateway
             new(opponent.Key, RoomState(room, first.ReconnectToken)),
             new(connectionId, RoomState(room, second.ReconnectToken))
         };
-        if (first.Version == LatestVersion) paired.Add(new GatewayMessage(opponent.Key, ProfileMessage(first)));
-        if (second.Version == LatestVersion) paired.Add(new GatewayMessage(connectionId, ProfileMessage(second)));
+        if (first.Version >= LatestVersion) paired.Add(new GatewayMessage(opponent.Key, ProfileMessage(first)));
+        if (second.Version >= LatestVersion) paired.Add(new GatewayMessage(connectionId, ProfileMessage(second)));
         return paired;
     }
 
@@ -443,7 +447,7 @@ public sealed class ProtocolGateway
         lastChat[session.PlayerId] = now;
         var payload = JsonSerializer.Serialize(new { v = LatestVersion, type = "chat", playerId = session.PlayerId, chatId = request.ChatId }, Json);
         // Canned phrase IDs contain no placement coordinates or free-form text.
-        return sessions.Where(pair => ReferenceEquals(pair.Value.Room, session.Room) && pair.Value.Version == LatestVersion)
+        return sessions.Where(pair => ReferenceEquals(pair.Value.Room, session.Room) && pair.Value.Version >= LatestVersion)
             .Select(pair => new GatewayMessage(pair.Key, payload)).ToArray();
     }
 
@@ -453,7 +457,7 @@ public sealed class ProtocolGateway
         if (string.IsNullOrWhiteSpace(request.TargetPlayerId) || request.TargetPlayerId == session.PlayerId)
             return Reply(connectionId, Error("invalid_friend_target"));
         var target = sessions.FirstOrDefault(pair => pair.Value.PlayerId == request.TargetPlayerId
-            && ReferenceEquals(pair.Value.Room, session.Room) && pair.Value.Version == LatestVersion);
+            && ReferenceEquals(pair.Value.Room, session.Room) && pair.Value.Version >= LatestVersion);
         if (target.Key is null) return Reply(connectionId, Error("friend_target_unavailable"));
         string friendError;
         try { friendError = friendStore.Request(session.PlayerId, request.TargetPlayerId); }
@@ -478,7 +482,7 @@ public sealed class ProtocolGateway
         { v = LatestVersion, type = "friend_reply", playerId = session.PlayerId,
             targetPlayerId = request.TargetPlayerId, accepted = request.Accepted }, Json);
         var replies = new List<GatewayMessage> { new(connectionId, payload) };
-        foreach (var source in sessions.Where(pair => pair.Value.PlayerId == request.TargetPlayerId && pair.Value.Version == LatestVersion))
+        foreach (var source in sessions.Where(pair => pair.Value.PlayerId == request.TargetPlayerId && pair.Value.Version >= LatestVersion))
             replies.Add(new GatewayMessage(source.Key, payload));
         return replies;
     }
@@ -587,7 +591,10 @@ public sealed class ProtocolGateway
         started = room.Started,
         players = room.Players.Select(p => new { id = p.Id, name = p.Name, slot = p.Slot, ready = p.Ready, characterId = p.CharacterId, weaponId = p.WeaponId }),
         reconnectToken,
-        config = new { maxPlayers = room.Config.MaxPlayers, minPlayersToStart = RoomAuthority.MinPlayers, startHp = room.Config.StartHp, placeSeconds = room.Config.PlaceSeconds, maxRounds = room.Config.MaxRounds, arenaWidth = room.Config.ArenaWidth, arenaHeight = room.Config.ArenaHeight, playerRadius = room.Config.PlayerRadius }
+        config = new { maxPlayers = room.Config.MaxPlayers, minPlayersToStart = RoomAuthority.MinPlayers, startHp = room.Config.StartHp, placeSeconds = room.Config.PlaceSeconds, maxRounds = room.Config.MaxRounds,
+            tiebreakMax = room.Config.TiebreakMax, tiebreakHp = room.Config.TiebreakHp,
+            suddenDeathRound = room.Config.SuddenDeathRound, hardCapRound = room.Config.HardCapRound,
+            arenaWidth = room.Config.ArenaWidth, arenaHeight = room.Config.ArenaHeight, playerRadius = room.Config.PlayerRadius }
     }, Json);
 
     private IReadOnlyList<GatewayMessage> RoomStateBroadcast(RoomAuthority room)
@@ -656,7 +663,7 @@ public sealed class ProtocolGateway
                 if (ReferenceEquals(session.Value.Room, room) && session.Value.PlayerId == message.PlayerId)
                 {
                     output.Add(new GatewayMessage(session.Key, message.Payload));
-                    if (session.Value.Version == LatestVersion && message.Payload.Contains("\"type\":\"match_end\"", StringComparison.Ordinal))
+                    if (session.Value.Version >= LatestVersion && message.Payload.Contains("\"type\":\"match_end\"", StringComparison.Ordinal))
                         output.Add(new GatewayMessage(session.Key, ProfileMessage(session.Value)));
                 }
             }
