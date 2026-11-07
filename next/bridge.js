@@ -6,8 +6,13 @@ export function send(method, payload = {}) {
   const allowed = new Set(['StartPractice','QuickPlay','CreateRoom','JoinRoom','LeaveRoom','Ready','SetCharacter','SetWeapon','SetLayout','SetSettings','Pause','Resume','Rematch','ExitMatch','SendEmote']);
   if (!allowed.has(method)) throw new Error(`Unknown bridge method: ${method}`);
   if (!window.unityInstance?.SendMessage) return false;
-  window.unityInstance.SendMessage('WebBridge', method, JSON.stringify(payload));
-  return true;
+  try {
+    window.unityInstance.SendMessage('WebBridge', method, JSON.stringify(payload));
+    return true;
+  } catch {
+    window.dispatchEvent(new CustomEvent('hitme-bridge-error', {detail: method}));
+    return false;
+  }
 }
 window.hitmeUi = {
   onUnity(event) {
