@@ -228,6 +228,10 @@ namespace HitMe.Core
                 {
                     _winnerIds.Clear(); _winnerIds.Add(leaders[0]); Phase = Phase.MatchEnd;
                 }
+                else if (Config.TiebreakMax == 0)
+                {
+                    _winnerIds.Clear(); _winnerIds.AddRange(leaders); Phase = Phase.MatchEnd;
+                }
                 else
                 {
                     _pendingTiebreak.Clear(); _pendingTiebreak.AddRange(leaders);
