@@ -11,5 +11,7 @@ Unity Release WebGL: Build succeeded, 11763737 bytes; local log D:\HITME GAME\_b
 Local gate: http://127.0.0.1:8104/next/; passed=true, failedIds=[], 6/6 viewports, 5/5 WebKit emulated matches; see stage1_local_gate.json.
 Public Vercel gate: passed=true, failedIds=[], hygienePassed=true, deploymentSynced=true, 6/6 viewports, 1/1 WebKit emulated match; see stage1_live_gate.json and stage1_live_matches.json.
 Public result screenshot: stage1_live_result.png (WebKit iPhone 15 emulation, real game result at round 12; not a physical iPhone).
+Public player-count matrix: python tools\blackbox\test_v13_player_matrix.py --url https://hitmegame-iota.vercel.app/next/ --output Evidence\v13\stage1_player_matrix.json
+Passed! 5/5: 2, 3, 4, 5, and 6 total players; selected bots 1-5; ranking counts match; 0 page errors. Rounds 19, 7, 18, 13, 12 respectively.
 
-Limits: The public browser run did not force or visually capture a tiebreak. Core/server/Unity automated tests cover tiebreak. No physical-device test was performed for this candidate. Online gameplay remains locked pending matching server/client protocol deployment. This closes Stage 1 candidate validation only; Stages 2-4 remain open.
+Limits: The public browser runs did not force or visually capture a tiebreak. Core/server/Unity automated tests cover tiebreak and the web bridge fixture covers its label. No physical-device test was performed for this candidate. Online gameplay remains locked pending matching server/client protocol deployment. This closes Stage 1 candidate validation only; Stages 2-4 remain open.
