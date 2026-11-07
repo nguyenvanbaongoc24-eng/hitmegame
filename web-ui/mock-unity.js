@@ -28,12 +28,12 @@ export function installMockUnity(catalog) {
     if(method==='StartPractice') {
       generation++;characterId=p.characterId||characterId;weaponId=p.weaponId||weaponId;
       emit({type:'screen',name:'match'});
-      emit({type:'match',round:1,maxRounds:5,phase:'placing',timeLeft:5,players:[{id:'local',characterId,hp:3}]});
-      timed(5000,()=>emit({type:'match',round:1,maxRounds:5,phase:'reveal',timeLeft:0,toast:'Tự ném theo hướng cuối'}));
-      timed(5750,()=>emit({type:'match',round:1,maxRounds:5,phase:'throwing',timeLeft:0,toast:'Dép đang bay'}));
+      emit({type:'match',round:1,maxRounds:0,phase:'placing',timeLeft:5,players:[{id:'local',characterId,hp:3}]});
+      timed(5000,()=>emit({type:'match',round:1,maxRounds:0,phase:'reveal',timeLeft:0,toast:'Tự ném theo hướng cuối'}));
+      timed(5750,()=>emit({type:'match',round:1,maxRounds:0,phase:'throwing',timeLeft:0,toast:'Dép đang bay'}));
       timed(6450,()=>emit({type:'event',kind:'hit',targetId:'bot_1'}));
       timed(7050,()=>emit({type:'event',kind:'ko',targetId:'bot_1'}));
-      timed(7450,()=>emit({type:'match',round:1,maxRounds:5,phase:'round_result',timeLeft:0,toast:'KẾT QUẢ VÒNG 1 • BOT 1 BỊ LOẠI'}));
+      timed(7450,()=>emit({type:'match',round:1,maxRounds:0,phase:'round_result',timeLeft:0,toast:'KẾT QUẢ VÒNG 1 • BOT 1 BỊ LOẠI'}));
       timed(7850,()=>emit({type:'event',kind:'win',sourceId:'local'}));
       timed(8300,()=>{emit({type:'screen',name:'result'});emit({type:'result',round:1,rankings:[{id:'local',rank:1}]})});
     }

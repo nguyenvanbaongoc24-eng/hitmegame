@@ -14,7 +14,7 @@ const bot = () => `<main class="stage preview" data-screen="bot">${header('LUY�
 const lobby = () => `<main class="stage preview" data-screen="lobby">${header('PHÒNG HM4826')}
   <div class="preview-scroll"><p>4 / 6 người • Sân làng</p><div class="preview-list">${['Bạn · Nam Làng','Người chơi 2 · Cô Ba','Người chơi 3 · Anh Teen','Người chơi 4 · Nữ Năng Động'].map((name,i)=>`<div><span>${name}</span><b>${i<3?'SẴN SÀNG':'CHƯA SẴN SÀNG'}</b></div>`).join('')}</div><p>Tất cả sẵn sàng thì trận tự bắt đầu.</p></div>
   <footer class="preview-footer"><a class="preview-primary" href="${href('match')}">SẴN SÀNG</a></footer>${navigation()}</main>`;
-const match = () => `<main class="stage preview preview-match" data-screen="match"><div class="match-top"><span>VÒNG 1/5</span><strong>5 GIÂY</strong><span>ẨN KHI NGẮM</span></div>
+const match = () => `<main class="stage preview preview-match" data-screen="match"><div class="match-top"><span>VÒNG 1</span><strong>5 GIÂY</strong><span>ẨN KHI NGẮM</span></div>
   <div class="match-arena"><img src="./assets/nam_lang_portrait.png" alt="Nam Làng"></div>
   <div class="match-bottom"><span>VŨ KHÍ: DÉP TỔ ONG</span><span>☺ BIỂU CẢM</span></div>${navigation()}</main>`;
 const result = () => `<main class="stage preview" data-screen="result">${header('KẾT QUẢ TRẬN')}<div class="preview-scroll"><h2>CHIẾN THẮNG!</h2><div class="preview-list">${['Nam Làng','Cô Ba','Anh Teen','Nữ Năng Động'].map((name,i)=>`<div><span>${i+1}. ${name}</span><b>${i===0?'HẠNG 1':'ĐÃ LOẠI'}</b></div>`).join('')}</div></div><footer class="preview-footer"><a class="preview-primary" href="${href('home')}">CHƠI LẠI</a></footer>${navigation()}</main>`;
