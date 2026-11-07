@@ -1,0 +1,266 @@
+{
+  "url": "https://hitmegame-iota.vercel.app/next/",
+  "utc": "2026-11-06T12:08:44.180373+00:00",
+  "release": {
+    "version": "0.1.0-beta.3+web.2",
+    "buildId": "5e27d8f-07a3145",
+    "createdAt": "2026-11-06T11:59:12Z",
+    "unityCommit": "5e27d8f",
+    "webUiCommit": "07a3145",
+    "catalogVersion": 1,
+    "gate": {
+      "passed": true,
+      "failedIds": []
+    },
+    "notes": "Hybrid Web UI (prep/codex) + Unity WebGL Release (feature/ui-ux-production)"
+  },
+  "fingerprints": {
+    "app.js": {
+      "localSha256": "19ad29bb0f216e2ae48d0b6bbcb3c97ed277950b3d7679dced032fec9dd12f7a",
+      "remoteSha256": "19ad29bb0f216e2ae48d0b6bbcb3c97ed277950b3d7679dced032fec9dd12f7a",
+      "synced": true,
+      "fetchError": null
+    },
+    "style.css": {
+      "localSha256": "53f5a48663d7eb933f4778da01a7c98b411b19c26e72f1623de0279949a2fdcf",
+      "remoteSha256": "53f5a48663d7eb933f4778da01a7c98b411b19c26e72f1623de0279949a2fdcf",
+      "synced": true,
+      "fetchError": null
+    },
+    "catalog.json": {
+      "localSha256": "ef516e3025da268c68fa9f72ebae4f713836168119e7da060f86225a333c16b2",
+      "remoteSha256": "ef516e3025da268c68fa9f72ebae4f713836168119e7da060f86225a333c16b2",
+      "synced": true,
+      "fetchError": null
+    },
+    "live.js": {
+      "localSha256": "312098ff68db4293efd7693163f5b7c6e91603223029c17a4c75e99eec8bf3af",
+      "remoteSha256": "312098ff68db4293efd7693163f5b7c6e91603223029c17a4c75e99eec8bf3af",
+      "synced": true,
+      "fetchError": null
+    },
+    "audio.js": {
+      "localSha256": "80cd1a30b8594ec4a44a0c6f95e783baa2a8bc4756f242267a812ec19c30ceb2",
+      "remoteSha256": "80cd1a30b8594ec4a44a0c6f95e783baa2a8bc4756f242267a812ec19c30ceb2",
+      "synced": true,
+      "fetchError": null
+    },
+    "bridge.js": {
+      "localSha256": "cd3434a3aefc7360ce925b60e65511d79c9204491703eb5ff04539a50b28a8a9",
+      "remoteSha256": "cd3434a3aefc7360ce925b60e65511d79c9204491703eb5ff04539a50b28a8a9",
+      "synced": true,
+      "fetchError": null
+    }
+  },
+  "deploymentSynced": true,
+  "profiles": {
+    "iphone15_safari": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [
+        {
+          "run": 1,
+          "rankings": 4
+        },
+        {
+          "run": 2,
+          "rankings": 4
+        },
+        {
+          "run": 3,
+          "rankings": 4
+        },
+        {
+          "run": 4,
+          "rankings": 4
+        },
+        {
+          "run": 5,
+          "rankings": 4
+        }
+      ],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true,
+        "SEL-LOCK": true,
+        "HUD-01": true,
+        "F7-TUTORIAL": true,
+        "ARENA-TOUCH": true,
+        "SET-PAUSE": true,
+        "SET-RESUME": true,
+        "SET-VOLUME": true,
+        "F7-REOPEN": true,
+        "EMO-OPEN": true,
+        "EMO-SEND": true,
+        "F1-MATCHES": true,
+        "F2-ROSTER": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 393,
+        "height": 695
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    },
+    "iphone15_collapsed": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 393,
+        "height": 780
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    },
+    "iphone15_standalone": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 393,
+        "height": 852
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    },
+    "iphonese_safari": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 553
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    },
+    "android_chrome": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    },
+    "android_tall": {
+      "status": "PASS",
+      "errors": [],
+      "matches": [],
+      "checks": {
+        "HOME-01": true,
+        "HOME-HERO": true,
+        "BTN-LABEL": true,
+        "BTN-09": true,
+        "VIEW-01": true
+      },
+      "build": "unity-prod",
+      "onlineLocked": 3,
+      "canvasRect": {
+        "x": 0,
+        "y": 0,
+        "width": 412,
+        "height": 780
+      },
+      "homeVisible": true,
+      "heroLoaded": true,
+      "buttonOverflow": {
+        "blue": 0,
+        "green": 0
+      }
+    }
+  },
+  "coverage": {
+    "HOME-01": "PASS",
+    "HOME-HERO": "PASS",
+    "BTN-LABEL": "PASS",
+    "BTN-09": "PASS",
+    "VIEW-01": "PASS",
+    "SEL-LOCK": "PASS",
+    "HUD-01": "PASS",
+    "F1-MATCHES": "PASS",
+    "F2-ROSTER": "PASS",
+    "F7-TUTORIAL": "PASS",
+    "F7-REOPEN": "PASS",
+    "SET-PAUSE": "PASS",
+    "SET-RESUME": "PASS",
+    "SET-VOLUME": "PASS",
+    "EMO-OPEN": "PASS",
+    "EMO-SEND": "PASS",
+    "ARENA-TOUCH": "PASS"
+  }
+}

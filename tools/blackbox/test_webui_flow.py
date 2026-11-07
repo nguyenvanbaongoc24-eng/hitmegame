@@ -5,6 +5,7 @@ and Chromium. Screenshots are design evidence, not gameplay evidence.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import threading
 from functools import partial
@@ -32,12 +33,16 @@ class Handler(SimpleHTTPRequestHandler):
         pass
 
 
-def run() -> int:
-    OUT.mkdir(parents=True, exist_ok=True)
-    server = ThreadingHTTPServer(('127.0.0.1', 0), partial(Handler, directory=str(DIST)))
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    url = f'http://127.0.0.1:{server.server_port}/ui-preview/?mock=1&e2e=1'
+def run(url: str | None = None, out: Path = OUT) -> int:
+    out.mkdir(parents=True, exist_ok=True)
+    server = None
+    if url is None:
+        server = ThreadingHTTPServer(('127.0.0.1', 0), partial(Handler, directory=str(DIST)))
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        url = f'http://127.0.0.1:{server.server_port}/ui-preview/?mock=1&e2e=1'
+    else:
+        url = url.rstrip('/') + '/?mock=1&e2e=1'
     results: dict[str, dict] = {}
     with sync_playwright() as playwright:
         for engine_name in ('webkit', 'chromium'):
@@ -51,7 +56,7 @@ def run() -> int:
             page.on('request', lambda request: requests.append(request.url))
             page.goto(url, wait_until='networkidle')
             page.locator('[data-name="quick-play"]').wait_for()
-            page.screenshot(path=str(OUT / f'{engine_name}_home.png'))
+            page.screenshot(path=str(out / f'{engine_name}_home.png'))
             checks: list[str] = []
             def check(condition: bool, name: str) -> None:
                 if not condition: checks.append(name)
@@ -63,7 +68,7 @@ def run() -> int:
             page.locator('.settings-sheet [data-action="close"]').click()
             page.locator('[data-action="practice"]').click()
             check(page.locator('[data-screen="bot"]').is_visible(), 'Home → bot')
-            page.screenshot(path=str(OUT / f'{engine_name}_bot.png'))
+            page.screenshot(path=str(out / f'{engine_name}_bot.png'))
             check(page.locator('[data-id="quay_boy"]').get_attribute('aria-disabled') == 'true', 'locked card')
             page.evaluate("document.querySelector('[data-id=quay_boy]').click()")
             check(page.evaluate('window.__hitmeState.selectedCharacterId') == 'nam_lang', 'locked denied')
@@ -83,7 +88,7 @@ def run() -> int:
             page.locator('[data-action="start-practice"]').click()
             check(page.locator('[data-screen="match"]').is_visible(), 'bot → match')
             check(page.locator('[data-name="mock-timer"]').is_visible(), 'match HUD timer')
-            page.screenshot(path=str(OUT / f'{engine_name}_match.png'))
+            page.screenshot(path=str(out / f'{engine_name}_match.png'))
             page.locator('[data-action="settings"]').click()
             check(page.locator('.settings-sheet [data-setting="sfx"]').is_visible(), 'match settings sheet')
             page.locator('.settings-sheet [data-action="close"]').click()
@@ -92,7 +97,7 @@ def run() -> int:
             page.locator('[data-action="send-emote"]').first.click()
             check(page.locator('[data-screen="match"]').is_visible(), 'emote → match')
             page.wait_for_selector('[data-screen="result"]', timeout=12000)
-            page.screenshot(path=str(OUT / f'{engine_name}_result.png'))
+            page.screenshot(path=str(out / f'{engine_name}_result.png'))
             events = page.evaluate('window.__mockEvents')
             phases = [e.get('phase') for e in events if e.get('type') == 'match']
             kinds = [e.get('kind') for e in events if e.get('type') == 'event']
@@ -129,16 +134,17 @@ def run() -> int:
             page.locator('[data-action="quick"]').click()
             page.wait_for_selector('[data-screen="lobby"]', timeout=3000)
             check(page.locator('[data-screen="lobby"]').is_visible(), 'quick → search → lobby')
-            local_requests = [u for u in requests if urlsplit(u).scheme in ('http', 'https') and urlsplit(u).hostname == '127.0.0.1']
-            check(all(urlsplit(u).path.startswith('/ui-preview/') for u in local_requests),
-                  f'all local assets within subpath: {[u for u in local_requests if not urlsplit(u).path.startswith("/ui-preview/")]}')
+            same_host_requests = [u for u in requests if urlsplit(u).scheme in ('http', 'https') and urlsplit(u).hostname == urlsplit(url).hostname]
+            check(all(urlsplit(u).path.startswith('/ui-preview/') for u in same_host_requests),
+                  f'all same-host assets within subpath: {[u for u in same_host_requests if not urlsplit(u).path.startswith("/ui-preview/")]}')
             check(not errors, f'JavaScript errors: {errors}')
             results[engine_name] = {'status': 'PASS' if not checks else 'FAIL', 'failures': checks,
                                     'phases': phases, 'events': kinds, 'requests': len(requests)}
             context.close()
             browser.close()
-    server.shutdown()
-    (OUT / 'results.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    if server is not None:
+        server.shutdown()
+    (out / 'results.json').write_text(json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     passed = sum(x['status'] == 'PASS' for x in results.values())
     print(f'Passed! {passed}/{len(results)}')
     for name, result in results.items():
@@ -147,4 +153,8 @@ def run() -> int:
 
 
 if __name__ == '__main__':
-    raise SystemExit(run())
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--url', help='Optional deployed /ui-preview/ URL')
+    parser.add_argument('--output', type=Path, default=OUT)
+    args = parser.parse_args()
+    raise SystemExit(run(args.url, args.output))
