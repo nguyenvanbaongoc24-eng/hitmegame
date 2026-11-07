@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,7 +18,7 @@ from urllib.request import urlopen
 
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(os.environ.get('HITME_SOURCE_REPO', str(Path(__file__).resolve().parents[2])))
 PROFILES = {
     'iphone15_safari': ('webkit', 393, 695, 3),
     'iphone15_collapsed': ('webkit', 393, 780, 3),
