@@ -188,12 +188,14 @@ function modal() {
   const list = choices.length ? `<div class="choice-grid">${choices.map(item => `<button data-action="${item.enabled?`select-${state.overlay}`:'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="${safeText(state.overlay==='character'?item.assets.head:item.icon)}" alt=""><span>${safeText(catalogTitle(item))}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
   const settings = state.overlay === 'settings' ? `<label class="sheet-setting">Nhạc nền <input type="range" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}"></label><label class="sheet-setting">Hiệu ứng <input type="range" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}"></label>${!mock&&state.screen==='match'?`<button class="live-secondary" data-action="${state.paused?'resume':'pause'}">${state.paused?'TIẾP TỤC':'TẠM DỪNG'}</button><button class="live-secondary" data-action="exit-confirm">THOÁT TRẬN</button>`:''}<button class="live-secondary" data-action="tutorial-reopen">XEM LẠI HƯỚNG DẪN</button>` : '';
+  const scenarioSettings = state.overlay === 'settings' && params.get('dev') === '1' && !mock
+    ? `<section aria-label="Kịch bản thử luật"><h3>Kịch bản thử luật (chỉ để kiểm tra)</h3>${['tiebreak','tiebreak3','tiebreak_draw','suddendeath','hardcap','ranking_ties'].map(name=>`<button class="live-secondary" data-action="start-scenario" data-scenario="${name}">${name}</button>`).join('')}</section>` : '';
   const confirmation = state.overlay==='exit-confirm' ? `<p>Thoát trận luyện với bot?</p><button class="live-primary" data-action="exit-match">THOÁT TRẬN</button><button class="live-secondary" data-action="close">Ở LẠI</button>` : '';
   const emotePhrases = document.documentElement.lang==='en' ? ['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG'] : ['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];
   const stickerIcon='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg>';
   const emotes = state.overlay==='emote' ? `<div class="live-emote-tabs"><button data-action="emote-tab" data-tab="sticker" class="${state.emoteTab==='sticker'?'active':''}">Sticker</button><button data-action="emote-tab" data-tab="phrase" class="${state.emoteTab==='phrase'?'active':''}">${document.documentElement.lang==='en'?'Quick phrases':'Câu nhanh'}</button></div><div class="live-emotes ${state.emoteTab}">${state.emoteTab==='sticker'?Array.from({length:6},(_,i)=>`<button data-action="send-live-emote" data-kind="sticker" data-id="sticker_0${i+1}" aria-label="Sticker ${i+1}">${stickerIcon}<small>sticker tạm</small></button>`).join(''):emotePhrases.map((text,i)=>`<button data-action="send-live-emote" data-kind="phrase" data-id="phrase_0${i+1}">${safeText(text)}</button>`).join('')}</div>` : '';
   const back = ['rank','quests'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
-  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${confirmation}${emotes}${['character','weapon','join','settings','exit-confirm','emote'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
+  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${scenarioSettings}${confirmation}${emotes}${['character','weapon','join','settings','exit-confirm','emote'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
 function render() {
   if (legacy) return;
@@ -246,6 +248,14 @@ root.addEventListener('click', event => {
   const action=button.dataset.action;
   playButton(action);
   if(action==='online-locked'){state.toasts=[{message:t('comingSoon')}];render();return;}
+  if(action==='start-scenario' && params.get('dev')==='1' && !mock){
+    if(!state.ready){state.overlay='loading';return render();}
+    if(send('StartScenario',{name:button.dataset.scenario})){
+      state.overlay=null;state.screen='match';state.practiceActive=true;state.result=null;state.tutorialStep=-1;
+      return render();
+    }
+    return;
+  }
   if(action==='tutorial-next'||action==='tutorial-skip') {state.tutorialStep=action==='tutorial-skip'||state.tutorialStep>=2?-1:state.tutorialStep+1;if(state.tutorialStep<0)remember('hitme.tutorialSeen','1');return render();}
   if(action==='tutorial-reopen'){state.tutorialStep=0;state.overlay=null;return render();}
   if(!mock&&action==='pause'){send('Pause');state.paused=true;return render();}

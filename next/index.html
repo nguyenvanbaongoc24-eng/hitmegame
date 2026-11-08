@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
-  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.5)</title>
+  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.5.1)</title>
   <link rel="stylesheet" href="./style.css">
   <style id="hitme-home-bg-patch">
     /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
@@ -273,7 +273,7 @@
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = { version: "0.1.0-beta.5", buildId: "876f0c8-a2a7163" };
+    window.__hitmeReleaseInfo = { version: "0.1.0-beta.5.1", buildId: "c86161d-4f6b253" };
 
     // Deduplicate 10 Hz Unity match ticks and guard active UI pointer interactions so app.js innerHTML never detaches buttons mid-click
     (function() {
@@ -372,7 +372,7 @@
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.5 (876f0c8-a2a7163)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.5.1 (c86161d-4f6b253)";
           sheet.appendChild(badge);
         }
       });
@@ -423,24 +423,24 @@
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "876f0c8-a2a7163";
+    const buildVersion = urlParams.get("v") || "c86161d-4f6b253";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
       arguments: [],
-      dataUrl: versioned(buildUrl + "/WebGL_Release_20261107_876f0c8.data.br"),
-      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261107_876f0c8.framework.js.br"),
-      codeUrl: versioned(buildUrl + "/WebGL_Release_20261107_876f0c8.wasm.br"),
+      dataUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.data.br"),
+      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.framework.js.br"),
+      codeUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.wasm.br"),
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
-      productVersion: "0.1.0-beta.5",
+      productVersion: "0.1.0-beta.5.1",
       matchWebGLToCanvasSize: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5)
     };
 
     const script = document.createElement("script");
-    script.src = versioned(buildUrl + "/WebGL_Release_20261107_876f0c8.loader.js");
+    script.src = versioned(buildUrl + "/WebGL_Release_20261107_c86161d.loader.js");
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
         const pct = Math.round(progress * 100);
