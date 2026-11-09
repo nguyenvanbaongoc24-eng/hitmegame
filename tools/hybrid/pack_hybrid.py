@@ -133,13 +133,15 @@ HOME_VISUAL_PATCH_HTML = """
     /* G7b + G7c: Widen weapon card so 'Dép Tổ Ong' stays on 1 line; hide reverse arrow when <= 1 weapon unlocked */
     .home .character-card {
       left: 3.5% !important;
-      width: 44.5% !important;
+      width: 45% !important;
       padding: 4px 8px !important;
+      gap: 6px !important;
     }
     .home .weapon-card {
       right: 3.5% !important;
-      width: 47% !important;
+      width: 46.5% !important;
       padding: 4px 8px !important;
+      gap: 6px !important;
     }
     .home .weapon-card b,
     .home .character-card b {
@@ -149,9 +151,9 @@ HOME_VISUAL_PATCH_HTML = """
       line-height: 1.28 !important;
       padding-bottom: 2px !important;
       max-height: none !important;
-      font-size: clamp(12px, 3.2vw, 16px) !important;
+      font-size: clamp(12px, 3.2vw, 15px) !important;
     }
-    .home .weapon-card.single-weapon > .icon.reverse {
+    .home .weapon-card > .icon.reverse {
       display: none !important;
     }
 
@@ -863,6 +865,84 @@ HOME_VISUAL_PATCH_HTML = """
       border-color: #475569 !important;
       cursor: default !important;
     }
+
+    /* U3: Online Server Readiness & Cold-Start Waking Sheet */
+    #r38-online-sheet-shade {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 60 !important;
+      background: rgba(6, 12, 22, 0.82) !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 16px !important;
+      pointer-events: auto !important;
+    }
+    #r38-online-sheet-shade.active {
+      display: flex !important;
+    }
+    .r38-online-sheet {
+      width: min(100%, 376px) !important;
+      background: linear-gradient(180deg, #15273d 0%, #0b1523 100%) !important;
+      border: 2px solid #ffcd38 !important;
+      border-radius: 18px !important;
+      padding: 16px !important;
+      color: #fff8e8 !important;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.72) !important;
+      text-align: center !important;
+    }
+    .r38-online-sheet h3 {
+      margin: 0 0 8px !important;
+      font-size: 18px !important;
+      font-weight: 900 !important;
+      color: #ffcd38 !important;
+    }
+    .r38-online-sheet p {
+      margin: 0 0 12px !important;
+      font-size: 13px !important;
+      line-height: 1.42 !important;
+      color: #cbd5e1 !important;
+    }
+    .r38-waking-bar {
+      width: 100% !important;
+      height: 8px !important;
+      border-radius: 99px !important;
+      background: rgba(255, 255, 255, 0.14) !important;
+      overflow: hidden !important;
+      margin: 8px 0 12px !important;
+    }
+    .r38-waking-bar > i {
+      display: block !important;
+      height: 100% !important;
+      width: 35% !important;
+      background: linear-gradient(90deg, #19d5d8, #ffcd38) !important;
+      transition: width 0.3s ease !important;
+    }
+    .r38-online-actions {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+    .r38-online-btn-primary {
+      min-height: 48px !important;
+      border-radius: 12px !important;
+      border: 2px solid #fff8e8 !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      color: #2b1206 !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+      cursor: pointer !important;
+    }
+    .r38-online-btn-secondary {
+      min-height: 44px !important;
+      border-radius: 12px !important;
+      border: 1.5px solid #19d5d8 !important;
+      background: rgba(25, 213, 216, 0.15) !important;
+      color: #e2e8f0 !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      cursor: pointer !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -1100,6 +1180,15 @@ HOME_VISUAL_PATCH_HTML = """
         if (weaponCard) {
           weaponCard.classList.toggle("single-weapon", _r38CatalogWeaponsUnlocked <= 1);
         }
+
+        // U3: Update locked online buttons from 'Sắp ra mắt' to 'Máy chủ chưa sẵn sàng' (or 'Server not ready')
+        const isEnHome = document.documentElement.lang === "en";
+        root.querySelectorAll('.home button.coming-soon[data-action="online-locked"] small').forEach(sm => {
+          const targetLabel = isEnHome ? "Server not ready" : "Máy chủ chưa sẵn sàng";
+          if (!sm.textContent.includes(targetLabel)) {
+            sm.textContent = targetLabel;
+          }
+        });
 
         // U1: Annotate Character & Weapon cards in Bot Setup and Modal with SỞ HỮU / DÙNG THỬ • TẠM badges
         root.querySelectorAll('[data-action="select-character"], .preview-character').forEach(btn => {
@@ -1474,8 +1563,80 @@ HOME_VISUAL_PATCH_HTML = """
           showPhaseBanner("ĐÃ KHÓA!");
         } else if (act === "quests" || act === "rank") {
           _r38LastOverlayTab = act;
+        } else if (act === "online-locked") {
+          e.stopPropagation();
+          e.preventDefault();
+          openOnlineStatusSheet(false);
         }
       }, true);
+
+      let _r38WakeTimer = null;
+      let _r38WakeSec = 0;
+      function openOnlineStatusSheet(startWaking) {
+        let shade = document.getElementById("r38-online-sheet-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r38-online-sheet-shade";
+          shade.innerHTML = `
+            <div class="r38-online-sheet" role="dialog" aria-modal="true" aria-label="Trạng thái máy chủ">
+              <h3 id="r38-online-title">MÁY CHỦ CHƯA SẴN SÀNG</h3>
+              <p id="r38-online-desc">Máy chủ đấu phòng trực tuyến hiện chưa mở kết nối WSS/CORS cho bản thử nghiệm này. Bạn có thể vào ngay chế độ <b>Luyện với Bot</b> (đã mở khóa đủ 7 nhân vật và 3 vũ khí)!</p>
+              <div class="r38-waking-bar" id="r38-waking-bar" style="display:none"><i id="r38-waking-fill"></i></div>
+              <div class="r38-online-actions">
+                <button type="button" class="r38-online-btn-primary" id="r38-btn-go-bot">CHUYỂN SANG LUYỆN VỚI BOT</button>
+                <button type="button" class="r38-online-btn-secondary" id="r38-btn-wake-retry">ĐÁNH THỨC MÁY CHỦ (TỚI 60 GIÂY)</button>
+                <button type="button" class="r38-online-btn-secondary" id="r38-btn-online-close">ĐÓNG</button>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(shade);
+          shade.querySelector("#r38-btn-online-close").addEventListener("click", () => {
+            if (_r38WakeTimer) { clearInterval(_r38WakeTimer); _r38WakeTimer = null; }
+            shade.classList.remove("active");
+          });
+          shade.querySelector("#r38-btn-go-bot").addEventListener("click", () => {
+            if (_r38WakeTimer) { clearInterval(_r38WakeTimer); _r38WakeTimer = null; }
+            shade.classList.remove("active");
+            const pracBtn = document.querySelector('#ui-root [data-action="practice"]');
+            if (pracBtn) pracBtn.click();
+          });
+          shade.querySelector("#r38-btn-wake-retry").addEventListener("click", () => {
+            startWakingSequence();
+          });
+        }
+        shade.classList.add("active");
+        if (startWaking) startWakingSequence();
+      }
+
+      function startWakingSequence() {
+        const titleEl = document.getElementById("r38-online-title");
+        const descEl = document.getElementById("r38-online-desc");
+        const barEl = document.getElementById("r38-waking-bar");
+        const fillEl = document.getElementById("r38-waking-fill");
+        const retryBtn = document.getElementById("r38-btn-wake-retry");
+        if (!titleEl || !descEl || !barEl || !fillEl) return;
+        if (_r38WakeTimer) clearInterval(_r38WakeTimer);
+        _r38WakeSec = 0;
+        barEl.style.display = "block";
+        titleEl.textContent = "ĐANG ĐÁNH THỨC MÁY CHỦ…";
+        descEl.textContent = "Đang đánh thức máy chủ… (0/60 giây). Nếu quá hạn hoặc máy chủ đang bảo trì, hãy chuyển sang Luyện với Bot.";
+        if (retryBtn) retryBtn.textContent = "THỬ LẠI KẾT NỐI";
+        fillEl.style.width = "8%";
+        _r38WakeTimer = setInterval(() => {
+          _r38WakeSec += 1;
+          const pct = Math.min(100, Math.round((_r38WakeSec / 60) * 100));
+          fillEl.style.width = Math.max(8, pct) + "%";
+          if (_r38WakeSec >= 60) {
+            clearInterval(_r38WakeTimer);
+            _r38WakeTimer = null;
+            titleEl.textContent = "MÁY CHỦ CHƯA PHẢN HỒI";
+            descEl.textContent = "Quá 60 giây chờ đánh thức hoặc CORS/WSS chưa bật. Gợi ý: Chuyển sang Luyện với Bot ngay!";
+          } else {
+            descEl.textContent = `Đang đánh thức máy chủ… (${_r38WakeSec}/60 giây). Bạn có thể chuyển sang Luyện với Bot bất cứ lúc nào.`;
+          }
+        }, 1000);
+      }
+      window.__hitmeOpenOnlineSheet = openOnlineStatusSheet;
 
       document.addEventListener("DOMContentLoaded", () => {
         const root = document.getElementById("ui-root");

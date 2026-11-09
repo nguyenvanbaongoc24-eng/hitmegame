@@ -20,3 +20,12 @@
   - Không có bot trong phòng online (`maxPlayers = 6`, `minPlayersToStart = 2`).
   - Khi `room_state.players.Count < 2`, nút Bắt đầu bị khóa và hiển thị thông báo kèm nút chuyển sang chế độ **Luyện với bot** cục bộ.
   - Khi nhận `quick_match_hint`, chỉ hiện gợi ý chuyển sang **Luyện với bot**, không tự động thêm bot vào phòng.
+
+## 4. Kết quả kiểm tra máy chủ trực tiếp trong bước U3 (Đợt 38)
+- **Kiểm tra `GET https://hitmegame.onrender.com/healthz` với header `Origin: https://hitmegame-iota.vercel.app`:**
+  - HTTP Status: `200 OK`, body: `{"status":"ok","protocol":3}`.
+  - Response headers: `Content-Type: application/json; charset=utf-8`, `x-render-origin-server: Kestrel` — **chưa có header `Access-Control-Allow-Origin: https://hitmegame-iota.vercel.app`**, khiến trình duyệt khi gọi `fetch` từ Vercel chỉ nhận `response.type === "opaque"` (`state.serverHealth = "waking"` trong `app.js`).
+  - Theo `origin/prep/codex:server/README.md`, cầu nối WebGL `.jslib` (`HitMeWebSocket.jslib`) mới qua kiểm thử JS bridge độc lập, chưa hoàn tất ghép nối toàn trình vào bản build WebGL Unity + thử iPhone, nên `NetConfig.Enabled` mặc định giữ `false`.
+- **Trạng thái giao diện trên `/next/` (U3):**
+  - Ba nút **CHƠI NHANH / TẠO PHÒNG / VÀO PHÒNG** hiển thị rõ nhãn **"Máy chủ chưa sẵn sàng"** (thay cho *"Sắp ra mắt"*).
+  - Khi người chơi chạm vào bất kỳ nút online nào, hộp thoại **"MÁY CHỦ CHƯA SẴN SÀNG"** hiện ra giải thích rõ lý do, có nút chính **"CHUYỂN SANG LUYỆN VỚI BOT"** (chuyển thẳng vào màn chọn bot 1 chạm) và nút **"ĐÁNH THỨC MÁY CHỦ (TỚI 60 GIÂY)"** (hiển thị thanh tiến trình đếm 0–60 giây + nút **THỬ LẠI KẾT NỐI**).
