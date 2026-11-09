@@ -2361,6 +2361,7 @@ HOME_VISUAL_PATCH_HTML = """
         auth_invalid: "Phiên đăng nhập không hợp lệ. Vui lòng thử lại.",
         token_invalid: "Mã xác thực không hợp lệ hoặc đã hết hạn.",
         reconnect_invalid: "Phiên kết nối lại đã hết hạn (quá 30 giây).",
+        reconnect_timeout: "Bạn đã rời trận do mất kết nối quá 30 giây.",
         room_full: "Phòng đã đủ 6 người chơi.",
         room_limit: "Máy chủ đã đạt giới hạn số phòng.",
         room_code_exhausted: "Tạm hết mã phòng trống, vui lòng thử lại.",
@@ -3035,26 +3036,78 @@ HOME_VISUAL_PATCH_HTML = """
         }
       };
 
+      // L4: Mobile Lifecycle, Ping Heartbeat, and Screen Wake Lock
+      let _heartbeatTimer = null;
+      let _lastPingTime = 0;
+      let _lastPongTime = 0;
+
+      function startHeartbeat() {
+        stopHeartbeat();
+        _lastPongTime = Date.now();
+        _heartbeatTimer = setInterval(() => {
+          if (onlineState.transportMode === "loopback") return;
+          if (onlineState.socket && onlineState.socket.readyState === WebSocket.OPEN) {
+            _lastPingTime = Date.now();
+            onlineState.socket.send(JSON.stringify({ v: 1, type: "ping" }));
+            if (_lastPingTime - _lastPongTime > 15000) {
+              console.warn("[HITME Net] 15s without pong — closing stale connection");
+              try { onlineState.socket.close(4000, "stale_heartbeat"); } catch (e) {}
+            }
+          }
+        }, 5000);
+      }
+
+      function stopHeartbeat() {
+        if (_heartbeatTimer) {
+          clearInterval(_heartbeatTimer);
+          _heartbeatTimer = null;
+        }
+      }
+
+      let _wakeLock = null;
+      async function requestWakeLock() {
+        if ("wakeLock" in navigator && navigator.wakeLock && navigator.wakeLock.request) {
+          try {
+            if (!_wakeLock) {
+              _wakeLock = await navigator.wakeLock.request("screen");
+              _wakeLock.addEventListener("release", () => { _wakeLock = null; });
+            }
+          } catch (e) {}
+        }
+      }
+
+      function releaseWakeLock() {
+        if (_wakeLock) {
+          try { _wakeLock.release(); } catch (e) {}
+          _wakeLock = null;
+        }
+      }
+
       function connectSocket(onOpenSendMsg) {
         if (onlineState.transportMode === "loopback") {
           onlineState.connected = true;
           if (onOpenSendMsg) loopbackHub.sendFromClient(onOpenSendMsg);
           return;
         }
-        try {
-          if (onlineState.socket && (onlineState.socket.readyState === WebSocket.OPEN || onlineState.socket.readyState === WebSocket.CONNECTING)) {
-            if (onlineState.socket.readyState === WebSocket.OPEN && onOpenSendMsg) {
-              onlineState.socket.send(JSON.stringify(onOpenSendMsg));
+        if (onlineState.socket) {
+          try {
+            onlineState.socket.onopen = null;
+            onlineState.socket.onmessage = null;
+            onlineState.socket.onclose = null;
+            onlineState.socket.onerror = null;
+            if (onlineState.socket.readyState === WebSocket.OPEN || onlineState.socket.readyState === WebSocket.CONNECTING) {
+              onlineState.socket.close();
             }
-            return;
-          }
-        } catch (e) {}
+          } catch (e) {}
+          onlineState.socket = null;
+        }
 
         const ws = new WebSocket(onlineState.wsUrl);
         onlineState.socket = ws;
         ws.onopen = () => {
           onlineState.connected = true;
           hideNetAlert();
+          startHeartbeat();
           if (onOpenSendMsg) {
             ws.send(JSON.stringify(onOpenSendMsg));
           }
@@ -3068,6 +3121,7 @@ HOME_VISUAL_PATCH_HTML = """
         };
         ws.onclose = (ev) => {
           onlineState.connected = false;
+          stopHeartbeat();
           const reason = String(ev.reason || "");
           if (reason === "server_shutdown" || reason === "server_restarting") {
             showNetAlert("server_shutdown", localizeError("server_shutdown"));
@@ -3098,6 +3152,13 @@ HOME_VISUAL_PATCH_HTML = """
         if (!msg || typeof msg !== "object") return;
         const t = msg.type;
         if (t === "hello") {
+          return;
+        }
+        if (t === "pong") {
+          _lastPongTime = Date.now();
+          if (_lastPingTime > 0) {
+            window.__hitmeLastRttMs = _lastPongTime - _lastPingTime;
+          }
           return;
         }
         if (t === "room_state") {
@@ -3149,6 +3210,7 @@ HOME_VISUAL_PATCH_HTML = """
         }
         if (t === "round_start") {
           if (_quickWaitTimer) { clearInterval(_quickWaitTimer); _quickWaitTimer = null; }
+          requestWakeLock();
           onlineState.lastErrorCode = "";
           onlineState.lastErrorText = "";
           onlineState.phase = "placing";
@@ -3191,6 +3253,7 @@ HOME_VISUAL_PATCH_HTML = """
           return;
         }
         if (t === "match_end") {
+          releaseWakeLock();
           onlineState.lastErrorCode = "";
           onlineState.lastErrorText = "";
           onlineState.phase = "match_end";
@@ -3227,18 +3290,36 @@ HOME_VISUAL_PATCH_HTML = """
         }
       }
 
+      let _reconnectBackoffMs = 1000;
       function startReconnectCountdown(seconds) {
         if (_reconnectTimer) clearInterval(_reconnectTimer);
         onlineState.reconnectSecLeft = seconds || 30;
+        _reconnectBackoffMs = 1000;
         showNetAlert("reconnecting", `Mất kết nối mạng — đang tự động vào lại phòng (${onlineState.reconnectSecLeft}s)...`);
+
+        function attemptAutoRetry() {
+          if (onlineState.reconnectSecLeft <= 0 || !onlineState.reconnectToken) return;
+          const jitter = Math.floor(Math.random() * 500);
+          setTimeout(() => {
+            if (onlineState.reconnectSecLeft > 0 && !onlineState.connected) {
+              triggerReconnectNow();
+              _reconnectBackoffMs = Math.min(8000, _reconnectBackoffMs * 2);
+            }
+          }, jitter);
+        }
+
         _reconnectTimer = setInterval(() => {
           onlineState.reconnectSecLeft = Math.max(0, onlineState.reconnectSecLeft - 1);
           if (onlineState.reconnectSecLeft <= 0) {
             clearInterval(_reconnectTimer);
             _reconnectTimer = null;
-            showNetAlert("reconnect_invalid", localizeError("reconnect_invalid"));
+            closeOnlineRoot();
+            showNetAlert("reconnect_timeout", "Bạn đã rời trận do mất kết nối quá 30 giây.");
           } else {
             showNetAlert("reconnecting", `Mất kết nối mạng — đang tự động vào lại phòng (${onlineState.reconnectSecLeft}s)...`);
+            if (onlineState.reconnectSecLeft % 3 === 0) {
+              attemptAutoRetry();
+            }
           }
         }, 1000);
       }
@@ -3267,10 +3348,12 @@ HOME_VISUAL_PATCH_HTML = """
         const isReconnecting = code === "reconnecting";
         const isShutdown = code === "server_shutdown" || code === "server_restarting";
         const isBanned = code === "banned";
+        const isTimeout = code === "reconnect_timeout" || code === "reconnect_invalid";
         const isRoomJoinError = code === "room_full" || code === "room_started" || code === "room_not_found" || code === "room_expired" || code === "room_limit" || code === "room_code_exhausted";
         const title = isReconnecting ? "ĐANG KẾT NỐI LẠI (30 GIÂY)"
                     : isShutdown ? "MÁY CHỦ ĐANG BẢO TRÌ / KHỞI ĐỘNG LẠI"
                     : isBanned ? "TẠM KHÓA DO KHÔNG THAO TÁC (AFK)"
+                    : isTimeout ? "BẠN ĐÃ RỜI TRẬN"
                     : isRoomJoinError ? "KHÔNG THỂ VÀO PHÒNG"
                     : "THÔNG BÁO KẾT NỐI";
         shade.innerHTML = `
@@ -3281,7 +3364,7 @@ HOME_VISUAL_PATCH_HTML = """
               ${isRoomJoinError ? `<button type="button" class="r39-btn" id="r39-alert-newroom-btn">TẠO PHÒNG MỚI</button>` : ""}
               ${isReconnecting ? `<button type="button" class="r39-btn" id="r39-alert-reconnect-btn">VÀO LẠI NGAY</button>` : ""}
               <button type="button" class="r39-btn ${isRoomJoinError ? "secondary" : ""}" id="r39-alert-bot-btn">LUYỆN VỚI BOT</button>
-              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">ĐÓNG</button>
+              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">${isTimeout ? "VỀ TRANG CHỦ" : "ĐÓNG"}</button>
             </div>
           </div>
         `;
@@ -3303,6 +3386,44 @@ HOME_VISUAL_PATCH_HTML = """
         const clsBtn = shade.querySelector("#r39-alert-close-btn");
         if (clsBtn) clsBtn.addEventListener("click", () => hideNetAlert());
       }
+
+      let _lastHiddenAt = 0;
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+          _lastHiddenAt = Date.now();
+        } else if (document.visibilityState === "visible") {
+          _lastHiddenAt = 0;
+          if (onlineState.mode === "match") {
+            requestWakeLock();
+          }
+          if (onlineState.mode === "match" && (!onlineState.socket || onlineState.socket.readyState !== WebSocket.OPEN) && onlineState.transportMode !== "loopback") {
+            triggerReconnectNow();
+          }
+        }
+      });
+
+      window.addEventListener("pagehide", () => {
+        releaseWakeLock();
+      });
+
+      window.addEventListener("pageshow", (ev) => {
+        if (ev.persisted && onlineState.mode === "match" && onlineState.transportMode !== "loopback") {
+          triggerReconnectNow();
+        }
+      });
+
+      window.addEventListener("offline", () => {
+        if (onlineState.mode === "match" || onlineState.mode === "lobby") {
+          startReconnectCountdown(30);
+        }
+      });
+
+      window.addEventListener("online", () => {
+        if (onlineState.reconnectSecLeft > 0) {
+          const jitter = 100 + Math.floor(Math.random() * 400);
+          setTimeout(() => triggerReconnectNow(), jitter);
+        }
+      });
 
       function hideNetAlert() {
         if (_reconnectTimer) { clearInterval(_reconnectTimer); _reconnectTimer = null; }
@@ -4147,7 +4268,12 @@ HOME_VISUAL_PATCH_HTML = """
         LocalProfileStore,
         validateAndSanitizeName,
         openNameModal,
-        fetchGuestToken
+        fetchGuestToken,
+        startHeartbeat,
+        stopHeartbeat,
+        requestWakeLock,
+        releaseWakeLock,
+        startReconnectCountdown
       };
     })();
   </script>
