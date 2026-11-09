@@ -2295,6 +2295,61 @@ HOME_VISUAL_PATCH_HTML = """
     .r40-feedback-btn:active {
       background: rgba(255, 255, 255, 0.4);
     }
+
+    /* L2: Guest Profile & Name Modal */
+    #r40-name-modal-shade {
+      position: fixed;
+      inset: 0;
+      z-index: 92;
+      background: rgba(6, 12, 22, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      pointer-events: auto;
+    }
+    .r40-profile-card {
+      background: linear-gradient(180deg, #1b2838 0%, #0d1520 100%);
+      border: 2px solid #ffcd38;
+      border-radius: 14px;
+      padding: 16px;
+      width: min(100%, 380px);
+      color: #fff8e8;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .r40-input-row {
+      display: flex;
+      position: relative;
+      align-items: center;
+    }
+    .r40-input-row input {
+      width: 100%;
+      background: #0a1018;
+      border: 1.5px solid #3a506b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      padding-right: 48px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+    }
+    .r40-input-row input:focus {
+      border-color: #ffcd38;
+      box-shadow: 0 0 8px rgba(255,205,56,0.3);
+    }
+    .r40-input-count {
+      position: absolute;
+      right: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      pointer-events: none;
+    }
   </style>
   <script id="r39-online-g9-js">
     (function() {
@@ -2588,17 +2643,229 @@ HOME_VISUAL_PATCH_HTML = """
         lastErrorText: ""
       };
 
+      // L2: Guest Profile Store & Identity (Safari Private Mode resilient)
+      const LocalProfileStore = {
+        _mem: {},
+        isStorageAvailable() {
+          try {
+            const k = "__hitme_test__";
+            localStorage.setItem(k, "1");
+            localStorage.removeItem(k);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        },
+        getItem(key) {
+          try {
+            if (this.isStorageAvailable()) {
+              return localStorage.getItem(key);
+            }
+          } catch (e) {}
+          return this._mem[key] !== undefined ? this._mem[key] : null;
+        },
+        setItem(key, val) {
+          try {
+            if (this.isStorageAvailable()) {
+              localStorage.setItem(key, val);
+              return true;
+            }
+          } catch (e) {}
+          this._mem[key] = String(val);
+          return false;
+        },
+        getProfile() {
+          const raw = this.getItem("hitme_user_profile");
+          if (raw) {
+            try { return JSON.parse(raw); } catch (e) {}
+          }
+          return null;
+        },
+        saveProfile(prof) {
+          const ok = this.setItem("hitme_user_profile", JSON.stringify(prof));
+          if (!ok && !window.__hitmeWarnedPrivateStorage) {
+            window.__hitmeWarnedPrivateStorage = true;
+            console.info("[HITME Profile] Chế độ riêng tư: hồ sơ lưu tạm trong phiên này.");
+          }
+          return prof;
+        }
+      };
+
+      const VULGAR_WORDS = ["dm", "đm", "dcm", "đcm", "cl", "vl", "vcl", "cc", "cac", "cặc", "lồn", "buoi", "bùi", "cu", "đĩ", "điếm", "loz", "lon"];
+
+      function validateAndSanitizeName(raw) {
+        if (!raw || typeof raw !== "string") {
+          return { ok: false, sanitized: "", error: "Tên người chơi không được để trống." };
+        }
+        let clean = raw.replace(/<[^>]*>/g, "");
+        clean = clean.replace(/[\\x00-\\x1F\\x7F]/g, "").trim();
+        if (clean.length < 3) {
+          return { ok: false, sanitized: clean, error: "Tên phải có ít nhất 3 ký tự." };
+        }
+        if (clean.length > 16) {
+          clean = clean.slice(0, 16).trim();
+        }
+        const lower = clean.toLowerCase();
+        for (const w of VULGAR_WORDS) {
+          const re = new RegExp("(^|\\s|_|-)" + w + "($|\\s|_|-)", "i");
+          if (re.test(lower) || lower === w) {
+            return { ok: false, sanitized: clean, error: "Tên chứa từ ngữ không phù hợp, vui lòng đổi tên khác." };
+          }
+        }
+        return { ok: true, sanitized: clean };
+      }
+
+      let _prof = LocalProfileStore.getProfile();
+      if (!_prof) {
+        _prof = {
+          guestId: "guest_" + Math.random().toString(36).substring(2, 10),
+          name: "NamLang" + Math.floor(10 + Math.random() * 89),
+          token: "",
+          characterId: "nam_lang",
+          weaponId: "dep_to_ong",
+          renameCount: 0,
+          customized: false
+        };
+        LocalProfileStore.saveProfile(_prof);
+      }
+      onlineState.playerName = _prof.name || onlineState.playerName;
+      onlineState.characterId = _prof.characterId || onlineState.characterId;
+
       try {
         const savedName = sessionStorage.getItem("hitme_online_name");
-        if (savedName && savedName.length >= 3) onlineState.playerName = savedName;
+        if (savedName && savedName.length >= 3) {
+          onlineState.playerName = savedName;
+          _prof.name = savedName;
+          LocalProfileStore.saveProfile(_prof);
+        }
       } catch (e) {}
 
       let _tickTimer = null;
       let _reconnectTimer = null;
       let _quickWaitTimer = null;
 
-      function getToken() {
+      async function fetchGuestToken(name) {
+        const p = LocalProfileStore.getProfile() || {};
+        if (p.token) return p.token;
+        const sUrl = resolveServerWsUrl();
+        const httpBase = sUrl.replace(/^wss:\\/\\//i, "https://").replace(/^ws:\\/\\//i, "http://").replace(/\\/ws\\/?$/, "");
+        try {
+          const resp = await fetch(httpBase + "/guest-token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name || onlineState.playerName, guestId: p.guestId })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.token) {
+              p.token = data.token;
+              LocalProfileStore.saveProfile(p);
+              return data.token;
+            }
+          }
+        } catch (e) {}
         return "guest:" + (onlineState.playerName || "Khach");
+      }
+
+      function getToken() {
+        const p = LocalProfileStore.getProfile() || {};
+        return p.token || ("guest:" + (onlineState.playerName || "Khach"));
+      }
+
+      function openNameModal(onSaved) {
+        let shade = document.getElementById("r40-name-modal-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r40-name-modal-shade";
+          document.body.appendChild(shade);
+        }
+        const prof = LocalProfileStore.getProfile() || {
+          name: onlineState.playerName || "NamLang",
+          renameCount: 0,
+          characterId: onlineState.characterId || "nam_lang"
+        };
+        const currentName = prof.name || onlineState.playerName || "";
+        const isFreeRename = (prof.renameCount || 0) === 0;
+        let selectedChar = prof.characterId || onlineState.characterId || "nam_lang";
+
+        function renderModalContent(err) {
+          shade.innerHTML = `
+            <div class="r40-profile-card" role="dialog" aria-modal="true" data-name="name-modal">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="margin:0;color:#ffcd38;font-size:16px;">HỒ SƠ NGƯỜI CHƠI</h3>
+                <span style="font-size:11px;color:${isFreeRename ? "#6ee7b7" : "#cbd5e1"};font-weight:700;">
+                  ${isFreeRename ? "✨ Đổi tên lần đầu miễn phí" : "Lần đổi: " + prof.renameCount}
+                </span>
+              </div>
+              <div style="font-size:12px;color:#94a3b8;">
+                Nhập tên hiển thị trong trận đấu (3–16 ký tự, tiếng Việt sạch):
+              </div>
+              <div class="r40-input-row">
+                <input id="r40-name-input" type="text" maxlength="16" value="${currentName}" placeholder="Nhập tên của bạn...">
+                <span id="r40-name-count" class="r40-input-count">${currentName.length}/16</span>
+              </div>
+              <div id="r40-name-err" style="color:#f87171;font-size:11.5px;font-weight:700;display:${err ? "block" : "none"};">${err || ""}</div>
+
+              <div style="font-size:12px;color:#cbd5e1;font-weight:800;margin-top:4px;">CHỌN NHÂN VẬT MẶC ĐỊNH:</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:160px;overflow-y:auto;padding-right:2px;">
+                ${CHARACTERS.map(c => `
+                  <button type="button" class="r39-char-pick ${selectedChar === c.id ? "selected" : ""}" data-name-char="${c.id}" style="min-height:52px;flex:1 1 45%;">
+                    <img src="${c.head}" alt="${c.name}" style="width:28px;height:28px;">
+                    <span style="font-size:11px;">${c.name}${c.tam ? " (TẠM)" : ""}</span>
+                  </button>
+                `).join("")}
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                <button type="button" class="r39-btn secondary" id="r40-name-cancel">HỦY / ĐÓNG</button>
+                <button type="button" class="r39-btn" id="r40-name-save">LƯU HỒ SƠ</button>
+              </div>
+            </div>
+          `;
+          shade.style.display = "flex";
+
+          const inputEl = shade.querySelector("#r40-name-input");
+          const countEl = shade.querySelector("#r40-name-count");
+          inputEl.addEventListener("input", () => {
+            countEl.textContent = inputEl.value.length + "/16";
+          });
+
+          shade.querySelectorAll("[data-name-char]").forEach(btn => {
+            btn.addEventListener("click", () => {
+              selectedChar = btn.dataset.nameChar;
+              renderModalContent();
+            });
+          });
+
+          shade.querySelector("#r40-name-cancel").addEventListener("click", () => {
+            shade.style.display = "none";
+          });
+
+          shade.querySelector("#r40-name-save").addEventListener("click", () => {
+            const rawVal = inputEl.value;
+            const res = validateAndSanitizeName(rawVal);
+            if (!res.ok) {
+              renderModalContent(res.error);
+              return;
+            }
+            prof.name = res.sanitized;
+            prof.characterId = selectedChar;
+            prof.customized = true;
+            if (prof.name !== currentName) {
+              prof.renameCount = (prof.renameCount || 0) + 1;
+              prof.token = "";
+            }
+            LocalProfileStore.saveProfile(prof);
+            onlineState.playerName = prof.name;
+            onlineState.characterId = prof.characterId;
+            try { sessionStorage.setItem("hitme_online_name", prof.name); } catch (e) {}
+            shade.style.display = "none";
+            renderOnlineRoot();
+            if (onSaved) onSaved(prof);
+          });
+        }
+
+        renderModalContent();
       }
 
       function saveReconnectToken(tok) {
@@ -3029,7 +3296,7 @@ HOME_VISUAL_PATCH_HTML = """
         if (_tickTimer) { clearInterval(_tickTimer); _tickTimer = null; }
       }
 
-      function openMode(mode) {
+      function _doOpenMode(mode) {
         onlineState.mode = mode || "create";
         onlineState.lastErrorCode = "";
         onlineState.lastErrorText = "";
@@ -3048,17 +3315,29 @@ HOME_VISUAL_PATCH_HTML = """
           }, 200);
         }
         if (mode === "quick") {
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6" });
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7" });
         } else if (mode === "create") {
           sendProtocol({
             type: "join",
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
           });
         }
         renderOnlineRoot();
+      }
+
+      function openMode(mode) {
+        const prof = LocalProfileStore.getProfile() || {};
+        if (!prof.customized && !window.__hitmeNamePromptedThisSession) {
+          window.__hitmeNamePromptedThisSession = true;
+          openNameModal(() => {
+            _doOpenMode(mode);
+          });
+          return;
+        }
+        _doOpenMode(mode);
       }
 
       function renderOnlineRoot() {
@@ -3401,8 +3680,9 @@ HOME_VISUAL_PATCH_HTML = """
           <div class="r39-on-wrap">
             <div class="r39-on-header">
               <h2>TRỰC TUYẾN • ${onlineState.transportMode === "loopback" ? "CHẾ ĐỘ LAB 2P" : "MÁY CHỦ THẬT"}</h2>
-              <div style="display:flex;gap:6px;">
-                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:6px 10px;font-size:12px;">HỒ SƠ & CỬA HÀNG</button>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <button type="button" class="r39-btn secondary" data-on-act="open-rename" style="padding:4px 8px;font-size:11.5px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Đổi tên / nhân vật">👤 ${onlineState.playerName}</button>
+                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:6px 10px;font-size:12px;">CỬA HÀNG</button>
                 <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:6px 10px;font-size:12px;">ĐÓNG</button>
               </div>
             </div>
@@ -3644,6 +3924,8 @@ HOME_VISUAL_PATCH_HTML = """
           const act = onAct.dataset.onAct;
           if (act === "close-online") {
             closeOnlineRoot();
+          } else if (act === "open-rename") {
+            openNameModal();
           } else if (act === "open-profile-shop") {
             openProfileShopModal();
           } else if (act === "open-inmatch-settings") {
@@ -3750,7 +4032,11 @@ HOME_VISUAL_PATCH_HTML = """
         showNetAlert,
         hideNetAlert,
         resolveServerWsUrl,
-        renderBetaBanner
+        renderBetaBanner,
+        LocalProfileStore,
+        validateAndSanitizeName,
+        openNameModal,
+        fetchGuestToken
       };
     })();
   </script>
