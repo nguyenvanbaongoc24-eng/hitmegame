@@ -89,6 +89,830 @@
       .home .blue, .home .green { top: 73.2% !important; height: 8.0% !important; min-height: 44px !important; }
       .home .practice { top: 82.2% !important; height: 7.4% !important; min-height: 44px !important; }
     }
+
+    /* ============================================================================
+       ROUND 38 G1–G8: In-Match HUD, Timer Ring + 5 Dots, Non-Blocking Interactive
+       Tutorial, Phase Banners, Bot Setup Top Selector & Scroll, and Home Polish
+       ============================================================================ */
+
+    /* G7a: Hide stray server-dot circle O after 'Sắp ra mắt' on CHƠI NHANH */
+    .home .quick .server-dot {
+      display: none !important;
+    }
+
+    /* G7b + G7c: Widen weapon card so 'Dép Tổ Ong' stays on 1 line; hide reverse arrow when <= 1 weapon unlocked */
+    .home .character-card {
+      left: 3.5% !important;
+      width: 45% !important;
+      padding: 4px 8px !important;
+      gap: 6px !important;
+    }
+    .home .weapon-card {
+      right: 3.5% !important;
+      width: 46.5% !important;
+      padding: 4px 8px !important;
+      gap: 6px !important;
+    }
+    .home .weapon-card b,
+    .home .character-card b {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1.28 !important;
+      padding-bottom: 2px !important;
+      max-height: none !important;
+      font-size: clamp(12px, 3.2vw, 15px) !important;
+    }
+    .home .weapon-card > .icon.reverse {
+      display: none !important;
+    }
+
+    /* G1: Adaptive Top Player Cards for N=2..6, larger circular avatars, clear hearts, unclipped diacritics ('Nữ Năng Động') */
+    .live-top {
+      padding: max(8px, env(safe-area-inset-top)) 8px 6px !important;
+      gap: 6px !important;
+    }
+    .live-cards {
+      display: flex !important;
+      gap: 6px !important;
+      width: 100% !important;
+      padding: 0 2px !important;
+      min-height: 66px !important;
+      align-items: stretch !important;
+    }
+    .live-card {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      padding: 5px 4px 4px !important;
+      background: linear-gradient(180deg, #162b42f5 0%, #0d1b2bf5 100%) !important;
+      border: 1.5px solid #d4af37 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 2px !important;
+      position: relative !important;
+    }
+    .live-card.local {
+      border: 2.5px solid #19d5d8 !important;
+      background: linear-gradient(180deg, #173852f8 0%, #0e2438f8 100%) !important;
+      box-shadow: 0 0 0 2px rgba(25, 213, 216, 0.28), 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+    .live-card.out {
+      opacity: 0.42 !important;
+      filter: grayscale(0.85) !important;
+    }
+    .live-card img {
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      border: 2px solid rgba(255, 220, 67, 0.85) !important;
+      background: radial-gradient(circle at 50% 40%, #24476e 0%, #0d1b2a 100%) !important;
+      padding: 1px !important;
+      object-fit: contain !important;
+      flex: none !important;
+    }
+    .live-card.local img {
+      border-color: #19d5d8 !important;
+    }
+    .live-cards[data-count="5"] .live-card img,
+    .live-cards[data-count="6"] .live-card img {
+      width: 30px !important;
+      height: 30px !important;
+    }
+    .live-card div {
+      width: 100% !important;
+      overflow: visible !important;
+    }
+    .live-card b {
+      display: block !important;
+      font-size: clamp(9.5px, 2.55vw, 11px) !important;
+      font-weight: 800 !important;
+      line-height: 1.32 !important;
+      padding-bottom: 2px !important;
+      color: #fff8e8 !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      letter-spacing: -0.02em !important;
+    }
+    .live-cards[data-count="2"] .live-card b,
+    .live-cards[data-count="3"] .live-card b,
+    .live-cards[data-count="4"] .live-card b {
+      overflow: visible !important;
+      text-overflow: clip !important;
+      font-size: clamp(9.2px, 2.45vw, 10.8px) !important;
+    }
+    .live-cards[data-count="5"] .live-card b,
+    .live-cards[data-count="6"] .live-card b {
+      font-size: 9px !important;
+    }
+    .live-card.hold-reveal b {
+      position: absolute !important;
+      top: -24px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: #0b1421f5 !important;
+      border: 1px solid #ffcd38 !important;
+      border-radius: 6px !important;
+      padding: 2px 6px !important;
+      font-size: 11px !important;
+      z-index: 30 !important;
+      white-space: nowrap !important;
+      overflow: visible !important;
+    }
+    .live-hearts {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 1px !important;
+      color: #ff4a5e !important;
+      font-size: 13px !important;
+      line-height: 1.1 !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
+    }
+    .live-hearts span {
+      color: #64748b !important;
+    }
+
+    /* G2: Center-Top Countdown Progress Ring + 5 Round Dots */
+    .live-summary {
+      display: grid !important;
+      grid-template-columns: 1fr auto 1fr !important;
+      align-items: center !important;
+      gap: 8px !important;
+      min-height: 54px !important;
+    }
+    .r38-round-cluster {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+    .r38-round-cluster b {
+      font-size: 13px !important;
+      font-weight: 900 !important;
+      color: #ffe258 !important;
+      letter-spacing: 0.03em !important;
+    }
+    .r38-round-dots {
+      display: flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+    }
+    .r38-round-dot {
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 50% !important;
+      border: 1.5px solid #ffd84d !important;
+      background: rgba(15, 23, 42, 0.75) !important;
+      transition: transform 0.2s ease, background 0.2s ease !important;
+    }
+    .r38-round-dot.past {
+      background: #17b987 !important;
+      border-color: #34d399 !important;
+    }
+    .r38-round-dot.current {
+      background: #ffcd38 !important;
+      border-color: #fff8e8 !important;
+      transform: scale(1.28) !important;
+      box-shadow: 0 0 6px rgba(255, 205, 56, 0.85) !important;
+    }
+    .r38-timer-ring {
+      position: relative !important;
+      width: 54px !important;
+      height: 54px !important;
+      border-radius: 50% !important;
+      display: grid !important;
+      place-items: center !important;
+      background: conic-gradient(var(--timer-color, #19d5d8) var(--timer-pct, 100%), rgba(255, 255, 255, 0.14) 0) !important;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55) !important;
+      justify-self: center !important;
+    }
+    .r38-timer-ring::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 5px !important;
+      border-radius: 50% !important;
+      background: radial-gradient(circle at 50% 35%, #192b42 0%, #0b1421 100%) !important;
+    }
+    .r38-timer-ring.coin-style::before {
+      background: radial-gradient(circle at 35% 30%, #ffe66d 0%, #d98212 85%, #7c3f06 100%) !important;
+    }
+    .r38-timer-ring span {
+      position: relative !important;
+      z-index: 2 !important;
+      font-size: 17px !important;
+      font-weight: 900 !important;
+      color: #fff8e8 !important;
+      line-height: 1 !important;
+      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8) !important;
+    }
+    .r38-timer-ring.urgent {
+      --timer-color: #f66a5d !important;
+      animation: r38-timer-pulse 0.48s ease-in-out infinite !important;
+    }
+    .r38-timer-ring.urgent span {
+      color: #ffdf55 !important;
+    }
+    @keyframes r38-timer-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.13); box-shadow: 0 0 14px rgba(246, 106, 93, 0.85); }
+    }
+    .live-summary > button[data-action="settings"] {
+      justify-self: end !important;
+      width: 48px !important;
+      height: 48px !important;
+    }
+
+    /* G3: Non-Blocking Interactive Tutorial (never covers the center court; pointer-events pass through) */
+    .live-tutorial {
+      left: 4% !important;
+      right: 4% !important;
+      bottom: calc(var(--live-bottom, 118px) + 6px) !important;
+      padding: 8px 12px !important;
+      background: rgba(11, 20, 33, 0.92) !important;
+      border: 2px solid #19d5d8 !important;
+      border-radius: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      text-align: left !important;
+      pointer-events: none !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55) !important;
+    }
+    .live-tutorial b {
+      font-size: 11px !important;
+      color: #ffcd38 !important;
+      display: block !important;
+      white-space: nowrap !important;
+    }
+    .live-tutorial p {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      margin: 2px 0 0 !important;
+      line-height: 1.25 !important;
+      color: #fff8e8 !important;
+      flex: 1 !important;
+    }
+    .live-tutorial div {
+      display: flex !important;
+      gap: 6px !important;
+      pointer-events: auto !important;
+    }
+    .live-tutorial button {
+      pointer-events: auto !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+    }
+    .r38-hand-guide {
+      position: fixed !important;
+      left: 50% !important;
+      top: 56% !important;
+      width: 42px !important;
+      height: 42px !important;
+      margin-left: -21px !important;
+      margin-top: -21px !important;
+      z-index: 22 !important;
+      pointer-events: none !important;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7)) !important;
+      animation: r38-hand-tap 1.35s ease-in-out infinite !important;
+    }
+    .r38-hand-guide.drag-mode {
+      animation: r38-hand-drag 1.6s ease-in-out infinite !important;
+    }
+    @keyframes r38-hand-tap {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.92; }
+      50% { transform: translate(0, -10px) scale(0.88); opacity: 1; }
+    }
+    @keyframes r38-hand-drag {
+      0% { transform: translate(-24px, 14px) scale(0.95); opacity: 0.95; }
+      65% { transform: translate(32px, -28px) scale(1); opacity: 1; }
+      100% { transform: translate(-24px, 14px) scale(0.95); opacity: 0.85; }
+    }
+
+    /* G4: Phase Transition Banner (0.6s bounce-in + fade-out, non-blocking) */
+    #r38-phase-banner {
+      position: fixed !important;
+      left: 50% !important;
+      top: 38% !important;
+      transform: translate(-50%, -50%) scale(0.7) !important;
+      z-index: 45 !important;
+      padding: 10px 26px !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      border: 3px solid #fff8e8 !important;
+      color: #2b1206 !important;
+      font-size: clamp(20px, 6vw, 30px) !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.04em !important;
+      text-transform: uppercase !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      white-space: nowrap !important;
+    }
+    #r38-phase-banner.active {
+      animation: r38-banner-pop 0.62s cubic-bezier(0.2, 1.35, 0.35, 1) forwards !important;
+    }
+    @keyframes r38-banner-pop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
+      28% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+      48% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+      82% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+      100% { opacity: 0; transform: translate(-50%, -56%) scale(0.92); }
+    }
+
+    /* G6: Bot Practice Setup Screen — Top Bot Count Selector + Scrollable Weapon Grid + Bottom Padding >= Footer Height */
+    [data-screen="bot"] .preview-scroll {
+      display: flex !important;
+      flex-direction: column !important;
+      padding-bottom: 116px !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    [data-screen="bot"] .preview-count {
+      order: -2 !important;
+      margin: 2px 0 10px !important;
+      padding: 10px 12px !important;
+      background: linear-gradient(135deg, #1b354f 0%, #112233 100%) !important;
+      border: 2px solid #ffcd38 !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+    }
+    [data-screen="bot"] .preview-weapons {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 8px !important;
+    }
+    [data-screen="bot"] .preview-weapon {
+      height: auto !important;
+      min-height: 88px !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      text-align: center !important;
+      padding: 8px 6px !important;
+      gap: 4px !important;
+    }
+    [data-screen="bot"] .preview-weapon img {
+      width: 44px !important;
+      height: 44px !important;
+    }
+    [data-screen="bot"] .preview-weapon span {
+      font-size: 12px !important;
+      line-height: 1.2 !important;
+      white-space: normal !important;
+    }
+    .r38-badge-tam {
+      display: inline-block !important;
+      margin-top: 2px !important;
+      padding: 1px 6px !important;
+      border-radius: 6px !important;
+      background: rgba(245, 158, 11, 0.22) !important;
+      border: 1px solid #f59e0b !important;
+      color: #fde68a !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.02em !important;
+    }
+    .r38-badge-owned {
+      display: inline-block !important;
+      margin-top: 2px !important;
+      padding: 1px 6px !important;
+      border-radius: 6px !important;
+      background: rgba(23, 185, 135, 0.22) !important;
+      border: 1px solid #17b987 !important;
+      color: #6ee7b7 !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+    }
+
+    /* E1: Living Home Screen (Hero Breathing, Tap Wave, Switch Bounce 220ms, Logo Shine, Courtyard Sway, Pooled Leaves, Coin Spin) */
+    .home .hero {
+      animation: r38-hero-breath 2.4s ease-in-out infinite !important;
+      transform-origin: center bottom !important;
+      cursor: pointer !important;
+      will-change: transform !important;
+    }
+    @keyframes r38-hero-breath {
+      0%, 100% { transform: translateY(0px) scale(1, 1); }
+      50% { transform: translateY(-3.5px) scale(1.01, 1.018); }
+    }
+    .home .hero.tap-wave {
+      animation: r38-hero-tap 0.28s cubic-bezier(0.22, 1.4, 0.36, 1) forwards !important;
+    }
+    @keyframes r38-hero-tap {
+      0% { transform: scale(1, 1) rotate(0deg); }
+      40% { transform: translateY(-8px) scale(1.06, 0.94) rotate(-4deg); }
+      75% { transform: translateY(-3px) scale(0.98, 1.03) rotate(3deg); }
+      100% { transform: translateY(0px) scale(1, 1) rotate(0deg); }
+    }
+    .home .hero.switch-bounce {
+      animation: r38-hero-switch 0.22s cubic-bezier(0.2, 1.35, 0.38, 1) forwards !important;
+    }
+    @keyframes r38-hero-switch {
+      0% { transform: scale(0.92); opacity: 0.82; }
+      60% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(1.0); opacity: 1; }
+    }
+    #r38-pedestal-glow {
+      position: fixed !important;
+      left: 50% !important;
+      top: var(--pedestal-feet-y, 48%) !important;
+      width: 148px !important;
+      height: 46px !important;
+      transform: translate(-50%, -50%) scale(0.85) !important;
+      border-radius: 50% !important;
+      background: radial-gradient(ellipse at center, rgba(255, 226, 88, 0.78) 0%, rgba(25, 213, 216, 0.35) 55%, rgba(0, 0, 0, 0) 75%) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      z-index: 2 !important;
+    }
+    #r38-pedestal-glow.flash {
+      animation: r38-pedestal-flash 0.24s ease-out forwards !important;
+    }
+    @keyframes r38-pedestal-flash {
+      0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.82); }
+      55% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.32); }
+    }
+    .home .logo,
+    .home .brand-badge {
+      position: relative !important;
+      overflow: hidden !important;
+    }
+    .home .logo::after,
+    .home .brand-badge::after {
+      content: "" !important;
+      position: absolute !important;
+      top: -20% !important;
+      left: -60% !important;
+      width: 42% !important;
+      height: 140% !important;
+      background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,248,210,0.65) 50%, rgba(255,255,255,0) 100%) !important;
+      transform: skewX(-22deg) !important;
+      animation: r38-logo-shine 6.8s ease-in-out infinite !important;
+      pointer-events: none !important;
+    }
+    @keyframes r38-logo-shine {
+      0%, 76%, 100% { left: -65%; opacity: 0; }
+      80% { opacity: 1; }
+      92% { left: 135%; opacity: 0.9; }
+    }
+    .home .gold svg,
+    .home .coin-pill::before,
+    .home .coin-pill img,
+    .home .coin-pill svg {
+      animation: r38-coin-spin 3.6s ease-in-out infinite !important;
+      display: inline-block !important;
+    }
+    @keyframes r38-coin-spin {
+      0%, 70%, 100% { transform: rotateY(0deg) scale(1); filter: brightness(1); }
+      85% { transform: rotateY(180deg) scale(1.12); filter: brightness(1.35); }
+    }
+    #r38-ambient-leaves {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
+      overflow: hidden !important;
+    }
+    .r38-leaf {
+      position: absolute !important;
+      top: -18px !important;
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 70% 15% 70% 15% !important;
+      background: radial-gradient(circle at 30% 30%, #fff3a1 0%, #f59e0b 85%) !important;
+      box-shadow: 0 0 6px rgba(255, 212, 71, 0.65) !important;
+      opacity: 0.78 !important;
+      animation: r38-leaf-fall linear infinite !important;
+      will-change: transform, opacity !important;
+    }
+    @keyframes r38-leaf-fall {
+      0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 0; }
+      12% { opacity: 0.82; }
+      85% { opacity: 0.75; }
+      100% { transform: translate3d(var(--drift-x, 38px), 92vh, 0) rotate(320deg); opacity: 0; }
+    }
+
+    /* E2–E6: In-Match Place Ring + Dust, Hit Shake, Shattered Heart, Floating Callout ("TRÚNG!"/"HỤT!"), Confetti & Low-HP Vignette */
+    #r38-place-fx {
+      position: fixed !important;
+      width: 68px !important;
+      height: 68px !important;
+      margin-left: -34px !important;
+      margin-top: -34px !important;
+      border-radius: 50% !important;
+      border: 3px solid #19d5d8 !important;
+      box-shadow: 0 0 14px rgba(25, 213, 216, 0.8), inset 0 0 10px rgba(255, 223, 74, 0.55) !important;
+      pointer-events: none !important;
+      z-index: 26 !important;
+      opacity: 0 !important;
+    }
+    #r38-place-fx.active {
+      animation: r38-place-pop 0.18s cubic-bezier(0.18, 1.35, 0.4, 1) forwards !important;
+    }
+    @keyframes r38-place-pop {
+      0% { opacity: 1; transform: scale(1.18); }
+      55% { opacity: 1; transform: scale(0.94); }
+      100% { opacity: 0; transform: scale(1.38); }
+    }
+    .r38-screen-shake {
+      animation: r38-shake-anim 0.12s ease-in-out !important;
+    }
+    @keyframes r38-shake-anim {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      25% { transform: translate3d(-3.5px, 2.5px, 0); }
+      50% { transform: translate3d(3.5px, -2.5px, 0); }
+      75% { transform: translate3d(-2.5px, -2px, 0); }
+    }
+    .live-card.r38-card-hit-shake {
+      animation: r38-card-hit 0.34s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
+      border-color: #ff4a5e !important;
+      box-shadow: 0 0 14px rgba(255, 74, 94, 0.9) !important;
+    }
+    @keyframes r38-card-hit {
+      0%, 100% { transform: translateX(0) scale(1); }
+      20% { transform: translateX(-5px) scale(1.06); background: rgba(220, 38, 38, 0.55); }
+      45% { transform: translateX(5px) scale(0.96); }
+      70% { transform: translateX(-3px) scale(1.02); }
+    }
+    #r38-hit-callout {
+      position: fixed !important;
+      left: 50% !important;
+      top: 47% !important;
+      transform: translate(-50%, -50%) scale(0.5) !important;
+      z-index: 46 !important;
+      padding: 6px 18px !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #ff4a5e 0%, #b91c1c 100%) !important;
+      border: 2.5px solid #fff8e8 !important;
+      color: #fff8e8 !important;
+      font-size: 22px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.04em !important;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85) !important;
+      box-shadow: 0 6px 18px rgba(185, 28, 28, 0.75) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+    }
+    #r38-hit-callout.miss {
+      background: linear-gradient(180deg, #475569 0%, #1e293b 100%) !important;
+      font-size: 17px !important;
+    }
+    #r38-hit-callout.active {
+      animation: r38-callout-pop 0.58s cubic-bezier(0.2, 1.4, 0.35, 1) forwards !important;
+    }
+    @keyframes r38-callout-pop {
+      0% { opacity: 0; transform: translate(-50%, -30%) scale(0.45); }
+      30% { opacity: 1; transform: translate(-50%, -65%) scale(1.18); }
+      65% { opacity: 1; transform: translate(-50%, -85%) scale(1.0); }
+      100% { opacity: 0; transform: translate(-50%, -115%) scale(0.9); }
+    }
+    #r38-low-hp-vignette {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 19 !important;
+      box-shadow: inset 0 0 36px rgba(246, 106, 93, 0.68) !important;
+      opacity: 0 !important;
+    }
+    #r38-low-hp-vignette.active {
+      animation: r38-low-hp-pulse 1.15s ease-in-out infinite !important;
+    }
+    @keyframes r38-low-hp-pulse {
+      0%, 100% { opacity: 0.22; }
+      50% { opacity: 0.72; }
+    }
+    #r38-confetti-pool {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 48 !important;
+      overflow: hidden !important;
+      display: none !important;
+    }
+    #r38-confetti-pool.active {
+      display: block !important;
+    }
+    .r38-confetti {
+      position: absolute !important;
+      top: -16px !important;
+      width: 10px !important;
+      height: 14px !important;
+      border-radius: 2px !important;
+      animation: r38-confetti-drop 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite !important;
+    }
+    @keyframes r38-confetti-drop {
+      0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 1; }
+      100% { transform: translate3d(var(--cf-drift, 24px), 95vh, 0) rotate(540deg); opacity: 0.15; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .home .hero, .home .brand-badge::after, .r38-leaf, .r38-confetti, #r38-low-hp-vignette.active, .r38-timer-ring.urgent {
+        animation: none !important;
+      }
+    }
+    body.r38-reduced-motion .home .hero,
+    body.r38-reduced-motion .home .brand-badge::after,
+    body.r38-reduced-motion .r38-leaf,
+    body.r38-reduced-motion .r38-confetti,
+    body.r38-reduced-motion #r38-low-hp-vignette.active,
+    body.r38-reduced-motion .r38-timer-ring.urgent {
+      animation: none !important;
+    }
+
+    /* U2: Daily Quests & Sample Leaderboard Modals */
+    .r38-u2-banner {
+      margin: 4px 0 10px !important;
+      padding: 8px 12px !important;
+      border-radius: 10px !important;
+      background: rgba(245, 158, 11, 0.18) !important;
+      border: 1.5px solid #f59e0b !important;
+      color: #fde68a !important;
+      font-size: 12px !important;
+      font-weight: 800 !important;
+      text-align: center !important;
+      line-height: 1.35 !important;
+    }
+    .r38-u2-stats-row {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 6px !important;
+      margin-bottom: 10px !important;
+    }
+    .r38-u2-stat-box {
+      padding: 7px 6px !important;
+      border-radius: 10px !important;
+      background: rgba(15, 29, 48, 0.92) !important;
+      border: 1px solid rgba(25, 213, 216, 0.45) !important;
+      text-align: center !important;
+    }
+    .r38-u2-stat-box small {
+      display: block !important;
+      font-size: 10.5px !important;
+      color: #94a3b8 !important;
+      margin-bottom: 2px !important;
+    }
+    .r38-u2-stat-box b {
+      font-size: 15px !important;
+      font-weight: 900 !important;
+      color: #19d5d8 !important;
+    }
+    .r38-u2-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      max-height: 46vh !important;
+      overflow-y: auto !important;
+      padding-right: 2px !important;
+      margin-bottom: 10px !important;
+    }
+    .r38-quest-row, .r38-rank-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      padding: 9px 11px !important;
+      border-radius: 12px !important;
+      background: linear-gradient(180deg, #162b42 0%, #0d1b2b 100%) !important;
+      border: 1.5px solid rgba(255, 205, 56, 0.4) !important;
+    }
+    .r38-rank-row.me {
+      border: 2px solid #19d5d8 !important;
+      background: linear-gradient(180deg, #173852 0%, #0e2438 100%) !important;
+    }
+    .r38-quest-info {
+      flex: 1 !important;
+      text-align: left !important;
+    }
+    .r38-quest-info b {
+      display: block !important;
+      font-size: 13.5px !important;
+      color: #fff8e8 !important;
+      margin-bottom: 3px !important;
+    }
+    .r38-quest-info small {
+      display: block !important;
+      font-size: 11.5px !important;
+      color: #ffcd38 !important;
+      font-weight: 700 !important;
+    }
+    .r38-quest-bar {
+      width: 100% !important;
+      height: 6px !important;
+      background: rgba(255,255,255,0.12) !important;
+      border-radius: 99px !important;
+      overflow: hidden !important;
+      margin-top: 4px !important;
+    }
+    .r38-quest-bar > i {
+      display: block !important;
+      height: 100% !important;
+      background: linear-gradient(90deg, #19d5d8, #17b987) !important;
+    }
+    .r38-quest-claim {
+      min-width: 92px !important;
+      min-height: 44px !important;
+      padding: 6px 10px !important;
+      border-radius: 10px !important;
+      font-size: 11.5px !important;
+      font-weight: 900 !important;
+      border: 1.5px solid #fff8e8 !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      color: #2b1206 !important;
+      cursor: pointer !important;
+    }
+    .r38-quest-claim[disabled] {
+      opacity: 0.55 !important;
+      background: #1e293b !important;
+      color: #94a3b8 !important;
+      border-color: #475569 !important;
+      cursor: default !important;
+    }
+
+    /* U3: Online Server Readiness & Cold-Start Waking Sheet */
+    #r38-online-sheet-shade {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 60 !important;
+      background: rgba(6, 12, 22, 0.82) !important;
+      display: none !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 16px !important;
+      pointer-events: auto !important;
+    }
+    #r38-online-sheet-shade.active {
+      display: flex !important;
+    }
+    .r38-online-sheet {
+      width: min(100%, 376px) !important;
+      background: linear-gradient(180deg, #15273d 0%, #0b1523 100%) !important;
+      border: 2px solid #ffcd38 !important;
+      border-radius: 18px !important;
+      padding: 16px !important;
+      color: #fff8e8 !important;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.72) !important;
+      text-align: center !important;
+    }
+    .r38-online-sheet h3 {
+      margin: 0 0 8px !important;
+      font-size: 18px !important;
+      font-weight: 900 !important;
+      color: #ffcd38 !important;
+    }
+    .r38-online-sheet p {
+      margin: 0 0 12px !important;
+      font-size: 13px !important;
+      line-height: 1.42 !important;
+      color: #cbd5e1 !important;
+    }
+    .r38-waking-bar {
+      width: 100% !important;
+      height: 8px !important;
+      border-radius: 99px !important;
+      background: rgba(255, 255, 255, 0.14) !important;
+      overflow: hidden !important;
+      margin: 8px 0 12px !important;
+    }
+    .r38-waking-bar > i {
+      display: block !important;
+      height: 100% !important;
+      width: 35% !important;
+      background: linear-gradient(90deg, #19d5d8, #ffcd38) !important;
+      transition: width 0.3s ease !important;
+    }
+    .r38-online-actions {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+    }
+    .r38-online-btn-primary {
+      min-height: 48px !important;
+      border-radius: 12px !important;
+      border: 2px solid #fff8e8 !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      color: #2b1206 !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+      cursor: pointer !important;
+    }
+    .r38-online-btn-secondary {
+      min-height: 44px !important;
+      border-radius: 12px !important;
+      border: 1.5px solid #19d5d8 !important;
+      background: rgba(25, 213, 216, 0.15) !important;
+      color: #e2e8f0 !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      cursor: pointer !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -115,7 +939,6 @@
       }, 600);
     });
     (function() {
-
       // Dynamic pedestal anchor alignment (B-4 formula from bg_home_meta.json)
       function syncPedestalAnchor() {
         const vv = window.visualViewport;
@@ -139,6 +962,685 @@
         window.visualViewport.addEventListener("scroll", syncPedestalAnchor);
       }
       syncPedestalAnchor();
+
+      // Round 38 G1–G8 DOM Enhancer (Timer Ring + 5 Round Dots + Phase Banners + Hold-to-View Name + Interactive Hand Guide)
+      let _r38LastPhase = "";
+      let _r38LastRound = 0;
+      let _r38LastUrgentSec = -1;
+      let _r38PlaceCountInTutorial = 0;
+      let _r38CatalogWeaponsUnlocked = 1;
+      let _r38PrevHpByPlayer = {};
+      let _r38HapticsEnabled = true;
+      let _r38LastOverlayTab = "";
+      try { _r38HapticsEnabled = localStorage.getItem("hitme_haptics") !== "0"; } catch (e) {}
+
+      // U2: LocalProfileStore (schemaVersion = 1, wrapped in try/catch for Safari Private Mode, QuestRewardsEnabled = false default)
+      const R38_PROFILE_KEY = "hitme_local_profile_v1";
+      let _r38MemProfile = null;
+      function getTodayLocalStr() {
+        const d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      }
+      function loadLocalProfile() {
+        const today = getTodayLocalStr();
+        let data = _r38MemProfile;
+        if (!data) {
+          try {
+            const raw = localStorage.getItem(R38_PROFILE_KEY);
+            if (raw) data = JSON.parse(raw);
+          } catch (e) {}
+        }
+        if (!data || typeof data !== "object" || Number(data.schemaVersion) < 1) {
+          data = {
+            schemaVersion: 1,
+            questRewardsEnabled: false,
+            lastResetDate: today,
+            botMatchesPlayed: 0,
+            botMatchesWon: 0,
+            totalHitsLanded: 0,
+            maxRoundSurvived: 0,
+            experimentalGoldClaimed: 0,
+            quests: {
+              play_1_match: { progress: 0, target: 1, reward: 50, claimed: false, title: "Chơi 1 trận luyện bot" },
+              land_3_hits: { progress: 0, target: 3, reward: 60, claimed: false, title: "Ném trúng 3 lần" },
+              survive_round_3: { progress: 0, target: 3, reward: 70, claimed: false, title: "Sống tới vòng 3" },
+              win_1_match: { progress: 0, target: 1, reward: 100, claimed: false, title: "Thắng 1 trận luyện bot" }
+            }
+          };
+        }
+        if (data.lastResetDate !== today) {
+          data.lastResetDate = today;
+          Object.values(data.quests || {}).forEach(q => { q.progress = 0; q.claimed = false; });
+        }
+        _r38MemProfile = data;
+        saveLocalProfile(data);
+        return data;
+      }
+      function saveLocalProfile(data) {
+        _r38MemProfile = data;
+        try { localStorage.setItem(R38_PROFILE_KEY, JSON.stringify(data)); } catch (e) {}
+      }
+      function recordBotMatchResult(evt) {
+        if (!evt || !Array.isArray(evt.rankings)) return;
+        const p = loadLocalProfile();
+        const me = evt.rankings.find(r => r.id === "player" || r.id === "you") || evt.rankings[0] || {};
+        const won = Number(me.rank) === 1;
+        const hits = Math.max(0, Number(me.hits) || 0);
+        const rounds = Math.max(1, Number(me.roundSurvived || evt.round) || 1);
+        p.botMatchesPlayed = (Number(p.botMatchesPlayed) || 0) + 1;
+        if (won) p.botMatchesWon = (Number(p.botMatchesWon) || 0) + 1;
+        p.totalHitsLanded = (Number(p.totalHitsLanded) || 0) + hits;
+        p.maxRoundSurvived = Math.max(Number(p.maxRoundSurvived) || 0, rounds);
+        if (p.quests) {
+          if (p.quests.play_1_match) p.quests.play_1_match.progress = Math.min(1, (p.quests.play_1_match.progress || 0) + 1);
+          if (p.quests.land_3_hits) p.quests.land_3_hits.progress = Math.min(3, (p.quests.land_3_hits.progress || 0) + hits);
+          if (p.quests.survive_round_3) p.quests.survive_round_3.progress = Math.min(3, Math.max(p.quests.survive_round_3.progress || 0, rounds));
+          if (p.quests.win_1_match && won) p.quests.win_1_match.progress = Math.min(1, (p.quests.win_1_match.progress || 0) + 1);
+        }
+        saveLocalProfile(p);
+      }
+      window.__hitmeRecordBotResult = recordBotMatchResult;
+
+      function tryHaptic(ms) {
+        if (!_r38HapticsEnabled || document.body.classList.contains("r38-reduced-motion")) return;
+        try { if (navigator && typeof navigator.vibrate === "function") navigator.vibrate(ms || 25); } catch (e) {}
+      }
+
+      function ensurePooledVfxContainers() {
+        if (!document.getElementById("r38-ambient-leaves")) {
+          const leaves = document.createElement("div");
+          leaves.id = "r38-ambient-leaves";
+          for (let i = 0; i < 16; i++) {
+            const l = document.createElement("i");
+            l.className = "r38-leaf";
+            l.style.left = ((i * 6.25 + 3) % 96).toFixed(1) + "%";
+            l.style.animationDuration = (5.2 + (i % 5) * 1.1).toFixed(1) + "s";
+            l.style.animationDelay = (-i * 0.65).toFixed(2) + "s";
+            l.style.setProperty("--drift-x", ((i % 2 === 0 ? 1 : -1) * (18 + (i % 4) * 9)) + "px");
+            leaves.appendChild(l);
+          }
+          document.body.appendChild(leaves);
+        }
+        if (!document.getElementById("r38-pedestal-glow")) {
+          const g = document.createElement("div");
+          g.id = "r38-pedestal-glow";
+          document.body.appendChild(g);
+        }
+        if (!document.getElementById("r38-place-fx")) {
+          const p = document.createElement("div");
+          p.id = "r38-place-fx";
+          document.body.appendChild(p);
+        }
+        if (!document.getElementById("r38-hit-callout")) {
+          const c = document.createElement("div");
+          c.id = "r38-hit-callout";
+          document.body.appendChild(c);
+        }
+        if (!document.getElementById("r38-low-hp-vignette")) {
+          const v = document.createElement("div");
+          v.id = "r38-low-hp-vignette";
+          document.body.appendChild(v);
+        }
+        if (!document.getElementById("r38-confetti-pool")) {
+          const cf = document.createElement("div");
+          cf.id = "r38-confetti-pool";
+          const colors = ["#ffcd38", "#19d5d8", "#f66a5d", "#17b987", "#fff8e8", "#a855f7"];
+          for (let i = 0; i < 28; i++) {
+            const p = document.createElement("i");
+            p.className = "r38-confetti";
+            p.style.left = ((i * 3.55 + 1.5) % 98).toFixed(1) + "%";
+            p.style.background = colors[i % colors.length];
+            p.style.animationDuration = (1.6 + (i % 5) * 0.28).toFixed(2) + "s";
+            p.style.animationDelay = ((i % 7) * 0.14).toFixed(2) + "s";
+            p.style.setProperty("--cf-drift", ((i % 2 === 0 ? 1 : -1) * (14 + (i % 5) * 8)) + "px");
+            cf.appendChild(p);
+          }
+          document.body.appendChild(cf);
+        }
+      }
+
+      function showHitCallout(text, isMiss) {
+        if (document.body.classList.contains("r38-reduced-motion")) return;
+        const c = document.getElementById("r38-hit-callout");
+        if (!c) return;
+        c.textContent = text;
+        c.classList.toggle("miss", !!isMiss);
+        c.classList.remove("active");
+        void c.offsetWidth;
+        c.classList.add("active");
+      }
+
+      function triggerScreenShake() {
+        if (document.body.classList.contains("r38-reduced-motion")) return;
+        const uCont = document.getElementById("unity-container");
+        if (!uCont) return;
+        uCont.classList.remove("r38-screen-shake");
+        void uCont.offsetWidth;
+        uCont.classList.add("r38-screen-shake");
+      }
+
+      fetch("./catalog.json").then(r => r.json()).then(cat => {
+        if (cat && Array.isArray(cat.weapons)) {
+          _r38CatalogWeaponsUnlocked = cat.weapons.filter(w => w.enabled).length;
+        }
+      }).catch(() => {});
+
+      function showPhaseBanner(text) {
+        if (!text) return;
+        let banner = document.getElementById("r38-phase-banner");
+        if (!banner) {
+          banner = document.createElement("div");
+          banner.id = "r38-phase-banner";
+          banner.setAttribute("role", "status");
+          banner.setAttribute("aria-live", "polite");
+          document.body.appendChild(banner);
+        }
+        banner.textContent = text;
+        banner.classList.remove("active");
+        void banner.offsetWidth;
+        banner.classList.add("active");
+      }
+
+      function enhanceRound38Dom() {
+        const root = document.getElementById("ui-root");
+        if (!root) return;
+
+        // G7c: Toggle .single-weapon on Home weapon card when <= 1 weapon unlocked
+        const weaponCard = root.querySelector(".home .weapon-card");
+        if (weaponCard) {
+          weaponCard.classList.toggle("single-weapon", _r38CatalogWeaponsUnlocked <= 1);
+        }
+
+        // U3: Update locked online buttons from 'Sắp ra mắt' to 'Máy chủ chưa sẵn sàng' (or 'Server not ready')
+        const isEnHome = document.documentElement.lang === "en";
+        root.querySelectorAll('.home button.coming-soon[data-action="online-locked"] small').forEach(sm => {
+          const targetLabel = isEnHome ? "Server not ready" : "Máy chủ chưa sẵn sàng";
+          if (!sm.textContent.includes(targetLabel)) {
+            sm.textContent = targetLabel;
+          }
+        });
+
+        // U1: Annotate Character & Weapon cards in Bot Setup and Modal with SỞ HỮU / DÙNG THỬ • TẠM badges
+        root.querySelectorAll('[data-action="select-character"], .preview-character').forEach(btn => {
+          const cid = btn.dataset.id || "";
+          const isTamPose = cid === "quay_boy" || cid === "cho_vang" || cid === "meo_mun";
+          if (isTamPose && !btn.querySelector(".r38-badge-tam")) {
+            const smallEl = btn.querySelector("small");
+            if (smallEl) {
+              smallEl.innerHTML = (smallEl.textContent.includes("ĐANG CHỌN") ? "ĐANG CHỌN • " : "CHỌN • ") + '<span class="r38-badge-tam">TẠM</span>';
+            } else {
+              const b = document.createElement("small");
+              b.className = "r38-badge-tam";
+              b.textContent = "MỞ KHÓA • TẠM";
+              btn.appendChild(b);
+            }
+          }
+        });
+
+        root.querySelectorAll('[data-action="select-weapon"], .preview-weapon').forEach(btn => {
+          const wid = btn.dataset.id || "";
+          if (!btn.dataset.r38WeaponBadge) {
+            btn.dataset.r38WeaponBadge = "1";
+            const badge = document.createElement("small");
+            if (wid === "dep_to_ong") {
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU";
+            } else if (wid === "chao_chong_dinh") {
+              badge.className = "r38-badge-tam";
+              badge.textContent = "CHƯA SỞ HỮU (199 VÀNG • TẠM)";
+            } else if (wid === "vot_pickleball") {
+              badge.className = "r38-badge-tam";
+              badge.textContent = "CHƯA SỞ HỮU (260 VÀNG • TẠM)";
+            }
+            if (badge.textContent) btn.appendChild(badge);
+          }
+        });
+
+        // G1: Set data-count on .live-cards and wire hold-to-reveal for N > 4
+        const liveCards = root.querySelector(".live-cards");
+        if (liveCards) {
+          const cards = liveCards.querySelectorAll(".live-card");
+          liveCards.dataset.count = String(cards.length);
+          cards.forEach(card => {
+            const nameEl = card.querySelector("b");
+            if (nameEl && !card.dataset.r38Bound) {
+              card.dataset.r38Bound = "1";
+              card.title = nameEl.textContent || "";
+              card.addEventListener("pointerdown", () => card.classList.add("hold-reveal"));
+              card.addEventListener("pointerup", () => card.classList.remove("hold-reveal"));
+              card.addEventListener("pointercancel", () => card.classList.remove("hold-reveal"));
+              card.addEventListener("pointerleave", () => card.classList.remove("hold-reveal"));
+            }
+          });
+        }
+
+        // G2: Enhance .live-summary with 5 Round Dots + Circular Countdown Ring
+        const summary = root.querySelector(".live-summary");
+        if (summary) {
+          const roundB = summary.querySelector(":scope > b");
+          const strongTimer = summary.querySelector(":scope > strong");
+          const isEn = document.documentElement.lang === "en";
+          const st = window.__hitmeLastMatchEvt || {};
+          const roundNum = Math.max(1, Number(st.round) || 1);
+          const phase = String(st.phase || "placing").toLowerCase();
+          const secLeft = Math.max(0, Number(st.timeLeft) || 0);
+
+          if (roundB && !summary.querySelector(".r38-round-cluster")) {
+            const cluster = document.createElement("div");
+            cluster.className = "r38-round-cluster";
+            roundB.replaceWith(cluster);
+            cluster.appendChild(roundB);
+            const dots = document.createElement("div");
+            dots.className = "r38-round-dots";
+            dots.setAttribute("aria-label", isEn ? "5 rounds progress" : "Tiến độ 5 vòng");
+            for (let i = 1; i <= 5; i++) {
+              const d = document.createElement("i");
+              d.className = "r38-round-dot" + (i < roundNum ? " past" : i === roundNum ? " current" : "");
+              dots.appendChild(d);
+            }
+            cluster.appendChild(dots);
+          } else {
+            const dots = summary.querySelectorAll(".r38-round-dot");
+            dots.forEach((d, idx) => {
+              const i = idx + 1;
+              d.className = "r38-round-dot" + (i < roundNum ? " past" : i === roundNum ? " current" : "");
+            });
+          }
+
+          if (strongTimer) {
+            let ring = summary.querySelector(".r38-timer-ring");
+            if (!ring) {
+              ring = document.createElement("div");
+              ring.className = "r38-timer-ring";
+              ring.dataset.name = "timer-ring";
+              const span = document.createElement("span");
+              ring.appendChild(span);
+              strongTimer.replaceWith(ring);
+            }
+            const pct = phase === "placing" ? Math.max(0, Math.min(100, (secLeft / 5.0) * 100)) : 0;
+            const urgent = phase === "placing" && secLeft > 0 && secLeft <= 2.0;
+            ring.style.setProperty("--timer-pct", pct.toFixed(1) + "%");
+            ring.classList.toggle("urgent", urgent);
+            const timerStyle = new URLSearchParams(location.search).get("timerStyle") || "ring";
+            ring.classList.toggle("coin-style", timerStyle === "coin");
+            const span = ring.querySelector("span");
+            if (span) {
+              span.textContent = phase === "placing" ? Math.ceil(secLeft) + "s" : "—";
+            }
+          }
+
+          // G4: Trigger phase transition banner when phase or round changes
+          if (phase && (phase !== _r38LastPhase || roundNum !== _r38LastRound)) {
+            _r38LastPhase = phase;
+            _r38LastRound = roundNum;
+            const bannerMapVi = {
+              placing: "ĐẶT NHÂN VẬT",
+              lock: "KHÓA!",
+              reveal: "LỘ DIỆN!",
+              throw: "NÉM!",
+              throwing: "NÉM!",
+              resolve: "KẾT QUẢ VÒNG",
+              roundend: "KẾT QUẢ VÒNG"
+            };
+            const bannerMapEn = {
+              placing: "PLACE CHARACTER",
+              lock: "LOCKED!",
+              reveal: "REVEAL!",
+              throw: "THROW!",
+              throwing: "THROW!",
+              resolve: "ROUND RESULT",
+              roundend: "ROUND RESULT"
+            };
+            const label = (isEn ? bannerMapEn : bannerMapVi)[phase];
+            if (label) showPhaseBanner(label);
+          }
+        }
+
+        // G3: Interactive Tutorial Hand Guide + step 3 copy update
+        const tut = root.querySelector(".live-tutorial");
+        let hand = document.getElementById("r38-hand-guide");
+        if (tut) {
+          const bText = tut.querySelector("b")?.textContent || "";
+          const pEl = tut.querySelector("p");
+          const isStep1 = bText.includes("1/3");
+          const isStep2 = bText.includes("2/3");
+          const isStep3 = bText.includes("3/3");
+          if (isStep3 && pEl) {
+            const isEn = document.documentElement.lang === "en";
+            pEl.textContent = isEn
+              ? "Tap another spot on the court to move your character before the 5s timer ends!"
+              : "Chạm chỗ khác trên sân để đặt lại vị trí trước khi hết 5 giây!";
+          }
+          if (!hand) {
+            hand = document.createElement("div");
+            hand.id = "r38-hand-guide";
+            hand.className = "r38-hand-guide";
+            hand.innerHTML = `<svg viewBox="0 0 24 24" width="42" height="42" fill="#ffdf4a" stroke="#2b1206" stroke-width="1.8"><path d="M9 11V5a2 2 0 1 1 4 0v4h1a2 2 0 0 1 2 2v1h1a2 2 0 0 1 2 2v4a5 5 0 0 1-5 5H9a5 5 0 0 1-4.5-2.8L2.6 15a1.8 1.8 0 0 1 2.5-2.3L9 14.5V11z"/></svg>`;
+            document.body.appendChild(hand);
+          }
+          hand.classList.toggle("drag-mode", isStep2);
+          hand.style.display = "block";
+        } else if (hand) {
+          hand.style.display = "none";
+        }
+
+        // E1–E6: Sync pooled ambient leaves, low-HP vignette, HP-drop card shake + callout, and Victory confetti
+        ensurePooledVfxContainers();
+        const isHome = !!root.querySelector('[data-screen="home"]');
+        const isMatch = !!root.querySelector('[data-screen="match"]');
+        const isResult = !!root.querySelector('[data-screen="result"]');
+        const leavesEl = document.getElementById("r38-ambient-leaves");
+        if (leavesEl) leavesEl.style.display = isHome ? "block" : "none";
+
+        const heroImg = root.querySelector(".home .hero");
+        if (heroImg && !heroImg.dataset.r38TapBound) {
+          heroImg.dataset.r38TapBound = "1";
+          heroImg.addEventListener("pointerdown", () => {
+            heroImg.classList.remove("tap-wave");
+            void heroImg.offsetWidth;
+            heroImg.classList.add("tap-wave");
+            setTimeout(() => heroImg.classList.remove("tap-wave"), 300);
+          });
+        }
+
+        // E4 & E6: Check player HP changes and local 1 HP vignette
+        const stEvt = window.__hitmeLastMatchEvt;
+        const lowHpVig = document.getElementById("r38-low-hp-vignette");
+        if (isMatch && stEvt && Array.isArray(stEvt.players)) {
+          let anyDamageThisTick = false;
+          let localHp = 3;
+          const cardEls = root.querySelectorAll(".live-cards .live-card");
+          stEvt.players.forEach((p, idx) => {
+            const pid = p.id || ("p" + idx);
+            const hp = Number(p.hp ?? 3);
+            if (pid === "you" || idx === 0) localHp = hp;
+            if (_r38PrevHpByPlayer[pid] !== undefined && hp < _r38PrevHpByPlayer[pid]) {
+              anyDamageThisTick = true;
+              const cardEl = cardEls[idx];
+              if (cardEl) {
+                cardEl.classList.remove("r38-card-hit-shake");
+                void cardEl.offsetWidth;
+                cardEl.classList.add("r38-card-hit-shake");
+              }
+            }
+            _r38PrevHpByPlayer[pid] = hp;
+          });
+          if (anyDamageThisTick) {
+            triggerScreenShake();
+            showHitCallout("BỐP! -1 ❤️", false);
+            tryHaptic(25);
+          }
+          if (lowHpVig) lowHpVig.classList.toggle("active", localHp === 1);
+        } else {
+          if (!isMatch) _r38PrevHpByPlayer = {};
+          if (lowHpVig) lowHpVig.classList.remove("active");
+        }
+
+        // E5: Confetti on Victory Result screen
+        const cfPool = document.getElementById("r38-confetti-pool");
+        if (cfPool) {
+          const resultTitle = (root.querySelector('[data-screen="result"] h1, [data-screen="result"] h2')?.textContent || "").toUpperCase();
+          const isWinResult = isResult && (resultTitle.includes("THẮNG") || resultTitle.includes("VICTORY") || resultTitle.includes("VÔ ĐỊCH"));
+          cfPool.classList.toggle("active", isWinResult);
+        }
+
+        // E6: Inject Haptics toggle into Settings sheet & sync Reduced Motion class
+        const settingsSheet = root.querySelector(".settings-sheet");
+        if (settingsSheet) {
+          const rmBtn = settingsSheet.querySelector('[data-action="reduced-motion"]');
+          if (rmBtn) {
+            const rmOn = (rmBtn.textContent || "").includes("Bật") || (rmBtn.textContent || "").includes("On");
+            document.body.classList.toggle("r38-reduced-motion", rmOn);
+          }
+          if (!settingsSheet.querySelector('[data-action="r38-toggle-haptics"]')) {
+            const hapBtn = document.createElement("button");
+            hapBtn.type = "button";
+            hapBtn.className = "setting-toggle";
+            hapBtn.dataset.action = "r38-toggle-haptics";
+            hapBtn.innerHTML = `<span>Rung xúc giác (Haptics)</span><b>${_r38HapticsEnabled ? "Bật" : "Tắt"}</b>`;
+            hapBtn.addEventListener("click", (ev) => {
+              ev.stopPropagation();
+              _r38HapticsEnabled = !_r38HapticsEnabled;
+              try { localStorage.setItem("hitme_haptics", _r38HapticsEnabled ? "1" : "0"); } catch (e) {}
+              const b = hapBtn.querySelector("b");
+              if (b) b.textContent = _r38HapticsEnabled ? "Bật" : "Tắt";
+              if (_r38HapticsEnabled) tryHaptic(25);
+            });
+            const toggleGroup = settingsSheet.querySelector(".setting-toggles") || settingsSheet;
+            toggleGroup.appendChild(hapBtn);
+          }
+        }
+
+        // U2: Enhance Daily Quests & Sample Leaderboard modal when opened from Home bottom tabs
+        const modalEl = root.querySelector(".modal");
+        const backBtn = modalEl ? modalEl.querySelector(".modal-back") : null;
+        if (modalEl && backBtn && (_r38LastOverlayTab === "quests" || _r38LastOverlayTab === "rank") && !modalEl.querySelector(".r38-u2-content")) {
+          const prof = loadLocalProfile();
+          const h2 = modalEl.querySelector("header h2");
+          const pPlaceholder = modalEl.querySelector(":scope > p");
+          if (pPlaceholder) pPlaceholder.style.display = "none";
+
+          const wrap = document.createElement("div");
+          wrap.className = "r38-u2-content";
+
+          if (_r38LastOverlayTab === "quests") {
+            if (h2) h2.textContent = "NHIỆM VỤ NGÀY";
+            const banner = document.createElement("div");
+            banner.className = "r38-u2-banner";
+            banner.textContent = `Đặt lại mỗi ngày (${prof.lastResetDate}) • QuestRewardsEnabled = false (Nhận thử nghiệm, chờ chủ dự án bật cộng vàng)`;
+            wrap.appendChild(banner);
+
+            const list = document.createElement("div");
+            list.className = "r38-u2-list";
+            Object.entries(prof.quests || {}).forEach(([qid, q]) => {
+              const prog = Math.min(q.target, Number(q.progress) || 0);
+              const pct = Math.round((prog / Math.max(1, q.target)) * 100);
+              const done = prog >= q.target;
+              const row = document.createElement("div");
+              row.className = "r38-quest-row";
+              row.dataset.questId = qid;
+              row.innerHTML = `
+                <div class="r38-quest-info">
+                  <b>${q.title} (${prog}/${q.target})</b>
+                  <small>Thưởng: +${q.reward} Vàng (Thử nghiệm)</small>
+                  <div class="r38-quest-bar"><i style="width:${pct}%"></i></div>
+                </div>
+                <button type="button" class="r38-quest-claim" data-quest-claim="${qid}" ${(!done || q.claimed) ? "disabled" : ""}>
+                  ${q.claimed ? "ĐÃ NHẬN (TẠM)" : done ? "NHẬN (THỬ)" : `${prog}/${q.target}`}
+                </button>
+              `;
+              const btn = row.querySelector("button");
+              if (btn && done && !q.claimed) {
+                btn.addEventListener("click", (ev) => {
+                  ev.stopPropagation();
+                  q.claimed = true;
+                  prof.experimentalGoldClaimed = (Number(prof.experimentalGoldClaimed) || 0) + q.reward;
+                  saveLocalProfile(prof);
+                  btn.disabled = true;
+                  btn.textContent = "ĐÃ NHẬN (TẠM)";
+                  tryHaptic(25);
+                });
+              }
+              list.appendChild(row);
+            });
+            wrap.appendChild(list);
+          } else {
+            if (h2) h2.textContent = "BẢNG XẾP HẠNG";
+            const banner = document.createElement("div");
+            banner.className = "r38-u2-banner";
+            banner.textContent = "Dữ liệu mẫu • Bảng xếp hạng thật mở khi có máy chủ";
+            wrap.appendChild(banner);
+
+            const stats = document.createElement("div");
+            stats.className = "r38-u2-stats-row";
+            stats.innerHTML = `
+              <div class="r38-u2-stat-box"><small>Trận Bot</small><b>${prof.botMatchesPlayed || 0}</b></div>
+              <div class="r38-u2-stat-box"><small>Trận Thắng</small><b>${prof.botMatchesWon || 0}</b></div>
+              <div class="r38-u2-stat-box"><small>Đòn Trúng</small><b>${prof.totalHitsLanded || 0}</b></div>
+            `;
+            wrap.appendChild(stats);
+
+            const sampleRows = [
+              { rank: 1, name: "Nguyễn_Vô_Địch", pts: 1250, tier: "Kim Cương", me: false },
+              { rank: 2, name: "Dép_Bay_Sát_Thủ", pts: 980, tier: "Bạch Kim", me: false },
+              { rank: 3, name: "Chảo_Thần_Sầu", pts: 820, tier: "Bạch Kim", me: false },
+              { rank: 4, name: "Bia_Hơi_Hà_Nội", pts: 540, tier: "Vàng", me: false },
+              { rank: 5, name: "Bạn (Thống kê cục bộ)", pts: 310 + (prof.botMatchesWon || 0) * 25, tier: "Vàng • Mẫu", me: true }
+            ];
+            const list = document.createElement("div");
+            list.className = "r38-u2-list";
+            sampleRows.forEach(r => {
+              const row = document.createElement("div");
+              row.className = "r38-rank-row" + (r.me ? " me" : "");
+              row.innerHTML = `
+                <div class="r38-quest-info">
+                  <b>#${r.rank} · ${r.name}</b>
+                  <small>Hạng: ${r.tier}</small>
+                </div>
+                <strong style="color:#ffcd38;font-size:14px;">${r.pts} Đ</strong>
+              `;
+              list.appendChild(row);
+            });
+            wrap.appendChild(list);
+          }
+
+          modalEl.insertBefore(wrap, backBtn);
+        }
+      }
+
+      document.addEventListener("click", (e) => {
+        const btn = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+        if (!btn) return;
+        const act = btn.dataset.action || "";
+        if (act === "previous" || act === "next" || act === "prev-character" || act === "next-character" || act === "select-character") {
+          setTimeout(() => {
+            const hero = document.querySelector("#ui-root .home .hero");
+            if (hero) {
+              hero.classList.remove("switch-bounce");
+              void hero.offsetWidth;
+              hero.classList.add("switch-bounce");
+              setTimeout(() => hero.classList.remove("switch-bounce"), 230);
+            }
+            const glow = document.getElementById("r38-pedestal-glow");
+            if (glow) {
+              glow.classList.remove("flash");
+              void glow.offsetWidth;
+              glow.classList.add("flash");
+            }
+          }, 15);
+        } else if (act === "ready") {
+          tryHaptic(25);
+          showPhaseBanner("ĐÃ KHÓA!");
+        } else if (act === "quests" || act === "rank") {
+          _r38LastOverlayTab = act;
+        } else if (act === "online-locked") {
+          e.stopPropagation();
+          e.preventDefault();
+          openOnlineStatusSheet(false);
+        }
+      }, true);
+
+      let _r38WakeTimer = null;
+      let _r38WakeSec = 0;
+      function openOnlineStatusSheet(startWaking) {
+        let shade = document.getElementById("r38-online-sheet-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r38-online-sheet-shade";
+          shade.innerHTML = `
+            <div class="r38-online-sheet" role="dialog" aria-modal="true" aria-label="Trạng thái máy chủ">
+              <h3 id="r38-online-title">MÁY CHỦ CHƯA SẴN SÀNG</h3>
+              <p id="r38-online-desc">Máy chủ đấu phòng trực tuyến hiện chưa mở kết nối WSS/CORS cho bản thử nghiệm này. Bạn có thể vào ngay chế độ <b>Luyện với Bot</b> (đã mở khóa đủ 7 nhân vật và 3 vũ khí)!</p>
+              <div class="r38-waking-bar" id="r38-waking-bar" style="display:none"><i id="r38-waking-fill"></i></div>
+              <div class="r38-online-actions">
+                <button type="button" class="r38-online-btn-primary" id="r38-btn-go-bot">CHUYỂN SANG LUYỆN VỚI BOT</button>
+                <button type="button" class="r38-online-btn-secondary" id="r38-btn-wake-retry">ĐÁNH THỨC MÁY CHỦ (TỚI 60 GIÂY)</button>
+                <button type="button" class="r38-online-btn-secondary" id="r38-btn-online-close">ĐÓNG</button>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(shade);
+          shade.querySelector("#r38-btn-online-close").addEventListener("click", () => {
+            if (_r38WakeTimer) { clearInterval(_r38WakeTimer); _r38WakeTimer = null; }
+            shade.classList.remove("active");
+          });
+          shade.querySelector("#r38-btn-go-bot").addEventListener("click", () => {
+            if (_r38WakeTimer) { clearInterval(_r38WakeTimer); _r38WakeTimer = null; }
+            shade.classList.remove("active");
+            const pracBtn = document.querySelector('#ui-root [data-action="practice"]');
+            if (pracBtn) pracBtn.click();
+          });
+          shade.querySelector("#r38-btn-wake-retry").addEventListener("click", () => {
+            startWakingSequence();
+          });
+        }
+        shade.classList.add("active");
+        if (startWaking) startWakingSequence();
+      }
+
+      function startWakingSequence() {
+        const titleEl = document.getElementById("r38-online-title");
+        const descEl = document.getElementById("r38-online-desc");
+        const barEl = document.getElementById("r38-waking-bar");
+        const fillEl = document.getElementById("r38-waking-fill");
+        const retryBtn = document.getElementById("r38-btn-wake-retry");
+        if (!titleEl || !descEl || !barEl || !fillEl) return;
+        if (_r38WakeTimer) clearInterval(_r38WakeTimer);
+        _r38WakeSec = 0;
+        barEl.style.display = "block";
+        titleEl.textContent = "ĐANG ĐÁNH THỨC MÁY CHỦ…";
+        descEl.textContent = "Đang đánh thức máy chủ… (0/60 giây). Nếu quá hạn hoặc máy chủ đang bảo trì, hãy chuyển sang Luyện với Bot.";
+        if (retryBtn) retryBtn.textContent = "THỬ LẠI KẾT NỐI";
+        fillEl.style.width = "8%";
+        _r38WakeTimer = setInterval(() => {
+          _r38WakeSec += 1;
+          const pct = Math.min(100, Math.round((_r38WakeSec / 60) * 100));
+          fillEl.style.width = Math.max(8, pct) + "%";
+          if (_r38WakeSec >= 60) {
+            clearInterval(_r38WakeTimer);
+            _r38WakeTimer = null;
+            titleEl.textContent = "MÁY CHỦ CHƯA PHẢN HỒI";
+            descEl.textContent = "Quá 60 giây chờ đánh thức hoặc CORS/WSS chưa bật. Gợi ý: Chuyển sang Luyện với Bot ngay!";
+          } else {
+            descEl.textContent = `Đang đánh thức máy chủ… (${_r38WakeSec}/60 giây). Bạn có thể chuyển sang Luyện với Bot bất cứ lúc nào.`;
+          }
+        }, 1000);
+      }
+      window.__hitmeOpenOnlineSheet = openOnlineStatusSheet;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const root = document.getElementById("ui-root");
+        if (root && typeof MutationObserver !== "undefined") {
+          const m = new MutationObserver(enhanceRound38Dom);
+          m.observe(root, { childList: true, subtree: true });
+        }
+        const uCanvas = document.getElementById("unity-canvas");
+        if (uCanvas) {
+          uCanvas.addEventListener("pointerdown", (ev) => {
+            const isMatch = !!document.querySelector('#ui-root [data-screen="match"]');
+            const phase = String(window.__hitmeLastMatchEvt?.phase || "placing").toLowerCase();
+            if (isMatch && phase === "placing") {
+              ensurePooledVfxContainers();
+              const fx = document.getElementById("r38-place-fx");
+              if (fx) {
+                fx.style.left = ev.clientX + "px";
+                fx.style.top = ev.clientY + "px";
+                fx.classList.remove("active");
+                void fx.offsetWidth;
+                fx.classList.add("active");
+              }
+              tryHaptic(18);
+            }
+          });
+          uCanvas.addEventListener("pointerup", () => {
+            const tut = document.querySelector("#ui-root .live-tutorial");
+            if (tut && (tut.querySelector("b")?.textContent || "").includes("3/3")) {
+              const nextBtn = tut.querySelector('[data-action="tutorial-next"]');
+              if (nextBtn) setTimeout(() => nextBtn.click(), 180);
+            }
+          });
+        }
+      });
     })();
   </script>
 
@@ -273,7 +1775,18 @@
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = { version: "0.1.0-beta.5.1", buildId: "c86161d-4f6b253" };
+    window.__hitmeReleaseInfo = { version: "0.1.0-beta.5.1", buildId: "b86353b-4f6b253" };
+    window.__hitmeBootT0 = performance.now();
+
+    function checkAndEmitHomeShown() {
+      if (window.__hitmeHomeShown) return;
+      const homeEl = document.querySelector('#ui-root [data-screen="home"]');
+      const heroEl = document.querySelector('#ui-root .home .hero');
+      if (homeEl && heroEl && window.unityInstance) {
+        window.__hitmeHomeShown = Math.round(performance.now() - (window.__hitmeBootT0 || 0));
+        console.log("HOME_SHOWN " + window.__hitmeHomeShown + "ms");
+      }
+    }
 
     // Deduplicate 10 Hz Unity match ticks and guard active UI pointer interactions so app.js innerHTML never detaches buttons mid-click
     (function() {
@@ -327,14 +1840,22 @@
             val.onUnity = function(event) {
               let evt = event;
               try { if (typeof event === "string") evt = JSON.parse(event); } catch (e) {}
+              if (window.__hitmeFreezeLiveMatch && evt && !evt.__fromTest) return;
               if (evt && typeof evt === "object") {
                 if (evt.type === "screen" || evt.type === "result") {
+                  if (evt.type === "result" && typeof window.__hitmeRecordBotResult === "function") {
+                    window.__hitmeRecordBotResult(evt);
+                  }
                   _lastMatchSig = "";
                   _tutorialHoldUntil = 0;
                   _interactHoldUntil = 0;
                   _deferredMatchEvt = null;
                   if (_flushTimer) { clearTimeout(_flushTimer); _flushTimer = null; }
+                } else if (evt.type === "error" && (evt.code === "character_locked" || evt.code === "weapon_locked")) {
+                  // Round 38 U1: All 7 characters and 3 cosmetic weapons are unlocked for offline Bot Practice
+                  return;
                 } else if (evt.type === "match") {
+                  window.__hitmeLastMatchEvt = evt;
                   if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {
                     evt = Object.assign({}, evt, { phase: "placing", timeLeft: Math.max(2, Number(evt.timeLeft) || 2) });
                     event = evt;
@@ -366,13 +1887,14 @@
     const uiRootEl = document.getElementById("ui-root");
     if (uiRootEl && typeof MutationObserver !== "undefined") {
       const obs = new MutationObserver(() => {
+        checkAndEmitHomeShown();
         const sheet = uiRootEl.querySelector(".settings-sheet");
         if (sheet && !sheet.querySelector(".release-version-badge")) {
           const badge = document.createElement("small");
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.5.1 (c86161d-4f6b253)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.5.1 (b86353b-4f6b253)";
           sheet.appendChild(badge);
         }
       });
@@ -423,14 +1945,14 @@
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "c86161d-4f6b253";
+    const buildVersion = urlParams.get("v") || "b86353b-4f6b253";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
       arguments: [],
-      dataUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.data.br"),
-      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.framework.js.br"),
-      codeUrl: versioned(buildUrl + "/WebGL_Release_20261107_c86161d.wasm.br"),
+      dataUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.data.br"),
+      frameworkUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.framework.js.br"),
+      codeUrl: versioned(buildUrl + "/WebGL_Release_20261105_b86353b.wasm.br"),
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
@@ -440,7 +1962,7 @@
     };
 
     const script = document.createElement("script");
-    script.src = versioned(buildUrl + "/WebGL_Release_20261107_c86161d.loader.js");
+    script.src = versioned(buildUrl + "/WebGL_Release_20261105_b86353b.loader.js");
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
         const pct = Math.round(progress * 100);
@@ -450,6 +1972,8 @@
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
+        checkAndEmitHomeShown();
+        setTimeout(checkAndEmitHomeShown, 60);
         if (urlParams.get("autostart") === "practice") {
           const autoChar = urlParams.get("char") || "nam_lang";
           const autoWeapon = urlParams.get("weapon") || "dep_to_ong";

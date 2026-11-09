@@ -9,5 +9,49 @@
     "passed": true,
     "failedIds": []
   },
-  "notes": "Stable root channel (preserved unchanged)"
+  "notes": "Stable root channel (preserved unchanged)",
+  "files": [
+    {
+      "path": "index.html",
+      "size": 23447,
+      "sha256": "544f5bcf5eccd5741bae9e32034a7efc11122554ff1fd7ceafbd77c22d96752e",
+      "contentEncoding": "identity"
+    },
+    {
+      "path": "version.json",
+      "size": 102,
+      "sha256": "b806ebcfa5a9eb0e773967945bd97eb989d7319402d61cd756429d10d75261ca",
+      "contentEncoding": "identity"
+    },
+    {
+      "path": "config.json",
+      "size": 156,
+      "sha256": "1325c36b9ebec041ee846ca50b42d3fd7b7b5cb7bc6e913b625207ca860418b2",
+      "contentEncoding": "identity"
+    },
+    {
+      "path": "../Build/WebGL_Release_20261104_1f1cdfa.data.br",
+      "size": 7816568,
+      "sha256": "5c134d524eae91c5d4d728f7d537a4909583e9d26eb3210639faaec8d132375d",
+      "contentEncoding": "br"
+    },
+    {
+      "path": "../Build/WebGL_Release_20261104_1f1cdfa.framework.js.br",
+      "size": 66341,
+      "sha256": "5a2e8603c0c87901e4f61dbbd8aefaab9d286106e5dc9e2e48b27a6eea1e8e1d",
+      "contentEncoding": "br"
+    },
+    {
+      "path": "../Build/WebGL_Release_20261104_1f1cdfa.wasm.br",
+      "size": 4337091,
+      "sha256": "54d0779723bf6834d8574c394e6c3fb315a452362872f6c47288fa78a1605cf1",
+      "contentEncoding": "br"
+    },
+    {
+      "path": "../Build/WebGL_Release_20261104_1f1cdfa.loader.js",
+      "size": 27914,
+      "sha256": "db2769738adfbef5a2f3e5ed06f54a71f0c49e88b0d7beeb0eec9f4aa8c272af",
+      "contentEncoding": "identity"
+    }
+  ]
 }

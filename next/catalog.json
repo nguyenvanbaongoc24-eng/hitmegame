@@ -13,8 +13,11 @@
         "en": "Agile and cunning village boy"
       },
       "enabled": true,
+      "poseStatus": "FULL_5_POSES",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/nam_lang_portrait.png",
@@ -32,8 +35,11 @@
         "en": "Athletic and quick reflexes"
       },
       "enabled": true,
+      "poseStatus": "IDLE_THROW_RELEASE",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/nu_nang_dong_portrait.png",
@@ -51,8 +57,11 @@
         "en": "Calm and precise thrower"
       },
       "enabled": true,
+      "poseStatus": "FULL_5_POSES",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/co_ba_portrait.png",
@@ -70,8 +79,11 @@
         "en": "Enthusiastic and competitive"
       },
       "enabled": true,
+      "poseStatus": "IDLE_THROW_RELEASE",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/anh_teen_portrait.png",
@@ -85,12 +97,15 @@
         "en": "Rebel Boy"
       },
       "desc": {
-        "vi": "Nghịch ngợm, phá cách (Sắp ra mắt)",
-        "en": "Rebellious (Coming soon)"
+        "vi": "Nghịch ngợm, phá cách (Mở khóa luyện bot • hoạt ảnh TẠM)",
+        "en": "Rebellious (Unlocked for bot practice • TEMP pose)"
       },
-      "enabled": false,
+      "enabled": true,
+      "poseStatus": "TAM_IDLE_RELEASE",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/quay_boy_portrait.png",
@@ -104,12 +119,15 @@
         "en": "Golden Dog"
       },
       "desc": {
-        "vi": "Trung thành, lanh lợi (Sắp ra mắt)",
-        "en": "Loyal and clever (Coming soon)"
+        "vi": "Trung thành, lanh lợi (Mở khóa luyện bot • hoạt ảnh TẠM)",
+        "en": "Loyal and clever (Unlocked for bot practice • TEMP pose)"
       },
-      "enabled": false,
+      "enabled": true,
+      "poseStatus": "TAM_IDLE_PROCEDURAL",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/cho_vang_portrait.png",
@@ -123,12 +141,15 @@
         "en": "Black Cat"
       },
       "desc": {
-        "vi": "Bí ẩn, thoăn thoắt (Sắp ra mắt)",
-        "en": "Mysterious and agile (Coming soon)"
+        "vi": "Bí ẩn, thoăn thoắt (Mở khóa luyện bot • hoạt ảnh TẠM)",
+        "en": "Mysterious and agile (Unlocked for bot practice • TEMP pose)"
       },
-      "enabled": false,
+      "enabled": true,
+      "poseStatus": "TAM_IDLE_PROCEDURAL",
       "weaponIds": [
-        "dep_to_ong"
+        "dep_to_ong",
+        "chao_chong_dinh",
+        "vot_pickleball"
       ],
       "assets": {
         "portrait": "./assets/meo_mun_portrait.png",
@@ -144,6 +165,9 @@
         "en": "Honeycomb Sandal"
       },
       "enabled": true,
+      "owned": true,
+      "price": 0,
+      "statusTag": "SỞ HỮU",
       "icon": "./assets/dep_to_ong_icon.png"
     },
     {
@@ -152,7 +176,10 @@
         "vi": "Chảo Chống Dính",
         "en": "Frying Pan"
       },
-      "enabled": false,
+      "enabled": true,
+      "owned": false,
+      "price": 199,
+      "statusTag": "DÙNG THỬ • 199 VÀNG (TẠM)",
       "icon": "./assets/chao_chong_dinh_icon.png"
     },
     {
@@ -161,11 +188,15 @@
         "vi": "Vợt Pickleball",
         "en": "Pickleball Paddle"
       },
-      "enabled": false,
+      "enabled": true,
+      "owned": false,
+      "price": 260,
+      "statusTag": "DÙNG THỬ • 260 VÀNG (TẠM)",
       "icon": "./assets/vot_pickleball_icon.png"
     }
   ],
   "features": {
-    "online": false
+    "online": false,
+    "questsRewardsRealGold": false
   }
 }
