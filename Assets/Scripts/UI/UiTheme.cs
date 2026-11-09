@@ -123,6 +123,20 @@ namespace HitMe.UI
         public float botSetupBottomBarPadding = 112f;
         public float minThumbTouchTargetPxAt1080 = 135f;
 
+        [Header("Round 38 E1–E6 Juice, VFX & Motion Tokens (Zero-Alloc Pool)")]
+        public float homeHeroBreathCycleSec = 2.4f;
+        public float homeHeroBreathAmplitudePx = 3.5f;
+        public float charSwitchBounceDurationMs = 220f;
+        public float logoShineSweepIntervalSec = 7.0f;
+        public int maxAmbientLeavesPool = 18;
+        public float placeBounceDurationMs = 180f;
+        public float hitStopMaxDurationMs = 65f; // <= 80ms visual hit-stop
+        public float screenShakeDurationMs = 120f;
+        public float screenShakeAmplitudePx = 3.5f;
+        public int maxVictoryConfettiPool = 28; // <= 30 pooled particles
+        public int hapticsDurationMs = 25;
+        public bool hapticsEnabledByDefault = true;
+
         private static UiTheme _instance;
         public static UiTheme Instance
         {

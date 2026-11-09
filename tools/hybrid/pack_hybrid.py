@@ -519,6 +519,241 @@ HOME_VISUAL_PATCH_HTML = """
       font-size: 9.5px !important;
       font-weight: 800 !important;
     }
+
+    /* E1: Living Home Screen (Hero Breathing, Tap Wave, Switch Bounce 220ms, Logo Shine, Courtyard Sway, Pooled Leaves, Coin Spin) */
+    .home .hero {
+      animation: r38-hero-breath 2.4s ease-in-out infinite !important;
+      transform-origin: center bottom !important;
+      cursor: pointer !important;
+      will-change: transform !important;
+    }
+    @keyframes r38-hero-breath {
+      0%, 100% { transform: translateY(0px) scale(1, 1); }
+      50% { transform: translateY(-3.5px) scale(1.01, 1.018); }
+    }
+    .home .hero.tap-wave {
+      animation: r38-hero-tap 0.28s cubic-bezier(0.22, 1.4, 0.36, 1) forwards !important;
+    }
+    @keyframes r38-hero-tap {
+      0% { transform: scale(1, 1) rotate(0deg); }
+      40% { transform: translateY(-8px) scale(1.06, 0.94) rotate(-4deg); }
+      75% { transform: translateY(-3px) scale(0.98, 1.03) rotate(3deg); }
+      100% { transform: translateY(0px) scale(1, 1) rotate(0deg); }
+    }
+    .home .hero.switch-bounce {
+      animation: r38-hero-switch 0.22s cubic-bezier(0.2, 1.35, 0.38, 1) forwards !important;
+    }
+    @keyframes r38-hero-switch {
+      0% { transform: scale(0.92); opacity: 0.82; }
+      60% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(1.0); opacity: 1; }
+    }
+    #r38-pedestal-glow {
+      position: fixed !important;
+      left: 50% !important;
+      top: var(--pedestal-feet-y, 48%) !important;
+      width: 148px !important;
+      height: 46px !important;
+      transform: translate(-50%, -50%) scale(0.85) !important;
+      border-radius: 50% !important;
+      background: radial-gradient(ellipse at center, rgba(255, 226, 88, 0.78) 0%, rgba(25, 213, 216, 0.35) 55%, rgba(0, 0, 0, 0) 75%) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      z-index: 2 !important;
+    }
+    #r38-pedestal-glow.flash {
+      animation: r38-pedestal-flash 0.24s ease-out forwards !important;
+    }
+    @keyframes r38-pedestal-flash {
+      0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.82); }
+      55% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.32); }
+    }
+    .home .logo,
+    .home .brand-badge {
+      position: relative !important;
+      overflow: hidden !important;
+    }
+    .home .logo::after,
+    .home .brand-badge::after {
+      content: "" !important;
+      position: absolute !important;
+      top: -20% !important;
+      left: -60% !important;
+      width: 42% !important;
+      height: 140% !important;
+      background: linear-gradient(105deg, rgba(255,255,255,0) 0%, rgba(255,248,210,0.65) 50%, rgba(255,255,255,0) 100%) !important;
+      transform: skewX(-22deg) !important;
+      animation: r38-logo-shine 6.8s ease-in-out infinite !important;
+      pointer-events: none !important;
+    }
+    @keyframes r38-logo-shine {
+      0%, 76%, 100% { left: -65%; opacity: 0; }
+      80% { opacity: 1; }
+      92% { left: 135%; opacity: 0.9; }
+    }
+    .home .gold svg,
+    .home .coin-pill::before,
+    .home .coin-pill img,
+    .home .coin-pill svg {
+      animation: r38-coin-spin 3.6s ease-in-out infinite !important;
+      display: inline-block !important;
+    }
+    @keyframes r38-coin-spin {
+      0%, 70%, 100% { transform: rotateY(0deg) scale(1); filter: brightness(1); }
+      85% { transform: rotateY(180deg) scale(1.12); filter: brightness(1.35); }
+    }
+    #r38-ambient-leaves {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
+      overflow: hidden !important;
+    }
+    .r38-leaf {
+      position: absolute !important;
+      top: -18px !important;
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 70% 15% 70% 15% !important;
+      background: radial-gradient(circle at 30% 30%, #fff3a1 0%, #f59e0b 85%) !important;
+      box-shadow: 0 0 6px rgba(255, 212, 71, 0.65) !important;
+      opacity: 0.78 !important;
+      animation: r38-leaf-fall linear infinite !important;
+      will-change: transform, opacity !important;
+    }
+    @keyframes r38-leaf-fall {
+      0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 0; }
+      12% { opacity: 0.82; }
+      85% { opacity: 0.75; }
+      100% { transform: translate3d(var(--drift-x, 38px), 92vh, 0) rotate(320deg); opacity: 0; }
+    }
+
+    /* E2–E6: In-Match Place Ring + Dust, Hit Shake, Shattered Heart, Floating Callout ("TRÚNG!"/"HỤT!"), Confetti & Low-HP Vignette */
+    #r38-place-fx {
+      position: fixed !important;
+      width: 68px !important;
+      height: 68px !important;
+      margin-left: -34px !important;
+      margin-top: -34px !important;
+      border-radius: 50% !important;
+      border: 3px solid #19d5d8 !important;
+      box-shadow: 0 0 14px rgba(25, 213, 216, 0.8), inset 0 0 10px rgba(255, 223, 74, 0.55) !important;
+      pointer-events: none !important;
+      z-index: 26 !important;
+      opacity: 0 !important;
+    }
+    #r38-place-fx.active {
+      animation: r38-place-pop 0.18s cubic-bezier(0.18, 1.35, 0.4, 1) forwards !important;
+    }
+    @keyframes r38-place-pop {
+      0% { opacity: 1; transform: scale(1.18); }
+      55% { opacity: 1; transform: scale(0.94); }
+      100% { opacity: 0; transform: scale(1.38); }
+    }
+    .r38-screen-shake {
+      animation: r38-shake-anim 0.12s ease-in-out !important;
+    }
+    @keyframes r38-shake-anim {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      25% { transform: translate3d(-3.5px, 2.5px, 0); }
+      50% { transform: translate3d(3.5px, -2.5px, 0); }
+      75% { transform: translate3d(-2.5px, -2px, 0); }
+    }
+    .live-card.r38-card-hit-shake {
+      animation: r38-card-hit 0.34s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
+      border-color: #ff4a5e !important;
+      box-shadow: 0 0 14px rgba(255, 74, 94, 0.9) !important;
+    }
+    @keyframes r38-card-hit {
+      0%, 100% { transform: translateX(0) scale(1); }
+      20% { transform: translateX(-5px) scale(1.06); background: rgba(220, 38, 38, 0.55); }
+      45% { transform: translateX(5px) scale(0.96); }
+      70% { transform: translateX(-3px) scale(1.02); }
+    }
+    #r38-hit-callout {
+      position: fixed !important;
+      left: 50% !important;
+      top: 47% !important;
+      transform: translate(-50%, -50%) scale(0.5) !important;
+      z-index: 46 !important;
+      padding: 6px 18px !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #ff4a5e 0%, #b91c1c 100%) !important;
+      border: 2.5px solid #fff8e8 !important;
+      color: #fff8e8 !important;
+      font-size: 22px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.04em !important;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85) !important;
+      box-shadow: 0 6px 18px rgba(185, 28, 28, 0.75) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+    }
+    #r38-hit-callout.miss {
+      background: linear-gradient(180deg, #475569 0%, #1e293b 100%) !important;
+      font-size: 17px !important;
+    }
+    #r38-hit-callout.active {
+      animation: r38-callout-pop 0.58s cubic-bezier(0.2, 1.4, 0.35, 1) forwards !important;
+    }
+    @keyframes r38-callout-pop {
+      0% { opacity: 0; transform: translate(-50%, -30%) scale(0.45); }
+      30% { opacity: 1; transform: translate(-50%, -65%) scale(1.18); }
+      65% { opacity: 1; transform: translate(-50%, -85%) scale(1.0); }
+      100% { opacity: 0; transform: translate(-50%, -115%) scale(0.9); }
+    }
+    #r38-low-hp-vignette {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 19 !important;
+      box-shadow: inset 0 0 36px rgba(246, 106, 93, 0.68) !important;
+      opacity: 0 !important;
+    }
+    #r38-low-hp-vignette.active {
+      animation: r38-low-hp-pulse 1.15s ease-in-out infinite !important;
+    }
+    @keyframes r38-low-hp-pulse {
+      0%, 100% { opacity: 0.22; }
+      50% { opacity: 0.72; }
+    }
+    #r38-confetti-pool {
+      position: fixed !important;
+      inset: 0 !important;
+      pointer-events: none !important;
+      z-index: 48 !important;
+      overflow: hidden !important;
+      display: none !important;
+    }
+    #r38-confetti-pool.active {
+      display: block !important;
+    }
+    .r38-confetti {
+      position: absolute !important;
+      top: -16px !important;
+      width: 10px !important;
+      height: 14px !important;
+      border-radius: 2px !important;
+      animation: r38-confetti-drop 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite !important;
+    }
+    @keyframes r38-confetti-drop {
+      0% { transform: translate3d(0, -20px, 0) rotate(0deg); opacity: 1; }
+      100% { transform: translate3d(var(--cf-drift, 24px), 95vh, 0) rotate(540deg); opacity: 0.15; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .home .hero, .home .brand-badge::after, .r38-leaf, .r38-confetti, #r38-low-hp-vignette.active, .r38-timer-ring.urgent {
+        animation: none !important;
+      }
+    }
+    body.r38-reduced-motion .home .hero,
+    body.r38-reduced-motion .home .brand-badge::after,
+    body.r38-reduced-motion .r38-leaf,
+    body.r38-reduced-motion .r38-confetti,
+    body.r38-reduced-motion #r38-low-hp-vignette.active,
+    body.r38-reduced-motion .r38-timer-ring.urgent {
+      animation: none !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -575,6 +810,87 @@ HOME_VISUAL_PATCH_HTML = """
       let _r38LastUrgentSec = -1;
       let _r38PlaceCountInTutorial = 0;
       let _r38CatalogWeaponsUnlocked = 1;
+      let _r38PrevHpByPlayer = {};
+      let _r38HapticsEnabled = true;
+      try { _r38HapticsEnabled = localStorage.getItem("hitme_haptics") !== "0"; } catch (e) {}
+
+      function tryHaptic(ms) {
+        if (!_r38HapticsEnabled || document.body.classList.contains("r38-reduced-motion")) return;
+        try { if (navigator && typeof navigator.vibrate === "function") navigator.vibrate(ms || 25); } catch (e) {}
+      }
+
+      function ensurePooledVfxContainers() {
+        if (!document.getElementById("r38-ambient-leaves")) {
+          const leaves = document.createElement("div");
+          leaves.id = "r38-ambient-leaves";
+          for (let i = 0; i < 16; i++) {
+            const l = document.createElement("i");
+            l.className = "r38-leaf";
+            l.style.left = ((i * 6.25 + 3) % 96).toFixed(1) + "%";
+            l.style.animationDuration = (5.2 + (i % 5) * 1.1).toFixed(1) + "s";
+            l.style.animationDelay = (-i * 0.65).toFixed(2) + "s";
+            l.style.setProperty("--drift-x", ((i % 2 === 0 ? 1 : -1) * (18 + (i % 4) * 9)) + "px");
+            leaves.appendChild(l);
+          }
+          document.body.appendChild(leaves);
+        }
+        if (!document.getElementById("r38-pedestal-glow")) {
+          const g = document.createElement("div");
+          g.id = "r38-pedestal-glow";
+          document.body.appendChild(g);
+        }
+        if (!document.getElementById("r38-place-fx")) {
+          const p = document.createElement("div");
+          p.id = "r38-place-fx";
+          document.body.appendChild(p);
+        }
+        if (!document.getElementById("r38-hit-callout")) {
+          const c = document.createElement("div");
+          c.id = "r38-hit-callout";
+          document.body.appendChild(c);
+        }
+        if (!document.getElementById("r38-low-hp-vignette")) {
+          const v = document.createElement("div");
+          v.id = "r38-low-hp-vignette";
+          document.body.appendChild(v);
+        }
+        if (!document.getElementById("r38-confetti-pool")) {
+          const cf = document.createElement("div");
+          cf.id = "r38-confetti-pool";
+          const colors = ["#ffcd38", "#19d5d8", "#f66a5d", "#17b987", "#fff8e8", "#a855f7"];
+          for (let i = 0; i < 28; i++) {
+            const p = document.createElement("i");
+            p.className = "r38-confetti";
+            p.style.left = ((i * 3.55 + 1.5) % 98).toFixed(1) + "%";
+            p.style.background = colors[i % colors.length];
+            p.style.animationDuration = (1.6 + (i % 5) * 0.28).toFixed(2) + "s";
+            p.style.animationDelay = ((i % 7) * 0.14).toFixed(2) + "s";
+            p.style.setProperty("--cf-drift", ((i % 2 === 0 ? 1 : -1) * (14 + (i % 5) * 8)) + "px");
+            cf.appendChild(p);
+          }
+          document.body.appendChild(cf);
+        }
+      }
+
+      function showHitCallout(text, isMiss) {
+        if (document.body.classList.contains("r38-reduced-motion")) return;
+        const c = document.getElementById("r38-hit-callout");
+        if (!c) return;
+        c.textContent = text;
+        c.classList.toggle("miss", !!isMiss);
+        c.classList.remove("active");
+        void c.offsetWidth;
+        c.classList.add("active");
+      }
+
+      function triggerScreenShake() {
+        if (document.body.classList.contains("r38-reduced-motion")) return;
+        const uCont = document.getElementById("unity-container");
+        if (!uCont) return;
+        uCont.classList.remove("r38-screen-shake");
+        void uCont.offsetWidth;
+        uCont.classList.add("r38-screen-shake");
+      }
 
       fetch("./catalog.json").then(r => r.json()).then(cat => {
         if (cat && Array.isArray(cat.weapons)) {
@@ -771,7 +1087,120 @@ HOME_VISUAL_PATCH_HTML = """
         } else if (hand) {
           hand.style.display = "none";
         }
+
+        // E1–E6: Sync pooled ambient leaves, low-HP vignette, HP-drop card shake + callout, and Victory confetti
+        ensurePooledVfxContainers();
+        const isHome = !!root.querySelector('[data-screen="home"]');
+        const isMatch = !!root.querySelector('[data-screen="match"]');
+        const isResult = !!root.querySelector('[data-screen="result"]');
+        const leavesEl = document.getElementById("r38-ambient-leaves");
+        if (leavesEl) leavesEl.style.display = isHome ? "block" : "none";
+
+        const heroImg = root.querySelector(".home .hero");
+        if (heroImg && !heroImg.dataset.r38TapBound) {
+          heroImg.dataset.r38TapBound = "1";
+          heroImg.addEventListener("pointerdown", () => {
+            heroImg.classList.remove("tap-wave");
+            void heroImg.offsetWidth;
+            heroImg.classList.add("tap-wave");
+            setTimeout(() => heroImg.classList.remove("tap-wave"), 300);
+          });
+        }
+
+        // E4 & E6: Check player HP changes and local 1 HP vignette
+        const stEvt = window.__hitmeLastMatchEvt;
+        const lowHpVig = document.getElementById("r38-low-hp-vignette");
+        if (isMatch && stEvt && Array.isArray(stEvt.players)) {
+          let anyDamageThisTick = false;
+          let localHp = 3;
+          const cardEls = root.querySelectorAll(".live-cards .live-card");
+          stEvt.players.forEach((p, idx) => {
+            const pid = p.id || ("p" + idx);
+            const hp = Number(p.hp ?? 3);
+            if (pid === "you" || idx === 0) localHp = hp;
+            if (_r38PrevHpByPlayer[pid] !== undefined && hp < _r38PrevHpByPlayer[pid]) {
+              anyDamageThisTick = true;
+              const cardEl = cardEls[idx];
+              if (cardEl) {
+                cardEl.classList.remove("r38-card-hit-shake");
+                void cardEl.offsetWidth;
+                cardEl.classList.add("r38-card-hit-shake");
+              }
+            }
+            _r38PrevHpByPlayer[pid] = hp;
+          });
+          if (anyDamageThisTick) {
+            triggerScreenShake();
+            showHitCallout("BỐP! -1 ❤️", false);
+            tryHaptic(25);
+          }
+          if (lowHpVig) lowHpVig.classList.toggle("active", localHp === 1);
+        } else {
+          if (!isMatch) _r38PrevHpByPlayer = {};
+          if (lowHpVig) lowHpVig.classList.remove("active");
+        }
+
+        // E5: Confetti on Victory Result screen
+        const cfPool = document.getElementById("r38-confetti-pool");
+        if (cfPool) {
+          const resultTitle = (root.querySelector('[data-screen="result"] h1, [data-screen="result"] h2')?.textContent || "").toUpperCase();
+          const isWinResult = isResult && (resultTitle.includes("THẮNG") || resultTitle.includes("VICTORY") || resultTitle.includes("VÔ ĐỊCH"));
+          cfPool.classList.toggle("active", isWinResult);
+        }
+
+        // E6: Inject Haptics toggle into Settings sheet & sync Reduced Motion class
+        const settingsSheet = root.querySelector(".settings-sheet");
+        if (settingsSheet) {
+          const rmBtn = settingsSheet.querySelector('[data-action="reduced-motion"]');
+          if (rmBtn) {
+            const rmOn = (rmBtn.textContent || "").includes("Bật") || (rmBtn.textContent || "").includes("On");
+            document.body.classList.toggle("r38-reduced-motion", rmOn);
+          }
+          if (!settingsSheet.querySelector('[data-action="r38-toggle-haptics"]')) {
+            const hapBtn = document.createElement("button");
+            hapBtn.type = "button";
+            hapBtn.className = "setting-toggle";
+            hapBtn.dataset.action = "r38-toggle-haptics";
+            hapBtn.innerHTML = `<span>Rung xúc giác (Haptics)</span><b>${_r38HapticsEnabled ? "Bật" : "Tắt"}</b>`;
+            hapBtn.addEventListener("click", (ev) => {
+              ev.stopPropagation();
+              _r38HapticsEnabled = !_r38HapticsEnabled;
+              try { localStorage.setItem("hitme_haptics", _r38HapticsEnabled ? "1" : "0"); } catch (e) {}
+              const b = hapBtn.querySelector("b");
+              if (b) b.textContent = _r38HapticsEnabled ? "Bật" : "Tắt";
+              if (_r38HapticsEnabled) tryHaptic(25);
+            });
+            const toggleGroup = settingsSheet.querySelector(".setting-toggles") || settingsSheet;
+            toggleGroup.appendChild(hapBtn);
+          }
+        }
       }
+
+      document.addEventListener("click", (e) => {
+        const btn = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+        if (!btn) return;
+        const act = btn.dataset.action || "";
+        if (act === "previous" || act === "next" || act === "prev-character" || act === "next-character" || act === "select-character") {
+          setTimeout(() => {
+            const hero = document.querySelector("#ui-root .home .hero");
+            if (hero) {
+              hero.classList.remove("switch-bounce");
+              void hero.offsetWidth;
+              hero.classList.add("switch-bounce");
+              setTimeout(() => hero.classList.remove("switch-bounce"), 230);
+            }
+            const glow = document.getElementById("r38-pedestal-glow");
+            if (glow) {
+              glow.classList.remove("flash");
+              void glow.offsetWidth;
+              glow.classList.add("flash");
+            }
+          }, 15);
+        } else if (act === "ready") {
+          tryHaptic(25);
+          showPhaseBanner("ĐÃ KHÓA!");
+        }
+      }, true);
 
       document.addEventListener("DOMContentLoaded", () => {
         const root = document.getElementById("ui-root");
@@ -781,6 +1210,22 @@ HOME_VISUAL_PATCH_HTML = """
         }
         const uCanvas = document.getElementById("unity-canvas");
         if (uCanvas) {
+          uCanvas.addEventListener("pointerdown", (ev) => {
+            const isMatch = !!document.querySelector('#ui-root [data-screen="match"]');
+            const phase = String(window.__hitmeLastMatchEvt?.phase || "placing").toLowerCase();
+            if (isMatch && phase === "placing") {
+              ensurePooledVfxContainers();
+              const fx = document.getElementById("r38-place-fx");
+              if (fx) {
+                fx.style.left = ev.clientX + "px";
+                fx.style.top = ev.clientY + "px";
+                fx.classList.remove("active");
+                void fx.offsetWidth;
+                fx.classList.add("active");
+              }
+              tryHaptic(18);
+            }
+          });
           uCanvas.addEventListener("pointerup", () => {
             const tut = document.querySelector("#ui-root .live-tutorial");
             if (tut && (tut.querySelector("b")?.textContent || "").includes("3/3")) {
@@ -1178,6 +1623,7 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
             val.onUnity = function(event) {{
               let evt = event;
               try {{ if (typeof event === "string") evt = JSON.parse(event); }} catch (e) {{}}
+              if (window.__hitmeFreezeLiveMatch && evt && !evt.__fromTest) return;
               if (evt && typeof evt === "object") {{
                 if (evt.type === "screen" || evt.type === "result") {{
                   _lastMatchSig = "";

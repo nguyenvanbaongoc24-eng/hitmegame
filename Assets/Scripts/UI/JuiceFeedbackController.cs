@@ -31,8 +31,12 @@ namespace HitMe.UI
 
         // Static key for PlayerPrefs
         public const string PrefKeyReducedMotion = "ReducedMotion";
+        public const string PrefKeyHapticsEnabled = "HitMe_HapticsEnabled";
 
+        private bool _hapticsEnabled = true;
         private readonly List<ButtonPressHandler> _buttonHandlers = new List<ButtonPressHandler>(16);
+        private readonly List<TMPro.TextMeshPro> _damageTextPool = new List<TMPro.TextMeshPro>(8);
+        private int _damageTextPoolIdx = 0;
 
         private void Awake()
         {
@@ -47,6 +51,25 @@ namespace HitMe.UI
             if (hitImpactFrames != null && hitImpactFrames.Length > 0)
             {
                 _hitFxPool = new Game.GenericPool<Game.HitFx>(CreateHitFx, vfxParent, poolWarmCount);
+            }
+
+            // Pre-warm zero-alloc floating damage/callout text pool (E4: 0 GC alloc/frame in match)
+            WarmDamageTextPool(6);
+        }
+
+        private void WarmDamageTextPool(int count)
+        {
+            for (int i = _damageTextPool.Count; i < count; i++)
+            {
+                var go = new GameObject("PooledFloatingCallout_" + i);
+                if (vfxParent != null) go.transform.SetParent(vfxParent, false);
+                var text = go.AddComponent<TMPro.TextMeshPro>();
+                text.fontSize = 4.5f;
+                text.fontStyle = TMPro.FontStyles.Bold;
+                text.alignment = TMPro.TextAlignmentOptions.Center;
+                text.sortingOrder = 10;
+                go.SetActive(false);
+                _damageTextPool.Add(text);
             }
         }
 
@@ -74,10 +97,37 @@ namespace HitMe.UI
             }
         }
 
+        public bool HapticsEnabled
+        {
+            get => _hapticsEnabled;
+            set
+            {
+                _hapticsEnabled = value;
+                try { PlayerPrefs.SetString(PrefKeyHapticsEnabled, value ? "1" : "0"); PlayerPrefs.Save(); }
+                catch { /* WebGL sandbox may fail */ }
+            }
+        }
+
         private void LoadReducedMotionPref()
         {
-            try { _reducedMotion = PlayerPrefs.GetString(PrefKeyReducedMotion, "0") == "1"; }
-            catch { _reducedMotion = false; }
+            try
+            {
+                _reducedMotion = PlayerPrefs.GetString(PrefKeyReducedMotion, "0") == "1";
+                _hapticsEnabled = PlayerPrefs.GetString(PrefKeyHapticsEnabled, "1") != "0";
+            }
+            catch
+            {
+                _reducedMotion = false;
+                _hapticsEnabled = true;
+            }
+        }
+
+        public void TriggerHaptic()
+        {
+            if (_reducedMotion || !_hapticsEnabled) return;
+#if UNITY_ANDROID || UNITY_IOS
+            try { Handheld.Vibrate(); } catch { }
+#endif
         }
 
         // ──────────────────────────────────────────────────
@@ -147,22 +197,29 @@ namespace HitMe.UI
         {
             if (_reducedMotion) return;
             PlayHitImpact(worldPos);
-            PlayCameraShake(0.08f, 0.14f);
-            PlayHitStop(0.04f);
-            StartCoroutine(SpawnFloatingDamageText(worldPos, damage));
+            PlayCameraShake(0.08f, 0.12f);
+            PlayHitStop(0.065f);
+            TriggerHaptic();
+            StartCoroutine(SpawnFloatingDamageText(worldPos, damage == 1 ? "-1 HP • TRÚNG!" : $"-{damage} HP", new Color(1f, 0.25f, 0.25f, 1f)));
         }
 
-        private IEnumerator SpawnFloatingDamageText(Vector3 worldPos, int damage)
+        public void ShowMissCallout(Vector3 worldPos)
         {
-            var go = new GameObject("DamageTextPopup");
+            if (_reducedMotion) return;
+            StartCoroutine(SpawnFloatingDamageText(worldPos, "HỤT!", new Color(0.85f, 0.90f, 0.98f, 0.92f)));
+        }
+
+        private IEnumerator SpawnFloatingDamageText(Vector3 worldPos, string label, Color baseColor)
+        {
+            if (_damageTextPool.Count == 0) WarmDamageTextPool(6);
+            var text = _damageTextPool[_damageTextPoolIdx];
+            _damageTextPoolIdx = (_damageTextPoolIdx + 1) % _damageTextPool.Count;
+            var go = text.gameObject;
+            go.SetActive(true);
             go.transform.position = worldPos + Vector3.up * 0.4f;
-            var text = go.AddComponent<TMPro.TextMeshPro>();
-            text.text = $"-{damage} HP";
-            text.fontSize = 4.5f;
-            text.fontStyle = TMPro.FontStyles.Bold;
-            text.color = new Color(1f, 0.25f, 0.25f, 1f);
-            text.alignment = TMPro.TextAlignmentOptions.Center;
-            text.sortingOrder = 10;
+            go.transform.localScale = Vector3.one;
+            text.text = label;
+            text.color = baseColor;
 
             float elapsed = 0f;
             float duration = 0.55f;
@@ -175,20 +232,20 @@ namespace HitMe.UI
                 if (go != null)
                 {
                     go.transform.position = startPos + Vector3.up * (p * 0.6f);
-                    text.color = new Color(1f, 0.25f, 0.25f, 1f - p);
+                    text.color = new Color(baseColor.r, baseColor.g, baseColor.b, 1f - p);
                     float s = 1f + Mathf.Sin(p * Mathf.PI) * 0.25f;
                     go.transform.localScale = new Vector3(s, s, 1f);
                 }
                 yield return null;
             }
 
-            if (go != null) Destroy(go);
+            if (go != null) go.SetActive(false);
         }
 
         /// <summary>
         /// Rung nhẹ camera khi trúng đòn (Game feel L5)
         /// </summary>
-        public void PlayCameraShake(float intensity = 0.08f, float duration = 0.14f)
+        public void PlayCameraShake(float intensity = 0.08f, float duration = 0.12f)
         {
             if (_reducedMotion) return;
             var cam = Camera.main;
@@ -216,12 +273,13 @@ namespace HitMe.UI
         }
 
         /// <summary>
-        /// Hit-stop ngắn tạo độ nảy / cảm giác va chạm có trọng lượng (Game feel L5)
+        /// Hit-stop ngắn <= 80ms tạo độ nảy / cảm giác va chạm có trọng lượng (E4)
         /// </summary>
-        public void PlayHitStop(float duration = 0.04f)
+        public void PlayHitStop(float duration = 0.065f)
         {
             if (_reducedMotion) return;
-            StartCoroutine(HitStopRoutine(duration));
+            float clamped = Mathf.Clamp(duration, 0.01f, 0.08f);
+            StartCoroutine(HitStopRoutine(clamped));
         }
 
         private IEnumerator HitStopRoutine(float duration)
