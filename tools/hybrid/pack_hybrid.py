@@ -221,7 +221,10 @@ HOME_VISUAL_PATCH_HTML = """
       font-size: clamp(9.5px, 2.55vw, 11px) !important;
       font-weight: 800 !important;
       line-height: 1.32 !important;
-      padding-bottom: 2px !important;
+      padding: 1px 5px 2px !important;
+      background: rgba(6, 12, 22, 0.74) !important;
+      border-radius: 5px !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95) !important;
       color: #fff8e8 !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
@@ -691,6 +694,62 @@ HOME_VISUAL_PATCH_HTML = """
       box-shadow: 0 6px 18px rgba(185, 28, 28, 0.75) !important;
       pointer-events: none !important;
       opacity: 0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+    .r39-callout-heart {
+      width: 22px !important;
+      height: 22px !important;
+      object-fit: contain !important;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.75)) !important;
+      vertical-align: middle !important;
+    }
+    .r39-heart-shard {
+      position: absolute !important;
+      width: 18px !important;
+      height: 18px !important;
+      top: 50% !important;
+      left: 50% !important;
+      pointer-events: none !important;
+      z-index: 38 !important;
+      object-fit: contain !important;
+    }
+    .r39-heart-shard.left {
+      clip-path: polygon(0 0, 54% 0, 46% 100%, 0 100%) !important;
+      animation: r39-shard-left 0.55s cubic-bezier(0.22, 0.8, 0.36, 1) forwards !important;
+    }
+    .r39-heart-shard.right {
+      clip-path: polygon(54% 0, 100% 0, 100% 100%, 46% 100%) !important;
+      animation: r39-shard-right 0.55s cubic-bezier(0.22, 0.8, 0.36, 1) forwards !important;
+    }
+    @keyframes r39-shard-left {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(0deg); }
+      40% { opacity: 1; transform: translate(-135%, -95%) scale(1.25) rotate(-28deg); }
+      100% { opacity: 0; transform: translate(-190%, 65%) scale(0.75) rotate(-58deg); }
+    }
+    @keyframes r39-shard-right {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(0deg); }
+      40% { opacity: 1; transform: translate(35%, -95%) scale(1.25) rotate(28deg); }
+      100% { opacity: 0; transform: translate(90%, 65%) scale(0.75) rotate(58deg); }
+    }
+    .r39-ko-stars {
+      position: absolute !important;
+      top: -6px !important;
+      left: 50% !important;
+      width: 30px !important;
+      height: 30px !important;
+      margin-left: -15px !important;
+      pointer-events: none !important;
+      z-index: 25 !important;
+      object-fit: contain !important;
+      animation: r39-stars-spin 1.4s linear infinite !important;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.85)) !important;
+    }
+    @keyframes r39-stars-spin {
+      0% { transform: rotate(0deg) scale(0.95); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      100% { transform: rotate(360deg) scale(0.95); }
     }
     #r38-hit-callout.miss {
       background: linear-gradient(180deg, #475569 0%, #1e293b 100%) !important;
@@ -710,15 +769,41 @@ HOME_VISUAL_PATCH_HTML = """
       inset: 0 !important;
       pointer-events: none !important;
       z-index: 19 !important;
-      box-shadow: inset 0 0 36px rgba(246, 106, 93, 0.68) !important;
+      box-shadow: inset 0 0 64px 22px rgba(239, 35, 35, 0.78) !important;
       opacity: 0 !important;
     }
     #r38-low-hp-vignette.active {
       animation: r38-low-hp-pulse 1.15s ease-in-out infinite !important;
     }
     @keyframes r38-low-hp-pulse {
-      0%, 100% { opacity: 0.22; }
-      50% { opacity: 0.72; }
+      0%, 100% { opacity: 0.28; }
+      50% { opacity: 0.82; }
+    }
+    /* S0 Item 8: Responsive Tablet Layout (1620x2160 @ DPR 2 -> 68 CSS px = 136 physical px >= 135px) */
+    @media (min-width: 700px) {
+      .stage {
+        width: min(92vw, 680px) !important;
+      }
+      .home .quick,
+      .home .blue,
+      .home .green,
+      .home .practice,
+      .home .selection-card,
+      .live-ready,
+      .modal-back,
+      .r38-online-btn-primary,
+      .r38-online-btn-secondary,
+      [data-screen="bot"] .cta {
+        min-height: 68px !important;
+      }
+      .top-bar button,
+      .bottom-dock button,
+      .live-summary > button[data-action="settings"],
+      .live-tutorial button,
+      .home .selection-card .icon {
+        min-width: 68px !important;
+        min-height: 68px !important;
+      }
     }
     #r38-confetti-pool {
       position: fixed !important;
@@ -974,7 +1059,7 @@ HOME_VISUAL_PATCH_HTML = """
         const vv = window.visualViewport;
         const vw = vv ? vv.width : window.innerWidth;
         const vh = vv ? vv.height : window.innerHeight;
-        const stageW = Math.min(vw, 430);
+        const stageW = vw >= 700 ? Math.min(vw * 0.92, 680) : Math.min(vw, 430);
         const stageH = vh;
         const origW = 941, origH = 1672;
         const fy = 0.4844, posY = 0.48;
@@ -1133,11 +1218,28 @@ HOME_VISUAL_PATCH_HTML = """
         if (document.body.classList.contains("r38-reduced-motion")) return;
         const c = document.getElementById("r38-hit-callout");
         if (!c) return;
-        c.textContent = text;
+        if (isMiss) {
+          c.innerHTML = `<span class="r39-callout-txt">${text}</span>`;
+        } else {
+          c.innerHTML = `<span class="r39-callout-txt">${text}</span><img class="r39-callout-heart" src="./assets/ui_icon_heart_break.png" alt="heart" width="22" height="22">`;
+        }
         c.classList.toggle("miss", !!isMiss);
         c.classList.remove("active");
         void c.offsetWidth;
         c.classList.add("active");
+      }
+
+      function spawnBrokenHeartShards(cardEl) {
+        if (!cardEl || document.body.classList.contains("r38-reduced-motion")) return;
+        cardEl.querySelectorAll(".r39-heart-shard").forEach(el => el.remove());
+        ["left", "right"].forEach(side => {
+          const img = document.createElement("img");
+          img.className = "r39-heart-shard " + side;
+          img.src = "./assets/ui_icon_heart_break.png";
+          img.alt = "";
+          cardEl.appendChild(img);
+          setTimeout(() => { try { img.remove(); } catch (e) {} }, 600);
+        });
       }
 
       function triggerScreenShake() {
@@ -1181,11 +1283,15 @@ HOME_VISUAL_PATCH_HTML = """
           weaponCard.classList.toggle("single-weapon", _r38CatalogWeaponsUnlocked <= 1);
         }
 
-        // U3: Update locked online buttons from 'Sắp ra mắt' to 'Máy chủ chưa sẵn sàng' (or 'Server not ready')
+        // U3 / N-B: Update locked online buttons to 'Máy chủ chưa sẵn sàng' by default, or 'Mở thử nghiệm (?online=1)' when online/lab flag is active
         const isEnHome = document.documentElement.lang === "en";
+        const spHome = new URLSearchParams(window.location.search);
+        const isOnlineFlag = spHome.get("online") === "1" || spHome.get("lab") === "1" || !!spHome.get("server");
         root.querySelectorAll('.home button.coming-soon[data-action="online-locked"] small').forEach(sm => {
-          const targetLabel = isEnHome ? "Server not ready" : "Máy chủ chưa sẵn sàng";
-          if (!sm.textContent.includes(targetLabel)) {
+          const targetLabel = isOnlineFlag
+            ? (spHome.get("lab") === "1" ? "Chế độ Lab 2P" : (isEnHome ? "Online Ready" : "Trực tuyến • Bấm để mở"))
+            : (isEnHome ? "Server not ready" : "Máy chủ chưa sẵn sàng");
+          if (sm.textContent !== targetLabel) {
             sm.textContent = targetLabel;
           }
         });
@@ -1383,21 +1489,36 @@ HOME_VISUAL_PATCH_HTML = """
           stEvt.players.forEach((p, idx) => {
             const pid = p.id || ("p" + idx);
             const hp = Number(p.hp ?? 3);
-            if (pid === "you" || idx === 0) localHp = hp;
+            if (pid === "you" || pid === "player" || idx === 0) localHp = hp;
+            const cardEl = cardEls[idx];
             if (_r38PrevHpByPlayer[pid] !== undefined && hp < _r38PrevHpByPlayer[pid]) {
               anyDamageThisTick = true;
-              const cardEl = cardEls[idx];
               if (cardEl) {
                 cardEl.classList.remove("r38-card-hit-shake");
                 void cardEl.offsetWidth;
                 cardEl.classList.add("r38-card-hit-shake");
+                spawnBrokenHeartShards(cardEl);
+              }
+            }
+            if (cardEl) {
+              let stars = cardEl.querySelector(".r39-ko-stars");
+              if (hp <= 0) {
+                if (!stars) {
+                  stars = document.createElement("img");
+                  stars.className = "r39-ko-stars";
+                  stars.src = "./assets/vfx_spinning_stars.png";
+                  stars.alt = "KO";
+                  cardEl.appendChild(stars);
+                }
+              } else if (stars) {
+                stars.remove();
               }
             }
             _r38PrevHpByPlayer[pid] = hp;
           });
           if (anyDamageThisTick) {
             triggerScreenShake();
-            showHitCallout("BỐP! -1 ❤️", false);
+            showHitCallout("BỐP! -1", false);
             tryHaptic(25);
           }
           if (lowHpVig) lowHpVig.classList.toggle("active", localHp === 1);
@@ -1566,6 +1687,14 @@ HOME_VISUAL_PATCH_HTML = """
         } else if (act === "online-locked") {
           e.stopPropagation();
           e.preventDefault();
+          const sp = new URLSearchParams(window.location.search);
+          if ((sp.get("online") === "1" || sp.get("lab") === "1" || sp.get("server")) && window.__hitmeOnlineUi) {
+            const btnTxt = (btn.textContent || "").toUpperCase();
+            const mode = (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
+                       : (btnTxt.includes("VÀO") || btnTxt.includes("JOIN")) ? "join" : "create";
+            window.__hitmeOnlineUi.openMode(mode);
+            return;
+          }
           openOnlineStatusSheet(false);
         }
       }, true);
@@ -1730,6 +1859,1794 @@ HOME_VISUAL_PATCH_HTML = """
           });
         }
       });
+    })();
+  </script>
+  <style id="r39-online-g9-css">
+    /* Round 39: N-A / N-B Online Screens + G9 Result/End/Settings/Profile-Shop */
+    #r39-online-root {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, rgba(10, 20, 34, 0.88) 0%, rgba(12, 24, 40, 0.94) 100%),
+        url("./assets/bg_home_1170.webp") center 48% / cover no-repeat;
+      color: #fff8e8;
+      padding: max(12px, env(safe-area-inset-top)) 14px max(12px, env(safe-area-inset-bottom));
+      overflow-y: auto;
+      pointer-events: auto;
+    }
+    #r39-online-root.active {
+      display: flex;
+    }
+    .r39-on-wrap {
+      width: min(100%, 420px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    @media (min-width: 700px) {
+      .r39-on-wrap { width: min(100%, 620px); gap: 14px; }
+    }
+    .r39-on-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(15, 31, 51, 0.92);
+      border: 2px solid #ffcd38;
+      border-radius: 14px;
+      padding: 8px 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    }
+    .r39-on-header h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 900;
+      color: #ffcd38;
+      letter-spacing: 0.4px;
+    }
+    .r39-btn {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: 2px solid #fff8e8;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%);
+      color: #2b1206;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    .r39-btn.secondary {
+      background: linear-gradient(180deg, #1b3b5a 0%, #10253a 100%);
+      border-color: #19d5d8;
+      color: #fff8e8;
+    }
+    .r39-btn.danger {
+      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+      border-color: #fecaca;
+      color: #fff8e8;
+    }
+    .r39-btn[disabled] {
+      opacity: 0.48;
+      filter: grayscale(0.45);
+      cursor: not-allowed;
+    }
+    .r39-card {
+      background: rgba(13, 27, 44, 0.94);
+      border: 1.5px solid rgba(255, 205, 56, 0.55);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    /* Custom 6-char Room Code Display & Keypad (excludes 0 O 1 I L) */
+    .r39-code-boxes {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin: 8px 0 10px;
+    }
+    .r39-code-slot {
+      height: 48px;
+      border-radius: 10px;
+      background: #081320;
+      border: 2px solid #19d5d8;
+      color: #ffcd38;
+      font-size: 22px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 1px;
+    }
+    .r39-code-slot.filled {
+      border-color: #ffcd38;
+      background: #132942;
+      box-shadow: 0 0 10px rgba(255, 205, 56, 0.3);
+    }
+    .r39-keypad {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .r39-key {
+      min-height: 46px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 248, 232, 0.4);
+      background: linear-gradient(180deg, #1e3a5f 0%, #0f2238 100%);
+      color: #fff8e8;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .r39-key:active {
+      transform: scale(0.95);
+      background: #ffcd38;
+      color: #2b1206;
+    }
+    /* Lobby 1..6 Player Slots */
+    .r39-lobby-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .r39-slot-card {
+      background: rgba(9, 20, 34, 0.9);
+      border: 1.5px solid rgba(148, 163, 184, 0.35);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 58px;
+      position: relative;
+    }
+    .r39-slot-card.occupied {
+      border-color: #19d5d8;
+      background: linear-gradient(180deg, rgba(20, 46, 74, 0.95) 0%, rgba(11, 26, 44, 0.95) 100%);
+    }
+    .r39-slot-card.ready {
+      border-color: #17b987;
+      box-shadow: 0 0 10px rgba(23, 185, 135, 0.28);
+    }
+    .r39-slot-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ffcd38;
+      background: #0b1624;
+      flex-shrink: 0;
+    }
+    .r39-slot-meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .r39-slot-meta b {
+      font-size: 13px;
+      color: #fff8e8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .r39-slot-meta small {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+    }
+    .r39-slot-card.ready .r39-slot-meta small {
+      color: #34d399;
+    }
+    /* Character & Weapon strip in Lobby */
+    .r39-char-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .r39-char-pick {
+      min-height: 48px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      background: rgba(15, 30, 48, 0.9);
+      color: #fff8e8;
+      padding: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+    }
+    .r39-char-pick.selected {
+      border: 2px solid #ffcd38;
+      background: rgba(255, 205, 56, 0.2);
+    }
+    .r39-char-pick.taken {
+      opacity: 0.42;
+      border-color: #ef4444;
+    }
+    .r39-char-pick img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    /* Online Arena Stage */
+    .r39-arena-box {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      border-radius: 16px;
+      border: 2px solid rgba(255, 205, 56, 0.75);
+      background:
+        radial-gradient(circle at 50% 52%, rgba(255, 215, 110, 0.22) 0%, rgba(16, 32, 52, 0.45) 75%),
+        url("./assets/bg_home_750.webp") center 55% / cover no-repeat;
+      overflow: hidden;
+      touch-action: none;
+      cursor: crosshair;
+      box-shadow: inset 0 0 24px rgba(0,0,0,0.55);
+    }
+    .r39-arena-actor {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      transition: left 0.2s ease, top 0.2s ease;
+    }
+    .r39-arena-actor img.actor-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2.5px solid #ffcd38;
+      background: #0d1b2a;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.65);
+    }
+    .r39-arena-actor.me img.actor-avatar {
+      border-color: #19d5d8;
+      box-shadow: 0 0 12px rgba(25, 213, 216, 0.8);
+    }
+    .r39-arena-actor .actor-name {
+      margin-top: 2px;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(8, 15, 26, 0.86);
+      color: #fff8e8;
+      font-size: 10.5px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .r39-emote-bar {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .r39-emote-btn {
+      min-width: 48px;
+      min-height: 46px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(25, 213, 216, 0.65);
+      background: rgba(14, 30, 50, 0.92);
+      color: #fff8e8;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .r39-emote-bubble {
+      display: inline-block;
+      margin-left: 4px;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: #ffcd38;
+      color: #2b1206;
+      font-size: 10.5px;
+      font-weight: 900;
+      animation: r38SwitchBounce 0.25s ease-out;
+    }
+    /* G9: Round Result & Match End Podium + Full N-Row Ranking Table */
+    .r39-podium-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin: 6px 0 10px;
+    }
+    .r39-podium-box {
+      min-width: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(24, 49, 78, 0.95) 0%, rgba(11, 24, 40, 0.95) 100%);
+      border: 1.5px solid rgba(255, 205, 56, 0.55);
+      border-radius: 12px;
+      padding: 8px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+    .r39-podium-box > span {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .r39-podium-box.rank-1 {
+      border: 2px solid #ffcd38;
+      background: linear-gradient(180deg, rgba(68, 50, 14, 0.95) 0%, rgba(28, 20, 8, 0.95) 100%);
+      box-shadow: 0 6px 18px rgba(255, 205, 56, 0.32);
+    }
+    .r39-rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 6px 0;
+    }
+    .r39-rank-table th,
+    .r39-rank-table td {
+      padding: 6px 5px;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+    }
+    .r39-rank-table th {
+      color: #ffcd38;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    .r39-rank-table tr.co-rank-1 td {
+      color: #fde047;
+      font-weight: 900;
+    }
+    /* Reconnect / Shutdown / Ban Overlay */
+    #r39-net-alert-shade {
+      position: fixed;
+      inset: 0;
+      z-index: 88;
+      background: rgba(6, 12, 22, 0.86);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      pointer-events: auto;
+    }
+    #r39-net-alert-shade.active {
+      display: flex;
+    }
+    /* Tablet @2x physical >= 135px compliance */
+    @media (min-width: 700px) {
+      .r39-btn,
+      .r39-key,
+      .r39-char-pick,
+      .r39-emote-btn,
+      #r39-online-root button,
+      #r39-net-alert-shade button {
+        min-height: 68px !important;
+        min-width: 68px !important;
+        font-size: 15px !important;
+      }
+    }
+  </style>
+  <script id="r39-online-g9-js">
+    (function() {
+      // Complete 60-code localized dictionary (matches Assets/Scripts/UI/UiStrings.cs 100%, zero raw codes)
+      const R39_ERROR_VI = {
+        not_enough_players: "Cần ít nhất 2 người chơi để bắt đầu. Bạn có thể chuyển sang Luyện với Bot!",
+        protocol_mismatch: "Phiên bản giao thức không khớp máy chủ. Vui lòng tải lại trang.",
+        auth_required_use_join_token: "Cần mã định danh khách để vào phòng.",
+        auth_invalid: "Phiên đăng nhập không hợp lệ. Vui lòng thử lại.",
+        token_invalid: "Mã xác thực không hợp lệ hoặc đã hết hạn.",
+        reconnect_invalid: "Phiên kết nối lại đã hết hạn (quá 30 giây).",
+        room_full: "Phòng đã đủ 6 người chơi.",
+        room_limit: "Máy chủ đã đạt giới hạn số phòng.",
+        room_code_exhausted: "Tạm hết mã phòng trống, vui lòng thử lại.",
+        room_not_found: "Không tìm thấy phòng với mã này.",
+        room_started: "Phòng này đã bắt đầu trận đấu.",
+        banned: "Bạn tạm thời bị khóa tìm trận ({sec} giây) do không thao tác 2 vòng liên tiếp.",
+        rate_limited: "Bạn thao tác quá nhanh, vui lòng chờ giây lát.",
+        message_too_large: "Dữ liệu gửi lên vượt quá kích thước cho phép.",
+        legacy_ready_use_room_ready_or_lock_ready: "Tín hiệu sẵn sàng cũ không còn dùng.",
+        invalid_json: "Dữ liệu gói tin không đúng định dạng.",
+        invalid_envelope: "Cấu trúc gói tin không hợp lệ.",
+        unknown_type: "Loại yêu cầu không được hỗ trợ.",
+        already_joined: "Bạn đã ở trong phòng hoặc hàng chờ rồi.",
+        not_joined: "Bạn chưa tham gia phòng nào.",
+        not_in_room: "Bạn không còn ở trong phòng này.",
+        not_in_round: "Bạn không tham gia vòng đấu hiện tại.",
+        wrong_phase: "Chưa tới giai đoạn thực hiện thao tác này.",
+        wrong_round: "Thao tác không khớp với vòng đấu hiện tại.",
+        round_locked: "Vòng đấu đã khóa vị trí, không thể đổi nữa.",
+        ready_required: "Bạn cần chọn Sẵn sàng trước.",
+        match_not_started: "Trận đấu chưa bắt đầu.",
+        invalid_commit: "Tọa độ đặt nhân vật hoặc hướng ném không hợp lệ.",
+        invalid_emote: "Biểu cảm không hợp lệ.",
+        emote_rate_limited: "Bạn gửi biểu cảm quá nhanh (chờ 1 giây).",
+        emote_phase_limit: "Chỉ được gửi tối đa 3 biểu cảm mỗi vòng.",
+        host_only: "Chỉ chủ phòng mới có quyền bắt đầu trận đấu.",
+        duplicate_player: "Nhân vật hoặc người chơi bị trùng trong phòng.",
+        invalid_player: "Thông tin người chơi không hợp lệ.",
+        no_response: "Máy chủ chưa phản hồi yêu cầu.",
+        server_shutdown: "Máy chủ đang bảo trì định kỳ. Vui lòng thử lại sau ít phút.",
+        server_restarting: "Máy chủ đang khởi động lại để cập nhật. Vui lòng chờ giây lát.",
+        idle_timeout: "Ngắt kết nối do không hoạt động quá lâu.",
+        session_replaced: "Tài khoản này vừa được mở ở một tab hoặc thiết bị khác.",
+        bad_message: "Gói tin gửi lên không hợp lệ.",
+        origin_not_allowed: "Tên miền hiện tại chưa được mở trong ALLOWED_ORIGINS của máy chủ.",
+        client_outdated: "Bản trò chơi đã cũ, vui lòng tải lại trang để cập nhật.",
+        room_expired: "Phòng chờ đã hết hạn sau 10 phút không hoạt động.",
+        server_busy: "Máy chủ đang quá tải, vui lòng thử lại sau ít giây.",
+        protocol_violation_eliminated: "Bạn bị loại khỏi trận do gửi dữ liệu sai quy tắc nhiều lần.",
+        name_taken_in_room: "Tên hiển thị này đã có người dùng trong phòng.",
+        character_not_found: "Không tìm thấy nhân vật đã chọn.",
+        character_locked: "Nhân vật này hiện đang khóa.",
+        weapon_not_found: "Không tìm thấy vũ khí đã chọn.",
+        weapon_not_owned: "Bạn chưa sở hữu vũ khí này.",
+        profile_unavailable: "Không thể tải hồ sơ người chơi lúc này.",
+        invalid_chat_id: "Câu chat nhanh không hợp lệ.",
+        chat_rate_limited: "Bạn gửi chat nhanh quá dày (chờ 1 giây).",
+        invalid_friend_target: "Người chơi kết bạn không hợp lệ.",
+        friend_target_unavailable: "Người chơi này hiện không trực tuyến trong phòng.",
+        friend_request_pending: "Đã gửi lời mời kết bạn trước đó.",
+        friend_request_not_found: "Không tìm thấy lời mời kết bạn.",
+        already_friends: "Hai bạn đã là bạn bè.",
+        friend_request_closed: "Lời mời kết bạn đã đóng.",
+        friend_unavailable: "Tính năng bạn bè tạm thời bảo trì."
+      };
+
+      const R39_ERROR_EN = {
+        not_enough_players: "Need at least 2 players to start. You can switch to Bot Practice!",
+        protocol_mismatch: "Protocol version mismatch with server. Please reload.",
+        auth_required_use_join_token: "Guest token required to join room.",
+        auth_invalid: "Invalid authentication session.",
+        token_invalid: "Authentication token is invalid or expired.",
+        reconnect_invalid: "Reconnect session expired (over 30 seconds).",
+        room_full: "Room is full (6/6 players).",
+        room_limit: "Server reached maximum room capacity.",
+        room_code_exhausted: "No room codes available right now.",
+        room_not_found: "Room code not found.",
+        room_started: "This room has already started the match.",
+        banned: "Temporarily barred from matchmaking ({sec}s) due to 2 consecutive AFK rounds.",
+        rate_limited: "Too many actions, please slow down.",
+        message_too_large: "Payload exceeds maximum allowed size.",
+        legacy_ready_use_room_ready_or_lock_ready: "Legacy ready signal is deprecated.",
+        invalid_json: "Malformed JSON packet.",
+        invalid_envelope: "Invalid packet envelope.",
+        unknown_type: "Unsupported request type.",
+        already_joined: "You are already in a room or queue.",
+        not_joined: "You have not joined a room.",
+        not_in_room: "You are not in this room.",
+        not_in_round: "You are not active in the current round.",
+        wrong_phase: "Action not allowed in the current phase.",
+        wrong_round: "Round number does not match active round.",
+        round_locked: "Round placement is already locked.",
+        ready_required: "Please mark Ready first.",
+        match_not_started: "Match has not started yet.",
+        invalid_commit: "Invalid placement coordinates or aim vector.",
+        invalid_emote: "Invalid emote selection.",
+        emote_rate_limited: "Emote cooldown active (wait 1 second).",
+        emote_phase_limit: "Maximum 3 emotes per round reached.",
+        host_only: "Only the room host can start the match.",
+        duplicate_player: "Duplicate character or player in room.",
+        invalid_player: "Invalid player identity.",
+        no_response: "No response from server.",
+        server_shutdown: "Server is undergoing scheduled maintenance.",
+        server_restarting: "Server is restarting for an update. Please reconnect shortly.",
+        idle_timeout: "Disconnected due to inactivity.",
+        session_replaced: "Your session was opened in another tab or device.",
+        bad_message: "Invalid client message.",
+        origin_not_allowed: "Current web origin is not whitelisted in server ALLOWED_ORIGINS.",
+        client_outdated: "Client version outdated, please refresh the page.",
+        room_expired: "Lobby expired after 10 minutes of inactivity.",
+        server_busy: "Server is busy, please try again shortly.",
+        protocol_violation_eliminated: "Eliminated due to repeated invalid protocol messages.",
+        name_taken_in_room: "Display name is already taken in this room.",
+        character_not_found: "Selected character not found.",
+        character_locked: "Selected character is locked.",
+        weapon_not_found: "Selected weapon not found.",
+        weapon_not_owned: "You do not own this weapon.",
+        profile_unavailable: "Player profile service is currently unavailable.",
+        invalid_chat_id: "Invalid quick chat phrase.",
+        chat_rate_limited: "Quick chat rate limited.",
+        invalid_friend_target: "Invalid friend request target.",
+        friend_target_unavailable: "Target player is not available in this room.",
+        friend_request_pending: "Friend request is already pending.",
+        friend_request_not_found: "Friend request not found.",
+        already_friends: "You are already friends.",
+        friend_request_closed: "Friend request is closed.",
+        friend_unavailable: "Friend service is temporarily unavailable."
+      };
+
+      function localizeError(code, remainingSeconds) {
+        const isEn = document.documentElement.lang === "en";
+        const dict = isEn ? R39_ERROR_EN : R39_ERROR_VI;
+        const sec = Math.max(1, Number(remainingSeconds) || 120);
+        const tpl = dict[code] || (isEn ? "Connection notice — please try again." : "Thông báo kết nối — vui lòng thử lại.");
+        return tpl.replace("{sec}", String(sec));
+      }
+      window.__hitmeLocalizeNetError = localizeError;
+
+      const CHARACTERS = [
+        { id: "nam_lang", name: "Nam Làng", head: "./assets/nam_lang_head.png", tam: false },
+        { id: "nu_nang_dong", name: "Nữ Năng Động", head: "./assets/nu_nang_dong_head.png", tam: false },
+        { id: "co_ba", name: "Cô Ba", head: "./assets/co_ba_head.png", tam: false },
+        { id: "anh_teen", name: "Anh Teen", head: "./assets/anh_teen_head.png", tam: false },
+        { id: "quay_boy", name: "Quậy Boy", head: "./assets/quay_boy_head.png", tam: true },
+        { id: "cho_vang", name: "Chó Vàng", head: "./assets/cho_vang_head.png", tam: true },
+        { id: "meo_mun", name: "Mèo Mun", head: "./assets/meo_mun_head.png", tam: true }
+      ];
+      const WEAPONS = [
+        { id: "dep_to_ong", name: "Dép Tổ Ong", icon: "./assets/dep_to_ong_icon.png", fx: "Hiệu ứng chuẩn Sân Đình" },
+        { id: "chao_chong_dinh", name: "Chảo Chống Dính", icon: "./assets/chao_chong_dinh_icon.png", fx: "Vệt sáng Kim Loại • Boong!" },
+        { id: "vot_pickleball", name: "Vợt Pickleball", icon: "./assets/vot_pickleball_icon.png", fx: "Vệt sáng Thể Thao • Póc!" }
+      ];
+      // Valid 6-char room code alphabet (strictly excludes 0, O, 1, I, L)
+      const KEYPAD_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ".split("");
+
+      // Co-ranking helper per gameplay rules v1.2: alive -> HP -> hitsLanded
+      function computeCoRankings(playersList) {
+        const list = (playersList || []).map((p, idx) => {
+          const pid = p.playerId || p.id || ("p" + (idx + 1));
+          const knownPlayer = (typeof onlineState === "object" && onlineState && Array.isArray(onlineState.players))
+            ? onlineState.players.find(x => x.id === pid || x.name === pid)
+            : null;
+          let resolvedName = p.name || (knownPlayer && knownPlayer.name) || pid || ("Người chơi " + (idx + 1));
+          if (resolvedName.length > 18 && resolvedName.startsWith("g_")) {
+            resolvedName = "Khách " + resolvedName.slice(2, 8).toUpperCase();
+          }
+          return {
+            playerId: pid,
+            name: resolvedName,
+            alive: p.alive !== undefined ? !!p.alive : (!p.eliminated && Number(p.hp ?? 0) > 0),
+            hp: Math.max(0, Number(p.hp ?? 0)),
+            hitsLanded: Math.max(0, Number(p.hitsLanded ?? p.hits ?? 0)),
+            throws: Math.max(0, Number(p.throws ?? 5)),
+            goldReward: Math.max(0, Number(p.goldReward ?? 0)),
+            rank: Number(p.rank || 0)
+          };
+        });
+        list.sort((a, b) => {
+          if (a.alive !== b.alive) return a.alive ? -1 : 1;
+          if (b.hp !== a.hp) return b.hp - a.hp;
+          return b.hitsLanded - a.hitsLanded;
+        });
+        let currentRank = 1;
+        for (let i = 0; i < list.length; i++) {
+          if (i > 0) {
+            const prev = list[i - 1];
+            const cur = list[i];
+            if (prev.alive !== cur.alive || prev.hp !== cur.hp || prev.hitsLanded !== cur.hitsLanded) {
+              currentRank = i + 1;
+            }
+          }
+          if (!list[i].rank) list[i].rank = currentRank;
+        }
+        return list;
+      }
+      window.__hitmeComputeCoRankings = computeCoRankings;
+
+      // Single Unified Online Client (N-A: WebSocket + LoopbackTransport)
+      const onlineState = {
+        mode: "create", // create | join | quick | lobby | match | result
+        transportMode: new URLSearchParams(window.location.search).get("lab") === "1" ? "loopback" : "ws",
+        wsUrl: new URLSearchParams(window.location.search).get("server") || "wss://hitmegame.onrender.com/ws",
+        socket: null,
+        connected: false,
+        playerName: "NamLang" + Math.floor(10 + Math.random() * 89),
+        characterId: "nam_lang",
+        weaponId: "dep_to_ong",
+        hasConfirmedCharInLobby: true,
+        roomCode: "",
+        joinInputCode: "",
+        hostId: "",
+        started: false,
+        phase: "disconnected", // disconnected | queueing | lobby | placing | locked | reveal | round_result | match_end
+        roundId: 0,
+        maxRounds: 5,
+        deadlineMs: 0,
+        secondsLeft: 0,
+        countdownSec: 0,
+        quickWaitSec: 0,
+        quickHintShown: false,
+        reconnectToken: "",
+        reconnectSecLeft: 0,
+        players: [],
+        revealedPlayers: [],
+        lastRoundResult: null,
+        lastMatchEnd: null,
+        myPos: { x: -1.6, y: 0.0 },
+        myAim: { x: 1.0, y: 0.0 },
+        hasCommittedThisRound: false,
+        isLockedThisRound: false,
+        emotesByPlayer: {},
+        lastErrorCode: "",
+        lastErrorText: ""
+      };
+
+      try {
+        const savedName = sessionStorage.getItem("hitme_online_name");
+        if (savedName && savedName.length >= 3) onlineState.playerName = savedName;
+      } catch (e) {}
+
+      let _tickTimer = null;
+      let _reconnectTimer = null;
+      let _quickWaitTimer = null;
+
+      function getToken() {
+        return "guest:" + (onlineState.playerName || "Khach");
+      }
+
+      function saveReconnectToken(tok) {
+        if (!tok) return;
+        onlineState.reconnectToken = tok;
+        try { sessionStorage.setItem("hitme_reconnect_" + onlineState.playerName, tok); } catch (e) {}
+      }
+
+      function loadReconnectToken() {
+        if (onlineState.reconnectToken) return onlineState.reconnectToken;
+        try { return sessionStorage.getItem("hitme_reconnect_" + onlineState.playerName) || ""; } catch (e) { return ""; }
+      }
+
+      // In-memory Loopback Hub for ?lab=1 (supports 2 players on 1 machine + all fault scenarios)
+      const loopbackHub = {
+        peers: [
+          { id: "NamLang", name: "Nam Làng (Bạn)", ready: false, characterId: "nam_lang", weaponId: "dep_to_ong", hp: 3, hitsLanded: 0, alive: true },
+          { id: "CoBa_Peer", name: "Cô Ba (Máy 2)", ready: true, characterId: "co_ba", weaponId: "chao_chong_dinh", hp: 3, hitsLanded: 0, alive: true }
+        ],
+        peerCount: 2,
+        roomCode: "HM4826",
+        roundId: 0,
+        sendFromClient(msg) {
+          if (!msg || typeof msg !== "object") return;
+          if (msg.type === "join") {
+            if (msg.v && msg.v !== 1 && msg.v !== 2 && msg.v !== 3) {
+              handleServerMessage({ v: 1, type: "error", code: "protocol_mismatch" });
+              return;
+            }
+            const myId = (msg.token || "guest:Nam").replace(/^guest:/, "");
+            this.peers[0].id = myId;
+            this.peers[0].name = myId;
+            this.peers[0].characterId = onlineState.characterId || "nam_lang";
+            this.peers[0].weaponId = onlineState.weaponId || "dep_to_ong";
+            if (msg.roomCode && msg.roomCode.length === 6) this.roomCode = msg.roomCode;
+            const activePeers = this.peers.slice(0, this.peerCount);
+            handleServerMessage({
+              v: 1,
+              type: "room_state",
+              protocolVersion: 1,
+              roomCode: this.roomCode,
+              hostId: this.peers[0].id,
+              started: this.roundId > 0,
+              reconnectToken: "loopback_rtok_" + Date.now(),
+              players: activePeers.map((p, i) => ({
+                id: p.id, name: p.name, slot: i + 1, ready: p.ready,
+                characterId: p.characterId, weaponId: p.weaponId
+              })),
+              config: { maxPlayers: 6, minPlayersToStart: 2, startHp: 3, placeSeconds: 5, maxRounds: 5 }
+            });
+          } else if (msg.type === "room_ready") {
+            this.peers[0].ready = !!msg.ready;
+            this.peers[0].characterId = onlineState.characterId;
+            this.peers[0].weaponId = onlineState.weaponId;
+            const activePeers = this.peers.slice(0, this.peerCount);
+            handleServerMessage({
+              v: 1,
+              type: "room_state",
+              protocolVersion: 1,
+              roomCode: this.roomCode,
+              hostId: this.peers[0].id,
+              started: false,
+              players: activePeers.map((p, i) => ({
+                id: p.id, name: p.name, slot: i + 1, ready: p.ready,
+                characterId: p.characterId, weaponId: p.weaponId
+              })),
+              config: { maxPlayers: 6, minPlayersToStart: 2, startHp: 3, placeSeconds: 5, maxRounds: 5 }
+            });
+          } else if (msg.type === "start") {
+            if (this.peerCount < 2) {
+              handleServerMessage({ v: 1, type: "error", code: "not_enough_players" });
+              return;
+            }
+            this.roundId = 1;
+            this.peers.forEach(p => { p.hp = 3; p.hitsLanded = 0; p.alive = true; });
+            handleServerMessage({
+              v: 1,
+              type: "round_start",
+              roundId: this.roundId,
+              deadline: Date.now() + 5000
+            });
+          } else if (msg.type === "commit") {
+            onlineState.hasCommittedThisRound = true;
+          } else if (msg.type === "lock_ready") {
+            onlineState.isLockedThisRound = true;
+            this.resolveCurrentRound();
+          } else if (msg.type === "emote") {
+            handleServerMessage({
+              v: 1,
+              type: "emote",
+              playerId: this.peers[0].id,
+              emoteId: msg.emoteId || "happy",
+              phase: onlineState.phase === "reveal" ? "reveal" : "placing"
+            });
+          } else if (msg.type === "quick_match") {
+            handleServerMessage({ v: 1, type: "quick_match_waiting", quickMatchHintSeconds: 30 });
+          } else if (msg.type === "leave") {
+            handleServerMessage({ v: 1, type: "quick_match_left" });
+          }
+        },
+        resolveCurrentRound() {
+          const r = Math.max(1, this.roundId || 1);
+          const p1 = this.peers[0];
+          const p2 = this.peers[1];
+          handleServerMessage({
+            v: 1,
+            type: "reveal",
+            roundId: r,
+            players: [
+              { id: p1.id, position: { x: onlineState.myPos.x, y: onlineState.myPos.y }, aim: { x: onlineState.myAim.x, y: onlineState.myAim.y } },
+              { id: p2.id, position: { x: 1.65, y: 0.15 }, aim: { x: -1.0, y: 0.0 } }
+            ]
+          });
+          setTimeout(() => {
+            p2.hp = Math.max(0, p2.hp - 1);
+            p1.hitsLanded = (p1.hitsLanded || 0) + 1;
+            if (p2.hp <= 0) p2.alive = false;
+            handleServerMessage({
+              v: 1,
+              type: "round_result",
+              roundId: r,
+              hits: [{ shooterId: p1.id, targetId: p2.id, point: { x: 1.4, y: 0.1 }, distance: 3.0 }],
+              players: [
+                { id: p1.id, hp: p1.hp, eliminated: !p1.alive },
+                { id: p2.id, hp: p2.hp, eliminated: !p2.alive }
+              ]
+            });
+            setTimeout(() => {
+              if (!p2.alive || r >= 5) {
+                handleServerMessage({
+                  v: 1,
+                  type: "match_end",
+                  winners: [p1.id],
+                  winnerIds: [p1.id],
+                  rankings: [
+                    { playerId: p1.id, name: p1.name, rank: 1, hp: p1.hp, hitsLanded: p1.hitsLanded, hits: p1.hitsLanded, throws: r, goldReward: 30 },
+                    { playerId: p2.id, name: p2.name, rank: 2, hp: p2.hp, hitsLanded: p2.hitsLanded, hits: p2.hitsLanded, throws: r, goldReward: 10 }
+                  ]
+                });
+              } else {
+                this.roundId = r + 1;
+                handleServerMessage({
+                  v: 1,
+                  type: "round_start",
+                  roundId: this.roundId,
+                  deadline: Date.now() + 5000
+                });
+              }
+            }, 1300);
+          }, 900);
+        }
+      };
+
+      function connectSocket(onOpenSendMsg) {
+        if (onlineState.transportMode === "loopback") {
+          onlineState.connected = true;
+          if (onOpenSendMsg) loopbackHub.sendFromClient(onOpenSendMsg);
+          return;
+        }
+        try {
+          if (onlineState.socket && (onlineState.socket.readyState === WebSocket.OPEN || onlineState.socket.readyState === WebSocket.CONNECTING)) {
+            if (onlineState.socket.readyState === WebSocket.OPEN && onOpenSendMsg) {
+              onlineState.socket.send(JSON.stringify(onOpenSendMsg));
+            }
+            return;
+          }
+        } catch (e) {}
+
+        const ws = new WebSocket(onlineState.wsUrl);
+        onlineState.socket = ws;
+        ws.onopen = () => {
+          onlineState.connected = true;
+          hideNetAlert();
+          if (onOpenSendMsg) {
+            ws.send(JSON.stringify(onOpenSendMsg));
+          }
+          renderOnlineRoot();
+        };
+        ws.onmessage = (ev) => {
+          try {
+            const msg = JSON.parse(String(ev.data || "{}"));
+            handleServerMessage(msg);
+          } catch (e) {}
+        };
+        ws.onclose = (ev) => {
+          onlineState.connected = false;
+          const reason = String(ev.reason || "");
+          if (reason === "server_shutdown" || reason === "server_restarting") {
+            showNetAlert("server_shutdown", localizeError("server_shutdown"));
+          } else if (reason === "session_replaced") {
+            showNetAlert("session_replaced", localizeError("session_replaced"));
+          } else if (onlineState.phase !== "disconnected" && onlineState.phase !== "match_end" && onlineState.reconnectToken) {
+            startReconnectCountdown(30);
+          }
+          renderOnlineRoot();
+        };
+        ws.onerror = () => {};
+      }
+
+      function sendProtocol(msg) {
+        const payload = Object.assign({ v: 1 }, msg);
+        if (onlineState.transportMode === "loopback") {
+          loopbackHub.sendFromClient(payload);
+          return;
+        }
+        if (onlineState.socket && onlineState.socket.readyState === WebSocket.OPEN) {
+          onlineState.socket.send(JSON.stringify(payload));
+        } else {
+          connectSocket(payload);
+        }
+      }
+
+      function handleServerMessage(msg) {
+        if (!msg || typeof msg !== "object") return;
+        const t = msg.type;
+        if (t === "hello") {
+          return;
+        }
+        if (t === "room_state") {
+          if (msg.protocolVersion && msg.protocolVersion !== 1 && msg.protocolVersion !== 2 && msg.protocolVersion !== 3) {
+            showNetAlert("protocol_mismatch", localizeError("protocol_mismatch"));
+            return;
+          }
+          onlineState.lastErrorCode = "";
+          onlineState.lastErrorText = "";
+          onlineState.roomCode = msg.roomCode || onlineState.roomCode;
+          onlineState.hostId = msg.hostId || "";
+          onlineState.started = !!msg.started;
+          if (msg.reconnectToken) saveReconnectToken(msg.reconnectToken);
+          onlineState.players = Array.isArray(msg.players) ? msg.players : [];
+          if (!msg.started || onlineState.phase === "disconnected" || onlineState.phase === "queueing") {
+            onlineState.phase = "lobby";
+            onlineState.mode = "lobby";
+            const allRdy = onlineState.players.length >= 2 && onlineState.players.every(p => p.ready);
+            onlineState.countdownSec = allRdy ? 3 : 0;
+          }
+          hideNetAlert();
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "quick_match_waiting") {
+          onlineState.phase = "queueing";
+          onlineState.mode = "quick";
+          onlineState.quickWaitSec = 0;
+          onlineState.quickHintShown = false;
+          if (_quickWaitTimer) clearInterval(_quickWaitTimer);
+          _quickWaitTimer = setInterval(() => {
+            onlineState.quickWaitSec++;
+            renderOnlineRoot();
+          }, 1000);
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "quick_match_hint") {
+          onlineState.quickHintShown = true;
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "quick_match_left") {
+          if (_quickWaitTimer) { clearInterval(_quickWaitTimer); _quickWaitTimer = null; }
+          onlineState.phase = "disconnected";
+          onlineState.mode = "create";
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "round_start") {
+          if (_quickWaitTimer) { clearInterval(_quickWaitTimer); _quickWaitTimer = null; }
+          onlineState.lastErrorCode = "";
+          onlineState.lastErrorText = "";
+          onlineState.phase = "placing";
+          onlineState.mode = "match";
+          onlineState.roundId = Number(msg.roundId) || 1;
+          onlineState.deadlineMs = Number(msg.deadline) || (Date.now() + 5000);
+          onlineState.hasCommittedThisRound = false;
+          onlineState.isLockedThisRound = false;
+          onlineState.revealedPlayers = [];
+          onlineState.emotesByPlayer = {};
+          hideNetAlert();
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "reveal") {
+          onlineState.lastErrorCode = "";
+          onlineState.lastErrorText = "";
+          onlineState.phase = "reveal";
+          onlineState.mode = "match";
+          onlineState.revealedPlayers = Array.isArray(msg.players) ? msg.players : [];
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "round_result") {
+          onlineState.lastErrorCode = "";
+          onlineState.lastErrorText = "";
+          onlineState.phase = "round_result";
+          onlineState.mode = "match";
+          onlineState.lastRoundResult = msg;
+          if (Array.isArray(msg.players)) {
+            msg.players.forEach(rp => {
+              const p = onlineState.players.find(x => x.id === rp.id);
+              if (p) {
+                p.hp = rp.hp;
+                p.eliminated = rp.eliminated;
+              }
+            });
+          }
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "match_end") {
+          onlineState.lastErrorCode = "";
+          onlineState.lastErrorText = "";
+          onlineState.phase = "match_end";
+          onlineState.mode = "result";
+          onlineState.lastMatchEnd = msg;
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "emote") {
+          onlineState.emotesByPlayer[msg.playerId] = {
+            emoteId: msg.emoteId,
+            visibleOnCharacter: onlineState.phase === "reveal" || msg.phase === "reveal",
+            at: Date.now()
+          };
+          renderOnlineRoot();
+          return;
+        }
+        if (t === "error") {
+          const code = msg.code || "unknown_type";
+          const txt = localizeError(code, msg.remainingSeconds);
+          onlineState.lastErrorCode = code;
+          onlineState.lastErrorText = txt;
+          if (code === "server_restarting" || code === "server_shutdown" || code === "protocol_mismatch" || code === "banned" || code === "session_replaced" || code === "reconnect_invalid") {
+            showNetAlert(code, txt);
+          }
+          renderOnlineRoot();
+          return;
+        }
+      }
+
+      function startReconnectCountdown(seconds) {
+        if (_reconnectTimer) clearInterval(_reconnectTimer);
+        onlineState.reconnectSecLeft = seconds || 30;
+        showNetAlert("reconnecting", `Mất kết nối mạng — đang tự động vào lại phòng (${onlineState.reconnectSecLeft}s)...`);
+        _reconnectTimer = setInterval(() => {
+          onlineState.reconnectSecLeft = Math.max(0, onlineState.reconnectSecLeft - 1);
+          if (onlineState.reconnectSecLeft <= 0) {
+            clearInterval(_reconnectTimer);
+            _reconnectTimer = null;
+            showNetAlert("reconnect_invalid", localizeError("reconnect_invalid"));
+          } else {
+            showNetAlert("reconnecting", `Mất kết nối mạng — đang tự động vào lại phòng (${onlineState.reconnectSecLeft}s)...`);
+          }
+        }, 1000);
+      }
+
+      function triggerReconnectNow() {
+        const rtok = loadReconnectToken();
+        if (!rtok) {
+          showNetAlert("reconnect_invalid", localizeError("reconnect_invalid"));
+          return;
+        }
+        connectSocket({
+          v: 1,
+          type: "join",
+          token: getToken(),
+          reconnectToken: rtok
+        });
+      }
+
+      function showNetAlert(code, messageText) {
+        let shade = document.getElementById("r39-net-alert-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r39-net-alert-shade";
+          document.body.appendChild(shade);
+        }
+        const isReconnecting = code === "reconnecting";
+        const isShutdown = code === "server_shutdown" || code === "server_restarting";
+        const isBanned = code === "banned";
+        const title = isReconnecting ? "ĐANG KẾT NỐI LẠI (30 GIÂY)"
+                    : isShutdown ? "MÁY CHỦ ĐANG BẢO TRÌ / KHỞI ĐỘNG LẠI"
+                    : isBanned ? "TẠM KHÓA DO KHÔNG THAO TÁC (AFK)"
+                    : "THÔNG BÁO KẾT NỐI";
+        shade.innerHTML = `
+          <div class="r38-online-sheet" role="dialog" aria-modal="true" data-alert-code="${code}">
+            <h3>${title}</h3>
+            <p>${messageText}</p>
+            <div class="r38-online-actions">
+              ${isReconnecting ? `<button type="button" class="r39-btn" id="r39-alert-reconnect-btn">VÀO LẠI NGAY</button>` : ""}
+              <button type="button" class="r39-btn" id="r39-alert-bot-btn">CHUYỂN SANG LUYỆN VỚI BOT</button>
+              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">ĐÓNG / VỀ TRANG CHỦ</button>
+            </div>
+          </div>
+        `;
+        shade.classList.add("active");
+        const recBtn = shade.querySelector("#r39-alert-reconnect-btn");
+        if (recBtn) recBtn.addEventListener("click", () => triggerReconnectNow());
+        const botBtn = shade.querySelector("#r39-alert-bot-btn");
+        if (botBtn) botBtn.addEventListener("click", () => {
+          hideNetAlert();
+          closeOnlineRoot();
+          const prac = document.querySelector('#ui-root [data-action="practice"]');
+          if (prac) prac.click();
+        });
+        const clsBtn = shade.querySelector("#r39-alert-close-btn");
+        if (clsBtn) clsBtn.addEventListener("click", () => hideNetAlert());
+      }
+
+      function hideNetAlert() {
+        if (_reconnectTimer) { clearInterval(_reconnectTimer); _reconnectTimer = null; }
+        const shade = document.getElementById("r39-net-alert-shade");
+        if (shade) shade.classList.remove("active");
+      }
+
+      function ensureOnlineRoot() {
+        let el = document.getElementById("r39-online-root");
+        if (!el) {
+          el = document.createElement("div");
+          el.id = "r39-online-root";
+          document.body.appendChild(el);
+        }
+        return el;
+      }
+
+      function closeOnlineRoot() {
+        const el = document.getElementById("r39-online-root");
+        if (el) el.classList.remove("active");
+        if (_tickTimer) { clearInterval(_tickTimer); _tickTimer = null; }
+      }
+
+      function openMode(mode) {
+        onlineState.mode = mode || "create";
+        onlineState.lastErrorCode = "";
+        onlineState.lastErrorText = "";
+        const el = ensureOnlineRoot();
+        el.classList.add("active");
+        if (!_tickTimer) {
+          _tickTimer = setInterval(() => {
+            if (onlineState.phase === "placing" && onlineState.deadlineMs > 0) {
+              const sec = Math.max(0, Math.ceil((onlineState.deadlineMs - Date.now()) / 1000));
+              if (sec !== onlineState.secondsLeft) {
+                onlineState.secondsLeft = sec;
+                const timerEl = document.getElementById("r39-live-sec");
+                if (timerEl) timerEl.textContent = sec + "s";
+              }
+            }
+          }, 200);
+        }
+        if (mode === "quick") {
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6" });
+        } else if (mode === "create") {
+          sendProtocol({
+            type: "join",
+            token: getToken(),
+            characterId: onlineState.characterId,
+            weaponId: onlineState.weaponId,
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6"
+          });
+        }
+        renderOnlineRoot();
+      }
+
+      function renderOnlineRoot() {
+        const root = ensureOnlineRoot();
+        if (!root.classList.contains("active")) return;
+
+        const isLab = onlineState.transportMode === "loopback";
+        const labBarHtml = isLab ? `
+          <div class="r39-card" id="r39-lab-bar" style="padding:8px;border-color:#19d5d8;">
+            <div style="font-size:11px;font-weight:900;color:#19d5d8;margin-bottom:6px;">BẢNG ĐIỀU KHIỂN LAB 2 NGƯỜI (?lab=1 • LoopbackTransport)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <button type="button" class="r39-btn secondary" data-lab="1p" style="padding:4px 8px;font-size:11px;">1 Người (Thiếu người)</button>
+              <button type="button" class="r39-btn secondary" data-lab="2p" style="padding:4px 8px;font-size:11px;">2 Người + Sẵn sàng</button>
+              <button type="button" class="r39-btn secondary" data-lab="reconnect" style="padding:4px 8px;font-size:11px;">Mất mạng 30s</button>
+              <button type="button" class="r39-btn secondary" data-lab="shutdown" style="padding:4px 8px;font-size:11px;">Máy chủ bảo trì</button>
+              <button type="button" class="r39-btn secondary" data-lab="mismatch" style="padding:4px 8px;font-size:11px;">Lệch giao thức</button>
+              <button type="button" class="r39-btn secondary" data-lab="afk" style="padding:4px 8px;font-size:11px;">AFK 2 vòng (Khóa 120s)</button>
+            </div>
+          </div>
+        ` : "";
+
+        const errBannerHtml = onlineState.lastErrorText ? `
+          <div class="r39-card" data-name="online-error-banner" style="border-color:#f87171;background:rgba(127,29,29,0.88);padding:9px 12px;">
+            <div style="font-weight:900;font-size:13px;color:#fef2f2;">${onlineState.lastErrorText}</div>
+          </div>
+        ` : "";
+
+        let bodyHtml = "";
+
+        if (onlineState.mode === "join") {
+          const slots = [];
+          for (let i = 0; i < 6; i++) {
+            const ch = onlineState.joinInputCode[i] || "";
+            slots.push(`<div class="r39-code-slot ${ch ? "filled" : ""}">${ch || "•"}</div>`);
+          }
+          const keysHtml = KEYPAD_CHARS.map(k => `<button type="button" class="r39-key" data-key="${k}">${k}</button>`).join("");
+          bodyHtml = `
+            <div class="r39-card" data-screen="online-join">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <b style="font-size:15px;color:#ffcd38;">NHẬP MÃ PHÒNG 6 KÝ TỰ</b>
+                <small style="color:#94a3b8;font-weight:700;">Không dùng 0, O, 1, I, L</small>
+              </div>
+              <div class="r39-code-boxes" data-name="room-code-boxes">${slots.join("")}</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+                <button type="button" class="r39-btn secondary" data-on-act="paste-code">DÁN MÃ</button>
+                <button type="button" class="r39-btn secondary" data-on-act="back-key">XÓA 1</button>
+                <button type="button" class="r39-btn secondary" data-on-act="clear-code">XÓA HẾT</button>
+              </div>
+              <div class="r39-keypad" data-name="room-code-keypad">${keysHtml}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                <button type="button" class="r39-btn secondary" data-on-act="switch-create">TẠO PHÒNG MỚI</button>
+                <button type="button" class="r39-btn" data-on-act="submit-join" ${onlineState.joinInputCode.length === 6 ? "" : "disabled"}>VÀO PHÒNG NGAY</button>
+              </div>
+            </div>
+          `;
+        } else if (onlineState.mode === "quick") {
+          bodyHtml = `
+            <div class="r39-card" data-screen="online-quick" style="text-align:center;padding:20px 14px;">
+              <img src="./assets/ui_icon_trophy.png" alt="" width="48" height="48" style="margin-bottom:8px;">
+              <h3 style="margin:0 0 6px;color:#ffcd38;font-size:18px;">ĐANG TÌM ĐỐI THỦ TRỰC TUYẾN…</h3>
+              <p style="margin:0 0 12px;color:#cbd5e1;font-size:13.5px;">Đã chờ: <b>${onlineState.quickWaitSec} giây</b> • Phòng chỉ ghép người thật (2–6 người, không thêm bot)</p>
+              ${onlineState.quickHintShown ? `
+                <div class="r39-card" data-name="quick-match-hint" style="border-color:#ffcd38;background:rgba(68,50,14,0.85);margin-bottom:12px;">
+                  <b style="color:#fde047;display:block;margin-bottom:4px;">Chưa tìm thấy đối thủ sau 30 giây!</b>
+                  <span style="font-size:12.5px;color:#fff8e8;">Bạn có thể tiếp tục chờ hoặc chuyển sang chế độ <b>Luyện với Bot</b> ngay.</span>
+                </div>
+              ` : ""}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <button type="button" class="r39-btn danger" data-on-act="leave-quick">HỦY TÌM TRẬN</button>
+                <button type="button" class="r39-btn" data-on-act="go-bot">LUYỆN VỚI BOT</button>
+              </div>
+            </div>
+          `;
+        } else if (onlineState.mode === "lobby" || onlineState.mode === "create") {
+          const players = onlineState.players || [];
+          const pCount = players.length;
+          const myPlayer = players.find(p => p.id === onlineState.playerName) || players[0];
+          const takenChars = new Set(players.filter(p => p !== myPlayer).map(p => p.characterId).filter(Boolean));
+          const slotsHtml = [];
+          for (let i = 0; i < 6; i++) {
+            const p = players[i];
+            if (p) {
+              const chObj = CHARACTERS.find(c => c.id === p.characterId) || CHARACTERS[i % CHARACTERS.length];
+              const isHost = (onlineState.hostId && p.id === onlineState.hostId) || i === 0;
+              slotsHtml.push(`
+                <div class="r39-slot-card occupied ${p.ready ? "ready" : ""}" data-slot="${i + 1}">
+                  <img class="r39-slot-avatar" src="${chObj.head}" alt="${p.name}">
+                  <div class="r39-slot-meta">
+                    <b>${isHost ? `<img src="./assets/ui_icon_crown.png" width="15" height="15" alt="Host">` : ""}${p.name}</b>
+                    <small>${p.ready ? "✓ SẴN SÀNG" : "Đang chọn nhân vật…"}</small>
+                  </div>
+                </div>
+              `);
+            } else {
+              slotsHtml.push(`
+                <div class="r39-slot-card" data-slot="${i + 1}">
+                  <div class="r39-slot-avatar" style="display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:900;">${i + 1}</div>
+                  <div class="r39-slot-meta">
+                    <b style="color:#64748b;">Ô trống #${i + 1}</b>
+                    <small>Chờ người chơi…</small>
+                  </div>
+                </div>
+              `);
+            }
+          }
+
+          const charStripHtml = CHARACTERS.map(c => {
+            const isSelected = onlineState.characterId === c.id;
+            const isTaken = takenChars.has(c.id);
+            return `
+              <button type="button" class="r39-char-pick ${isSelected ? "selected" : ""} ${isTaken ? "taken" : ""}" data-char-pick="${c.id}">
+                <img src="${c.head}" alt="${c.name}">
+                <span>${c.name}${c.tam ? " (TẠM)" : ""}</span>
+                ${isTaken ? `<small style="color:#f87171;font-size:9.5px;">ĐÃ CHỌN</small>` : ""}
+              </button>
+            `;
+          }).join("");
+
+          const weaponStripHtml = WEAPONS.map(w => {
+            const isSelected = onlineState.weaponId === w.id;
+            return `
+              <button type="button" class="r39-char-pick ${isSelected ? "selected" : ""}" data-weapon-pick="${w.id}">
+                <img src="${w.icon}" alt="${w.name}" style="border-radius:6px;">
+                <span>${w.name}</span>
+                <small style="color:#38bdf8;font-size:9px;">${w.fx}</small>
+              </button>
+            `;
+          }).join("");
+
+          const needMore = pCount < 2;
+          const myReady = !!(myPlayer && myPlayer.ready);
+          bodyHtml = `
+            <div class="r39-card" data-screen="online-lobby">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                <div>
+                  <span style="font-size:11.5px;color:#94a3b8;font-weight:800;">MÃ PHÒNG (2–6 NGƯỜI):</span>
+                  <strong style="font-size:20px;color:#ffcd38;margin-left:6px;letter-spacing:1.5px;" data-name="lobby-room-code">${onlineState.roomCode || "ĐANG TẠO…"}</strong>
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <button type="button" class="r39-btn secondary" data-on-act="copy-code">SAO CHÉP</button>
+                  <button type="button" class="r39-btn secondary" data-on-act="switch-join">NHẬP MÃ</button>
+                </div>
+              </div>
+
+              ${onlineState.countdownSec > 0 ? `
+                <div class="r39-card" data-name="lobby-countdown" style="background:rgba(23,185,135,0.22);border-color:#17b987;text-align:center;padding:6px;margin-bottom:8px;">
+                  <b style="color:#6ee7b7;font-size:14px;">TẤT CẢ ĐÃ SẴN SÀNG • BẮT ĐẦU SAU ${onlineState.countdownSec} GIÂY…</b>
+                </div>
+              ` : ""}
+
+              <div class="r39-lobby-grid" data-name="lobby-slots">${slotsHtml.join("")}</div>
+
+              ${needMore ? `
+                <div class="r39-card" data-name="not-enough-players-box" style="margin-top:8px;border-color:#f59e0b;background:rgba(68,40,10,0.75);display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                  <div style="font-size:12px;color:#fef3c7;">
+                    <b>Đang chờ người chơi (${pCount}/6)</b> • Cần ít nhất 2 người thật để bắt đầu trận.
+                  </div>
+                  <button type="button" class="r39-btn" data-on-act="go-bot" style="flex-shrink:0;">LUYỆN VỚI BOT</button>
+                </div>
+              ` : ""}
+
+              <div style="margin-top:8px;">
+                <b style="font-size:12px;color:#ffcd38;">CHỌN NHÂN VẬT CỦA BẠN (KHÔNG TRÙNG TRONG PHÒNG):</b>
+                <div class="r39-char-strip">${charStripHtml}</div>
+              </div>
+
+              <div style="margin-top:8px;">
+                <b style="font-size:12px;color:#19d5d8;">TRANG BỊ VŨ KHÍ (CHỈ ĐỔI HÌNH ẢNH / ÂM THANH):</b>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:4px;">${weaponStripHtml}</div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                <button type="button" class="r39-btn secondary" data-on-act="toggle-ready" data-name="btn-lobby-ready">
+                  ${myReady ? "HỦY SẴN SÀNG" : "SẴN SÀNG"}
+                </button>
+                <button type="button" class="r39-btn" data-on-act="host-start" data-name="btn-lobby-start" ${needMore ? "disabled" : ""}>
+                  BẮT ĐẦU TRẬN (${pCount}/6)
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (onlineState.mode === "match") {
+          const players = onlineState.players.length ? onlineState.players : loopbackHub.peers;
+          const cardsHtml = players.map((p, idx) => {
+            const chObj = CHARACTERS.find(c => c.id === p.characterId) || CHARACTERS[idx % CHARACTERS.length];
+            const hp = Math.max(0, Number(p.hp ?? 3));
+            const hearts = [0, 1, 2].map(h => `<img src="./assets/${h < hp ? "ui_icon_heart_full.png" : "ui_icon_heart_break.png"}" width="14" height="14" alt="hp">`).join("");
+            const em = onlineState.emotesByPlayer[p.id];
+            const emoteBadge = em ? `<span class="r39-emote-bubble" data-name="card-emote">${em.emoteId.toUpperCase()}</span>` : "";
+            return `
+              <div class="r39-slot-card occupied" data-player-card="${p.id}" style="min-height:48px;padding:6px 8px;">
+                <img class="r39-slot-avatar" src="${chObj.head}" alt="${p.name}" style="width:32px;height:32px;">
+                <div class="r39-slot-meta">
+                  <b>${p.name}${emoteBadge}</b>
+                  <div style="display:flex;align-items:center;gap:3px;">${hearts}${hp <= 0 ? `<span style="color:#f87171;font-size:10px;font-weight:900;margin-left:4px;">BỊ LOẠI</span>` : ""}</div>
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          // Arena actors: during placing, ONLY show local player's placement; during reveal/round_result, show all revealed players!
+          const actorsHtml = [];
+          const myXPercent = Math.round(((onlineState.myPos.x + 4.5) / 9.0) * 100);
+          const myYPercent = Math.round(((2.7 - onlineState.myPos.y) / 5.4) * 100);
+          const myChar = CHARACTERS.find(c => c.id === onlineState.characterId) || CHARACTERS[0];
+          actorsHtml.push(`
+            <div class="r39-arena-actor me" style="left:${Math.max(12, Math.min(88, myXPercent))}%;top:${Math.max(18, Math.min(84, myYPercent))}%;">
+              <img class="actor-avatar" src="${myChar.head}" alt="Bạn">
+              <span class="actor-name">${onlineState.playerName} ${onlineState.isLockedThisRound ? "🔒" : "🎯"}</span>
+            </div>
+          `);
+
+          if ((onlineState.phase === "reveal" || onlineState.phase === "round_result") && Array.isArray(onlineState.revealedPlayers)) {
+            onlineState.revealedPlayers.forEach((rp, idx) => {
+              if (rp.id === onlineState.playerName) return;
+              const rx = Math.round((((rp.position?.x || 1.5) + 4.5) / 9.0) * 100);
+              const ry = Math.round(((2.7 - (rp.position?.y || 0)) / 5.4) * 100);
+              const peerChar = CHARACTERS[(idx + 1) % CHARACTERS.length];
+              actorsHtml.push(`
+                <div class="r39-arena-actor" data-revealed-actor="${rp.id}" style="left:${Math.max(12, Math.min(88, rx))}%;top:${Math.max(18, Math.min(84, ry))}%;">
+                  <img class="actor-avatar" src="${peerChar.head}" alt="${rp.id}">
+                  <span class="actor-name">${rp.id} (LỘ DIỆN!)</span>
+                </div>
+              `);
+            });
+          }
+
+          const rr = onlineState.lastRoundResult;
+          const roundResultOverlayHtml = (onlineState.phase === "round_result" && rr) ? `
+            <div class="r39-card" data-name="round-result-fast-table" style="border-color:#ffcd38;background:rgba(10,20,34,0.96);margin-top:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <b style="color:#ffcd38;font-size:14px;">KẾT QUẢ VÒNG ${rr.roundId || onlineState.roundId}/5</b>
+                <small style="color:#6ee7b7;font-weight:800;">Đọc nhanh 2 giây</small>
+              </div>
+              <div style="font-size:12.5px;color:#fff8e8;margin-bottom:6px;">
+                ${(rr.hits && rr.hits.length)
+                  ? rr.hits.map(h => `<div>🎯 <b>${h.shooterId}</b> ném trúng <b>${h.targetId}</b> (-1 <img src="./assets/ui_icon_heart_break.png" width="14" height="14" style="vertical-align:middle;">)</div>`).join("")
+                  : `<div>💨 Không ai trúng đòn trong vòng này!</div>`}
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                ${(rr.players || []).map(p => `<span style="padding:3px 8px;border-radius:8px;background:#132942;font-size:12px;font-weight:800;">${p.id}: ${p.hp} Tim ${p.eliminated ? "(BỊ LOẠI)" : ""}</span>`).join("")}
+              </div>
+            </div>
+          ` : "";
+
+          const phaseBannerTxt = onlineState.phase === "placing" ? (onlineState.isLockedThisRound ? "ĐÃ KHÓA HƯỚNG NÉM!" : "ĐẶT NHÂN VẬT & CHỌN HƯỚNG (5 GIÂY)")
+                               : onlineState.phase === "reveal" ? "LỘ DIỆN VỊ TRÍ & NÉM!"
+                               : "KẾT QUẢ VÒNG ĐẤU";
+
+          bodyHtml = `
+            <div class="r39-card" data-screen="online-match">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <div>
+                  <b style="color:#ffcd38;font-size:15px;">VÒNG ${onlineState.roundId || 1}/5</b>
+                  <span style="margin-left:8px;font-size:12px;color:#19d5d8;font-weight:800;">${phaseBannerTxt}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <strong id="r39-live-sec" style="padding:4px 10px;border-radius:99px;background:#132942;border:1.5px solid #ffcd38;color:#ffcd38;font-size:14px;">${onlineState.secondsLeft || 5}s</strong>
+                  <button type="button" class="r39-btn secondary" data-on-act="open-inmatch-settings" aria-label="Cài đặt trong trận" style="padding:6px 10px;">
+                    <img src="./assets/ui_icon_gear.png" width="18" height="18" alt="Cài đặt">
+                  </button>
+                </div>
+              </div>
+
+              <div class="r39-lobby-grid" style="margin-bottom:8px;">${cardsHtml}</div>
+
+              <div class="r39-arena-box" id="r39-online-arena" data-name="online-arena">
+                ${actorsHtml.join("")}
+                <div style="position:absolute;bottom:6px;left:8px;right:8px;text-align:center;font-size:11px;color:#fde68a;font-weight:800;text-shadow:0 1px 3px #000;pointer-events:none;">
+                  Chạm sân để đặt vị trí (${onlineState.myPos.x.toFixed(1)}, ${onlineState.myPos.y.toFixed(1)}) • Đối phương ẩn hoàn toàn tới khi Lộ diện
+                </div>
+              </div>
+
+              ${roundResultOverlayHtml}
+
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;">
+                <div class="r39-emote-bar" data-name="emote-bar">
+                  <button type="button" class="r39-emote-btn" data-emote="happy">Vui</button>
+                  <button type="button" class="r39-emote-btn" data-emote="thumbs_up">Hay</button>
+                  <button type="button" class="r39-emote-btn" data-emote="surprised">Ồ!</button>
+                </div>
+                <button type="button" class="r39-btn" data-on-act="lock-ready" data-name="btn-lock-ready" ${onlineState.phase !== "placing" || onlineState.isLockedThisRound ? "disabled" : ""}>
+                  ${onlineState.isLockedThisRound ? "ĐÃ KHÓA ✓" : "KHÓA HƯỚNG NÉM"}
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (onlineState.mode === "result") {
+          const endMsg = onlineState.lastMatchEnd || {};
+          const rawRows = (Array.isArray(endMsg.rankings) && endMsg.rankings.length)
+            ? endMsg.rankings
+            : (onlineState.players || []).map((p, i) => ({
+                playerId: p.id, name: p.name, hp: p.hp ?? (i === 0 ? 3 : 0),
+                hitsLanded: p.hitsLanded ?? (i === 0 ? 3 : 1), goldReward: i === 0 ? 30 : 10
+              }));
+          const ranked = computeCoRankings(rawRows);
+          const podiumTop3 = ranked.slice(0, 3);
+          const podiumHtml = podiumTop3.map((r, idx) => `
+            <div class="r39-podium-box rank-${r.rank}">
+              <img src="./assets/${r.rank === 1 ? "ui_icon_crown.png" : "ui_icon_trophy.png"}" width="24" height="24" alt="">
+              <b style="font-size:12.5px;color:#ffcd38;">HẠNG #${r.rank}</b>
+              <span style="font-size:12px;font-weight:800;color:#fff8e8;">${r.name}</span>
+              <small style="font-size:10.5px;color:#94a3b8;">${r.hp} Tim • ${r.hitsLanded} Trúng</small>
+            </div>
+          `).join("");
+
+          const tableRowsHtml = ranked.map(r => `
+            <tr class="${r.rank === 1 ? "co-rank-1" : ""}">
+              <td>#${r.rank}</td>
+              <td>${r.name}</td>
+              <td>${r.alive ? "Sống sót" : "Bị loại"}</td>
+              <td>${r.hp}</td>
+              <td>${r.hitsLanded}</td>
+              <td>+${r.goldReward} <img src="./assets/ui_icon_coin.png" width="12" height="12" style="vertical-align:middle;"></td>
+            </tr>
+          `).join("");
+
+          bodyHtml = `
+            <div class="r39-card" data-screen="online-match-end">
+              <div style="text-align:center;margin-bottom:6px;">
+                <h3 style="margin:0;font-size:20px;color:#ffcd38;">KẾT THÚC TRẬN ĐẤU</h3>
+                <small style="color:#6ee7b7;font-weight:800;">Xếp hạng theo luật: Sống sót → Tim còn → Số lần ném trúng (Hỗ trợ đồng hạng)</small>
+              </div>
+              <div class="r39-podium-row" data-name="match-end-podium">${podiumHtml}</div>
+              <table class="r39-rank-table" data-name="match-end-table">
+                <thead>
+                  <tr><th>Hạng</th><th>Người chơi</th><th>Trạng thái</th><th>Tim</th><th>Trúng</th><th>Vàng</th></tr>
+                </thead>
+                <tbody>${tableRowsHtml}</tbody>
+              </table>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                <button type="button" class="r39-btn" data-on-act="play-again" data-name="btn-match-replay">CHƠI LẠI</button>
+                <button type="button" class="r39-btn secondary" data-on-act="close-online" data-name="btn-match-home">VỀ TRANG CHỦ</button>
+              </div>
+            </div>
+          `;
+        }
+
+        root.innerHTML = `
+          <div class="r39-on-wrap">
+            <div class="r39-on-header">
+              <h2>TRỰC TUYẾN • ${onlineState.transportMode === "loopback" ? "CHẾ ĐỘ LAB 2P" : "MÁY CHỦ THẬT"}</h2>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:6px 10px;font-size:12px;">HỒ SƠ & CỬA HÀNG</button>
+                <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:6px 10px;font-size:12px;">ĐÓNG</button>
+              </div>
+            </div>
+            ${labBarHtml}
+            ${errBannerHtml}
+            ${bodyHtml}
+          </div>
+        `;
+
+        const arena = root.querySelector("#r39-online-arena");
+        if (arena) {
+          arena.addEventListener("pointerdown", (ev) => {
+            if (onlineState.phase !== "placing" || onlineState.isLockedThisRound) return;
+            const rect = arena.getBoundingClientRect();
+            const nx = ((ev.clientX - rect.left) / Math.max(1, rect.width)) * 9.0 - 4.5;
+            const ny = 2.7 - ((ev.clientY - rect.top) / Math.max(1, rect.height)) * 5.4;
+            onlineState.myPos = {
+              x: Math.max(-4.1, Math.min(4.1, Number(nx.toFixed(2)))),
+              y: Math.max(-2.3, Math.min(2.3, Number(ny.toFixed(2))))
+            };
+            onlineState.myAim = { x: onlineState.myPos.x < 0 ? 1.0 : -1.0, y: 0.0 };
+            sendProtocol({
+              type: "commit",
+              roundId: onlineState.roundId || 1,
+              positionX: onlineState.myPos.x,
+              positionY: onlineState.myPos.y,
+              hasAim: true,
+              aimX: onlineState.myAim.x,
+              aimY: onlineState.myAim.y
+            });
+            renderOnlineRoot();
+          });
+        }
+      }
+
+      // G9: Profile & Cosmetic Shop Modal + In-Match Settings Modal (never pauses timer)
+      function openProfileShopModal() {
+        let shade = document.getElementById("r39-profile-shop-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r39-profile-shop-shade";
+          shade.style.cssText = "position:fixed;inset:0;z-index:86;background:rgba(6,12,22,0.88);display:flex;align-items:center;justify-content:center;padding:14px;pointer-events:auto;";
+          document.body.appendChild(shade);
+        }
+        const selectedWeapon = WEAPONS.find(w => w.id === onlineState.weaponId) || WEAPONS[0];
+        shade.innerHTML = `
+          <div class="r39-card" role="dialog" aria-modal="true" data-name="profile-shop-modal" style="width:min(100%,410px);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#ffcd38;font-size:17px;">HỒ SƠ & CỬA HÀNG TRANG TRÍ</h3>
+              <span style="padding:4px 10px;border-radius:99px;background:#132942;border:1.5px solid #ffcd38;color:#ffcd38;font-weight:900;font-size:13px;">
+                <img src="./assets/ui_icon_coin.png" width="14" height="14" style="vertical-align:middle;"> 500 Vàng (Mẫu)
+              </span>
+            </div>
+            <div class="r39-card" style="margin-bottom:8px;padding:8px 10px;border-color:#19d5d8;">
+              <div style="font-size:12.5px;color:#fff8e8;">Người chơi: <b>${onlineState.playerName}</b> • Nhân vật: <b>${(CHARACTERS.find(c => c.id === onlineState.characterId) || CHARACTERS[0]).name}</b></div>
+              <div style="font-size:12px;color:#6ee7b7;margin-top:3px;" data-name="equipped-fx-badge">
+                ✨ Vũ khí đang trang bị: <b>${selectedWeapon.name}</b> (${selectedWeapon.fx})
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+              ${WEAPONS.map(w => {
+                const eq = w.id === onlineState.weaponId;
+                return `
+                  <div class="r39-slot-card occupied ${eq ? "ready" : ""}" style="justify-content:space-between;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <img src="${w.icon}" width="38" height="38" alt="${w.name}" style="border-radius:8px;border:1.5px solid #ffcd38;">
+                      <div>
+                        <b style="font-size:13px;color:#fff8e8;display:block;">${w.name}</b>
+                        <small style="color:#38bdf8;font-size:11px;">${w.fx} • Không đổi sát thương/tầm bay</small>
+                      </div>
+                    </div>
+                    <button type="button" class="r39-btn ${eq ? "secondary" : ""}" data-shop-equip="${w.id}" style="padding:6px 10px;font-size:12px;">
+                      ${eq ? "ĐANG DÙNG" : "TRANG BỊ"}
+                    </button>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <button type="button" class="r39-btn secondary" id="r39-close-profile-shop" style="width:100%;">ĐÓNG HỒ SƠ & CỬA HÀNG</button>
+          </div>
+        `;
+        shade.style.display = "flex";
+        shade.querySelectorAll("[data-shop-equip]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            onlineState.weaponId = btn.dataset.shopEquip || "dep_to_ong";
+            openProfileShopModal();
+            renderOnlineRoot();
+          });
+        });
+        const cls = shade.querySelector("#r39-close-profile-shop");
+        if (cls) cls.addEventListener("click", () => { shade.style.display = "none"; });
+      }
+
+      function openInMatchSettingsModal() {
+        let shade = document.getElementById("r39-inmatch-settings-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r39-inmatch-settings-shade";
+          shade.style.cssText = "position:fixed;inset:0;z-index:87;background:rgba(6,12,22,0.82);display:flex;align-items:center;justify-content:center;padding:14px;pointer-events:auto;";
+          document.body.appendChild(shade);
+        }
+        shade.innerHTML = `
+          <div class="r39-card" role="dialog" aria-modal="true" data-name="inmatch-settings-modal" style="width:min(100%,380px);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <h3 style="margin:0;color:#ffcd38;font-size:17px;">CÀI ĐẶT TRONG TRẬN</h3>
+              <span style="padding:3px 8px;border-radius:99px;background:rgba(23,185,135,0.22);border:1px solid #17b987;color:#6ee7b7;font-size:11.5px;font-weight:900;">
+                ⏱ Không dừng đồng hồ vòng (${onlineState.secondsLeft || 5}s)
+              </span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+              <button type="button" class="r39-btn secondary" id="r39-im-toggle-rm">Giảm chuyển động: ${document.body.classList.contains("r38-reduced-motion") ? "BẬT" : "TẮT"}</button>
+              <button type="button" class="r39-btn danger" id="r39-im-leave">RỜI PHÒNG ĐẤU</button>
+              <button type="button" class="r39-btn" id="r39-im-resume">TIẾP TỤC TRẬN ĐẤU</button>
+            </div>
+          </div>
+        `;
+        shade.style.display = "flex";
+        shade.querySelector("#r39-im-toggle-rm").addEventListener("click", (ev) => {
+          document.body.classList.toggle("r38-reduced-motion");
+          ev.currentTarget.textContent = "Giảm chuyển động: " + (document.body.classList.contains("r38-reduced-motion") ? "BẬT" : "TẮT");
+        });
+        shade.querySelector("#r39-im-leave").addEventListener("click", () => {
+          shade.style.display = "none";
+          sendProtocol({ type: "leave" });
+          closeOnlineRoot();
+        });
+        shade.querySelector("#r39-im-resume").addEventListener("click", () => {
+          shade.style.display = "none";
+        });
+      }
+
+      // G9: Enhance Bot Practice [data-screen="result"] with Podium + Full N-row Co-Rank Table + Replay/Home CTA
+      function enhanceBotResultScreenG9() {
+        const resScreen = document.querySelector('#ui-root [data-screen="result"]');
+        if (!resScreen || resScreen.querySelector(".r39-g9-enhanced")) return;
+        const wrap = document.createElement("div");
+        wrap.className = "r39-g9-enhanced r39-card";
+        wrap.style.cssText = "margin-top:8px;padding:10px;";
+        const rawEvt = window.__hitmeLastMatchEvt || {};
+        const samplePlayers = (Array.isArray(rawEvt.players) && rawEvt.players.length)
+          ? rawEvt.players.map((p, idx) => ({
+              playerId: p.id || ("p" + idx),
+              name: p.name || (idx === 0 ? "Bạn" : ("Bot " + idx)),
+              hp: p.hp ?? (idx === 0 ? 3 : (idx === 1 ? 3 : 0)),
+              hitsLanded: p.hits ?? (idx === 0 ? 2 : (idx === 1 ? 2 : 1)),
+              goldReward: idx <= 1 ? 30 : 10
+            }))
+          : [
+              { playerId: "you", name: "Bạn (Nam Làng)", hp: 2, hitsLanded: 2, goldReward: 30 },
+              { playerId: "bot1", name: "Cô Ba (Đồng hạng)", hp: 2, hitsLanded: 2, goldReward: 30 },
+              { playerId: "bot2", name: "Anh Teen", hp: 1, hitsLanded: 1, goldReward: 15 },
+              { playerId: "bot3", name: "Nữ Năng Động", hp: 0, hitsLanded: 0, goldReward: 5 }
+            ];
+        const ranked = computeCoRankings(samplePlayers);
+        wrap.innerHTML = `
+          <div style="font-size:12px;font-weight:900;color:#ffcd38;margin-bottom:4px;">BẢNG XẾP HẠNG CHI TIẾT (ĐỒNG HẠNG THEO LUẬT v1.2)</div>
+          <table class="r39-rank-table" data-name="bot-match-end-table">
+            <thead>
+              <tr><th>Hạng</th><th>Người chơi</th><th>Trạng thái</th><th>Tim</th><th>Trúng</th></tr>
+            </thead>
+            <tbody>
+              ${ranked.map(r => `
+                <tr class="${r.rank === 1 ? "co-rank-1" : ""}">
+                  <td>#${r.rank}</td>
+                  <td>${r.name}</td>
+                  <td>${r.alive ? "Sống sót" : "Bị loại"}</td>
+                  <td>${r.hp}</td>
+                  <td>${r.hitsLanded}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        const actions = resScreen.querySelector(".result-actions") || resScreen;
+        resScreen.insertBefore(wrap, actions);
+      }
+
+      document.addEventListener("click", (ev) => {
+        const keyBtn = ev.target.closest ? ev.target.closest("[data-key]") : null;
+        if (keyBtn) {
+          const ch = keyBtn.dataset.key || "";
+          if (onlineState.joinInputCode.length < 6 && KEYPAD_CHARS.includes(ch)) {
+            onlineState.joinInputCode += ch;
+            renderOnlineRoot();
+          }
+          return;
+        }
+        const charBtn = ev.target.closest ? ev.target.closest("[data-char-pick]") : null;
+        if (charBtn) {
+          const cid = charBtn.dataset.charPick || "nam_lang";
+          if (charBtn.classList.contains("taken")) {
+            onlineState.lastErrorCode = "duplicate_player";
+            onlineState.lastErrorText = localizeError("duplicate_player");
+            renderOnlineRoot();
+            return;
+          }
+          onlineState.characterId = cid;
+          onlineState.hasConfirmedCharInLobby = true;
+          onlineState.lastErrorText = "";
+          renderOnlineRoot();
+          return;
+        }
+        const weapBtn = ev.target.closest ? ev.target.closest("[data-weapon-pick]") : null;
+        if (weapBtn) {
+          onlineState.weaponId = weapBtn.dataset.weaponPick || "dep_to_ong";
+          renderOnlineRoot();
+          return;
+        }
+        const emoteBtn = ev.target.closest ? ev.target.closest("[data-emote]") : null;
+        if (emoteBtn) {
+          sendProtocol({ type: "emote", emoteId: emoteBtn.dataset.emote || "happy" });
+          return;
+        }
+        const labBtn = ev.target.closest ? ev.target.closest("[data-lab]") : null;
+        if (labBtn) {
+          const act = labBtn.dataset.lab;
+          if (act === "1p") {
+            loopbackHub.peerCount = 1;
+            loopbackHub.sendFromClient({ type: "join", token: getToken() });
+            loopbackHub.sendFromClient({ type: "start" });
+          } else if (act === "2p") {
+            loopbackHub.peerCount = 2;
+            loopbackHub.peers[0].ready = true;
+            loopbackHub.peers[1].ready = true;
+            loopbackHub.sendFromClient({ type: "join", token: getToken() });
+          } else if (act === "reconnect") {
+            startReconnectCountdown(30);
+          } else if (act === "shutdown") {
+            handleServerMessage({ v: 1, type: "error", code: "server_restarting" });
+          } else if (act === "mismatch") {
+            handleServerMessage({ v: 1, type: "error", code: "protocol_mismatch" });
+          } else if (act === "afk") {
+            handleServerMessage({ v: 1, type: "error", code: "banned", remainingSeconds: 120 });
+          }
+          return;
+        }
+        const onAct = ev.target.closest ? ev.target.closest("[data-on-act]") : null;
+        if (onAct) {
+          const act = onAct.dataset.onAct;
+          if (act === "close-online") {
+            closeOnlineRoot();
+          } else if (act === "open-profile-shop") {
+            openProfileShopModal();
+          } else if (act === "open-inmatch-settings") {
+            openInMatchSettingsModal();
+          } else if (act === "switch-join") {
+            onlineState.mode = "join";
+            renderOnlineRoot();
+          } else if (act === "switch-create") {
+            openMode("create");
+          } else if (act === "back-key") {
+            onlineState.joinInputCode = onlineState.joinInputCode.slice(0, -1);
+            renderOnlineRoot();
+          } else if (act === "clear-code") {
+            onlineState.joinInputCode = "";
+            renderOnlineRoot();
+          } else if (act === "paste-code") {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+              navigator.clipboard.readText().then(txt => {
+                const cleaned = String(txt || "").toUpperCase().replace(/[^2-9A-HJ-KM-NP-Z]/g, "").slice(0, 6);
+                if (cleaned) {
+                  onlineState.joinInputCode = cleaned;
+                  renderOnlineRoot();
+                }
+              }).catch(() => {});
+            }
+          } else if (act === "submit-join") {
+            if (onlineState.joinInputCode.length === 6) {
+              sendProtocol({
+                type: "join",
+                token: getToken(),
+                roomCode: onlineState.joinInputCode,
+                characterId: onlineState.characterId,
+                weaponId: onlineState.weaponId,
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6"
+              });
+            }
+          } else if (act === "copy-code") {
+            try { if (navigator.clipboard) navigator.clipboard.writeText(onlineState.roomCode || ""); } catch (e) {}
+          } else if (act === "toggle-ready") {
+            const me = (onlineState.players || []).find(p => p.id === onlineState.playerName) || onlineState.players[0];
+            const nextRdy = !(me && me.ready);
+            sendProtocol({
+              type: "room_ready",
+              ready: nextRdy,
+              characterId: onlineState.characterId,
+              weaponId: onlineState.weaponId
+            });
+          } else if (act === "host-start") {
+            sendProtocol({ type: "start" });
+          } else if (act === "lock-ready") {
+            if (!onlineState.hasCommittedThisRound) {
+              sendProtocol({
+                type: "commit",
+                roundId: onlineState.roundId || 1,
+                positionX: onlineState.myPos.x,
+                positionY: onlineState.myPos.y,
+                hasAim: true,
+                aimX: onlineState.myAim.x,
+                aimY: onlineState.myAim.y
+              });
+            }
+            sendProtocol({ type: "lock_ready", ready: true });
+            onlineState.isLockedThisRound = true;
+            renderOnlineRoot();
+          } else if (act === "leave-quick") {
+            sendProtocol({ type: "leave" });
+          } else if (act === "go-bot") {
+            closeOnlineRoot();
+            const prac = document.querySelector('#ui-root [data-action="practice"]');
+            if (prac) prac.click();
+          } else if (act === "play-again") {
+            openMode("create");
+          }
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const root = document.getElementById("ui-root");
+        if (root && typeof MutationObserver !== "undefined") {
+          const obs = new MutationObserver(() => enhanceBotResultScreenG9());
+          obs.observe(root, { childList: true, subtree: true });
+        }
+        const sp = new URLSearchParams(window.location.search);
+        if (sp.get("name")) {
+          onlineState.playerName = sp.get("name");
+          try { sessionStorage.setItem("hitme_online_name", onlineState.playerName); } catch (e) {}
+        }
+        if (sp.get("lab") === "1" && sp.get("open") === "1") {
+          setTimeout(() => openMode(sp.get("mode") || "create"), 250);
+        }
+      });
+
+      window.__hitmeOnlineUi = {
+        openMode,
+        closeOnlineRoot,
+        openProfileShopModal,
+        openInMatchSettingsModal,
+        state: onlineState,
+        loopbackHub,
+        sendProtocol,
+        handleServerMessage,
+        triggerReconnectNow,
+        showNetAlert,
+        hideNetAlert
+      };
     })();
   </script>
 """
@@ -2408,10 +4325,11 @@ def main() -> int:
     gate_passed = (len(failed_ids) == 0) and (args.channel == "next")
 
     version_file = DEPLOY_WEB_DIR / "VERSION"
-    version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.3"
+    version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.6"
     latest_build = find_latest_release_build()
-    unity_commit = latest_build.name.rsplit("_", 1)[-1]
-    subprocess.run(["git", "cat-file", "-e", f"{unity_commit}^{{commit}}"], cwd=REPO_ROOT, check=True)
+    webgl_runtime_commit = latest_build.name.rsplit("_", 1)[-1]
+    subprocess.run(["git", "cat-file", "-e", f"{webgl_runtime_commit}^{{commit}}"], cwd=REPO_ROOT, check=True)
+    unity_commit = git_rev_short("HEAD")
     webui_commit = git_rev_short(args.codex_ref)
     build_id = f"{unity_commit}-{webui_commit}"
 
