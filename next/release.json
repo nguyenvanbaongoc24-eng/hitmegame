@@ -1,10 +1,21 @@
 {
-  "version": "0.1.0-beta.5.1",
-  "buildId": "b86353b-4f6b253",
-  "createdAt": "2026-11-09T06:40:36.068205+00:00",
-  "unityCommit": "b86353b",
+  "version": "0.1.0-beta.7",
+  "buildId": "22f8dcd-4f6b253",
+  "createdAt": "2026-11-09T17:58:01.466405+00:00",
+  "unityCommit": "22f8dcd",
   "webUiCommit": "4f6b253",
   "catalogVersion": 1,
+  "serverUrl": "wss://hitmegame.onrender.com/ws",
+  "online": true,
+  "betaBanner": true,
+  "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock",
+  "allowedCustomServers": [
+    "wss://hitmegame.onrender.com/ws",
+    "ws://localhost:5000/ws",
+    "ws://127.0.0.1:5000/ws",
+    "ws://localhost:8080/ws",
+    "ws://127.0.0.1:8080/ws"
+  ],
   "gate": {
     "passed": true,
     "failedIds": []
@@ -12,14 +23,14 @@
   "files": [
     {
       "path": "index.html",
-      "size": 87255,
-      "sha256": "f24b070a34129de9801d971651b21c855f0130bd63a6c49c5e84bffbae0c087b",
+      "size": 218142,
+      "sha256": "4302db9facc3e913abada570be97ca77a9099dd98a514d5eb458a4051a38ae4b",
       "contentEncoding": "identity"
     },
     {
       "path": "version.json",
-      "size": 178,
-      "sha256": "5f097ac06f656baaeca70d4f94d7e3f5299867b1f827065af3a495ad84029541",
+      "size": 176,
+      "sha256": "699f11052976e262b3d10ca9f20ca54756c134aed2a12b0d393d9ecf58744fd9",
       "contentEncoding": "identity"
     },
     {
