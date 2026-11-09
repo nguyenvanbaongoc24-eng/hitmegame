@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
+#endif
 
 namespace HitMe.UI
 {
@@ -29,8 +31,10 @@ namespace HitMe.UI
                 _currentLanguage = value;
                 try
                 {
+#if UNITY_5_3_OR_NEWER
                     PlayerPrefs.SetString(PrefKeyLanguage, value == AppLanguage.English ? "EN" : "VI");
                     PlayerPrefs.Save();
+#endif
                 }
                 catch { /* WebGL sandbox */ }
                 OnLanguageChanged?.Invoke();
@@ -50,7 +54,11 @@ namespace HitMe.UI
         {
             try
             {
+#if UNITY_5_3_OR_NEWER
                 string saved = PlayerPrefs.GetString(PrefKeyLanguage, "VI");
+#else
+                string saved = "VI";
+#endif
                 _currentLanguage = string.Equals(saved, "EN", StringComparison.OrdinalIgnoreCase)
                     ? AppLanguage.English
                     : AppLanguage.Vietnamese;
@@ -412,7 +420,31 @@ namespace HitMe.UI
             { "duplicate_player", ("Người chơi đã tồn tại trong phòng!", "Duplicate player in room!") },
             { "invalid_player", ("Thông tin người chơi không hợp lệ!", "Invalid player data!") },
             { "no_response", ("Máy chủ không phản hồi, vui lòng thử lại!", "Server did not respond, please retry!") },
-            { "server_shutdown", ("Máy chủ đang bảo trì hoặc đã đóng kết nối!", "Server shutting down or maintenance!") }
+            { "server_shutdown", ("Máy chủ đang bảo trì hoặc đã đóng kết nối!", "Server shutting down or maintenance!") },
+            { "server_restarting", ("Máy chủ đang khởi động lại, vui lòng thử lại sau ít giây!", "Server is restarting, please try again shortly!") },
+            { "idle_timeout", ("Đã ngắt kết nối do không hoạt động!", "Disconnected due to inactivity!") },
+            { "session_replaced", ("Tài khoản vừa được mở ở một tab hoặc thiết bị khác!", "Session opened in another tab or device!") },
+            { "bad_message", ("Định dạng gói tin gửi lên không hợp lệ!", "Malformed network message!") },
+            { "origin_not_allowed", ("Tên miền trang web chưa được máy chủ cấp phép kết nối!", "Origin domain is not allowed by the server!") },
+            { "client_outdated", ("Phiên bản trò chơi đã cũ, vui lòng tải lại trang!", "Client version outdated, please reload the page!") },
+            { "room_expired", ("Phòng chờ đã hết hạn sau 10 phút không hoạt động!", "Room expired after 10 minutes of inactivity!") },
+            { "server_busy", ("Máy chủ đang đầy, vui lòng thử lại sau ít phút!", "Server is currently full, please try again shortly!") },
+            { "protocol_violation_eliminated", ("Đã bị loại khỏi trận do gửi dữ liệu sai quy định nhiều lần!", "Eliminated from match due to repeated invalid packets!") },
+            { "name_taken_in_room", ("Tên nhân vật này đã có người dùng trong phòng!", "This player name is already taken in the room!") },
+            { "character_not_found", ("Nhân vật đã chọn không tồn tại!", "Selected character does not exist!") },
+            { "character_locked", ("Nhân vật này chưa được mở khóa trên máy chủ!", "This character is locked on the server!") },
+            { "weapon_not_found", ("Vũ khí đã chọn không tồn tại!", "Selected weapon does not exist!") },
+            { "weapon_not_owned", ("Bạn chưa sở hữu vũ khí này!", "You do not own this weapon!") },
+            { "profile_unavailable", ("Không thể tải hồ sơ người chơi từ máy chủ!", "Player profile is currently unavailable!") },
+            { "invalid_chat_id", ("Câu giao tiếp nhanh không hợp lệ!", "Invalid quick-chat message ID!") },
+            { "chat_rate_limited", ("Bạn gửi tin nhắn nhanh quá liên tục!", "Quick-chat rate limit reached!") },
+            { "invalid_friend_target", ("Người chơi nhận lời mời kết bạn không hợp lệ!", "Invalid friend request target!") },
+            { "friend_target_unavailable", ("Người chơi này hiện không trực tuyến trong phòng!", "Target player is not available in the room!") },
+            { "friend_request_pending", ("Lời mời kết bạn đang chờ phản hồi!", "Friend request is already pending!") },
+            { "friend_request_not_found", ("Không tìm thấy lời mời kết bạn!", "Friend request not found!") },
+            { "already_friends", ("Hai bạn đã là bạn bè rồi!", "You are already friends!") },
+            { "friend_request_closed", ("Lời mời kết bạn đã đóng!", "Friend request is closed!") },
+            { "friend_unavailable", ("Tính năng kết bạn tạm thời chưa khả dụng!", "Friend service is temporarily unavailable!") }
         };
 
         public static string GetNetErrorMessage(string code, int remainingSeconds = 0)
