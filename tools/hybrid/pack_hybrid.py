@@ -632,13 +632,12 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
 
 def promote_next_to_root() -> None:
     next_dir = DIST_DIR / "next"
-    if not next_dir.exists() or not (next_dir / "index.html").exists():
-        if (STAGING_DEPLOY_DIR / "next" / "index.html").exists():
-            if next_dir.exists():
-                shutil.rmtree(next_dir)
-            shutil.copytree(STAGING_DEPLOY_DIR / "next", next_dir)
-        else:
-            raise FileNotFoundError("Cannot promote: dist/next/ does not exist")
+    if (STAGING_DEPLOY_DIR / "next" / "release.json").exists():
+        if next_dir.exists():
+            shutil.rmtree(next_dir)
+        shutil.copytree(STAGING_DEPLOY_DIR / "next", next_dir)
+    elif not next_dir.exists() or not (next_dir / "release.json").exists():
+        raise FileNotFoundError("Cannot promote: dist/next/release.json does not exist")
     prev_dir = DIST_DIR / "previous"
     if prev_dir.exists():
         shutil.rmtree(prev_dir)
