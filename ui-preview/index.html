@@ -1609,6 +1609,65 @@
       }
       window.__hitmeOpenOnlineSheet = openOnlineStatusSheet;
 
+      // 3-tap top-right corner FPS + Frame ms + Build ID overlay (or ?fps=1)
+      let _r38TopRightTaps = [];
+      let _r38FpsVisible = new URLSearchParams(location.search).get("fps") === "1";
+      let _r38FpsFrames = 0;
+      let _r38FpsLastT = performance.now();
+      function ensureFpsOverlay() {
+        let el = document.getElementById("r38-fps-overlay");
+        if (!el) {
+          el = document.createElement("div");
+          el.id = "r38-fps-overlay";
+          el.style.cssText = "position:fixed;top:max(58px,calc(env(safe-area-inset-top) + 48px));right:8px;z-index:85;padding:4px 9px;border-radius:8px;background:rgba(6,14,24,0.88);border:1.5px solid #17b987;color:#6ee7b7;font:800 11.5px/1.25 monospace;pointer-events:none;box-shadow:0 3px 10px rgba(0,0,0,0.6);display:none;";
+          document.body.appendChild(el);
+        }
+        el.style.display = _r38FpsVisible ? "block" : "none";
+        return el;
+      }
+      function tickFpsLoop(now) {
+        _r38FpsFrames++;
+        const dt = now - _r38FpsLastT;
+        if (dt >= 500) {
+          if (_r38FpsVisible) {
+            const fps = Math.min(120, Math.round((_r38FpsFrames * 1000) / dt));
+            const ms = (dt / Math.max(1, _r38FpsFrames)).toFixed(1);
+            const bid = window.__hitmeReleaseInfo?.buildId || "";
+            const el = ensureFpsOverlay();
+            el.textContent = `FPS: ${fps} (${ms}ms) • ${bid}`;
+          }
+          _r38FpsFrames = 0;
+          _r38FpsLastT = now;
+        }
+        if (_r38FpsVisible) requestAnimationFrame(tickFpsLoop);
+      }
+      document.addEventListener("pointerdown", (ev) => {
+        const vw = window.innerWidth || 390;
+        const vh = window.innerHeight || 844;
+        if (ev.clientX >= vw * 0.70 && ev.clientY <= vh * 0.20) {
+          const now = performance.now();
+          _r38TopRightTaps = _r38TopRightTaps.filter(t => now - t < 1400);
+          _r38TopRightTaps.push(now);
+          if (_r38TopRightTaps.length >= 3) {
+            _r38TopRightTaps = [];
+            _r38FpsVisible = !_r38FpsVisible;
+            const el = ensureFpsOverlay();
+            if (_r38FpsVisible) {
+              el.textContent = `FPS: 60 (16.7ms) • ${window.__hitmeReleaseInfo?.buildId || ""}`;
+              _r38FpsFrames = 0;
+              _r38FpsLastT = performance.now();
+              requestAnimationFrame(tickFpsLoop);
+            }
+          }
+        }
+      }, true);
+      if (_r38FpsVisible) {
+        document.addEventListener("DOMContentLoaded", () => {
+          ensureFpsOverlay();
+          requestAnimationFrame(tickFpsLoop);
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
         const root = document.getElementById("ui-root");
         if (root && typeof MutationObserver !== "undefined") {
