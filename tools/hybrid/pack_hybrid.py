@@ -2895,6 +2895,22 @@ HOME_VISUAL_PATCH_HTML = """
               handleServerMessage({ v: 1, type: "error", code: "protocol_mismatch" });
               return;
             }
+            if (msg.roomCode === "NOTFND" || msg.roomCode === "BADRM9") {
+              handleServerMessage({ v: 1, type: "error", code: "room_not_found" });
+              return;
+            }
+            if (msg.roomCode === "FULL01" || msg.roomCode === "MAX999") {
+              handleServerMessage({ v: 1, type: "error", code: "room_full" });
+              return;
+            }
+            if (msg.roomCode === "STRT01" || msg.roomCode === "STRT99") {
+              handleServerMessage({ v: 1, type: "error", code: "room_started" });
+              return;
+            }
+            if (msg.roomCode === "EXPIRD" || msg.roomCode === "EXP999") {
+              handleServerMessage({ v: 1, type: "error", code: "room_expired" });
+              return;
+            }
             const myId = (msg.token || "guest:Nam").replace(/^guest:/, "");
             this.peers[0].id = myId;
             this.peers[0].name = myId;
@@ -3197,7 +3213,13 @@ HOME_VISUAL_PATCH_HTML = """
           const txt = localizeError(code, msg.remainingSeconds);
           onlineState.lastErrorCode = code;
           onlineState.lastErrorText = txt;
-          if (code === "server_restarting" || code === "server_shutdown" || code === "protocol_mismatch" || code === "banned" || code === "session_replaced" || code === "reconnect_invalid") {
+          const isModalAlert = code === "server_restarting" || code === "server_shutdown" ||
+                               code === "protocol_mismatch" || code === "banned" ||
+                               code === "session_replaced" || code === "reconnect_invalid" ||
+                               code === "room_full" || code === "room_started" ||
+                               code === "room_not_found" || code === "room_expired" ||
+                               code === "room_limit" || code === "room_code_exhausted";
+          if (isModalAlert) {
             showNetAlert(code, txt);
           }
           renderOnlineRoot();
@@ -3245,22 +3267,30 @@ HOME_VISUAL_PATCH_HTML = """
         const isReconnecting = code === "reconnecting";
         const isShutdown = code === "server_shutdown" || code === "server_restarting";
         const isBanned = code === "banned";
+        const isRoomJoinError = code === "room_full" || code === "room_started" || code === "room_not_found" || code === "room_expired" || code === "room_limit" || code === "room_code_exhausted";
         const title = isReconnecting ? "ĐANG KẾT NỐI LẠI (30 GIÂY)"
                     : isShutdown ? "MÁY CHỦ ĐANG BẢO TRÌ / KHỞI ĐỘNG LẠI"
                     : isBanned ? "TẠM KHÓA DO KHÔNG THAO TÁC (AFK)"
+                    : isRoomJoinError ? "KHÔNG THỂ VÀO PHÒNG"
                     : "THÔNG BÁO KẾT NỐI";
         shade.innerHTML = `
           <div class="r38-online-sheet" role="dialog" aria-modal="true" data-alert-code="${code}">
             <h3>${title}</h3>
             <p>${messageText}</p>
             <div class="r38-online-actions">
+              ${isRoomJoinError ? `<button type="button" class="r39-btn" id="r39-alert-newroom-btn">TẠO PHÒNG MỚI</button>` : ""}
               ${isReconnecting ? `<button type="button" class="r39-btn" id="r39-alert-reconnect-btn">VÀO LẠI NGAY</button>` : ""}
-              <button type="button" class="r39-btn" id="r39-alert-bot-btn">CHUYỂN SANG LUYỆN VỚI BOT</button>
-              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">ĐÓNG / VỀ TRANG CHỦ</button>
+              <button type="button" class="r39-btn ${isRoomJoinError ? "secondary" : ""}" id="r39-alert-bot-btn">LUYỆN VỚI BOT</button>
+              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">ĐÓNG</button>
             </div>
           </div>
         `;
         shade.classList.add("active");
+        const newRoomBtn = shade.querySelector("#r39-alert-newroom-btn");
+        if (newRoomBtn) newRoomBtn.addEventListener("click", () => {
+          hideNetAlert();
+          openMode("create");
+        });
         const recBtn = shade.querySelector("#r39-alert-reconnect-btn");
         if (recBtn) recBtn.addEventListener("click", () => triggerReconnectNow());
         const botBtn = shade.querySelector("#r39-alert-bot-btn");
@@ -3476,8 +3506,9 @@ HOME_VISUAL_PATCH_HTML = """
                   <span style="font-size:11.5px;color:#94a3b8;font-weight:800;">MÃ PHÒNG (2–6 NGƯỜI):</span>
                   <strong style="font-size:20px;color:#ffcd38;margin-left:6px;letter-spacing:1.5px;" data-name="lobby-room-code">${onlineState.roomCode || "ĐANG TẠO…"}</strong>
                 </div>
-                <div style="display:flex;gap:6px;">
-                  <button type="button" class="r39-btn secondary" data-on-act="copy-code">SAO CHÉP</button>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button type="button" class="r39-btn secondary" data-on-act="copy-invite-link" data-name="btn-copy-invite">📋 SAO CHÉP LIÊN KẾT</button>
+                  <button type="button" class="r39-btn" data-on-act="share-invite-link" data-name="btn-share-invite">📤 CHIA SẺ</button>
                   <button type="button" class="r39-btn secondary" data-on-act="switch-join">NHẬP MÃ</button>
                 </div>
               </div>
@@ -3959,11 +3990,55 @@ HOME_VISUAL_PATCH_HTML = """
                 roomCode: onlineState.joinInputCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.6"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
               });
             }
-          } else if (act === "copy-code") {
-            try { if (navigator.clipboard) navigator.clipboard.writeText(onlineState.roomCode || ""); } catch (e) {}
+          } else if (act === "copy-code" || act === "copy-invite-link") {
+            const loc = window.location;
+            const code = onlineState.roomCode || "";
+            const url = loc.origin + loc.pathname + "?join=" + encodeURIComponent(code);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(() => {
+                if (onAct) {
+                  const orig = onAct.textContent;
+                  onAct.textContent = "✓ ĐÃ CHÉP!";
+                  setTimeout(() => { onAct.textContent = orig; }, 1800);
+                }
+              }).catch(() => {});
+            }
+          } else if (act === "share-invite-link") {
+            const loc = window.location;
+            const code = onlineState.roomCode || "";
+            const url = loc.origin + loc.pathname + "?join=" + encodeURIComponent(code);
+            if (navigator.share) {
+              navigator.share({
+                title: "Vào chơi HIT ME cùng mình!",
+                text: "Bấm vào liên kết để vào ngay phòng HIT ME (" + code + ") cùng mình nhé!",
+                url: url
+              }).catch((e) => {
+                if (e && e.name !== "AbortError") {
+                  if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(() => {
+                      if (onAct) {
+                        const orig = onAct.textContent;
+                        onAct.textContent = "✓ ĐÃ CHÉP LIÊN KẾT!";
+                        setTimeout(() => { onAct.textContent = orig; }, 1800);
+                      }
+                    }).catch(() => {});
+                  }
+                }
+              });
+            } else {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => {
+                  if (onAct) {
+                    const orig = onAct.textContent;
+                    onAct.textContent = "✓ ĐÃ CHÉP LIÊN KẾT!";
+                    setTimeout(() => { onAct.textContent = orig; }, 1800);
+                  }
+                }).catch(() => {});
+              }
+            }
           } else if (act === "toggle-ready") {
             const me = (onlineState.players || []).find(p => p.id === onlineState.playerName) || onlineState.players[0];
             const nextRdy = !(me && me.ready);
@@ -4012,10 +4087,46 @@ HOME_VISUAL_PATCH_HTML = """
         const sp = new URLSearchParams(window.location.search);
         if (sp.get("name")) {
           onlineState.playerName = sp.get("name");
+          const p = LocalProfileStore.getProfile() || {};
+          p.name = onlineState.playerName;
+          p.customized = true;
+          LocalProfileStore.saveProfile(p);
           try { sessionStorage.setItem("hitme_online_name", onlineState.playerName); } catch (e) {}
         }
-        if (sp.get("lab") === "1" && sp.get("open") === "1") {
-          setTimeout(() => openMode(sp.get("mode") || "create"), 250);
+        const rawJoin = sp.get("join") || "";
+        const joinCode = rawJoin.toUpperCase().replace(/[^2-9A-HJ-KM-NP-Z]/g, "").slice(0, 6);
+        if (joinCode.length === 6) {
+          onlineState.joinInputCode = joinCode;
+          const prof = LocalProfileStore.getProfile() || {};
+          if (!prof.customized) {
+            setTimeout(() => {
+              openNameModal(() => {
+                _doOpenMode("join");
+                sendProtocol({
+                  type: "join",
+                  token: getToken(),
+                  roomCode: joinCode,
+                  characterId: onlineState.characterId,
+                  weaponId: onlineState.weaponId,
+                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+                });
+              });
+            }, 300);
+          } else {
+            setTimeout(() => {
+              _doOpenMode("join");
+              sendProtocol({
+                type: "join",
+                token: getToken(),
+                roomCode: joinCode,
+                characterId: onlineState.characterId,
+                weaponId: onlineState.weaponId,
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+              });
+            }, 300);
+          }
+        } else if (sp.get("lab") === "1" && sp.get("open") === "1") {
+          setTimeout(() => _doOpenMode(sp.get("mode") || "create"), 250);
         }
       });
 
