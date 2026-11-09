@@ -49,6 +49,28 @@ public sealed class GoldenRoundsParityTests
         }
     }
 
+    [TestCase("dep_to_ong")]
+    [TestCase("chao_chong_dinh")]
+    [TestCase("vot_pickleball")]
+    public void CosmeticWeaponSelection_DoesNotAlterGoldenRoundOutcomes(string cosmeticWeaponId)
+    {
+        Assert.That(cosmeticWeaponId, Is.Not.Empty);
+        var file = GoldenJson.Read(GoldenJsonPath());
+        var config = file.Config.ToCore();
+        for (var roundIndex = 0; roundIndex < 25; roundIndex++)
+        {
+            var round = file.Rounds[roundIndex];
+            var players = new List<PlayerState>();
+            var inputs = new Dictionary<string, RoundInput>();
+            for (var index = 0; index < round.Players.Length; index++) players.Add(round.Players[index].ToCore());
+            for (var index = 0; index < round.Inputs.Length; index++) inputs.Add(round.Inputs[index].PlayerId, round.Inputs[index].ToCore());
+            var actual = RoundResolver.Resolve(players, inputs, config);
+            Assert.That(actual.Hits, Has.Count.EqualTo(round.Expected.Hits.Length));
+            for (var index = 0; index < players.Count; index++)
+                AssertPlayer(round.Expected.Players[index], players[index], $"weapon={cosmeticWeaponId} round={round.Id}", index);
+        }
+    }
+
     static string GoldenJsonPath()
     {
 #if UNITY_5_3_OR_NEWER

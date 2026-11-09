@@ -29,6 +29,7 @@ namespace HitMe.UI
         private int _lastBotCount = 3;
         private bool _startingScenario;
         private int _lastCharIdx = 0;
+        private string _lastWeaponId = "dep_to_ong";
         private string _currentToast = "";
         private float _toastExpiryTime = 0f;
 
@@ -356,12 +357,12 @@ namespace HitMe.UI
                         }
                         if (!string.IsNullOrEmpty(dto.weaponId))
                         {
-                            weaponId = dto.weaponId;
-                            if (weaponId != "dep" && weaponId != "dep_to_ong")
+                            weaponId = dto.weaponId == "dep" ? "dep_to_ong" : dto.weaponId;
+                            if (weaponId != "dep_to_ong" && weaponId != "chao_chong_dinh" && weaponId != "vot_pickleball")
                             {
-                                EmitError("weapon_locked", "Vũ khí chưa sẵn sàng trong trận này.");
-                                return;
+                                weaponId = "dep_to_ong";
                             }
+                            _lastWeaponId = weaponId;
                         }
                     }
                 }
@@ -482,11 +483,15 @@ namespace HitMe.UI
                 var dto = JsonUtility.FromJson<IdDto>(json);
                 if (dto != null && !string.IsNullOrEmpty(dto.id))
                 {
-                    if (dto.id != "dep" && dto.id != "dep_to_ong")
+                    string wid = dto.id == "dep" ? "dep_to_ong" : dto.id;
+                    if (wid != "dep_to_ong" && wid != "chao_chong_dinh" && wid != "vot_pickleball")
                     {
                         EmitError("weapon_locked", "Vũ khí chưa sẵn sàng trong trận này.");
                         return;
                     }
+                    _lastWeaponId = wid;
+                    string selectionJson = "{\"type\":\"selection\",\"weaponId\":\"" + wid + "\"}";
+                    HitMeWebBridge.EmitUnityToWebJson(selectionJson);
                 }
             }
             catch (Exception e)
@@ -725,8 +730,8 @@ namespace HitMe.UI
             }
             _sb.Append("],\"weapons\":[");
             _sb.Append("{\"id\":\"dep_to_ong\",\"name\":\"Dép Tổ Ong\",\"enabled\":true},");
-            _sb.Append("{\"id\":\"chao_chong_dinh\",\"name\":\"Chảo Chống Dính\",\"enabled\":false},");
-            _sb.Append("{\"id\":\"vot_pickleball\",\"name\":\"Vợt Pickleball\",\"enabled\":false}");
+            _sb.Append("{\"id\":\"chao_chong_dinh\",\"name\":\"Chảo Chống Dính\",\"enabled\":true},");
+            _sb.Append("{\"id\":\"vot_pickleball\",\"name\":\"Vợt Pickleball\",\"enabled\":true}");
             _sb.Append("]}");
 
             HitMeWebBridge.EmitUnityToWebJson(_sb.ToString());
@@ -801,7 +806,8 @@ namespace HitMe.UI
             _sb.Append("\"aliveCount\":").Append(aliveCount).Append(",");
             _sb.Append("\"phase\":\"").Append(state.Phase.ToString().ToLowerInvariant()).Append("\",");
             _sb.Append("\"timeLeft\":").Append(matchController.SecondsRemaining.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)).Append(",");
-            _sb.Append("\"weaponName\":\"Dép Tổ Ong\",");
+            string weaponDisplay = _lastWeaponId == "chao_chong_dinh" ? "Chảo Chống Dính" : (_lastWeaponId == "vot_pickleball" ? "Vợt Pickleball" : "Dép Tổ Ong");
+            _sb.Append("\"weaponName\":\"").Append(weaponDisplay).Append("\",");
             string currentToast = (Time.unscaledTime < _toastExpiryTime) ? _currentToast : "";
             _sb.Append("\"toast\":\"").Append(EscapeJson(currentToast)).Append("\",");
 

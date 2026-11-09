@@ -496,6 +496,29 @@ HOME_VISUAL_PATCH_HTML = """
       line-height: 1.2 !important;
       white-space: normal !important;
     }
+    .r38-badge-tam {
+      display: inline-block !important;
+      margin-top: 2px !important;
+      padding: 1px 6px !important;
+      border-radius: 6px !important;
+      background: rgba(245, 158, 11, 0.22) !important;
+      border: 1px solid #f59e0b !important;
+      color: #fde68a !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.02em !important;
+    }
+    .r38-badge-owned {
+      display: inline-block !important;
+      margin-top: 2px !important;
+      padding: 1px 6px !important;
+      border-radius: 6px !important;
+      background: rgba(23, 185, 135, 0.22) !important;
+      border: 1px solid #17b987 !important;
+      color: #6ee7b7 !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -584,6 +607,42 @@ HOME_VISUAL_PATCH_HTML = """
         if (weaponCard) {
           weaponCard.classList.toggle("single-weapon", _r38CatalogWeaponsUnlocked <= 1);
         }
+
+        // U1: Annotate Character & Weapon cards in Bot Setup and Modal with SỞ HỮU / DÙNG THỬ • TẠM badges
+        root.querySelectorAll('[data-action="select-character"], .preview-character').forEach(btn => {
+          const cid = btn.dataset.id || "";
+          const isTamPose = cid === "quay_boy" || cid === "cho_vang" || cid === "meo_mun";
+          if (isTamPose && !btn.querySelector(".r38-badge-tam")) {
+            const smallEl = btn.querySelector("small");
+            if (smallEl) {
+              smallEl.innerHTML = (smallEl.textContent.includes("ĐANG CHỌN") ? "ĐANG CHỌN • " : "CHỌN • ") + '<span class="r38-badge-tam">TẠM</span>';
+            } else {
+              const b = document.createElement("small");
+              b.className = "r38-badge-tam";
+              b.textContent = "MỞ KHÓA • TẠM";
+              btn.appendChild(b);
+            }
+          }
+        });
+
+        root.querySelectorAll('[data-action="select-weapon"], .preview-weapon').forEach(btn => {
+          const wid = btn.dataset.id || "";
+          if (!btn.dataset.r38WeaponBadge) {
+            btn.dataset.r38WeaponBadge = "1";
+            const badge = document.createElement("small");
+            if (wid === "dep_to_ong") {
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU";
+            } else if (wid === "chao_chong_dinh") {
+              badge.className = "r38-badge-tam";
+              badge.textContent = "CHƯA SỞ HỮU (199 VÀNG • TẠM)";
+            } else if (wid === "vot_pickleball") {
+              badge.className = "r38-badge-tam";
+              badge.textContent = "CHƯA SỞ HỮU (260 VÀNG • TẠM)";
+            }
+            if (badge.textContent) btn.appendChild(badge);
+          }
+        });
 
         // G1: Set data-count on .live-cards and wire hold-to-reveal for N > 4
         const liveCards = root.querySelector(".live-cards");
@@ -870,6 +929,9 @@ def sync_visual_assets(assets_dir: Path) -> None:
         for f in CATALOG_SRC_DIR.iterdir():
             if f.is_file() and f.suffix.lower() == ".png":
                 shutil.copy2(f, assets_dir / f.name)
+        cat_json = CATALOG_SRC_DIR / "catalog.json"
+        if cat_json.exists() and (assets_dir.parent / "catalog.json").exists():
+            shutil.copy2(cat_json, assets_dir.parent / "catalog.json")
 
 
 def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity_commit: str, webui_commit: str,
@@ -1123,6 +1185,9 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
                   _interactHoldUntil = 0;
                   _deferredMatchEvt = null;
                   if (_flushTimer) {{ clearTimeout(_flushTimer); _flushTimer = null; }}
+                }} else if (evt.type === "error" && (evt.code === "character_locked" || evt.code === "weapon_locked")) {{
+                  // Round 38 U1: All 7 characters and 3 cosmetic weapons are unlocked for offline Bot Practice
+                  return;
                 }} else if (evt.type === "match") {{
                   window.__hitmeLastMatchEvt = evt;
                   if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {{
