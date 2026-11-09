@@ -9,6 +9,7 @@ namespace HitMe.NetClientV1
             get
             {
                 if (Enabled) return true;
+#if UNITY_5_3_OR_NEWER
                 if (UnityEngine.Application.absoluteURL != null)
                 {
                     string u = UnityEngine.Application.absoluteURL;
@@ -19,6 +20,7 @@ namespace HitMe.NetClientV1
                         return true;
                     }
                 }
+#endif
                 return false;
             }
         }

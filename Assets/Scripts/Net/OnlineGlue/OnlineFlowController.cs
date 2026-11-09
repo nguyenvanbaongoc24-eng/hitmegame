@@ -150,7 +150,14 @@ public sealed class OnlineFlowController : IDisposable
             case RoundResultMessage result: ui.ShowRoundResult(result); break;
             case MatchEndMessage result: ui.ShowMatchEnd(result); break;
             case EmoteBroadcastMessage emote: ui.ShowEmote(emote.playerId, emote.emoteId, revealed); break;
-            case ErrorMessage error: ui.ShowError(error.code, ErrorText(error)); break;
+            case ErrorMessage error:
+                if (string.Equals(error.code, "server_restarting", StringComparison.Ordinal) ||
+                    string.Equals(error.code, "server_shutdown", StringComparison.Ordinal))
+                {
+                    ui.ShowServerShutdown();
+                }
+                ui.ShowError(error.code, ErrorText(error));
+                break;
         }
     }
 
@@ -163,7 +170,9 @@ public sealed class OnlineFlowController : IDisposable
     private void OnClosed(string reason)
     {
         localCountdownEnd = null;
-        if (string.Equals(reason, "server_shutdown", StringComparison.Ordinal)) ui.ShowServerShutdown();
+        if (string.Equals(reason, "server_shutdown", StringComparison.Ordinal) ||
+            string.Equals(reason, "server_restarting", StringComparison.Ordinal))
+            ui.ShowServerShutdown();
         else ui.ShowReconnecting();
     }
 

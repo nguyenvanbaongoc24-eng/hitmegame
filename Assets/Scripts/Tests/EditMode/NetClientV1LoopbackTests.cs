@@ -2,7 +2,12 @@ using System;
 using System.Collections.Generic;
 using HitMe.NetClientV1;
 using NUnit.Framework;
+#if UNITY_5_3_OR_NEWER
 using UnityEngine;
+#else
+using Assert = NUnit.Framework.Legacy.ClassicAssert;
+using StringAssert = NUnit.Framework.Legacy.StringAssert;
+#endif
 
 namespace HitMe.Tests
 {
