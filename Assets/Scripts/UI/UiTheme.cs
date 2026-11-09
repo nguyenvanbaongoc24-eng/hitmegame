@@ -4,6 +4,12 @@ using TMPro;
 
 namespace HitMe.UI
 {
+    public enum TimerVisualStyle
+    {
+        RingOnly = 0,
+        GoldCoinAndRing = 1
+    }
+
     [CreateAssetMenu(fileName = "UiTheme", menuName = "HIT ME/UI Theme", order = 1)]
     public class UiTheme : ScriptableObject
     {
@@ -96,6 +102,26 @@ namespace HitMe.UI
         public float weaponSpinSpeed = -720f;
         public float weaponShadowOffset = 0.22f;
         public float weaponShadowVerticalScaleFactor = DefaultWeaponShadowVerticalScaleFactor;
+
+        [Header("Round 38 G1–G8 In-Match HUD & Arena Framing Tokens")]
+        public TimerVisualStyle timerStyle = TimerVisualStyle.RingOnly;
+        public float playerCardHeightN2To4 = 68f;
+        public float playerCardHeightN5To6 = 60f;
+        public float playerCardAvatarSizeN2To4 = 38f;
+        public float playerCardAvatarSizeN5To6 = 32f;
+        public float playerCardGap = 6f;
+        public float playerCardSafeSideMargin = 8f;
+        public float playerCardNameLineHeight = 1.28f;
+        public float timerCircleDiameter = 62f;
+        public float timerPulseUrgentSeconds = 2.0f;
+        public float phaseBannerDuration = 0.62f;
+        public float phaseBannerOvershootScale = 1.14f;
+        public float arenaViewZoomFactor = 0.88f; // Closer camera framing so characters occupy ~14-18% screen height
+        public float placeBounceOvershoot = 1.15f;
+        public float placeDustExpandScale = 1.35f;
+        public float aimRulerDashSpeed = 3.2f;
+        public float botSetupBottomBarPadding = 112f;
+        public float minThumbTouchTargetPxAt1080 = 135f;
 
         private static UiTheme _instance;
         public static UiTheme Instance

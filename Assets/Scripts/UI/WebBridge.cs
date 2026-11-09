@@ -518,7 +518,8 @@ namespace HitMe.UI
             if (cam == null) return;
 
             float aspect = cam.aspect > 0.01f ? cam.aspect : (393f / 695f);
-            float targetOrtho = 3.4133f / Mathf.Max(0.01f, aspect);
+            float zoomFactor = UiTheme.Instance != null ? UiTheme.Instance.arenaViewZoomFactor : 0.88f;
+            float targetOrtho = (3.4133f * zoomFactor) / Mathf.Max(0.01f, aspect);
             cam.orthographicSize = targetOrtho;
 
             float worldOffsetY = ((bottomCss - topCss) * 0.5f / 695f) * (2f * targetOrtho);

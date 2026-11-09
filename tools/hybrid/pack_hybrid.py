@@ -119,6 +119,383 @@ HOME_VISUAL_PATCH_HTML = """
       .home .blue, .home .green { top: 73.2% !important; height: 8.0% !important; min-height: 44px !important; }
       .home .practice { top: 82.2% !important; height: 7.4% !important; min-height: 44px !important; }
     }
+
+    /* ============================================================================
+       ROUND 38 G1–G8: In-Match HUD, Timer Ring + 5 Dots, Non-Blocking Interactive
+       Tutorial, Phase Banners, Bot Setup Top Selector & Scroll, and Home Polish
+       ============================================================================ */
+
+    /* G7a: Hide stray server-dot circle O after 'Sắp ra mắt' on CHƠI NHANH */
+    .home .quick .server-dot {
+      display: none !important;
+    }
+
+    /* G7b + G7c: Widen weapon card so 'Dép Tổ Ong' stays on 1 line; hide reverse arrow when <= 1 weapon unlocked */
+    .home .character-card {
+      left: 3.5% !important;
+      width: 44.5% !important;
+      padding: 4px 8px !important;
+    }
+    .home .weapon-card {
+      right: 3.5% !important;
+      width: 47% !important;
+      padding: 4px 8px !important;
+    }
+    .home .weapon-card b,
+    .home .character-card b {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1.28 !important;
+      padding-bottom: 2px !important;
+      max-height: none !important;
+      font-size: clamp(12px, 3.2vw, 16px) !important;
+    }
+    .home .weapon-card.single-weapon > .icon.reverse {
+      display: none !important;
+    }
+
+    /* G1: Adaptive Top Player Cards for N=2..6, larger circular avatars, clear hearts, unclipped diacritics ('Nữ Năng Động') */
+    .live-top {
+      padding: max(8px, env(safe-area-inset-top)) 8px 6px !important;
+      gap: 6px !important;
+    }
+    .live-cards {
+      display: flex !important;
+      gap: 6px !important;
+      width: 100% !important;
+      padding: 0 2px !important;
+      min-height: 66px !important;
+      align-items: stretch !important;
+    }
+    .live-card {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      padding: 5px 4px 4px !important;
+      background: linear-gradient(180deg, #162b42f5 0%, #0d1b2bf5 100%) !important;
+      border: 1.5px solid #d4af37 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 2px !important;
+      position: relative !important;
+    }
+    .live-card.local {
+      border: 2.5px solid #19d5d8 !important;
+      background: linear-gradient(180deg, #173852f8 0%, #0e2438f8 100%) !important;
+      box-shadow: 0 0 0 2px rgba(25, 213, 216, 0.28), 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+    }
+    .live-card.out {
+      opacity: 0.42 !important;
+      filter: grayscale(0.85) !important;
+    }
+    .live-card img {
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50% !important;
+      border: 2px solid rgba(255, 220, 67, 0.85) !important;
+      background: radial-gradient(circle at 50% 40%, #24476e 0%, #0d1b2a 100%) !important;
+      padding: 1px !important;
+      object-fit: contain !important;
+      flex: none !important;
+    }
+    .live-card.local img {
+      border-color: #19d5d8 !important;
+    }
+    .live-cards[data-count="5"] .live-card img,
+    .live-cards[data-count="6"] .live-card img {
+      width: 30px !important;
+      height: 30px !important;
+    }
+    .live-card div {
+      width: 100% !important;
+      overflow: visible !important;
+    }
+    .live-card b {
+      display: block !important;
+      font-size: clamp(9.5px, 2.55vw, 11px) !important;
+      font-weight: 800 !important;
+      line-height: 1.32 !important;
+      padding-bottom: 2px !important;
+      color: #fff8e8 !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      letter-spacing: -0.02em !important;
+    }
+    .live-cards[data-count="2"] .live-card b,
+    .live-cards[data-count="3"] .live-card b,
+    .live-cards[data-count="4"] .live-card b {
+      overflow: visible !important;
+      text-overflow: clip !important;
+      font-size: clamp(9.2px, 2.45vw, 10.8px) !important;
+    }
+    .live-cards[data-count="5"] .live-card b,
+    .live-cards[data-count="6"] .live-card b {
+      font-size: 9px !important;
+    }
+    .live-card.hold-reveal b {
+      position: absolute !important;
+      top: -24px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: #0b1421f5 !important;
+      border: 1px solid #ffcd38 !important;
+      border-radius: 6px !important;
+      padding: 2px 6px !important;
+      font-size: 11px !important;
+      z-index: 30 !important;
+      white-space: nowrap !important;
+      overflow: visible !important;
+    }
+    .live-hearts {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 1px !important;
+      color: #ff4a5e !important;
+      font-size: 13px !important;
+      line-height: 1.1 !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
+    }
+    .live-hearts span {
+      color: #64748b !important;
+    }
+
+    /* G2: Center-Top Countdown Progress Ring + 5 Round Dots */
+    .live-summary {
+      display: grid !important;
+      grid-template-columns: 1fr auto 1fr !important;
+      align-items: center !important;
+      gap: 8px !important;
+      min-height: 54px !important;
+    }
+    .r38-round-cluster {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+    .r38-round-cluster b {
+      font-size: 13px !important;
+      font-weight: 900 !important;
+      color: #ffe258 !important;
+      letter-spacing: 0.03em !important;
+    }
+    .r38-round-dots {
+      display: flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+    }
+    .r38-round-dot {
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 50% !important;
+      border: 1.5px solid #ffd84d !important;
+      background: rgba(15, 23, 42, 0.75) !important;
+      transition: transform 0.2s ease, background 0.2s ease !important;
+    }
+    .r38-round-dot.past {
+      background: #17b987 !important;
+      border-color: #34d399 !important;
+    }
+    .r38-round-dot.current {
+      background: #ffcd38 !important;
+      border-color: #fff8e8 !important;
+      transform: scale(1.28) !important;
+      box-shadow: 0 0 6px rgba(255, 205, 56, 0.85) !important;
+    }
+    .r38-timer-ring {
+      position: relative !important;
+      width: 54px !important;
+      height: 54px !important;
+      border-radius: 50% !important;
+      display: grid !important;
+      place-items: center !important;
+      background: conic-gradient(var(--timer-color, #19d5d8) var(--timer-pct, 100%), rgba(255, 255, 255, 0.14) 0) !important;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55) !important;
+      justify-self: center !important;
+    }
+    .r38-timer-ring::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 5px !important;
+      border-radius: 50% !important;
+      background: radial-gradient(circle at 50% 35%, #192b42 0%, #0b1421 100%) !important;
+    }
+    .r38-timer-ring.coin-style::before {
+      background: radial-gradient(circle at 35% 30%, #ffe66d 0%, #d98212 85%, #7c3f06 100%) !important;
+    }
+    .r38-timer-ring span {
+      position: relative !important;
+      z-index: 2 !important;
+      font-size: 17px !important;
+      font-weight: 900 !important;
+      color: #fff8e8 !important;
+      line-height: 1 !important;
+      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8) !important;
+    }
+    .r38-timer-ring.urgent {
+      --timer-color: #f66a5d !important;
+      animation: r38-timer-pulse 0.48s ease-in-out infinite !important;
+    }
+    .r38-timer-ring.urgent span {
+      color: #ffdf55 !important;
+    }
+    @keyframes r38-timer-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.13); box-shadow: 0 0 14px rgba(246, 106, 93, 0.85); }
+    }
+    .live-summary > button[data-action="settings"] {
+      justify-self: end !important;
+      width: 48px !important;
+      height: 48px !important;
+    }
+
+    /* G3: Non-Blocking Interactive Tutorial (never covers the center court; pointer-events pass through) */
+    .live-tutorial {
+      left: 4% !important;
+      right: 4% !important;
+      bottom: calc(var(--live-bottom, 118px) + 6px) !important;
+      padding: 8px 12px !important;
+      background: rgba(11, 20, 33, 0.92) !important;
+      border: 2px solid #19d5d8 !important;
+      border-radius: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      text-align: left !important;
+      pointer-events: none !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55) !important;
+    }
+    .live-tutorial b {
+      font-size: 11px !important;
+      color: #ffcd38 !important;
+      display: block !important;
+      white-space: nowrap !important;
+    }
+    .live-tutorial p {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      margin: 2px 0 0 !important;
+      line-height: 1.25 !important;
+      color: #fff8e8 !important;
+      flex: 1 !important;
+    }
+    .live-tutorial div {
+      display: flex !important;
+      gap: 6px !important;
+      pointer-events: auto !important;
+    }
+    .live-tutorial button {
+      pointer-events: auto !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+    }
+    .r38-hand-guide {
+      position: fixed !important;
+      left: 50% !important;
+      top: 56% !important;
+      width: 42px !important;
+      height: 42px !important;
+      margin-left: -21px !important;
+      margin-top: -21px !important;
+      z-index: 22 !important;
+      pointer-events: none !important;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7)) !important;
+      animation: r38-hand-tap 1.35s ease-in-out infinite !important;
+    }
+    .r38-hand-guide.drag-mode {
+      animation: r38-hand-drag 1.6s ease-in-out infinite !important;
+    }
+    @keyframes r38-hand-tap {
+      0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.92; }
+      50% { transform: translate(0, -10px) scale(0.88); opacity: 1; }
+    }
+    @keyframes r38-hand-drag {
+      0% { transform: translate(-24px, 14px) scale(0.95); opacity: 0.95; }
+      65% { transform: translate(32px, -28px) scale(1); opacity: 1; }
+      100% { transform: translate(-24px, 14px) scale(0.95); opacity: 0.85; }
+    }
+
+    /* G4: Phase Transition Banner (0.6s bounce-in + fade-out, non-blocking) */
+    #r38-phase-banner {
+      position: fixed !important;
+      left: 50% !important;
+      top: 38% !important;
+      transform: translate(-50%, -50%) scale(0.7) !important;
+      z-index: 45 !important;
+      padding: 10px 26px !important;
+      border-radius: 999px !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      border: 3px solid #fff8e8 !important;
+      color: #2b1206 !important;
+      font-size: clamp(20px, 6vw, 30px) !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.04em !important;
+      text-transform: uppercase !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      white-space: nowrap !important;
+    }
+    #r38-phase-banner.active {
+      animation: r38-banner-pop 0.62s cubic-bezier(0.2, 1.35, 0.35, 1) forwards !important;
+    }
+    @keyframes r38-banner-pop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
+      28% { opacity: 1; transform: translate(-50%, -50%) scale(1.14); }
+      48% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+      82% { opacity: 1; transform: translate(-50%, -50%) scale(1.0); }
+      100% { opacity: 0; transform: translate(-50%, -56%) scale(0.92); }
+    }
+
+    /* G6: Bot Practice Setup Screen — Top Bot Count Selector + Scrollable Weapon Grid + Bottom Padding >= Footer Height */
+    [data-screen="bot"] .preview-scroll {
+      display: flex !important;
+      flex-direction: column !important;
+      padding-bottom: 116px !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    [data-screen="bot"] .preview-count {
+      order: -2 !important;
+      margin: 2px 0 10px !important;
+      padding: 10px 12px !important;
+      background: linear-gradient(135deg, #1b354f 0%, #112233 100%) !important;
+      border: 2px solid #ffcd38 !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+    }
+    [data-screen="bot"] .preview-weapons {
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 8px !important;
+    }
+    [data-screen="bot"] .preview-weapon {
+      height: auto !important;
+      min-height: 88px !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      text-align: center !important;
+      padding: 8px 6px !important;
+      gap: 4px !important;
+    }
+    [data-screen="bot"] .preview-weapon img {
+      width: 44px !important;
+      height: 44px !important;
+    }
+    [data-screen="bot"] .preview-weapon span {
+      font-size: 12px !important;
+      line-height: 1.2 !important;
+      white-space: normal !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -168,6 +545,192 @@ HOME_VISUAL_PATCH_HTML = """
         window.visualViewport.addEventListener("scroll", syncPedestalAnchor);
       }
       syncPedestalAnchor();
+
+      // Round 38 G1–G8 DOM Enhancer (Timer Ring + 5 Round Dots + Phase Banners + Hold-to-View Name + Interactive Hand Guide)
+      let _r38LastPhase = "";
+      let _r38LastRound = 0;
+      let _r38LastUrgentSec = -1;
+      let _r38PlaceCountInTutorial = 0;
+      let _r38CatalogWeaponsUnlocked = 1;
+
+      fetch("./catalog.json").then(r => r.json()).then(cat => {
+        if (cat && Array.isArray(cat.weapons)) {
+          _r38CatalogWeaponsUnlocked = cat.weapons.filter(w => w.enabled).length;
+        }
+      }).catch(() => {});
+
+      function showPhaseBanner(text) {
+        if (!text) return;
+        let banner = document.getElementById("r38-phase-banner");
+        if (!banner) {
+          banner = document.createElement("div");
+          banner.id = "r38-phase-banner";
+          banner.setAttribute("role", "status");
+          banner.setAttribute("aria-live", "polite");
+          document.body.appendChild(banner);
+        }
+        banner.textContent = text;
+        banner.classList.remove("active");
+        void banner.offsetWidth;
+        banner.classList.add("active");
+      }
+
+      function enhanceRound38Dom() {
+        const root = document.getElementById("ui-root");
+        if (!root) return;
+
+        // G7c: Toggle .single-weapon on Home weapon card when <= 1 weapon unlocked
+        const weaponCard = root.querySelector(".home .weapon-card");
+        if (weaponCard) {
+          weaponCard.classList.toggle("single-weapon", _r38CatalogWeaponsUnlocked <= 1);
+        }
+
+        // G1: Set data-count on .live-cards and wire hold-to-reveal for N > 4
+        const liveCards = root.querySelector(".live-cards");
+        if (liveCards) {
+          const cards = liveCards.querySelectorAll(".live-card");
+          liveCards.dataset.count = String(cards.length);
+          cards.forEach(card => {
+            const nameEl = card.querySelector("b");
+            if (nameEl && !card.dataset.r38Bound) {
+              card.dataset.r38Bound = "1";
+              card.title = nameEl.textContent || "";
+              card.addEventListener("pointerdown", () => card.classList.add("hold-reveal"));
+              card.addEventListener("pointerup", () => card.classList.remove("hold-reveal"));
+              card.addEventListener("pointercancel", () => card.classList.remove("hold-reveal"));
+              card.addEventListener("pointerleave", () => card.classList.remove("hold-reveal"));
+            }
+          });
+        }
+
+        // G2: Enhance .live-summary with 5 Round Dots + Circular Countdown Ring
+        const summary = root.querySelector(".live-summary");
+        if (summary) {
+          const roundB = summary.querySelector(":scope > b");
+          const strongTimer = summary.querySelector(":scope > strong");
+          const isEn = document.documentElement.lang === "en";
+          const st = window.__hitmeLastMatchEvt || {};
+          const roundNum = Math.max(1, Number(st.round) || 1);
+          const phase = String(st.phase || "placing").toLowerCase();
+          const secLeft = Math.max(0, Number(st.timeLeft) || 0);
+
+          if (roundB && !summary.querySelector(".r38-round-cluster")) {
+            const cluster = document.createElement("div");
+            cluster.className = "r38-round-cluster";
+            roundB.replaceWith(cluster);
+            cluster.appendChild(roundB);
+            const dots = document.createElement("div");
+            dots.className = "r38-round-dots";
+            dots.setAttribute("aria-label", isEn ? "5 rounds progress" : "Tiến độ 5 vòng");
+            for (let i = 1; i <= 5; i++) {
+              const d = document.createElement("i");
+              d.className = "r38-round-dot" + (i < roundNum ? " past" : i === roundNum ? " current" : "");
+              dots.appendChild(d);
+            }
+            cluster.appendChild(dots);
+          } else {
+            const dots = summary.querySelectorAll(".r38-round-dot");
+            dots.forEach((d, idx) => {
+              const i = idx + 1;
+              d.className = "r38-round-dot" + (i < roundNum ? " past" : i === roundNum ? " current" : "");
+            });
+          }
+
+          if (strongTimer) {
+            let ring = summary.querySelector(".r38-timer-ring");
+            if (!ring) {
+              ring = document.createElement("div");
+              ring.className = "r38-timer-ring";
+              ring.dataset.name = "timer-ring";
+              const span = document.createElement("span");
+              ring.appendChild(span);
+              strongTimer.replaceWith(ring);
+            }
+            const pct = phase === "placing" ? Math.max(0, Math.min(100, (secLeft / 5.0) * 100)) : 0;
+            const urgent = phase === "placing" && secLeft > 0 && secLeft <= 2.0;
+            ring.style.setProperty("--timer-pct", pct.toFixed(1) + "%");
+            ring.classList.toggle("urgent", urgent);
+            const timerStyle = new URLSearchParams(location.search).get("timerStyle") || "ring";
+            ring.classList.toggle("coin-style", timerStyle === "coin");
+            const span = ring.querySelector("span");
+            if (span) {
+              span.textContent = phase === "placing" ? Math.ceil(secLeft) + "s" : "—";
+            }
+          }
+
+          // G4: Trigger phase transition banner when phase or round changes
+          if (phase && (phase !== _r38LastPhase || roundNum !== _r38LastRound)) {
+            _r38LastPhase = phase;
+            _r38LastRound = roundNum;
+            const bannerMapVi = {
+              placing: "ĐẶT NHÂN VẬT",
+              lock: "KHÓA!",
+              reveal: "LỘ DIỆN!",
+              throw: "NÉM!",
+              throwing: "NÉM!",
+              resolve: "KẾT QUẢ VÒNG",
+              roundend: "KẾT QUẢ VÒNG"
+            };
+            const bannerMapEn = {
+              placing: "PLACE CHARACTER",
+              lock: "LOCKED!",
+              reveal: "REVEAL!",
+              throw: "THROW!",
+              throwing: "THROW!",
+              resolve: "ROUND RESULT",
+              roundend: "ROUND RESULT"
+            };
+            const label = (isEn ? bannerMapEn : bannerMapVi)[phase];
+            if (label) showPhaseBanner(label);
+          }
+        }
+
+        // G3: Interactive Tutorial Hand Guide + step 3 copy update
+        const tut = root.querySelector(".live-tutorial");
+        let hand = document.getElementById("r38-hand-guide");
+        if (tut) {
+          const bText = tut.querySelector("b")?.textContent || "";
+          const pEl = tut.querySelector("p");
+          const isStep1 = bText.includes("1/3");
+          const isStep2 = bText.includes("2/3");
+          const isStep3 = bText.includes("3/3");
+          if (isStep3 && pEl) {
+            const isEn = document.documentElement.lang === "en";
+            pEl.textContent = isEn
+              ? "Tap another spot on the court to move your character before the 5s timer ends!"
+              : "Chạm chỗ khác trên sân để đặt lại vị trí trước khi hết 5 giây!";
+          }
+          if (!hand) {
+            hand = document.createElement("div");
+            hand.id = "r38-hand-guide";
+            hand.className = "r38-hand-guide";
+            hand.innerHTML = `<svg viewBox="0 0 24 24" width="42" height="42" fill="#ffdf4a" stroke="#2b1206" stroke-width="1.8"><path d="M9 11V5a2 2 0 1 1 4 0v4h1a2 2 0 0 1 2 2v1h1a2 2 0 0 1 2 2v4a5 5 0 0 1-5 5H9a5 5 0 0 1-4.5-2.8L2.6 15a1.8 1.8 0 0 1 2.5-2.3L9 14.5V11z"/></svg>`;
+            document.body.appendChild(hand);
+          }
+          hand.classList.toggle("drag-mode", isStep2);
+          hand.style.display = "block";
+        } else if (hand) {
+          hand.style.display = "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const root = document.getElementById("ui-root");
+        if (root && typeof MutationObserver !== "undefined") {
+          const m = new MutationObserver(enhanceRound38Dom);
+          m.observe(root, { childList: true, subtree: true });
+        }
+        const uCanvas = document.getElementById("unity-canvas");
+        if (uCanvas) {
+          uCanvas.addEventListener("pointerup", () => {
+            const tut = document.querySelector("#ui-root .live-tutorial");
+            if (tut && (tut.querySelector("b")?.textContent || "").includes("3/3")) {
+              const nextBtn = tut.querySelector('[data-action="tutorial-next"]');
+              if (nextBtn) setTimeout(() => nextBtn.click(), 180);
+            }
+          });
+        }
+      });
     })();
   </script>
 """
@@ -561,6 +1124,7 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
                   _deferredMatchEvt = null;
                   if (_flushTimer) {{ clearTimeout(_flushTimer); _flushTimer = null; }}
                 }} else if (evt.type === "match") {{
+                  window.__hitmeLastMatchEvt = evt;
                   if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {{
                     evt = Object.assign({{}}, evt, {{ phase: "placing", timeLeft: Math.max(2, Number(evt.timeLeft) || 2) }});
                     event = evt;

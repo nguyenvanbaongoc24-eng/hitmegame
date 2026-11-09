@@ -55,6 +55,10 @@ namespace HitMe.Core
         public float CharacterScale = 1.0f;
         public float WeaponScale = 0.28f;
         public float HitRingScale = 1.0f;
+        public float ArenaViewZoomFactor = 0.88f;
+        public int DefaultPracticeBotCount = 3;
+        public int MinPracticeBotCount = 1;
+        public int MaxPracticeBotCount = 5;
         public Vec2 HeadlessAimDragOrigin = new Vec2(0f, -2.50f);
 
         public float MinX { get { return -ArenaWidth * 0.5f + PlayerRadius; } }
