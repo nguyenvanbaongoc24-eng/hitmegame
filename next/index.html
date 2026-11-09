@@ -4645,7 +4645,7 @@
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.8", "buildId": "168b938-4f6b253", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
+    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.8", "buildId": "e1191a8-4f6b253", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
     window.__hitmeBootT0 = performance.now();
 
     function checkAndEmitHomeShown() {
@@ -4745,7 +4745,14 @@
               try { if (typeof event === "string") evt = JSON.parse(event); } catch (e) {}
               if (window.__hitmeFreezeLiveMatch && evt && !evt.__fromTest) return;
               if (evt && typeof evt === "object") {
-                if (evt.type === "screen" || evt.type === "result") {
+                if (evt.type === "ready") {
+                  if (Array.isArray(evt.roster)) {
+                    evt.roster.forEach(c => c.enabled = true);
+                  }
+                  if (Array.isArray(evt.weapons)) {
+                    evt.weapons.forEach(w => w.enabled = true);
+                  }
+                } else if (evt.type === "screen" || evt.type === "result") {
                   if (evt.type === "result" && typeof window.__hitmeRecordBotResult === "function") {
                     window.__hitmeRecordBotResult(evt);
                   }
@@ -4805,7 +4812,7 @@
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.8 (168b938-4f6b253)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.8 (e1191a8-4f6b253)";
           sheet.appendChild(badge);
         }
       });
@@ -4856,7 +4863,7 @@
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "168b938-4f6b253";
+    const buildVersion = urlParams.get("v") || "e1191a8-4f6b253";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
