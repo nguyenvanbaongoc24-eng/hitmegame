@@ -1293,11 +1293,11 @@
               badge.className = "r38-badge-owned";
               badge.textContent = "SỞ HỮU";
             } else if (wid === "chao_chong_dinh") {
-              badge.className = "r38-badge-tam";
-              badge.textContent = "CHƯA SỞ HỮU (199 VÀNG • TẠM)";
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
             } else if (wid === "vot_pickleball") {
-              badge.className = "r38-badge-tam";
-              badge.textContent = "CHƯA SỞ HỮU (260 VÀNG • TẠM)";
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
             }
             if (badge.textContent) btn.appendChild(badge);
           }
@@ -1655,14 +1655,15 @@
           showPhaseBanner("ĐÃ KHÓA!");
         } else if (act === "quests" || act === "rank") {
           _r38LastOverlayTab = act;
-        } else if (act === "online-locked") {
+        } else if (act === "quick" || act === "create" || act === "join" || act === "online-locked") {
           e.stopPropagation();
           e.preventDefault();
           const sp = new URLSearchParams(window.location.search);
           const isOnlineEnabled = window.__hitmeReleaseInfo?.online !== false;
           if ((isOnlineEnabled || sp.get("online") === "1" || sp.get("lab") === "1" || sp.get("server")) && window.__hitmeOnlineUi) {
             const btnTxt = (btn.textContent || "").toUpperCase();
-            const mode = (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
+            const mode = (act === "quick" || act === "create" || act === "join") ? act
+                       : (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
                        : (btnTxt.includes("VÀO") || btnTxt.includes("JOIN")) ? "join" : "create";
             window.__hitmeOnlineUi.openMode(mode);
             return;
