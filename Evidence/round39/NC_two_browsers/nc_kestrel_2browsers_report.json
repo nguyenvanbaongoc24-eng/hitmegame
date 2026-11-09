@@ -1,0 +1,163 @@
+{
+  "kestrelPort": 54753,
+  "webPort": 54752,
+  "tests": {
+    "n2_full_match": {
+      "passed": true,
+      "roomCode": "S8QRCR",
+      "serverMatchEnd": {
+        "v": 1,
+        "type": "match_end",
+        "matchId": "917e34e3-e712-4a9f-b45b-a444f8e218e5",
+        "winners": [
+          "g_c960c4f82433558bb299e2c047789681"
+        ],
+        "winnerIds": [
+          "g_c960c4f82433558bb299e2c047789681"
+        ],
+        "tiebreakCount": 0,
+        "rankings": [
+          {
+            "playerId": "g_c960c4f82433558bb299e2c047789681",
+            "rank": 1,
+            "hp": 3,
+            "hitsLanded": 3,
+            "hits": 3,
+            "throws": 3,
+            "accuracy": 1,
+            "eliminatedRound": 0,
+            "goldReward": 100
+          },
+          {
+            "playerId": "g_c49b457b33f810537bf10336e5f981e7",
+            "rank": 2,
+            "hp": 0,
+            "hitsLanded": 0,
+            "hits": 0,
+            "throws": 3,
+            "accuracy": 0,
+            "eliminatedRound": 3,
+            "goldReward": 0
+          }
+        ]
+      },
+      "uiTableRows": [
+        [
+          "#1",
+          "HostNamA",
+          "Sống sót",
+          "3",
+          "3",
+          "+100"
+        ],
+        [
+          "#2",
+          "GuestCoBa",
+          "Bị loại",
+          "0",
+          "0",
+          "+0"
+        ]
+      ]
+    },
+    "n3_full_match": {
+      "passed": true,
+      "roomCode": "KVRKFE",
+      "serverMatchEnd": {
+        "v": 1,
+        "type": "match_end",
+        "matchId": "3abd8d3a-87b2-4301-ae90-da8bc47e159a",
+        "winners": [
+          "g_f4e40272e0f31135d28ba9c5253fbe37"
+        ],
+        "winnerIds": [
+          "g_f4e40272e0f31135d28ba9c5253fbe37"
+        ],
+        "tiebreakCount": 0,
+        "rankings": [
+          {
+            "playerId": "g_f4e40272e0f31135d28ba9c5253fbe37",
+            "rank": 1,
+            "hp": 3,
+            "hitsLanded": 3,
+            "hits": 3,
+            "throws": 3,
+            "accuracy": 1,
+            "eliminatedRound": 0,
+            "goldReward": 150
+          },
+          {
+            "playerId": "g_01d29d0bd07c529e0bcbb438d2f2fa1a",
+            "rank": 2,
+            "hp": 0,
+            "hitsLanded": 0,
+            "hits": 0,
+            "throws": 3,
+            "accuracy": 0,
+            "eliminatedRound": 3,
+            "goldReward": 80
+          },
+          {
+            "playerId": "g_624cbcc50806522b1f2495fee8fd8aa0",
+            "rank": 2,
+            "hp": 0,
+            "hitsLanded": 3,
+            "hits": 3,
+            "throws": 3,
+            "accuracy": 1,
+            "eliminatedRound": 3,
+            "goldReward": 80
+          }
+        ]
+      },
+      "uiTableRows": [
+        [
+          "#1",
+          "Player1Nam",
+          "Sống sót",
+          "3",
+          "3",
+          "+150"
+        ],
+        [
+          "#2",
+          "Player2Nu",
+          "Bị loại",
+          "0",
+          "3",
+          "+80"
+        ],
+        [
+          "#2",
+          "Player3Teen",
+          "Bị loại",
+          "0",
+          "0",
+          "+80"
+        ]
+      ]
+    },
+    "fault_cases": {
+      "reconnectUnder30s": {
+        "phase": "placing",
+        "roundId": 1
+      },
+      "reconnectOver30sRejected": {
+        "code": "reconnect_invalid",
+        "text": "Phiên kết nối lại đã hết hạn (quá 30 giây)."
+      },
+      "lateCommitOver5sIgnored": {
+        "code": "wrong_round",
+        "text": "Thao tác không khớp với vòng đấu hiện tại."
+      },
+      "duplicateTokenSessionReplaced": {
+        "code": "session_replaced",
+        "text": "Tài khoản này vừa được mở ở một tab hoặc thiết bị khác."
+      }
+    },
+    "server_shutdown_mid_match": {
+      "code": "server_restarting",
+      "text": "Máy chủ đang khởi động lại để cập nhật. Vui lòng chờ giây lát."
+    }
+  }
+}
