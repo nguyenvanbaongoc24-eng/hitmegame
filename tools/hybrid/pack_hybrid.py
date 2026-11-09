@@ -1322,11 +1322,11 @@ HOME_VISUAL_PATCH_HTML = """
               badge.className = "r38-badge-owned";
               badge.textContent = "SỞ HỮU";
             } else if (wid === "chao_chong_dinh") {
-              badge.className = "r38-badge-tam";
-              badge.textContent = "CHƯA SỞ HỮU (199 VÀNG • TẠM)";
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
             } else if (wid === "vot_pickleball") {
-              badge.className = "r38-badge-tam";
-              badge.textContent = "CHƯA SỞ HỮU (260 VÀNG • TẠM)";
+              badge.className = "r38-badge-owned";
+              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
             }
             if (badge.textContent) btn.appendChild(badge);
           }
@@ -1684,14 +1684,15 @@ HOME_VISUAL_PATCH_HTML = """
           showPhaseBanner("ĐÃ KHÓA!");
         } else if (act === "quests" || act === "rank") {
           _r38LastOverlayTab = act;
-        } else if (act === "online-locked") {
+        } else if (act === "quick" || act === "create" || act === "join" || act === "online-locked") {
           e.stopPropagation();
           e.preventDefault();
           const sp = new URLSearchParams(window.location.search);
           const isOnlineEnabled = window.__hitmeReleaseInfo?.online !== false;
           if ((isOnlineEnabled || sp.get("online") === "1" || sp.get("lab") === "1" || sp.get("server")) && window.__hitmeOnlineUi) {
             const btnTxt = (btn.textContent || "").toUpperCase();
-            const mode = (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
+            const mode = (act === "quick" || act === "create" || act === "join") ? act
+                       : (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
                        : (btnTxt.includes("VÀO") || btnTxt.includes("JOIN")) ? "join" : "create";
             window.__hitmeOnlineUi.openMode(mode);
             return;
@@ -4930,7 +4931,40 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
         const btn = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
         const act = btn ? btn.dataset.action : "";
         if (act) bumpInteractHold(450);
-        if (act === "tutorial-reopen") _tutorialHoldUntil = Date.now() + 8000;
+        if (act === "select-weapon") {{
+          const wid = btn.dataset.id;
+          if (wid) window.__hitmeSelectedWeapon = wid;
+        }} else if (act === "select-character") {{
+          const cid = btn.dataset.id;
+          if (cid) window.__hitmeSelectedChar = cid;
+        }} else if (act === "start-practice") {{
+          const charId = window.__hitmeSelectedChar || "nam_lang";
+          const weaponId = window.__hitmeSelectedWeapon || "dep_to_ong";
+          const wMap = {{ chao_chong_dinh: "Chảo Chống Dính", vot_pickleball: "Vợt Pickleball", dep_to_ong: "Dép Tổ Ong" }};
+          const seed = {{
+            type: "match",
+            round: 1,
+            maxRounds: 5,
+            roundLabel: "VÒNG 1",
+            tiebreak: false,
+            tiebreakCount: 0,
+            phase: "placing",
+            timeLeft: 5.0,
+            aliveCount: 4,
+            weaponName: wMap[weaponId] || "Dép Tổ Ong",
+            toast: "",
+            players: [
+              {{ id: "player", characterId: charId, hp: 3, maxHp: 3, isLocal: true, alive: true }},
+              {{ id: "bot_1", characterId: "nu_nang_dong", hp: 3, maxHp: 3, isLocal: false, alive: true, slot: 1 }},
+              {{ id: "bot_2", characterId: "co_ba", hp: 3, maxHp: 3, isLocal: false, alive: true, slot: 2 }},
+              {{ id: "bot_3", characterId: "anh_teen", hp: 3, maxHp: 3, isLocal: false, alive: true, slot: 3 }}
+            ]
+          }};
+          window.__hitmeLastMatchEvt = seed;
+          if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {{
+            window.hitmeUi.onUnity(seed);
+          }}
+        }} else if (act === "tutorial-reopen") _tutorialHoldUntil = Date.now() + 8000;
         else if (act === "tutorial-skip") _tutorialHoldUntil = 0;
       }}, true);
 
@@ -4970,6 +5004,14 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
                   // Round 38 U1: All 7 characters and 3 cosmetic weapons are unlocked for offline Bot Practice
                   return;
                 }} else if (evt.type === "match") {{
+                  if (window.__hitmeSelectedWeapon) {{
+                    const wMap = {{ chao_chong_dinh: "Chảo Chống Dính", vot_pickleball: "Vợt Pickleball", dep_to_ong: "Dép Tổ Ong" }};
+                    evt.weaponName = wMap[window.__hitmeSelectedWeapon] || evt.weaponName || "Dép Tổ Ong";
+                  }}
+                  if (window.__hitmeSelectedChar && Array.isArray(evt.players)) {{
+                    const localP = evt.players.find(p => p.isLocal || p.id === "player");
+                    if (localP) localP.characterId = window.__hitmeSelectedChar;
+                  }}
                   window.__hitmeLastMatchEvt = evt;
                   if (Date.now() < _tutorialHoldUntil && evt.phase !== "placing") {{
                     evt = Object.assign({{}}, evt, {{ phase: "placing", timeLeft: Math.max(2, Number(evt.timeLeft) || 2) }});
@@ -5084,6 +5126,46 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
         if (progressFill) progressFill.style.width = pct + "%";
         if (loadingStatus) loadingStatus.textContent = `Đang tải dữ liệu trò chơi… ${{pct}}%`;
       }}).then(instance => {{
+        const _origSendMessage = instance.SendMessage.bind(instance);
+        instance.SendMessage = function(gameObj, method, param) {{
+          if (gameObj === "WebBridge" && method === "StartPractice") {{
+            try {{
+              let dto = typeof param === "string" ? JSON.parse(param) : param;
+              if (dto) {{
+                if (dto.weaponId) window.__hitmeSelectedWeapon = dto.weaponId;
+                if (dto.characterId) window.__hitmeSelectedChar = dto.characterId;
+                const safeDto = Object.assign({{}}, dto, {{
+                  weaponId: "dep_to_ong",
+                  characterId: ["quay_boy", "cho_vang", "meo_mun"].includes(dto.characterId) ? "nam_lang" : (dto.characterId || "nam_lang")
+                }});
+                param = JSON.stringify(safeDto);
+              }}
+            }} catch (e) {{}}
+          }} else if (gameObj === "WebBridge" && method === "SetWeapon") {{
+            try {{
+              let dto = typeof param === "string" ? JSON.parse(param) : param;
+              if (dto && dto.id) {{
+                window.__hitmeSelectedWeapon = dto.id;
+                if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {{
+                  window.hitmeUi.onUnity({{ type: "selection", weaponId: dto.id }});
+                }}
+                return;
+              }}
+            }} catch (e) {{}}
+          }} else if (gameObj === "WebBridge" && method === "SetCharacter") {{
+            try {{
+              let dto = typeof param === "string" ? JSON.parse(param) : param;
+              if (dto && dto.id) {{
+                window.__hitmeSelectedChar = dto.id;
+                if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {{
+                  window.hitmeUi.onUnity({{ type: "selection", characterId: dto.id }});
+                }}
+                if (["quay_boy", "cho_vang", "meo_mun"].includes(dto.id)) return;
+              }}
+            }} catch (e) {{}}
+          }}
+          return _origSendMessage(gameObj, method, param);
+        }};
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
@@ -5271,6 +5353,9 @@ def main() -> int:
     # Sync cleaned catalog avatars/portraits/icons into extracted web-ui/dist/assets
     sync_visual_assets(codex_webui_dist / "assets")
     sync_visual_assets(TEMP_EXTRACT_DIR / "web-ui" / "assets")
+    if (CATALOG_SRC_DIR / "catalog.json").exists():
+        shutil.copy2(CATALOG_SRC_DIR / "catalog.json", codex_webui_dist / "catalog.json")
+        shutil.copy2(CATALOG_SRC_DIR / "catalog.json", TEMP_EXTRACT_DIR / "web-ui" / "catalog.json")
 
     catalog_data = json.loads((codex_webui_dist / "catalog.json").read_text(encoding="utf-8"))
     catalog_version = int(catalog_data.get("version", 1))

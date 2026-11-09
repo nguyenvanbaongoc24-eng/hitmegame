@@ -97,8 +97,8 @@
         "en": "Rebel Boy"
       },
       "desc": {
-        "vi": "Nghịch ngợm, phá cách (Mở khóa luyện bot • hoạt ảnh TẠM)",
-        "en": "Rebellious (Unlocked for bot practice • TEMP pose)"
+        "vi": "Nghịch ngợm, phá cách • Sẵn sàng nghênh chiến",
+        "en": "Rebellious and agile • Ready for battle"
       },
       "enabled": true,
       "poseStatus": "TAM_IDLE_RELEASE",
@@ -119,8 +119,8 @@
         "en": "Golden Dog"
       },
       "desc": {
-        "vi": "Trung thành, lanh lợi (Mở khóa luyện bot • hoạt ảnh TẠM)",
-        "en": "Loyal and clever (Unlocked for bot practice • TEMP pose)"
+        "vi": "Trung thành, lanh lợi • Đón đầu mọi hướng né",
+        "en": "Loyal and clever • Sharp dodging senses"
       },
       "enabled": true,
       "poseStatus": "TAM_IDLE_PROCEDURAL",
@@ -141,8 +141,8 @@
         "en": "Black Cat"
       },
       "desc": {
-        "vi": "Bí ẩn, thoăn thoắt (Mở khóa luyện bot • hoạt ảnh TẠM)",
-        "en": "Mysterious and agile (Unlocked for bot practice • TEMP pose)"
+        "vi": "Bí ẩn, thoăn thoắt • Di chuyển linh hoạt",
+        "en": "Mysterious and agile • Flexible moves"
       },
       "enabled": true,
       "poseStatus": "TAM_IDLE_PROCEDURAL",
@@ -177,9 +177,9 @@
         "en": "Frying Pan"
       },
       "enabled": true,
-      "owned": false,
-      "price": 199,
-      "statusTag": "DÙNG THỬ • 199 VÀNG (TẠM)",
+      "owned": true,
+      "price": 0,
+      "statusTag": "SỞ HỮU",
       "icon": "./assets/chao_chong_dinh_icon.png"
     },
     {
@@ -189,14 +189,14 @@
         "en": "Pickleball Paddle"
       },
       "enabled": true,
-      "owned": false,
-      "price": 260,
-      "statusTag": "DÙNG THỬ • 260 VÀNG (TẠM)",
+      "owned": true,
+      "price": 0,
+      "statusTag": "SỞ HỮU",
       "icon": "./assets/vot_pickleball_icon.png"
     }
   ],
   "features": {
-    "online": false,
-    "questsRewardsRealGold": false
+    "online": true,
+    "questsRewardsRealGold": true
   }
 }
