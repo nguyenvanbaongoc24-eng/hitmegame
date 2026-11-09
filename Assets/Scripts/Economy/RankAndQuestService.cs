@@ -196,34 +196,37 @@ namespace HitMe.Economy
                 resetHour = 0,
                 quests = new List<QuestDto>
                 {
-                    new QuestDto { id = "play_3_matches", titleVi = "Chơi 3 trận", titleEn = "Play 3 matches", target = 3, rewardGold = 50, descriptionVi = "Hoàn thành 3 trận đấu bất kỳ." },
+                    new QuestDto { id = "play_3_matches", titleVi = "Chơi 3 trận", titleEn = "Play 3 matches", target = 3, rewardGold = 50, descriptionVi = "Hoàn thành 3 trận luyện bot." },
                     new QuestDto { id = "land_5_hits", titleVi = "Trúng 5 đòn", titleEn = "Land 5 hits", target = 5, rewardGold = 60, descriptionVi = "Ném trúng đối thủ 5 lần." },
-                    new QuestDto { id = "win_1_match", titleVi = "Thắng 1 trận", titleEn = "Win 1 match", target = 1, rewardGold = 100, descriptionVi = "Chiến thắng 1 trận đấu." }
+                    new QuestDto { id = "survive_round_3", titleVi = "Sống tới vòng 3", titleEn = "Survive to round 3", target = 3, rewardGold = 70, descriptionVi = "Sống sót tới vòng 3 trong trận luyện bot." },
+                    new QuestDto { id = "win_1_match", titleVi = "Thắng 1 trận", titleEn = "Win 1 match", target = 1, rewardGold = 100, descriptionVi = "Chiến thắng 1 trận luyện bot." }
                 }
             };
         }
 
         private static string GetTodayVnDateString()
         {
-            // Vietnam Time = UTC + 7
-            var vnTime = DateTime.UtcNow.AddHours(7);
-            return vnTime.ToString("yyyy-MM-dd");
+            // Local date with Vietnam UTC+7 fallback
+            try { return DateTime.Now.ToString("yyyy-MM-dd"); }
+            catch { return DateTime.UtcNow.AddHours(7).ToString("yyyy-MM-dd"); }
         }
 
         public static void CheckAndResetDaily()
         {
             string today = GetTodayVnDateString();
-            string lastReset = PlayerPrefs.GetString(PrefsLastResetDate, string.Empty);
+            string lastReset = LocalProfileStore.GetString(PrefsLastResetDate, string.Empty);
             if (lastReset != today)
             {
                 // Reset daily quests
                 foreach (var q in _config.quests)
                 {
-                    PlayerPrefs.DeleteKey(PrefsQuestProgress + q.id);
-                    PlayerPrefs.DeleteKey(PrefsQuestClaimed + q.id);
+                    LocalProfileStore.DeleteKey(PrefsQuestProgress + q.id);
+                    LocalProfileStore.DeleteKey(PrefsQuestClaimed + q.id);
                 }
-                PlayerPrefs.SetString(PrefsLastResetDate, today);
-                PlayerPrefs.Save();
+                LocalProfileStore.SetString(PrefsLastResetDate, today);
+                var profile = LocalProfileStore.Load();
+                profile.lastQuestResetLocalDate = today;
+                LocalProfileStore.Save();
             }
         }
 
@@ -240,8 +243,8 @@ namespace HitMe.Economy
                     target = q.target,
                     rewardGold = q.rewardGold,
                     descriptionVi = q.descriptionVi,
-                    currentProgress = PlayerPrefs.GetInt(PrefsQuestProgress + q.id, 0),
-                    isClaimed = PlayerPrefs.GetInt(PrefsQuestClaimed + q.id, 0) == 1
+                    currentProgress = LocalProfileStore.GetInt(PrefsQuestProgress + q.id, 0),
+                    isClaimed = LocalProfileStore.GetInt(PrefsQuestClaimed + q.id, 0) == 1
                 };
                 _runtimeQuests.Add(copy);
             }
@@ -253,28 +256,39 @@ namespace HitMe.Economy
             return _runtimeQuests;
         }
 
-        public static void RecordMatchPlayed(bool isWin, int hitsLanded)
+        public static void RecordMatchPlayed(bool isWin, int hitsLanded, int roundsSurvived = 1)
         {
             EnsureInitialized();
+            var profile = LocalProfileStore.Load();
+            profile.botMatchesPlayed += 1;
+            if (isWin) profile.botMatchesWon += 1;
+            profile.totalHitsLanded += Mathf.Max(0, hitsLanded);
+            if (roundsSurvived > profile.maxRoundSurvived) profile.maxRoundSurvived = roundsSurvived;
+
             foreach (var q in _runtimeQuests)
             {
-                if (q.id == "play_3_matches")
+                if (q.id == "play_3_matches" || q.id == "play_1_match")
                 {
                     q.currentProgress = Mathf.Min(q.target, q.currentProgress + 1);
-                    PlayerPrefs.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
+                    LocalProfileStore.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
                 }
-                else if (q.id == "land_5_hits")
+                else if (q.id == "land_5_hits" || q.id == "land_3_hits")
                 {
                     q.currentProgress = Mathf.Min(q.target, q.currentProgress + hitsLanded);
-                    PlayerPrefs.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
+                    LocalProfileStore.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
+                }
+                else if (q.id == "survive_round_3")
+                {
+                    q.currentProgress = Mathf.Min(q.target, Mathf.Max(q.currentProgress, roundsSurvived));
+                    LocalProfileStore.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
                 }
                 else if (q.id == "win_1_match" && isWin)
                 {
                     q.currentProgress = Mathf.Min(q.target, q.currentProgress + 1);
-                    PlayerPrefs.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
+                    LocalProfileStore.SetInt(PrefsQuestProgress + q.id, q.currentProgress);
                 }
             }
-            PlayerPrefs.Save();
+            LocalProfileStore.Save();
         }
 
         public static bool ClaimReward(string questId, out int goldReward)
@@ -286,8 +300,13 @@ namespace HitMe.Economy
 
             q.isClaimed = true;
             goldReward = q.rewardGold;
-            PlayerPrefs.SetInt(PrefsQuestClaimed + q.id, 1);
-            PlayerPrefs.Save();
+            LocalProfileStore.SetInt(PrefsQuestClaimed + q.id, 1);
+            if (LocalProfileStore.QuestRewardsEnabled)
+            {
+                var profile = LocalProfileStore.Load();
+                profile.localGold += goldReward;
+            }
+            LocalProfileStore.Save();
             return true;
         }
 
@@ -295,14 +314,16 @@ namespace HitMe.Economy
         {
             _config = null;
             _runtimeQuests.Clear();
-            PlayerPrefs.DeleteKey(PrefsLastResetDate);
-            PlayerPrefs.DeleteKey(PrefsQuestProgress + "play_3_matches");
-            PlayerPrefs.DeleteKey(PrefsQuestClaimed + "play_3_matches");
-            PlayerPrefs.DeleteKey(PrefsQuestProgress + "land_5_hits");
-            PlayerPrefs.DeleteKey(PrefsQuestClaimed + "land_5_hits");
-            PlayerPrefs.DeleteKey(PrefsQuestProgress + "win_1_match");
-            PlayerPrefs.DeleteKey(PrefsQuestClaimed + "win_1_match");
-            PlayerPrefs.Save();
+            LocalProfileStore.DeleteKey(PrefsLastResetDate);
+            LocalProfileStore.DeleteKey(PrefsQuestProgress + "play_3_matches");
+            LocalProfileStore.DeleteKey(PrefsQuestClaimed + "play_3_matches");
+            LocalProfileStore.DeleteKey(PrefsQuestProgress + "land_5_hits");
+            LocalProfileStore.DeleteKey(PrefsQuestClaimed + "land_5_hits");
+            LocalProfileStore.DeleteKey(PrefsQuestProgress + "survive_round_3");
+            LocalProfileStore.DeleteKey(PrefsQuestClaimed + "survive_round_3");
+            LocalProfileStore.DeleteKey(PrefsQuestProgress + "win_1_match");
+            LocalProfileStore.DeleteKey(PrefsQuestClaimed + "win_1_match");
+            LocalProfileStore.Save();
         }
     }
 }

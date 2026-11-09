@@ -754,6 +754,115 @@ HOME_VISUAL_PATCH_HTML = """
     body.r38-reduced-motion .r38-timer-ring.urgent {
       animation: none !important;
     }
+
+    /* U2: Daily Quests & Sample Leaderboard Modals */
+    .r38-u2-banner {
+      margin: 4px 0 10px !important;
+      padding: 8px 12px !important;
+      border-radius: 10px !important;
+      background: rgba(245, 158, 11, 0.18) !important;
+      border: 1.5px solid #f59e0b !important;
+      color: #fde68a !important;
+      font-size: 12px !important;
+      font-weight: 800 !important;
+      text-align: center !important;
+      line-height: 1.35 !important;
+    }
+    .r38-u2-stats-row {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 6px !important;
+      margin-bottom: 10px !important;
+    }
+    .r38-u2-stat-box {
+      padding: 7px 6px !important;
+      border-radius: 10px !important;
+      background: rgba(15, 29, 48, 0.92) !important;
+      border: 1px solid rgba(25, 213, 216, 0.45) !important;
+      text-align: center !important;
+    }
+    .r38-u2-stat-box small {
+      display: block !important;
+      font-size: 10.5px !important;
+      color: #94a3b8 !important;
+      margin-bottom: 2px !important;
+    }
+    .r38-u2-stat-box b {
+      font-size: 15px !important;
+      font-weight: 900 !important;
+      color: #19d5d8 !important;
+    }
+    .r38-u2-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      max-height: 46vh !important;
+      overflow-y: auto !important;
+      padding-right: 2px !important;
+      margin-bottom: 10px !important;
+    }
+    .r38-quest-row, .r38-rank-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 10px !important;
+      padding: 9px 11px !important;
+      border-radius: 12px !important;
+      background: linear-gradient(180deg, #162b42 0%, #0d1b2b 100%) !important;
+      border: 1.5px solid rgba(255, 205, 56, 0.4) !important;
+    }
+    .r38-rank-row.me {
+      border: 2px solid #19d5d8 !important;
+      background: linear-gradient(180deg, #173852 0%, #0e2438 100%) !important;
+    }
+    .r38-quest-info {
+      flex: 1 !important;
+      text-align: left !important;
+    }
+    .r38-quest-info b {
+      display: block !important;
+      font-size: 13.5px !important;
+      color: #fff8e8 !important;
+      margin-bottom: 3px !important;
+    }
+    .r38-quest-info small {
+      display: block !important;
+      font-size: 11.5px !important;
+      color: #ffcd38 !important;
+      font-weight: 700 !important;
+    }
+    .r38-quest-bar {
+      width: 100% !important;
+      height: 6px !important;
+      background: rgba(255,255,255,0.12) !important;
+      border-radius: 99px !important;
+      overflow: hidden !important;
+      margin-top: 4px !important;
+    }
+    .r38-quest-bar > i {
+      display: block !important;
+      height: 100% !important;
+      background: linear-gradient(90deg, #19d5d8, #17b987) !important;
+    }
+    .r38-quest-claim {
+      min-width: 92px !important;
+      min-height: 44px !important;
+      padding: 6px 10px !important;
+      border-radius: 10px !important;
+      font-size: 11.5px !important;
+      font-weight: 900 !important;
+      border: 1.5px solid #fff8e8 !important;
+      background: linear-gradient(180deg, #ffdf4a 0%, #f59e0b 100%) !important;
+      color: #2b1206 !important;
+      cursor: pointer !important;
+    }
+    .r38-quest-claim[disabled] {
+      opacity: 0.55 !important;
+      background: #1e293b !important;
+      color: #94a3b8 !important;
+      border-color: #475569 !important;
+      cursor: default !important;
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -812,7 +921,75 @@ HOME_VISUAL_PATCH_HTML = """
       let _r38CatalogWeaponsUnlocked = 1;
       let _r38PrevHpByPlayer = {};
       let _r38HapticsEnabled = true;
+      let _r38LastOverlayTab = "";
       try { _r38HapticsEnabled = localStorage.getItem("hitme_haptics") !== "0"; } catch (e) {}
+
+      // U2: LocalProfileStore (schemaVersion = 1, wrapped in try/catch for Safari Private Mode, QuestRewardsEnabled = false default)
+      const R38_PROFILE_KEY = "hitme_local_profile_v1";
+      let _r38MemProfile = null;
+      function getTodayLocalStr() {
+        const d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      }
+      function loadLocalProfile() {
+        const today = getTodayLocalStr();
+        let data = _r38MemProfile;
+        if (!data) {
+          try {
+            const raw = localStorage.getItem(R38_PROFILE_KEY);
+            if (raw) data = JSON.parse(raw);
+          } catch (e) {}
+        }
+        if (!data || typeof data !== "object" || Number(data.schemaVersion) < 1) {
+          data = {
+            schemaVersion: 1,
+            questRewardsEnabled: false,
+            lastResetDate: today,
+            botMatchesPlayed: 0,
+            botMatchesWon: 0,
+            totalHitsLanded: 0,
+            maxRoundSurvived: 0,
+            experimentalGoldClaimed: 0,
+            quests: {
+              play_1_match: { progress: 0, target: 1, reward: 50, claimed: false, title: "Chơi 1 trận luyện bot" },
+              land_3_hits: { progress: 0, target: 3, reward: 60, claimed: false, title: "Ném trúng 3 lần" },
+              survive_round_3: { progress: 0, target: 3, reward: 70, claimed: false, title: "Sống tới vòng 3" },
+              win_1_match: { progress: 0, target: 1, reward: 100, claimed: false, title: "Thắng 1 trận luyện bot" }
+            }
+          };
+        }
+        if (data.lastResetDate !== today) {
+          data.lastResetDate = today;
+          Object.values(data.quests || {}).forEach(q => { q.progress = 0; q.claimed = false; });
+        }
+        _r38MemProfile = data;
+        saveLocalProfile(data);
+        return data;
+      }
+      function saveLocalProfile(data) {
+        _r38MemProfile = data;
+        try { localStorage.setItem(R38_PROFILE_KEY, JSON.stringify(data)); } catch (e) {}
+      }
+      function recordBotMatchResult(evt) {
+        if (!evt || !Array.isArray(evt.rankings)) return;
+        const p = loadLocalProfile();
+        const me = evt.rankings.find(r => r.id === "player" || r.id === "you") || evt.rankings[0] || {};
+        const won = Number(me.rank) === 1;
+        const hits = Math.max(0, Number(me.hits) || 0);
+        const rounds = Math.max(1, Number(me.roundSurvived || evt.round) || 1);
+        p.botMatchesPlayed = (Number(p.botMatchesPlayed) || 0) + 1;
+        if (won) p.botMatchesWon = (Number(p.botMatchesWon) || 0) + 1;
+        p.totalHitsLanded = (Number(p.totalHitsLanded) || 0) + hits;
+        p.maxRoundSurvived = Math.max(Number(p.maxRoundSurvived) || 0, rounds);
+        if (p.quests) {
+          if (p.quests.play_1_match) p.quests.play_1_match.progress = Math.min(1, (p.quests.play_1_match.progress || 0) + 1);
+          if (p.quests.land_3_hits) p.quests.land_3_hits.progress = Math.min(3, (p.quests.land_3_hits.progress || 0) + hits);
+          if (p.quests.survive_round_3) p.quests.survive_round_3.progress = Math.min(3, Math.max(p.quests.survive_round_3.progress || 0, rounds));
+          if (p.quests.win_1_match && won) p.quests.win_1_match.progress = Math.min(1, (p.quests.win_1_match.progress || 0) + 1);
+        }
+        saveLocalProfile(p);
+      }
+      window.__hitmeRecordBotResult = recordBotMatchResult;
 
       function tryHaptic(ms) {
         if (!_r38HapticsEnabled || document.body.classList.contains("r38-reduced-motion")) return;
@@ -1174,6 +1351,102 @@ HOME_VISUAL_PATCH_HTML = """
             toggleGroup.appendChild(hapBtn);
           }
         }
+
+        // U2: Enhance Daily Quests & Sample Leaderboard modal when opened from Home bottom tabs
+        const modalEl = root.querySelector(".modal");
+        const backBtn = modalEl ? modalEl.querySelector(".modal-back") : null;
+        if (modalEl && backBtn && (_r38LastOverlayTab === "quests" || _r38LastOverlayTab === "rank") && !modalEl.querySelector(".r38-u2-content")) {
+          const prof = loadLocalProfile();
+          const h2 = modalEl.querySelector("header h2");
+          const pPlaceholder = modalEl.querySelector(":scope > p");
+          if (pPlaceholder) pPlaceholder.style.display = "none";
+
+          const wrap = document.createElement("div");
+          wrap.className = "r38-u2-content";
+
+          if (_r38LastOverlayTab === "quests") {
+            if (h2) h2.textContent = "NHIỆM VỤ NGÀY";
+            const banner = document.createElement("div");
+            banner.className = "r38-u2-banner";
+            banner.textContent = `Đặt lại mỗi ngày (${prof.lastResetDate}) • QuestRewardsEnabled = false (Nhận thử nghiệm, chờ chủ dự án bật cộng vàng)`;
+            wrap.appendChild(banner);
+
+            const list = document.createElement("div");
+            list.className = "r38-u2-list";
+            Object.entries(prof.quests || {}).forEach(([qid, q]) => {
+              const prog = Math.min(q.target, Number(q.progress) || 0);
+              const pct = Math.round((prog / Math.max(1, q.target)) * 100);
+              const done = prog >= q.target;
+              const row = document.createElement("div");
+              row.className = "r38-quest-row";
+              row.dataset.questId = qid;
+              row.innerHTML = `
+                <div class="r38-quest-info">
+                  <b>${q.title} (${prog}/${q.target})</b>
+                  <small>Thưởng: +${q.reward} Vàng (Thử nghiệm)</small>
+                  <div class="r38-quest-bar"><i style="width:${pct}%"></i></div>
+                </div>
+                <button type="button" class="r38-quest-claim" data-quest-claim="${qid}" ${(!done || q.claimed) ? "disabled" : ""}>
+                  ${q.claimed ? "ĐÃ NHẬN (TẠM)" : done ? "NHẬN (THỬ)" : `${prog}/${q.target}`}
+                </button>
+              `;
+              const btn = row.querySelector("button");
+              if (btn && done && !q.claimed) {
+                btn.addEventListener("click", (ev) => {
+                  ev.stopPropagation();
+                  q.claimed = true;
+                  prof.experimentalGoldClaimed = (Number(prof.experimentalGoldClaimed) || 0) + q.reward;
+                  saveLocalProfile(prof);
+                  btn.disabled = true;
+                  btn.textContent = "ĐÃ NHẬN (TẠM)";
+                  tryHaptic(25);
+                });
+              }
+              list.appendChild(row);
+            });
+            wrap.appendChild(list);
+          } else {
+            if (h2) h2.textContent = "BẢNG XẾP HẠNG";
+            const banner = document.createElement("div");
+            banner.className = "r38-u2-banner";
+            banner.textContent = "Dữ liệu mẫu • Bảng xếp hạng thật mở khi có máy chủ";
+            wrap.appendChild(banner);
+
+            const stats = document.createElement("div");
+            stats.className = "r38-u2-stats-row";
+            stats.innerHTML = `
+              <div class="r38-u2-stat-box"><small>Trận Bot</small><b>${prof.botMatchesPlayed || 0}</b></div>
+              <div class="r38-u2-stat-box"><small>Trận Thắng</small><b>${prof.botMatchesWon || 0}</b></div>
+              <div class="r38-u2-stat-box"><small>Đòn Trúng</small><b>${prof.totalHitsLanded || 0}</b></div>
+            `;
+            wrap.appendChild(stats);
+
+            const sampleRows = [
+              { rank: 1, name: "Nguyễn_Vô_Địch", pts: 1250, tier: "Kim Cương", me: false },
+              { rank: 2, name: "Dép_Bay_Sát_Thủ", pts: 980, tier: "Bạch Kim", me: false },
+              { rank: 3, name: "Chảo_Thần_Sầu", pts: 820, tier: "Bạch Kim", me: false },
+              { rank: 4, name: "Bia_Hơi_Hà_Nội", pts: 540, tier: "Vàng", me: false },
+              { rank: 5, name: "Bạn (Thống kê cục bộ)", pts: 310 + (prof.botMatchesWon || 0) * 25, tier: "Vàng • Mẫu", me: true }
+            ];
+            const list = document.createElement("div");
+            list.className = "r38-u2-list";
+            sampleRows.forEach(r => {
+              const row = document.createElement("div");
+              row.className = "r38-rank-row" + (r.me ? " me" : "");
+              row.innerHTML = `
+                <div class="r38-quest-info">
+                  <b>#${r.rank} · ${r.name}</b>
+                  <small>Hạng: ${r.tier}</small>
+                </div>
+                <strong style="color:#ffcd38;font-size:14px;">${r.pts} Đ</strong>
+              `;
+              list.appendChild(row);
+            });
+            wrap.appendChild(list);
+          }
+
+          modalEl.insertBefore(wrap, backBtn);
+        }
       }
 
       document.addEventListener("click", (e) => {
@@ -1199,6 +1472,8 @@ HOME_VISUAL_PATCH_HTML = """
         } else if (act === "ready") {
           tryHaptic(25);
           showPhaseBanner("ĐÃ KHÓA!");
+        } else if (act === "quests" || act === "rank") {
+          _r38LastOverlayTab = act;
         }
       }, true);
 
@@ -1626,6 +1901,9 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
               if (window.__hitmeFreezeLiveMatch && evt && !evt.__fromTest) return;
               if (evt && typeof evt === "object") {{
                 if (evt.type === "screen" || evt.type === "result") {{
+                  if (evt.type === "result" && typeof window.__hitmeRecordBotResult === "function") {{
+                    window.__hitmeRecordBotResult(evt);
+                  }}
                   _lastMatchSig = "";
                   _tutorialHoldUntil = 0;
                   _interactHoldUntil = 0;
