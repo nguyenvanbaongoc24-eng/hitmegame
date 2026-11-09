@@ -83,3 +83,36 @@
      - `ALLOWED_ORIGINS=https://hitmegame-iota.vercel.app,http://localhost,http://127.0.0.1`
    - Thêm header `Access-Control-Allow-Origin` (khớp `ALLOWED_ORIGINS`) cho phản hồi `GET /healthz` và `POST /guest-token` để trình duyệt trên Vercel đọc được JSON `/healthz` ở chế độ CORS chuẩn.
    - Trong khi chờ Render cập nhật `ALLOWED_ORIGINS`, mặt định `/next/` giữ nhãn **"Máy chủ chưa sẵn sàng"**, và toàn bộ màn hình Online + giao thức thật được mở qua cờ `?online=1` (hoặc `?lab=1` cho Loopback 2 người).
+
+## 6. Kết quả kiểm tra máy chủ Render thật trong bước L10 (Đợt 40 — `2026-11-10T00:55:05Z`)
+- **Thời gian kiểm thử:** `2026-11-10T00:55:05Z`.
+- **Mục tiêu:** Kiểm thử toàn trình 2–6 người chơi thật từ nguồn Vercel `https://hitmegame-iota.vercel.app/next/` tới máy chủ Render `wss://hitmegame.onrender.com/ws`.
+
+### Nhật ký đo đạc nguyên văn (Verbatim Probe Log):
+1. `GET https://hitmegame.onrender.com/healthz`:
+   - **Mã HTTP:** `200 OK` (thời gian: 320 ms)
+   - **Header:** `Server: cloudflare`, `x-render-origin-server: Kestrel`, `Content-Type: application/json; charset=utf-8`
+   - **Body:** `{"status":"ok","protocol":3}`
+   - **Lưu ý CORS:** Vẫn thiếu header `Access-Control-Allow-Origin: https://hitmegame-iota.vercel.app`.
+
+2. `POST https://hitmegame.onrender.com/guest-token`:
+   - **Mã HTTP:** `503 Service Unavailable`
+   - **Header:** `Server: cloudflare`, `x-render-origin-server: Kestrel`, `allow: POST`
+   - **Ý nghĩa:** Biến môi trường ký token khách `GUEST_TOKEN_SIGNING_KEY` chưa được bật trên Render.
+
+3. `POST https://hitmegame.onrender.com/client-log`:
+   - **Mã HTTP:** `404 Not Found` (Codex chưa triển khai endpoint nhận telemetry log khách; client L8 giữ ở trạng thái fallback an toàn, không làm gián đoạn trải nghiệm).
+
+4. Bắt tay WebSocket `wss://hitmegame.onrender.com/ws` với `Origin: https://hitmegame-iota.vercel.app`:
+   - **Playwright log:**
+     ```
+     WS Created: wss://hitmegame.onrender.com/ws
+     WS SocketError: Error during WebSocket handshake: Unexpected response code: 403
+     WS Closed: {'errTriggered': True, 'code': 1006, 'reason': '', 'wasClean': False}
+     ```
+   - **Mã lỗi handshake:** HTTP `403 Forbidden` (`origin_not_allowed`).
+
+### Kết luận bước L10:
+- Theo đúng quy tắc an toàn và chỉ thị Đợt 40: *"Nếu Render chưa cho phép Origin Vercel hoặc guest-token chưa mở: ghi vào docs/NET_FEEDBACK.md nguyên văn và dừng L10 ở CHỜ CODEX; không dùng Kestrel cục bộ để tuyên bố 'online chạy'."*
+- Antigravity **không** dùng kết quả Kestrel cục bộ để thay thế bằng chứng Render thật; xác nhận dừng L10 ở trạng thái: **`BỊ CHẶN / CHỜ CODEX (Render ALLOWED_ORIGINS & GUEST_TOKEN_SIGNING_KEY)`**.
+- Toàn bộ mã client (L1–L9) đã hoàn tất 100%, sẵn sàng chạy ngay khi Codex cập nhật Render `ALLOWED_ORIGINS` cho phép `https://hitmegame-iota.vercel.app`.
