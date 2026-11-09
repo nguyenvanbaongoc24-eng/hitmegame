@@ -4,6 +4,7 @@ pack_hybrid.py — R2 Channel Packager for HIT ME Hybrid Web UI + Unity WebGL Re
 Channels:
   /             Stable channel (preserved unchanged unless --promote is explicitly passed)
   /next/        Candidate hybrid channel (Web UI from prep/codex + latest Unity WebGL Release)
+  /previous/    Backup of the previous stable root / channel (restorable via --rollback)
   /ui-preview/  Web UI preview channel (web-ui/dist from prep/codex)
   /rc/          Unverified candidate channel (used only if deploy gate fails, with visible RC warning badge)
 """
@@ -15,6 +16,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -143,7 +145,6 @@ HOME_VISUAL_PATCH_HTML = """
       }, 600);
     });
     (function() {
-
       // Dynamic pedestal anchor alignment (B-4 formula from bg_home_meta.json)
       function syncPedestalAnchor() {
         const vv = window.visualViewport;
@@ -177,6 +178,67 @@ def git_rev_short(ref: str, cwd: Path = REPO_ROOT) -> str:
     return res.stdout.strip()
 
 
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build_channel_file_manifest(channel_dir: Path, root_dir: Path) -> list[dict]:
+    """
+    Builds a deterministic list of required files for a channel (`index.html`, `version.json`,
+    `app.js`, `style.css`, `catalog.json`, key assets, and referenced `Build/*` files).
+    Paths are recorded relative to `channel_dir` (e.g. `index.html`, `../Build/WebGL_Release_...`).
+    """
+    entries: list[dict] = []
+    seen_paths: set[str] = set()
+
+    def add_entry(rel_path: str, abs_path: Path) -> None:
+        if rel_path in seen_paths or not abs_path.exists() or not abs_path.is_file():
+            return
+        seen_paths.add(rel_path)
+        entries.append({
+            "path": rel_path,
+            "size": abs_path.stat().st_size,
+            "sha256": sha256_file(abs_path),
+            "contentEncoding": "br" if abs_path.name.endswith(".br") else "identity",
+        })
+
+    for rel in (
+        "index.html",
+        "version.json",
+        "config.json",
+        "app.js",
+        "style.css",
+        "catalog.json",
+        "assets/bg_home_750.webp",
+        "assets/bg_home_1170.webp",
+        "assets/bg_home_1536.webp",
+        "assets/bg_home_lqip.webp",
+        "assets/bg_home_meta.json",
+        "assets/nam_lang_portrait.png",
+        "assets/nu_nang_dong_portrait.png",
+        "assets/co_ba_portrait.png",
+        "assets/anh_teen_portrait.png",
+        "assets/dep_to_ong_icon.png",
+    ):
+        add_entry(rel, channel_dir / rel)
+
+    # Parse index.html to discover referenced WebGL Build files
+    index_file = channel_dir / "index.html"
+    if index_file.exists():
+        html_text = index_file.read_text(encoding="utf-8", errors="ignore")
+        build_url_match = re.search(r'const\s+buildUrl\s*=\s*"([^"]+)"', html_text)
+        build_prefix = build_url_match.group(1).rstrip("/") if build_url_match else "./Build"
+        for m in re.finditer(r'buildUrl\s*\+\s*"/([^"?]+)"', html_text):
+            fname = m.group(1)
+            rel_ref = f"{build_prefix}/{fname}"
+            abs_build_file = (channel_dir / rel_ref).resolve()
+            if not abs_build_file.exists() and (root_dir / "Build" / fname).exists():
+                abs_build_file = (root_dir / "Build" / fname).resolve()
+            add_entry(rel_ref, abs_build_file)
+
+    return entries
+
+
 def find_latest_release_build() -> Path:
     candidates = []
     if BUILDS_DIR.exists():
@@ -199,42 +261,38 @@ def extract_from_codex(ref: str, paths: list[str], dest_root: Path) -> None:
         tf.extractall(path=dest_root)
 
 
+def sync_root_static_configs(dest_dir: Path) -> None:
+    for cfg_name in ("vercel.json", "robots.txt"):
+        src = DEPLOY_WEB_DIR / cfg_name
+        dst = dest_dir / cfg_name
+        if src.exists():
+            if not dst.exists() or sha256_file(src) != sha256_file(dst):
+                shutil.copy2(src, dst)
+
+
 def preserve_stable_root() -> None:
-    """Ensures / (root index.html, config.json, version.json, and Build/) matches the deployed stable root."""
+    """Ensures / (root files, previous/, and Build/) matches the deployed stable root."""
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     if STAGING_DEPLOY_DIR.exists() and (STAGING_DEPLOY_DIR / "index.html").exists():
-        for name in ("index.html", "config.json", "version.json"):
-            src = STAGING_DEPLOY_DIR / name
-            if src.exists():
-                shutil.copy2(src, DIST_DIR / name)
-        src_build = STAGING_DEPLOY_DIR / "Build"
-        dst_build = DIST_DIR / "Build"
-        if src_build.exists():
-            if dst_build.exists():
-                shutil.rmtree(dst_build)
-            shutil.copytree(src_build, dst_build)
+        for item in STAGING_DEPLOY_DIR.iterdir():
+            if item.name in (".git", "next", "rc", "ui-preview"):
+                continue
+            dst = DIST_DIR / item.name
+            if item.is_dir():
+                shutil.copytree(item, dst, dirs_exist_ok=True)
+            else:
+                shutil.copy2(item, dst)
 
-    # Write release.json for stable root / without changing root index.html or Build/
-    root_ver = "0.1.0-beta.1"
-    root_build = "1f1cdfa"
-    if (DIST_DIR / "version.json").exists():
-        try:
-            vdata = json.loads((DIST_DIR / "version.json").read_text(encoding="utf-8"))
-            root_ver = vdata.get("version", root_ver)
-            root_build = vdata.get("build", root_build)
-        except Exception:
-            pass
-    root_release = {
-        "version": root_ver,
-        "buildId": root_build,
-        "createdAt": "2026-11-05T02:10:37Z",
-        "unityCommit": root_build,
-        "webUiCommit": "none",
-        "catalogVersion": 1,
-        "gate": {"passed": True, "failedIds": []},
-        "notes": "Stable root channel (preserved unchanged)"
-    }
-    (DIST_DIR / "release.json").write_text(json.dumps(root_release, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # Refresh files manifest in root release.json and previous/release.json if present
+    for ch_dir in (DIST_DIR, DIST_DIR / "previous"):
+        rel_path = ch_dir / "release.json"
+        if rel_path.exists():
+            try:
+                rdata = json.loads(rel_path.read_text(encoding="utf-8"))
+                rdata["files"] = build_channel_file_manifest(ch_dir, DIST_DIR)
+                rel_path.write_text(json.dumps(rdata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            except Exception:
+                pass
 
 
 def sync_visual_assets(assets_dir: Path) -> None:
@@ -254,6 +312,16 @@ def sync_visual_assets(assets_dir: Path) -> None:
 def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity_commit: str, webui_commit: str,
                            catalog_version: int, gate_passed: bool, failed_ids: list[str], notes: str) -> None:
     now_iso = datetime.now(timezone.utc).isoformat()
+    version_data = {
+        "version": version,
+        "build": build_id,
+        "unityCommit": unity_commit,
+        "webUiCommit": webui_commit,
+        "timestamp": now_iso
+    }
+    (channel_dir / "version.json").write_text(json.dumps(version_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    files_manifest = build_channel_file_manifest(channel_dir, DIST_DIR)
     release_data = {
         "version": version,
         "buildId": build_id,
@@ -265,17 +333,10 @@ def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity
             "passed": gate_passed,
             "failedIds": failed_ids
         },
+        "files": files_manifest,
         "notes": notes
     }
     (channel_dir / "release.json").write_text(json.dumps(release_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    version_data = {
-        "version": version,
-        "build": build_id,
-        "unityCommit": unity_commit,
-        "webUiCommit": webui_commit,
-        "timestamp": now_iso
-    }
-    (channel_dir / "version.json").write_text(json.dumps(version_data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_files: dict[str, str],
@@ -428,6 +489,17 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
   <script>
     window.__hitmeConfig = {{ ui: "web" }};
     window.__hitmeReleaseInfo = {{ version: "{version}", buildId: "{build_id}" }};
+    window.__hitmeBootT0 = performance.now();
+
+    function checkAndEmitHomeShown() {{
+      if (window.__hitmeHomeShown) return;
+      const homeEl = document.querySelector('#ui-root [data-screen="home"]');
+      const heroEl = document.querySelector('#ui-root .home .hero');
+      if (homeEl && heroEl && window.unityInstance) {{
+        window.__hitmeHomeShown = Math.round(performance.now() - (window.__hitmeBootT0 || 0));
+        console.log("HOME_SHOWN " + window.__hitmeHomeShown + "ms");
+      }}
+    }}
 
     // Deduplicate 10 Hz Unity match ticks and guard active UI pointer interactions so app.js innerHTML never detaches buttons mid-click
     (function() {{
@@ -520,6 +592,7 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
     const uiRootEl = document.getElementById("ui-root");
     if (uiRootEl && typeof MutationObserver !== "undefined") {{
       const obs = new MutationObserver(() => {{
+        checkAndEmitHomeShown();
         const sheet = uiRootEl.querySelector(".settings-sheet");
         if (sheet && !sheet.querySelector(".release-version-badge")) {{
           const badge = document.createElement("small");
@@ -604,6 +677,8 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
         window.unityInstance = instance;
         if (loading) loading.style.display = "none";
         canvas.focus();
+        checkAndEmitHomeShown();
+        setTimeout(checkAndEmitHomeShown, 60);
         if (urlParams.get("autostart") === "practice") {{
           const autoChar = urlParams.get("char") || "nam_lang";
           const autoWeapon = urlParams.get("weapon") || "dep_to_ong";
@@ -631,6 +706,10 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
 
 
 def promote_next_to_root() -> None:
+    """
+    Safely promotes `/next/` to root `/`, backing up the current root `/` into `/previous/`,
+    while preserving all shared `Build/` and `ui-preview/` files using `dirs_exist_ok=True`.
+    """
     next_dir = DIST_DIR / "next"
     if (STAGING_DEPLOY_DIR / "next" / "release.json").exists():
         if next_dir.exists():
@@ -638,29 +717,41 @@ def promote_next_to_root() -> None:
         shutil.copytree(STAGING_DEPLOY_DIR / "next", next_dir)
     elif not next_dir.exists() or not (next_dir / "release.json").exists():
         raise FileNotFoundError("Cannot promote: dist/next/release.json does not exist")
+
+    # 1. Always merge shared Build/ and ui-preview/ from STAGING_DEPLOY_DIR with dirs_exist_ok=True
+    for shared_folder in ("Build", "ui-preview"):
+        if (STAGING_DEPLOY_DIR / shared_folder).exists():
+            shutil.copytree(
+                STAGING_DEPLOY_DIR / shared_folder,
+                DIST_DIR / shared_folder,
+                dirs_exist_ok=True,
+            )
+
+    # 2. Backup current root / to /previous/ (including hybrid assets/app.js/style.css if present)
     prev_dir = DIST_DIR / "previous"
     if prev_dir.exists():
         shutil.rmtree(prev_dir)
     prev_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("index.html", "version.json", "release.json", "config.json"):
-        src_root_file = STAGING_DEPLOY_DIR / name if (STAGING_DEPLOY_DIR / name).exists() else DIST_DIR / name
-        if src_root_file.exists():
+    root_src_base = STAGING_DEPLOY_DIR if (STAGING_DEPLOY_DIR / "index.html").exists() else DIST_DIR
+    for name in ("index.html", "version.json", "release.json", "config.json", "app.js", "style.css", "catalog.json"):
+        src_root_file = root_src_base / name
+        if src_root_file.exists() and src_root_file.is_file():
             shutil.copy2(src_root_file, prev_dir / name)
+    if (root_src_base / "assets").exists():
+        shutil.copytree(root_src_base / "assets", prev_dir / "assets", dirs_exist_ok=True)
+
     if (prev_dir / "index.html").exists():
         phtml = (prev_dir / "index.html").read_text(encoding="utf-8")
         phtml = phtml.replace('const buildUrl = "Build";', 'const buildUrl = "../Build";')
+        phtml = phtml.replace('const buildUrl = "./Build";', 'const buildUrl = "../Build";')
         (prev_dir / "index.html").write_text(phtml, encoding="utf-8")
+    if (prev_dir / "release.json").exists():
+        pdata = json.loads((prev_dir / "release.json").read_text(encoding="utf-8"))
+        pdata["files"] = build_channel_file_manifest(prev_dir, DIST_DIR)
+        (prev_dir / "release.json").write_text(json.dumps(pdata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"[+] Backed up current root / to {prev_dir}")
 
-    # Copy shared Build/ and ui-preview/ from STAGING_DEPLOY_DIR if missing in DIST_DIR
-    for shared_folder in ("Build", "ui-preview"):
-        if not (DIST_DIR / shared_folder).exists() and (STAGING_DEPLOY_DIR / shared_folder).exists():
-            shutil.copytree(STAGING_DEPLOY_DIR / shared_folder, DIST_DIR / shared_folder)
-    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
-    vercel_dest = DIST_DIR / "vercel.json"
-    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
-        shutil.copy2(vercel_source, vercel_dest)
-
+    # 3. Copy next/ contents to root /
     for item in next_dir.iterdir():
         if item.name == "Build":
             continue
@@ -675,7 +766,51 @@ def promote_next_to_root() -> None:
         rhtml = (DIST_DIR / "index.html").read_text(encoding="utf-8")
         rhtml = rhtml.replace('const buildUrl = "../Build";', 'const buildUrl = "./Build";')
         (DIST_DIR / "index.html").write_text(rhtml, encoding="utf-8")
+
+    # 4. Refresh files manifest in root / and ui-preview/
+    for ch_dir in (DIST_DIR, DIST_DIR / "ui-preview", DIST_DIR / "next"):
+        rel_path = ch_dir / "release.json"
+        if rel_path.exists():
+            rdata = json.loads(rel_path.read_text(encoding="utf-8"))
+            rdata["files"] = build_channel_file_manifest(ch_dir, DIST_DIR)
+            rel_path.write_text(json.dumps(rdata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    sync_root_static_configs(DIST_DIR)
     print("[+] Promoted /next/ to root /")
+
+
+def rollback_previous_to_root() -> None:
+    """Restores `/previous/` back to root `/` while keeping `Build/`, `/next/`, and `/ui-preview/` intact."""
+    preserve_stable_root()
+    for shared_folder in ("Build", "ui-preview", "next", "previous"):
+        if (STAGING_DEPLOY_DIR / shared_folder).exists():
+            shutil.copytree(STAGING_DEPLOY_DIR / shared_folder, DIST_DIR / shared_folder, dirs_exist_ok=True)
+
+    prev_dir = DIST_DIR / "previous"
+    if not prev_dir.exists() or not (prev_dir / "index.html").exists():
+        raise FileNotFoundError("Cannot rollback: /previous/index.html does not exist")
+
+    for item in prev_dir.iterdir():
+        dst = DIST_DIR / item.name
+        if item.is_dir():
+            if dst.exists():
+                shutil.rmtree(dst)
+            shutil.copytree(item, dst)
+        else:
+            shutil.copy2(item, dst)
+
+    if (DIST_DIR / "index.html").exists():
+        rhtml = (DIST_DIR / "index.html").read_text(encoding="utf-8")
+        rhtml = rhtml.replace('const buildUrl = "../Build";', 'const buildUrl = "./Build";')
+        (DIST_DIR / "index.html").write_text(rhtml, encoding="utf-8")
+
+    if (DIST_DIR / "release.json").exists():
+        rdata = json.loads((DIST_DIR / "release.json").read_text(encoding="utf-8"))
+        rdata["files"] = build_channel_file_manifest(DIST_DIR, DIST_DIR)
+        (DIST_DIR / "release.json").write_text(json.dumps(rdata, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    sync_root_static_configs(DIST_DIR)
+    print("[+] Rolled back root / from /previous/")
 
 
 def main() -> int:
@@ -685,11 +820,15 @@ def main() -> int:
     parser.add_argument("--gate-passed", action="store_true", default=True)
     parser.add_argument("--gate-failed-ids", default="")
     parser.add_argument("--promote", action="store_true")
+    parser.add_argument("--rollback", action="store_true")
     parser.add_argument("--notes", default="Hybrid Web UI (prep/codex) + Unity WebGL Release (feature/ui-ux-production)")
     args = parser.parse_args()
 
     if args.promote:
         promote_next_to_root()
+        return 0
+    if args.rollback:
+        rollback_previous_to_root()
         return 0
 
     failed_ids = [x.strip() for x in args.gate_failed_ids.split(",") if x.strip()]
@@ -697,8 +836,6 @@ def main() -> int:
 
     version_file = DEPLOY_WEB_DIR / "VERSION"
     version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.3"
-    # The packager can change after Unity finishes building. Record the commit
-    # embedded in the selected build directory, not the current packaging HEAD.
     latest_build = find_latest_release_build()
     unity_commit = latest_build.name.rsplit("_", 1)[-1]
     subprocess.run(["git", "cat-file", "-e", f"{unity_commit}^{{commit}}"], cwd=REPO_ROOT, check=True)
@@ -783,11 +920,8 @@ def main() -> int:
         catalog_version, gate_passed, failed_ids, args.notes
     )
 
-    # 5. Copy vercel.json to DIST_DIR only if its content changed.
-    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
-    vercel_dest = DIST_DIR / "vercel.json"
-    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
-        shutil.copy2(vercel_source, vercel_dest)
+    # 5. Copy vercel.json and robots.txt to DIST_DIR
+    sync_root_static_configs(DIST_DIR)
 
     print(f"[SUCCESS] Packaged /{args.channel}/ and /ui-preview/ with buildId={build_id} (root / preserved unchanged)")
     return 0
