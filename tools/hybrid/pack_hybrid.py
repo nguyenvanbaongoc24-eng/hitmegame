@@ -1688,7 +1688,8 @@ HOME_VISUAL_PATCH_HTML = """
           e.stopPropagation();
           e.preventDefault();
           const sp = new URLSearchParams(window.location.search);
-          if ((sp.get("online") === "1" || sp.get("lab") === "1" || sp.get("server")) && window.__hitmeOnlineUi) {
+          const isOnlineEnabled = window.__hitmeReleaseInfo?.online !== false;
+          if ((isOnlineEnabled || sp.get("online") === "1" || sp.get("lab") === "1" || sp.get("server")) && window.__hitmeOnlineUi) {
             const btnTxt = (btn.textContent || "").toUpperCase();
             const mode = (btnTxt.includes("NHANH") || btnTxt.includes("QUICK")) ? "quick"
                        : (btnTxt.includes("VÀO") || btnTxt.includes("JOIN")) ? "join" : "create";
@@ -2250,6 +2251,50 @@ HOME_VISUAL_PATCH_HTML = """
         font-size: 15px !important;
       }
     }
+
+    /* L1: Beta Testing Banner & Feedback Button */
+    .r40-beta-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 85;
+      background: linear-gradient(90deg, rgba(234, 88, 12, 0.95), rgba(194, 65, 12, 0.95));
+      color: #fff8e8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      letter-spacing: 0.3px;
+      pointer-events: auto;
+    }
+    .r40-beta-banner .badge {
+      background: #fff;
+      color: #c2410c;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 900;
+      margin-right: 6px;
+      text-transform: uppercase;
+    }
+    .r40-feedback-btn {
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fff8e8;
+      text-decoration: none;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 10.5px;
+      font-weight: 800;
+      transition: background 0.15s;
+    }
+    .r40-feedback-btn:active {
+      background: rgba(255, 255, 255, 0.4);
+    }
   </style>
   <script id="r39-online-g9-js">
     (function() {
@@ -2448,11 +2493,68 @@ HOME_VISUAL_PATCH_HTML = """
       }
       window.__hitmeComputeCoRankings = computeCoRankings;
 
+      // L1: Server URL Resolution & Security Guard
+      function isLocalHostname(host) {
+        if (!host) return false;
+        return host === "localhost" || host === "127.0.0.1" || host === "::1" ||
+               host.endsWith(".local") || /^192\\.168\\./.test(host) || /^10\\./.test(host) || /^172\\.(1[6-9]|2[0-9]|3[0-1])\\./.test(host);
+      }
+
+      function resolveServerWsUrl() {
+        const rel = window.__hitmeReleaseInfo || {};
+        const defaultUrl = rel.serverUrl || "wss://hitmegame.onrender.com/ws";
+        const allowed = Array.isArray(rel.allowedCustomServers) ? rel.allowedCustomServers : [];
+        const param = new URLSearchParams(window.location.search).get("server");
+        let target = defaultUrl;
+
+        if (param) {
+          try {
+            const u = new URL(param);
+            const isPageLocal = isLocalHostname(window.location.hostname);
+            const isTargetLocal = isLocalHostname(u.hostname);
+            const isAllowed = allowed.includes(param) || isTargetLocal;
+            if (isPageLocal || isAllowed) {
+              target = param;
+            } else {
+              console.warn("[HITME Security] Custom server rejected (not localhost or whitelisted):", param);
+            }
+          } catch (e) {
+            console.warn("[HITME Security] Invalid server param:", param);
+          }
+        }
+
+        if (window.location.protocol === "https:" && target.startsWith("ws://")) {
+          const isTargetLocal = target.includes("localhost") || target.includes("127.0.0.1");
+          if (!isTargetLocal) {
+            target = target.replace(/^ws:\\/\\//i, "wss://");
+          }
+        }
+        return target;
+      }
+
+      function renderBetaBanner() {
+        const rel = window.__hitmeReleaseInfo || {};
+        if (rel.betaBanner === false) return;
+        if (document.getElementById("r40-beta-banner")) return;
+        const banner = document.createElement("div");
+        banner.id = "r40-beta-banner";
+        banner.className = "r40-beta-banner";
+        const fbUrl = rel.feedbackUrl || "";
+        banner.innerHTML = `
+          <div style="display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            <span class="badge">BETA</span>
+            <span>Bản thử nghiệm Beta đóng v1</span>
+          </div>
+          ${fbUrl ? `<a href="${fbUrl}" target="_blank" rel="noopener noreferrer" class="r40-feedback-btn">Góp ý 💬</a>` : ""}
+        `;
+        document.body.appendChild(banner);
+      }
+
       // Single Unified Online Client (N-A: WebSocket + LoopbackTransport)
       const onlineState = {
         mode: "create", // create | join | quick | lobby | match | result
         transportMode: new URLSearchParams(window.location.search).get("lab") === "1" ? "loopback" : "ws",
-        wsUrl: new URLSearchParams(window.location.search).get("server") || "wss://hitmegame.onrender.com/ws",
+        wsUrl: resolveServerWsUrl(),
         socket: null,
         connected: false,
         playerName: "NamLang" + Math.floor(10 + Math.random() * 89),
@@ -3624,6 +3726,7 @@ HOME_VISUAL_PATCH_HTML = """
           const obs = new MutationObserver(() => enhanceBotResultScreenG9());
           obs.observe(root, { childList: true, subtree: true });
         }
+        renderBetaBanner();
         const sp = new URLSearchParams(window.location.search);
         if (sp.get("name")) {
           onlineState.playerName = sp.get("name");
@@ -3645,7 +3748,9 @@ HOME_VISUAL_PATCH_HTML = """
         handleServerMessage,
         triggerReconnectNow,
         showNetAlert,
-        hideNetAlert
+        hideNetAlert,
+        resolveServerWsUrl,
+        renderBetaBanner
       };
     })();
   </script>
@@ -3811,6 +3916,17 @@ def write_release_metadata(channel_dir: Path, version: str, build_id: str, unity
         "unityCommit": unity_commit,
         "webUiCommit": webui_commit,
         "catalogVersion": catalog_version,
+        "serverUrl": "wss://hitmegame.onrender.com/ws",
+        "online": True,
+        "betaBanner": True,
+        "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock",
+        "allowedCustomServers": [
+            "wss://hitmegame.onrender.com/ws",
+            "ws://localhost:5000/ws",
+            "ws://127.0.0.1:5000/ws",
+            "ws://localhost:8080/ws",
+            "ws://127.0.0.1:8080/ws"
+        ],
         "gate": {
             "passed": gate_passed,
             "failedIds": failed_ids
@@ -3830,6 +3946,22 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
   <div id="rc-warning-badge" data-name="rc-badge" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#b91c1c;color:#fff8e8;font-size:12px;font-weight:800;text-align:center;padding:4px 8px;pointer-events:none;">
     RC - chưa qua kiểm thử ({failed_str})
   </div>"""
+
+    release_info_js = json.dumps({
+        "version": version,
+        "buildId": build_id,
+        "serverUrl": "wss://hitmegame.onrender.com/ws",
+        "online": True,
+        "betaBanner": True,
+        "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock",
+        "allowedCustomServers": [
+            "wss://hitmegame.onrender.com/ws",
+            "ws://localhost:5000/ws",
+            "ws://127.0.0.1:5000/ws",
+            "ws://localhost:8080/ws",
+            "ws://127.0.0.1:8080/ws"
+        ]
+    }, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
 <html lang="vi">
@@ -3970,7 +4102,7 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
 
   <script>
     window.__hitmeConfig = {{ ui: "web" }};
-    window.__hitmeReleaseInfo = {{ version: "{version}", buildId: "{build_id}" }};
+    window.__hitmeReleaseInfo = {release_info_js};
     window.__hitmeBootT0 = performance.now();
 
     function checkAndEmitHomeShown() {{
