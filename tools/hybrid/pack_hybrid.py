@@ -3840,6 +3840,7 @@ HOME_VISUAL_PATCH_HTML = """
           `;
         } else if (onlineState.mode === "result") {
           const endMsg = onlineState.lastMatchEnd || {};
+          const isHost = (onlineState.hostId && onlineState.playerName === onlineState.hostId) || (onlineState.players[0] && onlineState.players[0].id === onlineState.playerName) || (onlineState.transportMode === "loopback");
           const rawRows = (Array.isArray(endMsg.rankings) && endMsg.rankings.length)
             ? endMsg.rankings
             : (onlineState.players || []).map((p, i) => ({
@@ -3882,8 +3883,12 @@ HOME_VISUAL_PATCH_HTML = """
                 <tbody>${tableRowsHtml}</tbody>
               </table>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-                <button type="button" class="r39-btn" data-on-act="play-again" data-name="btn-match-replay">CHƠI LẠI</button>
-                <button type="button" class="r39-btn secondary" data-on-act="close-online" data-name="btn-match-home">VỀ TRANG CHỦ</button>
+                <button type="button" class="r39-btn" data-on-act="replay-match" data-name="btn-match-replay" ${isHost ? "" : "disabled"} title="${isHost ? "Bắt đầu ván đấu mới" : "Chỉ chủ phòng mới có quyền bấm Đấu lại"}">
+                  ${isHost ? "ĐẤU LẠI 👑" : "ĐẤU LẠI (CHỦ PHÒNG)"}
+                </button>
+                <button type="button" class="r39-btn secondary" data-on-act="return-lobby" data-name="btn-match-lobby">VỀ PHÒNG CHỜ</button>
+                <button type="button" class="r39-btn secondary" data-on-act="quick-again" data-name="btn-match-quick">GHÉP NHANH LẠI</button>
+                <button type="button" class="r39-btn danger" data-on-act="leave-room" data-name="btn-match-leave">RỜI PHÒNG</button>
               </div>
             </div>
           `;
@@ -4253,8 +4258,30 @@ HOME_VISUAL_PATCH_HTML = """
             closeOnlineRoot();
             const prac = document.querySelector('#ui-root [data-action="practice"]');
             if (prac) prac.click();
-          } else if (act === "play-again") {
-            openMode("create");
+          } else if (act === "replay-match" || act === "play-again") {
+            const isHost = (onlineState.hostId && onlineState.playerName === onlineState.hostId) || (onlineState.players[0] && onlineState.players[0].id === onlineState.playerName) || (onlineState.transportMode === "loopback");
+            if (!isHost && act === "replay-match") {
+              showNetAlert("host_only", "Chỉ chủ phòng mới có quyền bấm Đấu lại!");
+              return;
+            }
+            sendProtocol({ type: "start" });
+          } else if (act === "return-lobby") {
+            onlineState.mode = "lobby";
+            onlineState.phase = "lobby";
+            onlineState.started = false;
+            sendProtocol({
+              type: "room_ready",
+              ready: false,
+              characterId: onlineState.characterId,
+              weaponId: onlineState.weaponId
+            });
+            renderOnlineRoot();
+          } else if (act === "leave-room") {
+            sendProtocol({ type: "leave" });
+            closeOnlineRoot();
+          } else if (act === "quick-again") {
+            sendProtocol({ type: "leave" });
+            setTimeout(() => _doOpenMode("quick"), 200);
           }
         }
       });
