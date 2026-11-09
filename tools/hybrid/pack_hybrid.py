@@ -4991,7 +4991,14 @@ def generate_hybrid_index_html(channel_dir: Path, build_rel_url: str, build_file
               try {{ if (typeof event === "string") evt = JSON.parse(event); }} catch (e) {{}}
               if (window.__hitmeFreezeLiveMatch && evt && !evt.__fromTest) return;
               if (evt && typeof evt === "object") {{
-                if (evt.type === "screen" || evt.type === "result") {{
+                if (evt.type === "ready") {{
+                  if (Array.isArray(evt.roster)) {{
+                    evt.roster.forEach(c => c.enabled = true);
+                  }}
+                  if (Array.isArray(evt.weapons)) {{
+                    evt.weapons.forEach(w => w.enabled = true);
+                  }}
+                }} else if (evt.type === "screen" || evt.type === "result") {{
                   if (evt.type === "result" && typeof window.__hitmeRecordBotResult === "function") {{
                     window.__hitmeRecordBotResult(evt);
                   }}
