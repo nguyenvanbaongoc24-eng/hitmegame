@@ -2350,6 +2350,27 @@ HOME_VISUAL_PATCH_HTML = """
       color: #94a3b8;
       pointer-events: none;
     }
+
+    /* L5: Release update toast */
+    .r40-update-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      color: #fff8e8;
+      border-radius: 99px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      font-size: 13px;
+      font-weight: 700;
+      pointer-events: auto;
+    }
   </style>
   <script id="r39-online-g9-js">
     (function() {
@@ -3345,13 +3366,15 @@ HOME_VISUAL_PATCH_HTML = """
           shade.id = "r39-net-alert-shade";
           document.body.appendChild(shade);
         }
+        const isMismatch = code === "protocol_mismatch";
         const isReconnecting = code === "reconnecting";
         const isShutdown = code === "server_shutdown" || code === "server_restarting";
         const isBanned = code === "banned";
         const isTimeout = code === "reconnect_timeout" || code === "reconnect_invalid";
         const isRoomJoinError = code === "room_full" || code === "room_started" || code === "room_not_found" || code === "room_expired" || code === "room_limit" || code === "room_code_exhausted";
-        const title = isReconnecting ? "ĐANG KẾT NỐI LẠI (30 GIÂY)"
-                    : isShutdown ? "MÁY CHỦ ĐANG BẢO TRÌ / KHỞI ĐỘNG LẠI"
+        const title = isMismatch ? "CÓ BẢN MỚI — VUI LÒNG TẢI LẠI"
+                    : isReconnecting ? "ĐANG KẾT NỐI LẠI (30 GIÂY)"
+                    : isShutdown ? "MÁY CHỦ ĐANG BẢO TRÌ, THỬ LẠI SAU ÍT PHÚT"
                     : isBanned ? "TẠM KHÓA DO KHÔNG THAO TÁC (AFK)"
                     : isTimeout ? "BẠN ĐÃ RỜI TRẬN"
                     : isRoomJoinError ? "KHÔNG THỂ VÀO PHÒNG"
@@ -3361,14 +3384,19 @@ HOME_VISUAL_PATCH_HTML = """
             <h3>${title}</h3>
             <p>${messageText}</p>
             <div class="r38-online-actions">
+              ${isMismatch ? `<button type="button" class="r39-btn" id="r39-alert-reload-btn">🔄 TẢI LẠI NGAY</button>` : ""}
               ${isRoomJoinError ? `<button type="button" class="r39-btn" id="r39-alert-newroom-btn">TẠO PHÒNG MỚI</button>` : ""}
               ${isReconnecting ? `<button type="button" class="r39-btn" id="r39-alert-reconnect-btn">VÀO LẠI NGAY</button>` : ""}
-              <button type="button" class="r39-btn ${isRoomJoinError ? "secondary" : ""}" id="r39-alert-bot-btn">LUYỆN VỚI BOT</button>
-              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">${isTimeout ? "VỀ TRANG CHỦ" : "ĐÓNG"}</button>
+              <button type="button" class="r39-btn ${isRoomJoinError || isMismatch ? "secondary" : ""}" id="r39-alert-bot-btn">LUYỆN VỚI BOT</button>
+              <button type="button" class="r39-btn secondary" id="r39-alert-close-btn">${isTimeout || isShutdown ? "VỀ TRANG CHỦ" : "ĐÓNG"}</button>
             </div>
           </div>
         `;
         shade.classList.add("active");
+        const reloadBtn = shade.querySelector("#r39-alert-reload-btn");
+        if (reloadBtn) reloadBtn.addEventListener("click", () => {
+          window.location.href = window.location.origin + window.location.pathname + "?_t=" + Date.now();
+        });
         const newRoomBtn = shade.querySelector("#r39-alert-newroom-btn");
         if (newRoomBtn) newRoomBtn.addEventListener("click", () => {
           hideNetAlert();
@@ -3384,7 +3412,40 @@ HOME_VISUAL_PATCH_HTML = """
           if (prac) prac.click();
         });
         const clsBtn = shade.querySelector("#r39-alert-close-btn");
-        if (clsBtn) clsBtn.addEventListener("click", () => hideNetAlert());
+        if (clsBtn) clsBtn.addEventListener("click", () => {
+          hideNetAlert();
+          if (isShutdown || isTimeout) closeOnlineRoot();
+        });
+      }
+
+      function startReleasePolling() {
+        const myBuildId = window.__hitmeReleaseInfo?.buildId || "";
+        setInterval(() => {
+          if (document.hidden) return;
+          fetch("./release.json?_t=" + Date.now(), { cache: "no-store" })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+              if (data && data.buildId && myBuildId && data.buildId !== myBuildId && !document.getElementById("r40-update-toast")) {
+                showUpdateToast(data.buildId);
+              }
+            })
+            .catch(() => {});
+        }, 60000);
+      }
+
+      function showUpdateToast(newBuildId) {
+        if (document.getElementById("r40-update-toast")) return;
+        const toast = document.createElement("div");
+        toast.id = "r40-update-toast";
+        toast.className = "r40-update-toast";
+        toast.innerHTML = `
+          <span>🚀 Có bản cập nhật mới!</span>
+          <button type="button" class="r39-btn-pill" id="r40-toast-reload-btn" style="padding:4px 10px;font-size:11.5px;">TẢI LẠI</button>
+        `;
+        document.body.appendChild(toast);
+        toast.querySelector("#r40-toast-reload-btn").addEventListener("click", () => {
+          window.location.href = window.location.origin + window.location.pathname + "?_t=" + Date.now();
+        });
       }
 
       let _lastHiddenAt = 0;
@@ -4205,6 +4266,7 @@ HOME_VISUAL_PATCH_HTML = """
           obs.observe(root, { childList: true, subtree: true });
         }
         renderBetaBanner();
+        startReleasePolling();
         const sp = new URLSearchParams(window.location.search);
         if (sp.get("name")) {
           onlineState.playerName = sp.get("name");
@@ -4273,7 +4335,9 @@ HOME_VISUAL_PATCH_HTML = """
         stopHeartbeat,
         requestWakeLock,
         releaseWakeLock,
-        startReconnectCountdown
+        startReconnectCountdown,
+        startReleasePolling,
+        showUpdateToast
       };
     })();
   </script>
