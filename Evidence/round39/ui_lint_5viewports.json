@@ -1,0 +1,71 @@
+{
+  "commit": "ab74062",
+  "timestamp": "2026-11-09T08:03:32Z",
+  "resolutionsTested": 5,
+  "resolutionsPassed": 5,
+  "checks": {
+    "a_text_height_min_2_2pct": {
+      "status": "PASS",
+      "tested": 10,
+      "violations": []
+    },
+    "b_touch_target_min_135_physical_px": {
+      "status": "PASS",
+      "tested": 5,
+      "violations": []
+    },
+    "c_no_overlap_safe_area": {
+      "status": "PASS",
+      "tested": 5,
+      "violations": []
+    },
+    "d_no_text_overflow": {
+      "status": "PASS",
+      "tested": 5,
+      "violations": []
+    },
+    "e_primary_button_lower_third": {
+      "status": "PASS",
+      "tested": 5,
+      "violations": []
+    }
+  },
+  "perViewport": {
+    "1080x1920": {
+      "dpr": 3,
+      "buttonsChecked": 1,
+      "minPhysicalHeightPx": 177,
+      "violations": [],
+      "status": "PASS"
+    },
+    "1170x2532": {
+      "dpr": 3,
+      "buttonsChecked": 1,
+      "minPhysicalHeightPx": 168,
+      "violations": [],
+      "status": "PASS"
+    },
+    "1080x2400": {
+      "dpr": 3,
+      "buttonsChecked": 1,
+      "minPhysicalHeightPx": 168,
+      "violations": [],
+      "status": "PASS"
+    },
+    "1080x2520": {
+      "dpr": 3,
+      "buttonsChecked": 1,
+      "minPhysicalHeightPx": 168,
+      "violations": [],
+      "status": "PASS"
+    },
+    "1620x2160": {
+      "dpr": 2,
+      "buttonsChecked": 1,
+      "minPhysicalHeightPx": 136,
+      "violations": [],
+      "status": "PASS"
+    }
+  },
+  "summary": "Passed! 5/5 viewports (5/5 checks)"
+}

@@ -11,7 +11,7 @@
 | Ném Dép Tổ Ong (`dep_to_ong`) | `throw_dep` / `PlayThrow("dep_to_ong")` | `Assets/Audio/sfx_throw.wav` | ✅ CÓ TỆP & ĐÃ GẮN |
 | Ném Chảo Chống Dính (`chao_chong_dinh`) | `throw_chao` / `PlayThrow("chao_chong_dinh")` | `Assets/Audio/sfx_throw.wav` | ⚠️ TẠM (dùng chung `sfx_throw.wav` chờ tệp `sfx_throw_chao.wav`) |
 | Ném Vợt Pickleball (`vot_pickleball`) | `throw_vot` / `PlayThrow("vot_pickleball")` | `Assets/Audio/sfx_throw.wav` | ⚠️ TẠM (dùng chung `sfx_throw.wav` chờ tệp `sfx_throw_vot.wav`) |
-| Vũ khí đang bay trên không (Flight loop) | `sfxFlightMissing` / `PlayFlight()` | *Không có tệp nguồn* | ❌ TẠM (`null` — giữ im lặng, không dùng synth) |
+| Tiếng vút khi dép/vũ khí bay (Flight whoosh) | `throw_whoosh` / `PlayFlight()` | `Assets/Audio/sfx_throw.wav` (pitch `1.12`, vol `0.65`) | ⚠️ TẠM (dùng `sfx_throw.wav` khi dép bay trên không chờ tệp `sfx_flight_whoosh.wav` riêng) |
 | Trúng đòn Dép (`hit_dep`) | `hit_dep` / `PlayHit("dep_to_ong")` | `Assets/Audio/sfx_hit_bop.wav` | ✅ CÓ TỆP & ĐÃ GẮN |
 | Trúng đòn Chảo (`hit_chao`) | `hit_chao` / `PlayHit("chao_chong_dinh")` | `Assets/Audio/sfx_hit_bop.wav` | ⚠️ TẠM (dùng chung `sfx_hit_bop.wav` chờ tệp tiếng chảo `sfx_hit_clang.wav`) |
 | Trúng đòn Vợt (`hit_vot`) | `hit_vot` / `PlayHit("vot_pickleball")` | `Assets/Audio/sfx_hit_bop.wav` | ⚠️ TẠM (dùng chung `sfx_hit_bop.wav` chờ tệp `sfx_hit_vot.wav`) |
@@ -43,7 +43,8 @@
 | **E2.a** | Đặt nhân vật nảy xuống sân + vòng nở (`#r38-place-fx`) | `180 ms` (`1.18 → 0.94 → 1.0`) | Node đơn `#r38-place-fx` tái sử dụng | ✅ Có |
 | **E4.a** | Hit-stop khi trúng đòn (`PlayHitStop`) | `65 ms` (`<= 80 ms`) | Chỉ thị giác, không đổi mô phỏng | ✅ Có |
 | **E4.b** | Rung màn hình khi trúng đòn (`r38-screen-shake`) | `120 ms` (`3.5px`) | CSS transform trên container | ✅ Có |
-| **E4.c** | Thẻ HP rung + chữ nổi `"BỐP! -1 ❤️"` / `"HỤT!"` | `340 ms` / `580 ms` | `_damageTextPool` (6) + `#r38-hit-callout` (1) | ✅ Có |
+| **E4.c** | Thẻ HP rung + mảnh tim vỡ bay tách (`r39-heart-shard`) + chữ nổi `"BỐP! -1"` kèm **sprite tim** (`./assets/ui_icon_heart_break.png`, không dùng emoji `❤️`) | `340 ms` / `580 ms` | `_damageTextPool` (6) + `#r38-hit-callout` (1) + `#r39-heart-shards` (pool 4) | ✅ Có |
+| **E4.d** | Khi bị loại (`0 HP` KO): thẻ xám + nghiêng + **sao quay quanh đầu** (`./assets/vfx_spinning_stars.png`) | Chu kỳ `1400 ms` | Sprite `./assets/vfx_spinning_stars.png` trên thẻ bị loại | ✅ Có |
 | **E5.a** | Hoa giấy mừng chiến thắng (`#r38-confetti-pool`) | `1600–2720 ms` | Pool cố định `28` hạt (`<= 30`) | ✅ Có |
-| **E6.a** | Viền đỏ nhấp nháy khi còn `1 HP` (`#r38-low-hp-vignette`) | Chu kỳ `1150 ms` | Node đơn `#r38-low-hp-vignette` | ✅ Có |
+| **E6.a** | Viền đỏ nhấp nháy khi còn `1 HP` (`#r38-low-hp-vignette`) + bóng tên nhân vật | Chu kỳ `1150 ms` | Node đơn `#r38-low-hp-vignette` | ✅ Có |
 | **E6.b** | Rung xúc giác (`navigator.vibrate(25)` bọc `try/catch`) | `25 ms` | Có nút bật/tắt trong Cài đặt | ✅ Có |

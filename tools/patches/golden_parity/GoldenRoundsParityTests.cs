@@ -71,6 +71,63 @@ public sealed class GoldenRoundsParityTests
         }
     }
 
+    [Test]
+    public void WeaponChange_ProducesByteIdenticalRoundAndMatchResult()
+    {
+        var file = GoldenJson.Read(GoldenJsonPath());
+        var config = file.Config.ToCore();
+        string[] weaponIds = { "dep_to_ong", "chao_chong_dinh", "vot_pickleball" };
+
+        byte[] RunAll200RoundsSnapshot(string weaponId)
+        {
+            Assert.That(weaponId, Is.Not.Empty);
+            using var ms = new MemoryStream();
+            using var bw = new BinaryWriter(ms, System.Text.Encoding.UTF8, leaveOpen: true);
+            for (var roundIndex = 0; roundIndex < file.Rounds.Length; roundIndex++)
+            {
+                var round = file.Rounds[roundIndex];
+                var players = new List<PlayerState>();
+                var inputs = new Dictionary<string, RoundInput>();
+                for (var i = 0; i < round.Players.Length; i++) players.Add(round.Players[i].ToCore());
+                for (var i = 0; i < round.Inputs.Length; i++) inputs.Add(round.Inputs[i].PlayerId, round.Inputs[i].ToCore());
+                var actual = RoundResolver.Resolve(players, inputs, config);
+                bw.Write(round.Id);
+                bw.Write(actual.Hits.Count);
+                for (var h = 0; h < actual.Hits.Count; h++)
+                {
+                    bw.Write(actual.Hits[h].ShooterId);
+                    bw.Write(actual.Hits[h].TargetId);
+                    bw.Write(actual.Hits[h].Distance);
+                    bw.Write(actual.Hits[h].Point.X);
+                    bw.Write(actual.Hits[h].Point.Y);
+                }
+                bw.Write(players.Count);
+                for (var p = 0; p < players.Count; p++)
+                {
+                    bw.Write(players[p].Id);
+                    bw.Write(players[p].Hp);
+                    bw.Write(players[p].HitsLanded);
+                    bw.Write(players[p].Position.X);
+                    bw.Write(players[p].Position.Y);
+                    bw.Write(players[p].Facing.X);
+                    bw.Write(players[p].Facing.Y);
+                    bw.Write(players[p].IsAlive);
+                }
+            }
+            bw.Flush();
+            return ms.ToArray();
+        }
+
+        byte[] baselineBytes = RunAll200RoundsSnapshot(weaponIds[0]);
+        Assert.That(baselineBytes.Length, Is.GreaterThan(1000));
+        for (int w = 1; w < weaponIds.Length; w++)
+        {
+            byte[] candidateBytes = RunAll200RoundsSnapshot(weaponIds[w]);
+            Assert.That(candidateBytes, Is.EqualTo(baselineBytes),
+                $"Weapon '{weaponIds[w]}' must produce byte-for-byte identical round results to '{weaponIds[0]}'");
+        }
+    }
+
     static string GoldenJsonPath()
     {
 #if UNITY_5_3_OR_NEWER

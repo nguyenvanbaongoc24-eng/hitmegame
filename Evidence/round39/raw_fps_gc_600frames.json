@@ -1,0 +1,4359 @@
+{
+  "environment": "desktop headless (Chromium rAF 60Hz, --enable-precise-memory-info)",
+  "iphoneStatus": "FPS iPhone vẫn CHỜ chủ dự án",
+  "viewport": "390x844 @ DPR 3 (1170x2532)",
+  "scenario": "Bot Practice 3 Bots (4 players), 620 frames (~10.3s across rounds)",
+  "totalFrames": 620,
+  "summary": {
+    "medianFps": 59.9,
+    "p95FrameTimeMs": 17,
+    "p99FrameTimeMs": 17.4,
+    "minHeapMB": 17.17,
+    "maxHeapMB": 18.83,
+    "netHeapDeltaMB": -0.179,
+    "positiveJsHeapAllocBytesPerFrameAvg": 7699.3,
+    "unityManagedGcAllocBytesPerFrameNote": "Measured via Pooled VFX/UI (zero runtime Instantiate/Destroy in hot loop; positive JS/WASM bridge heap delta averaged across 620 frames)."
+  },
+  "frames": [
+    {
+      "frameIndex": 0,
+      "elapsedMs": -1.5,
+      "dtMs": -1.5,
+      "fps": 2000,
+      "usedJSHeapBytes": 19204341
+    },
+    {
+      "frameIndex": 1,
+      "elapsedMs": 15.7,
+      "dtMs": 17.2,
+      "fps": 58.1,
+      "usedJSHeapBytes": 19212613
+    },
+    {
+      "frameIndex": 2,
+      "elapsedMs": 32.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19220037
+    },
+    {
+      "frameIndex": 3,
+      "elapsedMs": 48.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19227313
+    },
+    {
+      "frameIndex": 4,
+      "elapsedMs": 65.1,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19239133
+    },
+    {
+      "frameIndex": 5,
+      "elapsedMs": 81.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19246449
+    },
+    {
+      "frameIndex": 6,
+      "elapsedMs": 98.5,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19253749
+    },
+    {
+      "frameIndex": 7,
+      "elapsedMs": 115.6,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 19261013
+    },
+    {
+      "frameIndex": 8,
+      "elapsedMs": 131.9,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19268513
+    },
+    {
+      "frameIndex": 9,
+      "elapsedMs": 148.5,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19281177
+    },
+    {
+      "frameIndex": 10,
+      "elapsedMs": 165.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19293313
+    },
+    {
+      "frameIndex": 11,
+      "elapsedMs": 181.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19300669
+    },
+    {
+      "frameIndex": 12,
+      "elapsedMs": 198.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19307885
+    },
+    {
+      "frameIndex": 13,
+      "elapsedMs": 215.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19315113
+    },
+    {
+      "frameIndex": 14,
+      "elapsedMs": 231.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19323033
+    },
+    {
+      "frameIndex": 15,
+      "elapsedMs": 249.2,
+      "dtMs": 17.3,
+      "fps": 57.8,
+      "usedJSHeapBytes": 19331429
+    },
+    {
+      "frameIndex": 16,
+      "elapsedMs": 265.1,
+      "dtMs": 15.9,
+      "fps": 62.9,
+      "usedJSHeapBytes": 19338821
+    },
+    {
+      "frameIndex": 17,
+      "elapsedMs": 281.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19352697
+    },
+    {
+      "frameIndex": 18,
+      "elapsedMs": 298.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19360117
+    },
+    {
+      "frameIndex": 19,
+      "elapsedMs": 315.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19367381
+    },
+    {
+      "frameIndex": 20,
+      "elapsedMs": 331.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19374697
+    },
+    {
+      "frameIndex": 21,
+      "elapsedMs": 348.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19381961
+    },
+    {
+      "frameIndex": 22,
+      "elapsedMs": 365.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19389201
+    },
+    {
+      "frameIndex": 23,
+      "elapsedMs": 382,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19401841
+    },
+    {
+      "frameIndex": 24,
+      "elapsedMs": 398.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19409093
+    },
+    {
+      "frameIndex": 25,
+      "elapsedMs": 415.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19416409
+    },
+    {
+      "frameIndex": 26,
+      "elapsedMs": 431.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19423673
+    },
+    {
+      "frameIndex": 27,
+      "elapsedMs": 448.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19430937
+    },
+    {
+      "frameIndex": 28,
+      "elapsedMs": 465,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18005784
+    },
+    {
+      "frameIndex": 29,
+      "elapsedMs": 481.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18013084
+    },
+    {
+      "frameIndex": 30,
+      "elapsedMs": 498.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18025070
+    },
+    {
+      "frameIndex": 31,
+      "elapsedMs": 515.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18031626
+    },
+    {
+      "frameIndex": 32,
+      "elapsedMs": 531.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18038050
+    },
+    {
+      "frameIndex": 33,
+      "elapsedMs": 548.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18044462
+    },
+    {
+      "frameIndex": 34,
+      "elapsedMs": 565.4,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18050886
+    },
+    {
+      "frameIndex": 35,
+      "elapsedMs": 582.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18057266
+    },
+    {
+      "frameIndex": 36,
+      "elapsedMs": 598.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18068226
+    },
+    {
+      "frameIndex": 37,
+      "elapsedMs": 615.1,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18074650
+    },
+    {
+      "frameIndex": 38,
+      "elapsedMs": 631.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18081062
+    },
+    {
+      "frameIndex": 39,
+      "elapsedMs": 648.5,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18087486
+    },
+    {
+      "frameIndex": 40,
+      "elapsedMs": 665,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18095710
+    },
+    {
+      "frameIndex": 41,
+      "elapsedMs": 681.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18103050
+    },
+    {
+      "frameIndex": 42,
+      "elapsedMs": 698.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18109474
+    },
+    {
+      "frameIndex": 43,
+      "elapsedMs": 715.4,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18120446
+    },
+    {
+      "frameIndex": 44,
+      "elapsedMs": 732.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18127182
+    },
+    {
+      "frameIndex": 45,
+      "elapsedMs": 748.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18133658
+    },
+    {
+      "frameIndex": 46,
+      "elapsedMs": 765.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18140082
+    },
+    {
+      "frameIndex": 47,
+      "elapsedMs": 782,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18146494
+    },
+    {
+      "frameIndex": 48,
+      "elapsedMs": 798.4,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18152894
+    },
+    {
+      "frameIndex": 49,
+      "elapsedMs": 815.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18159294
+    },
+    {
+      "frameIndex": 50,
+      "elapsedMs": 831.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18170342
+    },
+    {
+      "frameIndex": 51,
+      "elapsedMs": 848.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18176790
+    },
+    {
+      "frameIndex": 52,
+      "elapsedMs": 865.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18183190
+    },
+    {
+      "frameIndex": 53,
+      "elapsedMs": 882.2,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18189590
+    },
+    {
+      "frameIndex": 54,
+      "elapsedMs": 898.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18196026
+    },
+    {
+      "frameIndex": 55,
+      "elapsedMs": 915.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18202402
+    },
+    {
+      "frameIndex": 56,
+      "elapsedMs": 932,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18208890
+    },
+    {
+      "frameIndex": 57,
+      "elapsedMs": 948.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18219862
+    },
+    {
+      "frameIndex": 58,
+      "elapsedMs": 965,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18226298
+    },
+    {
+      "frameIndex": 59,
+      "elapsedMs": 981.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18232722
+    },
+    {
+      "frameIndex": 60,
+      "elapsedMs": 998.5,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18239158
+    },
+    {
+      "frameIndex": 61,
+      "elapsedMs": 1015.3,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18245646
+    },
+    {
+      "frameIndex": 62,
+      "elapsedMs": 1031.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18252106
+    },
+    {
+      "frameIndex": 63,
+      "elapsedMs": 1048.7,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18258518
+    },
+    {
+      "frameIndex": 64,
+      "elapsedMs": 1065.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18269450
+    },
+    {
+      "frameIndex": 65,
+      "elapsedMs": 1081.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18275886
+    },
+    {
+      "frameIndex": 66,
+      "elapsedMs": 1098.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18293040
+    },
+    {
+      "frameIndex": 67,
+      "elapsedMs": 1115.1,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18299428
+    },
+    {
+      "frameIndex": 68,
+      "elapsedMs": 1132,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18310106
+    },
+    {
+      "frameIndex": 69,
+      "elapsedMs": 1148.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18316338
+    },
+    {
+      "frameIndex": 70,
+      "elapsedMs": 1165.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18327382
+    },
+    {
+      "frameIndex": 71,
+      "elapsedMs": 1181.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18335850
+    },
+    {
+      "frameIndex": 72,
+      "elapsedMs": 1198.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18342106
+    },
+    {
+      "frameIndex": 73,
+      "elapsedMs": 1215.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18348342
+    },
+    {
+      "frameIndex": 74,
+      "elapsedMs": 1231.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18354646
+    },
+    {
+      "frameIndex": 75,
+      "elapsedMs": 1248.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18360902
+    },
+    {
+      "frameIndex": 76,
+      "elapsedMs": 1265.3,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18367198
+    },
+    {
+      "frameIndex": 77,
+      "elapsedMs": 1281.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18377966
+    },
+    {
+      "frameIndex": 78,
+      "elapsedMs": 1299,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18384242
+    },
+    {
+      "frameIndex": 79,
+      "elapsedMs": 1315,
+      "dtMs": 16,
+      "fps": 62.5,
+      "usedJSHeapBytes": 18390486
+    },
+    {
+      "frameIndex": 80,
+      "elapsedMs": 1331.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18396694
+    },
+    {
+      "frameIndex": 81,
+      "elapsedMs": 1348.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18402990
+    },
+    {
+      "frameIndex": 82,
+      "elapsedMs": 1365,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18409246
+    },
+    {
+      "frameIndex": 83,
+      "elapsedMs": 1381.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18416046
+    },
+    {
+      "frameIndex": 84,
+      "elapsedMs": 1398.3,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18426850
+    },
+    {
+      "frameIndex": 85,
+      "elapsedMs": 1415,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18435378
+    },
+    {
+      "frameIndex": 86,
+      "elapsedMs": 1431.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18441674
+    },
+    {
+      "frameIndex": 87,
+      "elapsedMs": 1448.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18447894
+    },
+    {
+      "frameIndex": 88,
+      "elapsedMs": 1465,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18454138
+    },
+    {
+      "frameIndex": 89,
+      "elapsedMs": 1481.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18460382
+    },
+    {
+      "frameIndex": 90,
+      "elapsedMs": 1498.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18466602
+    },
+    {
+      "frameIndex": 91,
+      "elapsedMs": 1514.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18477458
+    },
+    {
+      "frameIndex": 92,
+      "elapsedMs": 1531.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18483714
+    },
+    {
+      "frameIndex": 93,
+      "elapsedMs": 1548.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18489922
+    },
+    {
+      "frameIndex": 94,
+      "elapsedMs": 1564.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18496178
+    },
+    {
+      "frameIndex": 95,
+      "elapsedMs": 1581.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18502422
+    },
+    {
+      "frameIndex": 96,
+      "elapsedMs": 1598.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18508694
+    },
+    {
+      "frameIndex": 97,
+      "elapsedMs": 1614.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18519546
+    },
+    {
+      "frameIndex": 98,
+      "elapsedMs": 1632.6,
+      "dtMs": 17.7,
+      "fps": 56.5,
+      "usedJSHeapBytes": 18526326
+    },
+    {
+      "frameIndex": 99,
+      "elapsedMs": 1648.2,
+      "dtMs": 15.6,
+      "fps": 64.1,
+      "usedJSHeapBytes": 18532546
+    },
+    {
+      "frameIndex": 100,
+      "elapsedMs": 1664.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18538790
+    },
+    {
+      "frameIndex": 101,
+      "elapsedMs": 1681.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18545098
+    },
+    {
+      "frameIndex": 102,
+      "elapsedMs": 1698.9,
+      "dtMs": 17.4,
+      "fps": 57.5,
+      "usedJSHeapBytes": 18551354
+    },
+    {
+      "frameIndex": 103,
+      "elapsedMs": 1715,
+      "dtMs": 16.1,
+      "fps": 62.1,
+      "usedJSHeapBytes": 18557610
+    },
+    {
+      "frameIndex": 104,
+      "elapsedMs": 1731.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18568962
+    },
+    {
+      "frameIndex": 105,
+      "elapsedMs": 1748.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18575218
+    },
+    {
+      "frameIndex": 106,
+      "elapsedMs": 1765.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18581502
+    },
+    {
+      "frameIndex": 107,
+      "elapsedMs": 1781.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18587770
+    },
+    {
+      "frameIndex": 108,
+      "elapsedMs": 1798.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18594050
+    },
+    {
+      "frameIndex": 109,
+      "elapsedMs": 1814.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18601034
+    },
+    {
+      "frameIndex": 110,
+      "elapsedMs": 1831.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18611826
+    },
+    {
+      "frameIndex": 111,
+      "elapsedMs": 1848.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18618086
+    },
+    {
+      "frameIndex": 112,
+      "elapsedMs": 1865.2,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18625442
+    },
+    {
+      "frameIndex": 113,
+      "elapsedMs": 1881.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18631782
+    },
+    {
+      "frameIndex": 114,
+      "elapsedMs": 1899.1,
+      "dtMs": 17.3,
+      "fps": 57.8,
+      "usedJSHeapBytes": 18638146
+    },
+    {
+      "frameIndex": 115,
+      "elapsedMs": 1914.9,
+      "dtMs": 15.8,
+      "fps": 63.3,
+      "usedJSHeapBytes": 18644510
+    },
+    {
+      "frameIndex": 116,
+      "elapsedMs": 1931.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18650926
+    },
+    {
+      "frameIndex": 117,
+      "elapsedMs": 1948.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18661838
+    },
+    {
+      "frameIndex": 118,
+      "elapsedMs": 1964.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18668202
+    },
+    {
+      "frameIndex": 119,
+      "elapsedMs": 1981.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18674470
+    },
+    {
+      "frameIndex": 120,
+      "elapsedMs": 1998.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18680666
+    },
+    {
+      "frameIndex": 121,
+      "elapsedMs": 2014.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18686950
+    },
+    {
+      "frameIndex": 122,
+      "elapsedMs": 2031.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18693170
+    },
+    {
+      "frameIndex": 123,
+      "elapsedMs": 2048.4,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18699342
+    },
+    {
+      "frameIndex": 124,
+      "elapsedMs": 2065.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18712206
+    },
+    {
+      "frameIndex": 125,
+      "elapsedMs": 2081.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18718426
+    },
+    {
+      "frameIndex": 126,
+      "elapsedMs": 2098.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18728394
+    },
+    {
+      "frameIndex": 127,
+      "elapsedMs": 2115,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18737126
+    },
+    {
+      "frameIndex": 128,
+      "elapsedMs": 2131.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18743346
+    },
+    {
+      "frameIndex": 129,
+      "elapsedMs": 2148.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18749530
+    },
+    {
+      "frameIndex": 130,
+      "elapsedMs": 2164.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18760346
+    },
+    {
+      "frameIndex": 131,
+      "elapsedMs": 2181.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18766630
+    },
+    {
+      "frameIndex": 132,
+      "elapsedMs": 2198.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18772878
+    },
+    {
+      "frameIndex": 133,
+      "elapsedMs": 2215,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18779110
+    },
+    {
+      "frameIndex": 134,
+      "elapsedMs": 2231.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18785318
+    },
+    {
+      "frameIndex": 135,
+      "elapsedMs": 2248.1,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18791514
+    },
+    {
+      "frameIndex": 136,
+      "elapsedMs": 2265,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18797798
+    },
+    {
+      "frameIndex": 137,
+      "elapsedMs": 2281.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18808542
+    },
+    {
+      "frameIndex": 138,
+      "elapsedMs": 2298.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18814738
+    },
+    {
+      "frameIndex": 139,
+      "elapsedMs": 2315.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18820922
+    },
+    {
+      "frameIndex": 140,
+      "elapsedMs": 2331.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18827142
+    },
+    {
+      "frameIndex": 141,
+      "elapsedMs": 2348.1,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18834390
+    },
+    {
+      "frameIndex": 142,
+      "elapsedMs": 2365,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18840610
+    },
+    {
+      "frameIndex": 143,
+      "elapsedMs": 2381.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18851378
+    },
+    {
+      "frameIndex": 144,
+      "elapsedMs": 2398.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18857574
+    },
+    {
+      "frameIndex": 145,
+      "elapsedMs": 2414.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18863794
+    },
+    {
+      "frameIndex": 146,
+      "elapsedMs": 2431.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18870078
+    },
+    {
+      "frameIndex": 147,
+      "elapsedMs": 2448.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18876262
+    },
+    {
+      "frameIndex": 148,
+      "elapsedMs": 2465,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18882494
+    },
+    {
+      "frameIndex": 149,
+      "elapsedMs": 2481.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18888714
+    },
+    {
+      "frameIndex": 150,
+      "elapsedMs": 2498.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18899458
+    },
+    {
+      "frameIndex": 151,
+      "elapsedMs": 2515,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18905742
+    },
+    {
+      "frameIndex": 152,
+      "elapsedMs": 2531.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18912010
+    },
+    {
+      "frameIndex": 153,
+      "elapsedMs": 2548.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18918206
+    },
+    {
+      "frameIndex": 154,
+      "elapsedMs": 2565.1,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18924426
+    },
+    {
+      "frameIndex": 155,
+      "elapsedMs": 2581.6,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18930646
+    },
+    {
+      "frameIndex": 156,
+      "elapsedMs": 2598.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18942766
+    },
+    {
+      "frameIndex": 157,
+      "elapsedMs": 2615,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18948998
+    },
+    {
+      "frameIndex": 158,
+      "elapsedMs": 2631.4,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18955194
+    },
+    {
+      "frameIndex": 159,
+      "elapsedMs": 2648.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18961378
+    },
+    {
+      "frameIndex": 160,
+      "elapsedMs": 2664.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18967574
+    },
+    {
+      "frameIndex": 161,
+      "elapsedMs": 2681.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18973858
+    },
+    {
+      "frameIndex": 162,
+      "elapsedMs": 2698,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18980090
+    },
+    {
+      "frameIndex": 163,
+      "elapsedMs": 2714.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18990846
+    },
+    {
+      "frameIndex": 164,
+      "elapsedMs": 2731.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18997114
+    },
+    {
+      "frameIndex": 165,
+      "elapsedMs": 2748.8,
+      "dtMs": 17.2,
+      "fps": 58.1,
+      "usedJSHeapBytes": 19003322
+    },
+    {
+      "frameIndex": 166,
+      "elapsedMs": 2764.9,
+      "dtMs": 16.1,
+      "fps": 62.1,
+      "usedJSHeapBytes": 19009606
+    },
+    {
+      "frameIndex": 167,
+      "elapsedMs": 2781.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19015826
+    },
+    {
+      "frameIndex": 168,
+      "elapsedMs": 2798,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19022058
+    },
+    {
+      "frameIndex": 169,
+      "elapsedMs": 2815,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19028266
+    },
+    {
+      "frameIndex": 170,
+      "elapsedMs": 2831.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19039010
+    },
+    {
+      "frameIndex": 171,
+      "elapsedMs": 2848,
+      "dtMs": 16.2,
+      "fps": 61.7,
+      "usedJSHeapBytes": 19045318
+    },
+    {
+      "frameIndex": 172,
+      "elapsedMs": 2864.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19051562
+    },
+    {
+      "frameIndex": 173,
+      "elapsedMs": 2881.6,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19057818
+    },
+    {
+      "frameIndex": 174,
+      "elapsedMs": 2898.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19064014
+    },
+    {
+      "frameIndex": 175,
+      "elapsedMs": 2914.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19070222
+    },
+    {
+      "frameIndex": 176,
+      "elapsedMs": 2931.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19076578
+    },
+    {
+      "frameIndex": 177,
+      "elapsedMs": 2948,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19087370
+    },
+    {
+      "frameIndex": 178,
+      "elapsedMs": 2964.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19093602
+    },
+    {
+      "frameIndex": 179,
+      "elapsedMs": 2981.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19099846
+    },
+    {
+      "frameIndex": 180,
+      "elapsedMs": 2998.1,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19106090
+    },
+    {
+      "frameIndex": 181,
+      "elapsedMs": 3014.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19112386
+    },
+    {
+      "frameIndex": 182,
+      "elapsedMs": 3031.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19118558
+    },
+    {
+      "frameIndex": 183,
+      "elapsedMs": 3048,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19124802
+    },
+    {
+      "frameIndex": 184,
+      "elapsedMs": 3064.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19135566
+    },
+    {
+      "frameIndex": 185,
+      "elapsedMs": 3081.6,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19141762
+    },
+    {
+      "frameIndex": 186,
+      "elapsedMs": 3098.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19156964
+    },
+    {
+      "frameIndex": 187,
+      "elapsedMs": 3114.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19169232
+    },
+    {
+      "frameIndex": 188,
+      "elapsedMs": 3131.6,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19176752
+    },
+    {
+      "frameIndex": 189,
+      "elapsedMs": 3147.9,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19182972
+    },
+    {
+      "frameIndex": 190,
+      "elapsedMs": 3164.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19189216
+    },
+    {
+      "frameIndex": 191,
+      "elapsedMs": 3181.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19200048
+    },
+    {
+      "frameIndex": 192,
+      "elapsedMs": 3197.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19206180
+    },
+    {
+      "frameIndex": 193,
+      "elapsedMs": 3214.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19212000
+    },
+    {
+      "frameIndex": 194,
+      "elapsedMs": 3231.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19217844
+    },
+    {
+      "frameIndex": 195,
+      "elapsedMs": 3247.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19226024
+    },
+    {
+      "frameIndex": 196,
+      "elapsedMs": 3264.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19233380
+    },
+    {
+      "frameIndex": 197,
+      "elapsedMs": 3281.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19245712
+    },
+    {
+      "frameIndex": 198,
+      "elapsedMs": 3298.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19252852
+    },
+    {
+      "frameIndex": 199,
+      "elapsedMs": 3314.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19683132
+    },
+    {
+      "frameIndex": 200,
+      "elapsedMs": 3331.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19267356
+    },
+    {
+      "frameIndex": 201,
+      "elapsedMs": 3348,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19273232
+    },
+    {
+      "frameIndex": 202,
+      "elapsedMs": 3364.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19280132
+    },
+    {
+      "frameIndex": 203,
+      "elapsedMs": 3381.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19290508
+    },
+    {
+      "frameIndex": 204,
+      "elapsedMs": 3399,
+      "dtMs": 17.5,
+      "fps": 57.1,
+      "usedJSHeapBytes": 19296364
+    },
+    {
+      "frameIndex": 205,
+      "elapsedMs": 3414.8,
+      "dtMs": 15.8,
+      "fps": 63.3,
+      "usedJSHeapBytes": 19302208
+    },
+    {
+      "frameIndex": 206,
+      "elapsedMs": 3431.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19308084
+    },
+    {
+      "frameIndex": 207,
+      "elapsedMs": 3447.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19313940
+    },
+    {
+      "frameIndex": 208,
+      "elapsedMs": 3464.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19319760
+    },
+    {
+      "frameIndex": 209,
+      "elapsedMs": 3481.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19325616
+    },
+    {
+      "frameIndex": 210,
+      "elapsedMs": 3497.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19336052
+    },
+    {
+      "frameIndex": 211,
+      "elapsedMs": 3514.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19341892
+    },
+    {
+      "frameIndex": 212,
+      "elapsedMs": 3531.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19347736
+    },
+    {
+      "frameIndex": 213,
+      "elapsedMs": 3547.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19353592
+    },
+    {
+      "frameIndex": 214,
+      "elapsedMs": 3564.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19359436
+    },
+    {
+      "frameIndex": 215,
+      "elapsedMs": 3581.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19365292
+    },
+    {
+      "frameIndex": 216,
+      "elapsedMs": 3597.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19371168
+    },
+    {
+      "frameIndex": 217,
+      "elapsedMs": 3614.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19381556
+    },
+    {
+      "frameIndex": 218,
+      "elapsedMs": 3631.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19387364
+    },
+    {
+      "frameIndex": 219,
+      "elapsedMs": 3647.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19393208
+    },
+    {
+      "frameIndex": 220,
+      "elapsedMs": 3664.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19399028
+    },
+    {
+      "frameIndex": 221,
+      "elapsedMs": 3681.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19404916
+    },
+    {
+      "frameIndex": 222,
+      "elapsedMs": 3697.8,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19410772
+    },
+    {
+      "frameIndex": 223,
+      "elapsedMs": 3714.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19421160
+    },
+    {
+      "frameIndex": 224,
+      "elapsedMs": 3731.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19426980
+    },
+    {
+      "frameIndex": 225,
+      "elapsedMs": 3748.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19432800
+    },
+    {
+      "frameIndex": 226,
+      "elapsedMs": 3764.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19438676
+    },
+    {
+      "frameIndex": 227,
+      "elapsedMs": 3781.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19444532
+    },
+    {
+      "frameIndex": 228,
+      "elapsedMs": 3797.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19451828
+    },
+    {
+      "frameIndex": 229,
+      "elapsedMs": 3814.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19457672
+    },
+    {
+      "frameIndex": 230,
+      "elapsedMs": 3832.2,
+      "dtMs": 17.5,
+      "fps": 57.1,
+      "usedJSHeapBytes": 19468024
+    },
+    {
+      "frameIndex": 231,
+      "elapsedMs": 3847.9,
+      "dtMs": 15.7,
+      "fps": 63.7,
+      "usedJSHeapBytes": 19473900
+    },
+    {
+      "frameIndex": 232,
+      "elapsedMs": 3864.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19479780
+    },
+    {
+      "frameIndex": 233,
+      "elapsedMs": 3881.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19485648
+    },
+    {
+      "frameIndex": 234,
+      "elapsedMs": 3897.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19491504
+    },
+    {
+      "frameIndex": 235,
+      "elapsedMs": 3914.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19497348
+    },
+    {
+      "frameIndex": 236,
+      "elapsedMs": 3931.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19503188
+    },
+    {
+      "frameIndex": 237,
+      "elapsedMs": 3947.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19513576
+    },
+    {
+      "frameIndex": 238,
+      "elapsedMs": 3964.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19519420
+    },
+    {
+      "frameIndex": 239,
+      "elapsedMs": 3981.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19525276
+    },
+    {
+      "frameIndex": 240,
+      "elapsedMs": 3997.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19531132
+    },
+    {
+      "frameIndex": 241,
+      "elapsedMs": 4014.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19536972
+    },
+    {
+      "frameIndex": 242,
+      "elapsedMs": 4031.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19542780
+    },
+    {
+      "frameIndex": 243,
+      "elapsedMs": 4047.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19548636
+    },
+    {
+      "frameIndex": 244,
+      "elapsedMs": 4064.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19559080
+    },
+    {
+      "frameIndex": 245,
+      "elapsedMs": 4081.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19564924
+    },
+    {
+      "frameIndex": 246,
+      "elapsedMs": 4097.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19570892
+    },
+    {
+      "frameIndex": 247,
+      "elapsedMs": 4114.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19590279
+    },
+    {
+      "frameIndex": 248,
+      "elapsedMs": 4131.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19603355
+    },
+    {
+      "frameIndex": 249,
+      "elapsedMs": 4147.7,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19609619
+    },
+    {
+      "frameIndex": 250,
+      "elapsedMs": 4164.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19615895
+    },
+    {
+      "frameIndex": 251,
+      "elapsedMs": 4181.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19647017
+    },
+    {
+      "frameIndex": 252,
+      "elapsedMs": 4197.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19653173
+    },
+    {
+      "frameIndex": 253,
+      "elapsedMs": 4214.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19664889
+    },
+    {
+      "frameIndex": 254,
+      "elapsedMs": 4231.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19670985
+    },
+    {
+      "frameIndex": 255,
+      "elapsedMs": 4247.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19677153
+    },
+    {
+      "frameIndex": 256,
+      "elapsedMs": 4264.7,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19683089
+    },
+    {
+      "frameIndex": 257,
+      "elapsedMs": 4281.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19692713
+    },
+    {
+      "frameIndex": 258,
+      "elapsedMs": 4297.7,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19698569
+    },
+    {
+      "frameIndex": 259,
+      "elapsedMs": 4314.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19704413
+    },
+    {
+      "frameIndex": 260,
+      "elapsedMs": 4331.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19710269
+    },
+    {
+      "frameIndex": 261,
+      "elapsedMs": 4347.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 19716241
+    },
+    {
+      "frameIndex": 262,
+      "elapsedMs": 4364.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 19722193
+    },
+    {
+      "frameIndex": 263,
+      "elapsedMs": 4381.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19728145
+    },
+    {
+      "frameIndex": 264,
+      "elapsedMs": 4397.6,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 19737877
+    },
+    {
+      "frameIndex": 265,
+      "elapsedMs": 4414.6,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 19743829
+    },
+    {
+      "frameIndex": 266,
+      "elapsedMs": 4431.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 19749841
+    },
+    {
+      "frameIndex": 267,
+      "elapsedMs": 4448.7,
+      "dtMs": 17.4,
+      "fps": 57.5,
+      "usedJSHeapBytes": 18184973
+    },
+    {
+      "frameIndex": 268,
+      "elapsedMs": 4464.3,
+      "dtMs": 15.6,
+      "fps": 64.1,
+      "usedJSHeapBytes": 18190937
+    },
+    {
+      "frameIndex": 269,
+      "elapsedMs": 4480.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18199109
+    },
+    {
+      "frameIndex": 270,
+      "elapsedMs": 4497.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18205049
+    },
+    {
+      "frameIndex": 271,
+      "elapsedMs": 4514.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18214825
+    },
+    {
+      "frameIndex": 272,
+      "elapsedMs": 4530.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18220789
+    },
+    {
+      "frameIndex": 273,
+      "elapsedMs": 4547.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18226729
+    },
+    {
+      "frameIndex": 274,
+      "elapsedMs": 4564.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18232609
+    },
+    {
+      "frameIndex": 275,
+      "elapsedMs": 4580.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18238537
+    },
+    {
+      "frameIndex": 276,
+      "elapsedMs": 4597.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18244401
+    },
+    {
+      "frameIndex": 277,
+      "elapsedMs": 4614.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18250269
+    },
+    {
+      "frameIndex": 278,
+      "elapsedMs": 4631,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18259917
+    },
+    {
+      "frameIndex": 279,
+      "elapsedMs": 4647.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18265761
+    },
+    {
+      "frameIndex": 280,
+      "elapsedMs": 4664.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18271617
+    },
+    {
+      "frameIndex": 281,
+      "elapsedMs": 4681,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18277493
+    },
+    {
+      "frameIndex": 282,
+      "elapsedMs": 4697.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18283325
+    },
+    {
+      "frameIndex": 283,
+      "elapsedMs": 4714.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18289181
+    },
+    {
+      "frameIndex": 284,
+      "elapsedMs": 4731.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18295001
+    },
+    {
+      "frameIndex": 285,
+      "elapsedMs": 4747.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18304637
+    },
+    {
+      "frameIndex": 286,
+      "elapsedMs": 4764.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18310501
+    },
+    {
+      "frameIndex": 287,
+      "elapsedMs": 4781,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18316357
+    },
+    {
+      "frameIndex": 288,
+      "elapsedMs": 4797.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18322189
+    },
+    {
+      "frameIndex": 289,
+      "elapsedMs": 4814.9,
+      "dtMs": 17.3,
+      "fps": 57.8,
+      "usedJSHeapBytes": 18328093
+    },
+    {
+      "frameIndex": 290,
+      "elapsedMs": 4830.9,
+      "dtMs": 16,
+      "fps": 62.5,
+      "usedJSHeapBytes": 18333949
+    },
+    {
+      "frameIndex": 291,
+      "elapsedMs": 4847.9,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18343553
+    },
+    {
+      "frameIndex": 292,
+      "elapsedMs": 4864.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18349337
+    },
+    {
+      "frameIndex": 293,
+      "elapsedMs": 4881.2,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18355145
+    },
+    {
+      "frameIndex": 294,
+      "elapsedMs": 4897.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18360977
+    },
+    {
+      "frameIndex": 295,
+      "elapsedMs": 4914.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18366821
+    },
+    {
+      "frameIndex": 296,
+      "elapsedMs": 4931.1,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18372697
+    },
+    {
+      "frameIndex": 297,
+      "elapsedMs": 4947.6,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18378553
+    },
+    {
+      "frameIndex": 298,
+      "elapsedMs": 4964.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18388177
+    },
+    {
+      "frameIndex": 299,
+      "elapsedMs": 4981.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18399122
+    },
+    {
+      "frameIndex": 300,
+      "elapsedMs": 4997.5,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18404978
+    },
+    {
+      "frameIndex": 301,
+      "elapsedMs": 5014.5,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18410862
+    },
+    {
+      "frameIndex": 302,
+      "elapsedMs": 5031.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18416610
+    },
+    {
+      "frameIndex": 303,
+      "elapsedMs": 5047.5,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18422502
+    },
+    {
+      "frameIndex": 304,
+      "elapsedMs": 5064.6,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18432030
+    },
+    {
+      "frameIndex": 305,
+      "elapsedMs": 5081.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18437742
+    },
+    {
+      "frameIndex": 306,
+      "elapsedMs": 5097.5,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18443510
+    },
+    {
+      "frameIndex": 307,
+      "elapsedMs": 5114.4,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18449258
+    },
+    {
+      "frameIndex": 308,
+      "elapsedMs": 5131.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18454994
+    },
+    {
+      "frameIndex": 309,
+      "elapsedMs": 5147.5,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18487409
+    },
+    {
+      "frameIndex": 310,
+      "elapsedMs": 5164,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18499253
+    },
+    {
+      "frameIndex": 311,
+      "elapsedMs": 5180.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18508953
+    },
+    {
+      "frameIndex": 312,
+      "elapsedMs": 5197.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18514773
+    },
+    {
+      "frameIndex": 313,
+      "elapsedMs": 5214.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18520557
+    },
+    {
+      "frameIndex": 314,
+      "elapsedMs": 5231.1,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18526493
+    },
+    {
+      "frameIndex": 315,
+      "elapsedMs": 5247.5,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18532241
+    },
+    {
+      "frameIndex": 316,
+      "elapsedMs": 5264.5,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18537977
+    },
+    {
+      "frameIndex": 317,
+      "elapsedMs": 5281,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18547493
+    },
+    {
+      "frameIndex": 318,
+      "elapsedMs": 5297.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18553821
+    },
+    {
+      "frameIndex": 319,
+      "elapsedMs": 5314.4,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18559721
+    },
+    {
+      "frameIndex": 320,
+      "elapsedMs": 5331.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18565613
+    },
+    {
+      "frameIndex": 321,
+      "elapsedMs": 5347.4,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18571505
+    },
+    {
+      "frameIndex": 322,
+      "elapsedMs": 5364.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18577349
+    },
+    {
+      "frameIndex": 323,
+      "elapsedMs": 5381,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18583145
+    },
+    {
+      "frameIndex": 324,
+      "elapsedMs": 5397.4,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18592693
+    },
+    {
+      "frameIndex": 325,
+      "elapsedMs": 5414.4,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18598417
+    },
+    {
+      "frameIndex": 326,
+      "elapsedMs": 5431,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18604153
+    },
+    {
+      "frameIndex": 327,
+      "elapsedMs": 5447.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18609877
+    },
+    {
+      "frameIndex": 328,
+      "elapsedMs": 5464.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18615625
+    },
+    {
+      "frameIndex": 329,
+      "elapsedMs": 5480.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18621393
+    },
+    {
+      "frameIndex": 330,
+      "elapsedMs": 5497.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18627141
+    },
+    {
+      "frameIndex": 331,
+      "elapsedMs": 5514.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18636669
+    },
+    {
+      "frameIndex": 332,
+      "elapsedMs": 5530.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18643105
+    },
+    {
+      "frameIndex": 333,
+      "elapsedMs": 5547.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18648853
+    },
+    {
+      "frameIndex": 334,
+      "elapsedMs": 5564.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18654657
+    },
+    {
+      "frameIndex": 335,
+      "elapsedMs": 5580.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18660405
+    },
+    {
+      "frameIndex": 336,
+      "elapsedMs": 5597.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18666153
+    },
+    {
+      "frameIndex": 337,
+      "elapsedMs": 5614.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18671901
+    },
+    {
+      "frameIndex": 338,
+      "elapsedMs": 5630.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18681441
+    },
+    {
+      "frameIndex": 339,
+      "elapsedMs": 5647.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18687209
+    },
+    {
+      "frameIndex": 340,
+      "elapsedMs": 5664.3,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18692885
+    },
+    {
+      "frameIndex": 341,
+      "elapsedMs": 5680.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18698609
+    },
+    {
+      "frameIndex": 342,
+      "elapsedMs": 5697.8,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18704405
+    },
+    {
+      "frameIndex": 343,
+      "elapsedMs": 5714.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18710225
+    },
+    {
+      "frameIndex": 344,
+      "elapsedMs": 5731,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18716065
+    },
+    {
+      "frameIndex": 345,
+      "elapsedMs": 5747.4,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18725701
+    },
+    {
+      "frameIndex": 346,
+      "elapsedMs": 5764.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18732789
+    },
+    {
+      "frameIndex": 347,
+      "elapsedMs": 5781,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18749845
+    },
+    {
+      "frameIndex": 348,
+      "elapsedMs": 5797.4,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18755641
+    },
+    {
+      "frameIndex": 349,
+      "elapsedMs": 5814.4,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18761445
+    },
+    {
+      "frameIndex": 350,
+      "elapsedMs": 5830.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18767229
+    },
+    {
+      "frameIndex": 351,
+      "elapsedMs": 5847.4,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18776721
+    },
+    {
+      "frameIndex": 352,
+      "elapsedMs": 5864.3,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18782469
+    },
+    {
+      "frameIndex": 353,
+      "elapsedMs": 5880.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18790133
+    },
+    {
+      "frameIndex": 354,
+      "elapsedMs": 5897.9,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18797801
+    },
+    {
+      "frameIndex": 355,
+      "elapsedMs": 5914.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18803989
+    },
+    {
+      "frameIndex": 356,
+      "elapsedMs": 5931,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18809773
+    },
+    {
+      "frameIndex": 357,
+      "elapsedMs": 5947.3,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18815509
+    },
+    {
+      "frameIndex": 358,
+      "elapsedMs": 5964.2,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18825013
+    },
+    {
+      "frameIndex": 359,
+      "elapsedMs": 5980.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18832993
+    },
+    {
+      "frameIndex": 360,
+      "elapsedMs": 5997.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18838801
+    },
+    {
+      "frameIndex": 361,
+      "elapsedMs": 6014.3,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18845305
+    },
+    {
+      "frameIndex": 362,
+      "elapsedMs": 6030.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18851365
+    },
+    {
+      "frameIndex": 363,
+      "elapsedMs": 6047.5,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18857209
+    },
+    {
+      "frameIndex": 364,
+      "elapsedMs": 6064.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18867554
+    },
+    {
+      "frameIndex": 365,
+      "elapsedMs": 6081,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18873410
+    },
+    {
+      "frameIndex": 366,
+      "elapsedMs": 6097.3,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18879206
+    },
+    {
+      "frameIndex": 367,
+      "elapsedMs": 6114.2,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18885078
+    },
+    {
+      "frameIndex": 368,
+      "elapsedMs": 6130.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18890934
+    },
+    {
+      "frameIndex": 369,
+      "elapsedMs": 6147.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18901974
+    },
+    {
+      "frameIndex": 370,
+      "elapsedMs": 6164,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18907782
+    },
+    {
+      "frameIndex": 371,
+      "elapsedMs": 6180.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18917418
+    },
+    {
+      "frameIndex": 372,
+      "elapsedMs": 6198,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18923274
+    },
+    {
+      "frameIndex": 373,
+      "elapsedMs": 6214.2,
+      "dtMs": 16.2,
+      "fps": 61.7,
+      "usedJSHeapBytes": 18934554
+    },
+    {
+      "frameIndex": 374,
+      "elapsedMs": 6230.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18940430
+    },
+    {
+      "frameIndex": 375,
+      "elapsedMs": 6247.5,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18242026
+    },
+    {
+      "frameIndex": 376,
+      "elapsedMs": 6264.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18247846
+    },
+    {
+      "frameIndex": 377,
+      "elapsedMs": 6280.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18257542
+    },
+    {
+      "frameIndex": 378,
+      "elapsedMs": 6297.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18263422
+    },
+    {
+      "frameIndex": 379,
+      "elapsedMs": 6314.1,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18269286
+    },
+    {
+      "frameIndex": 380,
+      "elapsedMs": 6330.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18275118
+    },
+    {
+      "frameIndex": 381,
+      "elapsedMs": 6347.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18280950
+    },
+    {
+      "frameIndex": 382,
+      "elapsedMs": 6364.3,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18286782
+    },
+    {
+      "frameIndex": 383,
+      "elapsedMs": 6380.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18292602
+    },
+    {
+      "frameIndex": 384,
+      "elapsedMs": 6397.5,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18302246
+    },
+    {
+      "frameIndex": 385,
+      "elapsedMs": 6414.2,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18308054
+    },
+    {
+      "frameIndex": 386,
+      "elapsedMs": 6430.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18313874
+    },
+    {
+      "frameIndex": 387,
+      "elapsedMs": 6447.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18319682
+    },
+    {
+      "frameIndex": 388,
+      "elapsedMs": 6464.2,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18325466
+    },
+    {
+      "frameIndex": 389,
+      "elapsedMs": 6480.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18331354
+    },
+    {
+      "frameIndex": 390,
+      "elapsedMs": 6497.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18337162
+    },
+    {
+      "frameIndex": 391,
+      "elapsedMs": 6513.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18346690
+    },
+    {
+      "frameIndex": 392,
+      "elapsedMs": 6530.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18352438
+    },
+    {
+      "frameIndex": 393,
+      "elapsedMs": 6547.6,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18358186
+    },
+    {
+      "frameIndex": 394,
+      "elapsedMs": 6564.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18363918
+    },
+    {
+      "frameIndex": 395,
+      "elapsedMs": 6580.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18369654
+    },
+    {
+      "frameIndex": 396,
+      "elapsedMs": 6597.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18375366
+    },
+    {
+      "frameIndex": 397,
+      "elapsedMs": 6614.1,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18381090
+    },
+    {
+      "frameIndex": 398,
+      "elapsedMs": 6630.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18390630
+    },
+    {
+      "frameIndex": 399,
+      "elapsedMs": 6647.2,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18396362
+    },
+    {
+      "frameIndex": 400,
+      "elapsedMs": 6664.1,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18402074
+    },
+    {
+      "frameIndex": 401,
+      "elapsedMs": 6680.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18407846
+    },
+    {
+      "frameIndex": 402,
+      "elapsedMs": 6697.1,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18413594
+    },
+    {
+      "frameIndex": 403,
+      "elapsedMs": 6714.1,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18419318
+    },
+    {
+      "frameIndex": 404,
+      "elapsedMs": 6731,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18428854
+    },
+    {
+      "frameIndex": 405,
+      "elapsedMs": 6747.2,
+      "dtMs": 16.2,
+      "fps": 61.7,
+      "usedJSHeapBytes": 18434554
+    },
+    {
+      "frameIndex": 406,
+      "elapsedMs": 6763.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18440302
+    },
+    {
+      "frameIndex": 407,
+      "elapsedMs": 6780.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18446026
+    },
+    {
+      "frameIndex": 408,
+      "elapsedMs": 6797.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18451726
+    },
+    {
+      "frameIndex": 409,
+      "elapsedMs": 6814,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18457494
+    },
+    {
+      "frameIndex": 410,
+      "elapsedMs": 6830.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18467022
+    },
+    {
+      "frameIndex": 411,
+      "elapsedMs": 6847.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18472770
+    },
+    {
+      "frameIndex": 412,
+      "elapsedMs": 6864.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18478554
+    },
+    {
+      "frameIndex": 413,
+      "elapsedMs": 6880.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18484290
+    },
+    {
+      "frameIndex": 414,
+      "elapsedMs": 6897.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18490058
+    },
+    {
+      "frameIndex": 415,
+      "elapsedMs": 6914.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18495806
+    },
+    {
+      "frameIndex": 416,
+      "elapsedMs": 6930.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18501554
+    },
+    {
+      "frameIndex": 417,
+      "elapsedMs": 6948,
+      "dtMs": 17.2,
+      "fps": 58.1,
+      "usedJSHeapBytes": 18511094
+    },
+    {
+      "frameIndex": 418,
+      "elapsedMs": 6963.8,
+      "dtMs": 15.8,
+      "fps": 63.3,
+      "usedJSHeapBytes": 18516830
+    },
+    {
+      "frameIndex": 419,
+      "elapsedMs": 6980.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18522598
+    },
+    {
+      "frameIndex": 420,
+      "elapsedMs": 6997.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18528310
+    },
+    {
+      "frameIndex": 421,
+      "elapsedMs": 7014,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18534058
+    },
+    {
+      "frameIndex": 422,
+      "elapsedMs": 7030.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18539794
+    },
+    {
+      "frameIndex": 423,
+      "elapsedMs": 7047.7,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18549370
+    },
+    {
+      "frameIndex": 424,
+      "elapsedMs": 7064,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18555114
+    },
+    {
+      "frameIndex": 425,
+      "elapsedMs": 7080.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18560850
+    },
+    {
+      "frameIndex": 426,
+      "elapsedMs": 7097.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18566514
+    },
+    {
+      "frameIndex": 427,
+      "elapsedMs": 7114,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18572262
+    },
+    {
+      "frameIndex": 428,
+      "elapsedMs": 7130.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18577974
+    },
+    {
+      "frameIndex": 429,
+      "elapsedMs": 7147.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18583706
+    },
+    {
+      "frameIndex": 430,
+      "elapsedMs": 7164,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18593246
+    },
+    {
+      "frameIndex": 431,
+      "elapsedMs": 7180.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18598958
+    },
+    {
+      "frameIndex": 432,
+      "elapsedMs": 7197.1,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18604694
+    },
+    {
+      "frameIndex": 433,
+      "elapsedMs": 7214,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18610442
+    },
+    {
+      "frameIndex": 434,
+      "elapsedMs": 7230.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18640246
+    },
+    {
+      "frameIndex": 435,
+      "elapsedMs": 7247.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18646114
+    },
+    {
+      "frameIndex": 436,
+      "elapsedMs": 7264,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18655786
+    },
+    {
+      "frameIndex": 437,
+      "elapsedMs": 7280.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18661654
+    },
+    {
+      "frameIndex": 438,
+      "elapsedMs": 7297.1,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18668598
+    },
+    {
+      "frameIndex": 439,
+      "elapsedMs": 7313.6,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18674330
+    },
+    {
+      "frameIndex": 440,
+      "elapsedMs": 7331,
+      "dtMs": 17.4,
+      "fps": 57.5,
+      "usedJSHeapBytes": 18680066
+    },
+    {
+      "frameIndex": 441,
+      "elapsedMs": 7347.1,
+      "dtMs": 16.1,
+      "fps": 62.1,
+      "usedJSHeapBytes": 18685802
+    },
+    {
+      "frameIndex": 442,
+      "elapsedMs": 7364,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18696082
+    },
+    {
+      "frameIndex": 443,
+      "elapsedMs": 7380.3,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18701822
+    },
+    {
+      "frameIndex": 444,
+      "elapsedMs": 7397,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18707534
+    },
+    {
+      "frameIndex": 445,
+      "elapsedMs": 7413.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18713262
+    },
+    {
+      "frameIndex": 446,
+      "elapsedMs": 7430.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18718918
+    },
+    {
+      "frameIndex": 447,
+      "elapsedMs": 7447,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18726542
+    },
+    {
+      "frameIndex": 448,
+      "elapsedMs": 7463.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18732162
+    },
+    {
+      "frameIndex": 449,
+      "elapsedMs": 7480.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18742358
+    },
+    {
+      "frameIndex": 450,
+      "elapsedMs": 7497.1,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18749642
+    },
+    {
+      "frameIndex": 451,
+      "elapsedMs": 7513.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18755274
+    },
+    {
+      "frameIndex": 452,
+      "elapsedMs": 7530.7,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18761930
+    },
+    {
+      "frameIndex": 453,
+      "elapsedMs": 7547,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18771418
+    },
+    {
+      "frameIndex": 454,
+      "elapsedMs": 7563.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18790366
+    },
+    {
+      "frameIndex": 455,
+      "elapsedMs": 7580.7,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18802338
+    },
+    {
+      "frameIndex": 456,
+      "elapsedMs": 7596.9,
+      "dtMs": 16.2,
+      "fps": 61.7,
+      "usedJSHeapBytes": 18808138
+    },
+    {
+      "frameIndex": 457,
+      "elapsedMs": 7614.2,
+      "dtMs": 17.3,
+      "fps": 57.8,
+      "usedJSHeapBytes": 18813854
+    },
+    {
+      "frameIndex": 458,
+      "elapsedMs": 7630.5,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18819606
+    },
+    {
+      "frameIndex": 459,
+      "elapsedMs": 7647.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18825378
+    },
+    {
+      "frameIndex": 460,
+      "elapsedMs": 7663.9,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18833410
+    },
+    {
+      "frameIndex": 461,
+      "elapsedMs": 7680.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18839150
+    },
+    {
+      "frameIndex": 462,
+      "elapsedMs": 7697,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18849434
+    },
+    {
+      "frameIndex": 463,
+      "elapsedMs": 7714,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18855162
+    },
+    {
+      "frameIndex": 464,
+      "elapsedMs": 7730.5,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18860898
+    },
+    {
+      "frameIndex": 465,
+      "elapsedMs": 7746.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18866650
+    },
+    {
+      "frameIndex": 466,
+      "elapsedMs": 7763.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18872390
+    },
+    {
+      "frameIndex": 467,
+      "elapsedMs": 7780.6,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18878142
+    },
+    {
+      "frameIndex": 468,
+      "elapsedMs": 7796.9,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18888474
+    },
+    {
+      "frameIndex": 469,
+      "elapsedMs": 7813.9,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18894246
+    },
+    {
+      "frameIndex": 470,
+      "elapsedMs": 7830.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18902206
+    },
+    {
+      "frameIndex": 471,
+      "elapsedMs": 7846.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18911914
+    },
+    {
+      "frameIndex": 472,
+      "elapsedMs": 7863.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18917654
+    },
+    {
+      "frameIndex": 473,
+      "elapsedMs": 7880.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18923406
+    },
+    {
+      "frameIndex": 474,
+      "elapsedMs": 7897,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18933698
+    },
+    {
+      "frameIndex": 475,
+      "elapsedMs": 7913.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18939438
+    },
+    {
+      "frameIndex": 476,
+      "elapsedMs": 7930.3,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18945130
+    },
+    {
+      "frameIndex": 477,
+      "elapsedMs": 7947,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18950870
+    },
+    {
+      "frameIndex": 478,
+      "elapsedMs": 7963.9,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18956610
+    },
+    {
+      "frameIndex": 479,
+      "elapsedMs": 7980.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18962430
+    },
+    {
+      "frameIndex": 480,
+      "elapsedMs": 7996.9,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18968182
+    },
+    {
+      "frameIndex": 481,
+      "elapsedMs": 8013.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18978466
+    },
+    {
+      "frameIndex": 482,
+      "elapsedMs": 8031.3,
+      "dtMs": 17.5,
+      "fps": 57.1,
+      "usedJSHeapBytes": 18984218
+    },
+    {
+      "frameIndex": 483,
+      "elapsedMs": 8047.2,
+      "dtMs": 15.9,
+      "fps": 62.9,
+      "usedJSHeapBytes": 18989934
+    },
+    {
+      "frameIndex": 484,
+      "elapsedMs": 8063.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18995710
+    },
+    {
+      "frameIndex": 485,
+      "elapsedMs": 8080.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19001402
+    },
+    {
+      "frameIndex": 486,
+      "elapsedMs": 8097,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19007154
+    },
+    {
+      "frameIndex": 487,
+      "elapsedMs": 8113.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18157685
+    },
+    {
+      "frameIndex": 488,
+      "elapsedMs": 8130.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18163437
+    },
+    {
+      "frameIndex": 489,
+      "elapsedMs": 8147.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18169261
+    },
+    {
+      "frameIndex": 490,
+      "elapsedMs": 8163.8,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18175061
+    },
+    {
+      "frameIndex": 491,
+      "elapsedMs": 8180.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18180801
+    },
+    {
+      "frameIndex": 492,
+      "elapsedMs": 8196.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18186553
+    },
+    {
+      "frameIndex": 493,
+      "elapsedMs": 8213.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18192293
+    },
+    {
+      "frameIndex": 494,
+      "elapsedMs": 8230.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18202605
+    },
+    {
+      "frameIndex": 495,
+      "elapsedMs": 8246.8,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18208357
+    },
+    {
+      "frameIndex": 496,
+      "elapsedMs": 8263.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18214109
+    },
+    {
+      "frameIndex": 497,
+      "elapsedMs": 8280.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18219837
+    },
+    {
+      "frameIndex": 498,
+      "elapsedMs": 8297.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18225589
+    },
+    {
+      "frameIndex": 499,
+      "elapsedMs": 8313.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18231361
+    },
+    {
+      "frameIndex": 500,
+      "elapsedMs": 8330.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18241645
+    },
+    {
+      "frameIndex": 501,
+      "elapsedMs": 8346.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18247445
+    },
+    {
+      "frameIndex": 502,
+      "elapsedMs": 8363.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18253173
+    },
+    {
+      "frameIndex": 503,
+      "elapsedMs": 8380.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18258913
+    },
+    {
+      "frameIndex": 504,
+      "elapsedMs": 8396.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18264685
+    },
+    {
+      "frameIndex": 505,
+      "elapsedMs": 8413.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18270413
+    },
+    {
+      "frameIndex": 506,
+      "elapsedMs": 8430.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18280685
+    },
+    {
+      "frameIndex": 507,
+      "elapsedMs": 8446.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18286437
+    },
+    {
+      "frameIndex": 508,
+      "elapsedMs": 8463.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18292189
+    },
+    {
+      "frameIndex": 509,
+      "elapsedMs": 8480.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18297961
+    },
+    {
+      "frameIndex": 510,
+      "elapsedMs": 8496.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18303713
+    },
+    {
+      "frameIndex": 511,
+      "elapsedMs": 8513.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18314053
+    },
+    {
+      "frameIndex": 512,
+      "elapsedMs": 8530.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18323853
+    },
+    {
+      "frameIndex": 513,
+      "elapsedMs": 8546.8,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18333977
+    },
+    {
+      "frameIndex": 514,
+      "elapsedMs": 8563.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18339565
+    },
+    {
+      "frameIndex": 515,
+      "elapsedMs": 8580.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18345085
+    },
+    {
+      "frameIndex": 516,
+      "elapsedMs": 8596.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18350677
+    },
+    {
+      "frameIndex": 517,
+      "elapsedMs": 8613.8,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18356269
+    },
+    {
+      "frameIndex": 518,
+      "elapsedMs": 8630.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18361837
+    },
+    {
+      "frameIndex": 519,
+      "elapsedMs": 8646.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18371933
+    },
+    {
+      "frameIndex": 520,
+      "elapsedMs": 8663.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18377525
+    },
+    {
+      "frameIndex": 521,
+      "elapsedMs": 8680.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18383081
+    },
+    {
+      "frameIndex": 522,
+      "elapsedMs": 8697,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18388673
+    },
+    {
+      "frameIndex": 523,
+      "elapsedMs": 8713.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18394229
+    },
+    {
+      "frameIndex": 524,
+      "elapsedMs": 8730.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18399889
+    },
+    {
+      "frameIndex": 525,
+      "elapsedMs": 8746.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18405481
+    },
+    {
+      "frameIndex": 526,
+      "elapsedMs": 8763.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18415605
+    },
+    {
+      "frameIndex": 527,
+      "elapsedMs": 8780.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18421149
+    },
+    {
+      "frameIndex": 528,
+      "elapsedMs": 8796.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18426749
+    },
+    {
+      "frameIndex": 529,
+      "elapsedMs": 8813.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18432361
+    },
+    {
+      "frameIndex": 530,
+      "elapsedMs": 8830.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18437941
+    },
+    {
+      "frameIndex": 531,
+      "elapsedMs": 8846.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18443521
+    },
+    {
+      "frameIndex": 532,
+      "elapsedMs": 8863.7,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18449101
+    },
+    {
+      "frameIndex": 533,
+      "elapsedMs": 8880.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18459225
+    },
+    {
+      "frameIndex": 534,
+      "elapsedMs": 8896.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18464825
+    },
+    {
+      "frameIndex": 535,
+      "elapsedMs": 8913.6,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18470465
+    },
+    {
+      "frameIndex": 536,
+      "elapsedMs": 8930.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18476045
+    },
+    {
+      "frameIndex": 537,
+      "elapsedMs": 8946.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18481625
+    },
+    {
+      "frameIndex": 538,
+      "elapsedMs": 8963.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18487205
+    },
+    {
+      "frameIndex": 539,
+      "elapsedMs": 8980,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18492817
+    },
+    {
+      "frameIndex": 540,
+      "elapsedMs": 8997,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18502929
+    },
+    {
+      "frameIndex": 541,
+      "elapsedMs": 9013.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18508485
+    },
+    {
+      "frameIndex": 542,
+      "elapsedMs": 9030.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18519997
+    },
+    {
+      "frameIndex": 543,
+      "elapsedMs": 9046.7,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18525565
+    },
+    {
+      "frameIndex": 544,
+      "elapsedMs": 9063.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18531153
+    },
+    {
+      "frameIndex": 545,
+      "elapsedMs": 9080.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18536685
+    },
+    {
+      "frameIndex": 546,
+      "elapsedMs": 9096.9,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18546845
+    },
+    {
+      "frameIndex": 547,
+      "elapsedMs": 9113.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18552425
+    },
+    {
+      "frameIndex": 548,
+      "elapsedMs": 9130.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18557957
+    },
+    {
+      "frameIndex": 549,
+      "elapsedMs": 9146.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18563557
+    },
+    {
+      "frameIndex": 550,
+      "elapsedMs": 9163.6,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18569137
+    },
+    {
+      "frameIndex": 551,
+      "elapsedMs": 9180.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18574645
+    },
+    {
+      "frameIndex": 552,
+      "elapsedMs": 9196.9,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18580225
+    },
+    {
+      "frameIndex": 553,
+      "elapsedMs": 9213.6,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18590321
+    },
+    {
+      "frameIndex": 554,
+      "elapsedMs": 9230.6,
+      "dtMs": 17,
+      "fps": 58.8,
+      "usedJSHeapBytes": 18601052
+    },
+    {
+      "frameIndex": 555,
+      "elapsedMs": 9246.9,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18610020
+    },
+    {
+      "frameIndex": 556,
+      "elapsedMs": 9263.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18615600
+    },
+    {
+      "frameIndex": 557,
+      "elapsedMs": 9280.2,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18621156
+    },
+    {
+      "frameIndex": 558,
+      "elapsedMs": 9296.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18626796
+    },
+    {
+      "frameIndex": 559,
+      "elapsedMs": 9313.5,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18632396
+    },
+    {
+      "frameIndex": 560,
+      "elapsedMs": 9330.3,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18642536
+    },
+    {
+      "frameIndex": 561,
+      "elapsedMs": 9346.8,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18648128
+    },
+    {
+      "frameIndex": 562,
+      "elapsedMs": 9363.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18653720
+    },
+    {
+      "frameIndex": 563,
+      "elapsedMs": 9380.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18659240
+    },
+    {
+      "frameIndex": 564,
+      "elapsedMs": 9396.8,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18664828
+    },
+    {
+      "frameIndex": 565,
+      "elapsedMs": 9413.5,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18670408
+    },
+    {
+      "frameIndex": 566,
+      "elapsedMs": 9429.9,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18680532
+    },
+    {
+      "frameIndex": 567,
+      "elapsedMs": 9446.8,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18686100
+    },
+    {
+      "frameIndex": 568,
+      "elapsedMs": 9463.3,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18691692
+    },
+    {
+      "frameIndex": 569,
+      "elapsedMs": 9480.4,
+      "dtMs": 17.1,
+      "fps": 58.5,
+      "usedJSHeapBytes": 18697328
+    },
+    {
+      "frameIndex": 570,
+      "elapsedMs": 9496.7,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18702920
+    },
+    {
+      "frameIndex": 571,
+      "elapsedMs": 9513.6,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18708500
+    },
+    {
+      "frameIndex": 572,
+      "elapsedMs": 9530.2,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18713996
+    },
+    {
+      "frameIndex": 573,
+      "elapsedMs": 9546.6,
+      "dtMs": 16.4,
+      "fps": 61,
+      "usedJSHeapBytes": 18724120
+    },
+    {
+      "frameIndex": 574,
+      "elapsedMs": 9563.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18729672
+    },
+    {
+      "frameIndex": 575,
+      "elapsedMs": 9580.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18735264
+    },
+    {
+      "frameIndex": 576,
+      "elapsedMs": 9596.6,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18740856
+    },
+    {
+      "frameIndex": 577,
+      "elapsedMs": 9613.5,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18746448
+    },
+    {
+      "frameIndex": 578,
+      "elapsedMs": 9630.3,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18752040
+    },
+    {
+      "frameIndex": 579,
+      "elapsedMs": 9646.6,
+      "dtMs": 16.3,
+      "fps": 61.3,
+      "usedJSHeapBytes": 18762184
+    },
+    {
+      "frameIndex": 580,
+      "elapsedMs": 9663.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18767812
+    },
+    {
+      "frameIndex": 581,
+      "elapsedMs": 9680.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18773392
+    },
+    {
+      "frameIndex": 582,
+      "elapsedMs": 9696.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18778984
+    },
+    {
+      "frameIndex": 583,
+      "elapsedMs": 9713.5,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18784564
+    },
+    {
+      "frameIndex": 584,
+      "elapsedMs": 9730.1,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18790176
+    },
+    {
+      "frameIndex": 585,
+      "elapsedMs": 9746.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18800276
+    },
+    {
+      "frameIndex": 586,
+      "elapsedMs": 9763.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18805832
+    },
+    {
+      "frameIndex": 587,
+      "elapsedMs": 9780.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18811388
+    },
+    {
+      "frameIndex": 588,
+      "elapsedMs": 9796.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18816980
+    },
+    {
+      "frameIndex": 589,
+      "elapsedMs": 9813.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18822580
+    },
+    {
+      "frameIndex": 590,
+      "elapsedMs": 9830.2,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18828136
+    },
+    {
+      "frameIndex": 591,
+      "elapsedMs": 9846.7,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18838284
+    },
+    {
+      "frameIndex": 592,
+      "elapsedMs": 9863.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18843840
+    },
+    {
+      "frameIndex": 593,
+      "elapsedMs": 9880.1,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18849408
+    },
+    {
+      "frameIndex": 594,
+      "elapsedMs": 9896.7,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18855008
+    },
+    {
+      "frameIndex": 595,
+      "elapsedMs": 9913.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18860588
+    },
+    {
+      "frameIndex": 596,
+      "elapsedMs": 9930,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18866180
+    },
+    {
+      "frameIndex": 597,
+      "elapsedMs": 9946.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18871736
+    },
+    {
+      "frameIndex": 598,
+      "elapsedMs": 9963.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18881848
+    },
+    {
+      "frameIndex": 599,
+      "elapsedMs": 9980,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18887448
+    },
+    {
+      "frameIndex": 600,
+      "elapsedMs": 9996.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18893028
+    },
+    {
+      "frameIndex": 601,
+      "elapsedMs": 10013.3,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18898620
+    },
+    {
+      "frameIndex": 602,
+      "elapsedMs": 10030,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18904212
+    },
+    {
+      "frameIndex": 603,
+      "elapsedMs": 10046.8,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18909840
+    },
+    {
+      "frameIndex": 604,
+      "elapsedMs": 10063.4,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18915440
+    },
+    {
+      "frameIndex": 605,
+      "elapsedMs": 10080,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18925564
+    },
+    {
+      "frameIndex": 606,
+      "elapsedMs": 10096.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18931120
+    },
+    {
+      "frameIndex": 607,
+      "elapsedMs": 10113.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18936712
+    },
+    {
+      "frameIndex": 608,
+      "elapsedMs": 10130,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18942292
+    },
+    {
+      "frameIndex": 609,
+      "elapsedMs": 10146.7,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18947868
+    },
+    {
+      "frameIndex": 610,
+      "elapsedMs": 10163.4,
+      "dtMs": 16.7,
+      "fps": 59.9,
+      "usedJSHeapBytes": 18953460
+    },
+    {
+      "frameIndex": 611,
+      "elapsedMs": 10180,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18963572
+    },
+    {
+      "frameIndex": 612,
+      "elapsedMs": 10196.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18969280
+    },
+    {
+      "frameIndex": 613,
+      "elapsedMs": 10213.1,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 18974872
+    },
+    {
+      "frameIndex": 614,
+      "elapsedMs": 10230,
+      "dtMs": 16.9,
+      "fps": 59.2,
+      "usedJSHeapBytes": 18984068
+    },
+    {
+      "frameIndex": 615,
+      "elapsedMs": 10246.6,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 18989672
+    },
+    {
+      "frameIndex": 616,
+      "elapsedMs": 10263.4,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 18995252
+    },
+    {
+      "frameIndex": 617,
+      "elapsedMs": 10279.9,
+      "dtMs": 16.5,
+      "fps": 60.6,
+      "usedJSHeapBytes": 19000844
+    },
+    {
+      "frameIndex": 618,
+      "elapsedMs": 10296.7,
+      "dtMs": 16.8,
+      "fps": 59.5,
+      "usedJSHeapBytes": 19010956
+    },
+    {
+      "frameIndex": 619,
+      "elapsedMs": 10313.3,
+      "dtMs": 16.6,
+      "fps": 60.2,
+      "usedJSHeapBytes": 19016544
+    }
+  ]
+}

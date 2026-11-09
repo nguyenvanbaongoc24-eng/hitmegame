@@ -7,6 +7,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GoldenRoundsParityTests.cs" Link="GoldenRoundsParityTests.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Tests\EditMode\Phase1CoreTests.cs" Link="Phase1CoreTests.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Tests\EditMode\V13CoreTests.cs" Link="V13CoreTests.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Tests\EditMode\NetClientV1LoopbackTests.cs" Link="NetClientV1LoopbackTests.cs" />
+    <Compile Include="..\..\..\..\Assets\Editor\Net\UnityOnlineFlowTests.cs" Link="UnityOnlineFlowTests.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\UI\UiStrings.cs" Link="UiStrings.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\NetClientDtos.cs" Link="Net\NetClientDtos.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\MatchTransports.cs" Link="Net\MatchTransports.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\ClientMatchSession.cs" Link="Net\ClientMatchSession.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\NetConfig.cs" Link="Net\NetConfig.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\UnityJsonProtocol.cs" Link="Net\UnityJsonProtocol.cs" />
+    <Compile Include="..\..\..\..\Assets\Scripts\Net\OnlineGlue\OnlineFlowController.cs" Link="Net\OnlineFlowController.cs" />
     <Compile Include="..\..\..\..\Assets\Scripts\Core\Phase1\**\*.cs" Link="Core\%(RecursiveDir)%(Filename)%(Extension)" />
     <None Include="..\..\..\..\server\Tests\golden\rounds.json" Link="golden\rounds.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
