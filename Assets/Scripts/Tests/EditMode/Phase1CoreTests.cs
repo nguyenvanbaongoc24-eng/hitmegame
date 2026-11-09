@@ -112,7 +112,7 @@ namespace HitMe.Tests
         }
 
         [Test]
-        public void FinalTwoWhoEliminateEachOtherBothWin()
+        public void FinalTwoWhoEliminateEachOtherEnterTiebreak()
         {
             var config = Config();
             var a = Player("a", new Vec2(0f, -2f), 1);
@@ -120,8 +120,13 @@ namespace HitMe.Tests
             var match = new MatchState(config, new[] { a, b });
             match.StartRound(); match.SetInput(Throw("a", Vec2.Up)); match.SetInput(Throw("b", new Vec2(0f, -1f)));
             match.LockRound(); match.BeginReveal(); match.BeginThrowing(); match.ResolveRound();
-            Assert.That(match.Phase, Is.EqualTo(Phase.MatchEnd));
-            Assert.That(match.WinnerIds, Is.EquivalentTo(new[] { "a", "b" }));
+            Assert.That(match.Phase, Is.EqualTo(Phase.RoundEnd));
+            Assert.That(match.TiebreakPending, Is.True);
+            match.StartRound();
+            Assert.That(match.IsTiebreak, Is.True);
+            Assert.That(match.TiebreakCount, Is.EqualTo(1));
+            Assert.That(a.Hp, Is.EqualTo(1));
+            Assert.That(b.Hp, Is.EqualTo(1));
         }
 
         [Test]
@@ -593,6 +598,7 @@ namespace HitMe.Tests
         public void S1_Ranking_ZeroSurvivors_MutualEliminationInFinalRound_RanksByRoundThenHits()
         {
             var config = Config();
+            config.TiebreakMax = 0; // Explicit co-win policy for the legacy ranking fixture.
             var early = Player("early", new Vec2(-3f, -2f), 1);
             var a = Player("a", new Vec2(0f, -2f), 2);
             var b = Player("b", new Vec2(0f, 2f), 1);

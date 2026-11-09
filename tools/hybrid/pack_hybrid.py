@@ -29,7 +29,7 @@ HOME_BG_WEB_DIR = DEPLOY_WEB_DIR / "web_assets" / "bg_home"
 DIST_DIR = DEPLOY_WEB_DIR / "dist"
 BUILDS_DIR = REPO_ROOT / "Builds"
 HOME_BG_DIR = REPO_ROOT / "Assets" / "Art" / "UI" / "HomeBg"
-STAGING_DEPLOY_DIR = REPO_ROOT.parent / "_web_dist_deploy"
+STAGING_DEPLOY_DIR = Path(os.environ.get("HITME_WEB_DIST_STAGING", str(REPO_ROOT.parent / "_web_dist_deploy")))
 TEMP_EXTRACT_DIR = REPO_ROOT.parent / "_codex_extract"
 
 
@@ -656,7 +656,10 @@ def promote_next_to_root() -> None:
     for shared_folder in ("Build", "ui-preview"):
         if not (DIST_DIR / shared_folder).exists() and (STAGING_DEPLOY_DIR / shared_folder).exists():
             shutil.copytree(STAGING_DEPLOY_DIR / shared_folder, DIST_DIR / shared_folder)
-    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
+    vercel_dest = DIST_DIR / "vercel.json"
+    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
+        shutil.copy2(vercel_source, vercel_dest)
 
     for item in next_dir.iterdir():
         if item.name == "Build":
@@ -694,7 +697,11 @@ def main() -> int:
 
     version_file = DEPLOY_WEB_DIR / "VERSION"
     version = version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "0.1.0-beta.3"
-    unity_commit = git_rev_short("HEAD")
+    # The packager can change after Unity finishes building. Record the commit
+    # embedded in the selected build directory, not the current packaging HEAD.
+    latest_build = find_latest_release_build()
+    unity_commit = latest_build.name.rsplit("_", 1)[-1]
+    subprocess.run(["git", "cat-file", "-e", f"{unity_commit}^{{commit}}"], cwd=REPO_ROOT, check=True)
     webui_commit = git_rev_short(args.codex_ref)
     build_id = f"{unity_commit}-{webui_commit}"
 
@@ -776,8 +783,11 @@ def main() -> int:
         catalog_version, gate_passed, failed_ids, args.notes
     )
 
-    # 5. Copy vercel.json to DIST_DIR
-    shutil.copy2(DEPLOY_WEB_DIR / "vercel.json", DIST_DIR / "vercel.json")
+    # 5. Copy vercel.json to DIST_DIR only if its content changed.
+    vercel_source = DEPLOY_WEB_DIR / "vercel.json"
+    vercel_dest = DIST_DIR / "vercel.json"
+    if not vercel_dest.exists() or hashlib.sha256(vercel_source.read_bytes()).digest() != hashlib.sha256(vercel_dest.read_bytes()).digest():
+        shutil.copy2(vercel_source, vercel_dest)
 
     print(f"[SUCCESS] Packaged /{args.channel}/ and /ui-preview/ with buildId={build_id} (root / preserved unchanged)")
     return 0

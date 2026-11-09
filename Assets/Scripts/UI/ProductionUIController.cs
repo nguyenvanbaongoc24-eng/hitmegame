@@ -6806,7 +6806,9 @@ SyncHomeCharacterDisplay();
 
 
 
-                    txtRound.text = string.Format(UiStrings.Get("VÒNG {0}/{1}"), _lastDisplayedRound, _lastDisplayedMaxRounds);
+                    txtRound.text = matchController != null && matchController.State != null && _lastDisplayedMaxRounds == 0
+                        ? matchController.State.RoundLabel
+                        : string.Format(UiStrings.Get("VÒNG {0}/{1}"), _lastDisplayedRound, _lastDisplayedMaxRounds);
 
 
 
@@ -15361,7 +15363,9 @@ SyncHomeCharacterDisplay();
 
 
 
-                    txtRound.text = "VÒNG " + round + "/" + maxRounds;
+                    txtRound.text = maxRounds == 0 && matchController != null && matchController.State != null
+                        ? matchController.State.RoundLabel
+                        : "VÒNG " + round + "/" + maxRounds;
 
 
 
@@ -15675,7 +15679,7 @@ SyncHomeCharacterDisplay();
 
 
 
-                        txtRoundResultTitle.text = $"KẾT QUẢ VÒNG {matchController.State.RoundNumber}";
+                        txtRoundResultTitle.text = "KẾT QUẢ " + matchController.State.RoundLabel;
 
 
 

@@ -68,6 +68,21 @@ namespace HitMe.Game
 
         public bool autoPlay;
 
+        private string _scenarioName;
+        private bool _scenarioOriginalAutoPlay;
+
+        public void ConfigureScenario(string name)
+        {
+            if (_scenarioName == null) _scenarioOriginalAutoPlay = autoPlay;
+            _scenarioName = DevScenario.IsKnown(name) ? name : null;
+            if (_scenarioName != null)
+            {
+                autoPlay = true;
+                _fastAutoPlayTimings = false;
+            }
+            else autoPlay = _scenarioOriginalAutoPlay;
+        }
+
 
 
         public MatchState State { get; private set; }
@@ -1799,6 +1814,7 @@ namespace HitMe.Game
 
 
             var config = configAsset != null ? configAsset.ToCore() : new GameConfig();
+            if (_scenarioName != null) DevScenario.Configure(_scenarioName, config);
 
 
 
@@ -1972,6 +1988,7 @@ namespace HitMe.Game
 
 
             State = new MatchState(config, players);
+            if (_scenarioName != null) DevScenario.Prime(_scenarioName, State);
 
 
 
@@ -2116,6 +2133,10 @@ namespace HitMe.Game
 
 
             State.StartRound();
+            if (_scenarioName != null) DevScenario.PrepareRound(_scenarioName, State);
+
+            if (State.IsTiebreak) TriggerToast("HIỆP PHỤ!");
+            else if (State.NormalRoundNumber == config.SuddenDeathRound) TriggerToast("CHẾT NGAY!");
 
 
 
@@ -2194,6 +2215,12 @@ namespace HitMe.Game
                 var botPlayer = State.FindPlayer(pair.Key);
 
                 if (botPlayer == null || !botPlayer.IsAlive) continue;
+
+                if (_scenarioName != null)
+                {
+                    State.SetInput(DevScenario.Input(_scenarioName, State, botPlayer));
+                    continue;
+                }
 
 
 
@@ -2413,7 +2440,9 @@ namespace HitMe.Game
 
 
 
-                    var autoInput = _autoBrain.MakeInput(localPlayer, config);
+                    var autoInput = _scenarioName != null
+                        ? DevScenario.Input(_scenarioName, State, localPlayer)
+                        : _autoBrain.MakeInput(localPlayer, config);
 
 
 
@@ -2438,6 +2467,12 @@ namespace HitMe.Game
 
 
                     SyncGesturePreview();
+
+                    if (_scenarioName != null)
+                    {
+                        Present(true);
+                        yield return new WaitForSeconds(1.2f);
+                    }
 
 
 

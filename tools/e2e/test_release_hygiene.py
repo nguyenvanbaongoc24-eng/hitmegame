@@ -64,7 +64,11 @@ def verify_runtime(base_url: str) -> dict:
 
         # 1. Load WITHOUT ?e2e=1
         page.goto(url_clean, wait_until="domcontentloaded", timeout=45000)
-        page.wait_for_timeout(2000)
+        # The remote WebGL bundle can take much longer than two seconds to
+        # initialize. Check after Unity is ready so late test-bridge leaks
+        # cannot escape this assertion.
+        page.wait_for_function("() => !!window.unityInstance", timeout=90000)
+        page.wait_for_timeout(1000)
         clean_globals = page.evaluate("""() => ({
             hasHitmeState: typeof window.__hitmeState !== 'undefined',
             hasHitmeUiDump: typeof window.__hitmeUiDump !== 'undefined',
@@ -75,7 +79,10 @@ def verify_runtime(base_url: str) -> dict:
 
         # 2. Load WITH ?e2e=1
         page.goto(url_e2e, wait_until="domcontentloaded", timeout=45000)
-        page.wait_for_timeout(2000)
+        page.wait_for_function(
+            "() => !!window.unityInstance && !!window.__hitmeState && typeof window.__hitmeUiDump === 'function'",
+            timeout=90000,
+        )
         e2e_globals = page.evaluate("""() => ({
             hasHitmeState: typeof window.__hitmeState !== 'undefined',
             hasHitmeUiDump: typeof window.__hitmeUiDump === 'function',

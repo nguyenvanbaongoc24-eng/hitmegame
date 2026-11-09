@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -152,7 +153,9 @@ def run_codex_next_live(base_url: str, output_dir: Path, matches: int) -> tuple[
         cmd.append("--gameplay")
 
     print(f"[*] Running Codex test_next_live.py: {' '.join(cmd)}")
-    res = subprocess.run(cmd, cwd=TEMP_EXTRACT_DIR, capture_output=True, text=True)
+    env = os.environ.copy()
+    env["HITME_SOURCE_REPO"] = str(REPO_ROOT)
+    res = subprocess.run(cmd, cwd=TEMP_EXTRACT_DIR, env=env, capture_output=True, text=True)
     if res.stdout:
         print(res.stdout.strip())
     if res.stderr:

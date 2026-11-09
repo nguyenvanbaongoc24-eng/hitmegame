@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -25,7 +26,7 @@ REPO_ROOT = SCRIPT_DIR.parent.parent
 DIST_DIR = SCRIPT_DIR / "dist"
 PACK_HYBRID_SCRIPT = REPO_ROOT / "tools" / "hybrid" / "pack_hybrid.py"
 DEPLOY_GATE_SCRIPT = REPO_ROOT / "tools" / "blackbox" / "deploy_gate.py"
-STAGING_DIR = REPO_ROOT.parent / "_web_dist_deploy"
+STAGING_DIR = Path(os.environ.get("HITME_WEB_DIST_STAGING", str(REPO_ROOT.parent / "_web_dist_deploy")))
 REMOTE_URL = "https://github.com/nguyenvanbaongoc24-eng/hitmegame.git"
 LIVE_BASE_URL = "https://hitmegame-iota.vercel.app"
 

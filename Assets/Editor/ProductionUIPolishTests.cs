@@ -340,8 +340,10 @@ namespace HitMe.Editor
             Assert.That(match.State.RoundNumber, Is.EqualTo(1));
             Assert.That(match.State.Phase, Is.EqualTo(Phase.Placing));
 
-            // Advance through 5 rounds to MatchEnd
-            for (int r = 1; r <= 5; r++)
+            // Exercise the replay/Home chain with a one-round hard cap.
+            match.State.Config.HardCapRound = 1;
+            match.State.Config.TiebreakMax = 0;
+            for (int r = 1; r <= 1; r++)
             {
                 if (match.State.Phase != Phase.Placing) match.State.StartRound();
                 for (int i = 0; i < match.State.Players.Count; i++)
@@ -367,7 +369,7 @@ namespace HitMe.Editor
             // Attempting StartRound() after MatchEnd must be a no-op (never returns to Placing)
             match.State.StartRound();
             Assert.That(match.State.Phase, Is.EqualTo(Phase.MatchEnd), "MatchState must never return to Placing after MatchEnd");
-            Assert.That(match.State.RoundNumber, Is.EqualTo(5));
+            Assert.That(match.State.RoundNumber, Is.EqualTo(1));
 
             ui.ApplyPhaseState(match.State.Phase);
             Assert.That(ui.CurrentScreen, Is.EqualTo(ProductionScreen.Result));

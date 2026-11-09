@@ -18,7 +18,11 @@ MonoBehaviour:
   revealSeconds: 0.8
   throwSeconds: 1.35
   resolveSeconds: 1.2
-  maxRounds: 5
+  maxRounds: 0
+  tiebreakMax: 3
+  tiebreakHp: 1
+  suddenDeathRound: 10
+  hardCapRound: 25
   roundLimitTiebreak: 1
   arenaWidth: 9
   arenaHeight: 11.4

@@ -27,6 +27,7 @@ namespace HitMe.UI
         private readonly StringBuilder _sb = new StringBuilder(2048);
 
         private int _lastBotCount = 3;
+        private bool _startingScenario;
         private int _lastCharIdx = 0;
         private string _currentToast = "";
         private float _toastExpiryTime = 0f;
@@ -37,6 +38,12 @@ namespace HitMe.UI
             public string characterId;
             public string weaponId;
             public int botCount = 3;
+        }
+
+        [Serializable]
+        private class StartScenarioDto
+        {
+            public string name;
         }
 
         [Serializable]
@@ -180,6 +187,12 @@ namespace HitMe.UI
 
             if (url.IndexOf("autostart=practice", StringComparison.OrdinalIgnoreCase) >= 0)
             {
+                string scenario = GetUrlParam(url, "scenario");
+                if (IsScenarioEnabled() && DevScenario.IsKnown(scenario))
+                {
+                    StartScenario(JsonUtility.ToJson(new StartScenarioDto { name = scenario }));
+                    return;
+                }
                 string charId = GetUrlParam(url, "char");
                 string weaponId = GetUrlParam(url, "weapon");
                 int bots = 3;
@@ -214,30 +227,72 @@ namespace HitMe.UI
             return "";
         }
 
+        private static bool IsScenarioEnabled()
+        {
+            string url = Application.absoluteURL;
+            return GetUrlParam(url, "dev") == "1" || GetUrlParam(url, "e2e") == "1";
+        }
+
+        public void StartScenario(string json)
+        {
+            if (!IsScenarioEnabled()) return;
+            StartScenarioDto dto;
+            try { dto = JsonUtility.FromJson<StartScenarioDto>(json); }
+            catch { EmitError("scenario_invalid", "Kịch bản thử không hợp lệ"); return; }
+            if (dto == null || !DevScenario.IsKnown(dto.name))
+            { EmitError("scenario_invalid", "Kịch bản thử không hợp lệ"); return; }
+            if (matchController == null)
+            { EmitError("scenario_unavailable", "Trận đấu chưa sẵn sàng"); return; }
+            matchController.ConfigureScenario(dto.name);
+            int bots = dto.name == "ranking_ties" ? 5
+                : dto.name == "tiebreak3" || dto.name == "tiebreak_draw" || dto.name == "hardcap" ? 2 : 1;
+            _startingScenario = true;
+            try
+            {
+                StartPractice(JsonUtility.ToJson(new StartPracticeDto
+                { characterId = "nam_lang", weaponId = "dep_to_ong", botCount = bots }));
+            }
+            finally { _startingScenario = false; }
+        }
+
         private void HandleMatchEnded(List<PlayerState> ranked, List<string> winners)
         {
-            int currentRound = matchController != null && matchController.State != null ? matchController.State.RoundNumber : 1;
+            var state = matchController != null ? matchController.State : null;
+            int currentRound = state != null ? state.RoundNumber : 1;
+            var finalRanks = state != null ? state.GetRankings() : Array.Empty<RankedPlayer>();
             _sb.Clear();
-            _sb.Append("{\"type\":\"result\",\"round\":").Append(currentRound).Append(",\"rankings\":[");
-            if (ranked != null)
+            _sb.Append("{\"type\":\"result\",\"round\":").Append(currentRound)
+               .Append(",\"roundLabel\":\"").Append(EscapeJson(state != null ? state.RoundLabel : "VÒNG 1"))
+               .Append("\",\"tiebreakCount\":").Append(state != null ? state.TiebreakCount : 0)
+               .Append(",\"winnerIds\":[");
+            if (winners != null)
             {
-                for (int i = 0; i < ranked.Count; i++)
+                for (int i = 0; i < winners.Count; i++)
                 {
                     if (i > 0) _sb.Append(",");
-                    var p = ranked[i];
+                    _sb.Append('"').Append(EscapeJson(winners[i])).Append('"');
+                }
+            }
+            _sb.Append("],\"rankings\":[");
+            for (int i = 0; i < finalRanks.Length; i++)
+            {
+                    if (i > 0) _sb.Append(",");
+                    var row = finalRanks[i];
+                    var p = row.Player;
                     bool survived = p.IsAlive;
-                    int rank = i + 1;
                     string charId = matchController != null ? matchController.GetPlayerCharacterId(p.Id) : "nam_lang";
                     int roundSurvived = survived ? currentRound : (p.EliminatedAtRound > 0 ? p.EliminatedAtRound : currentRound);
-                    _sb.Append("{\"id\":\"").Append(p.Id)
+                    _sb.Append("{\"id\":\"").Append(EscapeJson(p.Id))
                        .Append("\",\"name\":\"").Append(EscapeJson(p.Name))
                        .Append("\",\"characterId\":\"").Append(charId)
-                       .Append("\",\"rank\":").Append(rank)
+                       .Append("\",\"rank\":").Append(row.Rank)
                        .Append(",\"hits\":").Append(p.HitsLanded)
+                       .Append(",\"throws\":").Append(p.Throws)
+                       .Append(",\"accuracy\":").Append(row.Accuracy.ToString("F4", System.Globalization.CultureInfo.InvariantCulture))
+                       .Append(",\"eliminatedRound\":").Append(p.EliminatedAtRound)
                        .Append(",\"roundSurvived\":").Append(roundSurvived)
                        .Append(",\"survived\":").Append(survived ? "true" : "false")
                        .Append("}");
-                }
             }
             int localHits = 0;
             if (ranked != null)
@@ -277,6 +332,7 @@ namespace HitMe.UI
         public void StartPractice(string json)
         {
             EnsureMatchSubscribed();
+            if (!_startingScenario && matchController != null) matchController.ConfigureScenario(null);
             int botCount = 3;
             int charIdx = _lastCharIdx >= 0 ? _lastCharIdx : 0;
             string weaponId = "dep_to_ong";
@@ -736,6 +792,12 @@ namespace HitMe.UI
             _sb.Append("{\"type\":\"match\",");
             _sb.Append("\"round\":").Append(state.RoundNumber).Append(",");
             _sb.Append("\"maxRounds\":").Append(state.Config.MaxRounds).Append(",");
+            _sb.Append("\"roundLabel\":\"").Append(EscapeJson(state.RoundLabel)).Append("\",");
+            _sb.Append("\"tiebreak\":").Append(state.IsTiebreak ? "true" : "false").Append(",");
+            _sb.Append("\"tiebreakCount\":").Append(state.TiebreakCount).Append(",");
+            int aliveCount = 0;
+            for (int i = 0; i < state.Players.Count; i++) if (state.Players[i].IsAlive) aliveCount++;
+            _sb.Append("\"aliveCount\":").Append(aliveCount).Append(",");
             _sb.Append("\"phase\":\"").Append(state.Phase.ToString().ToLowerInvariant()).Append("\",");
             _sb.Append("\"timeLeft\":").Append(matchController.SecondsRemaining.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)).Append(",");
             _sb.Append("\"weaponName\":\"Dép Tổ Ong\",");
