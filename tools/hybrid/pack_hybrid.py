@@ -2511,6 +2511,165 @@ HOME_VISUAL_PATCH_HTML = """
       }
       window.__hitmeLocalizeNetError = localizeError;
 
+      // L8: Circular log buffer (20 entries) & Client Error Catcher
+      const _recentLogs = [];
+      function pushLog(type, args) {
+        try {
+          const str = Array.from(args).map(a => {
+            if (typeof a === "object") {
+              try { return JSON.stringify(a); } catch (e) { return String(a); }
+            }
+            return String(a);
+          }).join(" ");
+          _recentLogs.push(`[${new Date().toISOString().slice(11, 19)}] [${type}] ${str}`);
+          if (_recentLogs.length > 20) _recentLogs.shift();
+        } catch (e) {}
+      }
+
+      const _origLog = console.log;
+      const _origWarn = console.warn;
+      const _origError = console.error;
+      console.log = function(...args) { pushLog("LOG", args); _origLog.apply(console, args); };
+      console.warn = function(...args) { pushLog("WARN", args); _origWarn.apply(console, args); };
+      console.error = function(...args) { pushLog("ERR", args); _origError.apply(console, args); };
+
+      let _errorReportCount = 0;
+      let _lastReportMinute = Math.floor(Date.now() / 60000);
+
+      function handleClientError(errMsg, source, line, col, errObj) {
+        const buildId = window.__hitmeReleaseInfo?.buildId || "unknown_build";
+        const shortUa = navigator.userAgent.slice(0, 100);
+        const vp = `${window.innerWidth}x${window.innerHeight}`;
+        const nl = String.fromCharCode(10);
+        const detailStr = "HIT ME Error Report" + nl +
+          "Build: " + buildId + nl +
+          "UA: " + shortUa + nl +
+          "Viewport: " + vp + nl +
+          "Error: " + errMsg + nl +
+          "At: " + (source || "unknown") + ":" + (line || 0) + ":" + (col || 0) + nl + nl +
+          "Last 20 Logs:" + nl +
+          _recentLogs.join(nl);
+
+        showClientErrorModal(errMsg, buildId, detailStr);
+
+        const sp = new URLSearchParams(window.location.search);
+        if (sp.get("telemetry") !== "0" && navigator.sendBeacon) {
+          const currentMin = Math.floor(Date.now() / 60000);
+          if (currentMin !== _lastReportMinute) {
+            _lastReportMinute = currentMin;
+            _errorReportCount = 0;
+          }
+          if (_errorReportCount < 5) {
+            _errorReportCount++;
+            const sUrl = resolveServerWsUrl();
+            const httpBase = sUrl.replace(/^wss:\\/\\//i, "https://").replace(/^ws:\\/\\//i, "http://").replace(/\\/ws\\/?$/, "");
+            try {
+              const payload = JSON.stringify({
+                buildId,
+                ua: shortUa,
+                viewport: vp,
+                message: String(errMsg).slice(0, 200),
+                logs: _recentLogs.slice(-15)
+              });
+              if (payload.length <= 2048) {
+                navigator.sendBeacon(httpBase + "/client-log", payload);
+              }
+            } catch (e) {}
+          }
+        }
+      }
+
+      window.onerror = function(msg, src, lin, col, err) {
+        handleClientError(msg, src, lin, col, err);
+      };
+
+      window.addEventListener("unhandledrejection", function(ev) {
+        const reason = ev.reason ? (ev.reason.message || String(ev.reason)) : "Unhandled Promise Rejection";
+        handleClientError(reason, "Promise", 0, 0, ev.reason);
+      });
+
+      function showClientErrorModal(errMsg, buildId, fullDetail) {
+        let shade = document.getElementById("r40-error-catcher-shade");
+        if (!shade) {
+          shade = document.createElement("div");
+          shade.id = "r40-error-catcher-shade";
+          shade.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(8,12,20,0.92);display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:auto;";
+          document.body.appendChild(shade);
+        }
+        shade.innerHTML = `
+          <div class="r40-profile-card" role="dialog" aria-modal="true" style="border-color:#f87171;width:min(100%,420px);" data-name="client-error-modal">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:22px;">⚠️</span>
+              <div>
+                <b style="color:#f87171;font-size:16px;">ĐÃ CÓ LỖI XẢY RA</b>
+                <small style="display:block;color:#94a3b8;font-size:11px;">Bản build: ${buildId}</small>
+              </div>
+            </div>
+            <div style="background:#0a1018;border:1px solid #334155;border-radius:8px;padding:8px 10px;font-size:12px;color:#fca5a5;max-height:100px;overflow-y:auto;font-family:monospace;" data-name="err-box">
+              ${String(errMsg || "Lỗi không xác định")}
+            </div>
+            <div style="font-size:12px;color:#cbd5e1;">
+              Bạn có thể sao chép thông tin lỗi gửi cho ban phát triển hoặc tải lại trò chơi.
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
+              <button type="button" class="r39-btn secondary" id="r40-btn-copy-err">📋 SAO CHÉP LỖI</button>
+              <button type="button" class="r39-btn" id="r40-btn-reload-err">🔄 TẢI LẠI TRANG</button>
+            </div>
+            <button type="button" class="r39-btn secondary" id="r40-btn-close-err" style="width:100%;margin-top:4px;">ĐÓNG</button>
+          </div>
+        `;
+        shade.style.display = "flex";
+        const copyBtn = shade.querySelector("#r40-btn-copy-err");
+        copyBtn.addEventListener("click", () => {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(fullDetail).then(() => {
+              copyBtn.textContent = "✓ ĐÃ SAO CHÉP!";
+              setTimeout(() => { copyBtn.textContent = "📋 SAO CHÉP LỖI"; }, 1800);
+            });
+          }
+        });
+        shade.querySelector("#r40-btn-reload-err").addEventListener("click", () => {
+          window.location.href = window.location.origin + window.location.pathname + "?_t=" + Date.now();
+        });
+        shade.querySelector("#r40-btn-close-err").addEventListener("click", () => {
+          shade.style.display = "none";
+        });
+      }
+
+      function renderDebugHudIfEnabled() {
+        const sp = new URLSearchParams(window.location.search);
+        if (sp.get("debug") !== "1") return;
+        let hud = document.getElementById("r40-debug-hud");
+        if (!hud) {
+          hud = document.createElement("div");
+          hud.id = "r40-debug-hud";
+          hud.className = "r40-debug-hud";
+          hud.style.cssText = "position:fixed;bottom:10px;left:10px;z-index:9999;background:rgba(15,23,42,0.92);border:1px solid #38bdf8;border-radius:10px;padding:8px 12px;font-family:monospace;font-size:11px;color:#e2e8f0;box-shadow:0 4px 12px rgba(0,0,0,0.5);max-width:320px;pointer-events:auto;";
+          document.body.appendChild(hud);
+        }
+        const rel = window.__hitmeReleaseInfo || {};
+        hud.innerHTML = `
+          <div style="font-weight:800;color:#38bdf8;margin-bottom:4px;display:flex;justify-content:space-between;">
+            <span>HIT ME DEBUG HUD</span>
+            <span>${rel.version || ""}</span>
+          </div>
+          <div>Build: <b>${(rel.buildId || "").slice(0, 15)}</b></div>
+          <div>Mode/Phase: <b>${onlineState.mode} / ${onlineState.phase}</b></div>
+          <div>Room: <b>${onlineState.roomCode || "—"}</b></div>
+          <div>WS: <b>${onlineState.connected ? "CONNECTED" : "OFFLINE"}</b> (RTT: ${window.__hitmeLastRttMs || 0}ms)</div>
+          <button type="button" class="r39-btn-pill" id="r40-debug-copy-logs" style="margin-top:6px;width:100%;padding:3px 6px;font-size:10.5px;">📋 Sao chép 20 logs</button>
+        `;
+        hud.querySelector("#r40-debug-copy-logs").addEventListener("click", () => {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(_recentLogs.join(String.fromCharCode(10))).then(() => {
+              const b = hud.querySelector("#r40-debug-copy-logs");
+              b.textContent = "✓ ĐÃ CHÉP LOGS!";
+              setTimeout(() => { b.textContent = "📋 Sao chép 20 logs"; }, 1500);
+            });
+          }
+        });
+      }
+
       const CHARACTERS = [
         { id: "nam_lang", name: "Nam Làng", head: "./assets/nam_lang_head.png", tam: false },
         { id: "nu_nang_dong", name: "Nữ Năng Động", head: "./assets/nu_nang_dong_head.png", tam: false },
@@ -2833,7 +2992,7 @@ HOME_VISUAL_PATCH_HTML = """
                 ${CHARACTERS.map(c => `
                   <button type="button" class="r39-char-pick ${selectedChar === c.id ? "selected" : ""}" data-name-char="${c.id}" style="min-height:52px;flex:1 1 45%;">
                     <img src="${c.head}" alt="${c.name}" style="width:28px;height:28px;">
-                    <span style="font-size:11px;">${c.name}${c.tam ? " (TẠM)" : ""}</span>
+                    <span style="font-size:11px;">${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">TẠM</span>' : ""}</span>
                   </button>
                 `).join("")}
               </div>
@@ -3662,7 +3821,7 @@ HOME_VISUAL_PATCH_HTML = """
             return `
               <button type="button" class="r39-char-pick ${isSelected ? "selected" : ""} ${isTaken ? "taken" : ""}" data-char-pick="${c.id}">
                 <img src="${c.head}" alt="${c.name}">
-                <span>${c.name}${c.tam ? " (TẠM)" : ""}</span>
+                <span>${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">TẠM</span>' : ""}</span>
                 ${isTaken ? `<small style="color:#f87171;font-size:9.5px;">ĐÃ CHỌN</small>` : ""}
               </button>
             `;
@@ -3953,6 +4112,9 @@ HOME_VISUAL_PATCH_HTML = """
               <span style="padding:4px 10px;border-radius:99px;background:#132942;border:1.5px solid #ffcd38;color:#ffcd38;font-weight:900;font-size:13px;">
                 <img src="./assets/ui_icon_coin.png" width="14" height="14" style="vertical-align:middle;"> 500 Vàng (Mẫu)
               </span>
+            </div>
+            <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:6px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;" data-name="shop-disclaimer">
+              ⚠️ DỮ LIỆU THỬ NGHIỆM • SẮP CÓ BẢN THẬT • KHÔNG CÓ TIỀN THẬT
             </div>
             <div class="r39-card" style="margin-bottom:8px;padding:8px 10px;border-color:#19d5d8;">
               <div style="font-size:12.5px;color:#fff8e8;">Người chơi: <b>${onlineState.playerName}</b> • Nhân vật: <b>${(CHARACTERS.find(c => c.id === onlineState.characterId) || CHARACTERS[0]).name}</b></div>
@@ -4286,7 +4448,7 @@ HOME_VISUAL_PATCH_HTML = """
         }
       });
 
-      document.addEventListener("DOMContentLoaded", () => {
+      function _initOnlineLifecycle() {
         const root = document.getElementById("ui-root");
         if (root && typeof MutationObserver !== "undefined") {
           const obs = new MutationObserver(() => enhanceBotResultScreenG9());
@@ -4294,6 +4456,8 @@ HOME_VISUAL_PATCH_HTML = """
         }
         renderBetaBanner();
         startReleasePolling();
+        renderDebugHudIfEnabled();
+        setInterval(renderDebugHudIfEnabled, 1000);
         const sp = new URLSearchParams(window.location.search);
         if (sp.get("name")) {
           onlineState.playerName = sp.get("name");
@@ -4338,7 +4502,13 @@ HOME_VISUAL_PATCH_HTML = """
         } else if (sp.get("lab") === "1" && sp.get("open") === "1") {
           setTimeout(() => _doOpenMode(sp.get("mode") || "create"), 250);
         }
-      });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", _initOnlineLifecycle);
+      } else {
+        _initOnlineLifecycle();
+      }
 
       window.__hitmeOnlineUi = {
         openMode,
@@ -4364,7 +4534,11 @@ HOME_VISUAL_PATCH_HTML = """
         releaseWakeLock,
         startReconnectCountdown,
         startReleasePolling,
-        showUpdateToast
+        showUpdateToast,
+        handleClientError,
+        showClientErrorModal,
+        renderDebugHudIfEnabled,
+        getRecentLogs: () => _recentLogs.slice()
       };
     })();
   </script>
