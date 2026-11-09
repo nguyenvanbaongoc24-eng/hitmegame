@@ -29,3 +29,57 @@
 - **Trạng thái giao diện trên `/next/` (U3):**
   - Ba nút **CHƠI NHANH / TẠO PHÒNG / VÀO PHÒNG** hiển thị rõ nhãn **"Máy chủ chưa sẵn sàng"** (thay cho *"Sắp ra mắt"*).
   - Khi người chơi chạm vào bất kỳ nút online nào, hộp thoại **"MÁY CHỦ CHƯA SẴN SÀNG"** hiện ra giải thích rõ lý do, có nút chính **"CHUYỂN SANG LUYỆN VỚI BOT"** (chuyển thẳng vào màn chọn bot 1 chạm) và nút **"ĐÁNH THỨC MÁY CHỦ (TỚI 60 GIÂY)"** (hiển thị thanh tiến trình đếm 0–60 giây + nút **THỬ LẠI KẾT NỐI**).
+
+## 5. Kết quả thử máy chủ Render thật trong bước S1 (Đợt 39 — `2026-11-09`)
+Đã chạy kiểm tra trực tiếp tới `https://hitmegame.onrender.com` và từ trang `https://hitmegame-iota.vercel.app/next/` trong Playwright Chromium (`Evidence/round39/S1_render_probe.json`):
+
+1. **`GET https://hitmegame.onrender.com/healthz` (có `Origin: https://hitmegame-iota.vercel.app`):**
+   - Mã HTTP: **`200 OK`**, thời gian phản hồi: **`416.0 ms`**.
+   - Body nguyên văn:
+     ```json
+     {"status":"ok","protocol":3}
+     ```
+   - Header trả về: `Content-Type: application/json; charset=utf-8`, `Server: cloudflare`, `x-render-origin-server: Kestrel`.
+   - **Lưu ý CORS:** Phản hồi **không có header `Access-Control-Allow-Origin`**, nên khi gọi `fetch("https://hitmegame.onrender.com/healthz", { mode: "cors" })` trực tiếp từ trang `https://hitmegame-iota.vercel.app/next/`, trình duyệt ném `TypeError: Failed to fetch` (CORS blocked).
+
+2. **`POST https://hitmegame.onrender.com/guest-token`:**
+   - Mã HTTP: **`503 Service Unavailable`**, thời gian phản hồi: **`162.8 ms`**.
+   - Ý nghĩa theo `server/README.md`: biến môi trường `GUEST_TOKEN_SIGNING_KEY` chưa được đặt trên Render, nghĩa là máy chủ đang cho phép định danh khách không chữ ký dạng `guest:<tên>` trong tin nhắn `join`.
+
+3. **Kết nối WebSocket `wss://hitmegame.onrender.com/ws` từ nguồn `Origin: https://hitmegame-iota.vercel.app`:**
+   - Trong trình duyệt mở tại `https://hitmegame-iota.vercel.app/next/`:
+     ```json
+     {
+       "opened": false,
+       "closeCode": 1006,
+       "closeReason": "",
+       "wasClean": false,
+       "elapsedMs": 245.1,
+       "messages": [],
+       "errorEvent": true
+     }
+     ```
+   - Kiểm tra trực tiếp bắt tay HTTP Upgrade (`Upgrade: websocket`, `Origin: https://hitmegame-iota.vercel.app`) cho thấy nguyên nhân chính xác:
+     - Mã HTTP: **`403 Forbidden`**
+     - Body nguyên văn từ Kestrel:
+       ```json
+       {"v":1,"type":"error","code":"origin_not_allowed"}
+       ```
+   - **Nguyên nhân gốc rễ (mục 11 Đợt 39):** WebSocket trên trình duyệt **không dùng CORS preflight**, nhưng máy chủ Kestrel (`server/Program.cs`) kiểm tra header `Origin` của yêu cầu HTTP Upgrade đối chiếu với danh sách `ALLOWED_ORIGINS`. Hiện tại trên Render, `ALLOWED_ORIGINS` vẫn đang ở giá trị mặc định (`http://localhost,http://127.0.0.1`) và **chưa có `https://hitmegame-iota.vercel.app`**.
+
+4. **Đối chứng kết nối `wss://hitmegame.onrender.com/ws` với `Origin: http://localhost`:**
+   - Bắt tay HTTP Upgrade trả **`101 Switching Protocols`** ngay lập tức.
+   - Tin nhắn đầu tiên máy chủ gửi về ngay khi mở:
+     ```json
+     {"v":2,"type":"hello","serverVersion":"0.1.0-beta.1","minClientVersion":"0.0.0"}
+     ```
+   - Khi gửi tiếp `{"v":1,"type":"join","token":"guest:ProbeNam","clientVersion":"0.1.0-beta.6"}`, máy chủ tạo phòng thành công và trả về:
+     ```json
+     {"v":1,"type":"room_state","protocolVersion":1,"roomCode":"U44YKT","phase":"waiting_for_players","hostId":1,"maxPlayers":6,"minPlayersToStart":2,"round":0,"maxRounds":5,"players":[{"id":1,"name":"ProbeNam","hp":3,"alive":true,"connected":true,"ready":false,"isHost":true,"character":0}]}
+     ```
+
+5. **Yêu cầu cấu hình trên Render (Codex / Chủ dự án):**
+   - Đặt biến môi trường trên dịch vụ Render `hitmegame`:
+     - `ALLOWED_ORIGINS=https://hitmegame-iota.vercel.app,http://localhost,http://127.0.0.1`
+   - Thêm header `Access-Control-Allow-Origin` (khớp `ALLOWED_ORIGINS`) cho phản hồi `GET /healthz` và `POST /guest-token` để trình duyệt trên Vercel đọc được JSON `/healthz` ở chế độ CORS chuẩn.
+   - Trong khi chờ Render cập nhật `ALLOWED_ORIGINS`, mặt định `/next/` giữ nhãn **"Máy chủ chưa sẵn sàng"**, và toàn bộ màn hình Online + giao thức thật được mở qua cờ `?online=1` (hoặc `?lab=1` cho Loopback 2 người).
