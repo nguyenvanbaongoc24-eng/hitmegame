@@ -8,6 +8,15 @@
   <link rel="icon" href="./assets/logo_hit_me.png">
   <link rel="stylesheet" href="./style.css">
   <style id="hitme-home-bg-patch">
+    /* Hide dev prototype nav bar from Beta unless ?debug=1 */
+    .preview-navigation {
+      display: none !important;
+    }
+    body.debug-mode .preview-navigation,
+    [data-debug="1"] .preview-navigation {
+      display: flex !important;
+    }
+
     /* B-2..B-5: Village Courtyard Home Background (u4_background.png) + Single Baked Lotus Pedestal */
     .home .backdrop {
       background-color: #d89658 !important;
@@ -1049,6 +1058,28 @@
       }
       syncPedestalAnchor();
 
+      // Safe execution helper: DOM enhancers must NEVER throw or block game flow
+      function safeRun(name, fn) {
+        try {
+          return fn();
+        } catch (err) {
+          console.warn("[safeRun:" + name + "]", err);
+          try {
+            if (window.__hitmeDiagnostics) {
+              if (!Array.isArray(window.__hitmeDiagnostics.errors)) window.__hitmeDiagnostics.errors = [];
+              window.__hitmeDiagnostics.errors.push({
+                name: name,
+                message: String(err && err.message || err),
+                stack: String(err && err.stack || ""),
+                time: Date.now()
+              });
+            }
+          } catch (e) {}
+          return null;
+        }
+      }
+      window.safeRun = safeRun;
+
       // Round 38 G1–G8 DOM Enhancer (Timer Ring + 5 Round Dots + Phase Banners + Hold-to-View Name + Interactive Hand Guide)
       let _r38LastPhase = "";
       let _r38LastRound = 0;
@@ -1248,6 +1279,10 @@
         const root = document.getElementById("ui-root");
         if (!root) return;
 
+        // B4: Toggle body.in-match to cleanly hide beta chip and let in-match HUD shine
+        const isMatchScreen = !!root.querySelector('[data-screen="match"]');
+        document.body.classList.toggle("in-match", isMatchScreen);
+
         // G7c: Toggle .single-weapon on Home weapon card when <= 1 weapon unlocked
         const weaponCard = root.querySelector(".home .weapon-card");
         if (weaponCard) {
@@ -1284,22 +1319,29 @@
           }
         });
 
-        root.querySelectorAll('[data-action="select-weapon"], .preview-weapon').forEach(btn => {
+        root.querySelectorAll('[data-action="select-weapon"], .choice-grid button[data-id], .preview-weapon').forEach(btn => {
           const wid = btn.dataset.id || "";
-          if (!btn.dataset.r38WeaponBadge) {
+          if (!btn.dataset.r38WeaponBadge && (wid === "dep_to_ong" || wid === "chao_chong_dinh" || wid === "vot_pickleball")) {
             btn.dataset.r38WeaponBadge = "1";
-            const badge = document.createElement("small");
-            if (wid === "dep_to_ong") {
-              badge.className = "r38-badge-owned";
-              badge.textContent = "SỞ HỮU";
-            } else if (wid === "chao_chong_dinh") {
-              badge.className = "r38-badge-owned";
-              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
-            } else if (wid === "vot_pickleball") {
-              badge.className = "r38-badge-owned";
-              badge.textContent = "SỞ HỮU • ĐÃ MỞ KHÓA";
+            let small = btn.querySelector("small");
+            if (!small) {
+              small = document.createElement("small");
+              btn.appendChild(small);
             }
-            if (badge.textContent) btn.appendChild(badge);
+            if (wid === "dep_to_ong") {
+              small.className = "r38-badge-owned";
+              small.textContent = "SỞ HỮU";
+            } else if (wid === "chao_chong_dinh") {
+              small.className = "r38-badge-tam";
+              small.textContent = "Cần bộ hình cầm vũ khí – sắp có";
+              btn.classList.add("locked");
+              btn.setAttribute("aria-disabled", "true");
+            } else if (wid === "vot_pickleball") {
+              small.className = "r38-badge-tam";
+              small.textContent = "SẮP CÓ";
+              btn.classList.add("locked");
+              btn.setAttribute("aria-disabled", "true");
+            }
           }
         });
 
@@ -1530,6 +1572,20 @@
             });
             const toggleGroup = settingsSheet.querySelector(".setting-toggles") || settingsSheet;
             toggleGroup.appendChild(hapBtn);
+          }
+
+          // B4: Inject Feedback link into Settings sheet
+          if (!settingsSheet.querySelector(".r40-settings-feedback")) {
+            const rel = window.__hitmeReleaseInfo || {};
+            const fbUrl = rel.feedbackUrl || "https://forms.gle/hitme-beta-feedback";
+            const fbBtn = document.createElement("a");
+            fbBtn.className = "live-secondary r40-settings-feedback";
+            fbBtn.href = fbUrl;
+            fbBtn.target = "_blank";
+            fbBtn.rel = "noopener noreferrer";
+            fbBtn.style.cssText = "text-align:center;text-decoration:none;display:block;margin-top:10px;padding:8px 12px;border-radius:8px;font-weight:700;font-size:12px;background:#1e3a53;color:#38bdf8;border:1px solid #38bdf8;";
+            fbBtn.textContent = "Góp ý bản thử nghiệm 💬";
+            settingsSheet.appendChild(fbBtn);
           }
         }
 
@@ -1802,7 +1858,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         const root = document.getElementById("ui-root");
         if (root && typeof MutationObserver !== "undefined") {
-          const m = new MutationObserver(enhanceRound38Dom);
+          const m = new MutationObserver(() => safeRun("enhanceRound38Dom", enhanceRound38Dom));
           m.observe(root, { childList: true, subtree: true });
         }
         const uCanvas = document.getElementById("unity-canvas");
@@ -2224,48 +2280,93 @@
       }
     }
 
-    /* L1: Beta Testing Banner & Feedback Button */
+    /* B4 / L1: Compact Beta Chip (Non-obtrusive, respect safe area, auto-hide in match) */
     .r40-beta-banner {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 85;
-      background: linear-gradient(90deg, rgba(234, 88, 12, 0.95), rgba(194, 65, 12, 0.95));
+      top: max(8px, env(safe-area-inset-top, 8px));
+      left: 12px;
+      z-index: 60;
+      background: rgba(234, 88, 12, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       color: #fff8e8;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 4px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-      letter-spacing: 0.3px;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      letter-spacing: 0.2px;
       pointer-events: auto;
+      max-width: 240px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
     .r40-beta-banner .badge {
       background: #fff;
       color: #c2410c;
-      padding: 1px 6px;
+      padding: 1px 5px;
       border-radius: 4px;
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 900;
-      margin-right: 6px;
       text-transform: uppercase;
     }
+    .r40-beta-banner .beta-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 10px;
+    }
     .r40-feedback-btn {
-      background: rgba(255, 255, 255, 0.22);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.45);
       color: #fff8e8;
       text-decoration: none;
-      padding: 2px 8px;
-      border-radius: 99px;
-      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 9.5px;
       font-weight: 800;
-      transition: background 0.15s;
+      white-space: nowrap;
     }
     .r40-feedback-btn:active {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Completely hide BETA chip on match screen so HUD (VÒNG X, timer ring, settings cog) is 100% unobstructed */
+    body.in-match .r40-beta-banner,
+    [data-screen="match"] .r40-beta-banner,
+    .live-match ~ .r40-beta-banner {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* B4 Safe area insets: viewport, stages, headers */
+    html, body, #ui-root, .stage {
+      min-height: 100dvh;
+      box-sizing: border-box;
+    }
+    .home, .stage, .preview-panel, .live-bottom, .modal, .live-result-panel {
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    }
+    .r40-online-hub .hub-header,
+    .r40-lobby-panel header,
+    .preview-header,
+    .match-top,
+    .live-top {
+      padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
+    }
+    .live-top {
+      min-height: calc(var(--live-top, 132px) + env(safe-area-inset-top, 0px)) !important;
+      padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+    }
+    .live-summary {
+      min-height: 40px !important;
+      align-items: center !important;
     }
 
     /* L2: Guest Profile & Name Modal */
@@ -2346,6 +2447,7 @@
   </style>
   <script id="r39-online-g9-js">
     (function() {
+      const safeRun = window.safeRun || function(name, fn) { try { return fn(); } catch (e) { return null; } };
       // Complete 60-code localized dictionary (matches Assets/Scripts/UI/UiStrings.cs 100%, zero raw codes)
       const R39_ERROR_VI = {
         not_enough_players: "Cần ít nhất 2 người chơi để bắt đầu. Bạn có thể chuyển sang Luyện với Bot!",
@@ -2560,51 +2662,75 @@
         handleClientError(reason, "Promise", 0, 0, ev.reason);
       });
 
+      // Intercept window.alert so Unity never pops a raw browser alert dialog
+      const _origNativeAlert = window.alert;
+      window.alert = function(msg) {
+        console.warn("[Intercepted Unity/Native Alert]:", msg);
+        const strMsg = String(msg || "");
+        if (strMsg.includes("Web Audio API is not supported") || strMsg.includes("AudioContext")) {
+          return;
+        }
+        handleClientError(strMsg, "alert", 0, 0, null);
+      };
+
       function showClientErrorModal(errMsg, buildId, fullDetail) {
         let shade = document.getElementById("r40-error-catcher-shade");
         if (!shade) {
           shade = document.createElement("div");
           shade.id = "r40-error-catcher-shade";
-          shade.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(8,12,20,0.92);display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:auto;";
+          shade.style.cssText = "position:fixed;inset:0;z-index:999999;background:rgba(8,12,20,0.94);display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:auto;";
           document.body.appendChild(shade);
         }
+        const isEn = document.documentElement.lang === "en";
+        const cleanMsg = String(errMsg || "Lỗi không xác định").slice(0, 160);
         shade.innerHTML = `
-          <div class="r40-profile-card" role="dialog" aria-modal="true" style="border-color:#f87171;width:min(100%,420px);" data-name="client-error-modal">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:22px;">⚠️</span>
+          <div class="r40-profile-card" role="dialog" aria-modal="true" style="border-color:#f87171;width:min(100%,380px);background:#0f1d2a;border:2px solid #ef4444;border-radius:14px;padding:18px;color:#f8fafc;" data-name="client-error-modal">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <span style="font-size:26px;">⚠️</span>
               <div>
-                <b style="color:#f87171;font-size:16px;">ĐÃ CÓ LỖI XẢY RA</b>
-                <small style="display:block;color:#94a3b8;font-size:11px;">Bản build: ${buildId}</small>
+                <b style="color:#f87171;font-size:16px;letter-spacing:0.3px;">${isEn ? "An Error Occurred" : "Có lỗi xảy ra"}</b>
+                <small style="display:block;color:#94a3b8;font-size:11px;">Mã lỗi • Build: <code>${buildId}</code></small>
               </div>
             </div>
-            <div style="background:#0a1018;border:1px solid #334155;border-radius:8px;padding:8px 10px;font-size:12px;color:#fca5a5;max-height:100px;overflow-y:auto;font-family:monospace;" data-name="err-box">
-              ${String(errMsg || "Lỗi không xác định")}
+            <div style="background:#08131d;border:1px solid #334155;border-radius:8px;padding:10px;font-size:12px;color:#fca5a5;max-height:90px;overflow-y:auto;font-family:monospace;word-break:break-word;margin-bottom:12px;" data-name="err-box">
+              ${cleanMsg}
             </div>
-            <div style="font-size:12px;color:#cbd5e1;">
-              Bạn có thể sao chép thông tin lỗi gửi cho ban phát triển hoặc tải lại trò chơi.
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button type="button" class="r39-btn" id="r40-btn-retry-home" style="background:#ffcd38;color:#0b1b28;font-weight:900;border:none;border-radius:8px;padding:12px;font-size:14px;cursor:pointer;">
+                ${isEn ? "Retry (Back to Home)" : "Thử lại (Về Home)"}
+              </button>
+              <button type="button" class="r39-btn secondary" id="r40-btn-reload-err" style="background:#1e3a53;color:#38bdf8;font-weight:700;border:1px solid #38bdf8;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;">
+                ${isEn ? "Reload (Bust Cache)" : "Tải lại (Phá cache)"}
+              </button>
+              <button type="button" class="r39-btn secondary" id="r40-btn-copy-err" style="background:transparent;color:#94a3b8;border:none;padding:6px;font-size:12px;cursor:pointer;text-decoration:underline;">
+                ${isEn ? "📋 Copy Error Logs" : "📋 Sao chép nhật ký"}
+              </button>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
-              <button type="button" class="r39-btn secondary" id="r40-btn-copy-err">📋 SAO CHÉP LỖI</button>
-              <button type="button" class="r39-btn" id="r40-btn-reload-err">🔄 TẢI LẠI TRANG</button>
-            </div>
-            <button type="button" class="r39-btn secondary" id="r40-btn-close-err" style="width:100%;margin-top:4px;">ĐÓNG</button>
           </div>
         `;
         shade.style.display = "flex";
+        shade.querySelector("#r40-btn-retry-home").addEventListener("click", () => {
+          shade.style.display = "none";
+          if (window.hitmeUi && window.__hitmeState) {
+            window.__hitmeState.screen = "home";
+            window.__hitmeState.overlay = null;
+            if (typeof window.hitmeUi.render === "function") window.hitmeUi.render();
+          } else {
+            window.location.hash = "";
+            window.location.search = "";
+          }
+        });
+        shade.querySelector("#r40-btn-reload-err").addEventListener("click", () => {
+          window.location.href = window.location.origin + window.location.pathname + "?v=" + encodeURIComponent(buildId) + "&_t=" + Date.now();
+        });
         const copyBtn = shade.querySelector("#r40-btn-copy-err");
         copyBtn.addEventListener("click", () => {
           if (navigator.clipboard) {
             navigator.clipboard.writeText(fullDetail).then(() => {
-              copyBtn.textContent = "✓ ĐÃ SAO CHÉP!";
-              setTimeout(() => { copyBtn.textContent = "📋 SAO CHÉP LỖI"; }, 1800);
+              copyBtn.textContent = isEn ? "✓ Logs Copied!" : "✓ Đã sao chép nhật ký!";
+              setTimeout(() => { copyBtn.textContent = isEn ? "📋 Copy Error Logs" : "📋 Sao chép nhật ký"; }, 1800);
             });
           }
-        });
-        shade.querySelector("#r40-btn-reload-err").addEventListener("click", () => {
-          window.location.href = window.location.origin + window.location.pathname + "?_t=" + Date.now();
-        });
-        shade.querySelector("#r40-btn-close-err").addEventListener("click", () => {
-          shade.style.display = "none";
         });
       }
 
@@ -2652,9 +2778,9 @@
         { id: "meo_mun", name: "Mèo Mun", head: "./assets/meo_mun_head.png", tam: true }
       ];
       const WEAPONS = [
-        { id: "dep_to_ong", name: "Dép Tổ Ong", icon: "./assets/dep_to_ong_icon.png", fx: "Hiệu ứng chuẩn Sân Đình" },
-        { id: "chao_chong_dinh", name: "Chảo Chống Dính", icon: "./assets/chao_chong_dinh_icon.png", fx: "Vệt sáng Kim Loại • Boong!" },
-        { id: "vot_pickleball", name: "Vợt Pickleball", icon: "./assets/vot_pickleball_icon.png", fx: "Vệt sáng Thể Thao • Póc!" }
+        { id: "dep_to_ong", name: "Dép Tổ Ong", icon: "./assets/dep_to_ong_icon.png", fx: "Hiệu ứng chuẩn Sân Đình", enabled: true },
+        { id: "chao_chong_dinh", name: "Chảo Chống Dính", icon: "./assets/chao_chong_dinh_icon.png", fx: "Cần bộ hình cầm vũ khí – sắp có", enabled: false, badge: "Cần bộ hình cầm vũ khí – sắp có" },
+        { id: "vot_pickleball", name: "Vợt Pickleball", icon: "./assets/vot_pickleball_icon.png", fx: "Sắp có", enabled: false, badge: "Sắp có", hidden: true }
       ];
       // Valid 6-char room code alphabet (strictly excludes 0, O, 1, I, L)
       const KEYPAD_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ".split("");
@@ -2743,19 +2869,20 @@
       function renderBetaBanner() {
         const rel = window.__hitmeReleaseInfo || {};
         if (rel.betaBanner === false) return;
-        if (document.getElementById("r40-beta-banner")) return;
-        const banner = document.createElement("div");
-        banner.id = "r40-beta-banner";
-        banner.className = "r40-beta-banner";
+        let banner = document.getElementById("r40-beta-banner");
+        if (!banner) {
+          banner = document.createElement("aside");
+          banner.id = "r40-beta-banner";
+          banner.className = "r40-beta-banner";
+          banner.setAttribute("aria-label", "Beta Testing Badge");
+          document.body.appendChild(banner);
+        }
         const fbUrl = rel.feedbackUrl || "";
         banner.innerHTML = `
-          <div style="display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            <span class="badge">BETA</span>
-            <span>Bản thử nghiệm Beta đóng v1</span>
-          </div>
+          <span class="badge">BETA</span>
+          <span class="beta-text">Beta đóng v1</span>
           ${fbUrl ? `<a href="${fbUrl}" target="_blank" rel="noopener noreferrer" class="r40-feedback-btn">Góp ý 💬</a>` : ""}
         `;
-        document.body.appendChild(banner);
       }
 
       // Single Unified Online Client (N-A: WebSocket + LoopbackTransport)
@@ -3658,14 +3785,33 @@
           }, 200);
         }
         if (mode === "quick") {
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7" });
+          onlineState.quickWaitSec = 0;
+          onlineState.quickHintShown = false;
+          if (_quickWaitTimer) clearInterval(_quickWaitTimer);
+          _quickWaitTimer = setInterval(() => {
+            onlineState.quickWaitSec = (onlineState.quickWaitSec || 0) + 1;
+            const qEl = document.getElementById("r40-quick-timer");
+            if (qEl) qEl.textContent = onlineState.quickWaitSec + " giây";
+            if (onlineState.quickWaitSec >= 30 && !onlineState.quickHintShown) {
+              onlineState.quickHintShown = true;
+              renderOnlineRoot();
+            }
+          }, 1000);
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.9" });
         } else if (mode === "create") {
+          if (onlineState._createTimeout) clearTimeout(onlineState._createTimeout);
+          onlineState._createTimeout = setTimeout(() => {
+            if (!onlineState.roomCode && (onlineState.mode === "create" || onlineState.mode === "lobby")) {
+              onlineState.lastErrorText = "Không thể kết nối máy chủ Render (Lỗi Origin origin_not_allowed hoặc máy chủ đang khởi động). Vui lòng thử lại hoặc Luyện với bot.";
+              renderOnlineRoot();
+            }
+          }, 8000);
           sendProtocol({
             type: "join",
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.9"
           });
         }
         renderOnlineRoot();
@@ -3711,51 +3857,61 @@
         let bodyHtml = "";
 
         if (onlineState.mode === "join") {
-          const slots = [];
-          for (let i = 0; i < 6; i++) {
-            const ch = onlineState.joinInputCode[i] || "";
-            slots.push(`<div class="r39-code-slot ${ch ? "filled" : ""}">${ch || "•"}</div>`);
-          }
-          const keysHtml = KEYPAD_CHARS.map(k => `<button type="button" class="r39-key" data-key="${k}">${k}</button>`).join("");
           bodyHtml = `
-            <div class="r39-card" data-screen="online-join">
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <b style="font-size:15px;color:#ffcd38;">NHẬP MÃ PHÒNG 6 KÝ TỰ</b>
+            <div class="r39-card" data-screen="online-join" style="padding:22px 16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <b style="font-size:16px;color:#ffcd38;font-weight:900;">NHẬP MÃ PHÒNG (6 KÝ TỰ)</b>
                 <small style="color:#94a3b8;font-weight:700;">Không dùng 0, O, 1, I, L</small>
               </div>
-              <div class="r39-code-boxes" data-name="room-code-boxes">${slots.join("")}</div>
-              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
-                <button type="button" class="r39-btn secondary" data-on-act="paste-code">DÁN MÃ</button>
-                <button type="button" class="r39-btn secondary" data-on-act="back-key">XÓA 1</button>
-                <button type="button" class="r39-btn secondary" data-on-act="clear-code">XÓA HẾT</button>
+              <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <input type="text" id="r40-room-code-input" maxlength="6"
+                       placeholder="VD: K7M4QX"
+                       autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text"
+                       value="${onlineState.joinInputCode}"
+                       style="flex:1;background:#0c1726;border:2px solid #ffcd38;border-radius:12px;padding:14px;color:#fff;font-size:24px;font-weight:900;letter-spacing:6px;text-align:center;text-transform:uppercase;">
+                <button type="button" class="r39-btn secondary" data-on-act="paste-code" style="padding:0 14px;font-size:13px;font-weight:800;flex-shrink:0;">DÁN MÃ</button>
               </div>
-              <div class="r39-keypad" data-name="room-code-keypad">${keysHtml}</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-                <button type="button" class="r39-btn secondary" data-on-act="switch-create">TẠO PHÒNG MỚI</button>
-                <button type="button" class="r39-btn" data-on-act="submit-join" ${onlineState.joinInputCode.length === 6 ? "" : "disabled"}>VÀO PHÒNG NGAY</button>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <button type="button" class="r39-btn secondary" data-on-act="clear-code" style="padding:6px 12px;font-size:12px;">XÓA MÃ</button>
+                <small style="color:#cbd5e1;font-size:12px;">Mã gồm 6 ký tự viết hoa</small>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button type="button" class="r39-btn secondary" data-on-act="switch-create" style="min-height:52px;font-weight:800;">TẠO PHÒNG MỚI</button>
+                <button type="button" class="r39-btn" data-on-act="submit-join" ${onlineState.joinInputCode.length === 6 ? "" : "disabled"} style="min-height:52px;font-size:16px;font-weight:900;">VÀO PHÒNG NGAY</button>
               </div>
             </div>
           `;
         } else if (onlineState.mode === "quick") {
           bodyHtml = `
-            <div class="r39-card" data-screen="online-quick" style="text-align:center;padding:20px 14px;">
-              <img src="./assets/ui_icon_trophy.png" alt="" width="48" height="48" style="margin-bottom:8px;">
-              <h3 style="margin:0 0 6px;color:#ffcd38;font-size:18px;">ĐANG TÌM ĐỐI THỦ TRỰC TUYẾN…</h3>
-              <p style="margin:0 0 12px;color:#cbd5e1;font-size:13.5px;">Đã chờ: <b>${onlineState.quickWaitSec} giây</b> • Phòng chỉ ghép người thật (2–6 người, không thêm bot)</p>
+            <div class="r39-card" data-screen="online-quick" style="text-align:center;padding:28px 16px;">
+              <div style="width:72px;height:72px;margin:0 auto 16px;border-radius:50%;border:3px solid #ffcd38;display:flex;align-items:center;justify-content:center;background:rgba(255,205,56,0.15);">
+                <img src="./assets/ui_icon_trophy.png" alt="" width="36" height="36">
+              </div>
+              <h3 style="margin:0 0 8px;color:#ffcd38;font-size:19px;font-weight:900;">ĐANG TÌM ĐỐI THỦ TRỰC TUYẾN…</h3>
+              <p style="margin:0 0 16px;color:#cbd5e1;font-size:14px;">Đã chờ: <b id="r40-quick-timer">${onlineState.quickWaitSec || 0} giây</b></p>
+              <p style="margin:0 0 20px;color:#94a3b8;font-size:12px;">Phòng chỉ ghép 2–6 người chơi thật • Tuyệt đối không thêm bot</p>
               ${onlineState.quickHintShown ? `
-                <div class="r39-card" data-name="quick-match-hint" style="border-color:#ffcd38;background:rgba(68,50,14,0.85);margin-bottom:12px;">
-                  <b style="color:#fde047;display:block;margin-bottom:4px;">Chưa tìm thấy đối thủ sau 30 giây!</b>
-                  <span style="font-size:12.5px;color:#fff8e8;">Bạn có thể tiếp tục chờ hoặc chuyển sang chế độ <b>Luyện với Bot</b> ngay.</span>
+                <div class="r39-card" data-name="quick-match-hint" style="border-color:#ffcd38;background:rgba(68,50,14,0.9);margin-bottom:16px;padding:12px;">
+                  <b style="color:#fde047;display:block;margin-bottom:4px;font-size:14px;">Chưa tìm thấy đối thủ sau 30 giây!</b>
+                  <span style="font-size:12.5px;color:#fff8e8;">Hiện tại ít người chơi trực tuyến. Bạn có thể tiếp tục chờ hoặc chuyển sang Luyện với Bot ngay.</span>
                 </div>
               ` : ""}
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <button type="button" class="r39-btn danger" data-on-act="leave-quick">HỦY TÌM TRẬN</button>
-                <button type="button" class="r39-btn" data-on-act="go-bot">LUYỆN VỚI BOT</button>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button type="button" class="r39-btn danger" data-on-act="leave-quick" style="padding:12px;font-weight:800;">HỦY TÌM TRẬN</button>
+                <button type="button" class="r39-btn" data-on-act="go-bot" style="padding:12px;font-weight:800;">LUYỆN VỚI BOT</button>
               </div>
             </div>
           `;
         } else if (onlineState.mode === "lobby" || onlineState.mode === "create") {
-          const players = onlineState.players || [];
+          const localHostPlayer = {
+            id: onlineState.playerName,
+            name: onlineState.playerName,
+            characterId: onlineState.characterId,
+            weaponId: onlineState.weaponId,
+            ready: true,
+            isHost: true
+          };
+          const players = (onlineState.players && onlineState.players.length > 0) ? onlineState.players : [localHostPlayer];
           const pCount = players.length;
           const myPlayer = players.find(p => p.id === onlineState.playerName) || players[0];
           const takenChars = new Set(players.filter(p => p !== myPlayer).map(p => p.characterId).filter(Boolean));
@@ -3820,8 +3976,8 @@
                   <strong style="font-size:20px;color:#ffcd38;margin-left:6px;letter-spacing:1.5px;" data-name="lobby-room-code">${onlineState.roomCode || "ĐANG TẠO…"}</strong>
                 </div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                  <button type="button" class="r39-btn secondary" data-on-act="copy-invite-link" data-name="btn-copy-invite">📋 SAO CHÉP LIÊN KẾT</button>
-                  <button type="button" class="r39-btn" data-on-act="share-invite-link" data-name="btn-share-invite">📤 CHIA SẺ</button>
+                  <button type="button" class="r39-btn secondary" data-on-act="copy-invite-link" data-name="btn-copy-invite">SAO CHÉP LIÊN KẾT</button>
+                  <button type="button" class="r39-btn" data-on-act="share-invite-link" data-name="btn-share-invite">CHIA SẺ LIÊN KẾT</button>
                   <button type="button" class="r39-btn secondary" data-on-act="switch-join">NHẬP MÃ</button>
                 </div>
               </div>
@@ -4028,11 +4184,13 @@
         root.innerHTML = `
           <div class="r39-on-wrap">
             <div class="r39-on-header">
-              <h2>TRỰC TUYẾN • ${onlineState.transportMode === "loopback" ? "CHẾ ĐỘ LAB 2P" : "MÁY CHỦ THẬT"}</h2>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:4px 10px;font-size:18px;min-height:36px;min-width:36px;line-height:1;" aria-label="Quay lại">‹</button>
+                <h2 style="margin:0;font-size:17px;font-weight:900;color:#ffcd38;letter-spacing:0.4px;white-space:nowrap;">CHƠI TRỰC TUYẾN</h2>
+              </div>
               <div style="display:flex;align-items:center;gap:6px;">
-                <button type="button" class="r39-btn secondary" data-on-act="open-rename" style="padding:4px 8px;font-size:11.5px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="Đổi tên / nhân vật">👤 ${onlineState.playerName}</button>
-                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:6px 10px;font-size:12px;">CỬA HÀNG</button>
-                <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:6px 10px;font-size:12px;">ĐÓNG</button>
+                <button type="button" class="r39-btn secondary" data-on-act="open-rename" style="padding:4px 8px;font-size:11.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:36px;" title="Đổi tên">👤 ${onlineState.playerName}</button>
+                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:4px 8px;font-size:11.5px;min-height:36px;">CỬA HÀNG</button>
               </div>
             </div>
             ${labBarHtml}
@@ -4040,6 +4198,17 @@
             ${bodyHtml}
           </div>
         `;
+
+        const codeInput = root.querySelector("#r40-room-code-input");
+        if (codeInput) {
+          codeInput.addEventListener("input", () => {
+            const cleaned = codeInput.value.toUpperCase().replace(/[^2-9A-HJ-KM-NP-Z]/g, "").slice(0, 6);
+            onlineState.joinInputCode = cleaned;
+            codeInput.value = cleaned;
+            const submitBtn = root.querySelector('[data-on-act="submit-join"]');
+            if (submitBtn) submitBtn.disabled = cleaned.length !== 6;
+          });
+        }
 
         const arena = root.querySelector("#r39-online-arena");
         if (arena) {
@@ -4168,49 +4337,62 @@
 
       // G9: Enhance Bot Practice [data-screen="result"] with Podium + Full N-row Co-Rank Table + Replay/Home CTA
       function enhanceBotResultScreenG9() {
-        const resScreen = document.querySelector('#ui-root [data-screen="result"]');
-        if (!resScreen || resScreen.querySelector(".r39-g9-enhanced")) return;
-        const wrap = document.createElement("div");
-        wrap.className = "r39-g9-enhanced r39-card";
-        wrap.style.cssText = "margin-top:8px;padding:10px;";
-        const rawEvt = window.__hitmeLastMatchEvt || {};
-        const samplePlayers = (Array.isArray(rawEvt.players) && rawEvt.players.length)
-          ? rawEvt.players.map((p, idx) => ({
-              playerId: p.id || ("p" + idx),
-              name: p.name || (idx === 0 ? "Bạn" : ("Bot " + idx)),
-              hp: p.hp ?? (idx === 0 ? 3 : (idx === 1 ? 3 : 0)),
-              hitsLanded: p.hits ?? (idx === 0 ? 2 : (idx === 1 ? 2 : 1)),
-              goldReward: idx <= 1 ? 30 : 10
-            }))
-          : [
-              { playerId: "you", name: "Bạn (Nam Làng)", hp: 2, hitsLanded: 2, goldReward: 30 },
-              { playerId: "bot1", name: "Cô Ba (Đồng hạng)", hp: 2, hitsLanded: 2, goldReward: 30 },
-              { playerId: "bot2", name: "Anh Teen", hp: 1, hitsLanded: 1, goldReward: 15 },
-              { playerId: "bot3", name: "Nữ Năng Động", hp: 0, hitsLanded: 0, goldReward: 5 }
-            ];
-        const ranked = computeCoRankings(samplePlayers);
-        wrap.innerHTML = `
-          <div style="font-size:12px;font-weight:900;color:#ffcd38;margin-bottom:4px;">BẢNG XẾP HẠNG CHI TIẾT (ĐỒNG HẠNG THEO LUẬT v1.2)</div>
-          <table class="r39-rank-table" data-name="bot-match-end-table">
-            <thead>
-              <tr><th>Hạng</th><th>Người chơi</th><th>Trạng thái</th><th>Tim</th><th>Trúng</th></tr>
-            </thead>
-            <tbody>
-              ${ranked.map(r => `
-                <tr class="${r.rank === 1 ? "co-rank-1" : ""}">
-                  <td>#${r.rank}</td>
-                  <td>${r.name}</td>
-                  <td>${r.alive ? "Sống sót" : "Bị loại"}</td>
-                  <td>${r.hp}</td>
-                  <td>${r.hitsLanded}</td>
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
-        `;
-        const actions = resScreen.querySelector(".result-actions") || resScreen;
-        resScreen.insertBefore(wrap, actions);
+        return safeRun("enhanceBotResultScreenG9", function() {
+          const resScreen = document.querySelector('#ui-root [data-screen="result"]') || document.querySelector('[data-screen="result"]');
+          if (!resScreen || resScreen.querySelector(".r39-g9-enhanced")) return;
+          const wrap = document.createElement("div");
+          wrap.className = "r39-g9-enhanced r39-card";
+          wrap.style.cssText = "margin-top:8px;padding:10px;";
+          const rawEvt = window.__hitmeLastMatchEvt || {};
+          const samplePlayers = (Array.isArray(rawEvt.players) && rawEvt.players.length)
+            ? rawEvt.players.map((p, idx) => ({
+                playerId: p.id || ("p" + idx),
+                name: p.name || (idx === 0 ? "Bạn" : ("Bot " + idx)),
+                hp: p.hp ?? (idx === 0 ? 3 : (idx === 1 ? 3 : 0)),
+                hitsLanded: p.hits ?? (idx === 0 ? 2 : (idx === 1 ? 2 : 1)),
+                goldReward: idx <= 1 ? 30 : 10
+              }))
+            : [
+                { playerId: "you", name: "Bạn (Nam Làng)", hp: 2, hitsLanded: 2, goldReward: 30 },
+                { playerId: "bot1", name: "Cô Ba (Đồng hạng)", hp: 2, hitsLanded: 2, goldReward: 30 },
+                { playerId: "bot2", name: "Anh Teen", hp: 1, hitsLanded: 1, goldReward: 15 },
+                { playerId: "bot3", name: "Nữ Năng Động", hp: 0, hitsLanded: 0, goldReward: 5 }
+              ];
+          const ranked = computeCoRankings(samplePlayers);
+          wrap.innerHTML = `
+            <div style="font-size:12px;font-weight:900;color:#ffcd38;margin-bottom:4px;">BẢNG XẾP HẠNG CHI TIẾT (ĐỒNG HẠNG THEO LUẬT v1.2)</div>
+            <table class="r39-rank-table" data-name="bot-match-end-table">
+              <thead>
+                <tr><th>Hạng</th><th>Người chơi</th><th>Trạng thái</th><th>Tim</th><th>Trúng</th></tr>
+              </thead>
+              <tbody>
+                ${ranked.map(r => `
+                  <tr class="${r.rank === 1 ? "co-rank-1" : ""}">
+                    <td>#${r.rank}</td>
+                    <td>${r.name}</td>
+                    <td>${r.alive ? "Sống sót" : "Bị loại"}</td>
+                    <td>${r.hp}</td>
+                    <td>${r.hitsLanded}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          `;
+          const panel = resScreen.querySelector(".live-result-panel") || resScreen.querySelector(".preview-scroll") || resScreen;
+          const ranks = panel.querySelector(".live-ranks, .preview-list");
+          if (ranks && typeof ranks.after === "function") {
+            ranks.after(wrap);
+          } else {
+            const footerEl = panel.querySelector("footer, .stage-footer, .preview-replay, .live-primary");
+            if (footerEl && footerEl.parentNode === panel) {
+              panel.insertBefore(wrap, footerEl);
+            } else {
+              panel.appendChild(wrap);
+            }
+          }
+        });
       }
+      window.enhanceBotResultScreenG9 = enhanceBotResultScreenG9;
 
       document.addEventListener("click", (ev) => {
         const keyBtn = ev.target.closest ? ev.target.closest("[data-key]") : null;
@@ -4423,13 +4605,13 @@
       function _initOnlineLifecycle() {
         const root = document.getElementById("ui-root");
         if (root && typeof MutationObserver !== "undefined") {
-          const obs = new MutationObserver(() => enhanceBotResultScreenG9());
+          const obs = new MutationObserver(() => safeRun("enhanceBotResultScreenG9", enhanceBotResultScreenG9));
           obs.observe(root, { childList: true, subtree: true });
         }
-        renderBetaBanner();
-        startReleasePolling();
-        renderDebugHudIfEnabled();
-        setInterval(renderDebugHudIfEnabled, 1000);
+        safeRun("renderBetaBanner", renderBetaBanner);
+        safeRun("startReleasePolling", startReleasePolling);
+        safeRun("renderDebugHudIfEnabled", renderDebugHudIfEnabled);
+        setInterval(() => safeRun("renderDebugHudIfEnabled", renderDebugHudIfEnabled), 1000);
         const sp = new URLSearchParams(window.location.search);
         if (sp.get("name")) {
           onlineState.playerName = sp.get("name");
