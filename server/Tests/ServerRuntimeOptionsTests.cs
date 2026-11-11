@@ -28,4 +28,21 @@ public sealed class ServerRuntimeOptionsTests
         Assert.Equal(7, options.JoinTimeout.TotalSeconds);
         Assert.Equal(9, options.ShutdownRoundWait.TotalSeconds);
     }
+
+    [Fact]
+    public void OriginConfigurationIsOptInAndNormalizesOnlyValidOrigins()
+    {
+        var variables = new Dictionary<string, string>
+        {
+            ["ALLOWED_ORIGINS"] = "HTTPS://HITMEGAME-IOTA.VERCEL.APP/, https://hitmegame-iota.vercel.app:443, *, not-a-url",
+            ["ALLOW_MISSING_ORIGIN"] = "TRUE",
+            ["ALLOW_VERCEL_PREVIEW_ORIGINS"] = "true"
+        };
+        var options = ServerRuntimeOptions.FromEnvironment(key => variables.GetValueOrDefault(key));
+        Assert.Equal(new[] { "https://hitmegame-iota.vercel.app" }, options.AllowedOrigins);
+        Assert.True(options.AllowMissingOrigin);
+        Assert.True(options.AllowVercelPreviewOrigins);
+        Assert.Empty(ServerRuntimeOptions.FromEnvironment(_ => null).AllowedOrigins);
+        Assert.False(ServerRuntimeOptions.FromEnvironment(_ => null).AllowMissingOrigin);
+    }
 }

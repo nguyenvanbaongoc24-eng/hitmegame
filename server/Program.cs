@@ -89,7 +89,7 @@ builder.Services.AddSingleton(runtime);
 builder.Services.AddSingleton(clientVersions);
 builder.Services.AddSingleton(displayNames);
 builder.Services.AddSingleton(new ConnectionAdmission(runtime.MaxConnectionsPerIp,
-    runtime.AllowedOrigins, runtime.MaxConnections));
+    runtime.AllowedOrigins, runtime.MaxConnections, runtime.AllowMissingOrigin, runtime.AllowVercelPreviewOrigins));
 builder.Services.AddHostedService<RoundDeadlineService>();
 builder.Services.AddHostedService<ShutdownNotifier>();
 if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
@@ -98,10 +98,23 @@ if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supaba
     builder.Services.AddHostedService<BetaMetricsReporter>();
 }
 var app = builder.Build();
+if (!runtime.AllowedOrigins.Any())
+    app.Logger.LogWarning("No browser origins configured; configure ALLOWED_ORIGINS to allow client domains.");
 app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = ProtocolGateway.V13Version }));
-app.MapGet("/healthz", () => Results.Ok(new { status = "ok", protocol = ProtocolGateway.V13Version }));
+app.MapGet("/healthz", (HttpContext context, ConnectionAdmission admission) =>
+{
+    AddCorsForAllowedOrigin(context, admission);
+    return Results.Ok(new
+    {
+        status = "ok", protocol = ProtocolGateway.V13Version,
+        originsConfigured = admission.OriginsConfigured,
+        allowedOriginsCount = admission.AllowedOriginsCount,
+        commit = Environment.GetEnvironmentVariable("RENDER_GIT_COMMIT")
+            ?? Environment.GetEnvironmentVariable("GIT_COMMIT") ?? "unknown"
+    });
+});
 app.MapMethods("/report", new[] { "OPTIONS" }, (HttpContext context, ConnectionAdmission admission) =>
 {
     var origin = context.Request.Headers.Origin.ToString();
@@ -137,12 +150,23 @@ app.MapPost("/report", async (HttpContext context, ConnectionAdmission admission
     catch (HttpRequestException) { return Results.Json(new { code = "report_unavailable" }, statusCode: 503); }
     catch (TaskCanceledException) { return Results.Json(new { code = "report_unavailable" }, statusCode: 503); }
 }).RequireRateLimiting("beta-report");
-app.MapPost("/guest-token", (GuestTokenRequest request, IAuthVerifier verifier) =>
+app.MapPost("/guest-token", (HttpContext context, GuestTokenRequest request, IAuthVerifier verifier,
+    ConnectionAdmission admission) =>
 {
+    if (!admission.IsAllowedOrigin(context.Request.Headers.Origin.ToString())) return OriginDenied();
+    AddCorsForAllowedOrigin(context, admission);
     if (verifier is not SignedGuestAuthVerifier signed) return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
     try { return Results.Ok(new { token = signed.Issue(request.Name) }); }
     catch (ArgumentException) { return Results.BadRequest(new { code = "invalid_guest_name" }); }
 }).RequireRateLimiting("guest-token");
+app.MapMethods("/guest-token", new[] { "OPTIONS" }, (HttpContext context, ConnectionAdmission admission) =>
+{
+    if (!admission.IsAllowedOrigin(context.Request.Headers.Origin.ToString())) return OriginDenied();
+    AddCorsForAllowedOrigin(context, admission);
+    context.Response.Headers.AccessControlAllowMethods = "POST, OPTIONS";
+    context.Response.Headers.AccessControlAllowHeaders = "Content-Type";
+    return Results.NoContent();
+});
 app.MapGet("/status", (RoomDirectory rooms, WebSocketConnectionRegistry connections) =>
     Results.Ok(new { status = "ok", protocol = ProtocolGateway.Version,
         rooms = rooms.Snapshot().Count, connections = connections.Count }));
@@ -156,7 +180,16 @@ app.Map("/ws", async context => {
     if (!context.WebSockets.IsWebSocketRequest) { context.Response.StatusCode = 400; return; }
     var admission = context.RequestServices.GetRequiredService<ConnectionAdmission>();
     var origin = context.Request.Headers.Origin.ToString();
-    if (!admission.IsAllowedOrigin(origin)) { context.Response.StatusCode = StatusCodes.Status403Forbidden; await context.Response.WriteAsJsonAsync(new { v = 1, type = "error", code = "origin_not_allowed" }); return; }
+    if (!admission.IsAllowedOrigin(origin))
+    {
+        // A WebSocket origin rejection occurs before protocol upgrade, so HTTP 403
+        // is the standards-compliant signal (there is no WebSocket close frame yet).
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        context.Response.Headers["X-WebSocket-Close-Code"] = "1008";
+        context.Response.Headers["X-WebSocket-Close-Reason"] = "origin_not_allowed";
+        await context.Response.WriteAsJsonAsync(OriginError());
+        return;
+    }
     var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
     if (!admission.TryAdmit(ip, out var admissionError)) { context.Response.StatusCode = StatusCodes.Status429TooManyRequests; await context.Response.WriteAsJsonAsync(new { v = 1, type = "error", code = admissionError }); return; }
     using var socket = await context.WebSockets.AcceptWebSocketAsync();
@@ -208,5 +241,14 @@ app.Map("/ws", async context => {
     }
 });
 app.Run();
+
+static IResult OriginDenied() => Results.Json(OriginError(), statusCode: StatusCodes.Status403Forbidden);
+static object OriginError() => new { v = 1, type = "error", code = "origin_not_allowed", message = "Origin is not allowed." };
+static void AddCorsForAllowedOrigin(HttpContext context, ConnectionAdmission admission)
+{
+    var origin = context.Request.Headers.Origin.ToString();
+    if (!string.IsNullOrEmpty(origin) && admission.IsAllowedOrigin(origin))
+        context.Response.Headers.AccessControlAllowOrigin = origin;
+}
 
 public sealed record GuestTokenRequest(string Name);

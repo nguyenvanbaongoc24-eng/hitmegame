@@ -41,10 +41,28 @@ public sealed class ConnectionAdmissionTests
     [Fact]
     public void OriginMustBeAllowListedExceptForNonBrowserClients()
     {
-        var admission = new ConnectionAdmission(2, new[] { "https://hitme.example" });
+        var admission = new ConnectionAdmission(2, new[] { "HTTPS://HITME.EXAMPLE/", "http://localhost:8103" });
         Assert.True(admission.IsAllowedOrigin("https://hitme.example"));
-        Assert.True(admission.IsAllowedOrigin(null));
+        Assert.True(admission.IsAllowedOrigin("https://HITME.EXAMPLE/"));
+        Assert.True(admission.IsAllowedOrigin("http://localhost:8103"));
+        Assert.False(admission.IsAllowedOrigin("http://localhost:8104"));
+        Assert.False(admission.IsAllowedOrigin(null));
         Assert.False(admission.IsAllowedOrigin("https://attacker.example"));
+    }
+
+    [Fact]
+    public void PreviewOriginsAndMissingOriginRequireExplicitFlags()
+    {
+        var strict = new ConnectionAdmission(2, new[] { "https://hitmegame-iota.vercel.app" });
+        Assert.False(strict.IsAllowedOrigin("https://hitmegame-preview-123.vercel.app"));
+        Assert.False(strict.IsAllowedOrigin(null));
+
+        var enabled = new ConnectionAdmission(2, new[] { "https://hitmegame-iota.vercel.app" },
+            allowMissingOrigin: true, allowVercelPreviewOrigins: true);
+        Assert.True(enabled.IsAllowedOrigin("https://hitmegame-preview-123.vercel.app"));
+        Assert.False(enabled.IsAllowedOrigin("http://hitmegame-preview-123.vercel.app"));
+        Assert.False(enabled.IsAllowedOrigin("https://hitmegame.vercel.app"));
+        Assert.True(enabled.IsAllowedOrigin(null));
     }
 
     [Fact]

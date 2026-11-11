@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
@@ -50,6 +51,41 @@ public sealed class WebSocketEndToEndTests
         { Content = new StringContent("{\"clientVersion\":\"0.1.0\",\"buildId\":\"b1\",\"browser\":\"Safari\",\"screen\":\"phone\",\"note\":\"bug\",\"recentLogs\":[null]}", Encoding.UTF8, "application/json") };
         nullLog.Headers.TryAddWithoutValidation("Origin", "http://localhost");
         Assert.Equal(HttpStatusCode.BadRequest, (await http.SendAsync(nullLog)).StatusCode);
+    }
+
+    [Fact]
+    public async Task GuestTokenAndHealthUseTheSameStrictOriginPolicy()
+    {
+        var port = ReservePort();
+        var env = new Dictionary<string, string>
+        {
+            ["ALLOWED_ORIGINS"] = "https://hitmegame-iota.vercel.app",
+            ["ALLOW_MISSING_ORIGIN"] = "false",
+            ["GUEST_TOKEN_SIGNING_KEY"] = Convert.ToBase64String(Enumerable.Repeat((byte)7, 32).ToArray()),
+            ["RENDER_GIT_COMMIT"] = "test-commit"
+        };
+        await using var host = await RunningServer.StartAsync(port, env);
+        using var http = new HttpClient();
+        var url = $"http://127.0.0.1:{port}/guest-token";
+
+        using var allowed = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent("{\"name\":\"Nam\"}", Encoding.UTF8, "application/json") };
+        allowed.Headers.TryAddWithoutValidation("Origin", "HTTPS://HITMEGAME-IOTA.VERCEL.APP/");
+        var allowedResponse = await http.SendAsync(allowed);
+        Assert.Equal(HttpStatusCode.OK, allowedResponse.StatusCode);
+        Assert.Equal("HTTPS://HITMEGAME-IOTA.VERCEL.APP/", allowedResponse.Headers.GetValues("Access-Control-Allow-Origin").Single());
+
+        using var foreign = new HttpRequestMessage(HttpMethod.Post, url)
+        { Content = new StringContent("{\"name\":\"Nam\"}", Encoding.UTF8, "application/json") };
+        foreign.Headers.TryAddWithoutValidation("Origin", "https://foreign.example");
+        var foreignResponse = await http.SendAsync(foreign);
+        Assert.Equal(HttpStatusCode.Forbidden, foreignResponse.StatusCode);
+        Assert.Equal("origin_not_allowed", JsonDocument.Parse(await foreignResponse.Content.ReadAsStringAsync()).RootElement.GetProperty("code").GetString());
+
+        var health = await http.GetFromJsonAsync<JsonElement>($"http://127.0.0.1:{port}/healthz");
+        Assert.True(health.GetProperty("originsConfigured").GetBoolean());
+        Assert.Equal(1, health.GetProperty("allowedOriginsCount").GetInt32());
+        Assert.Equal("test-commit", health.GetProperty("commit").GetString());
     }
 
     [Fact]
@@ -333,13 +369,19 @@ public sealed class WebSocketEndToEndTests
         }
         public string Diagnostics { get { lock (diagnostics) return string.Join(" | ", diagnostics); } }
 
-        public static async Task<RunningServer> StartAsync(int port)
+        public static async Task<RunningServer> StartAsync(int port, IReadOnlyDictionary<string, string>? environment = null)
         {
             var dll = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "bin", "Debug", "net8.0", "HitMe.Server.dll"));
             Assert.True(File.Exists(dll), $"Missing server executable: {dll}");
             var start = new ProcessStartInfo("dotnet") { UseShellExecute = false, RedirectStandardError = true, RedirectStandardOutput = true };
             start.ArgumentList.Add(dll);
             start.Environment["PORT"] = port.ToString();
+            // Existing transport tests intentionally model a native/non-browser
+            // client. Production defaults remain deny-by-default for no Origin.
+            start.Environment["ALLOW_MISSING_ORIGIN"] = "true";
+            start.Environment["ALLOWED_ORIGINS"] = "http://localhost,http://127.0.0.1";
+            if (environment is not null)
+                foreach (var pair in environment) start.Environment[pair.Key] = pair.Value;
             var process = Process.Start(start) ?? throw new InvalidOperationException("Could not start Kestrel.");
             using var http = new HttpClient();
             for (var attempt = 0; attempt < 80; attempt++)
