@@ -73,7 +73,10 @@ const remembered = key => {try{return localStorage.getItem(key)}catch{return nul
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
 
 // Auto-cleanse legacy data for new releases so all users experience fresh gameplay & FTUE
-const SCHEMA_VERSION = 'v1.0.0-beta.14';
+if (params.has('reset') || params.has('fresh')) {
+  try { localStorage.clear(); sessionStorage.clear(); } catch(e) {}
+}
+const SCHEMA_VERSION = 'v1.0.0-beta.15';
 if (remembered('hitme.schema') !== SCHEMA_VERSION) {
   try {
     const legacyKeys = ['hitme.ftueCompleted','hitme.tutorialSeen','hitme.playerName','hitme.characterId','hitme.weaponId','hitme_user_profile','hitme_loadout','hitme_guest_token','guestId'];
@@ -274,7 +277,7 @@ function modal() {
         ${isEn ? 'Send Feedback' : 'Gửi góp ý trải nghiệm'}
       </a>
       <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:#94a3b8;">
-        <span>Phiên bản 0.1.0-beta.12 · 5ef2718</span>
+        <span>Phiên bản 0.1.0-beta.15</span>
         <button type="button" data-action="copy-ver" style="background:transparent;border:none;color:#ffcd38;font-size:11.5px;font-weight:800;cursor:pointer;text-decoration:underline;">${isEn ? 'Copy' : 'Sao chép'}</button>
       </div>
     </div>
@@ -600,7 +603,7 @@ root.addEventListener('click', event => {
   if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}seedMatchState();send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
   if (action==='set-lang-vi') {document.documentElement.lang='vi';try{localStorage.setItem('hitme_lang','vi')}catch(e){}return render();}
   if (action==='set-lang-en') {document.documentElement.lang='en';try{localStorage.setItem('hitme_lang','en')}catch(e){}return render();}
-  if (action==='copy-ver') {try{navigator.clipboard?.writeText('0.1.0-beta.12 · 5ef2718');button.textContent=(document.documentElement.lang==='en'?'Copied!':'Đã chép!');setTimeout(()=>{button.textContent=(document.documentElement.lang==='en'?'Copy':'Sao chép')},1500)}catch(e){}return;}
+  if (action==='copy-ver') {try{navigator.clipboard?.writeText('0.1.0-beta.15');button.textContent=(document.documentElement.lang==='en'?'Copied!':'Đã chép!');setTimeout(()=>{button.textContent=(document.documentElement.lang==='en'?'Copy':'Sao chép')},1500)}catch(e){}return;}
   if (action==='open-ftue') {state.overlay='ftue';state.ftueStep=1;return render();}
   if (action==='ftue-step-1') {state.ftueStep=1;return render();}
   if (action==='ftue-step-2') {audio.playSfx('ui_confirm');state.ftueStep=2;return render();}

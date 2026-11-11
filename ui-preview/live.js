@@ -104,7 +104,8 @@ export function updateLiveMatchInPlace(root, match, state, catalog) {
   const aliveText = `${aliveNum} ${phrase('người còn sống','alive')}`;
   if (progEl && progEl.textContent !== aliveText) progEl.textContent = aliveText;
 
-  const weaponsList = (catalog && catalog.weapons) || (state && state.catalog && state.catalog.weapons) || (state && state.weapons) || (window.__hitmeCatalog && window.__hitmeCatalog.weapons) || [];
+  const cat = (typeof catalog !== 'undefined' && catalog) || (state && state.catalog) || window.__hitmeCatalog || {};
+  const weaponsList = (cat && cat.weapons) || (state && state.weapons) || [];
   const chipEl = matchEl.querySelector('.live-weapon-chip');
   if (chipEl) {
     const curW = weaponsList.find(x => x.id === (state?.weaponId || match.weaponId)) || weaponsList[0];

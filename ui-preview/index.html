@@ -395,33 +395,11 @@
       stroke: currentColor !important;
     }
 
-    /* M2: Seamless letterbox fill at bottom of court - zero hard contrast seams */
-    .live-match::before {
-      content: "" !important;
-      position: absolute !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      height: 220px !important;
-      background-image: url('./assets/bg_home_1170.webp') !important;
-      background-position: center 95% !important;
-      background-size: cover !important;
-      filter: blur(8px) brightness(0.65) !important;
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 25%, black 100%) !important;
-      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 25%, black 100%) !important;
-      pointer-events: none !important;
-      z-index: 1 !important;
-    }
+    /* M2: Court clarity - zero obstructing blur overlays over the playing field */
+    .live-match::before,
     .live-match::after {
-      content: "" !important;
-      position: absolute !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      height: 120px !important;
-      background: linear-gradient(180deg, rgba(8, 16, 26, 0) 0%, rgba(6, 12, 22, 0.75) 60%, #060c16 100%) !important;
-      pointer-events: none !important;
-      z-index: 2 !important;
+      content: none !important;
+      display: none !important;
     }
 
     /* SECTION A: Floating Phase Capsule (never adds permanent height to HUD) */
@@ -1962,7 +1940,7 @@
           if (_r38FpsVisible) {
             const fps = Math.min(120, Math.round((_r38FpsFrames * 1000) / dt));
             const ms = (dt / Math.max(1, _r38FpsFrames)).toFixed(1);
-            const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.12";
+            const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.15";
             const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
             const el = ensureFpsOverlay();
             el.innerHTML = `<div>${fps} fps · ${ms}ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
@@ -1985,7 +1963,7 @@
             try { localStorage.setItem("hitme.showFps", _r38FpsVisible ? "1" : "0"); } catch (e) {}
             const el = ensureFpsOverlay();
             if (_r38FpsVisible) {
-              const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.12";
+              const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.15";
               const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
               el.innerHTML = `<div>60 fps · 16.7ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
               _r38FpsFrames = 0;
@@ -3699,7 +3677,7 @@ Origin: ${location.origin}
 WebSocket URL: ${wsUrl}
 HTTP /healthz: ${httpStatus ? `HTTP ${httpStatus} (${dt}ms)` : `Unreachable / Timeout (${dt}ms)`}
 Server Protocol: ${serverProto ?? "Unknown"}
-Client Version: ${window.__hitmeReleaseInfo?.version || "0.1.0-beta.12"}
+Client Version: ${window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"}
 User-Agent: ${navigator.userAgent}`;
 
         if (!httpStatus || httpStatus >= 500) {
@@ -4190,7 +4168,7 @@ User-Agent: ${navigator.userAgent}`;
               renderOnlineRoot();
             }
           }, 1000);
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.11" });
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15" });
         } else if (mode === "create") {
           onlineState.connectWaitSec = 0;
           if (onlineState._connectTimer) clearInterval(onlineState._connectTimer);
@@ -4213,7 +4191,7 @@ User-Agent: ${navigator.userAgent}`;
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.11"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
           });
         }
         renderOnlineRoot();
@@ -4804,7 +4782,7 @@ User-Agent: ${navigator.userAgent}`;
         const hapticsOn = localStorage.getItem("hitme_haptics") !== "0";
         const rmOn = document.body.classList.contains("r38-reduced-motion");
         const rel = window.__hitmeReleaseInfo || {};
-        const verStr = "Phiên bản " + (rel.version || "0.1.0-beta.10") + " · " + (rel.buildId || "{build_id}");
+        const verStr = "Phiên bản " + (rel.version || "0.1.0-beta.15") + " · " + (rel.buildId || "{build_id}");
         const fbUrl = rel.feedbackUrl || "https://forms.gle/hitme-beta-feedback";
 
         shade.innerHTML = `
@@ -5131,7 +5109,7 @@ User-Agent: ${navigator.userAgent}`;
                 roomCode: onlineState.joinInputCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
               });
             }
           } else if (act === "copy-code" || act === "copy-invite-link") {
@@ -5274,7 +5252,7 @@ User-Agent: ${navigator.userAgent}`;
                   roomCode: joinCode,
                   characterId: onlineState.characterId,
                   weaponId: onlineState.weaponId,
-                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
+                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
                 });
               });
             }, 300);
@@ -5287,7 +5265,7 @@ User-Agent: ${navigator.userAgent}`;
                 roomCode: joinCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
               });
             }, 300);
           }
