@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
-  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.12)</title>
+  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.13)</title>
   <link rel="stylesheet" href="./style.css">
   <style id="hitme-home-bg-patch">
     /* Hide dev prototype nav bar from Beta unless ?debug=1 */
@@ -3715,6 +3715,23 @@ User-Agent: ${navigator.userAgent}`;
         onlineState.lastErrorCode = diag.code;
         onlineState.lastErrorText = diag.message;
         renderOnlineRoot();
+        if (diag.code === "NET-SLEEP" && !onlineState._wakePoll) {
+          onlineState._wakePoll = setInterval(async () => {
+            if (onlineState.screen !== "search" && onlineState.screen !== "lobby") {
+              clearInterval(onlineState._wakePoll);
+              onlineState._wakePoll = null;
+              return;
+            }
+            try {
+              const res = await fetch("https://hitmegame.onrender.com/healthz", { cache: "no-store" });
+              if (res.ok) {
+                clearInterval(onlineState._wakePoll);
+                onlineState._wakePoll = null;
+                await triggerNetDiagnostics();
+              }
+            } catch (e) {}
+          }, 4000);
+        }
       }
 
       function connectSocket(onOpenSendMsg) {
@@ -5419,7 +5436,7 @@ User-Agent: ${navigator.userAgent}`;
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.12", "buildId": "162eb5b-4f6b253", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
+    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.13", "buildId": "568ca9e-4f6b253", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
     window.__hitmeBootT0 = performance.now();
 
     function checkAndEmitHomeShown() {
@@ -5586,7 +5603,7 @@ User-Agent: ${navigator.userAgent}`;
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.12 (162eb5b-4f6b253)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.13 (568ca9e-4f6b253)";
           sheet.appendChild(badge);
         }
       });
@@ -5637,7 +5654,7 @@ User-Agent: ${navigator.userAgent}`;
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "162eb5b-4f6b253";
+    const buildVersion = urlParams.get("v") || "568ca9e-4f6b253";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
@@ -5648,7 +5665,7 @@ User-Agent: ${navigator.userAgent}`;
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
-      productVersion: "0.1.0-beta.12",
+      productVersion: "0.1.0-beta.13",
       matchWebGLToCanvasSize: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5),
       errorHandler: function(message, filename, lineno) {

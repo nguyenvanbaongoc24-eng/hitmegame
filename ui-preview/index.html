@@ -3716,6 +3716,23 @@ User-Agent: ${navigator.userAgent}`;
         onlineState.lastErrorCode = diag.code;
         onlineState.lastErrorText = diag.message;
         renderOnlineRoot();
+        if (diag.code === "NET-SLEEP" && !onlineState._wakePoll) {
+          onlineState._wakePoll = setInterval(async () => {
+            if (onlineState.screen !== "search" && onlineState.screen !== "lobby") {
+              clearInterval(onlineState._wakePoll);
+              onlineState._wakePoll = null;
+              return;
+            }
+            try {
+              const res = await fetch("https://hitmegame.onrender.com/healthz", { cache: "no-store" });
+              if (res.ok) {
+                clearInterval(onlineState._wakePoll);
+                onlineState._wakePoll = null;
+                await triggerNetDiagnostics();
+              }
+            } catch (e) {}
+          }, 4000);
+        }
       }
 
       function connectSocket(onOpenSendMsg) {

@@ -70,7 +70,7 @@ export function renderLiveMatch(state, catalog) {
   return `<main class="stage live-match" data-screen="match" style="--live-top:${top}px;--live-bottom:${bottom}px"><header class="live-top"><div class="live-summary"><b>${escape(roundLabel)}</b><strong>${phase==='placing'?`${Math.ceil(seconds)} ${phrase('GIÂY','SEC')}`:''}</strong><button data-action="settings" class="r43-match-settings-btn" aria-label="${phrase('Cài đặt','Settings')}">${gearSvg}</button></div><div class="live-cards">${cards}</div><div class="live-phase">${phaseText(phase)}</div>${events}${toast?`<output class="live-toast">${escape(toast.message)}</output>`:''}</header><div class="live-arena" aria-hidden="true"></div><footer class="live-bottom"><div class="live-progress"><b>${activeAlive} ${phrase('người còn sống','alive')}</b></div><div class="live-controls"><span class="live-weapon-chip">${weapon?.icon?`<img src="${escape(weapon.icon)}" alt="">`:''}${escape(match.weaponName || title(weapon))}</span>${phase==='placing'?`<button class="live-ready" data-action="ready" aria-label="${phrase('Khóa hướng sớm','Lock aim early')}" ${state.readyLocked?'disabled':''}>${state.readyLocked?phrase('ĐÃ KHÓA','LOCKED'):phrase('SẴN SÀNG','READY')}</button>`:''}<button class="live-emote-trigger ${state.emoteCooldownUntil>Date.now()?'cooldown':''}" data-action="emote" aria-label="${phrase('Biểu cảm','Emote')}" ${state.emoteCooldownUntil>Date.now()?'disabled':''}>${smile}</button></div></footer>${tutorial}</main>`;
 }
 
-export function updateLiveMatchInPlace(root, match, state) {
+export function updateLiveMatchInPlace(root, match, state, catalog) {
   const matchEl = root ? root.querySelector('.live-match') : null;
   if (!matchEl) return false;
 
@@ -104,18 +104,19 @@ export function updateLiveMatchInPlace(root, match, state) {
   const aliveText = `${aliveNum} ${phrase('người còn sống','alive')}`;
   if (progEl && progEl.textContent !== aliveText) progEl.textContent = aliveText;
 
+  const weaponsList = (catalog && catalog.weapons) || (state && state.catalog && state.catalog.weapons) || (state && state.weapons) || (window.__hitmeCatalog && window.__hitmeCatalog.weapons) || [];
   const chipEl = matchEl.querySelector('.live-weapon-chip');
   if (chipEl) {
-    const curW = (catalog?.weapons || []).find(x => x.id === (state?.weaponId || match.weaponId)) || (catalog?.weapons || [])[0];
-    const wName = match.weaponName || (curW?.name?.vi || 'Dép Tổ Ong');
-    const wIcon = curW?.icon || './assets/weapon_dep_to_ong.png';
+    const curW = weaponsList.find(x => x.id === (state?.weaponId || match.weaponId)) || weaponsList[0];
+    const wName = match.weaponName || (curW?.name?.vi || (curW?.id === 'chao_chong_dinh' ? 'Chảo Chống Dính' : curW?.id === 'vot_pickleball' ? 'Vợt Pickleball' : 'Dép Tổ Ong'));
+    const wIcon = curW?.icon || (curW?.id === 'chao_chong_dinh' ? './assets/weapon_chao_chong_dinh.png' : curW?.id === 'vot_pickleball' ? './assets/weapon_vot_pickleball.png' : './assets/weapon_dep_to_ong.png');
     chipEl.innerHTML = `${wIcon ? `<img src="${escape(wIcon)}" alt="">` : ''}${escape(wName)}`;
   }
 
   if ((phase === 'throw' || phase === 'throwing') && !matchEl.querySelector('.live-flying-weapon')) {
     const arena = matchEl.querySelector('.live-arena');
     if (arena) {
-      const curW = (catalog?.weapons || []).find(x => x.id === state?.weaponId) || (catalog?.weapons || [])[0];
+      const curW = weaponsList.find(x => x.id === state?.weaponId) || weaponsList[0];
       const flyEl = document.createElement('div');
       flyEl.className = 'live-flying-weapon';
       const flyImg = curW?.id === 'chao_chong_dinh' ? './assets/weapon_chao_full.png'

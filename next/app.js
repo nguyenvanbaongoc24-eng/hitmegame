@@ -7,6 +7,7 @@ import {renderLiveMatch,renderLiveResult,validateLiveEvent,updateLiveMatchInPlac
 
 const copy = await (await fetch('./i18n.json')).json();
 const catalog = await (await fetch('./catalog.json')).json();
+window.__hitmeCatalog = catalog;
 const t = key => copy[document.documentElement.lang === 'en' ? 'en' : 'vi'][key];
 
 const params = new URLSearchParams(location.search);
@@ -70,6 +71,17 @@ const safeText = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&a
 const assetId = id => /^[a-z0-9_]+$/.test(id || '') ? id : 'nam_lang';
 const remembered = key => {try{return localStorage.getItem(key)}catch{return null}};
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
+
+// Auto-cleanse legacy data for new releases so all users experience fresh gameplay & FTUE
+const SCHEMA_VERSION = 'v1.0.0-beta.13';
+if (remembered('hitme.schema') !== SCHEMA_VERSION) {
+  try {
+    const legacyKeys = ['hitme.ftueCompleted','hitme.tutorialSeen','hitme.playerName','hitme.characterId','hitme.weaponId','hitme_user_profile','hitme_loadout','hitme_guest_token','guestId'];
+    legacyKeys.forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
+    localStorage.setItem('hitme.schema', SCHEMA_VERSION);
+  } catch(e) {}
+}
+
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
 const ftueDone = remembered('hitme.ftueCompleted') === '1' || params.has('skip_ftue');
@@ -184,7 +196,7 @@ function home() {
     <div class="home-bottom-art" aria-hidden="true"></div>
     <header class="profile" data-name="profile">
       <button class="avatar round" data-action="profile" aria-label="${t('profile')}"><img src="${characterImage('head')}" alt=""></button>
-      <button class="profile-name" data-action="profile"><strong>${safeText(catalogTitle(character))}</strong><span>${t('profile')} ${icon('edit')}</span></button>
+      <button class="profile-name" data-action="profile"><strong>${safeText(remembered('hitme.playerName') || catalogTitle(character))}</strong><span>${t('profile')} ${icon('edit')}</span></button>
       <button class="gold" data-action="shop" aria-label="Vàng ${state.balance || 1250}">${icon('coin')}<b>${Number(state.balance || 1250).toLocaleString('vi-VN')}</b><span class="add">${icon('plus')}</span></button>
     </header>
     <button class="settings icon-round" data-name="settings" data-action="settings" aria-label="${t('settings')}">${icon('gear')}</button>
@@ -249,6 +261,7 @@ function modal() {
         <label class="r40-switch"><input type="checkbox" data-setting="reduced-motion" ${state.reducedMotion?'checked':''}><span class="r40-switch-slider"></span></label>
       </div>
       <button type="button" class="live-secondary" data-action="open-ftue" style="margin-top:6px;width:100%;font-size:12.5px;">${isEn ? 'REPLAY TUTORIAL (FTUE)' : 'XEM LẠI HƯỚNG DẪN (FTUE)'}</button>
+      <button type="button" class="live-secondary danger" data-action="factory-reset" style="margin-top:6px;width:100%;font-size:12.5px;background:#7f1d1d!important;border:1.5px solid #ef4444!important;color:#fee2e2!important;font-weight:900;">${isEn ? 'RESET ALL DATA (START FRESH)' : 'XÓA DỮ LIỆU & BẮT ĐẦU LẠI'}</button>
       ${!mock && state.screen === 'match' ? `
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;">
           <button type="button" class="live-secondary" data-action="${state.paused ? 'resume' : 'pause'}">${state.paused ? (isEn ? 'RESUME' : 'TIẾP TỤC') : (isEn ? 'PAUSE' : 'TẠM DỪNG')}</button>
@@ -571,6 +584,7 @@ root.addEventListener('click', event => {
     }
     return;
   }
+  if(action==='factory-reset'){try{localStorage.clear();sessionStorage.clear();}catch(e){}window.location.reload();return;}
   if(action==='tutorial-next'||action==='tutorial-skip') {state.tutorialStep=action==='tutorial-skip'||state.tutorialStep>=2?-1:state.tutorialStep+1;if(state.tutorialStep<0)remember('hitme.tutorialSeen','1');return render();}
   if(action==='tutorial-reopen'){state.tutorialStep=0;state.overlay=null;return render();}
   if(!mock&&action==='pause'){send('Pause');state.paused=true;return render();}
@@ -692,7 +706,7 @@ onUnity(event => {
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') {state.lobby=event;state.lobbyReady=!!event.players?.find(p=>p.id==='local')?.ready;}
-  if (event.type==='match') {const endingPhase=['resolve','roundend','round_result','matchend','match_end'].includes(String(event.phase).toLowerCase());if(!mock && state.match?.phase!==event.phase && endingPhase)clearPhaseToasts();state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast&&!endingPhase)queueToast(event.toast);}if(state.overlay)return;if(state.screen==='match'&&updateLiveMatchInPlace(root,event,state))return;}
+  if (event.type==='match') {const endingPhase=['resolve','roundend','round_result','matchend','match_end'].includes(String(event.phase).toLowerCase());if(!mock && state.match?.phase!==event.phase && endingPhase)clearPhaseToasts();state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast&&!endingPhase)queueToast(event.toast);}if(state.overlay)return;if(state.screen==='match'&&updateLiveMatchInPlace(root,event,state,catalog))return;}
   if (event.type==='result') {
     state.result=event;
     const local=event.rankings.find(player=>player.id==='player');
