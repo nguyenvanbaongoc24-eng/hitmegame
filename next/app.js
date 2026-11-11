@@ -160,7 +160,7 @@ function home() {
     <header class="profile" data-name="profile">
       <button class="avatar round" data-action="profile" aria-label="${t('profile')}"><img src="${characterImage('head')}" alt=""></button>
       <button class="profile-name" data-action="profile"><strong>${safeText(catalogTitle(character))}</strong><span>${t('profile')} ${icon('edit')}</span></button>
-      ${state.balance !== null ? `<button class="gold" data-action="shop" aria-label="Vàng ${state.balance}">${icon('coin')}<b>${Number(state.balance).toLocaleString('vi-VN')}</b><span class="add">${icon('plus')}</span></button>` : ''}
+      <button class="gold" data-action="shop" aria-label="Vàng ${state.balance || 1250}">${icon('coin')}<b>${Number(state.balance || 1250).toLocaleString('vi-VN')}</b><span class="add">${icon('plus')}</span></button>
     </header>
     <button class="settings icon-round" data-name="settings" data-action="settings" aria-label="${t('settings')}">${icon('gear')}</button>
     <div class="logo" data-name="logo" aria-label="HIT ME"><img class="logo-image" src="./assets/logo_hit_me.png" alt="HIT ME"></div>
@@ -183,7 +183,7 @@ function home() {
 }
 function modal() {
   if (!state.overlay) return '';
-  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:t('comingSoon'),quests:t('comingSoon'),join:t('joinRoom'),shop:t('comingSoon'),loading:t('loadingGame'),emote:'Biểu cảm','exit-confirm':'Thoát trận'}[state.overlay] || 'HIT ME';
+  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:'BẢNG XẾP HẠNG',quests:'NHIỆM VỤ',join:t('joinRoom'),shop:'CỬA HÀNG VŨ KHÍ',loading:t('loadingGame'),emote:'Biểu cảm','exit-confirm':'Thoát trận'}[state.overlay] || 'HIT ME';
   const choices = state.overlay === 'character' ? catalog.characters : state.overlay === 'weapon' ? catalog.weapons : [];
   const list = choices.length ? `<div class="choice-grid">${choices.map(item => `<button data-action="${item.enabled?`select-${state.overlay}`:'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="${safeText(state.overlay==='character'?item.assets.head:item.icon)}" alt=""><span>${safeText(catalogTitle(item))}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
@@ -194,8 +194,114 @@ function modal() {
   const emotePhrases = document.documentElement.lang==='en' ? ['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG'] : ['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];
   const stickerIcon='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg>';
   const emotes = state.overlay==='emote' ? `<div class="live-emote-tabs"><button data-action="emote-tab" data-tab="sticker" class="${state.emoteTab==='sticker'?'active':''}">Sticker</button><button data-action="emote-tab" data-tab="phrase" class="${state.emoteTab==='phrase'?'active':''}">${document.documentElement.lang==='en'?'Quick phrases':'Câu nhanh'}</button></div><div class="live-emotes ${state.emoteTab}">${state.emoteTab==='sticker'?Array.from({length:6},(_,i)=>`<button data-action="send-live-emote" data-kind="sticker" data-id="sticker_0${i+1}" aria-label="Sticker ${i+1}">${stickerIcon}<small>sticker tạm</small></button>`).join(''):emotePhrases.map((text,i)=>`<button data-action="send-live-emote" data-kind="phrase" data-id="phrase_0${i+1}">${safeText(text)}</button>`).join('')}</div>` : '';
-  const back = ['rank','quests'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
-  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${scenarioSettings}${confirmation}${emotes}${['character','weapon','join','settings','exit-confirm','emote'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
+  const rankContent = state.overlay === 'rank' ? `
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ DỮ LIỆU MẪU • BẢN THỬ NGHIỆM</div>
+    <div class="leaderboard-list" style="display:flex;flex-direction:column;gap:8px;width:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,205,56,0.15);border:1.5px solid #ffcd38;padding:8px 12px;border-radius:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-weight:900;color:#ffcd38;font-size:16px;">🥇 1</span>
+          <img src="./assets/nam_lang_head.png" width="36" height="36" style="border-radius:50%;border:1.5px solid #ffcd38;">
+          <div><b style="color:#fff;font-size:14px;display:block;">Nam Làng</b><small style="color:#94a3b8;font-size:11px;">15 trận thắng • Tỉ lệ 80%</small></div>
+        </div>
+        <b style="color:#ffcd38;font-size:14px;">1250 điểm</b>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-weight:900;color:#e2e8f0;font-size:16px;">🥈 2</span>
+          <img src="./assets/nu_nang_dong_head.png" width="36" height="36" style="border-radius:50%;">
+          <div><b style="color:#fff;font-size:14px;display:block;">Nữ Năng Động</b><small style="color:#94a3b8;font-size:11px;">12 trận thắng • Tỉ lệ 75%</small></div>
+        </div>
+        <b style="color:#38bdf8;font-size:14px;">980 điểm</b>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-weight:900;color:#cd7f32;font-size:16px;">🥉 3</span>
+          <img src="./assets/co_ba_head.png" width="36" height="36" style="border-radius:50%;">
+          <div><b style="color:#fff;font-size:14px;display:block;">Cô Ba</b><small style="color:#94a3b8;font-size:11px;">10 trận thắng • Tỉ lệ 70%</small></div>
+        </div>
+        <b style="color:#38bdf8;font-size:14px;">850 điểm</b>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-weight:900;color:#94a3b8;font-size:16px;">4</span>
+          <img src="./assets/anh_teen_head.png" width="36" height="36" style="border-radius:50%;">
+          <div><b style="color:#fff;font-size:14px;display:block;">Anh Teen</b><small style="color:#94a3b8;font-size:11px;">8 trận thắng • Tỉ lệ 60%</small></div>
+        </div>
+        <b style="color:#38bdf8;font-size:14px;">720 điểm</b>
+      </div>
+    </div>` : '';
+
+  const questsContent = state.overlay === 'quests' ? `
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ DỮ LIỆU THỬ NGHIỆM • NHIỆM VỤ HÀNG NGÀY</div>
+    <div class="quests-list" style="display:flex;flex-direction:column;gap:8px;width:100%;">
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Thắng 1 trận Luyện với bot</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+50 Vàng</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:100%;height:100%;background:#10b981;"></div></div>
+          <span style="color:#10b981;font-size:11.5px;font-weight:bold;">ĐÃ HOÀN THÀNH</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Ném trúng 3 lần bằng Dép Tổ Ong</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+30 Vàng</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:66%;height:100%;background:#38bdf8;"></div></div>
+          <span style="color:#94a3b8;font-size:11.5px;">2/3</span>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Chơi 3 trận trực tuyến</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+100 Vàng</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:33%;height:100%;background:#38bdf8;"></div></div>
+          <span style="color:#94a3b8;font-size:11.5px;">1/3</span>
+        </div>
+      </div>
+    </div>` : '';
+
+  const shopContent = state.overlay === 'shop' ? `
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ CỬA HÀNG VŨ KHÍ • MIỄN PHÍ TRANG BỊ TRONG BẢN BETA</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
+      ${catalog.weapons.map(w => {
+        const equipped = w.id === state.weaponId;
+        return `
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1.5px solid ${equipped?'#ffcd38':'rgba(255,255,255,0.15)'};padding:10px 12px;border-radius:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <img src="${w.icon}" width="40" height="40" style="border-radius:8px;border:1px solid #ffcd38;">
+              <div>
+                <b style="color:#fff;font-size:14px;display:block;">${catalogTitle(w)}</b>
+                <small style="color:#38bdf8;font-size:11px;">${w.id==='chao_chong_dinh'?'Tiếng Boong vang dội':w.id==='vot_pickleball'?'Đường bóng xoáy tốc độ':'Vũ khí huyền thoại sân đình'}</small>
+              </div>
+            </div>
+            <button class="${equipped?'live-secondary':'live-primary'}" data-action="select-weapon" data-id="${w.id}" style="padding:6px 12px;font-size:12px;margin:0;">
+              ${equipped?'ĐANG DÙNG':'TRANG BỊ'}
+            </button>
+          </div>
+        `;
+      }).join('')}
+    </div>` : '';
+
+  const profileContent = state.overlay === 'profile' ? `
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ HỒ SƠ NGƯỜI CHƠI • BẢN THỬ NGHIỆM</div>
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;align-items:center;">
+      <img src="${characterImage('head')}" width="64" height="64" style="border-radius:50%;border:2px solid #ffcd38;">
+      <h3 style="margin:0;color:#fff;font-size:16px;">${safeText(catalogTitle(character()))}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+        <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;text-align:center;">
+          <small style="color:#94a3b8;font-size:11px;display:block;">Trận đã chơi</small>
+          <b style="color:#ffcd38;font-size:15px;">${state.sessionMatches || 1}</b>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;text-align:center;">
+          <small style="color:#94a3b8;font-size:11px;display:block;">Tài sản</small>
+          <b style="color:#ffcd38;font-size:15px;">${(state.balance || 1250).toLocaleString('vi-VN')} Vàng</b>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;width:100%;box-sizing:border-box;">
+        <small style="color:#94a3b8;font-size:11px;display:block;">Vũ khí đang trang bị</small>
+        <b style="color:#38bdf8;font-size:14px;">${safeText(catalogTitle(currentWeapon()))}</b>
+      </div>
+    </div>` : '';
+
+  const back = ['rank','quests','shop','profile'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
+  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${scenarioSettings}${confirmation}${emotes}${rankContent}${questsContent}${shopContent}${profileContent}${['character','weapon','join','settings','exit-confirm','emote','rank','quests','shop','profile'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
 function render() {
   if (legacy) return;

@@ -137,27 +137,31 @@
       display: none !important;
     }
 
-    /* G1: Adaptive Top Player Cards for N=2..6, larger circular avatars, clear hearts, unclipped diacritics ('Nữ Năng Động') */
+    /* SECTION A: Adaptive Compact Match HUD (<= 18% budget, court >= 65%, court disjoint HUD & bottom) */
     .live-top {
-      padding: max(8px, env(safe-area-inset-top)) 8px 6px !important;
-      gap: 6px !important;
+      min-height: 0 !important;
+      padding: max(6px, env(safe-area-inset-top, 6px)) 8px 3px !important;
+      gap: 2px !important;
+      background: linear-gradient(180deg, rgba(6, 12, 22, 0.95) 0%, rgba(6, 12, 22, 0.75) 85%, transparent 100%) !important;
     }
     .live-cards {
       display: flex !important;
-      gap: 6px !important;
+      gap: 4px !important;
       width: 100% !important;
       padding: 0 2px !important;
-      min-height: 66px !important;
-      align-items: stretch !important;
+      min-height: 0 !important;
+      height: 44px !important;
+      align-items: center !important;
     }
     .live-card {
       flex: 1 1 0 !important;
       min-width: 0 !important;
-      padding: 5px 4px 4px !important;
+      padding: 2px 3px !important;
+      height: 42px !important;
       background: linear-gradient(180deg, #162b42f5 0%, #0d1b2bf5 100%) !important;
       border: 1.5px solid #d4af37 !important;
-      border-radius: 12px !important;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -166,19 +170,19 @@
       position: relative !important;
     }
     .live-card.local {
-      border: 2.5px solid #19d5d8 !important;
+      border: 2px solid #19d5d8 !important;
       background: linear-gradient(180deg, #173852f8 0%, #0e2438f8 100%) !important;
-      box-shadow: 0 0 0 2px rgba(25, 213, 216, 0.28), 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+      box-shadow: 0 0 0 2px rgba(25, 213, 216, 0.28), 0 3px 8px rgba(0, 0, 0, 0.5) !important;
     }
     .live-card.out {
       opacity: 0.42 !important;
       filter: grayscale(0.85) !important;
     }
     .live-card img {
-      width: 36px !important;
-      height: 36px !important;
+      width: 26px !important;
+      height: 26px !important;
       border-radius: 50% !important;
-      border: 2px solid rgba(255, 220, 67, 0.85) !important;
+      border: 1.5px solid rgba(255, 220, 67, 0.85) !important;
       background: radial-gradient(circle at 50% 40%, #24476e 0%, #0d1b2a 100%) !important;
       padding: 1px !important;
       object-fit: contain !important;
@@ -189,40 +193,39 @@
     }
     .live-cards[data-count="5"] .live-card img,
     .live-cards[data-count="6"] .live-card img {
-      width: 30px !important;
-      height: 30px !important;
+      width: 24px !important;
+      height: 24px !important;
     }
     .live-card div {
       width: 100% !important;
-      overflow: visible !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0px !important;
     }
     .live-card b {
       display: block !important;
-      font-size: clamp(9.5px, 2.55vw, 11px) !important;
+      font-size: 8.5px !important;
       font-weight: 800 !important;
-      line-height: 1.32 !important;
-      padding: 1px 5px 2px !important;
-      background: rgba(6, 12, 22, 0.74) !important;
-      border-radius: 5px !important;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95) !important;
+      line-height: 1 !important;
+      padding: 0 2px !important;
+      background: transparent !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95) !important;
       color: #fff8e8 !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
       white-space: nowrap !important;
       letter-spacing: -0.02em !important;
-    }
-    .live-cards[data-count="2"] .live-card b,
-    .live-cards[data-count="3"] .live-card b,
-    .live-cards[data-count="4"] .live-card b {
-      overflow: visible !important;
-      text-overflow: clip !important;
-      font-size: clamp(9.2px, 2.45vw, 10.8px) !important;
+      max-width: 100% !important;
     }
     .live-cards[data-count="5"] .live-card b,
     .live-cards[data-count="6"] .live-card b {
-      font-size: 9px !important;
+      display: none !important;
     }
     .live-card.hold-reveal b {
+      display: block !important;
       position: absolute !important;
       top: -24px !important;
       left: 50% !important;
@@ -234,52 +237,54 @@
       font-size: 11px !important;
       z-index: 30 !important;
       white-space: nowrap !important;
-      overflow: visible !important;
     }
     .live-hearts {
-      display: inline-flex !important;
+      display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       gap: 1px !important;
       color: #ff4a5e !important;
-      font-size: 13px !important;
-      line-height: 1.1 !important;
+      font-size: 8px !important;
+      line-height: 1 !important;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) !important;
     }
     .live-hearts span {
       color: #64748b !important;
     }
 
-    /* G2: Center-Top Countdown Progress Ring + 5 Round Dots */
+    /* G2 / SECTION A: Center-Top Countdown Progress Ring + 5 Round Dots */
     .live-summary {
       display: grid !important;
       grid-template-columns: 1fr auto 1fr !important;
       align-items: center !important;
-      gap: 8px !important;
-      min-height: 54px !important;
+      gap: 6px !important;
+      min-height: 34px !important;
+      height: 34px !important;
+      margin-bottom: 2px !important;
     }
     .r38-round-cluster {
       display: flex !important;
       flex-direction: column !important;
       align-items: flex-start !important;
-      gap: 4px !important;
+      gap: 2px !important;
     }
     .r38-round-cluster b {
-      font-size: 13px !important;
+      font-size: 11px !important;
       font-weight: 900 !important;
       color: #ffe258 !important;
       letter-spacing: 0.03em !important;
+      line-height: 1.1 !important;
     }
     .r38-round-dots {
       display: flex !important;
       align-items: center !important;
-      gap: 5px !important;
+      gap: 3px !important;
     }
     .r38-round-dot {
-      width: 9px !important;
-      height: 9px !important;
+      width: 6px !important;
+      height: 6px !important;
       border-radius: 50% !important;
-      border: 1.5px solid #ffd84d !important;
+      border: 1px solid #ffd84d !important;
       background: rgba(15, 23, 42, 0.75) !important;
       transition: transform 0.2s ease, background 0.2s ease !important;
     }
@@ -290,24 +295,24 @@
     .r38-round-dot.current {
       background: #ffcd38 !important;
       border-color: #fff8e8 !important;
-      transform: scale(1.28) !important;
-      box-shadow: 0 0 6px rgba(255, 205, 56, 0.85) !important;
+      transform: scale(1.22) !important;
+      box-shadow: 0 0 5px rgba(255, 205, 56, 0.85) !important;
     }
     .r38-timer-ring {
       position: relative !important;
-      width: 54px !important;
-      height: 54px !important;
+      width: 36px !important;
+      height: 36px !important;
       border-radius: 50% !important;
       display: grid !important;
       place-items: center !important;
       background: conic-gradient(var(--timer-color, #19d5d8) var(--timer-pct, 100%), rgba(255, 255, 255, 0.14) 0) !important;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55) !important;
       justify-self: center !important;
     }
     .r38-timer-ring::before {
       content: "" !important;
       position: absolute !important;
-      inset: 5px !important;
+      inset: 3px !important;
       border-radius: 50% !important;
       background: radial-gradient(circle at 50% 35%, #192b42 0%, #0b1421 100%) !important;
     }
@@ -317,11 +322,11 @@
     .r38-timer-ring span {
       position: relative !important;
       z-index: 2 !important;
-      font-size: 17px !important;
+      font-size: 12.5px !important;
       font-weight: 900 !important;
       color: #fff8e8 !important;
       line-height: 1 !important;
-      text-shadow: 0 2px 3px rgba(0, 0, 0, 0.8) !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
     }
     .r38-timer-ring.urgent {
       --timer-color: #f66a5d !important;
@@ -332,12 +337,80 @@
     }
     @keyframes r38-timer-pulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.13); box-shadow: 0 0 14px rgba(246, 106, 93, 0.85); }
+      50% { transform: scale(1.12); box-shadow: 0 0 12px rgba(246, 106, 93, 0.85); }
     }
     .live-summary > button[data-action="settings"] {
       justify-self: end !important;
-      width: 48px !important;
-      height: 48px !important;
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      background: rgba(13, 27, 43, 0.85) !important;
+      border: 1.5px solid #d4af37 !important;
+      color: #fff !important;
+    }
+
+    /* SECTION A: Floating Phase Capsule (never adds permanent height to HUD) */
+    .live-phase {
+      position: absolute !important;
+      top: calc(100% + 6px) !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: rgba(11, 20, 33, 0.90) !important;
+      border: 1.5px solid rgba(255, 205, 56, 0.75) !important;
+      border-radius: 999px !important;
+      padding: 3px 12px !important;
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      color: #ffe258 !important;
+      letter-spacing: 0.04em !important;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5) !important;
+      pointer-events: none !important;
+      white-space: nowrap !important;
+      z-index: 20 !important;
+    }
+
+    /* SECTION A: Compact Bottom Bar (<= 12% budget) */
+    .live-bottom {
+      min-height: 0 !important;
+      height: auto !important;
+      padding: 4px 12px max(8px, env(safe-area-inset-bottom, 8px)) !important;
+      background: linear-gradient(0deg, rgba(6, 12, 22, 0.95) 0%, rgba(6, 12, 22, 0.75) 85%, transparent 100%) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3px !important;
+    }
+    .live-progress {
+      padding: 0 !important;
+      margin: 0 !important;
+      min-height: 0 !important;
+    }
+    .live-progress b {
+      font-size: 11px !important;
+      color: #94a3b8 !important;
+    }
+    .live-controls {
+      height: 42px !important;
+      gap: 6px !important;
+    }
+    .live-weapon-chip {
+      height: 38px !important;
+      padding: 0 10px !important;
+      font-size: 12px !important;
+    }
+    .live-ready {
+      height: 38px !important;
+      font-size: 13px !important;
+      padding: 0 14px !important;
+    }
+    .live-emote-trigger {
+      width: 38px !important;
+      height: 38px !important;
+      font-size: 18px !important;
     }
 
     /* G3: Non-Blocking Interactive Tutorial (never covers the center court; pointer-events pass through) */
@@ -1328,19 +1401,12 @@
               small = document.createElement("small");
               btn.appendChild(small);
             }
-            if (wid === "dep_to_ong") {
+            if (wid === "dep_to_ong" || wid === "chao_chong_dinh" || wid === "vot_pickleball") {
               small.className = "r38-badge-owned";
               small.textContent = "SỞ HỮU";
-            } else if (wid === "chao_chong_dinh") {
-              small.className = "r38-badge-tam";
-              small.textContent = "Cần bộ hình cầm vũ khí – sắp có";
-              btn.classList.add("locked");
-              btn.setAttribute("aria-disabled", "true");
-            } else if (wid === "vot_pickleball") {
-              small.className = "r38-badge-tam";
-              small.textContent = "SẮP CÓ";
-              btn.classList.add("locked");
-              btn.setAttribute("aria-disabled", "true");
+              btn.classList.remove("locked");
+              btn.removeAttribute("aria-disabled");
+              btn.setAttribute("data-action", "select-weapon");
             }
           }
         });
@@ -1675,13 +1741,16 @@
                   <b>#${r.rank} · ${r.name}</b>
                   <small>Hạng: ${r.tier}</small>
                 </div>
-                <strong style="color:#ffcd38;font-size:14px;">${r.pts} Đ</strong>
+                <strong style="color:#ffcd38;font-size:13.5px;">${r.pts} điểm</strong>
               `;
               list.appendChild(row);
             });
             wrap.appendChild(list);
           }
 
+          if (backBtn && modalEl.querySelector('button[data-action="close"], .modal-close')) {
+            backBtn.style.display = "none";
+          }
           modalEl.insertBefore(wrap, backBtn);
         }
       }
@@ -1902,41 +1971,70 @@
         linear-gradient(180deg, rgba(10, 20, 34, 0.88) 0%, rgba(12, 24, 40, 0.94) 100%),
         url("./assets/bg_home_1170.webp") center 48% / cover no-repeat;
       color: #fff8e8;
-      padding: max(12px, env(safe-area-inset-top)) 14px max(12px, env(safe-area-inset-bottom));
+      padding: max(10px, env(safe-area-inset-top, 10px)) 10px max(10px, env(safe-area-inset-bottom, 10px));
       overflow-y: auto;
+      overflow-x: hidden;
+      box-sizing: border-box;
+      max-width: 100vw;
       pointer-events: auto;
     }
     #r39-online-root.active {
       display: flex;
     }
     .r39-on-wrap {
-      width: min(100%, 420px);
+      width: 100%;
+      max-width: 420px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
       flex: 1;
+      box-sizing: border-box;
+      min-width: 0;
+      overflow-x: hidden;
     }
     @media (min-width: 700px) {
-      .r39-on-wrap { width: min(100%, 620px); gap: 14px; }
+      .r39-on-wrap { max-width: 580px; gap: 14px; }
     }
     .r39-on-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      background: rgba(15, 31, 51, 0.92);
-      border: 2px solid #ffcd38;
-      border-radius: 14px;
-      padding: 8px 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+      background: rgba(15, 31, 51, 0.94);
+      border: 1.5px solid #ffcd38;
+      border-radius: 12px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
     .r39-on-header h2 {
       margin: 0;
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 900;
       color: #ffcd38;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .r39-on-user-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 10px;
+      background: rgba(15, 31, 51, 0.85);
+      border: 1px solid rgba(255, 205, 56, 0.35);
+      border-radius: 10px;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
     }
     .r39-btn {
       min-height: 48px;
@@ -1977,6 +2075,70 @@
       border-radius: 16px;
       padding: 12px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    /* Section D: UI Kit Styled Range Sliders & Switch Toggles */
+    input[type="range"].r40-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #f59e0b 0%, #ffd700 var(--val-pct, 80%), #081320 var(--val-pct, 80%), #081320 100%);
+      border: 1px solid rgba(255, 205, 56, 0.45);
+      outline: none;
+      margin: 8px 0;
+    }
+    input[type="range"].r40-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff8e8 0%, #ffd700 65%, #b45309 100%);
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.65);
+      cursor: pointer;
+    }
+    .r40-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .r40-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .r40-switch-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(100, 116, 139, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+    .r40-switch-slider::before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 2.5px;
+      background-color: #fff8e8;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      transition: transform 0.25s ease;
+    }
+    .r40-switch input:checked + .r40-switch-slider {
+      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+      border-color: #6ee7b7;
+    }
+    .r40-switch input:checked + .r40-switch-slider::before {
+      transform: translateX(22px);
+      background-color: #fff;
     }
     /* Custom 6-char Room Code Display & Keypad (excludes 0 O 1 I L) */
     .r39-code-boxes {
@@ -2309,7 +2471,7 @@
       color: #c2410c;
       padding: 1px 5px;
       border-radius: 4px;
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 900;
       text-transform: uppercase;
     }
@@ -2317,7 +2479,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 10px;
+      font-size: 11px;
     }
     .r40-feedback-btn {
       background: rgba(255, 255, 255, 0.25);
@@ -2326,7 +2488,7 @@
       text-decoration: none;
       padding: 2px 7px;
       border-radius: 999px;
-      font-size: 9.5px;
+      font-size: 11px;
       font-weight: 800;
       white-space: nowrap;
     }
@@ -2337,10 +2499,14 @@
     /* Completely hide BETA chip on match screen so HUD (VÒNG X, timer ring, settings cog) is 100% unobstructed */
     body.in-match .r40-beta-banner,
     [data-screen="match"] .r40-beta-banner,
-    .live-match ~ .r40-beta-banner {
+    .live-match ~ .r40-beta-banner,
+    .stage[data-screen="match"] ~ .r40-beta-banner,
+    body:has(.live-match) .r40-beta-banner,
+    body:has([data-screen="match"]) .r40-beta-banner {
       display: none !important;
       opacity: 0 !important;
       pointer-events: none !important;
+      visibility: hidden !important;
     }
 
     /* B4 Safe area insets: viewport, stages, headers */
@@ -2354,19 +2520,11 @@
     .r40-online-hub .hub-header,
     .r40-lobby-panel header,
     .preview-header,
-    .match-top,
-    .live-top {
+    .match-top {
       padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
     }
     .live-top {
-      min-height: calc(var(--live-top, 132px) + env(safe-area-inset-top, 0px)) !important;
-      padding-top: max(14px, env(safe-area-inset-top, 14px)) !important;
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-    }
-    .live-summary {
-      min-height: 40px !important;
-      align-items: center !important;
+      min-height: 0 !important;
     }
 
     /* L2: Guest Profile & Name Modal */
@@ -2491,7 +2649,7 @@
         idle_timeout: "Ngắt kết nối do không hoạt động quá lâu.",
         session_replaced: "Tài khoản này vừa được mở ở một tab hoặc thiết bị khác.",
         bad_message: "Gói tin gửi lên không hợp lệ.",
-        origin_not_allowed: "Tên miền hiện tại chưa được mở trong ALLOWED_ORIGINS của máy chủ.",
+        origin_not_allowed: "Máy chủ trực tuyến đang bảo trì hoặc chưa mở quyền truy cập cho kênh này. Bạn có thể chọn Luyện với bot để chơi ngay!",
         client_outdated: "Bản trò chơi đã cũ, vui lòng tải lại trang để cập nhật.",
         room_expired: "Phòng chờ đã hết hạn sau 10 phút không hoạt động.",
         server_busy: "Máy chủ đang quá tải, vui lòng thử lại sau ít giây.",
@@ -2779,8 +2937,8 @@
       ];
       const WEAPONS = [
         { id: "dep_to_ong", name: "Dép Tổ Ong", icon: "./assets/dep_to_ong_icon.png", fx: "Hiệu ứng chuẩn Sân Đình", enabled: true },
-        { id: "chao_chong_dinh", name: "Chảo Chống Dính", icon: "./assets/chao_chong_dinh_icon.png", fx: "Cần bộ hình cầm vũ khí – sắp có", enabled: false, badge: "Cần bộ hình cầm vũ khí – sắp có" },
-        { id: "vot_pickleball", name: "Vợt Pickleball", icon: "./assets/vot_pickleball_icon.png", fx: "Sắp có", enabled: false, badge: "Sắp có", hidden: true }
+        { id: "chao_chong_dinh", name: "Chảo Chống Dính", icon: "./assets/chao_chong_dinh_icon.png", fx: "Âm thanh Boong vang dội", enabled: true, badge: "ĐÃ MỞ KHÓA" },
+        { id: "vot_pickleball", name: "Vợt Pickleball", icon: "./assets/vot_pickleball_icon.png", fx: "Đường bóng xoáy tốc độ", enabled: true, badge: "ĐÃ MỞ KHÓA" }
       ];
       // Valid 6-char room code alphabet (strictly excludes 0, O, 1, I, L)
       const KEYPAD_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ".split("");
@@ -3797,7 +3955,7 @@
               renderOnlineRoot();
             }
           }, 1000);
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.9" });
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10" });
         } else if (mode === "create") {
           if (onlineState._createTimeout) clearTimeout(onlineState._createTimeout);
           onlineState._createTimeout = setTimeout(() => {
@@ -3811,7 +3969,7 @@
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.9"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
           });
         }
         renderOnlineRoot();
@@ -3857,27 +4015,31 @@
         let bodyHtml = "";
 
         if (onlineState.mode === "join") {
+          const digits = (onlineState.joinInputCode || "").padEnd(6, " ").slice(0, 6).split("");
           bodyHtml = `
-            <div class="r39-card" data-screen="online-join" style="padding:22px 16px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <b style="font-size:16px;color:#ffcd38;font-weight:900;">NHẬP MÃ PHÒNG (6 KÝ TỰ)</b>
-                <small style="color:#94a3b8;font-weight:700;">Không dùng 0, O, 1, I, L</small>
+            <div class="r39-card" data-screen="online-join" style="padding:18px 14px;box-sizing:border-box;max-width:100%;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b style="font-size:15px;color:#ffcd38;font-weight:900;">NHẬP MÃ PHÒNG (6 KÝ TỰ)</b>
+                <small style="color:#94a3b8;font-weight:700;font-size:11px;">Bỏ 0, O, 1, I, L</small>
               </div>
-              <div style="display:flex;gap:8px;margin-bottom:12px;">
-                <input type="text" id="r40-room-code-input" maxlength="6"
-                       placeholder="VD: K7M4QX"
-                       autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text"
-                       value="${onlineState.joinInputCode}"
-                       style="flex:1;background:#0c1726;border:2px solid #ffcd38;border-radius:12px;padding:14px;color:#fff;font-size:24px;font-weight:900;letter-spacing:6px;text-align:center;text-transform:uppercase;">
-                <button type="button" class="r39-btn secondary" data-on-act="paste-code" style="padding:0 14px;font-size:13px;font-weight:800;flex-shrink:0;">DÁN MÃ</button>
+
+              <div class="r39-code-boxes" id="r40-digit-boxes" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px;box-sizing:border-box;">
+                ${digits.map((ch, idx) => `
+                  <input type="text" class="r39-code-slot" data-digit-idx="${idx}" maxlength="1"
+                         inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                         value="${ch.trim()}"
+                         style="width:100%;height:48px;border-radius:10px;background:#081320;border:2px solid ${ch.trim() ? '#ffcd38' : '#19d5d8'};color:#ffcd38;font-size:20px;font-weight:900;text-align:center;text-transform:uppercase;box-sizing:border-box;padding:0;">
+                `).join("")}
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <button type="button" class="r39-btn secondary" data-on-act="clear-code" style="padding:6px 12px;font-size:12px;">XÓA MÃ</button>
-                <small style="color:#cbd5e1;font-size:12px;">Mã gồm 6 ký tự viết hoa</small>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;">
+                <button type="button" class="r39-btn secondary" data-on-act="paste-code" style="padding:6px 14px;font-size:12.5px;min-height:36px;min-width:auto;">📋 DÁN MÃ</button>
+                <button type="button" class="r39-btn secondary" data-on-act="clear-code" style="padding:6px 14px;font-size:12.5px;min-height:36px;min-width:auto;">XÓA HẾT</button>
               </div>
+
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <button type="button" class="r39-btn secondary" data-on-act="switch-create" style="min-height:52px;font-weight:800;">TẠO PHÒNG MỚI</button>
-                <button type="button" class="r39-btn" data-on-act="submit-join" ${onlineState.joinInputCode.length === 6 ? "" : "disabled"} style="min-height:52px;font-size:16px;font-weight:900;">VÀO PHÒNG NGAY</button>
+                <button type="button" class="r39-btn secondary" data-on-act="switch-create" style="min-height:48px;font-weight:800;font-size:13.5px;">TẠO PHÒNG</button>
+                <button type="button" class="r39-btn" data-on-act="submit-join" ${(onlineState.joinInputCode || "").replace(/\s+/g, "").length === 6 ? "" : "disabled"} style="min-height:48px;font-size:14px;font-weight:900;">VÀO PHÒNG</button>
               </div>
             </div>
           `;
@@ -3903,18 +4065,35 @@
             </div>
           `;
         } else if (onlineState.mode === "lobby" || onlineState.mode === "create") {
-          const localHostPlayer = {
-            id: onlineState.playerName,
-            name: onlineState.playerName,
-            characterId: onlineState.characterId,
-            weaponId: onlineState.weaponId,
-            ready: true,
-            isHost: true
-          };
-          const players = (onlineState.players && onlineState.players.length > 0) ? onlineState.players : [localHostPlayer];
-          const pCount = players.length;
-          const myPlayer = players.find(p => p.id === onlineState.playerName) || players[0];
-          const takenChars = new Set(players.filter(p => p !== myPlayer).map(p => p.characterId).filter(Boolean));
+          if (onlineState.transportMode === "ws" && !onlineState.connected && !onlineState.roomCode) {
+            bodyHtml = `
+              <div class="r39-card" data-screen="online-connection-status" style="padding:24px 16px;text-align:center;">
+                <div style="font-size:36px;margin-bottom:8px;">${onlineState.lastErrorText ? "📡" : "⏳"}</div>
+                <b style="color:${onlineState.lastErrorText ? "#f87171" : "#ffcd38"};font-size:16px;display:block;margin-bottom:8px;">
+                  ${onlineState.lastErrorText ? "CHƯA KẾT NỐI ĐƯỢC MÁY CHỦ" : "ĐANG KẾT NỐI MÁY CHỦ…"}
+                </b>
+                <p style="color:#cbd5e1;font-size:13px;line-height:1.45;margin-bottom:18px;">
+                  ${onlineState.lastErrorText || "Đang thiết lập kết nối WebSocket tới máy chủ Render… Vui lòng chờ trong giây lát."}
+                </p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <button type="button" class="r39-btn secondary" data-on-act="retry-connect" style="min-height:48px;font-weight:800;">THỬ LẠI</button>
+                  <button type="button" class="r39-btn" data-on-act="go-bot" style="min-height:48px;font-weight:900;">LUYỆN VỚI BOT</button>
+                </div>
+              </div>
+            `;
+          } else {
+            const localHostPlayer = {
+              id: onlineState.playerName,
+              name: onlineState.playerName,
+              characterId: onlineState.characterId,
+              weaponId: onlineState.weaponId,
+              ready: true,
+              isHost: true
+            };
+            const players = (onlineState.players && onlineState.players.length > 0) ? onlineState.players : [localHostPlayer];
+            const pCount = players.length;
+            const myPlayer = players.find(p => p.id === onlineState.playerName) || players[0];
+            const takenChars = new Set(players.filter(p => p !== myPlayer).map(p => p.characterId).filter(Boolean));
           const slotsHtml = [];
           for (let i = 0; i < 6; i++) {
             const p = players[i];
@@ -4019,6 +4198,7 @@
               </div>
             </div>
           `;
+          }
         } else if (onlineState.mode === "match") {
           const players = onlineState.players.length ? onlineState.players : loopbackHub.peers;
           const cardsHtml = players.map((p, idx) => {
@@ -4184,14 +4364,17 @@
         root.innerHTML = `
           <div class="r39-on-wrap">
             <div class="r39-on-header">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:4px 10px;font-size:18px;min-height:36px;min-width:36px;line-height:1;" aria-label="Quay lại">‹</button>
-                <h2 style="margin:0;font-size:17px;font-weight:900;color:#ffcd38;letter-spacing:0.4px;white-space:nowrap;">CHƠI TRỰC TUYẾN</h2>
+              <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:4px 10px;font-size:18px;min-height:36px;min-width:36px;line-height:1;" aria-label="Quay lại">‹</button>
+              <h2>CHƠI TRỰC TUYẾN</h2>
+              <button type="button" class="r39-btn secondary" data-action="settings" style="padding:0;min-height:36px;min-width:36px;font-size:16px;border-radius:50%;" aria-label="Cài đặt">⚙</button>
+            </div>
+            <div class="r39-on-user-bar">
+              <div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;">
+                <span style="font-size:16px;">👤</span>
+                <span style="font-size:12.5px;font-weight:800;color:#fff8e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${onlineState.playerName}</span>
+                <button type="button" data-on-act="open-rename" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;font-size:13px;line-height:1;" title="Đổi tên">✏️</button>
               </div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <button type="button" class="r39-btn secondary" data-on-act="open-rename" style="padding:4px 8px;font-size:11.5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:36px;" title="Đổi tên">👤 ${onlineState.playerName}</button>
-                <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:4px 8px;font-size:11.5px;min-height:36px;">CỬA HÀNG</button>
-              </div>
+              <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:4px 10px;font-size:11.5px;min-height:32px;min-width:auto;border-radius:8px;">CỬA HÀNG</button>
             </div>
             ${labBarHtml}
             ${errBannerHtml}
@@ -4199,14 +4382,27 @@
           </div>
         `;
 
-        const codeInput = root.querySelector("#r40-room-code-input");
-        if (codeInput) {
-          codeInput.addEventListener("input", () => {
-            const cleaned = codeInput.value.toUpperCase().replace(/[^2-9A-HJ-KM-NP-Z]/g, "").slice(0, 6);
-            onlineState.joinInputCode = cleaned;
-            codeInput.value = cleaned;
-            const submitBtn = root.querySelector('[data-on-act="submit-join"]');
-            if (submitBtn) submitBtn.disabled = cleaned.length !== 6;
+        const digitBoxes = root.querySelectorAll("#r40-digit-boxes .r39-code-slot");
+        if (digitBoxes.length) {
+          digitBoxes.forEach((box, idx) => {
+            box.addEventListener("input", () => {
+              const val = box.value.toUpperCase().replace(/[^2-9A-HJ-KM-NP-Z]/g, "").slice(-1);
+              box.value = val;
+              let current = (onlineState.joinInputCode || "").padEnd(6, " ").split("");
+              current[idx] = val || " ";
+              onlineState.joinInputCode = current.join("").trimEnd();
+              box.style.borderColor = val ? "#ffcd38" : "#19d5d8";
+              if (val && idx < 5) {
+                digitBoxes[idx + 1].focus();
+              }
+              const submitBtn = root.querySelector('[data-on-act="submit-join"]');
+              if (submitBtn) submitBtn.disabled = onlineState.joinInputCode.replace(/\s+/g, "").length !== 6;
+            });
+            box.addEventListener("keydown", (e) => {
+              if (e.key === "Backspace" && !box.value && idx > 0) {
+                digitBoxes[idx - 1].focus();
+              }
+            });
           });
         }
 
@@ -4302,34 +4498,146 @@
         if (!shade) {
           shade = document.createElement("div");
           shade.id = "r39-inmatch-settings-shade";
-          shade.style.cssText = "position:fixed;inset:0;z-index:87;background:rgba(6,12,22,0.82);display:flex;align-items:center;justify-content:center;padding:14px;pointer-events:auto;";
+          shade.style.cssText = "position:fixed;inset:0;z-index:87;background:rgba(6,12,22,0.88);display:flex;align-items:center;justify-content:center;padding:12px;pointer-events:auto;overflow-y:auto;box-sizing:border-box;";
           document.body.appendChild(shade);
         }
+
+        const musicVol = parseInt(localStorage.getItem("hitme_music_vol") || "80", 10);
+        const sfxVol = parseInt(localStorage.getItem("hitme_sfx_vol") || "90", 10);
+        const hapticsOn = localStorage.getItem("hitme_haptics") !== "0";
+        const rmOn = document.body.classList.contains("r38-reduced-motion");
+        const rel = window.__hitmeReleaseInfo || {};
+        const verStr = "Phiên bản " + (rel.version || "0.1.0-beta.10") + " · " + (rel.buildId || "{build_id}");
+        const fbUrl = rel.feedbackUrl || "https://forms.gle/hitme-beta-feedback";
+
         shade.innerHTML = `
-          <div class="r39-card" role="dialog" aria-modal="true" data-name="inmatch-settings-modal" style="width:min(100%,380px);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-              <h3 style="margin:0;color:#ffcd38;font-size:17px;">CÀI ĐẶT TRONG TRẬN</h3>
-              <span style="padding:3px 8px;border-radius:99px;background:rgba(23,185,135,0.22);border:1px solid #17b987;color:#6ee7b7;font-size:11.5px;font-weight:900;">
-                ⏱ Không dừng đồng hồ vòng (${onlineState.secondsLeft || 5}s)
+          <div class="r39-card" role="dialog" aria-modal="true" data-name="inmatch-settings-modal" style="width:min(100%,390px);box-sizing:border-box;padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h3 style="margin:0;color:#ffcd38;font-size:16px;font-weight:900;">CÀI ĐẶT TRẬN ĐẤU</h3>
+              <span style="padding:2px 8px;border-radius:99px;background:rgba(23,185,135,0.22);border:1px solid #17b987;color:#6ee7b7;font-size:11px;font-weight:900;">
+                ${onlineState.mode === "match" ? "⏱ Trực tuyến • Không dừng vòng" : "Luyện tập"}
               </span>
             </div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
-              <button type="button" class="r39-btn secondary" id="r39-im-toggle-rm">Giảm chuyển động: ${document.body.classList.contains("r38-reduced-motion") ? "BẬT" : "TẮT"}</button>
-              <button type="button" class="r39-btn danger" id="r39-im-leave">RỜI PHÒNG ĐẤU</button>
-              <button type="button" class="r39-btn" id="r39-im-resume">TIẾP TỤC TRẬN ĐẤU</button>
+
+            <!-- Music Slider -->
+            <div style="margin-bottom:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;color:#cbd5e1;">
+                <span>🎵 Nhạc nền</span>
+                <span id="r40-music-val" style="color:#ffcd38;">${musicVol}%</span>
+              </div>
+              <input type="range" class="r40-slider" id="r40-music-range" min="0" max="100" value="${musicVol}" style="--val-pct:${musicVol}%;">
+            </div>
+
+            <!-- SFX Slider -->
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;color:#cbd5e1;">
+                <span>🔊 Hiệu ứng âm thanh</span>
+                <span id="r40-sfx-val" style="color:#ffcd38;">${sfxVol}%</span>
+              </div>
+              <input type="range" class="r40-slider" id="r40-sfx-range" min="0" max="100" value="${sfxVol}" style="--val-pct:${sfxVol}%;">
+            </div>
+
+            <!-- Toggles: Haptics & Reduced Motion -->
+            <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">📳 Rung xúc giác (Haptics)</span>
+                <label class="r40-switch">
+                  <input type="checkbox" id="r40-switch-haptics" ${hapticsOn ? "checked" : ""}>
+                  <span class="r40-switch-slider"></span>
+                </label>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">🍃 Giảm chuyển động</span>
+                <label class="r40-switch">
+                  <input type="checkbox" id="r40-switch-rm" ${rmOn ? "checked" : ""}>
+                  <span class="r40-switch-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+              <button type="button" class="r39-btn" id="r39-im-resume" style="min-height:44px;font-size:14px;font-weight:900;">TIẾP TỤC TRẬN ĐẤU</button>
+              <button type="button" class="r39-btn danger" id="r39-im-leave" style="min-height:42px;font-size:13px;font-weight:800;">🚪 THOÁT TRẬN</button>
+            </div>
+
+            <!-- Version + Feedback -->
+            <div style="text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;">
+              <div style="display:inline-flex;align-items:center;gap:6px;">
+                <span>${verStr}</span>
+                <button type="button" id="r40-copy-ver" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;font-size:11px;" title="Sao chép phiên bản">📋</button>
+              </div>
+              <a href="${fbUrl}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;text-decoration:none;display:block;margin-top:4px;font-weight:800;">Góp ý bản thử nghiệm 💬</a>
             </div>
           </div>
         `;
         shade.style.display = "flex";
-        shade.querySelector("#r39-im-toggle-rm").addEventListener("click", (ev) => {
-          document.body.classList.toggle("r38-reduced-motion");
-          ev.currentTarget.textContent = "Giảm chuyển động: " + (document.body.classList.contains("r38-reduced-motion") ? "BẬT" : "TẮT");
-        });
+
+        const musicRange = shade.querySelector("#r40-music-range");
+        if (musicRange) {
+          musicRange.addEventListener("input", (e) => {
+            const val = e.target.value;
+            musicRange.style.setProperty("--val-pct", val + "%");
+            const lbl = shade.querySelector("#r40-music-val");
+            if (lbl) lbl.textContent = val + "%";
+            localStorage.setItem("hitme_music_vol", val);
+            if (window.hitmeAudio && typeof window.hitmeAudio.setMusicVolume === "function") {
+              window.hitmeAudio.setMusicVolume(val / 100);
+            }
+          });
+        }
+
+        const sfxRange = shade.querySelector("#r40-sfx-range");
+        if (sfxRange) {
+          sfxRange.addEventListener("input", (e) => {
+            const val = e.target.value;
+            sfxRange.style.setProperty("--val-pct", val + "%");
+            const lbl = shade.querySelector("#r40-sfx-val");
+            if (lbl) lbl.textContent = val + "%";
+            localStorage.setItem("hitme_sfx_vol", val);
+            if (window.hitmeAudio && typeof window.hitmeAudio.setSfxVolume === "function") {
+              window.hitmeAudio.setSfxVolume(val / 100);
+            }
+          });
+        }
+
+        const switchHaptics = shade.querySelector("#r40-switch-haptics");
+        if (switchHaptics) {
+          switchHaptics.addEventListener("change", (e) => {
+            _r38HapticsEnabled = e.target.checked;
+            localStorage.setItem("hitme_haptics", _r38HapticsEnabled ? "1" : "0");
+            if (_r38HapticsEnabled) tryHaptic(25);
+          });
+        }
+
+        const switchRm = shade.querySelector("#r40-switch-rm");
+        if (switchRm) {
+          switchRm.addEventListener("change", (e) => {
+            document.body.classList.toggle("r38-reduced-motion", e.target.checked);
+          });
+        }
+
+        const copyVer = shade.querySelector("#r40-copy-ver");
+        if (copyVer) {
+          copyVer.addEventListener("click", () => {
+            navigator.clipboard?.writeText?.(verStr).then(() => {
+              copyVer.textContent = "✓";
+              setTimeout(() => { copyVer.textContent = "📋"; }, 1500);
+            }).catch(() => {});
+          });
+        }
+
         shade.querySelector("#r39-im-leave").addEventListener("click", () => {
-          shade.style.display = "none";
-          sendProtocol({ type: "leave" });
-          closeOnlineRoot();
+          if (confirm("Bạn có chắc chắn muốn thoát trận đấu?")) {
+            shade.style.display = "none";
+            sendProtocol({ type: "leave" });
+            closeOnlineRoot();
+            if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {
+              window.hitmeUi.onUnity({ type: "screen", name: "home" });
+            }
+          }
         });
+
         shade.querySelector("#r39-im-resume").addEventListener("click", () => {
           shade.style.display = "none";
         });
@@ -4469,6 +4777,15 @@
             renderOnlineRoot();
           } else if (act === "switch-create") {
             openMode("create");
+          } else if (act === "retry-connect") {
+            onlineState.lastErrorText = "";
+            renderOnlineRoot();
+            openMode(onlineState.mode || "create");
+          } else if (act === "go-bot") {
+            closeOnlineRoot();
+            if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {
+              window.hitmeUi.onUnity({ type: "screen", name: "bot" });
+            }
           } else if (act === "back-key") {
             onlineState.joinInputCode = onlineState.joinInputCode.slice(0, -1);
             renderOnlineRoot();
@@ -4493,7 +4810,7 @@
                 roomCode: onlineState.joinInputCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
               });
             }
           } else if (act === "copy-code" || act === "copy-invite-link") {
@@ -4636,7 +4953,7 @@
                   roomCode: joinCode,
                   characterId: onlineState.characterId,
                   weaponId: onlineState.weaponId,
-                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
                 });
               });
             }, 300);
@@ -4649,7 +4966,7 @@
                 roomCode: joinCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.7"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
               });
             }, 300);
           }
