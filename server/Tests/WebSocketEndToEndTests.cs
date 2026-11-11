@@ -82,9 +82,14 @@ public sealed class WebSocketEndToEndTests
         Assert.Equal(HttpStatusCode.Forbidden, foreignResponse.StatusCode);
         Assert.Equal("origin_not_allowed", JsonDocument.Parse(await foreignResponse.Content.ReadAsStringAsync()).RootElement.GetProperty("code").GetString());
 
-        var health = await http.GetFromJsonAsync<JsonElement>($"http://127.0.0.1:{port}/healthz");
+        using var healthResponse = await http.GetAsync($"http://127.0.0.1:{port}/healthz");
+        Assert.Equal("*", healthResponse.Headers.GetValues("Access-Control-Allow-Origin").Single());
+        var healthText = await healthResponse.Content.ReadAsStringAsync();
+        Assert.DoesNotContain("hitmegame-iota", healthText, StringComparison.OrdinalIgnoreCase);
+        var health = JsonDocument.Parse(healthText).RootElement;
         Assert.True(health.GetProperty("originsConfigured").GetBoolean());
         Assert.Equal(1, health.GetProperty("allowedOriginsCount").GetInt32());
+        Assert.False(health.GetProperty("draining").GetBoolean());
         Assert.Equal("test-commit", health.GetProperty("commit").GetString());
     }
 

@@ -1,6 +1,9 @@
 // Deployment verification without secrets. Node 22+.
 // node tools/deploy/smoke_deployed.mjs https://hitmegame.onrender.com --origin https://hitmegame-iota.vercel.app
 import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
+import { connect as connectTcp } from 'node:net';
+import { connect as connectTls } from 'node:tls';
 
 const [base, flag, origin] = process.argv.slice(2);
 if (!base || flag !== '--origin' || !origin) {
@@ -13,7 +16,7 @@ wsUrl.protocol = wsUrl.protocol === 'https:' ? 'wss:' : 'ws:';
 const report = { healthz: null, guestToken: false, wsHandshake: false, twoPlayerMatch: false, quickMatch: false, inviteLink: null };
 
 try {
-  const health = await fetch(new URL('/healthz', httpBase), { headers: { Origin: origin } });
+  const health = await fetchHealthWithRetry(httpBase, origin);
   assert.equal(health.status, 200, '/healthz');
   report.healthz = await health.json();
   assert.equal(report.healthz.originsConfigured, true, 'healthz.originsConfigured');
@@ -30,8 +33,8 @@ try {
     return body.token;
   };
   const stamp = Date.now().toString(36);
-  const firstToken = await token(`smoke_a_${stamp}`);
-  const secondToken = await token(`smoke_b_${stamp}`);
+  const firstToken = await token(`SmokeA${stamp}`);
+  const secondToken = await token(`SmokeB${stamp}`);
   report.guestToken = true;
 
   const first = await connect(wsUrl.href, origin);
@@ -61,9 +64,9 @@ try {
   first.close(); second.close();
 
   const quickA = await connect(wsUrl.href, origin), quickB = await connect(wsUrl.href, origin);
-  quickA.send({ type: 'quick_match', token: await token(`quick_a_${stamp}`), clientVersion: '0.1.0-beta.1' });
+  quickA.send({ type: 'quick_match', token: await token(`QuickA${stamp}`), clientVersion: '0.1.0-beta.1' });
   assert.equal((await quickA.take('quick_match_waiting')).quickMatchHintSeconds, 30);
-  quickB.send({ type: 'quick_match', token: await token(`quick_b_${stamp}`), clientVersion: '0.1.0-beta.1' });
+  quickB.send({ type: 'quick_match', token: await token(`QuickB${stamp}`), clientVersion: '0.1.0-beta.1' });
   await quickA.take('room_state'); await quickB.take('room_state');
   report.quickMatch = true;
   quickA.close(); quickB.close();
@@ -74,25 +77,92 @@ try {
   process.exitCode = 1;
 }
 
+async function fetchHealthWithRetry(base, requestOrigin) {
+  let lastError;
+  for (let attempt = 0; attempt < 60; attempt++) {
+    try {
+      const response = await fetch(new URL('/healthz', base), { headers: { Origin: requestOrigin } });
+      if (response.ok) return response;
+      lastError = new Error(`/healthz returned HTTP ${response.status}`);
+    } catch (error) { lastError = error; }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+  throw new Error(`healthz unavailable after 60 seconds: ${lastError instanceof Error ? lastError.message : String(lastError)}`);
+}
+
 async function connect(url, requestOrigin) {
-  // Node 22's WebSocket (undici) sends this browser-equivalent Origin header.
-  const socket = new WebSocket(url, [], { headers: { Origin: requestOrigin } });
+  // Global WebSocket in Node ignores caller-supplied Origin headers. This tiny
+  // RFC 6455 client deliberately sends Origin, so it exercises browser admission.
+  const endpoint = new URL(url);
+  const tls = endpoint.protocol === 'wss:';
+  const port = Number(endpoint.port || (tls ? 443 : 80));
+  const socket = tls ? connectTls({ host: endpoint.hostname, port, servername: endpoint.hostname })
+    : connectTcp({ host: endpoint.hostname, port });
   const queue = [], waiters = [];
-  socket.addEventListener('message', event => {
-    const packet = JSON.parse(event.data);
-    const waiter = waiters.find(item => item.types.includes(packet.type) || packet.type === 'error');
-    if (!waiter) return void queue.push(packet);
-    waiters.splice(waiters.indexOf(waiter), 1); clearTimeout(waiter.timer);
-    packet.type === 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
+  let input = Buffer.alloc(0), upgraded = false, closed = false;
+  const fail = error => {
+    if (closed) return; closed = true;
+    for (const waiter of waiters.splice(0)) { clearTimeout(waiter.timer); waiter.reject(error); }
+  };
+  socket.on('error', fail);
+  socket.on('close', () => fail(new Error('WebSocket closed unexpectedly')));
+  socket.on('data', chunk => {
+    input = Buffer.concat([input, chunk]);
+    if (!upgraded) {
+      const end = input.indexOf('\r\n\r\n');
+      if (end < 0) return;
+      const head = input.subarray(0, end).toString('ascii');
+      input = input.subarray(end + 4);
+      if (!head.startsWith('HTTP/1.1 101')) return fail(new Error(`WebSocket handshake failed: ${head.split('\r\n')[0]}`));
+      upgraded = true;
+    }
+    readFrames();
   });
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('WebSocket open timeout')), 15000);
-    socket.addEventListener('open', () => { clearTimeout(timer); resolve(); }, { once: true });
-    socket.addEventListener('error', () => { clearTimeout(timer); reject(new Error('WebSocket handshake failed')); }, { once: true });
+    socket.once('connect', () => {
+      const path = `${endpoint.pathname || '/'}${endpoint.search}`;
+      const key = randomBytes(16).toString('base64');
+      socket.write(`GET ${path} HTTP/1.1\r\nHost: ${endpoint.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\nOrigin: ${requestOrigin}\r\n\r\n`);
+    });
+    socket.once('secureConnect', () => {
+      const path = `${endpoint.pathname || '/'}${endpoint.search}`;
+      const key = randomBytes(16).toString('base64');
+      socket.write(`GET ${path} HTTP/1.1\r\nHost: ${endpoint.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\nOrigin: ${requestOrigin}\r\n\r\n`);
+    });
+    const waitUpgrade = setInterval(() => { if (upgraded) { clearInterval(waitUpgrade); clearTimeout(timer); resolve(); } }, 5);
+    socket.once('error', error => { clearInterval(waitUpgrade); clearTimeout(timer); reject(error); });
   });
-  const hello = await take('hello');
-  assert.equal(hello.type, 'hello');
-  return { send: packet => socket.send(JSON.stringify({ v: 1, ...packet })), take, close: () => socket.close() };
+  const hello = await take('hello'); assert.equal(hello.type, 'hello');
+  return { send: packet => writeFrame(0x1, Buffer.from(JSON.stringify({ v: 1, ...packet }))), take, close: () => { if (!closed) { writeFrame(0x8, Buffer.alloc(0)); socket.end(); } } };
+
+  function readFrames() {
+    while (input.length >= 2) {
+      const first = input[0], second = input[1], opcode = first & 0x0f; let length = second & 0x7f, offset = 2;
+      if (length === 126) { if (input.length < 4) return; length = input.readUInt16BE(2); offset = 4; }
+      else if (length === 127) return fail(new Error('Unexpected large WebSocket frame'));
+      if (input.length < offset + length) return;
+      const payload = input.subarray(offset, offset + length); input = input.subarray(offset + length);
+      if (opcode === 0x9) { writeFrame(0xA, payload); continue; }
+      if (opcode === 0x8) { closed = true; socket.end(); return; }
+      if (opcode !== 0x1) continue;
+      const packet = JSON.parse(payload.toString('utf8'));
+      const waiter = waiters.find(item => item.types.includes(packet.type) || packet.type === 'error');
+      if (!waiter) { queue.push(packet); continue; }
+      waiters.splice(waiters.indexOf(waiter), 1); clearTimeout(waiter.timer);
+      packet.type === 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
+    }
+  }
+  function writeFrame(opcode, payload) {
+    const mask = randomBytes(4); const length = payload.length;
+    if (length > 0xffff) throw new Error('Smoke packet too large');
+    const extended = length >= 126; const offset = extended ? 8 : 6;
+    const frame = Buffer.alloc(offset + length); frame[0] = 0x80 | opcode; frame[1] = 0x80 | (extended ? 126 : length);
+    if (extended) frame.writeUInt16BE(length, 2);
+    mask.copy(frame, offset - 4);
+    for (let index = 0; index < length; index++) frame[offset + index] = payload[index] ^ mask[index % 4];
+    socket.write(frame);
+  }
   function take(wanted) {
     const types = Array.isArray(wanted) ? wanted : [wanted];
     const index = queue.findIndex(packet => types.includes(packet.type) || packet.type === 'error');

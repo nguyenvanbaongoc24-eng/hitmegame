@@ -9,15 +9,19 @@ public sealed class ShutdownNotifier : IHostedService
     private readonly WebSocketConnectionRegistry connections;
     private readonly RoomDirectory rooms;
     private readonly ServerRuntimeOptions options;
-    public ShutdownNotifier(WebSocketConnectionRegistry connections, RoomDirectory rooms, ServerRuntimeOptions options)
+    private readonly ServerDrainState drainState;
+    public ShutdownNotifier(WebSocketConnectionRegistry connections, RoomDirectory rooms, ServerRuntimeOptions options,
+        ServerDrainState? drainState = null)
     {
         this.connections = connections;
         this.rooms = rooms;
         this.options = options;
+        this.drainState = drainState ?? new ServerDrainState();
     }
     public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        drainState.BeginDraining();
         // Snapshot only rounds already active at shutdown. A newly opened round
         // must not extend the grace period. The deadline service is still alive
         // while this hosted service stops (registered earlier in Program).

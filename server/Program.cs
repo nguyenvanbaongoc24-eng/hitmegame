@@ -85,6 +85,7 @@ builder.Services.AddSingleton(provider => new ProtocolGateway(provider.GetRequir
             entry.RoomId, entry.MatchId, entry.Code, entry.Count)));
 builder.Services.AddSingleton<ServerMetrics>();
 builder.Services.AddSingleton<WebSocketConnectionRegistry>();
+builder.Services.AddSingleton<ServerDrainState>();
 builder.Services.AddSingleton(runtime);
 builder.Services.AddSingleton(clientVersions);
 builder.Services.AddSingleton(displayNames);
@@ -103,14 +104,17 @@ if (!runtime.AllowedOrigins.Any())
 app.UseRateLimiter();
 app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = runtime.KeepAliveInterval });
 app.MapGet("/health", () => Results.Ok(new { status = "ok", protocol = ProtocolGateway.V13Version }));
-app.MapGet("/healthz", (HttpContext context, ConnectionAdmission admission) =>
+app.MapGet("/healthz", (HttpContext context, ConnectionAdmission admission, ServerDrainState drainState) =>
 {
-    AddCorsForAllowedOrigin(context, admission);
+    // This public liveness endpoint has no credentials or configuration values.
+    // Wildcard CORS lets a browser distinguish a sleeping server from Origin denial.
+    context.Response.Headers.AccessControlAllowOrigin = "*";
     return Results.Ok(new
     {
         status = "ok", protocol = ProtocolGateway.V13Version,
         originsConfigured = admission.OriginsConfigured,
         allowedOriginsCount = admission.AllowedOriginsCount,
+        draining = drainState.IsDraining,
         commit = Environment.GetEnvironmentVariable("RENDER_GIT_COMMIT")
             ?? Environment.GetEnvironmentVariable("GIT_COMMIT") ?? "unknown"
     });

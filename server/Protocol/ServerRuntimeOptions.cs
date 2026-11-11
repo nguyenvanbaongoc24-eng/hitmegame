@@ -20,7 +20,7 @@ public sealed record ServerRuntimeOptions(
         // browser. Local development explicitly supplies its origins.
         var origins = (read("ALLOWED_ORIGINS") ?? string.Empty)
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(ConnectionAdmission.NormalizeConfiguredOrigin)
+            .Select(OriginPolicy.NormalizeConfiguredOrigin)
             .Where(origin => origin is not null)
             .Cast<string>()
             .Distinct(StringComparer.Ordinal)
