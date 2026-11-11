@@ -73,7 +73,7 @@ const remembered = key => {try{return localStorage.getItem(key)}catch{return nul
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
 
 // Auto-cleanse legacy data for new releases so all users experience fresh gameplay & FTUE
-const SCHEMA_VERSION = 'v1.0.0-beta.13';
+const SCHEMA_VERSION = 'v1.0.0-beta.14';
 if (remembered('hitme.schema') !== SCHEMA_VERSION) {
   try {
     const legacyKeys = ['hitme.ftueCompleted','hitme.tutorialSeen','hitme.playerName','hitme.characterId','hitme.weaponId','hitme_user_profile','hitme_loadout','hitme_guest_token','guestId'];
@@ -625,6 +625,7 @@ root.addEventListener('click', event => {
   if (action==='ftue-step-5') {state.ftueStep=5;return render();}
   if (action==='ftue-finish') {
     remember('hitme.ftueCompleted','1');
+    remember('hitme.tutorialSeen','1');
     try {
       const p = {
         name: remembered('hitme.playerName') || 'Nam Siêu Tốc',
