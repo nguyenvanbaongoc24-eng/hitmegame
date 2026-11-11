@@ -1151,6 +1151,18 @@
       font-weight: 800 !important;
       cursor: pointer !important;
     }
+    /* Hide FPS overlay when modals, settings, FTUE, or online screens are active */
+    body:has(.modal-shade) #r38-fps-overlay,
+    body:has(.r39-online-root.active) #r38-fps-overlay,
+    body:has(.r44-ftue-card) #r38-fps-overlay {
+      display: none !important;
+    }
+    @keyframes liveThrowFly {
+      0% { transform: translate(-50%, 0) scale(0.7) rotate(0deg); opacity: 0; }
+      15% { opacity: 1; }
+      50% { transform: translate(-25%, -130px) scale(1.1) rotate(220deg); }
+      100% { transform: translate(15%, -250px) scale(0.65) rotate(540deg); opacity: 0.9; }
+    }
   </style>
   <script>
     window.addEventListener("load", function() {
@@ -1728,7 +1740,7 @@
         // U2: Enhance Daily Quests & Sample Leaderboard modal when opened from Home bottom tabs
         const modalEl = root.querySelector(".modal");
         const backBtn = modalEl ? modalEl.querySelector(".modal-back") : null;
-        if (modalEl && backBtn && (_r38LastOverlayTab === "quests" || _r38LastOverlayTab === "rank") && !modalEl.querySelector(".r38-u2-content")) {
+        if (modalEl && backBtn && (_r38LastOverlayTab === "quests" || _r38LastOverlayTab === "rank") && !modalEl.querySelector(".r38-u2-content") && !modalEl.querySelector(".r44-quests") && !modalEl.querySelector(".r44-rank")) {
           const prof = loadLocalProfile();
           const h2 = modalEl.querySelector("header h2");
           const pPlaceholder = modalEl.querySelector(":scope > p");
@@ -1928,8 +1940,8 @@
       window.__hitmeOpenOnlineSheet = openOnlineStatusSheet;
 
       // 3-tap top-right corner FPS + Frame ms + Build ID overlay (or ?fps=1)
-      let _r38TopRightTaps = [];
-      let _r38FpsVisible = new URLSearchParams(location.search).get("fps") === "1";
+      let _r38TopLeftTaps = [];
+      let _r38FpsVisible = (new URLSearchParams(location.search).get("fps") === "1") || (localStorage.getItem("hitme.showFps") === "1");
       let _r38FpsFrames = 0;
       let _r38FpsLastT = performance.now();
       function ensureFpsOverlay() {
@@ -1937,7 +1949,7 @@
         if (!el) {
           el = document.createElement("div");
           el.id = "r38-fps-overlay";
-          el.style.cssText = "position:fixed;top:max(58px,calc(env(safe-area-inset-top) + 48px));right:8px;z-index:85;padding:4px 9px;border-radius:8px;background:rgba(6,14,24,0.88);border:1.5px solid #17b987;color:#6ee7b7;font:800 11.5px/1.25 monospace;pointer-events:none;box-shadow:0 3px 10px rgba(0,0,0,0.6);display:none;";
+          el.style.cssText = "position:fixed;top:calc(env(safe-area-inset-top, 0px) + 6px);left:8px;right:auto;z-index:85;padding:3px 6px;border-radius:6px;background:rgba(6,14,24,0.85);border:1px solid #17b987;color:#6ee7b7;font:800 10.5px/1.25 monospace;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,0.5);display:none;";
           document.body.appendChild(el);
         }
         el.style.display = _r38FpsVisible ? "block" : "none";
@@ -1950,9 +1962,10 @@
           if (_r38FpsVisible) {
             const fps = Math.min(120, Math.round((_r38FpsFrames * 1000) / dt));
             const ms = (dt / Math.max(1, _r38FpsFrames)).toFixed(1);
-            const bid = window.__hitmeReleaseInfo?.buildId || "";
+            const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.12";
+            const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
             const el = ensureFpsOverlay();
-            el.textContent = `FPS: ${fps} (${ms}ms) • ${bid}`;
+            el.innerHTML = `<div>${fps} fps · ${ms}ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
           }
           _r38FpsFrames = 0;
           _r38FpsLastT = now;
@@ -1962,16 +1975,19 @@
       document.addEventListener("pointerdown", (ev) => {
         const vw = window.innerWidth || 390;
         const vh = window.innerHeight || 844;
-        if (ev.clientX >= vw * 0.70 && ev.clientY <= vh * 0.20) {
+        if (ev.clientX <= vw * 0.25 && ev.clientY <= vh * 0.15) {
           const now = performance.now();
-          _r38TopRightTaps = _r38TopRightTaps.filter(t => now - t < 1400);
-          _r38TopRightTaps.push(now);
-          if (_r38TopRightTaps.length >= 3) {
-            _r38TopRightTaps = [];
+          _r38TopLeftTaps = _r38TopLeftTaps.filter(t => now - t < 1400);
+          _r38TopLeftTaps.push(now);
+          if (_r38TopLeftTaps.length >= 3) {
+            _r38TopLeftTaps = [];
             _r38FpsVisible = !_r38FpsVisible;
+            try { localStorage.setItem("hitme.showFps", _r38FpsVisible ? "1" : "0"); } catch (e) {}
             const el = ensureFpsOverlay();
             if (_r38FpsVisible) {
-              el.textContent = `FPS: 60 (16.7ms) • ${window.__hitmeReleaseInfo?.buildId || ""}`;
+              const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.12";
+              const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
+              el.innerHTML = `<div>60 fps · 16.7ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
               _r38FpsFrames = 0;
               _r38FpsLastT = performance.now();
               requestAnimationFrame(tickFpsLoop);
@@ -3600,6 +3616,108 @@
         }
       }
 
+      async function runNetDiagnostics(wsUrl) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const mockNet = urlParams.get("mock_net");
+        if (mockNet === "origin") {
+          return {
+            code: "NET-ORIGIN",
+            message: "Máy chủ Render từ chối nguồn gốc kết nối (HTTP 403 Forbidden). Cần cập nhật ALLOWED_ORIGINS trên máy chủ Render để cho phép nguồn gốc này.",
+            details: `Origin: ${location.origin}
+WebSocket URL: ${wsUrl}
+HTTP Status: 403 Forbidden
+Protocol: 3
+Host: hitmegame.onrender.com
+User-Agent: ${navigator.userAgent}`
+          };
+        }
+        if (mockNet === "sleep") {
+          return {
+            code: "NET-SLEEP",
+            message: "Máy chủ Render đang ngủ (gói miễn phí tự tắt khi không có khách). Vui lòng đợi 30–60 giây để máy chủ khởi động.",
+            details: `Origin: ${location.origin}
+WebSocket URL: ${wsUrl}
+HTTP Status: 503 / Timeout (Sleeping)
+Host: hitmegame.onrender.com`
+          };
+        }
+        if (mockNet === "proto") {
+          return {
+            code: "NET-PROTO",
+            message: "Phiên bản giao thức không khớp giữa client và server.",
+            details: `Client Protocol: 3
+Server Protocol: Mismatch
+Target WS: ${wsUrl}`
+          };
+        }
+        if (mockNet === "ws") {
+          return {
+            code: "NET-WS",
+            message: "Không thể mở kết nối WebSocket tới máy chủ.",
+            details: `Target WS: ${wsUrl}
+State: Closed/Error
+Network Online: ${navigator.onLine}`
+          };
+        }
+
+        const diagStart = Date.now();
+        let healthOk = false;
+        let serverProto = null;
+        let httpStatus = 0;
+        try {
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), 4000);
+          const res = await fetch("https://hitmegame.onrender.com/healthz", { signal: ctrl.signal, cache: "no-store" });
+          clearTimeout(t);
+          httpStatus = res.status;
+          if (res.ok) {
+            const data = await res.json();
+            healthOk = data.status === "ok";
+            serverProto = data.protocol;
+          }
+        } catch (err) {
+          httpStatus = 0;
+        }
+
+        const dt = Date.now() - diagStart;
+        const diagLog = `Timestamp: ${new Date().toISOString()}
+Origin: ${location.origin}
+WebSocket URL: ${wsUrl}
+HTTP /healthz: ${httpStatus ? `HTTP ${httpStatus} (${dt}ms)` : `Unreachable / Timeout (${dt}ms)`}
+Server Protocol: ${serverProto ?? "Unknown"}
+Client Version: ${window.__hitmeReleaseInfo?.version || "0.1.0-beta.12"}
+User-Agent: ${navigator.userAgent}`;
+
+        if (!httpStatus || httpStatus >= 500) {
+          return {
+            code: "NET-SLEEP",
+            message: "Máy chủ Render đang tạm ngủ (gói miễn phí tự tắt khi không có khách). Đang kích hoạt đánh thức máy chủ, vui lòng đợi 30–60 giây...",
+            details: diagLog
+          };
+        }
+        if (healthOk && (serverProto === 1 || serverProto === 2 || serverProto === 3)) {
+          return {
+            code: "NET-ORIGIN",
+            message: "Máy chủ Render đang chạy nhưng từ chối nguồn gốc kết nối (HTTP 403 Forbidden). Nguồn gốc " + location.origin + " chưa có trong ALLOWED_ORIGINS của máy chủ.",
+            details: diagLog
+          };
+        }
+        return {
+          code: "NET-WS",
+          message: "Không thể kết nối WebSocket tới máy chủ lúc này. Vui lòng thử lại hoặc Luyện với bot.",
+          details: diagLog
+        };
+      }
+
+      async function triggerNetDiagnostics() {
+        if (onlineState._connectTimer) { clearInterval(onlineState._connectTimer); onlineState._connectTimer = null; }
+        const diag = await runNetDiagnostics(onlineState.wsUrl);
+        onlineState.diagResult = diag;
+        onlineState.lastErrorCode = diag.code;
+        onlineState.lastErrorText = diag.message;
+        renderOnlineRoot();
+      }
+
       function connectSocket(onOpenSendMsg) {
         if (onlineState.transportMode === "loopback") {
           onlineState.connected = true;
@@ -3646,10 +3764,16 @@
             showNetAlert("session_replaced", localizeError("session_replaced"));
           } else if (onlineState.phase !== "disconnected" && onlineState.phase !== "match_end" && onlineState.reconnectToken) {
             startReconnectCountdown(30);
+          } else if (!onlineState.roomCode && (onlineState.mode === "create" || onlineState.mode === "lobby" || onlineState.mode === "join" || onlineState.mode === "quick")) {
+            triggerNetDiagnostics();
           }
           renderOnlineRoot();
         };
-        ws.onerror = () => {};
+        ws.onerror = () => {
+          if (!onlineState.connected && !onlineState.roomCode) {
+            triggerNetDiagnostics();
+          }
+        };
       }
 
       function sendProtocol(msg) {
@@ -4047,11 +4171,12 @@
           if (onlineState._createTimeout) clearTimeout(onlineState._createTimeout);
           onlineState._createTimeout = setTimeout(() => {
             if (!onlineState.roomCode && (onlineState.mode === "create" || onlineState.mode === "lobby")) {
-              if (onlineState._connectTimer) { clearInterval(onlineState._connectTimer); onlineState._connectTimer = null; }
-              onlineState.lastErrorText = "Không thể kết nối tới máy chủ vào lúc này. Máy chủ có thể đang thức dậy hoặc gặp sự cố mạng. Vui lòng thử lại hoặc Luyện với bot.";
-              renderOnlineRoot();
+              triggerNetDiagnostics();
             }
-          }, 12000);
+          }, 8000);
+          if (new URLSearchParams(location.search).has("mock_net")) {
+            setTimeout(() => triggerNetDiagnostics(), 300);
+          }
           sendProtocol({
             type: "join",
             token: getToken(),
@@ -4094,7 +4219,8 @@
           </div>
         ` : "";
 
-        const errBannerHtml = onlineState.lastErrorText ? `
+        const isConnStatusCard = (!onlineState.connected && !onlineState.roomCode && (onlineState.mode === "lobby" || onlineState.mode === "create" || onlineState.mode === "quick"));
+        const errBannerHtml = (onlineState.lastErrorText && !isConnStatusCard) ? `
           <div class="r39-card" data-name="online-error-banner" style="border-color:#f87171;background:rgba(127,29,29,0.88);padding:9px 12px;border-radius:10px;">
             <div style="font-weight:900;font-size:13px;color:#fef2f2;">${onlineState.lastErrorText}</div>
           </div>
@@ -4188,18 +4314,33 @@
         } else if (onlineState.mode === "lobby" || onlineState.mode === "create") {
           if (onlineState.transportMode === "ws" && !onlineState.connected && !onlineState.roomCode) {
             bodyHtml = `
-              <div class="r39-card" data-screen="online-connection-status" style="padding:28px 16px;text-align:center;background:rgba(15,28,45,0.9);border:1.5px solid rgba(255,205,56,0.35);border-radius:12px;">
-                <div class="r40-spinner" style="width:42px;height:42px;margin:0 auto 16px;border:3.5px solid rgba(255,205,56,0.2);border-top-color:#ffcd38;border-radius:50%;animation:r40-spin 0.8s linear infinite;"></div>
-                <b style="color:${onlineState.lastErrorText ? "#f87171" : "#ffcd38"};font-size:16.5px;display:block;margin-bottom:8px;">
-                  ${onlineState.lastErrorText ? "CHƯA KẾT NỐI ĐƯỢC MÁY CHỦ" : "ĐANG KẾT NỐI MÁY CHỦ…"}
-                </b>
-                <p style="color:#cbd5e1;font-size:13.5px;line-height:1.5;margin-bottom:18px;">
-                  ${onlineState.lastErrorText || `Đang kết nối tới máy chủ… Máy chủ có thể cần tới 60 giây để thức dậy (Đã chờ: <b id="r40-connect-timer" style="color:#ffcd38;">${onlineState.connectWaitSec || 0}s</b>).`}
-                </p>
-                <div style="display:grid;grid-template-columns:${onlineState.lastErrorText ? "1fr 1fr" : "1fr"};gap:10px;">
-                  ${onlineState.lastErrorText ? `<button type="button" class="r39-btn secondary" data-on-act="retry-connect" style="min-height:48px;font-weight:800;">THỬ LẠI</button>` : ""}
+              <div class="r39-card" data-screen="online-connection-status" style="padding:24px 16px;text-align:center;background:rgba(15,28,45,0.92);border:1.5px solid ${onlineState.lastErrorText ? 'rgba(239,68,68,0.5)' : 'rgba(255,205,56,0.35)'};border-radius:12px;">
+                ${onlineState.lastErrorText ? `
+                  <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:50%;background:rgba(239,68,68,0.15);border:1.5px solid #ef4444;display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <b style="color:#f87171;font-size:16.5px;display:block;margin-bottom:6px;">CHƯA KẾT NỐI ĐƯỢC MÁY CHỦ</b>
+                  <div style="display:inline-block;padding:3px 10px;border-radius:6px;background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5;font-size:12px;font-weight:900;letter-spacing:0.5px;margin-bottom:12px;">${onlineState.lastErrorCode || "NET-ERR"}</div>
+                  <p style="color:#cbd5e1;font-size:13px;line-height:1.5;margin:0 0 14px;">${onlineState.lastErrorText}</p>
+                  <details style="margin:0 0 16px;text-align:left;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:11.5px;color:#94a3b8;">
+                    <summary style="cursor:pointer;color:#38bdf8;font-weight:700;">Xem chi tiết chẩn đoán mạng</summary>
+                    <pre style="margin:8px 0 0;white-space:pre-wrap;word-break:break-all;font-family:monospace;color:#e2e8f0;font-size:11px;">${onlineState.diagResult?.details || onlineState.lastErrorText}</pre>
+                  </details>
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <button type="button" class="r39-btn" data-on-act="go-bot" style="min-height:48px;font-weight:900;font-size:14px;background:linear-gradient(180deg,#ffe066 0%,#f59e0b 100%);color:#081320;border:none;">LUYỆN VỚI BOT</button>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                      <button type="button" class="r39-btn secondary" data-on-act="retry-connect" style="min-height:42px;font-weight:800;font-size:12.5px;">THỬ LẠI</button>
+                      <button type="button" class="r39-btn secondary" data-on-act="copy-diag" style="min-height:42px;font-weight:800;font-size:12.5px;">SAO CHÉP</button>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="r40-spinner" style="width:42px;height:42px;margin:0 auto 16px;border:3.5px solid rgba(255,205,56,0.2);border-top-color:#ffcd38;border-radius:50%;animation:r40-spin 0.8s linear infinite;"></div>
+                  <b style="color:#ffcd38;font-size:16.5px;display:block;margin-bottom:8px;">ĐANG KẾT NỐI MÁY CHỦ…</b>
+                  <p style="color:#cbd5e1;font-size:13.5px;line-height:1.5;margin-bottom:18px;">
+                    Đang kết nối tới máy chủ… Máy chủ có thể cần tới 60 giây để thức dậy (Đã chờ: <b id="r40-connect-timer" style="color:#ffcd38;">${onlineState.connectWaitSec || 0}s</b>).
+                  </p>
                   <button type="button" class="r39-btn" data-on-act="go-bot" style="min-height:48px;font-weight:900;">LUYỆN VỚI BOT</button>
-                </div>
+                `}
               </div>
             `;
           } else {
@@ -4909,6 +5050,12 @@
             onlineState.lastErrorText = "";
             renderOnlineRoot();
             openMode(onlineState.mode || "create");
+          } else if (act === "copy-diag") {
+            const txt = onlineState.diagResult?.details || onlineState.lastErrorText || "No diagnostic details";
+            try {
+              navigator.clipboard?.writeText(txt);
+              showNetAlert("diag_copied", "Đã sao chép thông tin chẩn đoán mạng vào bộ nhớ tạm!");
+            } catch (e) {}
           } else if (act === "go-bot") {
             closeOnlineRoot();
             if (window.hitmeUi && typeof window.hitmeUi.onUnity === "function") {

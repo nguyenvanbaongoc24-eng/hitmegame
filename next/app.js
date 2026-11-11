@@ -72,7 +72,8 @@ const remembered = key => {try{return localStorage.getItem(key)}catch{return nul
 const remember = (key,value) => {try{localStorage.setItem(key,value)}catch{ /* private mode */ }};
 const initialCharacter = remembered('hitme.characterId');
 const initialWeapon = remembered('hitme.weaponId');
-const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,serverHealth:'waking',match:null,result:null,overlay:null,emoteTab:'sticker',emoteBubbles:{},emoteCooldownUntil:0,readyLocked:false,practiceActive:false,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
+const ftueDone = remembered('hitme.ftueCompleted') === '1' || params.has('skip_ftue');
+const state = {screen:mock?(params.get('scene')||'home'):'home',previousScreen:'home',catalog,roster:[],weapons:[],characterId:catalog.characters.some(x=>x.id===initialCharacter&&x.enabled)?initialCharacter:'nam_lang',weaponId:catalog.weapons.some(x=>x.id===initialWeapon&&x.enabled)?initialWeapon:'dep_to_ong',balance:null,version:'',build:'',lobby:null,serverHealth:'waking',match:null,result:null,overlay:(!ftueDone && !mock)?'ftue':null,ftueStep:1,emoteTab:'sticker',emoteBubbles:{},emoteCooldownUntil:0,readyLocked:false,practiceActive:false,reducedMotion:false,ready:false,loadingPercent:0,slideDirection:'',botCount:3,lobbyReady:false,musicVolume:audio.musicVolume,sfxVolume:audio.sfxVolume,mockRound:1,mockPhase:'placing',mockTimeLeft:5,mockHp:3,mockEvent:''};
 state.layout=null;state.toasts=[];state.roundEvents=[];state.currentRound=0;state.contractErrors=[];state.sessionMatches=0;state.tutorialStep=-1;state.paused=false;
 let tutorialPointer=null;
 canvas.addEventListener('pointerdown', event => {
@@ -149,7 +150,31 @@ function sendLayout() {
 const current = () => catalog.characters.find(c => c.id === state.characterId) || catalog.characters[0];
 const currentWeapon = () => catalog.weapons.find(w=>w.id===state.weaponId) || catalog.weapons[0];
 const characterImage = kind => current().assets[kind];
-const saveSelection = () => {remember('hitme.characterId',state.characterId);remember('hitme.weaponId',state.weaponId)};
+const saveSelection = () => {
+  remember('hitme.characterId',state.characterId);
+  remember('hitme.weaponId',state.weaponId);
+  try {
+    const prof = JSON.parse(localStorage.getItem('hitme.localProfile') || '{}');
+    prof.characterId = state.characterId;
+    prof.weaponId = state.weaponId;
+    localStorage.setItem('hitme.localProfile', JSON.stringify(prof));
+  } catch(e) {}
+};
+const LoadoutStore = {
+  getWeapon: () => remembered('hitme.weaponId') || state.weaponId || 'dep_to_ong',
+  setWeapon: (id) => {
+    state.weaponId = id;
+    saveSelection();
+    send('SetWeapon', { id });
+  },
+  getCharacter: () => remembered('hitme.characterId') || state.characterId || 'nam_lang',
+  setCharacter: (id) => {
+    state.characterId = id;
+    saveSelection();
+    send('SetCharacter', { id });
+  }
+};
+window.__hitmeLoadout = LoadoutStore;
 const go = screen => {state.screen=screen;state.overlay=null;render()};
 
 function home() {
@@ -183,11 +208,11 @@ function home() {
 }
 function modal() {
   if (!state.overlay) return '';
-  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:'BẢNG XẾP HẠNG',quests:'NHIỆM VỤ',join:t('joinRoom'),shop:'CỬA HÀNG VŨ KHÍ',loading:t('loadingGame'),emote:'Biểu cảm','exit-confirm':'Thoát trận'}[state.overlay] || 'HIT ME';
+  const isEn = (document.documentElement.lang || 'vi') === 'en';
+  const title = {character:t('chooseCharacter'),weapon:t('chooseWeapon'),settings:t('settings'),profile:t('profile'),rank:'BẢNG XẾP HẠNG',quests:'NHIỆM VỤ',join:t('joinRoom'),shop:'CỬA HÀNG VŨ KHÍ',loading:t('loadingGame'),emote:'Biểu cảm','exit-confirm':'Thoát trận',ftue:(isEn?`THIẾT LẬP (${state.ftueStep||1}/5)`:`THIẾT LẬP (${state.ftueStep||1}/5)`)}[state.overlay] || 'HIT ME';
   const choices = state.overlay === 'character' ? catalog.characters : state.overlay === 'weapon' ? catalog.weapons : [];
   const list = choices.length ? `<div class="choice-grid">${choices.map(item => `<button data-action="${item.enabled?`select-${state.overlay}`:'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="${safeText(state.overlay==='character'?item.assets.head:item.icon)}" alt=""><span>${safeText(catalogTitle(item))}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
-  const isEn = (document.documentElement.lang || 'vi') === 'en';
   const settings = state.overlay === 'settings' ? `
     <div class="r40-settings-card" style="display:flex;flex-direction:column;gap:12px;width:100%;box-sizing:border-box;">
       <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.1);">
@@ -216,9 +241,14 @@ function modal() {
         <label class="r40-switch"><input type="checkbox" data-setting="haptics" ${state.haptics!==false?'checked':''}><span class="r40-switch-slider"></span></label>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-weight:800;color:#cbd5e1;font-size:13px;">${isEn ? 'Show FPS Counter' : 'Chỉ số khung hình (FPS)'}</span>
+        <label class="r40-switch"><input type="checkbox" data-setting="fps" ${remembered('hitme.showFps')==='1'?'checked':''}><span class="r40-switch-slider"></span></label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,0.08);">
         <span style="font-weight:800;color:#cbd5e1;font-size:13px;">${isEn ? 'Reduced Motion' : 'Giảm chuyển động'}</span>
         <label class="r40-switch"><input type="checkbox" data-setting="reduced-motion" ${state.reducedMotion?'checked':''}><span class="r40-switch-slider"></span></label>
       </div>
+      <button type="button" class="live-secondary" data-action="open-ftue" style="margin-top:6px;width:100%;font-size:12.5px;">${isEn ? 'REPLAY TUTORIAL (FTUE)' : 'XEM LẠI HƯỚNG DẪN (FTUE)'}</button>
       ${!mock && state.screen === 'match' ? `
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;">
           <button type="button" class="live-secondary" data-action="${state.paused ? 'resume' : 'pause'}">${state.paused ? (isEn ? 'RESUME' : 'TIẾP TỤC') : (isEn ? 'PAUSE' : 'TẠM DỪNG')}</button>
@@ -231,7 +261,7 @@ function modal() {
         ${isEn ? 'Send Feedback' : 'Gửi góp ý trải nghiệm'}
       </a>
       <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:#94a3b8;">
-        <span>Phiên bản 0.1.0-beta.11 · 9d63d2f</span>
+        <span>Phiên bản 0.1.0-beta.12 · 5ef2718</span>
         <button type="button" data-action="copy-ver" style="background:transparent;border:none;color:#ffcd38;font-size:11.5px;font-weight:800;cursor:pointer;text-decoration:underline;">${isEn ? 'Copy' : 'Sao chép'}</button>
       </div>
     </div>
@@ -243,7 +273,7 @@ function modal() {
   const stickerIcon='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg>';
   const emotes = state.overlay==='emote' ? `<div class="live-emote-tabs"><button data-action="emote-tab" data-tab="sticker" class="${state.emoteTab==='sticker'?'active':''}">Sticker</button><button data-action="emote-tab" data-tab="phrase" class="${state.emoteTab==='phrase'?'active':''}">${document.documentElement.lang==='en'?'Quick phrases':'Câu nhanh'}</button></div><div class="live-emotes ${state.emoteTab}">${state.emoteTab==='sticker'?Array.from({length:6},(_,i)=>`<button data-action="send-live-emote" data-kind="sticker" data-id="sticker_0${i+1}" aria-label="Sticker ${i+1}">${stickerIcon}<small>sticker tạm</small></button>`).join(''):emotePhrases.map((text,i)=>`<button data-action="send-live-emote" data-kind="phrase" data-id="phrase_0${i+1}">${safeText(text)}</button>`).join('')}</div>` : '';
   const rankContent = state.overlay === 'rank' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">DỮ LIỆU MẪU • BẢN THỬ NGHIỆM</div>
+    <div class="r44-rank" style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">DỮ LIỆU MẪU • BẢN THỬ NGHIỆM</div>
     <div class="leaderboard-list" style="display:flex;flex-direction:column;gap:8px;width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,205,56,0.15);border:1.5px solid #ffcd38;padding:8px 12px;border-radius:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -279,24 +309,48 @@ function modal() {
       </div>
     </div>` : '';
 
-  const questsContent = '';
+  const questsContent = state.overlay === 'quests' ? `
+    <div class="r44-quests" style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">NHIỆM VỤ NGÀY • LÀM MỚI MỖI NGÀY</div>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div>
+          <b style="color:#fff;font-size:14px;display:block;">Chơi 1 trận Luyện với bot</b>
+          <small style="color:#94a3b8;font-size:11px;">Tiến độ: ${state.sessionMatches > 0 ? '1/1 (Hoàn thành)' : '0/1'}</small>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${state.sessionMatches > 0 ? '#4ade80' : '#ffcd38'};background:rgba(255,255,255,0.08);padding:4px 8px;border-radius:6px;">+50 Vàng</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div>
+          <b style="color:#fff;font-size:14px;display:block;">Ném trúng đối thủ 3 lần</b>
+          <small style="color:#94a3b8;font-size:11px;">Tiến độ: 2/3</small>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:#ffcd38;background:rgba(255,255,255,0.08);padding:4px 8px;border-radius:6px;">+60 Vàng</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
+        <div>
+          <b style="color:#fff;font-size:14px;display:block;">Sống sót tới Vòng 3</b>
+          <small style="color:#94a3b8;font-size:11px;">Tiến độ: 3/3 (Hoàn thành)</small>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:#4ade80;background:rgba(255,255,255,0.08);padding:4px 8px;border-radius:6px;">+70 Vàng</span>
+      </div>
+    </div>` : '';
 
   const shopContent = state.overlay === 'shop' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">CỬA HÀNG VŨ KHÍ • MIỄN PHÍ TRANG BỊ TRONG BẢN BETA</div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px;text-align:center;">Vũ khí chỉ thay đổi hình ảnh & âm thanh • Miễn phí trong Beta</div>
     <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
       ${catalog.weapons.map(w => {
         const equipped = w.id === state.weaponId;
         return `
-          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1.5px solid ${equipped?'#ffcd38':'rgba(255,255,255,0.15)'};padding:10px 12px;border-radius:10px;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <img src="${w.icon}" width="40" height="40" style="border-radius:8px;border:1px solid #ffcd38;">
-              <div>
-                <b style="color:#fff;font-size:14px;display:block;">${catalogTitle(w)}</b>
-                <small style="color:#38bdf8;font-size:11px;">${w.id==='chao_chong_dinh'?'Tiếng Boong vang dội':w.id==='vot_pickleball'?'Đường bóng xoáy tốc độ':'Vũ khí huyền thoại sân đình'}</small>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,0.06);border:1.5px solid ${equipped?'#ffcd38':'rgba(255,255,255,0.15)'};padding:10px 12px;border-radius:10px;">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+              <img src="${w.icon}" width="40" height="40" style="border-radius:8px;border:1px solid #ffcd38;flex-shrink:0;">
+              <div style="min-width:0;">
+                <b style="color:#fff;font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catalogTitle(w)}</b>
+                <small style="color:#38bdf8;font-size:11px;display:block;">${w.id==='chao_chong_dinh'?'Tiếng Boong vang dội':w.id==='vot_pickleball'?'Đường bóng xoáy tốc độ':'Vũ khí huyền thoại sân đình'}</small>
               </div>
             </div>
-            <button class="${equipped?'live-secondary':'live-primary'}" data-action="select-weapon" data-id="${w.id}" style="padding:6px 12px;font-size:12px;margin:0;">
-              ${equipped?'ĐANG DÙNG':'TRANG BỊ'}
+            <button class="${equipped?'live-secondary':'live-primary'}" data-action="select-weapon" data-id="${w.id}" style="width:96px;min-width:96px;padding:8px 0;font-size:12px;margin:0;text-align:center;flex-shrink:0;">
+              ${equipped?'✓ ĐANG DÙNG':'TRANG BỊ'}
             </button>
           </div>
         `;
@@ -324,8 +378,111 @@ function modal() {
       </div>
     </div>` : '';
 
-  const back = ['rank','quests','shop','profile'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
-  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${scenarioSettings}${confirmation}${emotes}${rankContent}${questsContent}${shopContent}${profileContent}${['character','weapon','join','settings','exit-confirm','emote','rank','quests','shop','profile'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
+  const ftueStep = state.ftueStep || 1;
+  const ftueContent = state.overlay === 'ftue' ? `
+    <div class="r44-ftue-card" style="display:flex;flex-direction:column;gap:12px;width:100%;box-sizing:border-box;">
+      ${ftueStep === 1 ? `
+        <div style="text-align:center;padding:8px 0;">
+          <img src="./assets/logo_hit_me.png" width="120" style="margin:0 auto 10px;display:block;">
+          <h3 style="color:#ffcd38;margin:0 0 6px;font-size:17px;font-weight:900;">${isEn ? 'WELCOME TO HIT ME!' : 'CHÀO MỪNG ĐẾN VỚI HIT ME!'}</h3>
+          <p style="color:#cbd5e1;font-size:13.5px;line-height:1.5;margin:0 0 16px;">
+            ${isEn ? 'Vietnamese folk sandal-throwing battle game. Fun, fast-paced, pure skills!' : 'Trò chơi ném dép dân gian vui nhộn, gay cấn và đậm chất làng quê Việt Nam.'}
+          </p>
+          <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:20px;">
+            <span style="font-size:13px;color:#94a3b8;">${isEn ? 'Language:' : 'Ngôn ngữ:'}</span>
+            <div class="r43-lang-toggle" style="display:inline-flex;border:1.5px solid #ffcd38;border-radius:8px;overflow:hidden;background:#0d1b2a;">
+              <button type="button" data-action="set-lang-vi" style="padding:5px 12px;font-size:12px;font-weight:900;border:none;cursor:pointer;background:${isEn ? 'transparent' : '#ffcd38'};color:${isEn ? '#fff8e8' : '#08121f'};">VI</button>
+              <button type="button" data-action="set-lang-en" style="padding:5px 12px;font-size:12px;font-weight:900;border:none;cursor:pointer;background:${isEn ? '#ffcd38' : 'transparent'};color:${isEn ? '#08121f' : '#fff8e8'};">EN</button>
+            </div>
+          </div>
+          <button type="button" class="live-primary" data-action="ftue-step-2" style="width:100%;min-height:48px;font-weight:900;font-size:15px;">${isEn ? 'GET STARTED' : 'BẮT ĐẦU NGAY'}</button>
+        </div>
+      ` : ftueStep === 2 ? `
+        <div>
+          <h3 style="color:#ffcd38;margin:0 0 4px;font-size:16px;font-weight:900;">${isEn ? 'CHOOSE YOUR NICKNAME' : 'ĐẶT BIỆT DANH CỦA BẠN'}</h3>
+          <p style="color:#94a3b8;font-size:12px;margin:0 0 12px;">${isEn ? 'This name will appear on the leaderboard & match cards.' : 'Tên sẽ xuất hiện trên bảng điểm và thẻ người chơi.'}</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px;">
+            <input id="r44-ftue-name-input" type="text" maxlength="16" value="${safeText(remembered('hitme.playerName') || 'Nam Siêu Tốc')}" style="flex:1;padding:10px 12px;background:#0d1b2a;border:1.5px solid #ffcd38;border-radius:8px;color:#fff;font-size:14px;font-weight:700;">
+            <button type="button" class="live-secondary" data-action="ftue-random-name" style="padding:0 12px;font-size:16px;" title="Ngẫu nhiên">🎲</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button type="button" class="live-secondary" data-action="ftue-step-1">${isEn ? 'BACK' : 'QUAY LẠI'}</button>
+            <button type="button" class="live-primary" data-action="ftue-save-name">${isEn ? 'CONTINUE' : 'TIẾP TỤC'}</button>
+          </div>
+        </div>
+      ` : ftueStep === 3 ? `
+        <div>
+          <h3 style="color:#ffcd38;margin:0 0 4px;font-size:16px;font-weight:900;">${isEn ? 'CHOOSE YOUR STARTER' : 'CHỌN NHÂN VẬT ĐỒNG HÀNH'}</h3>
+          <p style="color:#94a3b8;font-size:12px;margin:0 0 12px;">${isEn ? 'All 7 characters unlocked for Beta. Change anytime!' : 'Cả 7 nhân vật đều đã mở khóa. Bạn có thể đổi lại bất cứ lúc nào!'}</p>
+          <div class="choice-grid" style="max-height:220px;overflow-y:auto;margin-bottom:14px;">
+            ${catalog.characters.map(c => `
+              <button data-action="ftue-select-char" data-id="${c.id}" class="${c.id===state.characterId?'selected':''}" style="border:1.5px solid ${c.id===state.characterId?'#ffcd38':'rgba(255,255,255,0.15)'};background:${c.id===state.characterId?'rgba(255,205,56,0.15)':'rgba(255,255,255,0.05)'};">
+                <img src="${c.assets.head}" alt="">
+                <span>${safeText(catalogTitle(c))}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button type="button" class="live-secondary" data-action="ftue-step-2">${isEn ? 'BACK' : 'QUAY LẠI'}</button>
+            <button type="button" class="live-primary" data-action="ftue-step-4">${isEn ? 'CONTINUE' : 'TIẾP TỤC'}</button>
+          </div>
+        </div>
+      ` : ftueStep === 4 ? `
+        <div>
+          <h3 style="color:#ffcd38;margin:0 0 4px;font-size:16px;font-weight:900;">${isEn ? 'SOUND & VIBRATION' : 'ÂM THANH & RUNG XÚC GIÁC'}</h3>
+          <p style="color:#94a3b8;font-size:12px;margin:0 0 12px;">${isEn ? 'Customize your sound experience.' : 'Điều chỉnh trải nghiệm âm thanh theo ý bạn.'}</p>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:13px;color:#cbd5e1;font-weight:700;">
+                <span>${isEn ? 'Music' : 'Nhạc nền'}</span>
+                <span class="music-val" style="color:#ffcd38;">${Math.round(state.musicVolume*100)}%</span>
+              </div>
+              <input type="range" class="r40-slider" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}" style="--val-pct:${Math.round(state.musicVolume*100)}%;width:100%;">
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:13px;color:#cbd5e1;font-weight:700;">
+                <span>${isEn ? 'SFX' : 'Hiệu ứng'}</span>
+                <span class="sfx-val" style="color:#ffcd38;">${Math.round(state.sfxVolume*100)}%</span>
+              </div>
+              <input type="range" class="r40-slider" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}" style="--val-pct:${Math.round(state.sfxVolume*100)}%;width:100%;">
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;">
+              <button type="button" class="live-secondary" data-action="ftue-test-sound" style="font-size:12px;padding:6px 12px;">🔊 ${isEn ? 'Test Pop Sound' : 'Thử tiếng Bốp'}</button>
+              <label class="r40-switch"><input type="checkbox" data-setting="haptics" ${state.haptics!==false?'checked':''}><span class="r40-switch-slider"></span></label>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <button type="button" class="live-secondary" data-action="ftue-step-3">${isEn ? 'BACK' : 'QUAY LẠI'}</button>
+            <button type="button" class="live-primary" data-action="ftue-step-5">${isEn ? 'CONTINUE' : 'TIẾP TỤC'}</button>
+          </div>
+        </div>
+      ` : `
+        <div>
+          <h3 style="color:#ffcd38;margin:0 0 6px;font-size:16px;font-weight:900;">${isEn ? 'QUICK GUIDE (3 STEPS)' : 'HƯỚNG DẪN CHƠI (3 BƯỚC)'}</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+            <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;">
+              <b style="color:#ffcd38;font-size:13px;display:block;">1. Đặt vị trí & Kéo ngắm</b>
+              <small style="color:#cbd5e1;font-size:11.5px;">Chạm vào sân để chọn vị trí đứng, kéo thả để ngắm hướng ném trong 5 giây.</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;">
+              <b style="color:#38bdf8;font-size:13px;display:block;">2. Ném đồng loạt & Né tránh</b>
+              <small style="color:#cbd5e1;font-size:11.5px;">Hết giờ, tất cả cùng ném! Người trúng đòn mất 1 Máu (3 Máu mỗi người).</small>
+            </div>
+            <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;">
+              <b style="color:#4ade80;font-size:13px;display:block;">3. Tối đa 5 Vòng</b>
+              <small style="color:#cbd5e1;font-size:11.5px;">Sống sót cuối cùng hoặc có nhiều Máu nhất sau 5 vòng sẽ chiến thắng!</small>
+            </div>
+          </div>
+          <div style="background:rgba(25,213,216,0.1);border:1px solid #19d5d8;border-radius:8px;padding:8px 10px;margin-bottom:14px;font-size:11.5px;color:#e0f2fe;">
+            💡 <b>Mẹo iOS:</b> Bấm Chia sẻ trên Safari → <i>"Thêm vào MH chính"</i> để chơi toàn màn hình không viền!
+          </div>
+          <button type="button" class="live-primary" data-action="ftue-finish" style="width:100%;min-height:48px;font-weight:900;font-size:15px;">${isEn ? 'ENTER GAME NOW' : 'VÀO GAME NGAY'}</button>
+        </div>
+      `}
+    </div>` : '';
+
+  const back = ['rank','quests','profile'].includes(state.overlay) ? `<button class="modal-back" data-action="close">${icon('chevron','reverse')}${t('back')}</button>` : '';
+  return `<div class="modal-shade ${state.overlay==='settings'?'settings-shade':''}"><section class="modal ${state.overlay==='settings'?'settings-sheet':''}" role="dialog" aria-modal="true" aria-label="${title}"><header><h2>${title}</h2><button data-action="close" aria-label="${t('close')}">${icon('close')}</button></header>${list}${join}${settings}${scenarioSettings}${confirmation}${emotes}${rankContent}${questsContent}${shopContent}${profileContent}${ftueContent}${['character','weapon','join','settings','exit-confirm','emote','rank','quests','shop','profile','ftue'].includes(state.overlay)?'':`<p>${state.overlay==='loading'?`${t('loadingGame')} ${state.loadingPercent}%`:t('preparing')}</p>`}${back}</section></div>`;
 }
 function render() {
   if (legacy) return;
@@ -429,7 +586,44 @@ root.addEventListener('click', event => {
   if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}seedMatchState();send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
   if (action==='set-lang-vi') {document.documentElement.lang='vi';try{localStorage.setItem('hitme_lang','vi')}catch(e){}return render();}
   if (action==='set-lang-en') {document.documentElement.lang='en';try{localStorage.setItem('hitme_lang','en')}catch(e){}return render();}
-  if (action==='copy-ver') {try{navigator.clipboard?.writeText('0.1.0-beta.11 · 9d63d2f');button.textContent=(document.documentElement.lang==='en'?'Copied!':'Đã chép!');setTimeout(()=>{button.textContent=(document.documentElement.lang==='en'?'Copy':'Sao chép')},1500)}catch(e){}return;}
+  if (action==='copy-ver') {try{navigator.clipboard?.writeText('0.1.0-beta.12 · 5ef2718');button.textContent=(document.documentElement.lang==='en'?'Copied!':'Đã chép!');setTimeout(()=>{button.textContent=(document.documentElement.lang==='en'?'Copy':'Sao chép')},1500)}catch(e){}return;}
+  if (action==='open-ftue') {state.overlay='ftue';state.ftueStep=1;return render();}
+  if (action==='ftue-step-1') {state.ftueStep=1;return render();}
+  if (action==='ftue-step-2') {audio.playSfx('ui_confirm');state.ftueStep=2;return render();}
+  if (action==='ftue-random-name') {
+    const pool=['Nam Siêu Tốc','Bé Bự','Cao Thủ Dép','Chảo Thần Sầu','Ninja Làng','Vô Địch Sân Đình','Dép Thần Công','Bàn Tay Vàng'];
+    const rName=pool[Math.floor(Math.random()*pool.length)];
+    const inp=document.getElementById('r44-ftue-name-input');
+    if(inp)inp.value=rName;
+    return;
+  }
+  if (action==='ftue-save-name') {
+    const inp=document.getElementById('r44-ftue-name-input');
+    const name=inp?.value?.trim()||'Nam Siêu Tốc';
+    remember('hitme.playerName',name);
+    try{const prof=JSON.parse(localStorage.getItem('hitme.localProfile')||'{}');prof.playerName=name;localStorage.setItem('hitme.localProfile',JSON.stringify(prof));}catch(e){}
+    state.ftueStep=3;
+    return render();
+  }
+  if (action==='ftue-select-char') {LoadoutStore.setCharacter(button.dataset.id);return render();}
+  if (action==='ftue-step-4') {state.ftueStep=4;return render();}
+  if (action==='ftue-test-sound') {audio.playSfx('sfx_hit');return;}
+  if (action==='ftue-step-5') {state.ftueStep=5;return render();}
+  if (action==='ftue-finish') {
+    remember('hitme.ftueCompleted','1');
+    try {
+      const p = {
+        name: remembered('hitme.playerName') || 'Nam Siêu Tốc',
+        characterId: state.characterId || 'nam_lang',
+        weaponId: state.weaponId || 'dep_to_ong',
+        customized: true
+      };
+      localStorage.setItem('hitme_user_profile', JSON.stringify(p));
+      localStorage.setItem('hitme.localProfile', JSON.stringify(p));
+    } catch(e) {}
+    state.overlay=null;
+    return render();
+  }
   if (action==='locked') {navigator.vibrate?.(30);return;}
   if (action.startsWith('go-')) {if(mock&&state.screen==='lobby'&&action==='go-home')send('LeaveRoom',{});return go(action.slice(3));}
   if (action==='settings-done') return go(state.previousScreen);
@@ -441,8 +635,8 @@ root.addEventListener('click', event => {
   if (action==='send-emote') {state.mockEvent=button.dataset.id;go('match');return;}
   if (action==='start-practice') {if(mock){seedMatchState();state.screen='match';send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});startMockClock();return render();} }
   if (action==='previous'||action==='next') return changeCharacter(action==='next'?1:-1);
-  if (action==='select-character') {state.characterId=button.dataset.id;saveSelection();send('SetCharacter',{id:state.characterId});state.overlay=null;return render();}
-  if (action==='select-weapon') {state.weaponId=button.dataset.id;saveSelection();send('SetWeapon',{id:state.weaponId});state.overlay=null;return render();}
+  if (action==='select-character') {LoadoutStore.setCharacter(button.dataset.id);state.overlay=null;return render();}
+  if (action==='select-weapon') {LoadoutStore.setWeapon(button.dataset.id);state.overlay=null;return render();}
   if (action==='close') {state.overlay=null;return render();}
   if (mock && action==='settings' && state.screen!=='home') {state.overlay='settings';return render();}
   if (mock && action==='emote') return go('emote');
@@ -471,6 +665,12 @@ root.addEventListener('input', event => {
 });
 root.addEventListener('change', event => {
   const setting = event.target.dataset?.setting;
+  if (setting === 'fps') {
+    const checked = event.target.checked;
+    try { localStorage.setItem('hitme.showFps', checked ? '1' : '0'); } catch(e) {}
+    const fpsEl = document.getElementById('r38-fps-overlay');
+    if (fpsEl) fpsEl.style.display = checked ? 'block' : 'none';
+  }
   if (setting === 'haptics') {
     state.haptics = event.target.checked;
     try { localStorage.setItem('hitme_haptics', event.target.checked ? '1' : '0'); } catch(e) {}
