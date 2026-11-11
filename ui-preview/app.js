@@ -3,7 +3,7 @@ import {onUnity, send} from './bridge.js';
 import {installMockUnity} from './mock-unity.js';
 import {audio} from './audio.js';
 import {prototype, title as catalogTitle} from './prototype.js';
-import {renderLiveMatch,renderLiveResult,validateLiveEvent} from './live.js';
+import {renderLiveMatch,renderLiveResult,validateLiveEvent,updateLiveMatchInPlace} from './live.js';
 
 const copy = await (await fetch('./i18n.json')).json();
 const catalog = await (await fetch('./catalog.json')).json();
@@ -187,19 +187,67 @@ function modal() {
   const choices = state.overlay === 'character' ? catalog.characters : state.overlay === 'weapon' ? catalog.weapons : [];
   const list = choices.length ? `<div class="choice-grid">${choices.map(item => `<button data-action="${item.enabled?`select-${state.overlay}`:'locked'}" data-id="${safeText(item.id)}" ${item.enabled?'':'aria-disabled="true" class="locked"'}><img src="${safeText(state.overlay==='character'?item.assets.head:item.icon)}" alt=""><span>${safeText(catalogTitle(item))}</span>${item.enabled?'':`${icon('lock')}<small>${t('comingSoon')}</small>`}</button>`).join('')}</div>` : '';
   const join = state.overlay === 'join' ? `<label>${t('roomCode')} <input id="room-code" maxlength="6" autocomplete="off" placeholder="HM4826"></label><button class="cta quick dialog-action" data-action="join-submit">${t('joinRoom')}</button>` : '';
-  const settings = state.overlay === 'settings' ? `<label class="sheet-setting">Nhạc nền <input type="range" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}"></label><label class="sheet-setting">Hiệu ứng <input type="range" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}"></label>${!mock&&state.screen==='match'?`<button class="live-secondary" data-action="${state.paused?'resume':'pause'}">${state.paused?'TIẾP TỤC':'TẠM DỪNG'}</button><button class="live-secondary" data-action="exit-confirm">THOÁT TRẬN</button>`:''}<button class="live-secondary" data-action="tutorial-reopen">XEM LẠI HƯỚNG DẪN</button>` : '';
+  const isEn = (document.documentElement.lang || 'vi') === 'en';
+  const settings = state.overlay === 'settings' ? `
+    <div class="r40-settings-card" style="display:flex;flex-direction:column;gap:12px;width:100%;box-sizing:border-box;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.1);">
+        <span style="font-weight:800;color:#cbd5e1;font-size:13.5px;">${isEn ? 'Language' : 'Ngôn ngữ'}</span>
+        <div class="r43-lang-toggle" style="display:inline-flex;border:1.5px solid #ffcd38;border-radius:8px;overflow:hidden;background:#0d1b2a;">
+          <button type="button" data-action="set-lang-vi" style="padding:5px 12px;font-size:12px;font-weight:900;border:none;cursor:pointer;background:${isEn ? 'transparent' : '#ffcd38'};color:${isEn ? '#fff8e8' : '#08121f'};">VI</button>
+          <button type="button" data-action="set-lang-en" style="padding:5px 12px;font-size:12px;font-weight:900;border:none;cursor:pointer;background:${isEn ? '#ffcd38' : 'transparent'};color:${isEn ? '#08121f' : '#fff8e8'};">EN</button>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-weight:800;color:#cbd5e1;font-size:13px;">
+          <span>${isEn ? 'Background Music' : 'Nhạc nền'}</span>
+          <span class="music-val" style="color:#ffcd38;font-weight:900;">${Math.round(state.musicVolume*100)}%</span>
+        </div>
+        <input type="range" class="r40-slider" data-setting="music" min="0" max="100" value="${Math.round(state.musicVolume*100)}" style="--val-pct:${Math.round(state.musicVolume*100)}%;width:100%;">
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-weight:800;color:#cbd5e1;font-size:13px;">
+          <span>${isEn ? 'Sound Effects' : 'Hiệu ứng âm thanh'}</span>
+          <span class="sfx-val" style="color:#ffcd38;font-weight:900;">${Math.round(state.sfxVolume*100)}%</span>
+        </div>
+        <input type="range" class="r40-slider" data-setting="sfx" min="0" max="100" value="${Math.round(state.sfxVolume*100)}" style="--val-pct:${Math.round(state.sfxVolume*100)}%;width:100%;">
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-weight:800;color:#cbd5e1;font-size:13px;">${isEn ? 'Haptics Vibration' : 'Rung xúc giác (Haptics)'}</span>
+        <label class="r40-switch"><input type="checkbox" data-setting="haptics" ${state.haptics!==false?'checked':''}><span class="r40-switch-slider"></span></label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-weight:800;color:#cbd5e1;font-size:13px;">${isEn ? 'Reduced Motion' : 'Giảm chuyển động'}</span>
+        <label class="r40-switch"><input type="checkbox" data-setting="reduced-motion" ${state.reducedMotion?'checked':''}><span class="r40-switch-slider"></span></label>
+      </div>
+      ${!mock && state.screen === 'match' ? `
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;">
+          <button type="button" class="live-secondary" data-action="${state.paused ? 'resume' : 'pause'}">${state.paused ? (isEn ? 'RESUME' : 'TIẾP TỤC') : (isEn ? 'PAUSE' : 'TẠM DỪNG')}</button>
+          <button type="button" class="live-secondary danger" data-action="exit-confirm" style="background:#7f1d1d!important;border:1.5px solid #ef4444!important;color:#fee2e2!important;font-weight:900;">${isEn ? 'QUIT MATCH' : 'THOÁT TRẬN'}</button>
+          <button type="button" class="live-secondary" data-action="tutorial-reopen">${isEn ? 'VIEW TUTORIAL' : 'XEM LẠI HƯỚNG DẪN'}</button>
+        </div>
+      ` : ''}
+      <a href="https://forms.gle/hitmegame-feedback-mock" target="_blank" rel="noopener noreferrer" class="r40-settings-feedback" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:42px;background:rgba(25,213,216,0.12);border:1.5px solid #19d5d8;border-radius:10px;color:#19d5d8;font-weight:800;font-size:13px;text-decoration:none;box-sizing:border-box;margin-top:4px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        ${isEn ? 'Send Feedback' : 'Gửi góp ý trải nghiệm'}
+      </a>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:#94a3b8;">
+        <span>Phiên bản 0.1.0-beta.11 · 9d63d2f</span>
+        <button type="button" data-action="copy-ver" style="background:transparent;border:none;color:#ffcd38;font-size:11.5px;font-weight:800;cursor:pointer;text-decoration:underline;">${isEn ? 'Copy' : 'Sao chép'}</button>
+      </div>
+    </div>
+  ` : '';
   const scenarioSettings = state.overlay === 'settings' && params.get('dev') === '1' && !mock
     ? `<section aria-label="Kịch bản thử luật"><h3>Kịch bản thử luật (chỉ để kiểm tra)</h3>${['tiebreak','tiebreak3','tiebreak_draw','suddendeath','hardcap','ranking_ties'].map(name=>`<button class="live-secondary" data-action="start-scenario" data-scenario="${name}">${name}</button>`).join('')}</section>` : '';
-  const confirmation = state.overlay==='exit-confirm' ? `<p>Thoát trận luyện với bot?</p><button class="live-primary" data-action="exit-match">THOÁT TRẬN</button><button class="live-secondary" data-action="close">Ở LẠI</button>` : '';
+  const confirmation = state.overlay==='exit-confirm' ? `<div style="text-align:center;padding:12px 0;"><h3 style="color:#ef4444;margin:0 0 8px;font-size:18px;">${isEn ? 'Exit Match?' : 'Thoát trận đấu?'}</h3><p style="color:#cbd5e1;font-size:13.5px;margin:0 0 16px;">${isEn ? 'Are you sure you want to exit to home?' : 'Bạn có chắc chắn muốn thoát về màn hình chính không?'}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><button class="live-secondary" data-action="close">${isEn ? 'STAY' : 'Ở LẠI'}</button><button class="live-primary danger" data-action="exit-match" style="background:#dc2626!important;border:1.5px solid #ef4444!important;color:#fff!important;">${isEn ? 'EXIT' : 'THOÁT TRẬN'}</button></div></div>` : '';
   const emotePhrases = document.documentElement.lang==='en' ? ['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG'] : ['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];
   const stickerIcon='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M8 9h.01M16 9h.01" stroke-linecap="round"/></svg>';
   const emotes = state.overlay==='emote' ? `<div class="live-emote-tabs"><button data-action="emote-tab" data-tab="sticker" class="${state.emoteTab==='sticker'?'active':''}">Sticker</button><button data-action="emote-tab" data-tab="phrase" class="${state.emoteTab==='phrase'?'active':''}">${document.documentElement.lang==='en'?'Quick phrases':'Câu nhanh'}</button></div><div class="live-emotes ${state.emoteTab}">${state.emoteTab==='sticker'?Array.from({length:6},(_,i)=>`<button data-action="send-live-emote" data-kind="sticker" data-id="sticker_0${i+1}" aria-label="Sticker ${i+1}">${stickerIcon}<small>sticker tạm</small></button>`).join(''):emotePhrases.map((text,i)=>`<button data-action="send-live-emote" data-kind="phrase" data-id="phrase_0${i+1}">${safeText(text)}</button>`).join('')}</div>` : '';
   const rankContent = state.overlay === 'rank' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ DỮ LIỆU MẪU • BẢN THỬ NGHIỆM</div>
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">DỮ LIỆU MẪU • BẢN THỬ NGHIỆM</div>
     <div class="leaderboard-list" style="display:flex;flex-direction:column;gap:8px;width:100%;">
       <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,205,56,0.15);border:1.5px solid #ffcd38;padding:8px 12px;border-radius:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-weight:900;color:#ffcd38;font-size:16px;">🥇 1</span>
+          <span style="font-weight:900;color:#ffcd38;font-size:16px;">#1</span>
           <img src="./assets/nam_lang_head.png" width="36" height="36" style="border-radius:50%;border:1.5px solid #ffcd38;">
           <div><b style="color:#fff;font-size:14px;display:block;">Nam Làng</b><small style="color:#94a3b8;font-size:11px;">15 trận thắng • Tỉ lệ 80%</small></div>
         </div>
@@ -207,7 +255,7 @@ function modal() {
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-weight:900;color:#e2e8f0;font-size:16px;">🥈 2</span>
+          <span style="font-weight:900;color:#e2e8f0;font-size:16px;">#2</span>
           <img src="./assets/nu_nang_dong_head.png" width="36" height="36" style="border-radius:50%;">
           <div><b style="color:#fff;font-size:14px;display:block;">Nữ Năng Động</b><small style="color:#94a3b8;font-size:11px;">12 trận thắng • Tỉ lệ 75%</small></div>
         </div>
@@ -215,7 +263,7 @@ function modal() {
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-weight:900;color:#cd7f32;font-size:16px;">🥉 3</span>
+          <span style="font-weight:900;color:#cd7f32;font-size:16px;">#3</span>
           <img src="./assets/co_ba_head.png" width="36" height="36" style="border-radius:50%;">
           <div><b style="color:#fff;font-size:14px;display:block;">Cô Ba</b><small style="color:#94a3b8;font-size:11px;">10 trận thắng • Tỉ lệ 70%</small></div>
         </div>
@@ -223,7 +271,7 @@ function modal() {
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-weight:900;color:#94a3b8;font-size:16px;">4</span>
+          <span style="font-weight:900;color:#94a3b8;font-size:16px;">#4</span>
           <img src="./assets/anh_teen_head.png" width="36" height="36" style="border-radius:50%;">
           <div><b style="color:#fff;font-size:14px;display:block;">Anh Teen</b><small style="color:#94a3b8;font-size:11px;">8 trận thắng • Tỉ lệ 60%</small></div>
         </div>
@@ -231,34 +279,10 @@ function modal() {
       </div>
     </div>` : '';
 
-  const questsContent = state.overlay === 'quests' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ DỮ LIỆU THỬ NGHIỆM • NHIỆM VỤ HÀNG NGÀY</div>
-    <div class="quests-list" style="display:flex;flex-direction:column;gap:8px;width:100%;">
-      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Thắng 1 trận Luyện với bot</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+50 Vàng</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:100%;height:100%;background:#10b981;"></div></div>
-          <span style="color:#10b981;font-size:11.5px;font-weight:bold;">ĐÃ HOÀN THÀNH</span>
-        </div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Ném trúng 3 lần bằng Dép Tổ Ong</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+30 Vàng</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:66%;height:100%;background:#38bdf8;"></div></div>
-          <span style="color:#94a3b8;font-size:11.5px;">2/3</span>
-        </div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);padding:10px 12px;border-radius:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><b style="color:#fff;font-size:13.5px;">Chơi 3 trận trực tuyến</b><span style="color:#ffcd38;font-size:12.5px;font-weight:900;">+100 Vàng</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div style="flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:99px;margin-right:10px;overflow:hidden;"><div style="width:33%;height:100%;background:#38bdf8;"></div></div>
-          <span style="color:#94a3b8;font-size:11.5px;">1/3</span>
-        </div>
-      </div>
-    </div>` : '';
+  const questsContent = '';
 
   const shopContent = state.overlay === 'shop' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ CỬA HÀNG VŨ KHÍ • MIỄN PHÍ TRANG BỊ TRONG BẢN BETA</div>
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">CỬA HÀNG VŨ KHÍ • MIỄN PHÍ TRANG BỊ TRONG BẢN BETA</div>
     <div style="display:flex;flex-direction:column;gap:8px;width:100%;">
       ${catalog.weapons.map(w => {
         const equipped = w.id === state.weaponId;
@@ -280,7 +304,7 @@ function modal() {
     </div>` : '';
 
   const profileContent = state.overlay === 'profile' ? `
-    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">⚠️ HỒ SƠ NGƯỜI CHƠI • BẢN THỬ NGHIỆM</div>
+    <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:8px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;">HỒ SƠ NGƯỜI CHƠI • BẢN THỬ NGHIỆM</div>
     <div style="display:flex;flex-direction:column;gap:10px;width:100%;align-items:center;">
       <img src="${characterImage('head')}" width="64" height="64" style="border-radius:50%;border:2px solid #ffcd38;">
       <h3 style="margin:0;color:#fff;font-size:16px;">${safeText(catalogTitle(character()))}</h3>
@@ -305,7 +329,7 @@ function modal() {
 }
 function render() {
   if (legacy) return;
-  root.innerHTML = state.screen==='home' ? home()+modal() : mock ? prototype(state.screen,state,catalog)+modal() : state.screen==='bot' ? prototype('bot',state,catalog)+modal() : state.screen==='match' ? renderLiveMatch(state,catalog)+modal() : state.screen==='result' ? renderLiveResult(state,catalog)+modal() : home()+modal();
+  root.innerHTML = state.screen==='home' ? home()+modal() : state.screen==='match' ? renderLiveMatch(state,catalog)+modal() : state.screen==='result' ? renderLiveResult(state,catalog)+modal() : state.screen==='bot' ? prototype('bot',state,catalog)+modal() : mock ? prototype(state.screen,state,catalog)+modal() : home()+modal();
   if(params.has('debug')&&state.contractErrors.length)root.insertAdjacentHTML('beforeend',`<output class="contract-debug">BRIDGE: ${state.contractErrors.map(safeText).join(', ')}</output>`);
   if (!performance.getEntriesByName('hitme-home-interactive').length) performance.mark('hitme-home-interactive');
   root.classList.toggle('reduced-motion',state.reducedMotion);
@@ -349,6 +373,34 @@ function startMockClock() {
     if (!state.overlay) render();
   },250);
 }
+function seedMatchState() {
+  const w = catalog.weapons.find(x => x.id === state.weaponId);
+  const wName = w ? catalogTitle(w) : 'Dép Tổ Ong';
+  const botPool = ['nu_nang_dong', 'co_ba', 'anh_teen', 'quay_boy', 'cho_vang', 'meo_mun'].filter(id => id !== state.characterId);
+  const botList = [];
+  const bCount = Math.max(1, Math.min(5, state.botCount || 3));
+  for (let i = 0; i < bCount; i++) {
+    const bid = botPool[i % botPool.length];
+    const bChar = catalog.characters.find(c => c.id === bid);
+    const bName = bChar ? catalogTitle(bChar) : `Bot ${i+1}`;
+    botList.push({ id: `bot-${i+1}`, name: bName, characterId: bid, slot: i+1, hp: 3, maxHp: 3, alive: true, isLocal: false });
+  }
+  state.match = {
+    type: 'match',
+    round: 1,
+    maxRounds: 5,
+    roundLabel: (document.documentElement.lang==='en'?'ROUND':'VÒNG') + ' 1',
+    phase: 'placing',
+    timeLeft: 5.0,
+    aliveCount: botList.length + 1,
+    weaponName: wName,
+    toast: '',
+    players: [
+      { id: 'player', name: (document.documentElement.lang==='en'?'YOU':'BẠN'), characterId: state.characterId, slot: 0, hp: 3, maxHp: 3, alive: true, isLocal: true },
+      ...botList
+    ]
+  };
+}
 root.addEventListener('click', event => {
   const button=event.target.closest('[data-action]'); if (!button) return;
   const action=button.dataset.action;
@@ -368,13 +420,16 @@ root.addEventListener('click', event => {
   if(!mock&&action==='resume'){send('Resume');state.paused=false;state.overlay=null;return render();}
   if(!mock&&action==='exit-confirm'){state.overlay='exit-confirm';return render();}
   if(!mock&&action==='exit-match'){send('ExitMatch');state.overlay=null;state.screen='home';state.paused=false;state.practiceActive=false;return render();}
-  if(!mock&&action==='rematch'){send('Rematch');state.result=null;state.screen='match';state.tutorialStep=-1;return render();}
+  if(!mock&&action==='rematch'){seedMatchState();send('Rematch');state.result=null;state.screen='match';state.tutorialStep=-1;return render();}
   if(!mock&&action==='ready'){if(state.match?.phase?.toLowerCase()==='placing'&&!state.readyLocked){state.readyLocked=send('Ready');render();}return;}
   if(!mock&&action==='emote'){if(Date.now()<state.emoteCooldownUntil)return;state.overlay='emote';return render();}
   if(!mock&&action==='emote-tab'){state.emoteTab=button.dataset.tab;return render();}
   if(!mock&&action==='send-live-emote'){if(Date.now()<state.emoteCooldownUntil)return;const id=button.dataset.id,kind=button.dataset.kind;state.emoteCooldownUntil=Date.now()+3000;showEmoteBubble('player',kind==='phrase'?(document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'])[Number(id.slice(-2))-1]:'Sticker');send('SendEmote',{kind,id});state.overlay=null;return render();}
   if(!mock&&action==='practice'){state.screen='bot';return render();}
-  if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
+  if(!mock&&action==='start-practice'){if(!state.ready){state.overlay='loading';return render();}seedMatchState();send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});state.practiceActive=true;state.screen='match';state.result=null;if(remembered('hitme.tutorialSeen')!=='1')state.tutorialStep=0;return render();}
+  if (action==='set-lang-vi') {document.documentElement.lang='vi';try{localStorage.setItem('hitme_lang','vi')}catch(e){}return render();}
+  if (action==='set-lang-en') {document.documentElement.lang='en';try{localStorage.setItem('hitme_lang','en')}catch(e){}return render();}
+  if (action==='copy-ver') {try{navigator.clipboard?.writeText('0.1.0-beta.11 · 9d63d2f');button.textContent=(document.documentElement.lang==='en'?'Copied!':'Đã chép!');setTimeout(()=>{button.textContent=(document.documentElement.lang==='en'?'Copy':'Sao chép')},1500)}catch(e){}return;}
   if (action==='locked') {navigator.vibrate?.(30);return;}
   if (action.startsWith('go-')) {if(mock&&state.screen==='lobby'&&action==='go-home')send('LeaveRoom',{});return go(action.slice(3));}
   if (action==='settings-done') return go(state.previousScreen);
@@ -384,7 +439,7 @@ root.addEventListener('click', event => {
   if (action==='lobby-practice') return go('bot');
   if (action==='mock-ready') {state.mockEvent='Đã khóa hướng ngắm';return render();}
   if (action==='send-emote') {state.mockEvent=button.dataset.id;go('match');return;}
-  if (action==='start-practice') {if(mock){send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});startMockClock();return;} }
+  if (action==='start-practice') {if(mock){seedMatchState();state.screen='match';send('StartPractice',{characterId:state.characterId,weaponId:state.weaponId,botCount:state.botCount});startMockClock();return render();} }
   if (action==='previous'||action==='next') return changeCharacter(action==='next'?1:-1);
   if (action==='select-character') {state.characterId=button.dataset.id;saveSelection();send('SetCharacter',{id:state.characterId});state.overlay=null;return render();}
   if (action==='select-weapon') {state.weaponId=button.dataset.id;saveSelection();send('SetWeapon',{id:state.weaponId});state.overlay=null;return render();}
@@ -408,8 +463,23 @@ root.addEventListener('input', event => {
   if (!['music','sfx'].includes(setting)) return;
   const value = Math.max(0,Math.min(1,Number(event.target.value)/100));
   if (setting==='music') state.musicVolume=value; else state.sfxVolume=value;
+  event.target.style.setProperty('--val-pct', `${Math.round(value*100)}%`);
+  const valSpan = event.target.parentElement?.querySelector(`.${setting}-val`);
+  if (valSpan) valSpan.textContent = `${Math.round(value*100)}%`;
   audio.setVolumes({music:state.musicVolume,sfx:state.sfxVolume});
   if(!mock)send('SetSettings',{musicVolume:state.musicVolume,sfxVolume:state.sfxVolume,reducedMotion:state.reducedMotion});
+});
+root.addEventListener('change', event => {
+  const setting = event.target.dataset?.setting;
+  if (setting === 'haptics') {
+    state.haptics = event.target.checked;
+    try { localStorage.setItem('hitme_haptics', event.target.checked ? '1' : '0'); } catch(e) {}
+  }
+  if (setting === 'reduced-motion') {
+    state.reducedMotion = event.target.checked;
+    document.body.classList.toggle('r38-reduced-motion', state.reducedMotion);
+    if(!mock)send('SetSettings',{musicVolume:state.musicVolume,sfxVolume:state.sfxVolume,reducedMotion:state.reducedMotion});
+  }
 });
 onUnity(event => {
   const invalid=validateLiveEvent(event);if(invalid){contractError(invalid);return;}
@@ -422,7 +492,7 @@ onUnity(event => {
   if (event.type==='selection' && event.weaponId) state.weaponId=assetId(event.weaponId);
   if (event.type==='profile' || event.type==='balance') state.balance=Number.isFinite(Number(event.balance))?Number(event.balance):null;
   if (event.type==='lobby') {state.lobby=event;state.lobbyReady=!!event.players?.find(p=>p.id==='local')?.ready;}
-  if (event.type==='match') {const endingPhase=['resolve','roundend','round_result','matchend','match_end'].includes(String(event.phase).toLowerCase());if(!mock && state.match?.phase!==event.phase && endingPhase)clearPhaseToasts();state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast&&!endingPhase)queueToast(event.toast);}}
+  if (event.type==='match') {const endingPhase=['resolve','roundend','round_result','matchend','match_end'].includes(String(event.phase).toLowerCase());if(!mock && state.match?.phase!==event.phase && endingPhase)clearPhaseToasts();state.match=event;if(mock){state.mockPhase=event.phase;state.mockRound=event.round||1;state.mockEvent=event.toast||'';}else{if(state.currentRound!==event.round){state.currentRound=event.round;state.roundEvents=[];state.readyLocked=false;}if(event.toast&&!endingPhase)queueToast(event.toast);}if(state.overlay)return;if(state.screen==='match'&&updateLiveMatchInPlace(root,event,state))return;}
   if (event.type==='result') {
     state.result=event;
     const local=event.rankings.find(player=>player.id==='player');
@@ -432,7 +502,7 @@ onUnity(event => {
   if(event.type==='error'){if(mock){state.screen='error';state.lobbyError=event.message||event.code||'Không thể vào phòng';}queueToast(event.message||event.code||'Lỗi');audio.playSfx('ui_error');}
   if(event.type==='emote'&&!mock){const phrases=document.documentElement.lang==='en'?['Hello everyone!','Can you dodge?','Well done!','Play again!','Oops!','GG']:['Chào cả nhà!','Né được không?','Giỏi lắm!','Chơi lại nhé!','Ối!','GG'];showEmoteBubble(event.playerId||'player',event.kind==='phrase'?(phrases[Number(String(event.id).slice(-2))-1]||'GG'):'Sticker');audio.playSfx('emo_pop');}
   if(event.type==='event'&&!mock){const names={hit:'Trúng đòn!',ko:'Bị loại!',win:'Chiến thắng!'};const message=names[event.kind];if(message){queueToast(message);if(['hit','ko'].includes(event.kind)){state.roundEvents.push(message);state.roundEvents=state.roundEvents.slice(-3);}}audio.playSfx({hit:'hit_dep',ko:'ko',win:'win',throw:'throw_dep',round_result:'round_result'}[event.kind]||'ui_tap');}
-  if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! ♥ giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
+  if (event.type==='event' && mock) {state.mockEvent={hit:'Trúng đòn! Tim giảm',ko:'BOT 1 bị loại',win:'Chiến thắng!' }[event.kind]||event.kind;if(event.kind==='hit')state.mockHp=2;audio.playSfx({hit:'hit_dep',ko:'ko',win:'win'}[event.kind]||'ui_tap');}
   render();
 });
 if (mock) {state.balance=1250;installMockUnity(catalog);} else render();

@@ -150,14 +150,14 @@
       width: 100% !important;
       padding: 0 2px !important;
       min-height: 0 !important;
-      height: 44px !important;
+      height: 50px !important;
       align-items: center !important;
     }
     .live-card {
       flex: 1 1 0 !important;
       min-width: 0 !important;
       padding: 2px 3px !important;
-      height: 42px !important;
+      height: 48px !important;
       background: linear-gradient(180deg, #162b42f5 0%, #0d1b2bf5 100%) !important;
       border: 1.5px solid #d4af37 !important;
       border-radius: 8px !important;
@@ -166,7 +166,7 @@
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
-      gap: 2px !important;
+      gap: 1px !important;
       position: relative !important;
     }
     .live-card.local {
@@ -174,13 +174,30 @@
       background: linear-gradient(180deg, #173852f8 0%, #0e2438f8 100%) !important;
       box-shadow: 0 0 0 2px rgba(25, 213, 216, 0.28), 0 3px 8px rgba(0, 0, 0, 0.5) !important;
     }
+    .live-card-you {
+      position: absolute !important;
+      top: -8px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: #19d5d8 !important;
+      color: #081a28 !important;
+      font-size: 8.5px !important;
+      font-weight: 900 !important;
+      padding: 1px 5px !important;
+      border-radius: 4px !important;
+      letter-spacing: 0.05em !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+      z-index: 4 !important;
+      white-space: nowrap !important;
+      line-height: 1.1 !important;
+    }
     .live-card.out {
       opacity: 0.42 !important;
       filter: grayscale(0.85) !important;
     }
     .live-card img {
-      width: 26px !important;
-      height: 26px !important;
+      width: 22px !important;
+      height: 22px !important;
       border-radius: 50% !important;
       border: 1.5px solid rgba(255, 220, 67, 0.85) !important;
       background: radial-gradient(circle at 50% 40%, #24476e 0%, #0d1b2a 100%) !important;
@@ -193,12 +210,12 @@
     }
     .live-cards[data-count="5"] .live-card img,
     .live-cards[data-count="6"] .live-card img {
-      width: 24px !important;
-      height: 24px !important;
+      width: 20px !important;
+      height: 20px !important;
     }
     .live-card div {
       width: 100% !important;
-      overflow: hidden !important;
+      overflow: visible !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -207,22 +224,23 @@
     }
     .live-card b {
       display: block !important;
-      font-size: 8.5px !important;
+      font-size: 9.5px !important;
       font-weight: 800 !important;
-      line-height: 1 !important;
-      padding: 0 2px !important;
+      line-height: 1.1 !important;
+      padding: 0 1px !important;
       background: transparent !important;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95) !important;
       color: #fff8e8 !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
       white-space: nowrap !important;
-      letter-spacing: -0.02em !important;
+      letter-spacing: -0.01em !important;
       max-width: 100% !important;
     }
     .live-cards[data-count="5"] .live-card b,
     .live-cards[data-count="6"] .live-card b {
-      display: none !important;
+      font-size: 8px !important;
+      display: block !important;
     }
     .live-card.hold-reveal b {
       display: block !important;
@@ -234,6 +252,10 @@
       border: 1px solid #ffcd38 !important;
       border-radius: 6px !important;
       padding: 2px 6px !important;
+      z-index: 10 !important;
+      white-space: nowrap !important;
+      max-width: none !important;
+    }
       font-size: 11px !important;
       z-index: 30 !important;
       white-space: nowrap !important;
@@ -300,8 +322,8 @@
     }
     .r38-timer-ring {
       position: relative !important;
-      width: 36px !important;
-      height: 36px !important;
+      width: 42px !important;
+      height: 42px !important;
       border-radius: 50% !important;
       display: grid !important;
       place-items: center !important;
@@ -312,7 +334,7 @@
     .r38-timer-ring::before {
       content: "" !important;
       position: absolute !important;
-      inset: 3px !important;
+      inset: 2.5px !important;
       border-radius: 50% !important;
       background: radial-gradient(circle at 50% 35%, #192b42 0%, #0b1421 100%) !important;
     }
@@ -322,7 +344,7 @@
     .r38-timer-ring span {
       position: relative !important;
       z-index: 2 !important;
-      font-size: 12.5px !important;
+      font-size: 16px !important;
       font-weight: 900 !important;
       color: #fff8e8 !important;
       line-height: 1 !important;
@@ -339,19 +361,67 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.12); box-shadow: 0 0 12px rgba(246, 106, 93, 0.85); }
     }
-    .live-summary > button[data-action="settings"] {
+    .live-summary > button[data-action="settings"],
+    .r43-match-settings-btn {
       justify-self: end !important;
-      width: 32px !important;
-      height: 32px !important;
-      font-size: 16px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      min-height: 44px !important;
+      font-size: 0 !important;
+      display: grid !important;
+      place-items: center !important;
       padding: 0 !important;
       border-radius: 50% !important;
-      background: rgba(13, 27, 43, 0.85) !important;
-      border: 1.5px solid #d4af37 !important;
-      color: #fff !important;
+      background: rgba(13, 27, 43, 0.90) !important;
+      border: 1.5px solid #ffcd38 !important;
+      color: #fff8e8 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+    }
+    .live-summary > button[data-action="settings"]::before,
+    .live-summary > button[data-action="settings"]::after,
+    .r43-match-settings-btn::before,
+    .r43-match-settings-btn::after {
+      content: none !important;
+      display: none !important;
+    }
+    .live-summary > button[data-action="settings"] svg,
+    .r43-match-settings-btn svg {
+      width: 22px !important;
+      height: 22px !important;
+      display: block !important;
+      margin: auto !important;
+      color: #fff8e8 !important;
+      stroke: currentColor !important;
+    }
+
+    /* M2: Seamless letterbox fill at bottom of court - zero hard contrast seams */
+    .live-match::before {
+      content: "" !important;
+      position: absolute !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      height: 220px !important;
+      background-image: url('./assets/bg_home_1170.webp') !important;
+      background-position: center 95% !important;
+      background-size: cover !important;
+      filter: blur(8px) brightness(0.65) !important;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 25%, black 100%) !important;
+      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 25%, black 100%) !important;
+      pointer-events: none !important;
+      z-index: 1 !important;
+    }
+    .live-match::after {
+      content: "" !important;
+      position: absolute !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      height: 120px !important;
+      background: linear-gradient(180deg, rgba(8, 16, 26, 0) 0%, rgba(6, 12, 22, 0.75) 60%, #060c16 100%) !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
     }
 
     /* SECTION A: Floating Phase Capsule (never adds permanent height to HUD) */
@@ -1382,11 +1452,11 @@
           if (isTamPose && !btn.querySelector(".r38-badge-tam")) {
             const smallEl = btn.querySelector("small");
             if (smallEl) {
-              smallEl.innerHTML = (smallEl.textContent.includes("ĐANG CHỌN") ? "ĐANG CHỌN • " : "CHỌN • ") + '<span class="r38-badge-tam">TẠM</span>';
+              smallEl.innerHTML = (smallEl.textContent.includes("ĐANG CHỌN") ? "ĐANG CHỌN • " : "CHỌN • ") + '<span class="r38-badge-tam">Thử nghiệm</span>';
             } else {
               const b = document.createElement("small");
               b.className = "r38-badge-tam";
-              b.textContent = "MỞ KHÓA • TẠM";
+              b.textContent = "MỞ KHÓA • THỬ NGHIỆM";
               btn.appendChild(b);
             }
           }
@@ -1650,7 +1720,7 @@
             fbBtn.target = "_blank";
             fbBtn.rel = "noopener noreferrer";
             fbBtn.style.cssText = "text-align:center;text-decoration:none;display:block;margin-top:10px;padding:8px 12px;border-radius:8px;font-weight:700;font-size:12px;background:#1e3a53;color:#38bdf8;border:1px solid #38bdf8;";
-            fbBtn.textContent = "Góp ý bản thử nghiệm 💬";
+            fbBtn.textContent = "Góp ý bản thử nghiệm";
             settingsSheet.appendChild(fbBtn);
           }
         }
@@ -1669,9 +1739,12 @@
 
           if (_r38LastOverlayTab === "quests") {
             if (h2) h2.textContent = "NHIỆM VỤ NGÀY";
+            const rawDate = String(prof.lastResetDate || "");
+            const dateParts = rawDate.split("-");
+            const formattedDate = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}` : (rawDate || "11/11");
             const banner = document.createElement("div");
             banner.className = "r38-u2-banner";
-            banner.textContent = `Đặt lại mỗi ngày (${prof.lastResetDate}) • QuestRewardsEnabled = false (Nhận thử nghiệm, chờ chủ dự án bật cộng vàng)`;
+            banner.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block;vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Đặt lại mỗi ngày (${formattedDate}) • Phần thưởng sẽ mở khi có máy chủ`;
             wrap.appendChild(banner);
 
             const list = document.createElement("div");
@@ -1680,31 +1753,20 @@
               const prog = Math.min(q.target, Number(q.progress) || 0);
               const pct = Math.round((prog / Math.max(1, q.target)) * 100);
               const done = prog >= q.target;
+              const isOnlineQuest = qid.includes("online");
               const row = document.createElement("div");
               row.className = "r38-quest-row";
               row.dataset.questId = qid;
               row.innerHTML = `
                 <div class="r38-quest-info">
-                  <b>${q.title} (${prog}/${q.target})</b>
-                  <small>Thưởng: +${q.reward} Vàng (Thử nghiệm)</small>
+                  <b>${q.title} (${prog}/${q.target}) ${isOnlineQuest ? '<span style="color:#38bdf8;font-size:10px;font-weight:700;margin-left:4px;">(Sắp có)</span>' : ''}</b>
+                  <small>Thưởng: +${q.reward} Vàng</small>
                   <div class="r38-quest-bar"><i style="width:${pct}%"></i></div>
                 </div>
-                <button type="button" class="r38-quest-claim" data-quest-claim="${qid}" ${(!done || q.claimed) ? "disabled" : ""}>
-                  ${q.claimed ? "ĐÃ NHẬN (TẠM)" : done ? "NHẬN (THỬ)" : `${prog}/${q.target}`}
+                <button type="button" class="r38-quest-claim" data-quest-claim="${qid}" disabled style="opacity:0.65;cursor:default;">
+                  ${done ? "ĐÃ HOÀN THÀNH" : "SẮP MỞ"}
                 </button>
               `;
-              const btn = row.querySelector("button");
-              if (btn && done && !q.claimed) {
-                btn.addEventListener("click", (ev) => {
-                  ev.stopPropagation();
-                  q.claimed = true;
-                  prof.experimentalGoldClaimed = (Number(prof.experimentalGoldClaimed) || 0) + q.reward;
-                  saveLocalProfile(prof);
-                  btn.disabled = true;
-                  btn.textContent = "ĐÃ NHẬN (TẠM)";
-                  tryHaptic(25);
-                });
-              }
               list.appendChild(row);
             });
             wrap.appendChild(list);
@@ -2442,12 +2504,12 @@
       }
     }
 
-    /* B4 / L1: Compact Beta Chip (Non-obtrusive, respect safe area, auto-hide in match) */
+    /* B4 / L1 / X2: Compact Beta Chip (Non-obtrusive, respect safe area, auto-hide in match / overlays) */
     .r40-beta-banner {
       position: fixed;
       top: max(8px, env(safe-area-inset-top, 8px));
       left: 12px;
-      z-index: 60;
+      z-index: 10;
       background: rgba(234, 88, 12, 0.92);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -2491,22 +2553,39 @@
       font-size: 11px;
       font-weight: 800;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
     .r40-feedback-btn:active {
       background: rgba(255, 255, 255, 0.45);
     }
 
-    /* Completely hide BETA chip on match screen so HUD (VÒNG X, timer ring, settings cog) is 100% unobstructed */
+    /* Completely hide BETA chip on match screen and when any sheet/dialog/modal is open */
     body.in-match .r40-beta-banner,
     [data-screen="match"] .r40-beta-banner,
     .live-match ~ .r40-beta-banner,
     .stage[data-screen="match"] ~ .r40-beta-banner,
     body:has(.live-match) .r40-beta-banner,
-    body:has([data-screen="match"]) .r40-beta-banner {
+    body:has([data-screen="match"]) .r40-beta-banner,
+    body:has(.modal-shade) .r40-beta-banner,
+    body:has(#r39-online-root.active) .r40-beta-banner,
+    body:has(#r38-online-sheet-shade) .r40-beta-banner,
+    body:has(#r39-profile-shop-shade) .r40-beta-banner,
+    body:has(#r40-name-modal-shade) .r40-beta-banner {
       display: none !important;
       opacity: 0 !important;
       pointer-events: none !important;
       visibility: hidden !important;
+    }
+
+    @keyframes r40-spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes r40-pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
     }
 
     /* B4 Safe area insets: viewport, stages, headers */
@@ -2844,7 +2923,7 @@
         shade.innerHTML = `
           <div class="r40-profile-card" role="dialog" aria-modal="true" style="border-color:#f87171;width:min(100%,380px);background:#0f1d2a;border:2px solid #ef4444;border-radius:14px;padding:18px;color:#f8fafc;" data-name="client-error-modal">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-              <span style="font-size:26px;">⚠️</span>
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <div>
                 <b style="color:#f87171;font-size:16px;letter-spacing:0.3px;">${isEn ? "An Error Occurred" : "Có lỗi xảy ra"}</b>
                 <small style="display:block;color:#94a3b8;font-size:11px;">Mã lỗi • Build: <code>${buildId}</code></small>
@@ -2861,7 +2940,7 @@
                 ${isEn ? "Reload (Bust Cache)" : "Tải lại (Phá cache)"}
               </button>
               <button type="button" class="r39-btn secondary" id="r40-btn-copy-err" style="background:transparent;color:#94a3b8;border:none;padding:6px;font-size:12px;cursor:pointer;text-decoration:underline;">
-                ${isEn ? "📋 Copy Error Logs" : "📋 Sao chép nhật ký"}
+                ${isEn ? "Copy Error Logs" : "Sao chép nhật ký"}
               </button>
             </div>
           </div>
@@ -2885,8 +2964,8 @@
         copyBtn.addEventListener("click", () => {
           if (navigator.clipboard) {
             navigator.clipboard.writeText(fullDetail).then(() => {
-              copyBtn.textContent = isEn ? "✓ Logs Copied!" : "✓ Đã sao chép nhật ký!";
-              setTimeout(() => { copyBtn.textContent = isEn ? "📋 Copy Error Logs" : "📋 Sao chép nhật ký"; }, 1800);
+              copyBtn.textContent = isEn ? "Logs Copied!" : "Đã sao chép nhật ký!";
+              setTimeout(() => { copyBtn.textContent = isEn ? "Copy Error Logs" : "Sao chép nhật ký"; }, 1800);
             });
           }
         });
@@ -2913,14 +2992,14 @@
           <div>Mode/Phase: <b>${onlineState.mode} / ${onlineState.phase}</b></div>
           <div>Room: <b>${onlineState.roomCode || "—"}</b></div>
           <div>WS: <b>${onlineState.connected ? "CONNECTED" : "OFFLINE"}</b> (RTT: ${window.__hitmeLastRttMs || 0}ms)</div>
-          <button type="button" class="r39-btn-pill" id="r40-debug-copy-logs" style="margin-top:6px;width:100%;padding:3px 6px;font-size:10.5px;">📋 Sao chép 20 logs</button>
+          <button type="button" class="r39-btn-pill" id="r40-debug-copy-logs" style="margin-top:6px;width:100%;padding:3px 6px;font-size:10.5px;">Sao chép 20 logs</button>
         `;
         hud.querySelector("#r40-debug-copy-logs").addEventListener("click", () => {
           if (navigator.clipboard) {
             navigator.clipboard.writeText(_recentLogs.join(String.fromCharCode(10))).then(() => {
               const b = hud.querySelector("#r40-debug-copy-logs");
-              b.textContent = "✓ ĐÃ CHÉP LOGS!";
-              setTimeout(() => { b.textContent = "📋 Sao chép 20 logs"; }, 1500);
+              b.textContent = "ĐÃ CHÉP LOGS!";
+              setTimeout(() => { b.textContent = "Sao chép 20 logs"; }, 1500);
             });
           }
         });
@@ -3036,10 +3115,11 @@
           document.body.appendChild(banner);
         }
         const fbUrl = rel.feedbackUrl || "";
+        const fbIconSvg = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-1px;margin-right:2px;" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
         banner.innerHTML = `
           <span class="badge">BETA</span>
           <span class="beta-text">Beta đóng v1</span>
-          ${fbUrl ? `<a href="${fbUrl}" target="_blank" rel="noopener noreferrer" class="r40-feedback-btn">Góp ý 💬</a>` : ""}
+          ${fbUrl ? `<a href="${fbUrl}" target="_blank" rel="noopener noreferrer" class="r40-feedback-btn">${fbIconSvg}Góp ý</a>` : ""}
         `;
       }
 
@@ -3232,7 +3312,7 @@
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <h3 style="margin:0;color:#ffcd38;font-size:16px;">HỒ SƠ NGƯỜI CHƠI</h3>
                 <span style="font-size:11px;color:${isFreeRename ? "#6ee7b7" : "#cbd5e1"};font-weight:700;">
-                  ${isFreeRename ? "✨ Đổi tên lần đầu miễn phí" : "Lần đổi: " + prof.renameCount}
+                  ${isFreeRename ? "Đổi tên lần đầu miễn phí" : "Lần đổi: " + prof.renameCount}
                 </span>
               </div>
               <div style="font-size:12px;color:#94a3b8;">
@@ -3249,7 +3329,7 @@
                 ${CHARACTERS.map(c => `
                   <button type="button" class="r39-char-pick ${selectedChar === c.id ? "selected" : ""}" data-name-char="${c.id}" style="min-height:52px;flex:1 1 45%;">
                     <img src="${c.head}" alt="${c.name}" style="width:28px;height:28px;">
-                    <span style="font-size:11px;">${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">TẠM</span>' : ""}</span>
+                    <span style="font-size:11px;">${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">Thử nghiệm</span>' : ""}</span>
                   </button>
                 `).join("")}
               </div>
@@ -3800,7 +3880,7 @@
             <h3>${title}</h3>
             <p>${messageText}</p>
             <div class="r38-online-actions">
-              ${isMismatch ? `<button type="button" class="r39-btn" id="r39-alert-reload-btn">🔄 TẢI LẠI NGAY</button>` : ""}
+              ${isMismatch ? `<button type="button" class="r39-btn" id="r39-alert-reload-btn">TẢI LẠI NGAY</button>` : ""}
               ${isRoomJoinError ? `<button type="button" class="r39-btn" id="r39-alert-newroom-btn">TẠO PHÒNG MỚI</button>` : ""}
               ${isReconnecting ? `<button type="button" class="r39-btn" id="r39-alert-reconnect-btn">VÀO LẠI NGAY</button>` : ""}
               <button type="button" class="r39-btn ${isRoomJoinError || isMismatch ? "secondary" : ""}" id="r39-alert-bot-btn">LUYỆN VỚI BOT</button>
@@ -3855,7 +3935,7 @@
         toast.id = "r40-update-toast";
         toast.className = "r40-update-toast";
         toast.innerHTML = `
-          <span>🚀 Có bản cập nhật mới!</span>
+          <span>Có bản cập nhật mới!</span>
           <button type="button" class="r39-btn-pill" id="r40-toast-reload-btn" style="padding:4px 10px;font-size:11.5px;">TẢI LẠI</button>
         `;
         document.body.appendChild(toast);
@@ -3955,21 +4035,29 @@
               renderOnlineRoot();
             }
           }, 1000);
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10" });
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.11" });
         } else if (mode === "create") {
+          onlineState.connectWaitSec = 0;
+          if (onlineState._connectTimer) clearInterval(onlineState._connectTimer);
+          onlineState._connectTimer = setInterval(() => {
+            onlineState.connectWaitSec = (onlineState.connectWaitSec || 0) + 1;
+            const cEl = document.getElementById("r40-connect-timer");
+            if (cEl) cEl.textContent = onlineState.connectWaitSec + "s";
+          }, 1000);
           if (onlineState._createTimeout) clearTimeout(onlineState._createTimeout);
           onlineState._createTimeout = setTimeout(() => {
             if (!onlineState.roomCode && (onlineState.mode === "create" || onlineState.mode === "lobby")) {
-              onlineState.lastErrorText = "Không thể kết nối máy chủ Render (Lỗi Origin origin_not_allowed hoặc máy chủ đang khởi động). Vui lòng thử lại hoặc Luyện với bot.";
+              if (onlineState._connectTimer) { clearInterval(onlineState._connectTimer); onlineState._connectTimer = null; }
+              onlineState.lastErrorText = "Không thể kết nối tới máy chủ vào lúc này. Máy chủ có thể đang thức dậy hoặc gặp sự cố mạng. Vui lòng thử lại hoặc Luyện với bot.";
               renderOnlineRoot();
             }
-          }, 8000);
+          }, 12000);
           sendProtocol({
             type: "join",
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.10"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.11"
           });
         }
         renderOnlineRoot();
@@ -4007,76 +4095,109 @@
         ` : "";
 
         const errBannerHtml = onlineState.lastErrorText ? `
-          <div class="r39-card" data-name="online-error-banner" style="border-color:#f87171;background:rgba(127,29,29,0.88);padding:9px 12px;">
+          <div class="r39-card" data-name="online-error-banner" style="border-color:#f87171;background:rgba(127,29,29,0.88);padding:9px 12px;border-radius:10px;">
             <div style="font-weight:900;font-size:13px;color:#fef2f2;">${onlineState.lastErrorText}</div>
           </div>
         ` : "";
 
         let bodyHtml = "";
 
-        if (onlineState.mode === "join") {
+        if (onlineState.mode === "join" || onlineState.mode === "hub") {
           const digits = (onlineState.joinInputCode || "").padEnd(6, " ").slice(0, 6).split("");
           bodyHtml = `
-            <div class="r39-card" data-screen="online-join" style="padding:18px 14px;box-sizing:border-box;max-width:100%;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <b style="font-size:15px;color:#ffcd38;font-weight:900;">NHẬP MÃ PHÒNG (6 KÝ TỰ)</b>
-                <small style="color:#94a3b8;font-weight:700;font-size:11px;">Bỏ 0, O, 1, I, L</small>
+            <div class="r43-online-hub-cards" style="display:flex;flex-direction:column;gap:12px;margin-top:2px;box-sizing:border-box;width:100%;">
+              <!-- Thẻ 1: TẠO PHÒNG -->
+              <div class="r39-card" style="padding:14px 14px;background:rgba(15,28,45,0.85);border:1.5px solid rgba(255,205,56,0.4);border-radius:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <b style="font-size:15px;color:#ffcd38;font-weight:900;">TẠO PHÒNG RIÊNG</b>
+                  <span style="font-size:11px;color:#94a3b8;font-weight:700;">2–6 người</span>
+                </div>
+                <p style="margin:0 0 12px;color:#cbd5e1;font-size:12.5px;line-height:1.4;">Tự tạo phòng mới và mời bạn bè qua mã phòng 6 ký tự hoặc liên kết chia sẻ.</p>
+                <button type="button" class="r39-btn" data-on-act="do-create-room" style="width:100%;min-height:46px;font-size:14px;font-weight:900;background:linear-gradient(180deg,#ffe066 0%,#f59e0b 100%);color:#081320;border:none;border-radius:10px;box-shadow:0 3px 8px rgba(0,0,0,0.35);">
+                  TẠO PHÒNG MỚI
+                </button>
               </div>
 
-              <div class="r39-code-boxes" id="r40-digit-boxes" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px;box-sizing:border-box;">
-                ${digits.map((ch, idx) => `
-                  <input type="text" class="r39-code-slot" data-digit-idx="${idx}" maxlength="1"
-                         inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
-                         value="${ch.trim()}"
-                         style="width:100%;height:48px;border-radius:10px;background:#081320;border:2px solid ${ch.trim() ? '#ffcd38' : '#19d5d8'};color:#ffcd38;font-size:20px;font-weight:900;text-align:center;text-transform:uppercase;box-sizing:border-box;padding:0;">
-                `).join("")}
+              <!-- Thẻ 2: VÀO PHÒNG BẰNG MÃ -->
+              <div class="r39-card" data-screen="online-join" style="padding:14px 14px;background:rgba(15,28,45,0.85);border:1.5px solid rgba(25,213,216,0.35);border-radius:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <b style="font-size:15px;color:#19d5d8;font-weight:900;">VÀO PHÒNG BẰNG MÃ</b>
+                  <small style="color:#94a3b8;font-weight:700;font-size:11px;">Mã 6 ký tự</small>
+                </div>
+                <div class="r39-code-boxes" id="r40-digit-boxes" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0 10px;box-sizing:border-box;">
+                  ${digits.map((ch, idx) => `
+                    <input type="text" class="r39-code-slot" data-digit-idx="${idx}" maxlength="1"
+                           inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                           value="${ch.trim()}"
+                           style="width:100%;height:46px;border-radius:8px;background:#081320;border:2px solid ${ch.trim() ? '#ffcd38' : '#19d5d8'};color:#ffcd38;font-size:19px;font-weight:900;text-align:center;text-transform:uppercase;box-sizing:border-box;padding:0;">
+                  `).join("")}
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;">
+                  <button type="button" class="r39-btn secondary" data-on-act="paste-code" style="padding:5px 12px;font-size:12px;min-height:34px;min-width:auto;display:inline-flex;align-items:center;gap:4px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    DÁN MÃ
+                  </button>
+                  <button type="button" class="r39-btn secondary" data-on-act="clear-code" style="padding:5px 12px;font-size:12px;min-height:34px;min-width:auto;">XÓA</button>
+                </div>
+                <button type="button" class="r39-btn" data-on-act="submit-join" ${(onlineState.joinInputCode || "").replace(/\s+/g, "").length === 6 ? "" : "disabled"} style="width:100%;min-height:46px;font-size:14px;font-weight:900;border-radius:10px;${(onlineState.joinInputCode || "").replace(/\s+/g, "").length === 6 ? "background:linear-gradient(180deg,#ffe066 0%,#f59e0b 100%);color:#081320;" : ""}">
+                  VÀO PHÒNG
+                </button>
               </div>
 
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;">
-                <button type="button" class="r39-btn secondary" data-on-act="paste-code" style="padding:6px 14px;font-size:12.5px;min-height:36px;min-width:auto;">📋 DÁN MÃ</button>
-                <button type="button" class="r39-btn secondary" data-on-act="clear-code" style="padding:6px 14px;font-size:12.5px;min-height:36px;min-width:auto;">XÓA HẾT</button>
+              <!-- Thẻ 3: GHÉP NHANH -->
+              <div class="r39-card" style="padding:14px 14px;background:rgba(15,28,45,0.85);border:1.5px solid rgba(56,189,248,0.35);border-radius:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <b style="font-size:15px;color:#38bdf8;font-weight:900;">GHÉP NHANH</b>
+                  <span style="font-size:11px;color:#94a3b8;font-weight:700;">Tự động</span>
+                </div>
+                <p style="margin:0 0 12px;color:#cbd5e1;font-size:12.5px;line-height:1.4;">Ghép ngẫu nhiên với người chơi đang trực tuyến (2–6 người thật).</p>
+                <button type="button" class="r39-btn" data-on-act="do-quick-match" style="width:100%;min-height:46px;font-size:14px;font-weight:900;background:linear-gradient(180deg,#38bdf8 0%,#0284c7 100%);color:#fff;border:none;border-radius:10px;box-shadow:0 3px 8px rgba(0,0,0,0.35);">
+                  TÌM TRẬN NGAY
+                </button>
               </div>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <button type="button" class="r39-btn secondary" data-on-act="switch-create" style="min-height:48px;font-weight:800;font-size:13.5px;">TẠO PHÒNG</button>
-                <button type="button" class="r39-btn" data-on-act="submit-join" ${(onlineState.joinInputCode || "").replace(/\s+/g, "").length === 6 ? "" : "disabled"} style="min-height:48px;font-size:14px;font-weight:900;">VÀO PHÒNG</button>
+              <!-- Phía dưới cùng: liên kết Luyện với bot -->
+              <div style="text-align:center;padding:8px 0 2px;">
+                <span style="font-size:13px;color:#94a3b8;">Chơi một mình? </span>
+                <button type="button" data-on-act="go-bot" style="background:transparent;border:none;color:#ffcd38;font-size:13px;font-weight:900;cursor:pointer;text-decoration:underline;">Luyện với bot</button>
               </div>
             </div>
           `;
         } else if (onlineState.mode === "quick") {
           bodyHtml = `
-            <div class="r39-card" data-screen="online-quick" style="text-align:center;padding:28px 16px;">
-              <div style="width:72px;height:72px;margin:0 auto 16px;border-radius:50%;border:3px solid #ffcd38;display:flex;align-items:center;justify-content:center;background:rgba(255,205,56,0.15);">
-                <img src="./assets/ui_icon_trophy.png" alt="" width="36" height="36">
+            <div class="r39-card" data-screen="online-quick" style="text-align:center;padding:28px 16px;background:rgba(15,28,45,0.9);border:1.5px solid rgba(56,189,248,0.4);border-radius:12px;">
+              <div class="r40-pulsing-avatar" style="width:78px;height:78px;margin:0 auto 16px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;">
+                <div style="position:absolute;inset:-6px;border-radius:50%;border:2.5px solid #38bdf8;animation:r40-pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;"></div>
+                <img src="${(CHARACTERS.find(c=>c.id===onlineState.characterId)||CHARACTERS[0]).head}" alt="" width="68" height="68" style="border-radius:50%;border:2px solid #ffcd38;background:#0d1b2a;">
               </div>
-              <h3 style="margin:0 0 8px;color:#ffcd38;font-size:19px;font-weight:900;">ĐANG TÌM ĐỐI THỦ TRỰC TUYẾN…</h3>
-              <p style="margin:0 0 16px;color:#cbd5e1;font-size:14px;">Đã chờ: <b id="r40-quick-timer">${onlineState.quickWaitSec || 0} giây</b></p>
-              <p style="margin:0 0 20px;color:#94a3b8;font-size:12px;">Phòng chỉ ghép 2–6 người chơi thật • Tuyệt đối không thêm bot</p>
+              <h3 style="margin:0 0 8px;color:#ffcd38;font-size:18px;font-weight:900;">ĐANG TÌM ĐỐI THỦ TRỰC TUYẾN…</h3>
+              <p style="margin:0 0 16px;color:#cbd5e1;font-size:14px;">Đang tìm đối thủ: <b id="r40-quick-timer" style="color:#ffcd38;">${onlineState.quickWaitSec || 0} giây</b></p>
+              <p style="margin:0 0 20px;color:#94a3b8;font-size:12.5px;">Chỉ ghép với người chơi thật (2–6 người)</p>
               ${onlineState.quickHintShown ? `
-                <div class="r39-card" data-name="quick-match-hint" style="border-color:#ffcd38;background:rgba(68,50,14,0.9);margin-bottom:16px;padding:12px;">
-                  <b style="color:#fde047;display:block;margin-bottom:4px;font-size:14px;">Chưa tìm thấy đối thủ sau 30 giây!</b>
-                  <span style="font-size:12.5px;color:#fff8e8;">Hiện tại ít người chơi trực tuyến. Bạn có thể tiếp tục chờ hoặc chuyển sang Luyện với Bot ngay.</span>
+                <div class="r39-card" data-name="quick-match-hint" style="border-color:#ffcd38;background:rgba(68,50,14,0.9);margin-bottom:16px;padding:12px;border-radius:10px;">
+                  <b style="color:#fde047;display:block;margin-bottom:4px;font-size:13.5px;">Chưa tìm thấy đối thủ sau 30 giây!</b>
+                  <span style="font-size:12.5px;color:#fff8e8;">Hiện tại ít người chơi trực tuyến. Bạn có thể tiếp tục chờ hoặc chuyển sang Luyện với bot ngay.</span>
                 </div>
               ` : ""}
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <button type="button" class="r39-btn danger" data-on-act="leave-quick" style="padding:12px;font-weight:800;">HỦY TÌM TRẬN</button>
-                <button type="button" class="r39-btn" data-on-act="go-bot" style="padding:12px;font-weight:800;">LUYỆN VỚI BOT</button>
+                <button type="button" class="r39-btn danger" data-on-act="leave-quick" style="padding:12px;font-weight:800;min-height:46px;">HỦY TÌM TRẬN</button>
+                <button type="button" class="r39-btn" data-on-act="go-bot" style="padding:12px;font-weight:800;min-height:46px;">LUYỆN VỚI BOT</button>
               </div>
             </div>
           `;
         } else if (onlineState.mode === "lobby" || onlineState.mode === "create") {
           if (onlineState.transportMode === "ws" && !onlineState.connected && !onlineState.roomCode) {
             bodyHtml = `
-              <div class="r39-card" data-screen="online-connection-status" style="padding:24px 16px;text-align:center;">
-                <div style="font-size:36px;margin-bottom:8px;">${onlineState.lastErrorText ? "📡" : "⏳"}</div>
-                <b style="color:${onlineState.lastErrorText ? "#f87171" : "#ffcd38"};font-size:16px;display:block;margin-bottom:8px;">
+              <div class="r39-card" data-screen="online-connection-status" style="padding:28px 16px;text-align:center;background:rgba(15,28,45,0.9);border:1.5px solid rgba(255,205,56,0.35);border-radius:12px;">
+                <div class="r40-spinner" style="width:42px;height:42px;margin:0 auto 16px;border:3.5px solid rgba(255,205,56,0.2);border-top-color:#ffcd38;border-radius:50%;animation:r40-spin 0.8s linear infinite;"></div>
+                <b style="color:${onlineState.lastErrorText ? "#f87171" : "#ffcd38"};font-size:16.5px;display:block;margin-bottom:8px;">
                   ${onlineState.lastErrorText ? "CHƯA KẾT NỐI ĐƯỢC MÁY CHỦ" : "ĐANG KẾT NỐI MÁY CHỦ…"}
                 </b>
-                <p style="color:#cbd5e1;font-size:13px;line-height:1.45;margin-bottom:18px;">
-                  ${onlineState.lastErrorText || "Đang thiết lập kết nối WebSocket tới máy chủ Render… Vui lòng chờ trong giây lát."}
+                <p style="color:#cbd5e1;font-size:13.5px;line-height:1.5;margin-bottom:18px;">
+                  ${onlineState.lastErrorText || `Đang kết nối tới máy chủ… Máy chủ có thể cần tới 60 giây để thức dậy (Đã chờ: <b id="r40-connect-timer" style="color:#ffcd38;">${onlineState.connectWaitSec || 0}s</b>).`}
                 </p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                  <button type="button" class="r39-btn secondary" data-on-act="retry-connect" style="min-height:48px;font-weight:800;">THỬ LẠI</button>
+                <div style="display:grid;grid-template-columns:${onlineState.lastErrorText ? "1fr 1fr" : "1fr"};gap:10px;">
+                  ${onlineState.lastErrorText ? `<button type="button" class="r39-btn secondary" data-on-act="retry-connect" style="min-height:48px;font-weight:800;">THỬ LẠI</button>` : ""}
                   <button type="button" class="r39-btn" data-on-act="go-bot" style="min-height:48px;font-weight:900;">LUYỆN VỚI BOT</button>
                 </div>
               </div>
@@ -4105,7 +4226,7 @@
                   <img class="r39-slot-avatar" src="${chObj.head}" alt="${p.name}">
                   <div class="r39-slot-meta">
                     <b>${isHost ? `<img src="./assets/ui_icon_crown.png" width="15" height="15" alt="Host">` : ""}${p.name}</b>
-                    <small>${p.ready ? "✓ SẴN SÀNG" : "Đang chọn nhân vật…"}</small>
+                    <small>${p.ready ? "SẴN SÀNG" : "Đang chọn nhân vật…"}</small>
                   </div>
                 </div>
               `);
@@ -4128,7 +4249,7 @@
             return `
               <button type="button" class="r39-char-pick ${isSelected ? "selected" : ""} ${isTaken ? "taken" : ""}" data-char-pick="${c.id}">
                 <img src="${c.head}" alt="${c.name}">
-                <span>${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">TẠM</span>' : ""}</span>
+                <span>${c.name}${c.tam ? ' <span class="r40-tam-badge" style="background:#b45309;color:#fef08a;font-size:9.5px;padding:1px 4px;border-radius:4px;font-weight:800;">Thử nghiệm</span>' : ""}</span>
                 ${isTaken ? `<small style="color:#f87171;font-size:9.5px;">ĐÃ CHỌN</small>` : ""}
               </button>
             `;
@@ -4226,7 +4347,7 @@
           actorsHtml.push(`
             <div class="r39-arena-actor me" style="left:${Math.max(12, Math.min(88, myXPercent))}%;top:${Math.max(18, Math.min(84, myYPercent))}%;">
               <img class="actor-avatar" src="${myChar.head}" alt="Bạn">
-              <span class="actor-name">${onlineState.playerName} ${onlineState.isLockedThisRound ? "🔒" : "🎯"}</span>
+              <span class="actor-name">${onlineState.playerName} ${onlineState.isLockedThisRound ? "(ĐÃ KHÓA)" : "(NGẮM)"}</span>
             </div>
           `);
 
@@ -4254,8 +4375,8 @@
               </div>
               <div style="font-size:12.5px;color:#fff8e8;margin-bottom:6px;">
                 ${(rr.hits && rr.hits.length)
-                  ? rr.hits.map(h => `<div>🎯 <b>${h.shooterId}</b> ném trúng <b>${h.targetId}</b> (-1 <img src="./assets/ui_icon_heart_break.png" width="14" height="14" style="vertical-align:middle;">)</div>`).join("")
-                  : `<div>💨 Không ai trúng đòn trong vòng này!</div>`}
+                  ? rr.hits.map(h => `<div><b>${h.shooterId}</b> ném trúng <b>${h.targetId}</b> (-1 <img src="./assets/ui_icon_heart_break.png" width="14" height="14" style="vertical-align:middle;">)</div>`).join("")
+                  : `<div>Không ai trúng đòn trong vòng này!</div>`}
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 ${(rr.players || []).map(p => `<span style="padding:3px 8px;border-radius:8px;background:#132942;font-size:12px;font-weight:800;">${p.id}: ${p.hp} Tim ${p.eliminated ? "(BỊ LOẠI)" : ""}</span>`).join("")}
@@ -4300,7 +4421,7 @@
                   <button type="button" class="r39-emote-btn" data-emote="surprised">Ồ!</button>
                 </div>
                 <button type="button" class="r39-btn" data-on-act="lock-ready" data-name="btn-lock-ready" ${onlineState.phase !== "placing" || onlineState.isLockedThisRound ? "disabled" : ""}>
-                  ${onlineState.isLockedThisRound ? "ĐÃ KHÓA ✓" : "KHÓA HƯỚNG NÉM"}
+                  ${onlineState.isLockedThisRound ? "ĐÃ KHÓA" : "KHÓA HƯỚNG NÉM"}
                 </button>
               </div>
             </div>
@@ -4351,7 +4472,7 @@
               </table>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
                 <button type="button" class="r39-btn" data-on-act="replay-match" data-name="btn-match-replay" ${isHost ? "" : "disabled"} title="${isHost ? "Bắt đầu ván đấu mới" : "Chỉ chủ phòng mới có quyền bấm Đấu lại"}">
-                  ${isHost ? "ĐẤU LẠI 👑" : "ĐẤU LẠI (CHỦ PHÒNG)"}
+                  ${isHost ? "ĐẤU LẠI" : "ĐẤU LẠI (CHỦ PHÒNG)"}
                 </button>
                 <button type="button" class="r39-btn secondary" data-on-act="return-lobby" data-name="btn-match-lobby">VỀ PHÒNG CHỜ</button>
                 <button type="button" class="r39-btn secondary" data-on-act="quick-again" data-name="btn-match-quick">GHÉP NHANH LẠI</button>
@@ -4361,20 +4482,23 @@
           `;
         }
 
+        const userHead = (CHARACTERS.find(c => c.id === onlineState.characterId) || CHARACTERS[0]).head;
+        const gearIconSvg = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+        const editIconSvg = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+
         root.innerHTML = `
           <div class="r39-on-wrap">
-            <div class="r39-on-header">
+            <div class="r39-on-header" style="display:flex;justify-content:space-between;align-items:center;">
               <button type="button" class="r39-btn secondary" data-on-act="close-online" style="padding:4px 10px;font-size:18px;min-height:36px;min-width:36px;line-height:1;" aria-label="Quay lại">‹</button>
-              <h2>CHƠI TRỰC TUYẾN</h2>
-              <button type="button" class="r39-btn secondary" data-action="settings" style="padding:0;min-height:36px;min-width:36px;font-size:16px;border-radius:50%;" aria-label="Cài đặt">⚙</button>
+              <h2 style="margin:0;font-size:17px;font-weight:900;color:#ffcd38;letter-spacing:0.5px;">CHƠI TRỰC TUYẾN</h2>
+              <button type="button" class="r39-btn secondary" data-action="settings" style="padding:0;min-height:36px;min-width:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;" aria-label="Cài đặt">${gearIconSvg}</button>
             </div>
-            <div class="r39-on-user-bar">
-              <div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1;">
-                <span style="font-size:16px;">👤</span>
-                <span style="font-size:12.5px;font-weight:800;color:#fff8e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${onlineState.playerName}</span>
-                <button type="button" data-on-act="open-rename" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;font-size:13px;line-height:1;" title="Đổi tên">✏️</button>
+            <div class="r39-on-user-bar" style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(19,41,66,0.85);border-radius:10px;border:1px solid rgba(255,205,56,0.3);">
+              <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;">
+                <img src="${userHead}" width="24" height="24" style="border-radius:50%;border:1.5px solid #ffcd38;flex-shrink:0;" alt="">
+                <span style="font-size:13px;font-weight:900;color:#fff8e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${onlineState.playerName}</span>
+                <button type="button" data-on-act="open-rename" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;display:flex;align-items:center;" title="Đổi tên" aria-label="Đổi tên">${editIconSvg}</button>
               </div>
-              <button type="button" class="r39-btn secondary" data-on-act="open-profile-shop" style="padding:4px 10px;font-size:11.5px;min-height:32px;min-width:auto;border-radius:8px;">CỬA HÀNG</button>
             </div>
             ${labBarHtml}
             ${errBannerHtml}
@@ -4451,12 +4575,12 @@
               </span>
             </div>
             <div style="font-size:11px;color:#fde047;font-weight:700;margin-bottom:6px;background:rgba(68,50,14,0.7);padding:4px 8px;border-radius:6px;" data-name="shop-disclaimer">
-              ⚠️ DỮ LIỆU THỬ NGHIỆM • SẮP CÓ BẢN THẬT • KHÔNG CÓ TIỀN THẬT
+              DỮ LIỆU THỬ NGHIỆM • SẮP CÓ BẢN THẬT • KHÔNG CÓ TIỀN THẬT
             </div>
             <div class="r39-card" style="margin-bottom:8px;padding:8px 10px;border-color:#19d5d8;">
               <div style="font-size:12.5px;color:#fff8e8;">Người chơi: <b>${onlineState.playerName}</b> • Nhân vật: <b>${(CHARACTERS.find(c => c.id === onlineState.characterId) || CHARACTERS[0]).name}</b></div>
               <div style="font-size:12px;color:#6ee7b7;margin-top:3px;" data-name="equipped-fx-badge">
-                ✨ Vũ khí đang trang bị: <b>${selectedWeapon.name}</b> (${selectedWeapon.fx})
+                Vũ khí đang trang bị: <b>${selectedWeapon.name}</b> (${selectedWeapon.fx})
               </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
@@ -4515,14 +4639,14 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
               <h3 style="margin:0;color:#ffcd38;font-size:16px;font-weight:900;">CÀI ĐẶT TRẬN ĐẤU</h3>
               <span style="padding:2px 8px;border-radius:99px;background:rgba(23,185,135,0.22);border:1px solid #17b987;color:#6ee7b7;font-size:11px;font-weight:900;">
-                ${onlineState.mode === "match" ? "⏱ Trực tuyến • Không dừng vòng" : "Luyện tập"}
+                ${onlineState.mode === "match" ? "Trực tuyến • Không dừng vòng" : "Luyện tập"}
               </span>
             </div>
 
             <!-- Music Slider -->
             <div style="margin-bottom:10px;">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;color:#cbd5e1;">
-                <span>🎵 Nhạc nền</span>
+                <span>Nhạc nền</span>
                 <span id="r40-music-val" style="color:#ffcd38;">${musicVol}%</span>
               </div>
               <input type="range" class="r40-slider" id="r40-music-range" min="0" max="100" value="${musicVol}" style="--val-pct:${musicVol}%;">
@@ -4531,7 +4655,7 @@
             <!-- SFX Slider -->
             <div style="margin-bottom:12px;">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:800;color:#cbd5e1;">
-                <span>🔊 Hiệu ứng âm thanh</span>
+                <span>Hiệu ứng âm thanh</span>
                 <span id="r40-sfx-val" style="color:#ffcd38;">${sfxVol}%</span>
               </div>
               <input type="range" class="r40-slider" id="r40-sfx-range" min="0" max="100" value="${sfxVol}" style="--val-pct:${sfxVol}%;">
@@ -4540,14 +4664,14 @@
             <!-- Toggles: Haptics & Reduced Motion -->
             <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:12px;">
               <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">📳 Rung xúc giác (Haptics)</span>
+                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">Rung xúc giác (Haptics)</span>
                 <label class="r40-switch">
                   <input type="checkbox" id="r40-switch-haptics" ${hapticsOn ? "checked" : ""}>
                   <span class="r40-switch-slider"></span>
                 </label>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">🍃 Giảm chuyển động</span>
+                <span style="font-size:12.5px;font-weight:800;color:#cbd5e1;">Giảm chuyển động</span>
                 <label class="r40-switch">
                   <input type="checkbox" id="r40-switch-rm" ${rmOn ? "checked" : ""}>
                   <span class="r40-switch-slider"></span>
@@ -4558,16 +4682,18 @@
             <!-- Action Buttons -->
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
               <button type="button" class="r39-btn" id="r39-im-resume" style="min-height:44px;font-size:14px;font-weight:900;">TIẾP TỤC TRẬN ĐẤU</button>
-              <button type="button" class="r39-btn danger" id="r39-im-leave" style="min-height:42px;font-size:13px;font-weight:800;">🚪 THOÁT TRẬN</button>
+              <button type="button" class="r39-btn danger" id="r39-im-leave" style="min-height:42px;font-size:13px;font-weight:800;">THOÁT TRẬN</button>
             </div>
 
             <!-- Version + Feedback -->
             <div style="text-align:center;font-size:11px;color:#94a3b8;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;">
               <div style="display:inline-flex;align-items:center;gap:6px;">
                 <span>${verStr}</span>
-                <button type="button" id="r40-copy-ver" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;font-size:11px;" title="Sao chép phiên bản">📋</button>
+                <button type="button" id="r40-copy-ver" style="background:transparent;border:none;color:#ffcd38;cursor:pointer;padding:2px 4px;font-size:11px;display:inline-flex;align-items:center;" title="Sao chép phiên bản">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
               </div>
-              <a href="${fbUrl}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;text-decoration:none;display:block;margin-top:4px;font-weight:800;">Góp ý bản thử nghiệm 💬</a>
+              <a href="${fbUrl}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8;text-decoration:none;display:block;margin-top:4px;font-weight:800;">Góp ý bản thử nghiệm</a>
             </div>
           </div>
         `;
@@ -4775,8 +4901,10 @@
           } else if (act === "switch-join") {
             onlineState.mode = "join";
             renderOnlineRoot();
-          } else if (act === "switch-create") {
+          } else if (act === "switch-create" || act === "do-create-room") {
             openMode("create");
+          } else if (act === "do-quick-match") {
+            openMode("quick");
           } else if (act === "retry-connect") {
             onlineState.lastErrorText = "";
             renderOnlineRoot();
