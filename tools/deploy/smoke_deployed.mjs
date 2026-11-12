@@ -150,7 +150,8 @@ async function connect(url, requestOrigin) {
       const waiter = waiters.find(item => item.types.includes(packet.type) || packet.type === 'error');
       if (!waiter) { queue.push(packet); continue; }
       waiters.splice(waiters.indexOf(waiter), 1); clearTimeout(waiter.timer);
-      packet.type === 'error' ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
+      packet.type === 'error' && !waiter.types.includes('error')
+        ? waiter.reject(new Error(packet.code)) : waiter.resolve(packet);
     }
   }
   function writeFrame(opcode, payload) {
@@ -166,7 +167,7 @@ async function connect(url, requestOrigin) {
   function take(wanted) {
     const types = Array.isArray(wanted) ? wanted : [wanted];
     const index = queue.findIndex(packet => types.includes(packet.type) || packet.type === 'error');
-    if (index >= 0) { const packet = queue.splice(index, 1)[0]; return packet.type === 'error' ? Promise.reject(new Error(packet.code)) : Promise.resolve(packet); }
+    if (index >= 0) { const packet = queue.splice(index, 1)[0]; return packet.type === 'error' && !types.includes('error') ? Promise.reject(new Error(packet.code)) : Promise.resolve(packet); }
     return new Promise((resolve, reject) => {
       const waiter = { types, resolve, reject, timer: null };
       waiter.timer = setTimeout(() => { const i = waiters.indexOf(waiter); if (i >= 0) waiters.splice(i, 1); reject(new Error(`Timeout waiting for ${types.join(' or ')}`)); }, 15000);
