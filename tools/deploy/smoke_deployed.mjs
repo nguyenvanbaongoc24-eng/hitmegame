@@ -5,9 +5,12 @@ import { randomBytes } from 'node:crypto';
 import { connect as connectTcp } from 'node:net';
 import { connect as connectTls } from 'node:tls';
 
-const [base, flag, origin] = process.argv.slice(2);
-if (!base || flag !== '--origin' || !origin) {
-  console.error('Usage: node tools/deploy/smoke_deployed.mjs https://SERVER --origin https://CLIENT');
+const [base, ...options] = process.argv.slice(2);
+const originIndex = options.indexOf('--origin');
+const origin = originIndex >= 0 ? options[originIndex + 1] : undefined;
+const duplicateSession = options.includes('--duplicate-session');
+if (!base || !origin || options.some(option => option !== '--origin' && option !== origin && option !== '--duplicate-session')) {
+  console.error('Usage: node tools/deploy/smoke_deployed.mjs https://SERVER --origin https://CLIENT [--duplicate-session]');
   process.exit(2);
 }
 const httpBase = new URL(base);
@@ -70,8 +73,24 @@ try {
   await quickA.take('room_state'); await quickB.take('room_state');
   report.quickMatch = true;
   quickA.close(); quickB.close();
+  if (duplicateSession) {
+    const duplicateToken = await token(`Duplicate${stamp}`);
+    const old = await connect(wsUrl.href, origin);
+    old.send({ type: 'join', token: duplicateToken, clientVersion: '0.1.0-beta.1' });
+    await old.take('room_state');
+    const replacement = await connect(wsUrl.href, origin);
+    replacement.send({ type: 'join', token: duplicateToken, clientVersion: '0.1.0-beta.1' });
+    await replacement.take('room_state');
+    const notice = await old.take('error');
+    assert.equal(notice.code, 'session_replaced', 'duplicate guest connection is replaced');
+    await old.waitForClose();
+    replacement.close();
+    report.duplicateGuestSession = true;
+  }
   console.log(JSON.stringify(report));
-  console.log('Passed! 6/6 healthz, guest-token, ws-handshake, 2-client-match, quick-match, invite-link');
+  console.log(duplicateSession
+    ? 'Passed! 7/7 healthz, guest-token, ws-handshake, 2-client-match, quick-match, invite-link, duplicate-guest-session'
+    : 'Passed! 6/6 healthz, guest-token, ws-handshake, 2-client-match, quick-match, invite-link');
 } catch (error) {
   console.error(JSON.stringify({ ...report, error: error instanceof Error ? error.message : String(error) }));
   process.exitCode = 1;
@@ -98,11 +117,12 @@ async function connect(url, requestOrigin) {
   const port = Number(endpoint.port || (tls ? 443 : 80));
   const socket = tls ? connectTls({ host: endpoint.hostname, port, servername: endpoint.hostname })
     : connectTcp({ host: endpoint.hostname, port });
-  const queue = [], waiters = [];
+  const queue = [], waiters = [], closeWaiters = [];
   let input = Buffer.alloc(0), upgraded = false, closed = false;
   const fail = error => {
     if (closed) return; closed = true;
     for (const waiter of waiters.splice(0)) { clearTimeout(waiter.timer); waiter.reject(error); }
+    for (const waiter of closeWaiters.splice(0)) { clearTimeout(waiter.timer); waiter.reject(error); }
   };
   socket.on('error', fail);
   socket.on('close', () => fail(new Error('WebSocket closed unexpectedly')));
@@ -120,12 +140,7 @@ async function connect(url, requestOrigin) {
   });
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error('WebSocket open timeout')), 15000);
-    socket.once('connect', () => {
-      const path = `${endpoint.pathname || '/'}${endpoint.search}`;
-      const key = randomBytes(16).toString('base64');
-      socket.write(`GET ${path} HTTP/1.1\r\nHost: ${endpoint.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\nOrigin: ${requestOrigin}\r\n\r\n`);
-    });
-    socket.once('secureConnect', () => {
+    socket.once(tls ? 'secureConnect' : 'connect', () => {
       const path = `${endpoint.pathname || '/'}${endpoint.search}`;
       const key = randomBytes(16).toString('base64');
       socket.write(`GET ${path} HTTP/1.1\r\nHost: ${endpoint.host}\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ${key}\r\nSec-WebSocket-Version: 13\r\nOrigin: ${requestOrigin}\r\n\r\n`);
@@ -134,7 +149,7 @@ async function connect(url, requestOrigin) {
     socket.once('error', error => { clearInterval(waitUpgrade); clearTimeout(timer); reject(error); });
   });
   const hello = await take('hello'); assert.equal(hello.type, 'hello');
-  return { send: packet => writeFrame(0x1, Buffer.from(JSON.stringify({ v: 1, ...packet }))), take, close: () => { if (!closed) { writeFrame(0x8, Buffer.alloc(0)); socket.end(); } } };
+  return { send: packet => writeFrame(0x1, Buffer.from(JSON.stringify({ v: 1, ...packet }))), take, waitForClose, close: () => { if (!closed) { writeFrame(0x8, Buffer.alloc(0)); socket.end(); } } };
 
   function readFrames() {
     while (input.length >= 2) {
@@ -144,7 +159,7 @@ async function connect(url, requestOrigin) {
       if (input.length < offset + length) return;
       const payload = input.subarray(offset, offset + length); input = input.subarray(offset + length);
       if (opcode === 0x9) { writeFrame(0xA, payload); continue; }
-      if (opcode === 0x8) { closed = true; socket.end(); return; }
+      if (opcode === 0x8) { closed = true; socket.end(); for (const waiter of closeWaiters.splice(0)) { clearTimeout(waiter.timer); waiter.resolve(); } return; }
       if (opcode !== 0x1) continue;
       const packet = JSON.parse(payload.toString('utf8'));
       const waiter = waiters.find(item => item.types.includes(packet.type) || packet.type === 'error');
@@ -172,6 +187,14 @@ async function connect(url, requestOrigin) {
       const waiter = { types, resolve, reject, timer: null };
       waiter.timer = setTimeout(() => { const i = waiters.indexOf(waiter); if (i >= 0) waiters.splice(i, 1); reject(new Error(`Timeout waiting for ${types.join(' or ')}`)); }, 15000);
       waiters.push(waiter);
+    });
+  }
+  function waitForClose() {
+    if (closed) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const waiter = { resolve, reject, timer: null };
+      waiter.timer = setTimeout(() => { const i = closeWaiters.indexOf(waiter); if (i >= 0) closeWaiters.splice(i, 1); reject(new Error('Timeout waiting for WebSocket close')); }, 5000);
+      closeWaiters.push(waiter);
     });
   }
 }
