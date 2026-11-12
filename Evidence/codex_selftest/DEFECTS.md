@@ -1,0 +1,28 @@
+# HIT ME — selftest đợt 34 (2026-11-12)
+
+Phạm vi đã chạy: `/next/` beta.15 (`954257d-4f6b253`) trên WebKit/Chromium giả lập 4 kích thước × VI/EN; 5 trận luyện với bot N=2–6; kiểm Render `/healthz` và smoke máy chủ cục bộ. Đây không phải thử trên iPhone/Android thật. Các ảnh/video/log ở cùng thư mục.
+
+| ID | Mức | Khu vực | Tái hiện | Kỳ vọng ↔ thực tế | Bằng chứng | Nguyên nhân nghi ngờ | Chủ sở hữu | Trạng thái |
+|---|---|---|---|---|---|---|---|---|
+| R34-01 | S0 | Online Render | GET `/healthz`, sau đó POST `/guest-token` với Origin trang Vercel. | Máy chủ cho vào ↔ `/healthz` chỉ trả `status,protocol`, guest-token HTTP 503; không thể xác nhận cấu hình Origin/commit đang triển khai. | Lệnh `Invoke-WebRequest https://hitmegame.onrender.com/healthz` ngày 2026-11-12; `tools/deploy/smoke_deployed.mjs` dừng tại healthz. | Render chưa dùng commit server mới hoặc thiếu biến môi trường. | CHỦ DỰ ÁN | CHỜ TRIỂN KHAI; online công khai chưa kiểm được. |
+| R34-02 | S1 | Vũ khí trong trận | Chọn Chảo/Vợt ở UI rồi bắt đầu luyện. | Ném đúng vũ khí ↔ bridge chỉ lưu `weaponId`/đổi nhãn, `MatchController.SpawnWeapons` gọi `PlayThrow("dep_to_ong")`; `ProductionUIController.SelectedWeaponId` cố định Dép. | `git show 954257d:Assets/Scripts/UI/WebBridge.cs` (`_lastWeaponId`, `weaponDisplay`); `git show 954257d:Assets/Scripts/Game/MatchController.cs` (`SpawnWeapons`); `git show 954257d:Assets/Scripts/UI/ProductionUIController.cs` (`SelectedWeaponId`). | Chọn vũ khí chưa được nối vào projectile/âm thanh thật. | UI-AG | CÒN; cần xác nhận bằng video/ảnh thiết bị sau khi AG sửa. |
+| R34-03 | S1 | Pipeline `/next/` | So SHA tệp công khai với `webUiCommit` trong release.json. | BuildId truy ra đúng nội dung ↔ `app.js`, `catalog.json`, `live.js` khác `git show 4f6b253:web-ui/dist/...`; chính release manifest vẫn khớp byte công khai. | [next_live/results.json](next_live/results.json) | Metadata `webUiCommit` cũ hơn gói web đã phát hành. | PIPELINE | CÒN; cần sửa quy trình tạo manifest rồi build/publish lại, không tự sửa `/`. |
+| R34-04 | S2 | Smoke test | Chạy `smoke_deployed.mjs` cục bộ với `--duplicate-session`. | `take('error')` nhận gói `session_replaced` ↔ hàm `take` luôn reject mọi gói `error`, kể cả khi đang đợi gói đó. | Log chạy cục bộ trước sửa: kết thúc `Error: session_replaced`; `tools/deploy/smoke_deployed.mjs:165-184`. | Điều kiện xử lý gói lỗi trong harness. | PIPELINE | ĐANG SỬA. |
+| R34-05 | S2 | Cổng kiểm `/next/` | Chạy `test_next_live.py` trên beta.15. | Kiểm hành vi hiện hành ↔ bộ kiểm cũ đòi online bị khóa (`BTN-09`), nên 0/6 không đại diện lỗi UI hiện tại. | [next_live/results.json](next_live/results.json); [browser_after_setup/results.json](browser_after_setup/results.json) (điều hướng 8/8). | Bộ kiểm chưa theo tính năng online beta.15 và commit metadata lệch. | PIPELINE | CÒN; cập nhật kỳ vọng sau khi chốt release metadata. |
+
+## Bằng chứng đã đạt
+
+- `python tools/blackbox/selftest_round34.py ...`: **Passed! 8/8 practice-navigation cases**; 0 pageerror/console error/failed request. [Kết quả](browser_after_setup/results.json), ảnh/video trong `browser_after_setup/`.
+- `python tools/blackbox/test_v13_player_matrix.py ...`: **Passed! 5/5** trận luyện N=2–6, mỗi trận có N hàng xếp hạng, 0 pageerror. [Kết quả](practice_2_to_6_after_setup.json), ảnh `practice_2_result.png` … `practice_6_result.png`. Trận chạy qua Core WebGL công khai; thời gian chơi tự động, chưa xác nhận thao tác ngắm bằng tay.
+- `dotnet test server/Tests/HitMe.Server.Tests.csproj`: **Passed! 229/229** trên checkout cục bộ hiện tại. Không suy ra Render đạt.
+
+## Chưa thử được / độ phủ còn thiếu
+
+- Toàn bộ tổ hợp 7 nhân vật × 3 vũ khí × 3 kết cục và các thao tác đặt/ngắm thật; hai kích thước WebKit 375×667 và 430×932 đã kiểm Home/điều hướng nhưng chưa chơi trọn trận. Chưa thử iPhone thật.
+- Online Render N=2/3/6, reconnect, AFK, commit trễ, tab ẩn, host rời, server restart: bị chặn bởi R34-01. Smoke cục bộ chỉ chứng minh giao thức cục bộ, không phải Render.
+- Giết app/mở lại 5 lần, IndexedDB hỏng, tải giữa mất mạng, xoay màn, các màn phụ 10 phút ngẫu nhiên, chaos 200 phòng, 1000 phòng rò bộ nhớ, 300 kết nối trong container, SIGTERM, thời gian HOME_SHOWN 20/5 Mbps: chưa chạy.
+- Các lỗi cũ về tải 0%, Safari `insertBefore`, FPS đè hồ sơ, nhiệm vụ trùng, chữ kỹ thuật, vùng trống màn online: chưa tái hiện trong vòng này; không đánh dấu đã sửa.
+
+## Lưu ý luật
+
+Prompt đợt 34 nói `maxRounds=5`; build Unity `954257d` có `GameConfig.MaxRounds=0`, nhưng 5 trận luyện công khai đều kết thúc ở vòng 5. Cần đối chiếu cấu hình thực tế/luật v1.3 trước mọi thay đổi; vòng kiểm này không đổi Core.

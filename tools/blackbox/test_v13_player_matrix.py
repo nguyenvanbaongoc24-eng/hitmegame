@@ -24,6 +24,9 @@ def run(url: str, output: Path) -> int:
         try:
             page.goto(url.rstrip("/") + "/?e2e=1", wait_until="domcontentloaded", timeout=45000)
             page.wait_for_function("() => window.__hitmeState?.build === 'unity-prod' && document.querySelector('[data-screen=home]')", timeout=90000)
+            if page.locator('[data-action="ftue-step-2"]').count():
+                for action in ("ftue-step-2", "ftue-save-name", "ftue-step-4", "ftue-step-5", "ftue-finish"):
+                    page.locator(f'[data-action="{action}"]').click(timeout=5000)
             for total_players in range(2, 7):
                 page.locator('[data-action="practice"]').click()
                 page.wait_for_function("() => window.__hitmeState?.screen === 'bot'", timeout=15000)
@@ -42,6 +45,7 @@ def run(url: str, output: Path) -> int:
                 row["rankings"] = page.locator('.live-rank').count()
                 row["resultText"] = page.locator('[data-screen="result"]').inner_text()[:160]
                 row["passed"] = selected_bots == desired_bots and row["rankings"] == total_players
+                page.screenshot(path=str(output.parent / f"practice_{total_players}_result.png"))
                 results["matches"].append(row)
                 page.locator('[data-action="exit-match"]').click()
                 page.wait_for_function("() => window.__hitmeState?.screen === 'home'", timeout=15000)
