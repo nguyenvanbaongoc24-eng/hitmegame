@@ -109,6 +109,28 @@ public sealed class WebSocketConnectionRegistryTests
         Assert.Equal(1, registry.Count);
     }
 
+    [Fact]
+    public async Task StalledReplacementCloseDoesNotDelayTheNewConnection()
+    {
+        var registry = new WebSocketConnectionRegistry(writeTimeout: TimeSpan.FromMilliseconds(30),
+            closeTimeout: TimeSpan.FromMilliseconds(30));
+        var old = new BlockingCloseWebSocket();
+        var current = new ImmediateWebSocket();
+        registry.Register("old", old);
+        registry.Register("current", current);
+
+        var watch = Stopwatch.StartNew();
+        await Task.WhenAll(
+            registry.CloseConnectionAsync("old", "session_replaced"),
+            registry.SendAsync(new GatewayMessage("current", "room_state"), CancellationToken.None));
+        watch.Stop();
+
+        Assert.True(watch.Elapsed < TimeSpan.FromMilliseconds(250), "A stalled old close delayed replacement too long.");
+        Assert.Equal(WebSocketState.Aborted, old.State);
+        Assert.Equal(1, current.SendCount);
+        Assert.Equal(1, registry.Count);
+    }
+
     private class ImmediateWebSocket : WebSocket
     {
         private WebSocketState state = WebSocketState.Open;

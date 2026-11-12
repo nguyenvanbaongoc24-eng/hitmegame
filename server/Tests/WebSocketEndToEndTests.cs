@@ -131,6 +131,94 @@ public sealed class WebSocketEndToEndTests
     }
 
     [Fact]
+    public async Task SimultaneousDuplicateGuestConnectionsLeaveOneCurrentSession()
+    {
+        var port = ReservePort();
+        await using var host = await RunningServer.StartAsync(port);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+        using var left = new ClientWebSocket();
+        using var right = new ClientWebSocket();
+        var endpoint = new Uri($"ws://127.0.0.1:{port}/ws");
+        await Task.WhenAll(left.ConnectAsync(endpoint, timeout.Token), right.ConnectAsync(endpoint, timeout.Token));
+        Assert.Equal("hello", (await Read(left)).GetProperty("type").GetString());
+        Assert.Equal("hello", (await Read(right)).GetProperty("type").GetString());
+        const string join = "{\"v\":1,\"type\":\"join\",\"token\":\"guest:duplicate_race\"}";
+        await Task.WhenAll(
+            left.SendAsync(Encoding.UTF8.GetBytes(join), WebSocketMessageType.Text, true, timeout.Token),
+            right.SendAsync(Encoding.UTF8.GetBytes(join), WebSocketMessageType.Text, true, timeout.Token));
+        var leftState = await Read(left);
+        var rightState = await Read(right);
+        Assert.Equal("room_state", leftState.GetProperty("type").GetString());
+        Assert.Equal("room_state", rightState.GetProperty("type").GetString());
+        Assert.Single(leftState.GetProperty("players").EnumerateArray());
+        Assert.Single(rightState.GetProperty("players").EnumerateArray());
+
+        using var replacedTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+        var notices = new[] { Read(left, replacedTimeout.Token), Read(right, replacedTimeout.Token) };
+        var completed = await Task.WhenAny(notices);
+        var notice = await completed;
+        Assert.Equal("error", notice.GetProperty("type").GetString());
+        Assert.Equal("session_replaced", notice.GetProperty("code").GetString());
+        replacedTimeout.Cancel();
+
+        async Task<JsonElement> Read(ClientWebSocket socket, CancellationToken? cancellation = null)
+        {
+            var bytes = new byte[4096];
+            var message = await socket.ReceiveAsync(bytes, cancellation ?? timeout.Token);
+            Assert.Equal(WebSocketMessageType.Text, message.MessageType);
+            return JsonDocument.Parse(Encoding.UTF8.GetString(bytes, 0, message.Count)).RootElement.Clone();
+        }
+    }
+
+    [Fact]
+    public async Task TwoHundredDuplicateGuestReplacementsStaySinglePlayerAndCloseTheOldSocket()
+    {
+        var port = ReservePort();
+        await using var host = await RunningServer.StartAsync(port);
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(75));
+        var endpoint = new Uri($"ws://127.0.0.1:{port}/ws");
+        var initial = await ConnectAndJoin();
+        var current = initial.Socket;
+        try
+        {
+            for (var iteration = 0; iteration < 200; iteration++)
+            {
+                var replacement = await ConnectAndJoin();
+                var notice = await Read(current);
+                Assert.Equal("session_replaced", notice.GetProperty("code").GetString());
+                var closing = await current.ReceiveAsync(new byte[128], timeout.Token);
+                Assert.Equal(WebSocketMessageType.Close, closing.MessageType);
+                current.Dispose();
+                current = replacement.Socket;
+                Assert.Single(replacement.State.GetProperty("players").EnumerateArray());
+            }
+            using var http = new HttpClient();
+            var status = JsonDocument.Parse(await http.GetStringAsync($"http://127.0.0.1:{port}/status")).RootElement;
+            Assert.Equal(1, status.GetProperty("connections").GetInt32());
+        }
+        finally { current.Dispose(); }
+
+        async Task<(ClientWebSocket Socket, JsonElement State)> ConnectAndJoin()
+        {
+            var socket = new ClientWebSocket();
+            await socket.ConnectAsync(endpoint, timeout.Token);
+            Assert.Equal("hello", (await Read(socket)).GetProperty("type").GetString());
+            await socket.SendAsync(Encoding.UTF8.GetBytes("{\"v\":1,\"type\":\"join\",\"token\":\"guest:duplicate_stress\"}"), WebSocketMessageType.Text, true, timeout.Token);
+            var state = await Read(socket);
+            Assert.Equal("room_state", state.GetProperty("type").GetString());
+            return (socket, state);
+        }
+
+        async Task<JsonElement> Read(ClientWebSocket socket)
+        {
+            var bytes = new byte[4096];
+            var message = await socket.ReceiveAsync(bytes, timeout.Token);
+            Assert.Equal(WebSocketMessageType.Text, message.MessageType);
+            return JsonDocument.Parse(Encoding.UTF8.GetString(bytes, 0, message.Count)).RootElement.Clone();
+        }
+    }
+
+    [Fact]
     public async Task TwentyMixedRosterMatchesOverRealWebSocketsMatchCoreAndRecoverFromFaults()
     {
         var port = ReservePort();

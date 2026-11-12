@@ -150,6 +150,7 @@ public sealed class WebSocketConnectionRegistry
 
     private async Task CloseAsync(Connection connection, string reason)
     {
+        var abort = false;
         try
         {
             using var timeout = new CancellationTokenSource(closeTimeout);
@@ -159,8 +160,9 @@ public sealed class WebSocketConnectionRegistry
         catch (Exception error) when (error is WebSocketException or OperationCanceledException or TimeoutException or ObjectDisposedException)
         {
             // A peer can stop reading the close frame. Bound shutdown and deadline ticks.
+            abort = true;
         }
-        finally { connection.Socket.Abort(); }
+        if (abort) connection.Socket.Abort();
     }
 
     private sealed class Connection
