@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#101b28">
-  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.15)</title>
+  <title>HIT ME — Web UI + Unity Hybrid (0.1.0-beta.16)</title>
   <link rel="stylesheet" href="./style.css">
   <style id="hitme-home-bg-patch">
     /* Hide dev prototype nav bar from Beta unless ?debug=1 */
@@ -445,19 +445,35 @@
       gap: 6px !important;
     }
     .live-weapon-chip {
+      flex: 1.25 !important;
       height: 38px !important;
-      padding: 0 10px !important;
-      font-size: 12px !important;
+      padding: 0 6px !important;
+      font-size: 11px !important;
+      letter-spacing: -0.2px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    .live-weapon-chip img {
+      width: 24px !important;
+      height: 24px !important;
+      flex-shrink: 0 !important;
+      object-fit: contain !important;
     }
     .live-ready {
+      flex: 1 !important;
       height: 38px !important;
       font-size: 13px !important;
-      padding: 0 14px !important;
+      padding: 0 10px !important;
     }
     .live-emote-trigger {
       width: 38px !important;
       height: 38px !important;
       font-size: 18px !important;
+      flex-shrink: 0 !important;
     }
 
     /* G3: Non-Blocking Interactive Tutorial (never covers the center court; pointer-events pass through) */
@@ -1939,7 +1955,7 @@
           if (_r38FpsVisible) {
             const fps = Math.min(120, Math.round((_r38FpsFrames * 1000) / dt));
             const ms = (dt / Math.max(1, _r38FpsFrames)).toFixed(1);
-            const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.15";
+            const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.16";
             const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
             const el = ensureFpsOverlay();
             el.innerHTML = `<div>${fps} fps · ${ms}ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
@@ -1962,7 +1978,7 @@
             try { localStorage.setItem("hitme.showFps", _r38FpsVisible ? "1" : "0"); } catch (e) {}
             const el = ensureFpsOverlay();
             if (_r38FpsVisible) {
-              const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.15";
+              const ver = window.__hitmeReleaseInfo?.version || "0.1.0-beta.16";
               const bid = (window.__hitmeReleaseInfo?.buildId || "").slice(0, 7);
               el.innerHTML = `<div>60 fps · 16.7ms</div><div style="opacity:0.75;font-size:9.5px;">${ver} (${bid})</div>`;
               _r38FpsFrames = 0;
@@ -3640,6 +3656,8 @@ Network Online: ${navigator.onLine}`
         const diagStart = Date.now();
         let healthOk = false;
         let serverProto = null;
+        let originsConfigured = true;
+        let allowedOriginsCount = 0;
         let httpStatus = 0;
         try {
           const ctrl = new AbortController();
@@ -3651,6 +3669,8 @@ Network Online: ${navigator.onLine}`
               const data = await res.json();
               healthOk = data.status === "ok";
               serverProto = data.protocol;
+              if (data.originsConfigured === false) originsConfigured = false;
+              if (Number.isFinite(data.allowedOriginsCount)) allowedOriginsCount = data.allowedOriginsCount;
             }
           } catch (eCors) {
             // Render /healthz lacks Access-Control-Allow-Origin header; test via no-cors mode
@@ -3675,8 +3695,10 @@ Network Online: ${navigator.onLine}`
 Origin: ${location.origin}
 WebSocket URL: ${wsUrl}
 HTTP /healthz: ${httpStatus ? `HTTP ${httpStatus} (${dt}ms)` : `Unreachable / Timeout (${dt}ms)`}
+Origins Configured: ${originsConfigured}
+Allowed Origins Count: ${allowedOriginsCount}
 Server Protocol: ${serverProto ?? "Unknown"}
-Client Version: ${window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"}
+Client Version: ${window.__hitmeReleaseInfo?.version || "0.1.0-beta.16"}
 User-Agent: ${navigator.userAgent}`;
 
         if (!httpStatus || httpStatus >= 500) {
@@ -3686,10 +3708,10 @@ User-Agent: ${navigator.userAgent}`;
             details: diagLog
           };
         }
-        if (healthOk && (serverProto === 1 || serverProto === 2 || serverProto === 3)) {
+        if (healthOk && (!originsConfigured || allowedOriginsCount === 0 || serverProto === 1 || serverProto === 2 || serverProto === 3)) {
           return {
             code: "NET-ORIGIN",
-            message: "Máy chủ Render đang chạy nhưng từ chối nguồn gốc kết nối (HTTP 403 Forbidden). Nguồn gốc " + location.origin + " chưa có trong ALLOWED_ORIGINS của máy chủ.",
+            message: "Máy chủ Render đang chạy nhưng từ chối nguồn gốc kết nối (HTTP 403 Forbidden / originsConfigured=false). Nguồn gốc " + location.origin + " chưa có trong ALLOWED_ORIGINS của máy chủ. Cần thiết lập biến môi trường trên Render: ALLOWED_ORIGINS=https://hitmegame-iota.vercel.app (duy nhất, không thêm localhost trong môi trường production).",
             details: diagLog
           };
         }
@@ -4167,7 +4189,7 @@ User-Agent: ${navigator.userAgent}`;
               renderOnlineRoot();
             }
           }, 1000);
-          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15" });
+          sendProtocol({ type: "quick_match", token: getToken(), clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.16" });
         } else if (mode === "create") {
           onlineState.connectWaitSec = 0;
           if (onlineState._connectTimer) clearInterval(onlineState._connectTimer);
@@ -4190,7 +4212,7 @@ User-Agent: ${navigator.userAgent}`;
             token: getToken(),
             characterId: onlineState.characterId,
             weaponId: onlineState.weaponId,
-            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
+            clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.16"
           });
         }
         renderOnlineRoot();
@@ -4781,7 +4803,7 @@ User-Agent: ${navigator.userAgent}`;
         const hapticsOn = localStorage.getItem("hitme_haptics") !== "0";
         const rmOn = document.body.classList.contains("r38-reduced-motion");
         const rel = window.__hitmeReleaseInfo || {};
-        const verStr = "Phiên bản " + (rel.version || "0.1.0-beta.15") + " · " + (rel.buildId || "{build_id}");
+        const verStr = "Phiên bản " + (rel.version || "0.1.0-beta.16") + " · " + (rel.buildId || "{build_id}");
         const fbUrl = rel.feedbackUrl || "https://forms.gle/hitme-beta-feedback";
 
         shade.innerHTML = `
@@ -5108,7 +5130,7 @@ User-Agent: ${navigator.userAgent}`;
                 roomCode: onlineState.joinInputCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.16"
               });
             }
           } else if (act === "copy-code" || act === "copy-invite-link") {
@@ -5251,7 +5273,7 @@ User-Agent: ${navigator.userAgent}`;
                   roomCode: joinCode,
                   characterId: onlineState.characterId,
                   weaponId: onlineState.weaponId,
-                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
+                  clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.16"
                 });
               });
             }, 300);
@@ -5264,7 +5286,7 @@ User-Agent: ${navigator.userAgent}`;
                 roomCode: joinCode,
                 characterId: onlineState.characterId,
                 weaponId: onlineState.weaponId,
-                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.15"
+                clientVersion: window.__hitmeReleaseInfo?.version || "0.1.0-beta.16"
               });
             }, 300);
           }
@@ -5443,7 +5465,7 @@ User-Agent: ${navigator.userAgent}`;
 
   <script>
     window.__hitmeConfig = { ui: "web" };
-    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.15", "buildId": "954257d-4f6b253", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
+    window.__hitmeReleaseInfo = {"version": "0.1.0-beta.16", "buildId": "4d54161-91fcc92", "serverUrl": "wss://hitmegame.onrender.com/ws", "online": true, "betaBanner": true, "feedbackUrl": "https://forms.gle/hitmegame-feedback-mock", "allowedCustomServers": ["wss://hitmegame.onrender.com/ws", "ws://localhost:5000/ws", "ws://127.0.0.1:5000/ws", "ws://localhost:8080/ws", "ws://127.0.0.1:8080/ws"]};
     window.__hitmeBootT0 = performance.now();
 
     function checkAndEmitHomeShown() {
@@ -5610,7 +5632,7 @@ User-Agent: ${navigator.userAgent}`;
           badge.className = "release-version-badge";
           badge.dataset.name = "release-version";
           badge.style.cssText = "display:block;margin-top:10px;opacity:0.8;font-size:12px;text-align:center;color:#cbd5e1;";
-          badge.textContent = "Phiên bản: 0.1.0-beta.15 (954257d-4f6b253)";
+          badge.textContent = "Phiên bản: 0.1.0-beta.16 (4d54161-91fcc92)";
           sheet.appendChild(badge);
         }
       });
@@ -5661,7 +5683,7 @@ User-Agent: ${navigator.userAgent}`;
       };
       WebAssembly.Memory.prototype = OrigMem.prototype;
     }
-    const buildVersion = urlParams.get("v") || "954257d-4f6b253";
+    const buildVersion = urlParams.get("v") || "4d54161-91fcc92";
     const versioned = path => path + "?v=" + encodeURIComponent(buildVersion);
 
     const config = {
@@ -5672,9 +5694,12 @@ User-Agent: ${navigator.userAgent}`;
       streamingAssetsUrl: "StreamingAssets",
       companyName: "HitMeStudio",
       productName: "HIT ME",
-      productVersion: "0.1.0-beta.15",
+      productVersion: "0.1.0-beta.16",
       matchWebGLToCanvasSize: false,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5),
+      cacheControl: function(url) {
+        return "no-store";
+      },
       errorHandler: function(message, filename, lineno) {
         console.error("[Unity ErrorHandler]", message, filename, lineno);
         try {
@@ -5780,7 +5805,7 @@ User-Agent: ${navigator.userAgent}`;
       const now = Date.now();
       const stallDurationSec = (now - window.__hitmeBoot.tLastProgress) / 1000;
       const totalDurationSec = (now - window.__hitmeBoot.t0) / 1000;
-      if (stallDurationSec > 15 || totalDurationSec > 60) {
+      if (stallDurationSec > 35 || totalDurationSec > 90) {
         clearInterval(_watchdogTimer);
         _watchdogTimer = null;
         window.__hitmeBoot.error = "stalled_loading";
