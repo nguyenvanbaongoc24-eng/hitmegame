@@ -10,6 +10,7 @@ Phạm vi đã chạy: `/next/` beta.15 (`954257d-4f6b253`) trên WebKit/Chromiu
 | R34-04 | S2 | Smoke test | Chạy `smoke_deployed.mjs` cục bộ với `--duplicate-session`. | `take('error')` nhận gói `session_replaced` ↔ hàm `take` luôn reject mọi gói `error`, kể cả khi đang đợi gói đó. | Trước sửa: `Error: session_replaced`; sau sửa: [smoke_local.txt](smoke_local.txt) `Passed! 7/7`. | Điều kiện xử lý gói lỗi trong harness. | PIPELINE | ĐÃ SỬA @ `452db32`; ca WebSocket bổ sung @ `a6b2cdd`. |
 | R34-05 | S2 | Cổng kiểm `/next/` | Chạy `test_next_live.py` trên beta.15. | Kiểm hành vi hiện hành ↔ bộ kiểm cũ đòi online bị khóa (`BTN-09`), nên 0/6 không đại diện lỗi UI hiện tại. | [next_live/results.json](next_live/results.json); [browser_after_setup/results.json](browser_after_setup/results.json) (điều hướng 8/8). | Bộ kiểm chưa theo tính năng online beta.15 và commit metadata lệch. | PIPELINE | CÒN; cập nhật kỳ vọng sau khi chốt release metadata. |
 | R34-06 | S0 | Vào lại bằng cùng guest token | Hai WebSocket cùng `playerId` kết nối gần nhau; lặp 200 lần. | Socket cũ nhận `session_replaced` rồi đóng êm, socket mới tiếp tục ↔ `WebSocketConnectionRegistry.CloseAsync` trước đây luôn `Abort()` cả khi gửi Close thành công, có thể cắt khung Close. | `WebSocketEndToEndTests.SimultaneousDuplicateGuestConnectionsLeaveOneCurrentSession`, `TwoHundredDuplicateGuestReplacementsStaySinglePlayerAndCloseTheOldSocket`, `WebSocketConnectionRegistryTests.StalledReplacementCloseDoesNotDelayTheNewConnection`; [smoke_local.txt](smoke_local.txt). | Abort vô điều kiện sau close handshake. | SERVER | ĐÃ SỬA CỤC BỘ @ `70a8a55`, **chưa triển khai Render**. |
+| R34-07 | S2 | Mở lại `/next/` nhanh | WebKit giả lập 393×852: sau 5 reload thành công, đóng/mở tab cùng context 5 lần liên tiếp. | Lần thứ 5 vào Home ↔ hai lần chạy độc lập đều lỗi `Page.goto: Error in the HTTP2 framing layer` ở lần thứ 5 (10/11 ca). | [lifecycle/results.json](lifecycle/results.json), [lifecycle_retry/results.json](lifecycle_retry/results.json). Kênh `/` mở 7/7 lần cùng kiểu. | Chưa xác định: HTTP/2 của CDN hoặc WebKit khi nhiều tài nguyên WebGL bị đóng giữa tải. | PIPELINE | CÒN; cần thử Safari iPhone thật và cô lập tải tài nguyên trước khi sửa. |
 
 ## Bằng chứng đã đạt
 
@@ -17,12 +18,13 @@ Phạm vi đã chạy: `/next/` beta.15 (`954257d-4f6b253`) trên WebKit/Chromiu
 - `python tools/blackbox/test_v13_player_matrix.py ...`: **Passed! 5/5** trận luyện N=2–6, mỗi trận có N hàng xếp hạng, 0 pageerror. [Kết quả](practice_2_to_6_after_setup.json), ảnh `practice_2_result.png` … `practice_6_result.png`. Trận chạy qua Core WebGL công khai; thời gian chơi tự động, chưa xác nhận thao tác ngắm bằng tay.
 - `dotnet test server/Tests/HitMe.Server.Tests.csproj`: **Passed! 229/229** trên checkout cục bộ hiện tại. Không suy ra Render đạt.
 - `node tools/deploy/smoke_deployed.mjs http://127.0.0.1:5009 --origin https://hitmegame-iota.vercel.app --duplicate-session`: **Passed! 7/7** trên server cục bộ, [log](smoke_local.txt). Không suy ra Render đạt.
+- `python tools/blackbox/test_lifecycle_round34.py`: **Failed 10/11** hai lần trên WebKit giả lập; 5/5 reload và 4/5 đóng/mở tab vào Home, không `pageerror`. Đây chưa phải bằng chứng lỗi "0%" trên điện thoại thật.
 
 ## Chưa thử được / độ phủ còn thiếu
 
 - Toàn bộ tổ hợp 7 nhân vật × 3 vũ khí × 3 kết cục và các thao tác đặt/ngắm thật; hai kích thước WebKit 375×667 và 430×932 đã kiểm Home/điều hướng nhưng chưa chơi trọn trận. Chưa thử iPhone thật.
 - Online Render N=2/3/6, reconnect, AFK, commit trễ, tab ẩn, host rời, server restart: bị chặn bởi R34-01. Smoke cục bộ chỉ chứng minh giao thức cục bộ, không phải Render.
-- Giết app/mở lại 5 lần, IndexedDB hỏng, tải giữa mất mạng, xoay màn, các màn phụ 10 phút ngẫu nhiên, chaos 200 phòng, 1000 phòng rò bộ nhớ, 300 kết nối trong container, SIGTERM, thời gian HOME_SHOWN 20/5 Mbps: chưa chạy.
+- Giết **tiến trình iOS** và mở lại, IndexedDB hỏng, tải giữa mất mạng, xoay màn (bài WebKit dừng trước bước này do R34-07), các màn phụ 10 phút ngẫu nhiên, chaos 200 phòng, 1000 phòng rò bộ nhớ, 300 kết nối trong container, SIGTERM, thời gian HOME_SHOWN 20/5 Mbps: chưa chạy.
 - Các lỗi cũ về tải 0%, Safari `insertBefore`, FPS đè hồ sơ, nhiệm vụ trùng, chữ kỹ thuật, vùng trống màn online: chưa tái hiện trong vòng này; không đánh dấu đã sửa.
 
 ## Lưu ý luật
